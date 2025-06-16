@@ -1,0 +1,71 @@
+{
+    "items": {
+        "rusty_sword": {
+            "id": "rusty_sword",
+            "name": "Rusty Sword",
+            "slot": "weapon",
+            "level": 2,
+            "roll1": "str",
+            "roll2": "agi",
+            "roll3": "allstats",
+            "roll4": "str",
+            "sellcost": 50
+        },
+        "cloth_armor": {
+            "id": "cloth_armor",
+            "name": "Cloth Armor",
+            "slot": "chest",
+            "level": 2,
+            "roll1": "armor",
+            "roll2": "int",
+            "roll3": "resist",
+            "roll4": "allstats",
+            "sellcost": 50
+        },
+        "minor_trinket": {
+            "id": "minor_trinket",
+            "name": "Minor Trinket",
+            "slot": "trinket",
+            "level": 2,
+            "roll1": "allstats",
+            "roll2": "int",
+            "roll3": "resist",
+            "roll4": "allstats",
+            "sellcost": 40
+        },
+        "iron_sword": {
+            "id": "iron_sword",
+            "name": "Iron Sword",
+            "slot": "weapon",
+            "level": 25,
+            "roll1": "str",
+            "roll2": "str",
+            "roll3": "agi",
+            "roll4": "allstats",
+            "sellcost": 250
+        },
+        "leather_armor": {
+            "id": "leather_armor",
+            "name": "Leather Armor",
+            "slot": "chest",
+            "level": 25,
+            "roll1": "armor",
+            "roll2": "agi",
+            "roll3": "str",
+            "roll4": "armor",
+            "sellcost": 250
+        },
+        "blood_diamond": {
+            "id": "blood_diamond",
+            "name": "Blood Diamond",
+            "slot": "trinket",
+            "level": 50,
+            "roll1": "str",
+            "roll2": "agi",
+            "roll3": "int",
+            "roll4": "allstats",
+            "sellcost": 5000,
+            "logicKey": "bloodDiamondLogic"
+        }
+    }
+}
