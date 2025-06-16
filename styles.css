@@ -1863,6 +1863,215 @@ body {
     text-align: center;
 }
 
+/* Item System Styles */
+.itemTooltip {
+    position: fixed;
+    background: rgba(10, 15, 26, 0.95);
+    border: 2px solid #2a6a8a;
+    padding: 12px;
+    border-radius: 4px;
+    z-index: 1002;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    pointer-events: none;
+    display: none;
+    min-width: 200px;
+}
+
+.itemTooltipName {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.itemTooltipLevel {
+    font-size: 14px;
+    color: #6a9aaa;
+    margin-bottom: 8px;
+}
+
+.itemStat {
+    font-size: 14px;
+    color: #00ff88;
+    margin: 4px 0;
+}
+
+.itemTooltipSell {
+    font-size: 12px;
+    color: #ffd700;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #2a6a8a;
+}
+
+/* Gear Grid */
+.gearGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 100px);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Family Stash Screen */
+#familyStashScreen {
+    display: none;
+    height: 100vh;
+    background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.familyStashHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+#familyStashTitle {
+    font-size: 36px;
+    color: #4dd0e1;
+    text-shadow: 0 0 30px rgba(77, 208, 225, 0.5);
+}
+
+.familyStashContent {
+    background: rgba(10, 25, 41, 0.8);
+    border: 2px solid #2a6a8a;
+    padding: 20px;
+    min-height: 400px;
+}
+
+.familyStashItems {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.stashItemElement {
+    background: rgba(10, 25, 41, 0.9);
+    border: 2px solid #2a6a8a;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.stashItemElement:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+.stashItemElement.common {
+    border-color: #4dd0e1;
+}
+
+.stashItemElement.rare {
+    border-color: #0099ff;
+}
+
+.stashItemElement.epic {
+    border-color: #aa55ff;
+}
+
+.stashItemElement.legendary {
+    border-color: #ffd700;
+}
+
+.itemName {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.itemLevel {
+    font-size: 14px;
+    color: #6a9aaa;
+}
+
+.itemSlot {
+    font-size: 14px;
+    color: #b0e0f0;
+}
+
+.noItems {
+    text-align: center;
+    color: #6a9aaa;
+    font-size: 18px;
+    padding: 40px;
+}
+
+/* Stash info on main stash screen */
+.stashInfo {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.stashGold {
+    color: #ffd700;
+}
+
+.stashItems {
+    color: #6a9aaa;
+}
+
+/* Stash inventory in gear tab */
+.stashInventory {
+    background: rgba(10, 25, 41, 0.8);
+    border: 1px solid #2a6a8a;
+    padding: 15px;
+    min-height: 320px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
+.stashInventoryItem {
+    background: rgba(10, 25, 41, 0.9);
+    border: 2px solid #2a6a8a;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.stashInventoryItem:hover {
+    background: rgba(42, 106, 138, 0.5);
+    border-color: #4dd0e1;
+}
+
+.stashInventoryItem.common {
+    border-color: #4dd0e1;
+}
+
+.stashInventoryItem.rare {
+    border-color: #0099ff;
+}
+
+.stashInventoryItem.epic {
+    border-color: #aa55ff;
+}
+
+.stashInventoryItem.legendary {
+    border-color: #ffd700;
+}
+
+/* Item reward in battle results */
+.itemRewardContainer {
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.itemSlot.filled {
+    background: rgba(42, 106, 138, 0.4);
+    border: 2px solid #4dd0e1;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Spell cast animation */
 @keyframes spellCast {
     0% {
@@ -1967,7 +2176,6 @@ body {
     border: 1px solid #4dd0e1;
 }
 
-/* Active turn circle indicator */
 /* Active turn circle indicator */
 .activeCircle {
     position: absolute;
