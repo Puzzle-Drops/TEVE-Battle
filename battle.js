@@ -1317,7 +1317,7 @@ if (victory) {
             const heroItems = [];
             
             // Villagers only get gold, not items
-            if (hero.className === 'villager1') {
+            if (hero.className === 'villager') {
                 const bonusGold = Math.floor(Math.random() * 100 + 50);
                 const family = hero.getClassFamily();
                 this.game.familyStashes[family].gold += bonusGold;
