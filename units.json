@@ -5,37 +5,65 @@
       "tier": 0,
       "modifiers": { "str": 10000.0, "agi": 10000.0, "int": 10000.0 },
       "spells": ["lose", "win"],
-      "promotesTo": ["acolyte", "archer", "druid", "initiate", "swordsman", "templar", "thief", "witch_hunter"]
+      "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
-    "villager": {
+    "villager_male": {
       "name": "Villager",
       "tier": 0,
       "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
       "spells": ["punch", "fury"],
-      "promotesTo": ["acolyte", "archer", "druid", "initiate", "swordsman", "templar", "thief", "witch_hunter"]
+      "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
-    "acolyte": {
+    "villager_female": {
+      "name": "Villager",
+      "tier": 0,
+      "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
+      "spells": ["punch", "fury"],
+      "promotesTo": ["acolyte_female", "archer_female", "druid_female", "initiate_female", "swordsman_female", "templar_female", "thief_female", "witch_hunter_female"]
+    },
+    "acolyte_male": {
       "name": "Acolyte",
       "tier": 1,
       "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
       "spells": ["holy_light"],
-      "promotesTo": ["cleric"]
+      "promotesTo": ["cleric_male"]
     },
-    "cleric": {
+    "acolyte_female": {
+      "name": "Acolyte",
+      "tier": 1,
+      "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
+      "spells": ["holy_light"],
+      "promotesTo": ["cleric_female"]
+    },
+    "cleric_male": {
       "name": "Cleric",
       "tier": 2,
       "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
       "spells": ["holy_light", "divine_shield"],
-      "promotesTo": ["priest", "matriarch"]
+      "promotesTo": ["priest_male", "luminary_male"]
     },
-    "priest": {
+    "cleric_female": {
+      "name": "Cleric",
+      "tier": 2,
+      "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
+      "spells": ["holy_light", "divine_shield"],
+      "promotesTo": ["priestess_female", "matriarch_female"]
+    },
+    "priest_male": {
       "name": "Priest",
       "tier": 3,
       "modifiers": { "str": 2.15, "agi": 2.95, "int": 3.9 },
       "spells": ["holy_light", "divine_shield", "mass_heal"],
-      "promotesTo": ["hierophant"]
+      "promotesTo": ["hierophant_male"]
     },
-    "hierophant": {
+    "priestess_female": {
+      "name": "Priestess",
+      "tier": 3,
+      "modifiers": { "str": 2.15, "agi": 2.95, "int": 3.9 },
+      "spells": ["holy_light", "divine_shield", "mass_heal"],
+      "promotesTo": ["hierophant_female"]
+    },
+    "hierophant_male": {
       "name": "Hierophant",
       "tier": 4,
       "modifiers": { "str": 2.5, "agi": 3.95, "int": 5.55 },
@@ -43,14 +71,37 @@
       "ultimateSpell": "heavens_wrath",
       "promotesTo": []
     },
-    "matriarch": {
+    "hierophant_female": {
+      "name": "Hierophant",
+      "tier": 4,
+      "modifiers": { "str": 2.5, "agi": 3.95, "int": 5.55 },
+      "spells": ["holy_light", "divine_shield", "mass_heal", "divine_aura"],
+      "ultimateSpell": "heavens_wrath",
+      "promotesTo": []
+    },
+    "luminary_male": {
+      "name": "Luminary",
+      "tier": 3,
+      "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
+      "spells": ["holy_light", "divine_shield", "blessed_recovery"],
+      "promotesTo": ["prophet_male"]
+    },
+    "matriarch_female": {
       "name": "Matriarch",
       "tier": 3,
       "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
       "spells": ["holy_light", "divine_shield", "blessed_recovery"],
-      "promotesTo": ["prophetess"]
+      "promotesTo": ["prophetess_female"]
     },
-    "prophetess": {
+    "prophet_male": {
+      "name": "Prophet",
+      "tier": 4,
+      "modifiers": { "str": 3.55, "agi": 2.85, "int": 5.6 },
+      "spells": ["holy_light", "divine_shield", "blessed_recovery", "prophecy_aura"],
+      "ultimateSpell": "divine_intervention",
+      "promotesTo": []
+    },
+    "prophetess_female": {
       "name": "Prophetess",
       "tier": 4,
       "modifiers": { "str": 3.55, "agi": 2.85, "int": 5.6 },
@@ -58,28 +109,49 @@
       "ultimateSpell": "divine_intervention",
       "promotesTo": []
     },
-    "archer": {
+    "archer_male": {
       "name": "Archer",
       "tier": 1,
       "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
       "spells": ["poison_strike"],
-      "promotesTo": ["ranger"]
+      "promotesTo": ["ranger_male"]
     },
-    "ranger": {
+    "archer_female": {
+      "name": "Archer",
+      "tier": 1,
+      "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
+      "spells": ["poison_strike"],
+      "promotesTo": ["ranger_female"]
+    },
+    "ranger_male": {
       "name": "Ranger",
       "tier": 2,
       "modifiers": { "str": 1.5, "agi": 2.9, "int": 1.6 },
       "spells": ["poison_strike", "multishot"],
-      "promotesTo": ["marksman", "tracker"]
+      "promotesTo": ["marksman_male", "tracker_male"]
     },
-    "marksman": {
+    "ranger_female": {
+      "name": "Ranger",
+      "tier": 2,
+      "modifiers": { "str": 1.5, "agi": 2.9, "int": 1.6 },
+      "spells": ["poison_strike", "multishot"],
+      "promotesTo": ["marksman_female", "tracker_female"]
+    },
+    "marksman_male": {
       "name": "Marksman",
       "tier": 3,
       "modifiers": { "str": 2.05, "agi": 4.6, "int": 2.35 },
       "spells": ["poison_strike", "multishot", "aimed_shot"],
-      "promotesTo": ["sniper"]
+      "promotesTo": ["sniper_male"]
     },
-    "sniper": {
+    "marksman_female": {
+      "name": "Marksman",
+      "tier": 3,
+      "modifiers": { "str": 2.05, "agi": 4.6, "int": 2.35 },
+      "spells": ["poison_strike", "multishot", "aimed_shot"],
+      "promotesTo": ["sniper_female"]
+    },
+    "sniper_male": {
       "name": "Sniper",
       "tier": 4,
       "modifiers": { "str": 2.55, "agi": 6.7, "int": 2.75 },
@@ -87,14 +159,29 @@
       "ultimateSpell": "perfect_shot",
       "promotesTo": []
     },
-    "tracker": {
+    "sniper_female": {
+      "name": "Sniper",
+      "tier": 4,
+      "modifiers": { "str": 2.55, "agi": 6.7, "int": 2.75 },
+      "spells": ["poison_strike", "multishot", "aimed_shot", "eagle_eye_aura"],
+      "ultimateSpell": "perfect_shot",
+      "promotesTo": []
+    },
+    "tracker_male": {
       "name": "Tracker",
       "tier": 3,
       "modifiers": { "str": 2.5, "agi": 4.25, "int": 2.25 },
       "spells": ["poison_strike", "multishot", "hunters_mark"],
-      "promotesTo": ["monster_hunter"]
+      "promotesTo": ["monster_hunter_male"]
     },
-    "monster_hunter": {
+    "tracker_female": {
+      "name": "Tracker",
+      "tier": 3,
+      "modifiers": { "str": 2.5, "agi": 4.25, "int": 2.25 },
+      "spells": ["poison_strike", "multishot", "hunters_mark"],
+      "promotesTo": ["monster_hunter_female"]
+    },
+    "monster_hunter_male": {
       "name": "Monster Hunter",
       "tier": 4,
       "modifiers": { "str": 3.35, "agi": 6.1, "int": 2.55 },
@@ -102,28 +189,57 @@
       "ultimateSpell": "the_wild_hunt",
       "promotesTo": []
     },
-    "druid": {
+    "monster_hunter_female": {
+      "name": "Monster Hunter",
+      "tier": 4,
+      "modifiers": { "str": 3.35, "agi": 6.1, "int": 2.55 },
+      "spells": ["poison_strike", "multishot", "hunters_mark", "predator_aura"],
+      "ultimateSpell": "the_wild_hunt",
+      "promotesTo": []
+    },
+    "druid_male": {
       "name": "Druid",
       "tier": 1,
       "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "spells": ["natures_touch"],
-      "promotesTo": ["arch_druid"]
+      "promotesTo": ["arch_druid_male"]
     },
-    "arch_druid": {
+    "druid_female": {
+      "name": "Druid",
+      "tier": 1,
+      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
+      "spells": ["natures_touch"],
+      "promotesTo": ["arch_druid_female"]
+    },
+    "arch_druid_male": {
       "name": "Arch Druid",
       "tier": 2,
       "modifiers": { "str": 2.0, "agi": 1.5, "int": 2.5 },
       "spells": ["natures_touch", "wild_growth"],
-      "promotesTo": ["shapeshifter", "shaman"]
+      "promotesTo": ["shapeshifter_male", "shaman_male"]
     },
-    "shapeshifter": {
+    "arch_druid_female": {
+      "name": "Arch Druid",
+      "tier": 2,
+      "modifiers": { "str": 2.0, "agi": 1.5, "int": 2.5 },
+      "spells": ["natures_touch", "wild_growth"],
+      "promotesTo": ["shapeshifter_female", "shaman_female"]
+    },
+    "shapeshifter_male": {
       "name": "Shapeshifter",
       "tier": 3,
       "modifiers": { "str": 4.0, "agi": 2.0, "int": 3.0 },
       "spells": ["natures_touch", "wild_growth", "beast_form"],
-      "promotesTo": ["runemaster"]
+      "promotesTo": ["runemaster_male"]
     },
-    "runemaster": {
+    "shapeshifter_female": {
+      "name": "Shapeshifter",
+      "tier": 3,
+      "modifiers": { "str": 4.0, "agi": 2.0, "int": 3.0 },
+      "spells": ["natures_touch", "wild_growth", "beast_form"],
+      "promotesTo": ["runemaster_female"]
+    },
+    "runemaster_male": {
       "name": "Runemaster",
       "tier": 4,
       "modifiers": { "str": 5.0, "agi": 3.0, "int": 4.0 },
@@ -131,14 +247,29 @@
       "ultimateSpell": "eternal_rune",
       "promotesTo": []
     },
-    "shaman": {
+    "runemaster_female": {
+      "name": "Runemaster",
+      "tier": 4,
+      "modifiers": { "str": 5.0, "agi": 3.0, "int": 4.0 },
+      "spells": ["natures_touch", "wild_growth", "beast_form", "runic_aura"],
+      "ultimateSpell": "eternal_rune",
+      "promotesTo": []
+    },
+    "shaman_male": {
       "name": "Shaman",
       "tier": 3,
       "modifiers": { "str": 2.5, "agi": 2.0, "int": 4.5 },
       "spells": ["natures_touch", "wild_growth", "elemental_shield"],
-      "promotesTo": ["summoner"]
+      "promotesTo": ["summoner_male"]
     },
-    "summoner": {
+    "shaman_female": {
+      "name": "Shaman",
+      "tier": 3,
+      "modifiers": { "str": 2.5, "agi": 2.0, "int": 4.5 },
+      "spells": ["natures_touch", "wild_growth", "elemental_shield"],
+      "promotesTo": ["summoner_female"]
+    },
+    "summoner_male": {
       "name": "Summoner",
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 2.5, "int": 6.5 },
@@ -146,28 +277,57 @@
       "ultimateSpell": "natures_wrath",
       "promotesTo": []
     },
-    "initiate": {
+    "summoner_female": {
+      "name": "Summoner",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 2.5, "int": 6.5 },
+      "spells": ["natures_touch", "wild_growth", "elemental_shield", "natures_army"],
+      "ultimateSpell": "natures_wrath",
+      "promotesTo": []
+    },
+    "initiate_male": {
       "name": "Initiate",
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "spells": ["fireball"],
-      "promotesTo": ["mage"]
+      "promotesTo": ["mage_male"]
     },
-    "mage": {
+    "initiate_female": {
+      "name": "Initiate",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
+      "spells": ["fireball"],
+      "promotesTo": ["mage_female"]
+    },
+    "mage_male": {
       "name": "Mage",
       "tier": 2,
       "modifiers": { "str": 1.6, "agi": 1.8, "int": 2.6 },
       "spells": ["fireball", "frost_armor"],
-      "promotesTo": ["wizard", "sage"]
+      "promotesTo": ["wizard_male", "sage_male"]
     },
-    "wizard": {
+    "mage_female": {
+      "name": "Mage",
+      "tier": 2,
+      "modifiers": { "str": 1.6, "agi": 1.8, "int": 2.6 },
+      "spells": ["fireball", "frost_armor"],
+      "promotesTo": ["witch_female", "sage_female"]
+    },
+    "wizard_male": {
       "name": "Wizard",
       "tier": 3,
       "modifiers": { "str": 2.3, "agi": 2.6, "int": 4.1 },
       "spells": ["fireball", "frost_armor", "arcane_explosion"],
-      "promotesTo": ["white_wizard"]
+      "promotesTo": ["white_wizard_male"]
     },
-    "white_wizard": {
+    "witch_female": {
+      "name": "Witch",
+      "tier": 3,
+      "modifiers": { "str": 2.3, "agi": 2.6, "int": 4.1 },
+      "spells": ["fireball", "frost_armor", "arcane_explosion"],
+      "promotesTo": ["white_witch_female"]
+    },
+    "white_wizard_male": {
       "name": "White Wizard",
       "tier": 4,
       "modifiers": { "str": 3.5, "agi": 3.0, "int": 5.5 },
@@ -175,14 +335,29 @@
       "ultimateSpell": "meteor_storm",
       "promotesTo": []
     },
-    "sage": {
+    "white_witch_female": {
+      "name": "White Witch",
+      "tier": 4,
+      "modifiers": { "str": 3.5, "agi": 3.0, "int": 5.5 },
+      "spells": ["fireball", "frost_armor", "arcane_explosion", "enlightenment_aura"],
+      "ultimateSpell": "meteor_storm",
+      "promotesTo": []
+    },
+    "sage_male": {
       "name": "Sage",
       "tier": 3,
       "modifiers": { "str": 2.0, "agi": 2.8, "int": 4.2 },
       "spells": ["fireball", "frost_armor", "mana_burn"],
-      "promotesTo": ["arch_sage"]
+      "promotesTo": ["arch_sage_male"]
     },
-    "arch_sage": {
+    "sage_female": {
+      "name": "Sage",
+      "tier": 3,
+      "modifiers": { "str": 2.0, "agi": 2.8, "int": 4.2 },
+      "spells": ["fireball", "frost_armor", "mana_burn"],
+      "promotesTo": ["arch_sage_female"]
+    },
+    "arch_sage_male": {
       "name": "Arch Sage",
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 3.5, "int": 5.5 },
@@ -190,28 +365,57 @@
       "ultimateSpell": "time_stop",
       "promotesTo": []
     },
-    "swordsman": {
+    "arch_sage_female": {
+      "name": "Arch Sage",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 3.5, "int": 5.5 },
+      "spells": ["fireball", "frost_armor", "mana_burn", "wisdom_aura"],
+      "ultimateSpell": "time_stop",
+      "promotesTo": []
+    },
+    "swordsman_male": {
       "name": "Swordsman",
       "tier": 1,
       "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "spells": ["blade_strike"],
-      "promotesTo": ["knight"]
+      "promotesTo": ["knight_male"]
     },
-    "knight": {
+    "swordsman_female": {
+      "name": "Swordsman",
+      "tier": 1,
+      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
+      "spells": ["blade_strike"],
+      "promotesTo": ["knight_female"]
+    },
+    "knight_male": {
       "name": "Knight",
       "tier": 2,
       "modifiers": { "str": 2.75, "agi": 1.75, "int": 1.5 },
       "spells": ["blade_strike", "shield_bash"],
-      "promotesTo": ["imperial_knight", "crusader"]
+      "promotesTo": ["imperial_knight_male", "crusader_male"]
     },
-    "imperial_knight": {
+    "knight_female": {
+      "name": "Knight",
+      "tier": 2,
+      "modifiers": { "str": 2.75, "agi": 1.75, "int": 1.5 },
+      "spells": ["blade_strike", "shield_bash"],
+      "promotesTo": ["imperial_knight_female", "crusader_female"]
+    },
+    "imperial_knight_male": {
       "name": "Imperial Knight",
       "tier": 3,
       "modifiers": { "str": 4.0, "agi": 3.0, "int": 2.0 },
       "spells": ["blade_strike", "shield_bash", "royal_charge"],
-      "promotesTo": ["champion"]
+      "promotesTo": ["champion_male"]
     },
-    "champion": {
+    "imperial_knight_female": {
+      "name": "Imperial Knight",
+      "tier": 3,
+      "modifiers": { "str": 4.0, "agi": 3.0, "int": 2.0 },
+      "spells": ["blade_strike", "shield_bash", "royal_charge"],
+      "promotesTo": ["champion_female"]
+    },
+    "champion_male": {
       "name": "Champion",
       "tier": 4,
       "modifiers": { "str": 6.0, "agi": 3.5, "int": 2.5 },
@@ -219,14 +423,29 @@
       "ultimateSpell": "divine_storm",
       "promotesTo": []
     },
-    "crusader": {
+    "champion_female": {
+      "name": "Champion",
+      "tier": 4,
+      "modifiers": { "str": 6.0, "agi": 3.5, "int": 2.5 },
+      "spells": ["blade_strike", "shield_bash", "royal_charge", "valor_aura"],
+      "ultimateSpell": "divine_storm",
+      "promotesTo": []
+    },
+    "crusader_male": {
       "name": "Crusader",
       "tier": 3,
       "modifiers": { "str": 4.85, "agi": 2.0, "int": 2.15 },
       "spells": ["blade_strike", "shield_bash", "holy_strike"],
-      "promotesTo": ["avenger"]
+      "promotesTo": ["avenger_male"]
     },
-    "avenger": {
+    "crusader_female": {
+      "name": "Crusader",
+      "tier": 3,
+      "modifiers": { "str": 4.85, "agi": 2.0, "int": 2.15 },
+      "spells": ["blade_strike", "shield_bash", "holy_strike"],
+      "promotesTo": ["avenger_female"]
+    },
+    "avenger_male": {
       "name": "Avenger",
       "tier": 4,
       "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
@@ -234,28 +453,57 @@
       "ultimateSpell": "wrath_of_heaven",
       "promotesTo": []
     },
-    "templar": {
+    "avenger_female": {
+      "name": "Avenger",
+      "tier": 4,
+      "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
+      "spells": ["blade_strike", "shield_bash", "holy_strike", "vengeance_aura"],
+      "ultimateSpell": "wrath_of_heaven",
+      "promotesTo": []
+    },
+    "templar_male": {
       "name": "Templar",
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.35, "int": 1.35 },
       "spells": ["shield_slam"],
-      "promotesTo": ["arch_templar"]
+      "promotesTo": ["arch_templar_male"]
     },
-    "arch_templar": {
+    "templar_female": {
+      "name": "Templar",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.35, "int": 1.35 },
+      "spells": ["shield_slam"],
+      "promotesTo": ["arch_templar_female"]
+    },
+    "arch_templar_male": {
       "name": "Arch Templar",
       "tier": 2,
       "modifiers": { "str": 1.6, "agi": 2.2, "int": 2.2 },
       "spells": ["shield_slam", "consecrate"],
-      "promotesTo": ["dark_templar", "high_templar"]
+      "promotesTo": ["dark_templar_male", "high_templar_male"]
     },
-    "dark_templar": {
+    "arch_templar_female": {
+      "name": "Arch Templar",
+      "tier": 2,
+      "modifiers": { "str": 1.6, "agi": 2.2, "int": 2.2 },
+      "spells": ["shield_slam", "consecrate"],
+      "promotesTo": ["dark_templar_female", "high_templar_female"]
+    },
+    "dark_templar_male": {
       "name": "Dark Templar",
       "tier": 3,
       "modifiers": { "str": 2.35, "agi": 4.4, "int": 2.25 },
       "spells": ["shield_slam", "consecrate", "shadow_strike"],
-      "promotesTo": ["dark_arch_templar"]
+      "promotesTo": ["dark_arch_templar_male"]
     },
-    "dark_arch_templar": {
+    "dark_templar_female": {
+      "name": "Dark Templar",
+      "tier": 3,
+      "modifiers": { "str": 2.35, "agi": 4.4, "int": 2.25 },
+      "spells": ["shield_slam", "consecrate", "shadow_strike"],
+      "promotesTo": ["dark_arch_templar_female"]
+    },
+    "dark_arch_templar_male": {
       "name": "Dark Arch Templar",
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 6.25, "int": 2.75 },
@@ -263,14 +511,29 @@
       "ultimateSpell": "void_storm",
       "promotesTo": []
     },
-    "high_templar": {
+    "dark_arch_templar_female": {
+      "name": "Dark Arch Templar",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 6.25, "int": 2.75 },
+      "spells": ["shield_slam", "consecrate", "shadow_strike", "darkness_aura"],
+      "ultimateSpell": "void_storm",
+      "promotesTo": []
+    },
+    "high_templar_male": {
       "name": "High Templar",
       "tier": 3,
       "modifiers": { "str": 2.35, "agi": 2.25, "int": 4.4 },
       "spells": ["shield_slam", "consecrate", "psi_storm"],
-      "promotesTo": ["grand_templar"]
+      "promotesTo": ["grand_templar_male"]
     },
-    "grand_templar": {
+    "high_templar_female": {
+      "name": "High Templar",
+      "tier": 3,
+      "modifiers": { "str": 2.35, "agi": 2.25, "int": 4.4 },
+      "spells": ["shield_slam", "consecrate", "psi_storm"],
+      "promotesTo": ["grand_templar_female"]
+    },
+    "grand_templar_male": {
       "name": "Grand Templar",
       "tier": 4,
       "modifiers": { "str": 2.75, "agi": 3.0, "int": 6.25 },
@@ -278,28 +541,57 @@
       "ultimateSpell": "archon_form",
       "promotesTo": []
     },
-    "thief": {
+    "grand_templar_female": {
+      "name": "Grand Templar",
+      "tier": 4,
+      "modifiers": { "str": 2.75, "agi": 3.0, "int": 6.25 },
+      "spells": ["shield_slam", "consecrate", "psi_storm", "psionic_aura"],
+      "ultimateSpell": "archon_form",
+      "promotesTo": []
+    },
+    "thief_male": {
       "name": "Thief",
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
       "spells": ["backstab"],
-      "promotesTo": ["rogue"]
+      "promotesTo": ["rogue_male"]
     },
-    "rogue": {
+    "thief_female": {
+      "name": "Thief",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
+      "spells": ["backstab"],
+      "promotesTo": ["rogue_female"]
+    },
+    "rogue_male": {
       "name": "Rogue",
       "tier": 2,
       "modifiers": { "str": 1.65, "agi": 2.75, "int": 1.6 },
       "spells": ["backstab", "smoke_bomb"],
-      "promotesTo": ["assassin", "stalker"]
+      "promotesTo": ["assassin_male", "stalker_male"]
     },
-    "assassin": {
+    "rogue_female": {
+      "name": "Rogue",
+      "tier": 2,
+      "modifiers": { "str": 1.65, "agi": 2.75, "int": 1.6 },
+      "spells": ["backstab", "smoke_bomb"],
+      "promotesTo": ["assassin_female", "stalker_female"]
+    },
+    "assassin_male": {
       "name": "Assassin",
       "tier": 3,
       "modifiers": { "str": 2.25, "agi": 4.55, "int": 2.2 },
       "spells": ["backstab", "smoke_bomb", "assassinate"],
-      "promotesTo": ["phantom_assassin"]
+      "promotesTo": ["phantom_assassin_male"]
     },
-    "phantom_assassin": {
+    "assassin_female": {
+      "name": "Assassin",
+      "tier": 3,
+      "modifiers": { "str": 2.25, "agi": 4.55, "int": 2.2 },
+      "spells": ["backstab", "smoke_bomb", "assassinate"],
+      "promotesTo": ["phantom_assassin_female"]
+    },
+    "phantom_assassin_male": {
       "name": "Phantom Assassin",
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 6.2, "int": 2.8 },
@@ -307,14 +599,29 @@
       "ultimateSpell": "coup_de_grace",
       "promotesTo": []
     },
-    "stalker": {
+    "phantom_assassin_female": {
+      "name": "Phantom Assassin",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 6.2, "int": 2.8 },
+      "spells": ["backstab", "smoke_bomb", "assassinate", "blur_aura"],
+      "ultimateSpell": "coup_de_grace",
+      "promotesTo": []
+    },
+    "stalker_male": {
       "name": "Stalker",
       "tier": 3,
       "modifiers": { "str": 2.35, "agi": 3.8, "int": 2.85 },
       "spells": ["backstab", "smoke_bomb", "shadowstep"],
-      "promotesTo": ["master_stalker"]
+      "promotesTo": ["master_stalker_male"]
     },
-    "master_stalker": {
+    "stalker_female": {
+      "name": "Stalker",
+      "tier": 3,
+      "modifiers": { "str": 2.35, "agi": 3.8, "int": 2.85 },
+      "spells": ["backstab", "smoke_bomb", "shadowstep"],
+      "promotesTo": ["master_stalker_female"]
+    },
+    "master_stalker_male": {
       "name": "Master Stalker",
       "tier": 4,
       "modifiers": { "str": 3.2, "agi": 5.8, "int": 3.0 },
@@ -322,28 +629,57 @@
       "ultimateSpell": "thousand_cuts",
       "promotesTo": []
     },
-    "witch_hunter": {
+    "master_stalker_female": {
+      "name": "Master Stalker",
+      "tier": 4,
+      "modifiers": { "str": 3.2, "agi": 5.8, "int": 3.0 },
+      "spells": ["backstab", "smoke_bomb", "shadowstep", "shadow_mastery_aura"],
+      "ultimateSpell": "thousand_cuts",
+      "promotesTo": []
+    },
+    "witch_hunter_male": {
       "name": "Witch Hunter",
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "spells": ["silver_bolt"],
-      "promotesTo": ["slayer"]
+      "promotesTo": ["slayer_male"]
     },
-    "slayer": {
+    "witch_hunter_female": {
+      "name": "Witch Hunter",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
+      "spells": ["silver_bolt"],
+      "promotesTo": ["slayer_female"]
+    },
+    "slayer_male": {
       "name": "Slayer",
       "tier": 2,
       "modifiers": { "str": 1.65, "agi": 2.7, "int": 1.65 },
       "spells": ["silver_bolt", "purge"],
-      "promotesTo": ["inquisitor", "witcher"]
+      "promotesTo": ["inquisitor_male", "witcher_male"]
     },
-    "inquisitor": {
+    "slayer_female": {
+      "name": "Slayer",
+      "tier": 2,
+      "modifiers": { "str": 1.65, "agi": 2.7, "int": 1.65 },
+      "spells": ["silver_bolt", "purge"],
+      "promotesTo": ["inquisitor_female", "witcher_female"]
+    },
+    "inquisitor_male": {
       "name": "Inquisitor",
       "tier": 3,
       "modifiers": { "str": 2.7, "agi": 2.8, "int": 3.5 },
       "spells": ["silver_bolt", "purge", "holy_fire"],
-      "promotesTo": ["grand_inquisitor"]
+      "promotesTo": ["grand_inquisitor_male"]
     },
-    "grand_inquisitor": {
+    "inquisitor_female": {
+      "name": "Inquisitor",
+      "tier": 3,
+      "modifiers": { "str": 2.7, "agi": 2.8, "int": 3.5 },
+      "spells": ["silver_bolt", "purge", "holy_fire"],
+      "promotesTo": ["grand_inquisitor_female"]
+    },
+    "grand_inquisitor_male": {
       "name": "Grand Inquisitor",
       "tier": 4,
       "modifiers": { "str": 3.45, "agi": 3.65, "int": 4.9 },
@@ -351,14 +687,37 @@
       "ultimateSpell": "divine_judgment",
       "promotesTo": []
     },
-    "witcher": {
+    "grand_inquisitor_female": {
+      "name": "Grand Inquisitor",
+      "tier": 4,
+      "modifiers": { "str": 3.45, "agi": 3.65, "int": 4.9 },
+      "spells": ["silver_bolt", "purge", "holy_fire", "zealot_aura"],
+      "ultimateSpell": "divine_judgment",
+      "promotesTo": []
+    },
+    "witcher_male": {
       "name": "Witcher",
       "tier": 3,
       "modifiers": { "str": 2.6, "agi": 4.0, "int": 2.4 },
       "spells": ["silver_bolt", "purge", "alchemy"],
-      "promotesTo": ["professional_witcher"]
+      "promotesTo": ["professional_witcher_male"]
     },
-    "professional_witcher": {
+    "witcher_female": {
+      "name": "Witcher",
+      "tier": 3,
+      "modifiers": { "str": 2.6, "agi": 4.0, "int": 2.4 },
+      "spells": ["silver_bolt", "purge", "alchemy"],
+      "promotesTo": ["professional_witcher_female"]
+    },
+    "professional_witcher_male": {
+      "name": "Professional Witcher",
+      "tier": 4,
+      "modifiers": { "str": 3.25, "agi": 5.8, "int": 2.95 },
+      "spells": ["silver_bolt", "purge", "alchemy", "mutation_aura"],
+      "ultimateSpell": "trial_of_grasses",
+      "promotesTo": []
+    },
+    "professional_witcher_female": {
       "name": "Professional Witcher",
       "tier": 4,
       "modifiers": { "str": 3.25, "agi": 5.8, "int": 2.95 },
