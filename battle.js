@@ -1,5 +1,4 @@
 // Battle System for TEVE
-let Item = window.Item;
 
 class BattleUnit {
 
