@@ -1332,9 +1332,9 @@ if (victory) {
                 const itemRoll = Math.random();
                 this.log(`${hero.name} rolling for item: ${(itemRoll * 100).toFixed(1)}% (need < 50%)`);
                 
-                if (itemRoll < 0.5 && dungeonConfig.items && dungeonConfig.items.length > 0) {
+                if (itemRoll < 0.5 && dungeonConfig.rewards.items && dungeonConfig.rewards.items.length > 0) {
                     // Pick a random item from the dungeon's item pool
-                    const itemId = dungeonConfig.items[Math.floor(Math.random() * dungeonConfig.items.length)];
+                    const itemId = dungeonConfig.rewards.items[Math.floor(Math.random() * dungeonConfig.rewards.items.length)];
                     this.log(`${hero.name} won item roll! Getting: ${itemId}`);
                     
                     const item = new Item(itemId);
@@ -1356,7 +1356,7 @@ if (victory) {
                     this.log(`${item.name} added to ${family} stash!`);
                     heroItems.push(item);
                 } else {
-                    if (!dungeonConfig.items || dungeonConfig.items.length === 0) {
+                    if (!dungeonConfig.rewards.items || dungeonConfig.rewards.items.length === 0) {
                         this.log(`${hero.name} - No items available in this dungeon!`);
                     } else {
                         this.log(`${hero.name} failed item roll.`);
