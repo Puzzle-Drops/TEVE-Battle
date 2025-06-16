@@ -320,38 +320,25 @@ constructor(game, party, enemyWaves) {
         const wave = this.enemyWaves[waveIndex];
 
         
-
-        // Clear any existing enemies and their UI
-
-        for (let i = 1; i <= 5; i++) {
-
-            const element = document.getElementById(`enemy${i}`);
-
-            if (element) {
-
-                const unitDiv = element.querySelector('.unit');
-
-                if (unitDiv) {
-
-                    delete unitDiv.dataset.spriteSet;
-
-                    unitDiv.innerHTML = 'E' + i;
-
-                }
-
-                // Remove any existing shadow
-
-                const shadow = element.querySelector('.unitShadow');
-
-                if (shadow) {
-
-                    shadow.remove();
-
-                }
-
-            }
-
+// Clear any existing enemies and their UI
+for (let i = 1; i <= 5; i++) {
+    const element = document.getElementById(`enemy${i}`);
+    if (element) {
+        const unitDiv = element.querySelector('.unit');
+        if (unitDiv) {
+            delete unitDiv.dataset.spriteSet;
+            unitDiv.innerHTML = 'E' + i;
+            unitDiv.classList.remove('dying');
+            unitDiv.style.opacity = '';
+            unitDiv.style.filter = '';
         }
+        // Remove any existing shadow
+        const shadow = element.querySelector('.unitShadow');
+        if (shadow) {
+            shadow.remove();
+        }
+    }
+}
 
         
 
@@ -956,40 +943,56 @@ showSpellAnimation(caster, spellName, effects) {
     
 
     // Combat methods referenced by spells
+dealDamage(attacker, target, amount, damageType = 'physical') {
+    if (!target.isAlive) return 0;
+    
+    let damage = Math.floor(amount);
+    
+    // Apply damage reduction based on type
+    if (damageType === 'physical') {
+        damage = damage * (1 - target.physicalDamageReduction);
+    } else {
+        // All non-physical damage is considered magical
+        damage = damage * (1 - target.magicDamageReduction);
+    }
+    
+    // Apply damage reduction from buffs
+    target.buffs.forEach(buff => {
+        if (buff.damageReduction) {
+            damage *= (1 - buff.damageReduction);
+        }
+    });
+    
+    // Apply damage increase from debuffs
+    target.debuffs.forEach(debuff => {
+        if (debuff.damageTakenMultiplier) {
+            damage *= debuff.damageTakenMultiplier;
+        }
+    });
+    
+    damage = Math.floor(damage);
+    const previousHp = target.currentHp;
+    target.currentHp = Math.max(0, target.currentHp - damage);
+    
+    // Check if target died
+    if (previousHp > 0 && target.currentHp <= 0) {
+        this.triggerDeathAnimation(target);
+    }
+    
+    return damage;
+}
 
-	dealDamage(attacker, target, amount, damageType = 'physical') {
-		if (!target.isAlive) return 0;
-		
-		let damage = Math.floor(amount);
-		
-		// Apply damage reduction based on type
-		if (damageType === 'physical') {
-			damage = damage * (1 - target.physicalDamageReduction);
-		} else {
-			// All non-physical damage is considered magical
-			damage = damage * (1 - target.magicDamageReduction);
-		}
-		
-		// Apply damage reduction from buffs
-		target.buffs.forEach(buff => {
-			if (buff.damageReduction) {
-				damage *= (1 - buff.damageReduction);
-			}
-		});
-		
-		// Apply damage increase from debuffs
-		target.debuffs.forEach(debuff => {
-			if (debuff.damageTakenMultiplier) {
-				damage *= debuff.damageTakenMultiplier;
-			}
-		});
-		
-		damage = Math.floor(damage);
-		target.currentHp = Math.max(0, target.currentHp - damage);
-		
-		return damage;
-	}
-
+triggerDeathAnimation(unit) {
+    const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
+    const element = document.getElementById(elementId);
+    
+    if (element) {
+        const unitDiv = element.querySelector('.unit');
+        if (unitDiv) {
+            unitDiv.classList.add('dying');
+        }
+    }
+}
     
 
     healUnit(target, amount) {
@@ -1129,24 +1132,21 @@ showSpellAnimation(caster, spellName, effects) {
     }
 
     
-
-    applyDotEffects(unit) {
-
-        unit.debuffs.forEach(debuff => {
-
-            if (debuff.dotDamage && unit.isAlive) {
-
-                const damage = Math.floor(debuff.dotDamage);
-
-                unit.currentHp = Math.max(0, unit.currentHp - damage);
-
-                this.log(`${unit.name} takes ${damage} damage from ${debuff.name}!`);
-
+applyDotEffects(unit) {
+    unit.debuffs.forEach(debuff => {
+        if (debuff.dotDamage && unit.isAlive) {
+            const damage = Math.floor(debuff.dotDamage);
+            const previousHp = unit.currentHp;
+            unit.currentHp = Math.max(0, unit.currentHp - damage);
+            this.log(`${unit.name} takes ${damage} damage from ${debuff.name}!`);
+            
+            // Check if unit died from DOT
+            if (previousHp > 0 && unit.currentHp <= 0) {
+                this.triggerDeathAnimation(unit);
             }
-
-        });
-
-    }
+        }
+    });
+}
 
 checkBattleEnd() {
     const partyAlive = this.party.some(u => u && u.isAlive);
@@ -1181,29 +1181,40 @@ checkBattleEnd() {
         }
         
         // Check if there are more waves
-        if (this.currentWave < this.enemyWaves.length - 1) {
-            // Prevent multiple wave transitions
-            if (!this.processingWaveTransition) {
-                this.processingWaveTransition = true;
-                this.log("Wave cleared!");
+if (this.currentWave < this.enemyWaves.length - 1) {
+    // Prevent multiple wave transitions
+    if (!this.processingWaveTransition) {
+        this.processingWaveTransition = true;
+        this.log("Wave cleared!");
+        
+        // Revive dead party members between waves
+        this.party.forEach((unit, index) => {
+            if (unit && !unit.isAlive) {
+                unit.currentHp = unit.maxHp;
+                this.log(`${unit.name} revived for next wave!`);
                 
-                // Load next wave
-                setTimeout(() => {
-                    this.loadWave(this.currentWave + 1);
-                    this.processingWaveTransition = false;
-                    this.waveExpCalculated = false; // Reset for next wave
-                }, 1000);
+                // Reset death animation
+                const elementId = `party${unit.position + 1}`;
+                const element = document.getElementById(elementId);
+                if (element) {
+                    const unitDiv = element.querySelector('.unit');
+                    if (unitDiv) {
+                        unitDiv.classList.remove('dying');
+                        unitDiv.style.opacity = '';
+                        unitDiv.style.filter = '';
+                    }
+                }
             }
-            return false; // Battle continues
-        } else {
-            this.log("Victory! All waves defeated!");
-            this.endBattle(true);
-            return true;
-        }
+        });
+        
+        // Load next wave
+        setTimeout(() => {
+            this.loadWave(this.currentWave + 1);
+            this.processingWaveTransition = false;
+            this.waveExpCalculated = false; // Reset for next wave
+        }, 1000);
     }
-    
-    return false;
-}
+    return false; // Battle continues
     
 calculateWaveExp() {
     // Base exp per enemy level
@@ -1701,28 +1712,31 @@ if (levelIndicator) {
 
 if (unitDiv) {
     if (!unit.isAlive) {
-        unitDiv.style.opacity = '0';
+    // Don't immediately hide - let death animation play
+    if (!unitDiv.classList.contains('dying')) {
         unitDiv.style.filter = 'grayscale(100%)';
-        levelIndicator.style.display = 'none';
-        
-// Hide health bar and action bar when dead
-        const healthBar = element.querySelector('.healthBar');
-        const actionBar = element.querySelector('.actionBar');
-        if (healthBar) {
-            healthBar.style.display = 'none';
-        }
-        if (actionBar) actionBar.style.display = 'none';
-    } else {
-        unitDiv.style.opacity = '';
-        unitDiv.style.filter = '';
-        levelIndicator.style.display = '';
-        
-        // Show health bar and action bar when alive
-        const healthBar = element.querySelector('.healthBar');
-        const actionBar = element.querySelector('.actionBar');
-        if (healthBar) healthBar.style.display = '';
-        if (actionBar) actionBar.style.display = '';
     }
+    levelIndicator.style.display = 'none';
+    
+    // Hide health bar and action bar when dead
+    const healthBar = element.querySelector('.healthBar');
+    const actionBar = element.querySelector('.actionBar');
+    if (healthBar) {
+        healthBar.style.display = 'none';
+    }
+    if (actionBar) actionBar.style.display = 'none';
+} else {
+    unitDiv.style.opacity = '';
+    unitDiv.style.filter = '';
+    unitDiv.classList.remove('dying');
+    levelIndicator.style.display = '';
+    
+    // Show health bar and action bar when alive
+    const healthBar = element.querySelector('.healthBar');
+    const actionBar = element.querySelector('.actionBar');
+    if (healthBar) healthBar.style.display = '';
+    if (actionBar) actionBar.style.display = '';
+}
                     // Update sprite for units
 
                     if (unit.isEnemy && unit.isAlive) {
