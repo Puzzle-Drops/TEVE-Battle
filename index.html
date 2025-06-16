@@ -7,7 +7,24 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="gameContainer">
+<!-- Loading Screen -->
+<div id="loadingScreen">
+    <div class="loadingContent">
+        <div class="loadingTitle">TEVE</div>
+        <div class="loadingSubtitle">Twilight's Forever</div>
+        <div class="loadingBarContainer">
+            <div class="loadingBar">
+                <div class="loadingFill"></div>
+            </div>
+            <div class="loadingText">Initializing...</div>
+        </div>
+        <div class="loadingError" style="display: none;">
+            <p>Failed to load game resources.</p>
+            <p>Please refresh the page to try again.</p>
+        </div>
+    </div>
+</div>
+    <div id="gameContainer" style="display: none;">
         <!-- Main Menu -->
         <div id="mainMenu">
             <div class="gameTitle">TEVE</div>
@@ -312,30 +329,75 @@
         let unitData;
 	let dungeonData;
         
-        // Initialize data loading
-        async function loadGameData() {
-            spellManager = new SpellManager();
-            await spellManager.loadSpells();
-            
-            // Load unit data
-            try {
-                const response = await fetch('units.json');
-                unitData = await response.json();
-                console.log('Unit data loaded');
-            } catch (error) {
-                console.error('Failed to load unit data:', error);
-            }
+// Loading manager
+class LoadingManager {
+    constructor() {
+        this.totalAssets = 3; // spells.json, units.json, dungeons.json
+        this.loadedAssets = 0;
+        this.loadingScreen = document.getElementById('loadingScreen');
+        this.loadingFill = document.querySelector('.loadingFill');
+        this.loadingText = document.querySelector('.loadingText');
+        this.loadingError = document.querySelector('.loadingError');
+        this.gameContainer = document.getElementById('gameContainer');
+    }
 
-	    // Load dungeon data
-            try {
-                const response = await fetch('dungeons.json');
-                dungeonData = await response.json();
-                console.log('Dungeon data loaded');
-            } catch (error) {
-                console.error('Failed to load dungeon data:', error);
-            }
+    updateProgress(assetName) {
+        this.loadedAssets++;
+        const progress = (this.loadedAssets / this.totalAssets) * 100;
+        this.loadingFill.style.width = progress + '%';
+        this.loadingText.textContent = `Loading ${assetName}... (${this.loadedAssets}/${this.totalAssets})`;
+        
+        if (this.loadedAssets === this.totalAssets) {
+            this.loadingText.textContent = 'Starting game...';
+            setTimeout(() => this.hideLoadingScreen(), 500);
         }
+    }
 
+    showError(error) {
+        console.error('Loading error:', error);
+        this.loadingText.style.display = 'none';
+        this.loadingError.style.display = 'block';
+    }
+
+    hideLoadingScreen() {
+        this.loadingScreen.style.display = 'none';
+        this.gameContainer.style.display = 'flex';
+    }
+}
+
+const loadingManager = new LoadingManager();
+
+// Initialize data loading
+async function loadGameData() {
+    try {
+        // Load spells
+        loadingManager.loadingText.textContent = 'Loading spells...';
+        spellManager = new SpellManager();
+        await spellManager.loadSpells();
+        loadingManager.updateProgress('spells');
+        
+        // Load units
+        loadingManager.loadingText.textContent = 'Loading units...';
+        const unitsResponse = await fetch('units.json');
+        if (!unitsResponse.ok) throw new Error('Failed to load units.json');
+        unitData = await unitsResponse.json();
+        console.log('Unit data loaded');
+        loadingManager.updateProgress('units');
+
+        // Load dungeons
+        loadingManager.loadingText.textContent = 'Loading dungeons...';
+        const dungeonsResponse = await fetch('dungeons.json');
+        if (!dungeonsResponse.ok) throw new Error('Failed to load dungeons.json');
+        dungeonData = await dungeonsResponse.json();
+        console.log('Dungeon data loaded');
+        loadingManager.updateProgress('dungeons');
+        
+        return true;
+    } catch (error) {
+        loadingManager.showError(error);
+        return false;
+    }
+}
         // Hero Class
         class Hero {
             constructor(className = 'villager') {
@@ -2524,9 +2586,12 @@ applyBattleResults() {
 	}
 
         // Initialize game after loading data
-        window.addEventListener('DOMContentLoaded', async () => {
-            await loadGameData();
-            window.game = new Game();
+window.addEventListener('DOMContentLoaded', async () => {
+    const loadSuccess = await loadGameData();
+    
+    if (loadSuccess) {
+        window.game = new Game();
+    }
             
             // Add global escape key handler
             document.addEventListener('keydown', (e) => {
