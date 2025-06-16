@@ -2235,3 +2235,18 @@ body {
 .unitSlot.casting-transform {
     animation: unitBounce 0.8s ease-in-out;
 }
+
+/* Gender symbol styling - add this to styles.css */
+.thumbClass::after {
+    content: attr(data-gender);
+    margin-left: 4px;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+/* Optional: Different colors for male/female symbols */
+.heroName::after {
+    content: attr(data-gender);
+    margin-left: 8px;
+    font-size: 0.9em;
+}
