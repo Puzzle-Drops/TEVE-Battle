@@ -170,23 +170,6 @@
             <button class="backButton" onclick="game.showMainMenu()">Back</button>
         </div>
 
-        <!-- Family Stash Screen -->
-        <div id="familyStashScreen">
-            <div class="familyStashHeader">
-                <h1 id="familyStashTitle">Family Stash</h1>
-                <div class="goldDisplay">
-                    <span class="goldIcon">💰</span>
-                    <span class="goldAmount" id="familyGoldAmount">0</span>
-                </div>
-            </div>
-            <div class="familyStashContent">
-                <div class="familyStashItems" id="familyStashItems">
-                    <!-- Items will be dynamically generated -->
-                </div>
-            </div>
-            <button class="backButton" onclick="game.showStash()">Back</button>
-        </div>
-
         <!-- Party Select Screen -->
         <div id="partySelectScreen">
             <div class="partySelectContainer">
@@ -307,9 +290,6 @@
             
             <button class="closeResultsBtn" onclick="game.closeBattleResults()">Continue</button>
         </div>
-
-        <!-- Item Tooltip -->
-        <div id="itemTooltip" class="itemTooltip"></div>
     </div>
 
     <!-- Confirmation Modal -->
@@ -324,7 +304,6 @@
         </div>
     </div>
 
-    <script src="itemLogic.js"></script>
     <script src="spellLogic.js"></script>
     <script src="battle.js"></script>
     <script>
@@ -332,7 +311,6 @@
         let spellManager;
         let unitData;
 	let dungeonData;
-        let itemData;
         
         // Initialize data loading
         async function loadGameData() {
@@ -356,144 +334,6 @@
             } catch (error) {
                 console.error('Failed to load dungeon data:', error);
             }
-            
-            // Load item data
-            try {
-                const response = await fetch('items.json');
-                itemData = await response.json();
-                console.log('Item data loaded');
-            } catch (error) {
-                console.error('Failed to load item data:', error);
-            }
-        }
-
-        // Item Class
-        class Item {
-            constructor(itemId, level = 1) {
-                const baseItem = itemData?.items[itemId];
-                if (!baseItem) {
-                    console.error(`Item ${itemId} not found in item data`);
-                    return;
-                }
-                
-                // Copy base properties
-                this.id = itemId;
-                this.name = baseItem.name;
-                this.slot = baseItem.slot;
-                this.level = baseItem.level || level;
-                this.sellcost = baseItem.sellcost || Math.floor(this.level * 100);
-                this.logicKey = baseItem.logicKey;
-                
-                // Roll properties
-                this.roll1 = baseItem.roll1;
-                this.roll2 = baseItem.roll2;
-                this.roll3 = baseItem.roll3;
-                this.roll4 = baseItem.roll4;
-                
-                // Quality values (will be set by rolling)
-                this.quality1 = 0;
-                this.quality2 = 0;
-                this.quality3 = 0;
-                this.quality4 = 0;
-                
-                // Number of active rolls
-                this.numRolls = 0;
-            }
-            
-            // Roll for item stats
-            rollStats() {
-                // First roll always happens
-                this.quality1 = Math.floor(Math.random() * 5) + 1; // 1-5
-                this.numRolls = 1;
-                
-                // 50% chance for second roll
-                if (Math.random() < 0.5 && this.roll2) {
-                    this.quality2 = Math.floor(Math.random() * 5) + 1;
-                    this.numRolls = 2;
-                    
-                    // 50% chance for third roll
-                    if (Math.random() < 0.5 && this.roll3) {
-                        this.quality3 = Math.floor(Math.random() * 5) + 1;
-                        this.numRolls = 3;
-                    }
-                }
-                
-                return this;
-            }
-            
-            // Get item rarity based on number of rolls
-            get rarity() {
-                switch(this.numRolls) {
-                    case 1: return 'common';
-                    case 2: return 'rare';
-                    case 3: return 'epic';
-                    case 4: return 'legendary';
-                    default: return 'common';
-                }
-            }
-            
-            // Get item color based on rarity
-            get color() {
-                switch(this.rarity) {
-                    case 'common': return '#4dd41';
-                    case 'rare': return '#0099ff';
-                    case 'epic': return '#aa55ff';
-                    case 'legendary': return '#ffd700';
-                    default: return '#b0e0f0';
-                }
-            }
-            
-            // Calculate stat bonuses
-            getStats() {
-                const stats = {};
-                const baseValue = Math.floor(this.level * 0.5);
-                
-                // Process each active roll
-                if (this.quality1 > 0 && this.roll1) {
-                    const value = Math.floor(baseValue * this.quality1);
-                    this.addStatToObject(stats, this.roll1, value);
-                }
-                
-                if (this.quality2 > 0 && this.roll2) {
-                    const value = Math.floor(baseValue * this.quality2);
-                    this.addStatToObject(stats, this.roll2, value);
-                }
-                
-                if (this.quality3 > 0 && this.roll3) {
-                    const value = Math.floor(baseValue * this.quality3);
-                    this.addStatToObject(stats, this.roll3, value);
-                }
-                
-                if (this.quality4 > 0 && this.roll4) {
-                    const value = Math.floor(baseValue * this.quality4);
-                    this.addStatToObject(stats, this.roll4, value);
-                }
-                
-                return stats;
-            }
-            
-            // Helper to add stat to object
-            addStatToObject(stats, statType, value) {
-                switch(statType) {
-                    case 'str':
-                    case 'agi':
-                    case 'int':
-                    case 'armor':
-                    case 'resist':
-                        stats[statType] = (stats[statType] || 0) + value;
-                        break;
-                    case 'allstats':
-                        stats.str = (stats.str || 0) + value;
-                        stats.agi = (stats.agi || 0) + value;
-                        stats.int = (stats.int || 0) + value;
-                        break;
-                }
-            }
-            
-            // Get display name with color
-            getDisplayName() {
-                return `<span style="color: ${this.color}">${this.name}</span>`;
-            }
         }
 
         // Hero Class
@@ -513,7 +353,7 @@
                     offhand: null,
                     trinket: null
                 };
-                this.gearStats = { str: 0, agi: 0, int: 0, armor: 0, resist: 0 };
+                this.gearStats = { str: 0, agi: 0, int: 0 };
                 this.awakened = false;
                 this.abilities = this.getClassAbilities();
                 this.pendingExp = 0;
@@ -721,124 +561,6 @@
                 this.abilities = this.getClassAbilities();
                 return true;
             }
-            
-            // Equip an item
-            equipItem(item) {
-                if (!item || !item.slot) return false;
-                
-                // Check if slot is valid
-                if (!['head', 'chest', 'legs', 'weapon', 'offhand', 'trinket'].includes(item.slot)) {
-                    return false;
-                }
-                
-                // Unequip current item in slot
-                if (this.gear[item.slot]) {
-                    this.unequipItem(item.slot);
-                }
-                
-                // Equip new item
-                this.gear[item.slot] = item;
-                this.recalculateGearStats();
-                
-                return true;
-            }
-            
-            // Unequip item from slot
-            unequipItem(slot) {
-                if (!this.gear[slot]) return null;
-                
-                const item = this.gear[slot];
-                this.gear[slot] = null;
-                this.recalculateGearStats();
-                
-                return item;
-            }
-            
-            // Recalculate gear stats
-            recalculateGearStats() {
-                this.gearStats = { str: 0, agi: 0, int: 0, armor: 0, resist: 0 };
-                
-                Object.values(this.gear).forEach(item => {
-                    if (item) {
-                        const stats = item.getStats();
-                        Object.keys(stats).forEach(stat => {
-                            this.gearStats[stat] = (this.gearStats[stat] || 0) + stats[stat];
-                        });
-                        
-                        // Apply item special effects if any
-                        if (item.logicKey && typeof window[item.logicKey] === 'function') {
-                            window[item.logicKey](this, item);
-                        }
-                    }
-                });
-            }
-            
-            // Get class family
-            getClassFamily() {
-                const familyMap = {
-                    'villager': 'Villager',
-                    'tester': 'Tester',
-                    // Acolyte family
-                    'acolyte': 'Acolyte',
-                    'cleric': 'Acolyte',
-                    'priest': 'Acolyte',
-                    'hierophant': 'Acolyte',
-                    'matriarch': 'Acolyte',
-                    'prophetess': 'Acolyte',
-                    // Archer family
-                    'archer': 'Archer',
-                    'ranger': 'Archer',
-                    'marksman': 'Archer',
-                    'sniper': 'Archer',
-                    'tracker': 'Archer',
-                    'monster_hunter': 'Archer',
-                    // Druid family
-                    'druid': 'Druid',
-                    'arch_druid': 'Druid',
-                    'shapeshifter': 'Druid',
-                    'runemaster': 'Druid',
-                    'shaman': 'Druid',
-                    'summoner': 'Druid',
-                    // Initiate family
-                    'initiate': 'Initiate',
-                    'mage': 'Initiate',
-                    'wizard': 'Initiate',
-                    'white_wizard': 'Initiate',
-                    'sage': 'Initiate',
-                    'arch_sage': 'Initiate',
-                    // Swordsman family
-                    'swordsman': 'Swordsman',
-                    'knight': 'Swordsman',
-                    'imperial_knight': 'Swordsman',
-                    'champion': 'Swordsman',
-                    'crusader': 'Swordsman',
-                    'avenger': 'Swordsman',
-                    // Templar family
-                    'templar': 'Templar',
-                    'arch_templar': 'Templar',
-                    'dark_templar': 'Templar',
-                    'dark_arch_templar': 'Templar',
-                    'high_templar': 'Templar',
-                    'grand_templar': 'Templar',
-                    // Thief family
-                    'thief': 'Thief',
-                    'rogue': 'Thief',
-                    'assassin': 'Thief',
-                    'phantom_assassin': 'Thief',
-                    'stalker': 'Thief',
-                    'master_stalker': 'Thief',
-                    // Witch Hunter family
-                    'witch_hunter': 'Witch Hunter',
-                    'slayer': 'Witch Hunter',
-                    'inquisitor': 'Witch Hunter',
-                    'grand_inquisitor': 'Witch Hunter',
-                    'witcher': 'Witch Hunter',
-                    'professional_witcher': 'Witch Hunter'
-                };
-                
-                const classId = this.className.toLowerCase().replace(/ /g, '_');
-                return familyMap[classId] || 'Unknown';
-            }
         }
 
         // Enemy Class
@@ -944,10 +666,6 @@
                 this.currentPreviewWave = 0;
                 this.gold = 10000; // Starting gold for the player
                 this.pendingBattleResults = null; // Store results until popup is closed
-                this.familyStashes = {}; // Stashes for each class family
-                
-                // Initialize family stashes
-                this.initializeFamilyStashes();
                 
                 // Load dungeon tiers from JSON data
                 this.dungeonTiers = {};
@@ -979,16 +697,6 @@
                 // Load class families from JSON data
                 this.classFamilies = unitData?.classFamilies || [];                
                 this.init();
-            }
-            
-            initializeFamilyStashes() {
-                const families = ['Villager', 'Tester', 'Acolyte', 'Archer', 'Druid', 'Initiate', 'Swordsman', 'Templar', 'Thief', 'Witch Hunter'];
-                families.forEach(family => {
-                    this.familyStashes[family] = {
-                        gold: 0,
-                        items: []
-                    };
-                });
             }
 
 init() {
@@ -1330,85 +1038,19 @@ enterDungeon(tierName, dungeonIndex) {
                 this.classFamilies.forEach((family, index) => {
                     const stashItem = document.createElement('div');
                     stashItem.className = 'stashItem';
-                    
-                    const familyStash = this.familyStashes[family.name];
-                    const itemCount = familyStash ? familyStash.items.length : 0;
-                    const goldAmount = familyStash ? familyStash.gold : 0;
-                    
                     stashItem.innerHTML = `
                         <div class="stashIcon">${family.icon}</div>
                         <div class="stashName">${family.name}</div>
-                        <div class="stashInfo">
-                            <div class="stashGold">💰 ${goldAmount.toLocaleString()}</div>
-                            <div class="stashItems">${itemCount} items</div>
-                        </div>
                     `;
                     
-                    stashItem.onclick = () => this.openFamilyStash(family.name);
+                    stashItem.onclick = () => this.openStash(family);
                     stashList.appendChild(stashItem);
                 });
             }
 
-            openFamilyStash(familyName) {
-                this.hideAllScreens();
-                this.currentScreen = 'familyStashScreen';
-                document.getElementById('familyStashScreen').style.display = 'block';
-                
-                // Update title and gold
-                document.getElementById('familyStashTitle').textContent = `${familyName} Stash`;
-                const stash = this.familyStashes[familyName];
-                document.getElementById('familyGoldAmount').textContent = stash.gold.toLocaleString();
-                
-                // Render items
-                this.renderFamilyStashItems(familyName);
-            }
-            
-            renderFamilyStashItems(familyName) {
-                const container = document.getElementById('familyStashItems');
-                container.innerHTML = '';
-                
-                const stash = this.familyStashes[familyName];
-                if (!stash || stash.items.length === 0) {
-                    container.innerHTML = '<div class="noItems">No items in stash</div>';
-                    return;
-                }
-                
-                stash.items.forEach((item, index) => {
-                    const itemElement = document.createElement('div');
-                    itemElement.className = `stashItemElement ${item.rarity}`;
-                    itemElement.innerHTML = `
-                        <div class="itemName" style="color: ${item.color}">${item.name}</div>
-                        <div class="itemLevel">Level ${item.level}</div>
-                        <div class="itemSlot">${item.slot.charAt(0).toUpperCase() + item.slot.slice(1)}</div>
-                    `;
-                    
-                    // Add hover tooltip
-                    itemElement.onmouseover = (e) => this.showItemTooltip(e, item);
-                    itemElement.onmouseout = () => this.hideItemTooltip();
-                    
-                    // Add click to sell
-                    itemElement.onclick = () => this.sellItem(familyName, index);
-                    
-                    container.appendChild(itemElement);
-                });
-            }
-            
-            sellItem(familyName, itemIndex) {
-                const stash = this.familyStashes[familyName];
-                if (!stash || !stash.items[itemIndex]) return;
-                
-                const item = stash.items[itemIndex];
-                const sellPrice = Math.floor(item.sellcost * 0.5); // Sell for 50% of base value
-                
-                if (confirm(`Sell ${item.name} for ${sellPrice} gold?`)) {
-                    // Remove item and add gold
-                    stash.items.splice(itemIndex, 1);
-                    stash.gold += sellPrice;
-                    
-                    // Update display
-                    document.getElementById('familyGoldAmount').textContent = stash.gold.toLocaleString();
-                    this.renderFamilyStashItems(familyName);
-                }
+            openStash(family) {
+                console.log(`Opening ${family.name} stash`);
+                // TODO: Implement individual stash view
             }
 
             showBattle() {
@@ -1544,7 +1186,6 @@ enterDungeon(tierName, dungeonIndex) {
                 document.getElementById('heroesScreen').style.display = 'none';
                 document.getElementById('dungeonsScreen').style.display = 'none';
                 document.getElementById('stashScreen').style.display = 'none';
-                document.getElementById('familyStashScreen').style.display = 'none';
                 document.getElementById('partySelectScreen').style.display = 'none';
             }
 
@@ -1921,122 +1562,45 @@ hideStatTooltip() {
             }
 
             showGearTab(hero, content) {
-                const family = hero.getClassFamily();
-                const familyStash = this.familyStashes[family];
-                
                 content.innerHTML = `
                     <div style="display: flex; gap: 40px;">
                         <div style="flex: 1;">
                             <h3>Equipped Gear</h3>
-                            <div class="gearGrid">
-                                <div class="gearSlot" data-slot="trinket">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                                <div class="gearSlot">
                                     <div class="gearLabel">Trinket</div>
-                                    <div class="gearItem" id="gear-trinket">
-                                        ${hero.gear.trinket ? `<div class="itemName" style="color: ${hero.gear.trinket.color}">${hero.gear.trinket.name}</div>` : 'Empty'}
-                                    </div>
+                                    <div class="gearItem">${hero.gear.trinket ? hero.gear.trinket.name : 'Empty'}</div>
                                 </div>
-                                <div class="gearSlot" data-slot="head">
+                                <div class="gearSlot">
                                     <div class="gearLabel">Head</div>
-                                    <div class="gearItem" id="gear-head">
-                                        ${hero.gear.head ? `<div class="itemName" style="color: ${hero.gear.head.color}">${hero.gear.head.name}</div>` : 'Empty'}
-                                    </div>
+                                    <div class="gearItem">${hero.gear.head ? hero.gear.head.name : 'Empty'}</div>
                                 </div>
-                                <div class="gearSlot" data-slot="weapon">
+                                <div class="gearSlot">
                                     <div class="gearLabel">Weapon</div>
-                                    <div class="gearItem" id="gear-weapon">
-                                        ${hero.gear.weapon ? `<div class="itemName" style="color: ${hero.gear.weapon.color}">${hero.gear.weapon.name}</div>` : 'Empty'}
-                                    </div>
+                                    <div class="gearItem">${hero.gear.weapon ? hero.gear.weapon.name : 'Empty'}</div>
                                 </div>
-                                <div class="gearSlot" data-slot="chest">
+                                <div class="gearSlot">
                                     <div class="gearLabel">Chest</div>
-                                    <div class="gearItem" id="gear-chest">
-                                        ${hero.gear.chest ? `<div class="itemName" style="color: ${hero.gear.chest.color}">${hero.gear.chest.name}</div>` : 'Empty'}
-                                    </div>
+                                    <div class="gearItem">${hero.gear.chest ? hero.gear.chest.name : 'Empty'}</div>
                                 </div>
-                                <div class="gearSlot" data-slot="offhand">
+                                <div class="gearSlot">
                                     <div class="gearLabel">Offhand</div>
-                                    <div class="gearItem" id="gear-offhand">
-                                        ${hero.gear.offhand ? `<div class="itemName" style="color: ${hero.gear.offhand.color}">${hero.gear.offhand.name}</div>` : 'Empty'}
-                                    </div>
+                                    <div class="gearItem">${hero.gear.offhand ? hero.gear.offhand.name : 'Empty'}</div>
                                 </div>
-                                <div class="gearSlot" data-slot="legs">
+                                <div class="gearSlot">
                                     <div class="gearLabel">Legs</div>
-                                    <div class="gearItem" id="gear-legs">
-                                        ${hero.gear.legs ? `<div class="itemName" style="color: ${hero.gear.legs.color}">${hero.gear.legs.name}</div>` : 'Empty'}
-                                    </div>
+                                    <div class="gearItem">${hero.gear.legs ? hero.gear.legs.name : 'Empty'}</div>
                                 </div>
                             </div>
                         </div>
                         <div style="flex: 1;">
-                            <h3>${family} Stash</h3>
-                            <div class="stashInventory">
-                                ${familyStash && familyStash.items.length > 0 ? 
-                                    familyStash.items.map((item, index) => `
-                                        <div class="stashInventoryItem ${item.rarity}" 
-                                             data-stash-index="${index}"
-                                             onmouseover="game.showItemTooltip(event, game.familyStashes['${family}'].items[${index}])"
-                                             onmouseout="game.hideItemTooltip()"
-                                             onclick="game.equipFromStash('${family}', ${index})">
-                                            <div class="itemName" style="color: ${item.color}">${item.name}</div>
-                                            <div class="itemSlot">${item.slot.charAt(0).toUpperCase() + item.slot.slice(1)}</div>
-                                        </div>
-                                    `).join('') : 
-                                    '<p style="text-align: center; color: #6a9aaa;">No items in stash</p>'
-                                }
+                            <h3>Stash</h3>
+                            <div style="margin-top: 20px; background: rgba(10, 25, 41, 0.8); padding: 10px; min-height: 200px; border: 1px solid #2a6a8a;">
+                                <p style="text-align: center; color: #6a9aaa;">No items in stash</p>
                             </div>
                         </div>
                     </div>
                 `;
-                
-                // Add click handlers to unequip items
-                Object.keys(hero.gear).forEach(slot => {
-                    const slotElement = document.querySelector(`[data-slot="${slot}"]`);
-                    if (slotElement && hero.gear[slot]) {
-                        slotElement.style.cursor = 'pointer';
-                        slotElement.onclick = () => this.unequipToStash(slot);
-                        slotElement.onmouseover = (e) => this.showItemTooltip(e, hero.gear[slot]);
-                        slotElement.onmouseout = () => this.hideItemTooltip();
-                    }
-                });
-            }
-            
-            equipFromStash(family, itemIndex) {
-                const hero = this.heroes[this.selectedHero];
-                const stash = this.familyStashes[family];
-                const item = stash.items[itemIndex];
-                
-                if (!item) return;
-                
-                // Check if hero already has item in that slot
-                const currentItem = hero.gear[item.slot];
-                
-                // Equip the new item
-                hero.equipItem(item);
-                
-                // Remove from stash
-                stash.items.splice(itemIndex, 1);
-                
-                // If there was an item equipped, put it back in stash
-                if (currentItem) {
-                    stash.items.push(currentItem);
-                }
-                
-                // Refresh the gear tab
-                this.showGearTab(hero, document.getElementById('heroContent'));
-            }
-            
-            unequipToStash(slot) {
-                const hero = this.heroes[this.selectedHero];
-                const item = hero.unequipItem(slot);
-                
-                if (item) {
-                    const family = hero.getClassFamily();
-                    const stash = this.familyStashes[family];
-                    stash.items.push(item);
-                    
-                    // Refresh the gear tab
-                    this.showGearTab(hero, document.getElementById('heroContent'));
-                }
             }
 
             showLogTab(hero, content) {
@@ -2567,27 +2131,27 @@ showHeroInfoPopup(hero) {
                 const gearHtml = `
                     <div class="statRow">
                         <span class="statLabel">Head</span>
-                        <span class="statValue">${hero.gear.head ? hero.gear.head.getDisplayName() : 'Empty'}</span>
+                        <span class="statValue">${hero.gear.head ? hero.gear.head.name : 'Empty'}</span>
                     </div>
                     <div class="statRow">
                         <span class="statLabel">Chest</span>
-                        <span class="statValue">${hero.gear.chest ? hero.gear.chest.getDisplayName() : 'Empty'}</span>
+                        <span class="statValue">${hero.gear.chest ? hero.gear.chest.name : 'Empty'}</span>
                     </div>
                     <div class="statRow">
                         <span class="statLabel">Legs</span>
-                        <span class="statValue">${hero.gear.legs ? hero.gear.legs.getDisplayName() : 'Empty'}</span>
+                        <span class="statValue">${hero.gear.legs ? hero.gear.legs.name : 'Empty'}</span>
                     </div>
                     <div class="statRow">
                         <span class="statLabel">Weapon</span>
-                        <span class="statValue">${hero.gear.weapon ? hero.gear.weapon.getDisplayName() : 'Empty'}</span>
+                        <span class="statValue">${hero.gear.weapon ? hero.gear.weapon.name : 'Empty'}</span>
                     </div>
                     <div class="statRow">
                         <span class="statLabel">Offhand</span>
-                        <span class="statValue">${hero.gear.offhand ? hero.gear.offhand.getDisplayName() : 'Empty'}</span>
+                        <span class="statValue">${hero.gear.offhand ? hero.gear.offhand.name : 'Empty'}</span>
                     </div>
                     <div class="statRow">
                         <span class="statLabel">Trinket</span>
-                        <span class="statValue">${hero.gear.trinket ? hero.gear.trinket.getDisplayName() : 'Empty'}</span>
+                        <span class="statValue">${hero.gear.trinket ? hero.gear.trinket.name : 'Empty'}</span>
                     </div>
                 `;
                 document.getElementById('popupGear').innerHTML = gearHtml;
@@ -2799,52 +2363,6 @@ formatAbilityTooltip(ability, level) {
                     tooltip.style.display = 'none';
                 }
             }
-            
-            showItemTooltip(event, item) {
-                let tooltip = document.getElementById('itemTooltip');
-                if (!tooltip) {
-                    tooltip = document.createElement('div');
-                    tooltip.id = 'itemTooltip';
-                    document.body.appendChild(tooltip);
-                }
-                
-                const stats = item.getStats();
-                let statsHtml = '';
-                Object.keys(stats).forEach(stat => {
-                    if (stats[stat] > 0) {
-                        statsHtml += `<div class="itemStat">+${stats[stat]} ${stat.toUpperCase()}</div>`;
-                    }
-                });
-                
-                tooltip.innerHTML = `
-                    <div class="itemTooltipName" style="color: ${item.color}">${item.name}</div>
-                    <div class="itemTooltipLevel">Level ${item.level}</div>
-                    ${statsHtml}
-                    <div class="itemTooltipSell">Sell: ${Math.floor(item.sellcost * 0.5)} gold</div>
-                `;
-                
-                // Position tooltip
-                const rect = event.target.getBoundingClientRect();
-                tooltip.style.display = 'block';
-                tooltip.style.left = rect.left + 'px';
-                tooltip.style.top = (rect.bottom + 5) + 'px';
-                
-                // Adjust if tooltip goes off screen
-                const tooltipRect = tooltip.getBoundingClientRect();
-                if (tooltipRect.right > window.innerWidth) {
-                    tooltip.style.left = (window.innerWidth - tooltipRect.width - 10) + 'px';
-                }
-                if (tooltipRect.bottom > window.innerHeight) {
-                    tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
-                }
-            }
-            
-            hideItemTooltip() {
-                const tooltip = document.getElementById('itemTooltip');
-                if (tooltip) {
-                    tooltip.style.display = 'none';
-                }
-            }
 
 showBattleResults() {
     if (!this.pendingBattleResults) return;
@@ -2911,16 +2429,6 @@ showBattleResults() {
         // Calculate exp bar fill
         const expPercent = hero.level >= 500 ? 100 : (hero.expToNext > 0 ? (hero.exp / hero.expToNext * 100) : 0);
         
-        // Show items if any
-        let itemsHtml = '';
-        if (result.items && result.items.length > 0) {
-            itemsHtml = result.items.map(item => `
-                <div class="itemSlot filled" onmouseover="game.showItemTooltip(event, game.getItemById('${item.id}'))" onmouseout="game.hideItemTooltip()">
-                    <div class="itemIcon" style="color: ${item.color}; font-size: 24px;">📦</div>
-                </div>
-            `).join('');
-        }
-        
         heroDiv.innerHTML = `
             <div class="heroResultThumb">
                 <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${classId}_${hero.gender}_portrait.png" 
@@ -2940,10 +2448,8 @@ showBattleResults() {
                 <div class="levelUpContainer" style="height: 30px; margin-top: 20px;">
                     ${result.leveledUp ? `<div style="color: #ffd700; font-size: 14px; font-weight: bold; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">Level Up! +${result.levelsGained}</div>` : ''}
                 </div>
-                <div class="itemRewardContainer">
-                    ${itemsHtml}
-                </div>
             ` : '<div style="color: #ff4444; font-size: 12px;">Did not survive</div>'}
+            <div class="itemSlot"></div>
         `;
         
         heroGrid.appendChild(heroDiv);
@@ -3015,12 +2521,6 @@ applyBattleResults() {
                     hero.expToNext = 0;
                 }
             }
-            
-            getItemById(itemId) {
-                // Helper to recreate item from stored data
-                // This is a temporary method - in reality you'd store the actual item objects
-                return new Item(itemId);
-            }
 	}
 
         // Initialize game after loading data
@@ -3055,10 +2555,6 @@ applyBattleResults() {
                     
                     // Navigate between screens based on current screen
                     switch(game.currentScreen) {
-                        case 'familyStashScreen':
-                            game.showStash();
-                            e.preventDefault();
-                            break;
                         case 'partySelectScreen':
                             game.closeDungeonSelect();
                             e.preventDefault();
