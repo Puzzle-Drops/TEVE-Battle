@@ -1,4 +1,5 @@
 // Battle System for TEVE
+let Item = window.Item;
 
 class BattleUnit {
 
@@ -271,7 +272,6 @@ constructor(game, party, enemyWaves) {
     this.running = true;
     this.processingWaveTransition = false;
     this.targetingState = null;
-	let Item = window.Item;
     
     // Add timer tracking
     this.startTime = Date.now();
