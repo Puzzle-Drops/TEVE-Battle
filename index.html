@@ -453,6 +453,14 @@ async function loadGameData() {
                     int: Math.floor(this.level * mods.int)
                 };
             }
+            
+            getStars() {
+                return game.generateStars({ 
+                    type: 'hero', 
+                    classTier: this.classTier, 
+                    awakened: this.awakened 
+                });
+            }
 
             get totalStats() {
                 const base = this.baseStats;
@@ -636,6 +644,14 @@ async function loadGameData() {
                 if (level < 800) return 7;
                 return 8;
             }
+            
+            getStars() {
+                return game.generateStars({ 
+                    type: 'enemy', 
+                    level: this.level, 
+                    isBoss: this.isBoss 
+                });
+            }
 
             get baseStats() {
                 return {
@@ -737,6 +753,61 @@ async function loadGameData() {
                 // Load class families from JSON data
                 this.classFamilies = unitData?.classFamilies || [];                
                 this.init();
+            }
+            
+            // Consolidated star generation function
+            generateStars(config) {
+                let starCount = 0;
+                let colorClass = 'normal';
+                
+                if (config.type === 'hero') {
+                    // Hero star logic
+                    if (config.awakened) {
+                        starCount = 6;
+                        colorClass = 'awakened';
+                    } else {
+                        // Tier 0 (villager) = 1 star, Tier 1 = 2 stars, etc.
+                        starCount = (config.classTier || 0) + 1;
+                    }
+                } else if (config.type === 'enemy') {
+                    // Enemy star logic based on level
+                    const level = config.level;
+                    if (level < 50) starCount = 1;
+                    else if (level < 100) starCount = 2;
+                    else if (level < 200) starCount = 3;
+                    else if (level < 300) starCount = 4;
+                    else if (level < 400) starCount = 5;
+                    else if (level < 500) starCount = 6;
+                    else if (level < 800) starCount = 7;
+                    else starCount = 8;
+                    
+                    // Boss units can have up to 10 stars and red color for 6+
+                    if (config.isBoss) {
+                        // Bosses can exceed normal star limits
+                        if (level >= 900) starCount = 10;
+                        else if (level >= 800) starCount = 9;
+                        else if (level >= 700) starCount = 8;
+                        // Use calculated starCount for levels below 700
+                        
+                        // Red stars for boss units at 6 stars and above
+                        if (starCount >= 6) {
+                            colorClass = 'red';
+                        }
+                    } else {
+                        // Non-boss enemies cap at 6 stars with purple color
+                        if (starCount > 6) starCount = 6;
+                        if (starCount === 6) colorClass = 'purple';
+                    }
+                }
+                
+                // Generate the star HTML
+                const stars = '★'.repeat(starCount);
+                return {
+                    count: starCount,
+                    html: stars,
+                    colorClass: colorClass,
+                    fullHtml: stars ? `<span class="${config.cssClass || 'stars'} ${colorClass}">${stars}</span>` : ''
+                };
             }
 
 init() {
@@ -1249,14 +1320,8 @@ enterDungeon(tierName, dungeonIndex) {
                         thumb.classList.add('selected');
                     }
                     
-                    // Generate stars
-                    let stars = '★';
-                    if (hero.classTier > 0) {
-                        const starCount = hero.awakened ? 5 : hero.classTier;
-                        for (let i = 0; i < starCount; i++) {
-                            stars += '★';
-                        }
-                    }
+                    // Generate stars using consolidated function
+                    const starData = hero.getStars();
                     
                     // Check if hero can promote (but not if already awakened)
                     const canPromote = hero.canPromote() && !hero.awakened;
@@ -1268,7 +1333,7 @@ enterDungeon(tierName, dungeonIndex) {
              style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
              onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 100 100\\'><rect fill=\\'%23666\\' width=\\'100\\' height=\\'100\\'/><text x=\\'50\\' y=\\'55\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'14\\'>${hero.displayClassName}</text></svg>'">
              
-        ${stars ? `<div class="thumbStars ${hero.awakened ? 'awakened' : 'normal'}">${stars}</div>` : ''}
+        ${starData.html ? `<div class="thumbStars ${starData.colorClass}">${starData.html}</div>` : ''}
 
         <div class="thumbLevel">${hero.level}</div>
 
@@ -1332,15 +1397,9 @@ enterDungeon(tierName, dungeonIndex) {
 			showInfoTab(hero, content) {
 				const stats = hero.totalStats;
 				const baseStats = hero.baseStats;
-				let stars = '★';
 				
-				// Generate stars based on class tier and awakened status
-				if (hero.classTier > 0) {
-					const starCount = hero.awakened ? 5 : hero.classTier;
-					for (let i = 0; i < starCount; i++) {
-						stars += '★';
-					}
-				}
+				// Generate stars using consolidated function
+				const starData = hero.getStars();
 				
 				// Calculate derived stats
 				const armor = hero.armor;
@@ -1350,7 +1409,7 @@ enterDungeon(tierName, dungeonIndex) {
 				
 				content.innerHTML = `
 					<div style="margin-bottom: 20px;">
-						${stars ? `<div style="font-size: 48px; font-weight: bold; ${hero.awakened ? 'color: #d896ff;' : 'color: #ffd700;'} text-shadow: 0 0 12px ${hero.awakened ? 'rgba(216, 150, 255, 0.9)' : 'rgba(255, 215, 0, 0.9)'}, 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${stars}</div>` : ''}
+						${starData.html ? `<div style="font-size: 48px; font-weight: bold; ${starData.colorClass === 'awakened' ? 'color: #d896ff;' : 'color: #ffd700;'} text-shadow: 0 0 12px ${starData.colorClass === 'awakened' ? 'rgba(216, 150, 255, 0.9)' : 'rgba(255, 215, 0, 0.9)'}, 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${starData.html}</div>` : ''}
 						<div class="heroName">${hero.displayClassName} ${hero.gender === 'male' ? '♂' : '♀'}</div>
 						<div style="font-size: 32px; color: #6a9aaa; cursor: pointer;" onclick="game.editHeroName()">
 							<span id="heroNameText">${hero.name}</span>
@@ -1518,15 +1577,8 @@ hideStatTooltip() {
                     return;
                 }
                 
-                // Generate stars for current class
-                let currentStars = '★';
-                if (hero.awakened) {
-                    currentStars = '<span style="color: #d896ff;">★★★★★★</span>';
-                } else {
-                    for (let i = 0; i < hero.classTier; i++) {
-                        currentStars += '★';
-                    }
-                }
+                // Generate stars for current class using consolidated function
+                const currentStarData = hero.getStars();
                 
                 // Check if class 4 but not high enough level
                 if (hero.classTier === 4 && !hero.awakened) {
@@ -1557,10 +1609,12 @@ hideStatTooltip() {
                                     const promoClass = unitData?.classes[promo];
                                     if (!promoClass) return '';
                                     
-                                    let promoStars = '★';
-                                    for (let i = 0; i < promoClass.tier; i++) {
-                                        promoStars += '★';
-                                    }
+                                    // Generate stars for promotion class
+                                    const promoStarData = this.generateStars({ 
+                                        type: 'hero', 
+                                        classTier: promoClass.tier, 
+                                        awakened: false 
+                                    });
                                     
                                     // Get display name
                                     let displayName = promoClass.name;
@@ -1570,7 +1624,7 @@ hideStatTooltip() {
                                             <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${promo}_portrait.png" alt="${displayName}" 
                                                  style="width: 80px; height: 80px; object-fit: cover; object-position: top center; image-rendering: pixelated;"
                                                  onerror="this.style.display='none'">
-											<div class="classStars" style="font-size: 24px; font-weight: bold; color: #ffd700; text-shadow: 0 0 12px rgba(255, 215, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${promoStars}</div>
+											<div class="classStars" style="font-size: 24px; font-weight: bold; color: #ffd700; text-shadow: 0 0 12px rgba(255, 215, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${promoStarData.html}</div>
 											<h2>${displayName}</h2>
                                             <button class="promoteButton" onclick="game.showPromotionConfirm('${promo}')">
                                                 Promote<br>
@@ -1838,17 +1892,8 @@ hideStatTooltip() {
                     if (index < 5) { // Ensure we don't exceed 5 slots
                         const slot = slots[index];
                         
-                        // Generate stars based on level
-                        let stars = '';
-                        const starCount = enemy.stars;
-                        for (let i = 0; i < starCount; i++) {
-                            stars += '★';
-                        }
-                        
-                        // Determine star color class
-                        let starClass = 'normal';
-                        if (starCount === 6) starClass = 'purple';
-                        else if (starCount >= 7) starClass = 'red';
+                        // Generate stars using consolidated function
+                        const starData = enemy.getStars();
                         
                         slot.innerHTML = `
                             <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
@@ -1856,7 +1901,7 @@ hideStatTooltip() {
                                     <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${enemy.enemyId}.png"
                                          alt="${enemy.name}" 
                                          onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 60 60\\'><rect fill=\\'%23666\\' width=\\'60\\' height=\\'60\\'/><text x=\\'30\\' y=\\'35\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'10\\'>${enemy.name}</text></svg>'">
-                                    ${stars ? `<div class="enemyStars ${starClass}">${stars}</div>` : ''}
+                                    ${starData.html ? `<div class="enemyStars ${starData.colorClass}">${starData.html}</div>` : ''}
                                     <div class="enemyLevel">${enemy.level}</div>
                                 </div>
                                 <div class="enemyName">${enemy.name}</div>
@@ -1905,14 +1950,8 @@ hideStatTooltip() {
                 const thumb = document.createElement('div');
                 thumb.className = 'heroThumb';
                 
-                // Generate stars
-                let stars = '★';
-                if (hero.classTier > 0) {
-                    const starCount = hero.awakened ? 5 : hero.classTier;
-                    for (let i = 0; i < starCount; i++) {
-                        stars += '★';
-                    }
-                }
+                // Generate stars using consolidated function
+                const starData = hero.getStars();
 
                 thumb.innerHTML = `
     <div style="position: relative; width: 100px; height: 100px;">
@@ -1920,7 +1959,7 @@ hideStatTooltip() {
              style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
              onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 100 100\\'><rect fill=\\'%23666\\' width=\\'100\\' height=\\'100\\'/><text x=\\'50\\' y=\\'55\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'14\\'>${hero.displayClassName}</text></svg>'">
              
-        ${stars ? `<div class="thumbStars ${hero.awakened ? 'awakened' : 'normal'}">${stars}</div>` : ''}
+        ${starData.html ? `<div class="thumbStars ${starData.colorClass}">${starData.html}</div>` : ''}
 
         <div class="thumbLevel">${hero.level}</div>
     </div>
@@ -1978,14 +2017,8 @@ hideStatTooltip() {
                     if (heroIndex !== null) {
                         const hero = this.heroes[heroIndex];
 						
-                        // Generate stars
-                        let stars = '★';
-                        if (hero.classTier > 0) {
-                            const starCount = hero.awakened ? 5 : hero.classTier;
-                            for (let i = 0; i < starCount; i++) {
-                                stars += '★';
-                            }
-                        }
+                        // Generate stars using consolidated function
+                        const starData = hero.getStars();
                         
                         slot.innerHTML = `
                             <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
@@ -1993,7 +2026,7 @@ hideStatTooltip() {
                                     <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_portrait.png" alt="${hero.displayClassName}" 
                                          style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
                                          onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 60 60\\'><rect fill=\\'%23666\\' width=\\'60\\' height=\\'60\\'/><text x=\\'30\\' y=\\'35\\' text-anchor=\\'middle\\' fill=\\'white\\'>${hero.displayClassName}</text></svg>'">
-                                    ${stars ? `<div class="thumbStars ${hero.awakened ? 'awakened' : 'normal'}">${stars}</div>` : ''}
+                                    ${starData.html ? `<div class="thumbStars ${starData.colorClass}">${starData.html}</div>` : ''}
                                     <div class="thumbLevel">${hero.level}</div>
                                 </div>
                                 <div class="thumbClass">${hero.displayClassName} ${hero.gender === 'male' ? '♂' : '♀'}</div>
@@ -2446,14 +2479,8 @@ showBattleResults() {
         const heroDiv = document.createElement('div');
         heroDiv.className = `heroResult ${result.survived ? '' : 'dead'}`;
         
-        // Generate stars
-        let stars = '';
-        if (hero.classTier > 0) {
-            const starCount = hero.awakened ? 6 : hero.classTier + 1;
-            stars = '★'.repeat(starCount);
-        } else {
-            stars = '★';
-        }
+        // Generate stars using consolidated function
+        const starData = hero.getStars();
         
         // Calculate exp bar fill
         const expPercent = hero.level >= 500 ? 100 : (hero.expToNext > 0 ? (hero.exp / hero.expToNext * 100) : 0);
@@ -2464,7 +2491,7 @@ showBattleResults() {
                      alt="${hero.displayClassName}"
                      style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
                      onerror="this.style.display='none'">
-                ${stars ? `<div class="thumbStars ${hero.awakened ? 'awakened' : 'normal'}" style="position: absolute; bottom: 0; left: 0; font-size: 12px;">${stars}</div>` : ''}
+                ${starData.html ? `<div class="thumbStars ${starData.colorClass}" style="position: absolute; bottom: 0; left: 0; font-size: 12px;">${starData.html}</div>` : ''}
                 <div class="thumbLevel" style="position: absolute; bottom: 0; right: 0; font-size: 14px;">${hero.level}</div>
             </div>
             <div class="heroResultClass">${hero.name}</div>
