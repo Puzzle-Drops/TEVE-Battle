@@ -229,7 +229,7 @@
     "avenger": {
       "name": "Avenger",
       "tier": 4,
-      "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 }
+      "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
       "spells": ["blade_strike", "shield_bash", "holy_strike", "vengeance_aura"],
       "ultimateSpell": "wrath_of_heaven",
       "promotesTo": []
