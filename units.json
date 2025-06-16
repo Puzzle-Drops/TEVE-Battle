@@ -1,6 +1,6 @@
 {
   "classes": {
-    "tester": {
+    "tester_male": {
       "name": "Tester",
       "tier": 0,
       "modifiers": { "str": 10000.0, "agi": 10000.0, "int": 10000.0 },
