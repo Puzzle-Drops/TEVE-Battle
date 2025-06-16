@@ -1180,42 +1180,52 @@ checkBattleEnd() {
             });
         }
         
-        // Check if there are more waves
-if (this.currentWave < this.enemyWaves.length - 1) {
-    // Prevent multiple wave transitions
-    if (!this.processingWaveTransition) {
-        this.processingWaveTransition = true;
-        this.log("Wave cleared!");
-        
-        // Revive dead party members between waves
-        this.party.forEach((unit, index) => {
-            if (unit && !unit.isAlive) {
-                unit.currentHp = unit.maxHp;
-                this.log(`${unit.name} revived for next wave!`);
+// Check if there are more waves
+        if (this.currentWave < this.enemyWaves.length - 1) {
+            // Prevent multiple wave transitions
+            if (!this.processingWaveTransition) {
+                this.processingWaveTransition = true;
+                this.log("Wave cleared!");
                 
-                // Reset death animation
-                const elementId = `party${unit.position + 1}`;
-                const element = document.getElementById(elementId);
-                if (element) {
-                    const unitDiv = element.querySelector('.unit');
-                    if (unitDiv) {
-                        unitDiv.classList.remove('dying');
-                        unitDiv.style.opacity = '';
-                        unitDiv.style.filter = '';
+                // Revive dead party members between waves
+                this.party.forEach((unit, index) => {
+                    if (unit && !unit.isAlive) {
+                        unit.currentHp = unit.maxHp;
+                        this.log(`${unit.name} revived for next wave!`);
+                        
+                        // Reset death animation
+                        const elementId = `party${unit.position + 1}`;
+                        const element = document.getElementById(elementId);
+                        if (element) {
+                            const unitDiv = element.querySelector('.unit');
+                            if (unitDiv) {
+                                unitDiv.classList.remove('dying');
+                                unitDiv.style.opacity = '';
+                                unitDiv.style.filter = '';
+                            }
+                        }
                     }
-                }
+                });
+                
+                // Load next wave
+                setTimeout(() => {
+                    this.loadWave(this.currentWave + 1);
+                    this.processingWaveTransition = false;
+                    this.waveExpCalculated = false; // Reset for next wave
+                }, 1000);
             }
-        });
-        
-        // Load next wave
-        setTimeout(() => {
-            this.loadWave(this.currentWave + 1);
-            this.processingWaveTransition = false;
-            this.waveExpCalculated = false; // Reset for next wave
-        }, 1000);
+            return false; // Battle continues
+        } else {
+            this.log("Victory! All waves defeated!");
+            this.endBattle(true);
+            return true;
+        }
     }
-    return false; // Battle continues
     
+    return false;
+}
+    
+calculateWaveExp() {    
 calculateWaveExp() {
     // Base exp per enemy level
     const baseExpPerLevel = 10;
