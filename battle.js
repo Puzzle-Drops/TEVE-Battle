@@ -1764,10 +1764,9 @@ if (unitDiv) {
 
                     } else if (!unit.isEnemy && unit.isAlive) {
                         const hero = unit.source;
-                        const classId = hero.className.toLowerCase().replace(/ /g, '_');
                         
                         unitDiv.innerHTML = `
-                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${classId}_${hero.gender}_battle.png" alt="${hero.displayClassName}" 
+                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" 
                                  style="image-rendering: pixelated; object-fit: contain;"
                                  onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
                         `;
