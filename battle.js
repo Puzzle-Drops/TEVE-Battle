@@ -1640,33 +1640,21 @@ if (levelIndicator) {
     // For heroes, show level and stars based on tier
     if (!unit.isEnemy) {
         const hero = unit.source;
-        let stars = '★';
-        let starClass = '★';
-        if (hero.classTier > 0) {
-            const starCount = hero.awakened ? 6 : hero.classTier+1;
-            stars = '★'.repeat(starCount);
-            starClass = hero.awakened ? 'awakened' : '';
-        }
+        const starData = hero.getStars();
         
         let html = '<div class="levelNumber">' + unit.source.level + '</div>';
-        if (stars) {
-            html += '<div class="levelStars ' + starClass + '">' + stars + '</div>';
+        if (starData.html) {
+            html += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
         }
         levelIndicator.innerHTML = html;
     } else {
         // For enemies, show level and stars based on their star rating
         const enemy = unit.source;
-        let stars = '';
-        let starClass = 'normal';
-        if (enemy.stars > 0) {
-            stars = '★'.repeat(enemy.stars);
-        }
-        if (enemy.stars === 6) starClass = 'purple';
-        else if (enemy.stars >= 7) starClass = 'red';
+        const starData = enemy.getStars();
         
         let html = '<div class="levelNumber">' + unit.source.level + '</div>';
-        if (stars) {
-            html += '<div class="levelStars ' + starClass + '">' + stars + '</div>';
+        if (starData.html) {
+            html += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
         }
         levelIndicator.innerHTML = html;
     }
