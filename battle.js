@@ -1307,42 +1307,7 @@ calculateWaveExp() {
 const dungeonId = this.game.currentDungeon.id;
 const dungeonConfig = dungeonData.dungeons[dungeonId];
 const rewards = dungeonConfig.rewards || { gold: 0, exp: 0 };
-
-// Roll for items for each surviving hero
-const itemRewards = [];
-if (victory) {
-    this.party.forEach(unit => {
-        if (unit && unit.isAlive) {
-            const hero = unit.source;
-            const heroItems = [];
-            
-            // Villagers only get gold, not items
-            if (hero.className === 'villager') {
-                const bonusGold = Math.floor(Math.random() * 100 + 50);
-                const family = hero.getClassFamily();
-                this.game.familyStashes[family].gold += bonusGold;
-            } else {
-                // 50% chance to get an item
-                if (Math.random() < 0.5 && dungeonConfig.items && dungeonConfig.items.length > 0) {
-                    // Pick a random item from the dungeon's item pool
-                    const itemId = dungeonConfig.items[Math.floor(Math.random() * dungeonConfig.items.length)];
-                    const item = new Item(itemId);
-                    item.rollStats();
-                    
-                    // Add to hero's family stash
-                    const family = hero.getClassFamily();
-                    this.game.familyStashes[family].items.push(item);
-                    heroItems.push(item);
-                }
-            }
-            
-            itemRewards.push({
-                hero: hero,
-                items: heroItems
-            });
-        }
-    });
-}
+        
 
         // Calculate gold changes
 
@@ -1375,15 +1340,12 @@ if (victory) {
             dungeonBonusExp: victory ? rewards.exp : 0,
 
             // In endBattle method, when creating heroResults:
-heroResults: this.party.map((unit, index) => {
+heroResults: this.party.map(unit => {
     if (!unit) return null;
     const hero = unit.source;
     const waveExp = hero.pendingExp;
     const dungeonBonus = victory && unit.isAlive ? rewards.exp : 0;
     const totalExp = waveExp + dungeonBonus;
-    
-    // Find items for this hero
-    const heroItemReward = itemRewards.find(r => r.hero === hero);
     
     console.log(`${hero.name} final exp: ${waveExp} (waves) + ${dungeonBonus} (dungeon) = ${totalExp} total`);
     
@@ -1391,7 +1353,7 @@ heroResults: this.party.map((unit, index) => {
         hero: hero,
         expGained: totalExp,
         survived: unit.isAlive,
-        items: heroItemReward ? heroItemReward.items : []
+        items: [] // Placeholder for future loot system
     };
 }).filter(r => r !== null)
 
