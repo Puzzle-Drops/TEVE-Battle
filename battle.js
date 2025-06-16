@@ -1321,18 +1321,41 @@ if (victory) {
                 const bonusGold = Math.floor(Math.random() * 100 + 50);
                 const family = hero.getClassFamily();
                 this.game.familyStashes[family].gold += bonusGold;
+                this.log(`${hero.name} (Villager) received ${bonusGold} bonus gold!`);
             } else {
                 // 50% chance to get an item
-                if (Math.random() < 0.5 && dungeonConfig.items && dungeonConfig.items.length > 0) {
+                const itemRoll = Math.random();
+                this.log(`${hero.name} rolling for item: ${(itemRoll * 100).toFixed(1)}% (need < 50%)`);
+                
+                if (itemRoll < 0.5 && dungeonConfig.items && dungeonConfig.items.length > 0) {
                     // Pick a random item from the dungeon's item pool
                     const itemId = dungeonConfig.items[Math.floor(Math.random() * dungeonConfig.items.length)];
+                    this.log(`${hero.name} won item roll! Getting: ${itemId}`);
+                    
                     const item = new Item(itemId);
                     item.rollStats();
+                    
+                    // Log the quality rolls
+                    this.log(`- Roll 1: Quality ${item.quality1} (${item.roll1})`);
+                    if (item.numRolls >= 2) {
+                        this.log(`- Roll 2: Quality ${item.quality2} (${item.roll2})`);
+                    }
+                    if (item.numRolls >= 3) {
+                        this.log(`- Roll 3: Quality ${item.quality3} (${item.roll3})`);
+                    }
+                    this.log(`- Item rarity: ${item.rarity} (${item.numRolls} rolls)`);
                     
                     // Add to hero's family stash
                     const family = hero.getClassFamily();
                     this.game.familyStashes[family].items.push(item);
+                    this.log(`${item.name} added to ${family} stash!`);
                     heroItems.push(item);
+                } else {
+                    if (!dungeonConfig.items || dungeonConfig.items.length === 0) {
+                        this.log(`${hero.name} - No items available in this dungeon!`);
+                    } else {
+                        this.log(`${hero.name} failed item roll.`);
+                    }
                 }
             }
             
@@ -1342,8 +1365,9 @@ if (victory) {
             });
         }
     });
+} else {
+    this.log("Defeat - no item rolls!");
 }
-
         // Calculate gold changes
 
         let goldChange = 0;
