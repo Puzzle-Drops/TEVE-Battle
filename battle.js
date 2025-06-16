@@ -1249,6 +1249,7 @@ calculateWaveExp() {
 	
     endBattle(victory) {
 
+	    this.log("endBattle function start");
         this.running = false;
 
         this.endTime = Date.now();
@@ -1307,6 +1308,10 @@ calculateWaveExp() {
 const dungeonId = this.game.currentDungeon.id;
 const dungeonConfig = dungeonData.dungeons[dungeonId];
 const rewards = dungeonConfig.rewards || { gold: 0, exp: 0 };
+this.log("dungeon data");
+this.log(dungeonId);
+this.log(dungeonConfig);
+this.log(rewards);
 
 // Roll for items for each surviving hero
 const itemRewards = [];
