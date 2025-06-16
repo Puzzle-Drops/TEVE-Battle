@@ -1225,7 +1225,6 @@ checkBattleEnd() {
     return false;
 }
     
-calculateWaveExp() {    
 calculateWaveExp() {
     // Base exp per enemy level
     const baseExpPerLevel = 10;
