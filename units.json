@@ -884,11 +884,11 @@
       "spells": ["arcane_explosion", "psi_storm", "shadow_strike", "holy_fire", "mana_burn"]
     }
   },
-  "classFamilies": [
-    { "name": "Acolyte", "icon": "✚", "classes": ["Acolyte", "Cleric", "Priest", "Hierophant", "Matriarch", "Prophetess"] },
+"classFamilies": [
+    { "name": "Acolyte", "icon": "✚", "classes": ["Acolyte", "Cleric", "Priest", "Priestess", "Hierophant", "Luminary", "Matriarch", "Prophet", "Prophetess"] },
     { "name": "Archer", "icon": "🏹", "classes": ["Archer", "Ranger", "Marksman", "Sniper", "Tracker", "Monster Hunter"] },
     { "name": "Druid", "icon": "🌿", "classes": ["Druid", "Arch Druid", "Shapeshifter", "Runemaster", "Shaman", "Summoner"] },
-    { "name": "Initiate", "icon": "✨", "classes": ["Initiate", "Mage", "Wizard", "White Wizard", "Sage", "Arch Sage"] },
+    { "name": "Initiate", "icon": "✨", "classes": ["Initiate", "Mage", "Wizard", "Witch", "White Wizard", "White Witch", "Sage", "Arch Sage"] },
     { "name": "Swordsman", "icon": "⚔️", "classes": ["Swordsman", "Knight", "Imperial Knight", "Champion", "Crusader", "Avenger"] },
     { "name": "Templar", "icon": "🛡️", "classes": ["Templar", "Arch Templar", "Dark Templar", "Dark Arch Templar", "High Templar", "Grand Templar"] },
     { "name": "Thief", "icon": "🗡️", "classes": ["Thief", "Rogue", "Assassin", "Phantom Assassin", "Stalker", "Master Stalker"] },
