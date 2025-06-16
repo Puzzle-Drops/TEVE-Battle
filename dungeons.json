@@ -107,7 +107,7 @@
         }
       ],
       "rewards": {
-        "gold": 300,
+        "gold": 350,
         "exp": 500,
         "items": ["rusty_sword", "cloth_armor", "minor_trinket"]
       }
