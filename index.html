@@ -432,6 +432,8 @@ class Item {
             return;
         }
         
+        console.log(`Creating item: ${itemId}`);
+        
         this.id = itemId;
         this.name = template.name;
         this.slot = template.slot;
@@ -439,7 +441,7 @@ class Item {
         this.sellcost = template.sellcost;
         this.logicKey = template.logicKey;
         
-        // Initialize quality rolls
+        // Initialize quality rolls (1-5)
         this.quality1 = 0;
         this.quality2 = 0;
         this.quality3 = 0;
@@ -449,23 +451,34 @@ class Item {
         this.roll1 = template.roll1;
         this.roll2 = template.roll2;
         this.roll3 = template.roll3;
-        this.roll4 = template.roll4;
+        this.roll4 = template.roll4 || 'cdr';
+        
+        // Max values for each roll
+        this.value1 = template.value1 || Math.floor(this.level / 2);
+        this.value2 = template.value2 || Math.floor(this.level / 2);
+        this.value3 = template.value3 || Math.floor(this.level / 2);
+        this.value4 = template.value4 || 10; // CDR is always max 10%
         
         // Roll the item
         this.rollItem();
+        
+        console.log(`Item created: ${this.name} (${this.getRarity()}) - Quality: ${this.getQualityPercent()}%`);
     }
     
     rollItem() {
         // First roll is guaranteed, rolls 1-5 quality
         this.quality1 = Math.floor(Math.random() * 5) + 1;
+        console.log(`  Roll 1 (${this.roll1}): ${this.quality1}/5`);
         
         // Second roll has 50% chance
         if (Math.random() < 0.5) {
             this.quality2 = Math.floor(Math.random() * 5) + 1;
+            console.log(`  Roll 2 (${this.roll2}): ${this.quality2}/5`);
             
             // Third roll has 50% chance (only if got second)
             if (Math.random() < 0.5) {
                 this.quality3 = Math.floor(Math.random() * 5) + 1;
+                console.log(`  Roll 3 (${this.roll3}): ${this.quality3}/5`);
             }
         }
     }
@@ -477,6 +490,30 @@ class Item {
         return 'green';
     }
     
+    getQualityPercent() {
+        let totalQuality = 0;
+        let maxQuality = 0;
+        
+        if (this.quality1 > 0) {
+            totalQuality += this.quality1;
+            maxQuality += 5;
+        }
+        if (this.quality2 > 0) {
+            totalQuality += this.quality2;
+            maxQuality += 5;
+        }
+        if (this.quality3 > 0) {
+            totalQuality += this.quality3;
+            maxQuality += 5;
+        }
+        if (this.quality4 > 0) {
+            totalQuality += this.quality4;
+            maxQuality += 5;
+        }
+        
+        return maxQuality > 0 ? Math.floor((totalQuality / maxQuality) * 100) : 0;
+    }
+    
     getStats() {
         const stats = {
             str: 0,
@@ -486,34 +523,32 @@ class Item {
             armor: 0,
             resist: 0,
             hpRegen: 0,
-            attackSpeed: 0
+            attackSpeed: 0,
+            cdr: 0
         };
         
-        // Calculate stats based on rolls and quality
-        const baseValue = Math.floor(this.level / 2);
-        
-        // Process each roll
+        // Process each roll with its quality percentage
         if (this.quality1 > 0) {
-            this.applyRoll(stats, this.roll1, this.quality1, baseValue, 0.75, 1.0);
+            const value = Math.floor(this.value1 * (this.quality1 / 5));
+            this.applyStatValue(stats, this.roll1, value);
         }
         if (this.quality2 > 0) {
-            this.applyRoll(stats, this.roll2, this.quality2, baseValue, 0.5, 1.0);
+            const value = Math.floor(this.value2 * (this.quality2 / 5));
+            this.applyStatValue(stats, this.roll2, value);
         }
         if (this.quality3 > 0) {
-            this.applyRoll(stats, this.roll3, this.quality3, baseValue, 0.01, 1.0);
+            const value = Math.floor(this.value3 * (this.quality3 / 5));
+            this.applyStatValue(stats, this.roll3, value);
         }
         if (this.quality4 > 0) {
-            // Fourth roll is CDR - implement later
+            // Fourth roll is CDR (1-10%)
+            stats.cdr = Math.floor(10 * (this.quality4 / 5));
         }
         
         return stats;
     }
     
-    applyRoll(stats, rollType, quality, baseValue, minMult, maxMult) {
-        const qualityPercent = quality / 5;
-        const multiplier = minMult + (maxMult - minMult) * qualityPercent;
-        const value = Math.floor(baseValue * multiplier);
-        
+    applyStatValue(stats, rollType, value) {
         switch(rollType) {
             case 'str':
                 stats.str += value;
@@ -550,28 +585,71 @@ class Item {
         }
     }
     
-    getTooltip() {
+    getTooltip(showMax = false) {
         const stats = this.getStats();
         const rarity = this.getRarity();
         let tooltip = `<div class="itemTooltip ${rarity}">`;
-        tooltip += `<div class="itemName">${this.name}</div>`;
-        tooltip += `<div class="itemLevel">Item Level ${this.level}</div>`;
-        tooltip += `<div class="itemSlot">${this.slot.charAt(0).toUpperCase() + this.slot.slice(1)}</div>`;
+        tooltip += `<div class="itemName">${this.name} - Level ${this.level}</div>`;
+        tooltip += `<div class="itemQuality">Quality: ${this.getQualityPercent()}%</div>`;
         
-        // Show stats
-        if (stats.armor > 0) tooltip += `<div class="itemStat">+${stats.armor} Armor</div>`;
-        if (stats.str > 0) tooltip += `<div class="itemStat">+${stats.str} STR</div>`;
-        if (stats.agi > 0) tooltip += `<div class="itemStat">+${stats.agi} AGI</div>`;
-        if (stats.int > 0) tooltip += `<div class="itemStat">+${stats.int} INT</div>`;
-        if (stats.hp > 0) tooltip += `<div class="itemStat">+${stats.hp} HP</div>`;
-        if (stats.resist > 0) tooltip += `<div class="itemStat">+${stats.resist} Resist</div>`;
-        if (stats.hpRegen > 0) tooltip += `<div class="itemStat">+${stats.hpRegen.toFixed(1)} HP Regen</div>`;
-        if (stats.attackSpeed > 0) tooltip += `<div class="itemStat">+${stats.attackSpeed}% Attack Speed</div>`;
+        // Show item image if available
+        tooltip += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${this.id}.png" alt="${this.name}" onerror="this.style.display='none'"></div>`;
         
-        tooltip += `<div class="itemSellValue">Sell Value: ${this.sellcost} gold</div>`;
+        // Show stats with max values if alt is held
+        if (this.quality1 > 0) {
+            const value = Math.floor(this.value1 * (this.quality1 / 5));
+            const maxValue = showMax ? ` (${this.value1})` : '';
+            tooltip += this.getStatLine(this.roll1, value, maxValue);
+        }
+        if (this.quality2 > 0) {
+            const value = Math.floor(this.value2 * (this.quality2 / 5));
+            const maxValue = showMax ? ` (${this.value2})` : '';
+            tooltip += this.getStatLine(this.roll2, value, maxValue);
+        }
+        if (this.quality3 > 0) {
+            const value = Math.floor(this.value3 * (this.quality3 / 5));
+            const maxValue = showMax ? ` (${this.value3})` : '';
+            tooltip += this.getStatLine(this.roll3, value, maxValue);
+        }
+        if (this.quality4 > 0) {
+            const value = Math.floor(10 * (this.quality4 / 5));
+            const maxValue = showMax ? ' (10)' : '';
+            tooltip += `<div class="itemStat">+${value}%${maxValue} Cooldown Reduction</div>`;
+        }
+        
+        tooltip += `<div class="itemSellValue">Sell Value: <span class="goldText">${this.sellcost} gold</span></div>`;
         tooltip += `</div>`;
         
         return tooltip;
+    }
+    
+    getStatLine(rollType, value, maxValue) {
+        switch(rollType) {
+            case 'str':
+                return `<div class="itemStat">+${value}${maxValue} STR</div>`;
+            case 'agi':
+                return `<div class="itemStat">+${value}${maxValue} AGI</div>`;
+            case 'int':
+                return `<div class="itemStat">+${value}${maxValue} INT</div>`;
+            case 'allstats':
+                // Show which stat got the bonus
+                const mainStat = ['str', 'agi', 'int'][Math.floor(Math.random() * 3)];
+                let statText = `<div class="itemStat">+${value * 2}${maxValue ? ` (${maxValue * 2})` : ''} ${mainStat.toUpperCase()}, `;
+                statText += `+${value}${maxValue} to other stats</div>`;
+                return statText;
+            case 'hp':
+                return `<div class="itemStat">+${value * 10}${maxValue ? ` (${maxValue * 10})` : ''} HP</div>`;
+            case 'armor':
+                return `<div class="itemStat">+${value}${maxValue} Armor</div>`;
+            case 'resist':
+                return `<div class="itemStat">+${value}${maxValue} Resist</div>`;
+            case 'hpRegen':
+                return `<div class="itemStat">+${(value * 0.1).toFixed(1)}${maxValue ? ` (${(maxValue * 0.1).toFixed(1)})` : ''} HP Regen</div>`;
+            case 'attackSpeed':
+                return `<div class="itemStat">+${value}%${maxValue ? ` (${maxValue}%)` : ''} Attack Speed</div>`;
+            default:
+                return '';
+        }
     }
 }
 
@@ -617,7 +695,8 @@ class Item {
                     armor: 0,
                     resist: 0,
                     hpRegen: 0,
-                    attackSpeed: 0
+                    attackSpeed: 0,
+                    cdr: 0
                 };
                 this.awakened = false;
                 this.abilities = this.getClassAbilities();
@@ -852,7 +931,8 @@ class Item {
                     armor: 0,
                     resist: 0,
                     hpRegen: 0,
-                    attackSpeed: 0
+                    attackSpeed: 0,
+                    cdr: 0
                 };
                 
                 // Add stats from all equipped items
@@ -1357,7 +1437,7 @@ enterDungeon(tierName, dungeonIndex) {
                         // Add click handler
                         itemDiv.onclick = () => this.showItemOptions(item, index, family);
                         
-                        // Add hover tooltip
+                        // Add hover tooltip with alt key detection
                         itemDiv.onmouseover = (e) => this.showItemTooltip(e, item);
                         itemDiv.onmouseout = () => this.hideItemTooltip();
                         
@@ -1380,6 +1460,9 @@ enterDungeon(tierName, dungeonIndex) {
             }
 
             showItemTooltip(event, item) {
+                // Check if alt key is held
+                const showMax = event.altKey;
+                
                 // Create or get tooltip element
                 let tooltip = document.getElementById('itemTooltipDiv');
                 if (!tooltip) {
@@ -1397,7 +1480,7 @@ enterDungeon(tierName, dungeonIndex) {
                     document.body.appendChild(tooltip);
                 }
                 
-                tooltip.innerHTML = item.getTooltip();
+                tooltip.innerHTML = item.getTooltip(showMax);
                 tooltip.style.display = 'block';
                 
                 // Position tooltip
@@ -3010,6 +3093,45 @@ window.addEventListener('DOMContentLoaded', async () => {
                             game.showMainMenu();
                             e.preventDefault();
                             break;
+                    }
+                }
+            });
+            
+            // Add global handler for alt key to update item tooltips
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Alt') {
+                    // Check if tooltip is currently showing
+                    const tooltip = document.getElementById('itemTooltipDiv');
+                    if (tooltip && tooltip.style.display === 'block') {
+                        // Find the element being hovered
+                        const hovered = document.querySelector(':hover');
+                        if (hovered && hovered.classList.contains('stashItemSlot')) {
+                            // Update tooltip with max values
+                            const itemIndex = Array.from(hovered.parentNode.children).indexOf(hovered);
+                            const family = game.currentStashFamily;
+                            if (family && game.stashes[family.name] && game.stashes[family.name].items[itemIndex]) {
+                                const item = game.stashes[family.name].items[itemIndex];
+                                tooltip.innerHTML = item.getTooltip(true);
+                            }
+                        }
+                    }
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                if (e.key === 'Alt') {
+                    // Update tooltip without max values
+                    const tooltip = document.getElementById('itemTooltipDiv');
+                    if (tooltip && tooltip.style.display === 'block') {
+                        const hovered = document.querySelector(':hover');
+                        if (hovered && hovered.classList.contains('stashItemSlot')) {
+                            const itemIndex = Array.from(hovered.parentNode.children).indexOf(hovered);
+                            const family = game.currentStashFamily;
+                            if (family && game.stashes[family.name] && game.stashes[family.name].items[itemIndex]) {
+                                const item = game.stashes[family.name].items[itemIndex];
+                                tooltip.innerHTML = item.getTooltip(false);
+                            }
+                        }
                     }
                 }
             });
