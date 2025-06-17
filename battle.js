@@ -444,33 +444,137 @@ for (let i = 1; i <= 5; i++) {
 
     
 
-    start() {
-
-        this.log("Battle started!");
-
-        this.log(`Your party: ${this.party.map(u => u.name).join(', ')}`);
-
-        
-
-        // Create wave counter
-
-        this.createWaveCounter();
-
-        
-
-        // Initial UI update
-
-        this.updateUI();
-
-        
-
-        // Start the battle loop with a small delay
-
-        setTimeout(() => this.battleLoop(), 500);
-
-    }
-
+start() {
+    this.log("Battle started!");
+    this.log(`Your party: ${this.party.map(u => u.name).join(', ')}`);
     
+    // Create UI elements
+    this.createBattleUI();
+    
+    // Initial UI update
+    this.updateUI();
+    
+    // Start the battle loop with a small delay
+    setTimeout(() => this.battleLoop(), 500);
+    
+    // Start timer update
+    this.startTimerUpdate();
+}
+
+    createBattleUI() {
+    // Create wave counter
+    this.createWaveCounter();
+    
+    // Create timer
+    this.createTimer();
+    
+    // Create dungeon name display
+    this.createDungeonNameDisplay();
+    
+    // Create automatic mode display
+    if (this.game.autoReplay) {
+        this.createAutomaticModeDisplay();
+    }
+}
+
+createTimer() {
+    // Remove any existing timer
+    const existingTimer = document.getElementById('battleTimer');
+    if (existingTimer) {
+        existingTimer.remove();
+    }
+    
+    // Create new timer
+    const timer = document.createElement('div');
+    timer.id = 'battleTimer';
+    timer.className = 'battleTimer';
+    timer.textContent = '00:00';
+    
+    const battleScene = document.getElementById('battleScene');
+    if (battleScene) {
+        battleScene.appendChild(timer);
+    }
+}
+
+createDungeonNameDisplay() {
+    // Remove any existing dungeon name
+    const existingName = document.getElementById('dungeonNameDisplay');
+    if (existingName) {
+        existingName.remove();
+    }
+    
+    // Create new dungeon name display
+    const nameDisplay = document.createElement('div');
+    nameDisplay.id = 'dungeonNameDisplay';
+    nameDisplay.className = 'dungeonNameDisplay';
+    nameDisplay.textContent = this.game.currentDungeon ? this.game.currentDungeon.name : '';
+    
+    const battleScene = document.getElementById('battleScene');
+    if (battleScene) {
+        battleScene.appendChild(nameDisplay);
+    }
+}
+
+createAutomaticModeDisplay() {
+    // Remove any existing automatic mode display
+    const existingDisplay = document.getElementById('automaticModeDisplay');
+    if (existingDisplay) {
+        existingDisplay.remove();
+    }
+    
+    // Create new automatic mode display
+    const autoDisplay = document.createElement('div');
+    autoDisplay.id = 'automaticModeDisplay';
+    autoDisplay.className = 'automaticModeDisplay';
+    
+    // Initialize automatic mode tracking if not exists
+    if (!this.game.automaticModeStartTime) {
+        this.game.automaticModeStartTime = Date.now();
+        this.game.automaticModeCompletions = 0;
+    }
+    
+    autoDisplay.innerHTML = `
+        <div class="autoModeTitle">Automatic Mode</div>
+        <div class="autoModeTime">00:00</div>
+        <div class="autoModeCompletions">Completions: ${this.game.automaticModeCompletions}</div>
+    `;
+    
+    const battleScene = document.getElementById('battleScene');
+    if (battleScene) {
+        battleScene.appendChild(autoDisplay);
+    }
+}
+
+startTimerUpdate() {
+    // Update timer every second
+    this.timerInterval = setInterval(() => {
+        this.updateTimer();
+        this.updateAutomaticModeDisplay();
+    }, 1000);
+}
+
+updateTimer() {
+    const timer = document.getElementById('battleTimer');
+    if (timer && this.startTime) {
+        const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+}
+
+updateAutomaticModeDisplay() {
+    const autoDisplay = document.getElementById('automaticModeDisplay');
+    if (autoDisplay && this.game.automaticModeStartTime) {
+        const elapsed = Math.floor((Date.now() - this.game.automaticModeStartTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        const timeElement = autoDisplay.querySelector('.autoModeTime');
+        if (timeElement) {
+            timeElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+    }
+}
 
     createWaveCounter() {
 
@@ -1279,6 +1383,12 @@ calculateWaveExp() {
 
         this.endTime = Date.now();
 
+	    // Clear timer interval
+if (this.timerInterval) {
+    clearInterval(this.timerInterval);
+    this.timerInterval = null;
+}
+
         
 
         // Clear any active targeting
@@ -1290,14 +1400,11 @@ calculateWaveExp() {
         }
 
         // Clean up wave counter
-
-        const waveCounter = document.getElementById('waveCounter');
-
-        if (waveCounter) {
-
-            waveCounter.remove();
-
-        }
+// Don't remove wave counter anymore - keep it visible
+// const waveCounter = document.getElementById('waveCounter');
+// if (waveCounter) {
+//     waveCounter.remove();
+// }
 
         
 
@@ -1314,6 +1421,18 @@ calculateWaveExp() {
                 }
             });
         }
+
+	    // Clean up UI elements when battle ends (but keep wave counter)
+const elementsToCleanup = ['battleTimer', 'dungeonNameDisplay'];
+if (!this.game.autoReplay) {
+    elementsToCleanup.push('automaticModeDisplay');
+}
+elementsToCleanup.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+        element.remove();
+    }
+});
 	    
         // Close any open popup
         this.game.closeHeroInfo();
@@ -1773,6 +1892,8 @@ if (levelIndicator) {
                             e.stopPropagation();
                             // Store the unit data at click time
                             const clickedUnit = unit;
+
+				
                             
                             // Close any existing popup first
                             this.game.closeHeroInfo();
