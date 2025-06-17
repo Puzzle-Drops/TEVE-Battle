@@ -260,6 +260,10 @@ body {
     width: 100%;
 }
 
+.heroResult.golden {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
 /* Hero result item borders based on rarity */
 .heroResult.green {
     border-color: #00ff88;
@@ -276,9 +280,9 @@ body {
     box-shadow: 0 0 15px rgba(216, 150, 255, 0.4);
 }
 
-.heroResult.golden {
-    border-color: #ffd700;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+.heroResult.red {
+    border-color: #ff4444;
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
 }
 
 /* Make item slots in battle results clickable for tooltip */
