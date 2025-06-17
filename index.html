@@ -616,7 +616,14 @@ getTooltip(showMax = false) {
     
     let tooltip = `<div class="itemTooltip ${rarity}">`;
     tooltip += `<div class="itemName">${this.name} - Level ${this.level}</div>`;
-    tooltip += `<div class="itemQuality">Quality: ${this.getQualityPercent()}% ${starData.html ? `<span class="itemStars ${starData.colorClass}">${starData.html}</span>` : ''}</div>`;
+    
+    // Quality and stars inline
+    tooltip += `<div class="itemQualityLine">`;
+    tooltip += `<span class="itemQualityText">Quality: ${this.getQualityPercent()}%</span>`;
+    if (starData.html) {
+        tooltip += `<span class="itemStarsInline ${starData.colorClass}">${starData.html}</span>`;
+    }
+    tooltip += `</div>`;
     
     // Show item image if available
     tooltip += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${this.id}.png" alt="${this.name}" onerror="this.style.display='none'"></div>`;
@@ -638,9 +645,9 @@ getTooltip(showMax = false) {
         tooltip += this.getStatLine(this.roll3, value, maxValue);
     }
     if (this.quality4 > 0) {
-        const value = Math.floor(10 * (this.quality4 / 5));
-        const maxValue = showMax ? ' (10)' : '';
-        tooltip += `<div class="itemStat">+${value}%${maxValue} Cooldown Reduction</div>`;
+        const value = Math.floor(this.value4 * (this.quality4 / 5));
+        const maxValue = showMax ? ` (${this.value4})` : '';
+        tooltip += this.getStatLine(this.roll4, value, maxValue);
     }
     
     tooltip += `<div class="itemSellValue">Sell Value: <span class="goldText">${this.sellcost} gold</span></div>`;
@@ -2299,20 +2306,23 @@ showGearTab(hero, content) {
     `;
 }
 		
-            unequipGear(slot) {
-                const hero = this.heroes[this.selectedHero];
-                const item = hero.unequipItem(slot);
-                
-                if (item) {
-                    // Add to stash
-                    const familyName = this.getClassFamily(hero.className, hero.classTier);
-                    this.stashes[familyName].items.push(item);
-                    
-                    // Refresh gear tab
-                    this.showGearTab(hero, document.getElementById('heroContent'));
-                }
-            }
-
+unequipGear(slot) {
+    // Hide item tooltip first
+    this.hideItemTooltip();
+    
+    const hero = this.heroes[this.selectedHero];
+    const item = hero.unequipItem(slot);
+    
+    if (item) {
+        // Add to stash
+        const familyName = this.getClassFamily(hero.className, hero.classTier);
+        this.stashes[familyName].items.push(item);
+        
+        // Refresh gear tab
+        this.showGearTab(hero, document.getElementById('heroContent'));
+    }
+}
+		
 equipFromStash(itemIndex, slot) {
     // Hide item tooltip first
     this.hideItemTooltip();
