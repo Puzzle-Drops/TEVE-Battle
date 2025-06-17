@@ -303,9 +303,14 @@ body {
     box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
 }
 
+.heroResult.blue {
+    border-color: #00c3ff; /* Changed from #4dd0e1 */
+    box-shadow: 0 0 20px rgba(0, 195, 255, 0.5);
+}
+
 .heroResult.blue .itemSlot {
-    border: 2px solid #4dd0e1;
-    box-shadow: 0 0 15px rgba(77, 208, 225, 0.4);
+    border: 2px solid #00c3ff; /* Changed from #4dd0e1 */
+    box-shadow: 0 0 20px rgba(0, 195, 255, 0.5);
 }
 
 .heroResult.purple .itemSlot {
@@ -314,12 +319,12 @@ body {
 }
 
 .heroResult.red .itemSlot {
-    border: 2px solid #ff4444;
+    border: 3px solid #ff4444;
     box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
 }
 
 .heroResult.golden .itemSlot {
-    border: 2px solid #ffd700;
+    border: 1px solid #ffd700;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
 }
 
@@ -334,7 +339,8 @@ body {
 
 /* Ensure item tooltip has higher max-height */
 .itemTooltip {
-    min-width: 250px;
+    min-width: 200px;
+    max-width: 250px;
     max-height: 600px;
     overflow-y: auto;
 }
@@ -507,8 +513,8 @@ body {
 }
 
 .itemSlot {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     background: rgba(10, 25, 41, 0.8);
     border: 1px solid #2a6a8a;
     margin: 15px auto 5px;
@@ -1462,8 +1468,8 @@ body {
     padding: 0;
     text-align: center;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     position: relative;
     overflow: hidden;
 }
@@ -1507,8 +1513,8 @@ body {
 }
 
 .gearItem.blue {
-    border: 2px solid #4dd0e1;
-    box-shadow: 0 0 10px rgba(77, 208, 225, 0.3);
+    border: 2px solid #00c3ff; /* Changed from #4dd0e1 */
+    box-shadow: 0 0 15px rgba(0, 195, 255, 0.5);
 }
 
 .gearItem.purple {
@@ -2473,8 +2479,8 @@ body {
 
 /* Item rarity borders */
 .stashItemSlot {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     background: rgba(10, 25, 41, 0.8);
     border: 2px solid #2a6a8a;
     padding: 2px;
@@ -2488,8 +2494,8 @@ body {
 }
 
 .stashItemSlot.blue {
-    border-color: #4dd0e1;
-    box-shadow: 0 0 10px rgba(77, 208, 225, 0.3);
+    border-color: #00c3ff; /* Changed from #4dd0e1 */
+    box-shadow: 0 0 15px rgba(0, 195, 255, 0.5);
 }
 
 .stashItemSlot.purple {
@@ -2511,11 +2517,6 @@ body {
     transform: scale(1.1);
 }
 
-/* Item tooltip styles */
-.itemTooltip {
-    min-width: 250px;
-}
-
 .itemName {
     font-size: 20px;
     font-weight: bold;
@@ -2529,7 +2530,7 @@ body {
 }
 
 .itemTooltip.blue .itemName {
-    color: #4dd0e1;
+    color: #00c3ff; /* Changed from #4dd0e1 */
 }
 
 .itemTooltip.purple .itemName {
@@ -2586,7 +2587,7 @@ body {
 }
 
 .gearItem.blue {
-    color: #4dd0e1;
+    color: #00c3ff; /* Changed from #4dd0e1 */
 }
 
 .gearItem.purple {
@@ -2607,7 +2608,7 @@ body {
 }
 
 .statValue.blue {
-    color: #4dd0e1;
+    color: #00c3ff; /* Changed from #4dd0e1 */
 }
 
 .statValue.purple {
@@ -2624,11 +2625,11 @@ body {
 
 .stashInventory {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 70px);
+    grid-template-columns: repeat(auto-fill, 74px);
     gap: 10px;
     padding: 20px;
     min-height: 400px;
-    max-height: 600px;
+    max-height: 100%;
     overflow-y: auto;
 }
 
@@ -2640,21 +2641,42 @@ body {
     overflow-y: auto;
 }
 
-/* Updated styles for tooltip quality and stars */
+/* Updated tooltip styles */
+.itemTooltip {
+    min-width: 200px; /* Reduced from 250px */
+    max-width: 250px; /* Added max width */
+}
+
+.itemTooltip .itemName {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #2a6a8a;
+}
+
+.itemTooltip .itemLevel {
+    font-size: 16px;
+    color: #b0e0f0;
+    margin-bottom: 8px;
+}
+
 .itemQualityText {
     font-size: 16px;
     color: #b0e0f0;
     margin-bottom: 5px;
-    padding-bottom: 5px;
 }
 
 .itemStarsInline {
     font-size: 16px;
     font-weight: bold;
     letter-spacing: -2px;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
+    margin-bottom: 8px;
+}
+
+.itemDivider {
     border-bottom: 1px solid #2a6a8a;
+    margin-bottom: 10px;
 }
 
 .itemStarsInline.golden {
