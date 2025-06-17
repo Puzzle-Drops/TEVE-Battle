@@ -1840,6 +1840,12 @@ elementsToRemove.forEach(id => {
                         clearInterval(this.autoReplayTimer);
                         this.autoReplayTimer = null;
                     }
+
+			// Reset automatic mode if not auto replaying
+if (!this.autoReplay) {
+    this.automaticModeStartTime = null;
+    this.automaticModeCompletions = 0;
+}
                     
                     // Reset party's action bars for next battle
                     this.selectedParty.forEach(heroIndex => {
