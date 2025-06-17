@@ -75,15 +75,19 @@ class BattleUnit {
     }
 
 	get armor() {
-		const stats = this.stats;
-		const gearArmor = this.isEnemy ? 0 : this.source.armor;
-		return gearArmor;
+		if (this.isEnemy) {
+			return this.source.armor;
+		} else {
+			return this.source.armor;
+		}
 	}
 
 	get resist() {
-		const stats = this.stats;
-		const gearResist = this.isEnemy ? 0 : this.source.resist;
-		return gearResist;
+		if (this.isEnemy) {
+			return this.source.resist;
+		} else {
+			return this.source.resist;
+		}
 	}
 
 	get physicalDamageReduction() {
