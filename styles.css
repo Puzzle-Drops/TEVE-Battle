@@ -288,7 +288,9 @@ body {
 
 /* Make item slots in battle results clickable for tooltip */
 .heroResult .itemSlot {
+    position: relative;
     cursor: pointer;
+    overflow: visible;
 }
 
 .heroResult .itemSlot:hover {
@@ -296,7 +298,27 @@ body {
 }
 
 /* Gold reward styling in battle results */
-.heroResult .itemSlot.golden {
+.heroResult.green .itemSlot {
+    border: 2px solid #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+}
+
+.heroResult.blue .itemSlot {
+    border: 2px solid #4dd0e1;
+    box-shadow: 0 0 15px rgba(77, 208, 225, 0.4);
+}
+
+.heroResult.purple .itemSlot {
+    border: 2px solid #d896ff;
+    box-shadow: 0 0 15px rgba(216, 150, 255, 0.4);
+}
+
+.heroResult.red .itemSlot {
+    border: 2px solid #ff4444;
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+}
+
+.heroResult.golden .itemSlot {
     border: 2px solid #ffd700;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
 }
@@ -315,6 +337,21 @@ body {
     min-width: 250px;
     max-height: 600px;
     overflow-y: auto;
+}
+
+.stashItemSlot img,
+.gearItem img,
+.itemSlot img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Item stars in tooltips should be inline */
+.itemTooltip .itemStars {
+    position: static;
+    display: inline-block;
+    margin-left: 10px;
 }
 
 /* Battle Results Popup */
@@ -1372,35 +1409,105 @@ body {
     color: #6a9aaa;
 }
 
+/* Item visual indicators */
+.itemContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.itemStars {
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: -3px;
+    text-shadow: 
+        0 0 4px rgba(0, 0, 0, 0.9),
+        1px 1px 2px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 1);
+    z-index: 2;
+}
+
+.itemStars.golden {
+    color: #ffd700;
+}
+
+.itemStars.red {
+    color: #ff4444;
+}
+
+.itemLevel {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 
+        0 0 4px rgba(0, 0, 0, 0.9),
+        1px 1px 2px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 1);
+    z-index: 2;
+}
+
+.itemQuality {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 1px 3px;
+    border-radius: 2px;
+    z-index: 2;
+}
+
 /* Gear Tab */
 .gearSlot {
     background: rgba(10, 25, 41, 0.8);
     border: 1px solid #2a6a8a;
-    padding: 2px;
+    padding: 0;
     text-align: center;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
     width: 100px;
     height: 100px;
-	text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .gearLabel {
-    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
     color: #6a9aaa;
-    margin-top: 0px;
-    margin-bottom: 5px;
-	text-align: center;
+    margin: 0;
+    z-index: 0;
 }
 
 .gearItem {
-    font-size: 10px;
-    color: #b0e0f0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 80px;
-    height: 80px;
-	text-align: center;
+    z-index: 1;
+    background: rgba(10, 25, 41, 0.95);
+    cursor: pointer;
+}
+
+.gearGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+    margin-top: 20px;
 }
 
 /* Gear item image containers */
