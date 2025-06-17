@@ -2655,12 +2655,6 @@ body {
     border-bottom: 1px solid #2a6a8a;
 }
 
-.itemTooltip .itemLevel {
-    font-size: 16px;
-    color: #b0e0f0;
-    margin-bottom: 8px;
-}
-
 .itemQualityText {
     font-size: 16px;
     color: #b0e0f0;
@@ -2705,4 +2699,19 @@ body {
     padding: 0;
     border-radius: 0;
     z-index: 2;
+}
+
+/* Item level text in tooltip */
+.itemTooltip .itemLevelText {
+    font-size: 16px;
+    color: #b0e0f0;
+    margin-bottom: 8px;
+}
+
+/* Ensure the divider always shows */
+.itemDivider {
+    width: 100%;
+    height: 1px;
+    background-color: #2a6a8a;
+    margin: 8px 0 10px 0;
 }
