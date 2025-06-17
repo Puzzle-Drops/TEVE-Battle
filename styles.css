@@ -347,13 +347,6 @@ body {
     object-fit: contain;
 }
 
-/* Item stars in tooltips should be inline */
-.itemTooltip .itemStars {
-    position: static;
-    display: inline-block;
-    margin-left: 10px;
-}
-
 /* Battle Results Popup */
 .battleResultsPopup {
     display: none;
@@ -1459,9 +1452,6 @@ body {
     font-size: 11px;
     font-weight: bold;
     color: #fff;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 1px 3px;
-    border-radius: 2px;
     z-index: 2;
 }
 
@@ -2648,4 +2638,53 @@ body {
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     padding: 20px;
     overflow-y: auto;
+}
+
+/* Separate styles for tooltip quality and stars */
+.itemQualityLine {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #2a6a8a;
+}
+
+.itemQualityText {
+    font-size: 16px;
+    color: #b0e0f0;
+}
+
+.itemStarsInline {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: -2px;
+}
+
+.itemStarsInline.golden {
+    color: #ffd700;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.itemStarsInline.red {
+    color: #ff4444;
+    text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+}
+
+/* Fix the item quality overlay on actual items */
+.itemContainer .itemQuality {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 
+        0 0 4px rgba(0, 0, 0, 0.9),
+        1px 1px 2px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 1);
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    z-index: 2;
 }
