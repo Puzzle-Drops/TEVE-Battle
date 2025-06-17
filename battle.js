@@ -1490,7 +1490,7 @@ heroResults: this.party.map((unit, index) => {
 
         if (logElement) {
 
-            logElement.innerHTML = this.battleLog.slice(-10).join('<br>') + '<br>';
+            logElement.innerHTML = this.battleLog.slice(-50).join('<br>') + '<br>';
 
             logElement.scrollTop = logElement.scrollHeight;
 
