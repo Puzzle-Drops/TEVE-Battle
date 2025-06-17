@@ -260,12 +260,6 @@ body {
     width: 100%;
 }
 
-/* Hero result item borders based on rarity */
-.heroResult.golden {
-    border-color: #ffd700;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
 .heroResult.green {
     border-color: #00ff88;
     box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
