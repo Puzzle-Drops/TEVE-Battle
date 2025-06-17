@@ -130,10 +130,14 @@
                 <div class="autoToggleContainer">
                     <label style="color: #b0e0f0;">
                         <input type="checkbox" id="autoModeToggle" onchange="game.currentBattle && game.currentBattle.toggleAutoMode(this.checked)">
-                        Auto
+                        Auto Battle
+                    </label>
+                    <label style="color: #b0e0f0; margin-left: 20px;">
+                        <input type="checkbox" id="autoReplayToggle" onchange="game.toggleAutoReplay(this.checked)">
+                        Auto Replay
                     </label>
                 </div>
-                <div class="abilityPanel" id="abilityPanel">
+		    <div class="abilityPanel" id="abilityPanel">
                 </div>
             </div>
             <button class="exitBattleButton" onclick="game.exitBattle()">Exit Battle</button>
@@ -250,6 +254,16 @@
                         <!-- Hero thumbnails will be generated here -->
                     </div>
                     <div class="actionButtons">
+                        <div class="autoTogglesPartySelect">
+                            <label style="color: #b0e0f0;">
+                                <input type="checkbox" id="autoBattleToggle" onchange="game.toggleAutoBattle(this.checked)">
+                                Auto Battle
+                            </label>
+                            <label style="color: #b0e0f0;">
+                                <input type="checkbox" id="autoReplayToggleParty" onchange="game.toggleAutoReplay(this.checked)">
+                                Auto Replay
+                            </label>
+                        </div>
                         <button class="startBattleBtn" id="startBattleBtn" disabled onclick="game.startBattle()">
                             ⚔️ Start
                         </button>
@@ -257,7 +271,7 @@
                             Cancel
                         </button>
                     </div>
-                </div>
+		</div>
             </div>
         </div>
 
@@ -1097,7 +1111,10 @@ equipItem(item, slot) {
                 this.expandedDungeon = null;
                 this.currentPreviewWave = 0;
                 this.pendingBattleResults = null; // Store results until popup is closed
-                
+                this.autoBattle = false; // Auto Battle state
+                this.autoReplay = false; // Auto Replay state
+                this.autoReplayTimer = null; // Timer for auto replay          
+		    
                 // Initialize stashes for all class families including villager
                 this.stashes = {
                     'Villager': { gold: 100000, items: [] },
@@ -1665,9 +1682,10 @@ hideGoldTooltip() {
                     battleField.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
                 }
                 
-                // Reset auto mode toggle
-                document.getElementById('autoModeToggle').checked = false;
-                
+              // Set auto toggles based on saved states
+                document.getElementById('autoModeToggle').checked = this.autoBattle;
+                document.getElementById('autoReplayToggle').checked = this.autoReplay;
+		    
                 // Update UI with actual units
                 this.updateBattleUI();
             }
@@ -1712,7 +1730,43 @@ hideGoldTooltip() {
                 
                 // Create and start battle with waves
                 this.currentBattle = new Battle(this, party, this.dungeonWaves);
+                
+                // Set auto mode if enabled
+                if (this.autoBattle) {
+                    this.currentBattle.autoMode = true;
+                }
+                
                 this.currentBattle.start();
+            }
+            
+            toggleAutoBattle(enabled) {
+                this.autoBattle = enabled;
+                // Update both toggle elements
+                const battleToggle = document.getElementById('autoModeToggle');
+                if (battleToggle) battleToggle.checked = enabled;
+                const partyToggle = document.getElementById('autoBattleToggle');
+                if (partyToggle) partyToggle.checked = enabled;
+                
+                // Update current battle if running
+                if (this.currentBattle) {
+                    this.currentBattle.toggleAutoMode(enabled);
+                }
+            }
+            
+            toggleAutoReplay(enabled) {
+                this.autoReplay = enabled;
+                // Update both toggle elements
+                const battleToggle = document.getElementById('autoReplayToggle');
+                if (battleToggle) battleToggle.checked = enabled;
+                const partyToggle = document.getElementById('autoReplayToggleParty');
+                if (partyToggle) partyToggle.checked = enabled;
+                
+                // Cancel any existing timer if disabling
+                if (!enabled && this.autoReplayTimer) {
+                    clearTimeout(this.autoReplayTimer);
+                    this.autoReplayTimer = null;
+                    this.updateAutoReplayText(null);
+                }
             }
 
             exitBattle() {
@@ -1757,6 +1811,12 @@ hideGoldTooltip() {
         
                     // Close any open popup
                     this.closeHeroInfo();
+
+			// Clear any auto replay timer
+                    if (this.autoReplayTimer) {
+                        clearInterval(this.autoReplayTimer);
+                        this.autoReplayTimer = null;
+                    }
                     
                     // Reset party's action bars for next battle
                     this.selectedParty.forEach(heroIndex => {
@@ -2552,6 +2612,12 @@ equipFromStash(itemIndex, slot) {
                 
                 // Update dungeon info
                 document.getElementById('dungeonName').textContent = this.currentDungeon.name;
+
+		    // Set toggle states
+                const autoBattleToggle = document.getElementById('autoBattleToggle');
+                if (autoBattleToggle) autoBattleToggle.checked = this.autoBattle;
+                const autoReplayToggle = document.getElementById('autoReplayToggleParty');
+                if (autoReplayToggle) autoReplayToggle.checked = this.autoReplay;
                 
                 // Render hero selection list
                 this.renderHeroSelectList();
@@ -3244,21 +3310,64 @@ if (result.item) {
     }
 });    
     popup.style.display = 'block';
+    
+    // Handle auto replay if enabled and victory
+    if (this.autoReplay && results.victory) {
+        let countdown = 5;
+        this.updateAutoReplayText(countdown);
+        
+        this.autoReplayTimer = setInterval(() => {
+            countdown--;
+            if (countdown <= 0) {
+                clearInterval(this.autoReplayTimer);
+                this.autoReplayTimer = null;
+                this.closeBattleResults();
+            } else {
+                this.updateAutoReplayText(countdown);
+            }
+        }, 1000);
+    }
 }
-
+		
 closeBattleResults() {
     const popup = document.getElementById('battleResultsPopup');
     popup.style.display = 'none';
+    
+    // Clear any auto replay timer
+    if (this.autoReplayTimer) {
+        clearInterval(this.autoReplayTimer);
+        this.autoReplayTimer = null;
+        this.updateAutoReplayText(null);
+    }
     
     if (this.pendingBattleResults) {
         // Apply the results (gold and items)
         this.applyBattleResults();
         
+        // Check if auto replay is enabled and it was a victory
+        const shouldAutoReplay = this.autoReplay && this.pendingBattleResults.victory;
+        
         // Clear pending results
         this.pendingBattleResults = null;
         
-        // Return to party select
-        this.showPartySelect();
+        if (shouldAutoReplay) {
+            // Auto start next battle
+            this.startBattle();
+        } else {
+            // Return to party select
+            this.showPartySelect();
+        }
+    }
+}
+
+updateAutoReplayText(countdown) {
+    const closeBtn = document.querySelector('.closeResultsBtn');
+    if (closeBtn) {
+        if (countdown !== null) {
+            closeBtn.textContent = `Auto Replay in ${countdown}...`;
+        } else {
+            closeBtn.textContent = 'Continue';
+        }
     }
 }
 
