@@ -2204,30 +2204,39 @@ showGearTab(hero, content) {
                 }
             }
 
-            equipFromStash(itemIndex, slot) {
-                const hero = this.heroes[this.selectedHero];
-                const familyName = this.getClassFamily(hero.className, hero.classTier);
-                const stash = this.stashes[familyName];
-                const item = stash.items[itemIndex];
-                
-                if (item && item.slot === slot) {
-                    // Remove from stash
-                    stash.items.splice(itemIndex, 1);
-                    
-                    // If there's already an item equipped, put it back in stash
-                    const currentItem = hero.gear[slot];
-                    if (currentItem) {
-                        stash.items.push(currentItem);
-                    }
-                    
-                    // Equip the new item
-                    hero.equipItem(item, slot);
-                    
-                    // Refresh gear tab
-                    this.showGearTab(hero, document.getElementById('heroContent'));
-                }
-            }
-
+equipFromStash(itemIndex, slot) {
+    // Hide item tooltip first
+    this.hideItemTooltip();
+    
+    const hero = this.heroes[this.selectedHero];
+    const familyName = this.getClassFamily(hero.className, hero.classTier);
+    const stash = this.stashes[familyName];
+    const item = stash.items[itemIndex];
+    
+    if (item && item.slot === slot) {
+        // Check villager restriction
+        if ((hero.className.includes('villager') || hero.className.includes('tester')) && item.level > 50) {
+            alert('Villagers can only equip items level 50 and below!');
+            return;
+        }
+        
+        // Remove from stash
+        stash.items.splice(itemIndex, 1);
+        
+        // If there's already an item equipped, put it back in stash
+        const currentItem = hero.gear[slot];
+        if (currentItem) {
+            stash.items.push(currentItem);
+        }
+        
+        // Equip the new item
+        hero.equipItem(item, slot);
+        
+        // Refresh gear tab
+        this.showGearTab(hero, document.getElementById('heroContent'));
+    }
+}
+		
             showLogTab(hero, content) {
                 content.innerHTML = `
                     <h3>Activity Log</h3>
