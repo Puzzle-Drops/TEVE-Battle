@@ -1758,21 +1758,36 @@ hideGoldTooltip() {
                 }
             }
             
-            toggleAutoReplay(enabled) {
-                this.autoReplay = enabled;
-                // Update both toggle elements
-                const battleToggle = document.getElementById('autoReplayToggle');
-                if (battleToggle) battleToggle.checked = enabled;
-                const partyToggle = document.getElementById('autoReplayToggleParty');
-                if (partyToggle) partyToggle.checked = enabled;
-                
-                // Cancel any existing timer if disabling
-                if (!enabled && this.autoReplayTimer) {
-                    clearTimeout(this.autoReplayTimer);
-                    this.autoReplayTimer = null;
-                    this.updateAutoReplayText(null);
-                }
-            }
+toggleAutoReplay(enabled) {
+    this.autoReplay = enabled;
+    // Update both toggle elements
+    const battleToggle = document.getElementById('autoReplayToggle');
+    if (battleToggle) battleToggle.checked = enabled;
+    const partyToggle = document.getElementById('autoReplayToggleParty');
+    if (partyToggle) partyToggle.checked = enabled;
+    
+    // Cancel any existing timer if disabling
+    if (!enabled) {
+        if (this.autoReplayTimer) {
+            clearTimeout(this.autoReplayTimer);
+            this.autoReplayTimer = null;
+            this.updateAutoReplayText(null);
+        }
+        // Reset automatic mode tracking
+        this.automaticModeStartTime = null;
+        this.automaticModeCompletions = 0;
+        // Remove automatic mode display if it exists
+        const autoDisplay = document.getElementById('automaticModeDisplay');
+        if (autoDisplay) {
+            autoDisplay.remove();
+        }
+    } else {
+        // If enabling during battle, create the automatic mode display
+        if (this.currentBattle && this.currentBattle.running) {
+            this.currentBattle.createAutomaticModeDisplay();
+        }
+    }
+}
 
             exitBattle() {
                 if (this.currentBattle) {
@@ -1791,11 +1806,14 @@ hideGoldTooltip() {
                         }
                     });
                     
-                    // Clean up any lingering UI elements
-                    const waveCounter = document.getElementById('waveCounter');
-                    if (waveCounter) {
-                        waveCounter.remove();
-                    }
+// Clean up any lingering UI elements
+const elementsToRemove = ['waveCounter', 'battleTimer', 'dungeonNameDisplay', 'automaticModeDisplay'];
+elementsToRemove.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+        element.remove();
+    }
+});
                     
                     // Clear ability panel
                     document.getElementById('abilityPanel').innerHTML = '';
@@ -3351,6 +3369,11 @@ closeBattleResults() {
     if (this.pendingBattleResults) {
         // Apply the results (gold and items)
         this.applyBattleResults();
+
+	    // Increment completions counter if victory and automatic mode
+if (this.pendingBattleResults.victory && this.autoReplay) {
+    this.automaticModeCompletions = (this.automaticModeCompletions || 0) + 1;
+}
         
         // Check if auto replay is enabled and it was a victory, but NOT a manual click
         const shouldAutoReplay = this.autoReplay && this.pendingBattleResults.victory && !wasManualClick;
@@ -3362,6 +3385,11 @@ closeBattleResults() {
             // Auto start next battle
             this.startBattle();
         } else {
+
+		if (!this.autoReplay) {
+        this.automaticModeStartTime = null;
+        this.automaticModeCompletions = 0;
+    }
             // Return to party select (either manual click or not auto replay)
             this.showPartySelect();
         }
@@ -3489,27 +3517,31 @@ window.addEventListener('DOMContentLoaded', async () => {
                 }
             });
             
-            // Add global handler for alt key to update item tooltips
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Alt') {
-                    e.preventDefault(); // Prevent default Alt key behavior
-                    // Update any visible item tooltip
-                    const tooltip = document.getElementById('itemTooltipDiv');
-                    if (tooltip && tooltip.style.display === 'block' && tooltip._currentItem) {
-                        tooltip.innerHTML = tooltip._currentItem.getTooltip(true);
-                    }
-                }
-            });
-            
-            document.addEventListener('keyup', (e) => {
-                if (e.key === 'Alt') {
-                    // Update tooltip without max values
-                    const tooltip = document.getElementById('itemTooltipDiv');
-                    if (tooltip && tooltip.style.display === 'block' && tooltip._currentItem) {
-                        tooltip.innerHTML = tooltip._currentItem.getTooltip(false);
-                    }
-                }
-            });
+// Add global handler for alt key to update item tooltips
+let altKeyPressed = false;
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Alt' && !altKeyPressed) {
+        e.preventDefault(); // Prevent default Alt key behavior
+        altKeyPressed = true;
+        // Update any visible item tooltip
+        const tooltip = document.getElementById('itemTooltipDiv');
+        if (tooltip && tooltip.style.display === 'block' && tooltip._currentItem) {
+            tooltip.innerHTML = tooltip._currentItem.getTooltip(true);
+        }
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    if (e.key === 'Alt' && altKeyPressed) {
+        altKeyPressed = false;
+        // Update tooltip without max values
+        const tooltip = document.getElementById('itemTooltipDiv');
+        if (tooltip && tooltip.style.display === 'block' && tooltip._currentItem) {
+            tooltip.innerHTML = tooltip._currentItem.getTooltip(false);
+        }
+    }
+});
+	
 // Add this after the existing event listeners (around line 3290)
 // Disable right-click context menu globally
 document.addEventListener('contextmenu', (e) => {
