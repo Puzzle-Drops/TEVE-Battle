@@ -398,13 +398,29 @@ async function loadGameData() {
         return false;
     }
 }
-        // Hero Class
+// Hero Class
         class Hero {
             constructor(className = null) {
                 this.name = this.generateName();
-                this.gender = Math.random() < 0.5 ? 'male' : 'female';
-                // Use gender-specific class name
-                this.className = className || `villager_${this.gender}`;
+                
+                // Determine gender from className if provided, otherwise random
+                if (className) {
+                    // Extract gender from className (all class names end with _male or _female)
+                    if (className.includes('_male')) {
+                        this.gender = 'male';
+                    } else if (className.includes('_female')) {
+                        this.gender = 'female';
+                    } else {
+                        // Fallback to random if className doesn't contain gender
+                        this.gender = Math.random() < 0.5 ? 'male' : 'female';
+                    }
+                    this.className = className;
+                } else {
+                    // No className provided, assign random gender and create villager class
+                    this.gender = Math.random() < 0.5 ? 'male' : 'female';
+                    this.className = `villager_${this.gender}`;
+                }
+                
                 this.level = 5;
                 this.exp = 0;
                 this.expToNext = this.calculateExpToNext();
