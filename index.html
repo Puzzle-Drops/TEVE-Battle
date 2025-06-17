@@ -3232,6 +3232,12 @@ window.addEventListener('DOMContentLoaded', async () => {
                     }
                 }
             });
+// Add this after the existing event listeners (around line 3290)
+// Disable right-click context menu globally
+document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    return false;
+});
         });
     </script>
 </body>
