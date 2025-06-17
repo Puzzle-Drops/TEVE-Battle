@@ -484,7 +484,7 @@ class Item {
     }
     
     getRarity() {
-        if (this.quality4 > 0) return 'red';
+        if (this.quality4 > 0) return 'golden';
         if (this.quality3 > 0) return 'purple';
         if (this.quality2 > 0) return 'blue';
         return 'green';
@@ -1407,7 +1407,7 @@ enterDungeon(tierName, dungeonIndex) {
                 this.showIndividualStash(family);
             }
 
-showIndividualStash(family) {
+            showIndividualStash(family) {
                 this.hideAllScreens();
                 this.currentScreen = 'individualStashScreen';
                 document.getElementById('individualStashScreen').style.display = 'block';
@@ -1421,34 +1421,10 @@ showIndividualStash(family) {
                 inventory.innerHTML = '';
                 
                 const items = this.stashes[family.name].items;
-                
-                // Sort items
-                const sortedItems = [...items].sort((a, b) => {
-                    // First sort by level (highest first)
-                    if (a.level !== b.level) {
-                        return b.level - a.level;
-                    }
-                    
-                    // Then by rarity order: red > purple > blue > green
-                    const rarityOrder = { red: 4, purple: 3, blue: 2, green: 1 };
-                    const aRarity = rarityOrder[a.getRarity()];
-                    const bRarity = rarityOrder[b.getRarity()];
-                    
-                    if (aRarity !== bRarity) {
-                        return bRarity - aRarity;
-                    }
-                    
-                    // Finally by quality percentage (highest first)
-                    return b.getQualityPercent() - a.getQualityPercent();
-                });
-                
-                if (sortedItems.length === 0) {
+                if (items.length === 0) {
                     inventory.innerHTML = '<p style="text-align: center; color: #6a9aaa; margin-top: 50px;">No items in stash</p>';
                 } else {
-                    sortedItems.forEach((item, index) => {
-                        // Find the original index of this item
-                        const originalIndex = items.indexOf(item);
-                        
+                    items.forEach((item, index) => {
                         const itemDiv = document.createElement('div');
                         itemDiv.className = `stashItemSlot ${item.getRarity()}`;
                         itemDiv.innerHTML = `
@@ -1458,7 +1434,7 @@ showIndividualStash(family) {
                         `;
                         
                         // Add click handler
-                        itemDiv.onclick = () => this.showItemOptions(item, originalIndex, family);
+                        itemDiv.onclick = () => this.showItemOptions(item, index, family);
                         
                         // Add hover tooltip with alt key detection
                         itemDiv.onmouseover = (e) => this.showItemTooltip(e, item);
@@ -1468,7 +1444,7 @@ showIndividualStash(family) {
                     });
                 }
             }
-		
+
             showItemOptions(item, itemIndex, family) {
                 // TODO: Show popup with options to equip or sell
                 const sellValue = item.sellcost;
@@ -1511,9 +1487,9 @@ showIndividualStash(family) {
                 // Add colored border based on rarity
                 const rarity = item.getRarity();
                 switch(rarity) {
-                    case 'red':
-                        tooltip.style.borderColor = '#ff4444';
-                        tooltip.style.boxShadow = '0 0 20px rgba(255, 68, 68, 0.5)';
+                    case 'golden':
+                        tooltip.style.borderColor = '#ffd700';
+                        tooltip.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
                         break;
                     case 'purple':
                         tooltip.style.borderColor = '#d896ff';
@@ -2042,30 +2018,10 @@ hideStatTooltip() {
                 `;
             }
 
-showGearTab(hero, content) {
+            showGearTab(hero, content) {
                 // Get the stash for this hero's class family
                 const familyName = this.getClassFamily(hero.className, hero.classTier);
                 const stash = this.stashes[familyName];
-                
-                // Sort stash items
-                const sortedStashItems = [...stash.items].sort((a, b) => {
-                    // First sort by level (highest first)
-                    if (a.level !== b.level) {
-                        return b.level - a.level;
-                    }
-                    
-                    // Then by rarity order: red > purple > blue > green
-                    const rarityOrder = { red: 4, purple: 3, blue: 2, green: 1 };
-                    const aRarity = rarityOrder[a.getRarity()];
-                    const bRarity = rarityOrder[b.getRarity()];
-                    
-                    if (aRarity !== bRarity) {
-                        return bRarity - aRarity;
-                    }
-                    
-                    // Finally by quality percentage (highest first)
-                    return b.getQualityPercent() - a.getQualityPercent();
-                });
                 
                 content.innerHTML = `
                     <div style="display: flex; gap: 40px;">
@@ -2078,11 +2034,7 @@ showGearTab(hero, content) {
                                          onclick="game.unequipGear('trinket')"
                                          onmouseover="${hero.gear.trinket ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.trinket)` : ''}"
                                          onmouseout="game.hideItemTooltip()">
-                                        ${hero.gear.trinket ? 
-                                            `<img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.trinket.id}.png" 
-                                                  alt="${hero.gear.trinket.name}"
-                                                  onerror="this.style.display='none'; this.parentElement.innerHTML='${hero.gear.trinket.name}'">` 
-                                            : 'Empty'}
+                                        ${hero.gear.trinket ? hero.gear.trinket.name : 'Empty'}
                                     </div>
                                 </div>
                                 <div class="gearSlot">
@@ -2091,11 +2043,7 @@ showGearTab(hero, content) {
                                          onclick="game.unequipGear('head')"
                                          onmouseover="${hero.gear.head ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.head)` : ''}"
                                          onmouseout="game.hideItemTooltip()">
-                                        ${hero.gear.head ? 
-                                            `<img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.head.id}.png" 
-                                                  alt="${hero.gear.head.name}"
-                                                  onerror="this.style.display='none'; this.parentElement.innerHTML='${hero.gear.head.name}'">` 
-                                            : 'Empty'}
+                                        ${hero.gear.head ? hero.gear.head.name : 'Empty'}
                                     </div>
                                 </div>
                                 <div class="gearSlot">
@@ -2104,11 +2052,7 @@ showGearTab(hero, content) {
                                          onclick="game.unequipGear('weapon')"
                                          onmouseover="${hero.gear.weapon ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.weapon)` : ''}"
                                          onmouseout="game.hideItemTooltip()">
-                                        ${hero.gear.weapon ? 
-                                            `<img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.weapon.id}.png" 
-                                                  alt="${hero.gear.weapon.name}"
-                                                  onerror="this.style.display='none'; this.parentElement.innerHTML='${hero.gear.weapon.name}'">` 
-                                            : 'Empty'}
+                                        ${hero.gear.weapon ? hero.gear.weapon.name : 'Empty'}
                                     </div>
                                 </div>
                                 <div class="gearSlot">
@@ -2117,11 +2061,7 @@ showGearTab(hero, content) {
                                          onclick="game.unequipGear('chest')"
                                          onmouseover="${hero.gear.chest ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.chest)` : ''}"
                                          onmouseout="game.hideItemTooltip()">
-                                        ${hero.gear.chest ? 
-                                            `<img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.chest.id}.png" 
-                                                  alt="${hero.gear.chest.name}"
-                                                  onerror="this.style.display='none'; this.parentElement.innerHTML='${hero.gear.chest.name}'">` 
-                                            : 'Empty'}
+                                        ${hero.gear.chest ? hero.gear.chest.name : 'Empty'}
                                     </div>
                                 </div>
                                 <div class="gearSlot">
@@ -2130,11 +2070,7 @@ showGearTab(hero, content) {
                                          onclick="game.unequipGear('offhand')"
                                          onmouseover="${hero.gear.offhand ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.offhand)` : ''}"
                                          onmouseout="game.hideItemTooltip()">
-                                        ${hero.gear.offhand ? 
-                                            `<img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.offhand.id}.png" 
-                                                  alt="${hero.gear.offhand.name}"
-                                                  onerror="this.style.display='none'; this.parentElement.innerHTML='${hero.gear.offhand.name}'">` 
-                                            : 'Empty'}
+                                        ${hero.gear.offhand ? hero.gear.offhand.name : 'Empty'}
                                     </div>
                                 </div>
                                 <div class="gearSlot">
@@ -2143,11 +2079,7 @@ showGearTab(hero, content) {
                                          onclick="game.unequipGear('legs')"
                                          onmouseover="${hero.gear.legs ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.legs)` : ''}"
                                          onmouseout="game.hideItemTooltip()">
-                                        ${hero.gear.legs ? 
-                                            `<img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.legs.id}.png" 
-                                                  alt="${hero.gear.legs.name}"
-                                                  onerror="this.style.display='none'; this.parentElement.innerHTML='${hero.gear.legs.name}'">` 
-                                            : 'Empty'}
+                                        ${hero.gear.legs ? hero.gear.legs.name : 'Empty'}
                                     </div>
                                 </div>
                             </div>
@@ -2158,21 +2090,18 @@ showGearTab(hero, content) {
                                 <span style="color: #ffd700; margin-left: 10px;">💰 ${stash.gold.toLocaleString()}</span>
                             </h3>
                             <div style="margin-top: 20px; background: rgba(10, 25, 41, 0.8); padding: 10px; min-height: 300px; max-height: 400px; overflow-y: auto; border: 1px solid #2a6a8a;">
-                                ${stash && sortedStashItems.length > 0 ? `
+                                ${stash && stash.items.length > 0 ? `
                                     <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 10px;">
-                                        ${sortedStashItems.map((item, sortedIndex) => {
-                                            // Find the original index of this item in the unsorted array
-                                            const originalIndex = stash.items.indexOf(item);
-                                            return `
+                                        ${stash.items.map((item, index) => `
                                             <div class="stashItemSlot ${item.getRarity()}" 
-                                                 onclick="game.equipFromStash(${originalIndex}, '${item.slot}')"
-                                                 onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}])"
+                                                 onclick="game.equipFromStash(${index}, '${item.slot}')"
+                                                 onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${index}])"
                                                  onmouseout="game.hideItemTooltip()">
                                                 <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                                      alt="${item.name}"
                                                      onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'text-align:center;font-size:10px;\\'>${item.name}</div>'">
                                             </div>
-                                        `;}).join('')}
+                                        `).join('')}
                                     </div>
                                 ` : '<p style="text-align: center; color: #6a9aaa;">No items in stash</p>'}
                             </div>
@@ -2180,7 +2109,7 @@ showGearTab(hero, content) {
                     </div>
                 `;
             }
-		
+
             unequipGear(slot) {
                 const hero = this.heroes[this.selectedHero];
                 const item = hero.unequipItem(slot);
@@ -3236,4 +3165,3 @@ window.addEventListener('DOMContentLoaded', async () => {
     </script>
 </body>
 </html>
-
