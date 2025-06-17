@@ -248,6 +248,49 @@ body {
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
 }
 
+/* Centered stash family name in hero gear panel */
+#heroContent h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Hero result item borders based on rarity */
+.heroResult.green {
+    border-color: #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+}
+
+.heroResult.blue {
+    border-color: #4dd0e1;
+    box-shadow: 0 0 15px rgba(77, 208, 225, 0.4);
+}
+
+.heroResult.purple {
+    border-color: #d896ff;
+    box-shadow: 0 0 15px rgba(216, 150, 255, 0.4);
+}
+
+.heroResult.golden {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+/* Make item slots in battle results clickable for tooltip */
+.heroResult .itemSlot {
+    cursor: pointer;
+}
+
+.heroResult .itemSlot:hover {
+    transform: scale(1.05);
+}
+
+/* Ensure item tooltip has higher max-height */
+.itemTooltip {
+    min-width: 250px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
 /* Battle Results Popup */
 .battleResultsPopup {
     display: none;
