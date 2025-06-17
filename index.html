@@ -307,6 +307,21 @@
             
             <button class="closeResultsBtn" onclick="game.closeBattleResults()">Continue</button>
         </div>
+        
+        <!-- Individual Stash Screen -->
+        <div id="individualStashScreen" class="individualStashScreen">
+            <div class="stashHeader">
+                <h2 id="stashFamilyName">Acolyte Stash</h2>
+                <div class="stashGold">
+                    <span class="goldIcon">💰</span>
+                    <span id="stashGoldAmount">0</span>
+                </div>
+            </div>
+            <div class="stashInventory" id="stashInventory">
+                <!-- Items will be displayed here -->
+            </div>
+            <button class="backButton" onclick="game.showStash()">Back</button>
+        </div>
     </div>
 
     <!-- Confirmation Modal -->
@@ -327,12 +342,13 @@
         // Global managers
         let spellManager;
         let unitData;
-	let dungeonData;
+        let dungeonData;
+        let itemData;
         
 // Loading manager
 class LoadingManager {
     constructor() {
-        this.totalAssets = 3; // spells.json, units.json, dungeons.json
+        this.totalAssets = 4; // spells.json, units.json, dungeons.json, items.json
         this.loadedAssets = 0;
         this.loadingScreen = document.getElementById('loadingScreen');
         this.loadingFill = document.querySelector('.loadingFill');
@@ -392,12 +408,173 @@ async function loadGameData() {
         console.log('Dungeon data loaded');
         loadingManager.updateProgress('dungeons');
         
+        // Load items
+        loadingManager.loadingText.textContent = 'Loading items...';
+        const itemsResponse = await fetch('items.json');
+        if (!itemsResponse.ok) throw new Error('Failed to load items.json');
+        itemData = await itemsResponse.json();
+        console.log('Item data loaded');
+        loadingManager.updateProgress('items');
+        
         return true;
     } catch (error) {
         loadingManager.showError(error);
         return false;
     }
 }
+
+// Item class
+class Item {
+    constructor(itemId) {
+        const template = itemData.items[itemId];
+        if (!template) {
+            console.error(`Item template not found: ${itemId}`);
+            return;
+        }
+        
+        this.id = itemId;
+        this.name = template.name;
+        this.slot = template.slot;
+        this.level = template.level;
+        this.sellcost = template.sellcost;
+        this.logicKey = template.logicKey;
+        
+        // Initialize quality rolls
+        this.quality1 = 0;
+        this.quality2 = 0;
+        this.quality3 = 0;
+        this.quality4 = 0;
+        
+        // Stats this item can roll
+        this.roll1 = template.roll1;
+        this.roll2 = template.roll2;
+        this.roll3 = template.roll3;
+        this.roll4 = template.roll4;
+        
+        // Roll the item
+        this.rollItem();
+    }
+    
+    rollItem() {
+        // First roll is guaranteed, rolls 1-5 quality
+        this.quality1 = Math.floor(Math.random() * 5) + 1;
+        
+        // Second roll has 50% chance
+        if (Math.random() < 0.5) {
+            this.quality2 = Math.floor(Math.random() * 5) + 1;
+            
+            // Third roll has 50% chance (only if got second)
+            if (Math.random() < 0.5) {
+                this.quality3 = Math.floor(Math.random() * 5) + 1;
+            }
+        }
+    }
+    
+    getRarity() {
+        if (this.quality4 > 0) return 'golden';
+        if (this.quality3 > 0) return 'purple';
+        if (this.quality2 > 0) return 'blue';
+        return 'green';
+    }
+    
+    getStats() {
+        const stats = {
+            str: 0,
+            agi: 0,
+            int: 0,
+            hp: 0,
+            armor: 0,
+            resist: 0,
+            hpRegen: 0,
+            attackSpeed: 0
+        };
+        
+        // Calculate stats based on rolls and quality
+        const baseValue = Math.floor(this.level / 2);
+        
+        // Process each roll
+        if (this.quality1 > 0) {
+            this.applyRoll(stats, this.roll1, this.quality1, baseValue, 0.75, 1.0);
+        }
+        if (this.quality2 > 0) {
+            this.applyRoll(stats, this.roll2, this.quality2, baseValue, 0.5, 1.0);
+        }
+        if (this.quality3 > 0) {
+            this.applyRoll(stats, this.roll3, this.quality3, baseValue, 0.01, 1.0);
+        }
+        if (this.quality4 > 0) {
+            // Fourth roll is CDR - implement later
+        }
+        
+        return stats;
+    }
+    
+    applyRoll(stats, rollType, quality, baseValue, minMult, maxMult) {
+        const qualityPercent = quality / 5;
+        const multiplier = minMult + (maxMult - minMult) * qualityPercent;
+        const value = Math.floor(baseValue * multiplier);
+        
+        switch(rollType) {
+            case 'str':
+                stats.str += value;
+                break;
+            case 'agi':
+                stats.agi += value;
+                break;
+            case 'int':
+                stats.int += value;
+                break;
+            case 'allstats':
+                // For allstats, give double to one random stat and normal to others
+                const mainStat = ['str', 'agi', 'int'][Math.floor(Math.random() * 3)];
+                stats[mainStat] += value * 2;
+                if (mainStat !== 'str') stats.str += value;
+                if (mainStat !== 'agi') stats.agi += value;
+                if (mainStat !== 'int') stats.int += value;
+                break;
+            case 'hp':
+                stats.hp += value * 10;
+                break;
+            case 'armor':
+                stats.armor += value;
+                break;
+            case 'resist':
+                stats.resist += value;
+                break;
+            case 'hpRegen':
+                stats.hpRegen += value * 0.1;
+                break;
+            case 'attackSpeed':
+                stats.attackSpeed += value;
+                break;
+        }
+    }
+    
+    getTooltip() {
+        const stats = this.getStats();
+        const rarity = this.getRarity();
+        let tooltip = `<div class="itemTooltip ${rarity}">`;
+        tooltip += `<div class="itemName">${this.name}</div>`;
+        tooltip += `<div class="itemLevel">Item Level ${this.level}</div>`;
+        tooltip += `<div class="itemSlot">${this.slot.charAt(0).toUpperCase() + this.slot.slice(1)}</div>`;
+        
+        // Show stats
+        if (stats.armor > 0) tooltip += `<div class="itemStat">+${stats.armor} Armor</div>`;
+        if (stats.str > 0) tooltip += `<div class="itemStat">+${stats.str} STR</div>`;
+        if (stats.agi > 0) tooltip += `<div class="itemStat">+${stats.agi} AGI</div>`;
+        if (stats.int > 0) tooltip += `<div class="itemStat">+${stats.int} INT</div>`;
+        if (stats.hp > 0) tooltip += `<div class="itemStat">+${stats.hp} HP</div>`;
+        if (stats.resist > 0) tooltip += `<div class="itemStat">+${stats.resist} Resist</div>`;
+        if (stats.hpRegen > 0) tooltip += `<div class="itemStat">+${stats.hpRegen.toFixed(1)} HP Regen</div>`;
+        if (stats.attackSpeed > 0) tooltip += `<div class="itemStat">+${stats.attackSpeed}% Attack Speed</div>`;
+        
+        tooltip += `<div class="itemSellValue">Sell Value: ${this.sellcost} gold</div>`;
+        tooltip += `</div>`;
+        
+        return tooltip;
+    }
+}
+
 // Hero Class
         class Hero {
             constructor(className = null) {
@@ -432,7 +609,16 @@ async function loadGameData() {
                     offhand: null,
                     trinket: null
                 };
-                this.gearStats = { str: 0, agi: 0, int: 0 };
+                this.gearStats = { 
+                    str: 0, 
+                    agi: 0, 
+                    int: 0,
+                    hp: 0,
+                    armor: 0,
+                    resist: 0,
+                    hpRegen: 0,
+                    attackSpeed: 0
+                };
                 this.awakened = false;
                 this.abilities = this.getClassAbilities();
                 this.pendingExp = 0;
@@ -488,28 +674,31 @@ async function loadGameData() {
             }
 
             get hp() {
-                return this.totalStats.str * 25;
+                const baseHp = this.totalStats.str * 25;
+                return baseHp + this.gearStats.hp;
             }
 
             get hpRegen() {
-                return this.totalStats.str * 0.05;
+                const baseRegen = this.totalStats.str * 0.05;
+                return baseRegen + this.gearStats.hpRegen;
             }
 
             get actionBarSpeed() {
                 const agi = this.totalStats.agi;
-                return 100 + 100 * (agi / (agi + 1000));
+                const baseSpeed = 100 + 100 * (agi / (agi + 1000));
+                return baseSpeed + this.gearStats.attackSpeed;
             }
 			
 			get armor() {
 				const stats = this.totalStats;
-				const gearArmor = this.gearStats.armor || 0;
-				return (0.25 * stats.str) + (0.05 * stats.agi) + gearArmor;
+				const baseArmor = (0.25 * stats.str) + (0.05 * stats.agi);
+				return baseArmor + this.gearStats.armor;
 			}
 
 			get resist() {
 				const stats = this.totalStats;
-				const gearResist = this.gearStats.resist || 0;
-				return (0.25 * stats.int) + gearResist;
+				const baseResist = (0.25 * stats.int);
+				return baseResist + this.gearStats.resist;
 			}
 
 			get physicalDamageReduction() {
@@ -625,6 +814,57 @@ async function loadGameData() {
                 this.abilities = this.getClassAbilities();
                 return true;
             }
+            
+            equipItem(item, slot) {
+                if (!item || item.slot !== slot) return false;
+                
+                // Unequip current item if any
+                if (this.gear[slot]) {
+                    this.unequipItem(slot);
+                }
+                
+                // Equip new item
+                this.gear[slot] = item;
+                
+                // Update gear stats
+                this.updateGearStats();
+                
+                return true;
+            }
+            
+            unequipItem(slot) {
+                const item = this.gear[slot];
+                if (!item) return null;
+                
+                this.gear[slot] = null;
+                this.updateGearStats();
+                
+                return item;
+            }
+            
+            updateGearStats() {
+                // Reset gear stats
+                this.gearStats = {
+                    str: 0,
+                    agi: 0,
+                    int: 0,
+                    hp: 0,
+                    armor: 0,
+                    resist: 0,
+                    hpRegen: 0,
+                    attackSpeed: 0
+                };
+                
+                // Add stats from all equipped items
+                Object.values(this.gear).forEach(item => {
+                    if (item) {
+                        const itemStats = item.getStats();
+                        Object.keys(itemStats).forEach(stat => {
+                            this.gearStats[stat] += itemStats[stat];
+                        });
+                    }
+                });
+            }
         }
 
         // Enemy Class
@@ -736,8 +976,20 @@ async function loadGameData() {
                 this.selectedTier = null;
                 this.expandedDungeon = null;
                 this.currentPreviewWave = 0;
-                this.gold = 10000; // Starting gold for the player
                 this.pendingBattleResults = null; // Store results until popup is closed
+                
+                // Initialize stashes for all class families including villager
+                this.stashes = {
+                    'Villager': { gold: 10000, items: [] },
+                    'Acolyte': { gold: 0, items: [] },
+                    'Archer': { gold: 0, items: [] },
+                    'Druid': { gold: 0, items: [] },
+                    'Initiate': { gold: 0, items: [] },
+                    'Swordsman': { gold: 0, items: [] },
+                    'Templar': { gold: 0, items: [] },
+                    'Thief': { gold: 0, items: [] },
+                    'Witch Hunter': { gold: 0, items: [] }
+                };
                 
                 // Load dungeon tiers from JSON data
                 this.dungeonTiers = {};
@@ -833,7 +1085,7 @@ init() {
         this.heroes.push(new Hero());
     }
             
-    // Hero 12: Tester (Level 50 with godlike stats)
+    // Hero 0: Tester (Level 50 with godlike stats)
     this.heroes[0] = new Hero('tester_male');
     this.heroes[0].gender = 'male';
     this.heroes[0].level = 50;
@@ -864,19 +1116,6 @@ init() {
                 this.closeHeroInfo(); // Close any open popups
                 this.currentScreen = 'heroesScreen';
                 document.getElementById('heroesScreen').style.display = 'block';
-                
-                // Add gold display
-                const heroStats = document.querySelector('.heroStats');
-                let goldDisplay = heroStats.querySelector('.goldDisplay');
-                if (!goldDisplay) {
-                    goldDisplay = document.createElement('div');
-                    goldDisplay.className = 'goldDisplay';
-                    heroStats.appendChild(goldDisplay);
-                }
-                goldDisplay.innerHTML = `
-                    <span class="goldIcon">💰</span>
-                    <span class="goldAmount">${this.gold.toLocaleString()}</span>
-                `;
                 
                 this.updateHeroList();
                 
@@ -1064,7 +1303,13 @@ enterDungeon(tierName, dungeonIndex) {
                 const stashList = document.getElementById('stashList');
                 stashList.innerHTML = '';
                 
-                this.classFamilies.forEach((family, index) => {
+                // Include Villager stash
+                const allFamilies = [
+                    { name: 'Villager', icon: '👥', classes: ['Villager', 'Tester'] },
+                    ...this.classFamilies
+                ];
+                
+                allFamilies.forEach((family, index) => {
                     const stashItem = document.createElement('div');
                     stashItem.className = 'stashItem';
                     stashItem.innerHTML = `
@@ -1079,7 +1324,102 @@ enterDungeon(tierName, dungeonIndex) {
 
             openStash(family) {
                 console.log(`Opening ${family.name} stash`);
-                // TODO: Implement individual stash view
+                this.currentStashFamily = family;
+                this.showIndividualStash(family);
+            }
+
+            showIndividualStash(family) {
+                this.hideAllScreens();
+                this.currentScreen = 'individualStashScreen';
+                document.getElementById('individualStashScreen').style.display = 'block';
+                
+                // Update header
+                document.getElementById('stashFamilyName').textContent = `${family.name} Stash`;
+                document.getElementById('stashGoldAmount').textContent = this.stashes[family.name].gold.toLocaleString();
+                
+                // Show items
+                const inventory = document.getElementById('stashInventory');
+                inventory.innerHTML = '';
+                
+                const items = this.stashes[family.name].items;
+                if (items.length === 0) {
+                    inventory.innerHTML = '<p style="text-align: center; color: #6a9aaa; margin-top: 50px;">No items in stash</p>';
+                } else {
+                    items.forEach((item, index) => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = `stashItemSlot ${item.getRarity()}`;
+                        itemDiv.innerHTML = `
+                            <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
+                                 alt="${item.name}"
+                                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'text-align:center;line-height:60px;\\'>${item.name}</div>'">
+                        `;
+                        
+                        // Add click handler
+                        itemDiv.onclick = () => this.showItemOptions(item, index, family);
+                        
+                        // Add hover tooltip
+                        itemDiv.onmouseover = (e) => this.showItemTooltip(e, item);
+                        itemDiv.onmouseout = () => this.hideItemTooltip();
+                        
+                        inventory.appendChild(itemDiv);
+                    });
+                }
+            }
+
+            showItemOptions(item, itemIndex, family) {
+                // TODO: Show popup with options to equip or sell
+                const sellValue = item.sellcost;
+                if (confirm(`Sell ${item.name} for ${sellValue} gold?`)) {
+                    // Remove item from stash
+                    this.stashes[family.name].items.splice(itemIndex, 1);
+                    // Add gold
+                    this.stashes[family.name].gold += sellValue;
+                    // Refresh display
+                    this.showIndividualStash(family);
+                }
+            }
+
+            showItemTooltip(event, item) {
+                // Create or get tooltip element
+                let tooltip = document.getElementById('itemTooltipDiv');
+                if (!tooltip) {
+                    tooltip = document.createElement('div');
+                    tooltip.id = 'itemTooltipDiv';
+                    tooltip.style.cssText = `
+                        position: fixed;
+                        background: rgba(10, 15, 26, 0.95);
+                        border: 2px solid #2a6a8a;
+                        padding: 16px;
+                        border-radius: 4px;
+                        z-index: 1002;
+                        pointer-events: none;
+                    `;
+                    document.body.appendChild(tooltip);
+                }
+                
+                tooltip.innerHTML = item.getTooltip();
+                tooltip.style.display = 'block';
+                
+                // Position tooltip
+                const rect = event.target.getBoundingClientRect();
+                tooltip.style.left = rect.right + 10 + 'px';
+                tooltip.style.top = rect.top + 'px';
+                
+                // Adjust if tooltip goes off screen
+                const tooltipRect = tooltip.getBoundingClientRect();
+                if (tooltipRect.right > window.innerWidth) {
+                    tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
+                }
+                if (tooltipRect.bottom > window.innerHeight) {
+                    tooltip.style.top = (window.innerHeight - tooltipRect.height - 10) + 'px';
+                }
+            }
+
+            hideItemTooltip() {
+                const tooltip = document.getElementById('itemTooltipDiv');
+                if (tooltip) {
+                    tooltip.style.display = 'none';
+                }
             }
 
             showBattle() {
@@ -1215,6 +1555,7 @@ enterDungeon(tierName, dungeonIndex) {
                 document.getElementById('dungeonsScreen').style.display = 'none';
                 document.getElementById('stashScreen').style.display = 'none';
                 document.getElementById('partySelectScreen').style.display = 'none';
+                document.getElementById('individualStashScreen').style.display = 'none';
             }
 
             updateHeroList() {
@@ -1560,6 +1901,10 @@ hideStatTooltip() {
             }
 
             showGearTab(hero, content) {
+                // Get the stash for this hero's class family
+                const familyName = this.getClassFamily(hero.className, hero.classTier);
+                const stash = this.stashes[familyName];
+                
                 content.innerHTML = `
                     <div style="display: flex; gap: 40px;">
                         <div style="flex: 1;">
@@ -1567,38 +1912,119 @@ hideStatTooltip() {
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
                                 <div class="gearSlot">
                                     <div class="gearLabel">Trinket</div>
-                                    <div class="gearItem">${hero.gear.trinket ? hero.gear.trinket.name : 'Empty'}</div>
+                                    <div class="gearItem ${hero.gear.trinket ? hero.gear.trinket.getRarity() : ''}" 
+                                         onclick="game.unequipGear('trinket')"
+                                         onmouseover="${hero.gear.trinket ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.trinket)` : ''}"
+                                         onmouseout="game.hideItemTooltip()">
+                                        ${hero.gear.trinket ? hero.gear.trinket.name : 'Empty'}
+                                    </div>
                                 </div>
                                 <div class="gearSlot">
                                     <div class="gearLabel">Head</div>
-                                    <div class="gearItem">${hero.gear.head ? hero.gear.head.name : 'Empty'}</div>
+                                    <div class="gearItem ${hero.gear.head ? hero.gear.head.getRarity() : ''}"
+                                         onclick="game.unequipGear('head')"
+                                         onmouseover="${hero.gear.head ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.head)` : ''}"
+                                         onmouseout="game.hideItemTooltip()">
+                                        ${hero.gear.head ? hero.gear.head.name : 'Empty'}
+                                    </div>
                                 </div>
                                 <div class="gearSlot">
                                     <div class="gearLabel">Weapon</div>
-                                    <div class="gearItem">${hero.gear.weapon ? hero.gear.weapon.name : 'Empty'}</div>
+                                    <div class="gearItem ${hero.gear.weapon ? hero.gear.weapon.getRarity() : ''}"
+                                         onclick="game.unequipGear('weapon')"
+                                         onmouseover="${hero.gear.weapon ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.weapon)` : ''}"
+                                         onmouseout="game.hideItemTooltip()">
+                                        ${hero.gear.weapon ? hero.gear.weapon.name : 'Empty'}
+                                    </div>
                                 </div>
                                 <div class="gearSlot">
                                     <div class="gearLabel">Chest</div>
-                                    <div class="gearItem">${hero.gear.chest ? hero.gear.chest.name : 'Empty'}</div>
+                                    <div class="gearItem ${hero.gear.chest ? hero.gear.chest.getRarity() : ''}"
+                                         onclick="game.unequipGear('chest')"
+                                         onmouseover="${hero.gear.chest ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.chest)` : ''}"
+                                         onmouseout="game.hideItemTooltip()">
+                                        ${hero.gear.chest ? hero.gear.chest.name : 'Empty'}
+                                    </div>
                                 </div>
                                 <div class="gearSlot">
                                     <div class="gearLabel">Offhand</div>
-                                    <div class="gearItem">${hero.gear.offhand ? hero.gear.offhand.name : 'Empty'}</div>
+                                    <div class="gearItem ${hero.gear.offhand ? hero.gear.offhand.getRarity() : ''}"
+                                         onclick="game.unequipGear('offhand')"
+                                         onmouseover="${hero.gear.offhand ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.offhand)` : ''}"
+                                         onmouseout="game.hideItemTooltip()">
+                                        ${hero.gear.offhand ? hero.gear.offhand.name : 'Empty'}
+                                    </div>
                                 </div>
                                 <div class="gearSlot">
                                     <div class="gearLabel">Legs</div>
-                                    <div class="gearItem">${hero.gear.legs ? hero.gear.legs.name : 'Empty'}</div>
+                                    <div class="gearItem ${hero.gear.legs ? hero.gear.legs.getRarity() : ''}"
+                                         onclick="game.unequipGear('legs')"
+                                         onmouseover="${hero.gear.legs ? `game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.legs)` : ''}"
+                                         onmouseout="game.hideItemTooltip()">
+                                        ${hero.gear.legs ? hero.gear.legs.name : 'Empty'}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div style="flex: 1;">
-                            <h3>Stash</h3>
-                            <div style="margin-top: 20px; background: rgba(10, 25, 41, 0.8); padding: 10px; min-height: 200px; border: 1px solid #2a6a8a;">
-                                <p style="text-align: center; color: #6a9aaa;">No items in stash</p>
+                            <h3>${familyName} Stash</h3>
+                            <div style="margin-top: 20px; background: rgba(10, 25, 41, 0.8); padding: 10px; min-height: 300px; max-height: 400px; overflow-y: auto; border: 1px solid #2a6a8a;">
+                                ${stash && stash.items.length > 0 ? `
+                                    <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 10px;">
+                                        ${stash.items.map((item, index) => `
+                                            <div class="stashItemSlot ${item.getRarity()}" 
+                                                 onclick="game.equipFromStash(${index}, '${item.slot}')"
+                                                 onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${index}])"
+                                                 onmouseout="game.hideItemTooltip()">
+                                                <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
+                                                     alt="${item.name}"
+                                                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'text-align:center;font-size:10px;\\'>${item.name}</div>'">
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : '<p style="text-align: center; color: #6a9aaa;">No items in stash</p>'}
                             </div>
                         </div>
                     </div>
                 `;
+            }
+
+            unequipGear(slot) {
+                const hero = this.heroes[this.selectedHero];
+                const item = hero.unequipItem(slot);
+                
+                if (item) {
+                    // Add to stash
+                    const familyName = this.getClassFamily(hero.className, hero.classTier);
+                    this.stashes[familyName].items.push(item);
+                    
+                    // Refresh gear tab
+                    this.showGearTab(hero, document.getElementById('heroContent'));
+                }
+            }
+
+            equipFromStash(itemIndex, slot) {
+                const hero = this.heroes[this.selectedHero];
+                const familyName = this.getClassFamily(hero.className, hero.classTier);
+                const stash = this.stashes[familyName];
+                const item = stash.items[itemIndex];
+                
+                if (item && item.slot === slot) {
+                    // Remove from stash
+                    stash.items.splice(itemIndex, 1);
+                    
+                    // If there's already an item equipped, put it back in stash
+                    const currentItem = hero.gear[slot];
+                    if (currentItem) {
+                        stash.items.push(currentItem);
+                    }
+                    
+                    // Equip the new item
+                    hero.equipItem(item, slot);
+                    
+                    // Refresh gear tab
+                    this.showGearTab(hero, document.getElementById('heroContent'));
+                }
             }
 
             showLogTab(hero, content) {
@@ -1610,7 +2036,12 @@ hideStatTooltip() {
                 `;
             }
 
-            getClassFamily(className) {
+            getClassFamily(className, classTier = null) {
+                // Special case for villager and tester
+                if (className.includes('villager') || className.includes('tester')) {
+                    return 'Villager';
+                }
+                
                 // Extract base class name by removing gender suffix
                 const baseClass = className.replace(/_male$|_female$/, '');
                 
@@ -1642,26 +2073,41 @@ hideStatTooltip() {
                 const hero = this.heroes[this.selectedHero];
                 
                 if (newClass === 'Awaken') {
-                    // Awakening doesn't have a gold cost in the doc
-                    if (hero.promote(newClass)) {
-                        // Update portrait remains the same
-                        const portrait = document.getElementById('heroPortrait');
-                        portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
-                        
-                        this.showHeroTab('info');
-                        this.updateHeroList();
+                    // Awakening costs gold
+                    const cost = 10000000;
+                    const familyName = this.getClassFamily(hero.className, hero.classTier);
+                    const stash = this.stashes[familyName];
+                    
+                    if (stash.gold >= cost) {
+                        stash.gold -= cost;
+                        if (hero.promote(newClass)) {
+                            // Update portrait remains the same
+                            const portrait = document.getElementById('heroPortrait');
+                            portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
+                            
+                            this.showHeroTab('info');
+                            this.updateHeroList();
+                        }
+                    } else {
+                        alert('Not enough gold!');
                     }
                 } else {
                     const cost = 1000 * Math.pow(10, hero.classTier);
+                    const familyName = this.getClassFamily(hero.className, hero.classTier);
+                    const stash = this.stashes[familyName];
                     
-                    // TODO: Check gold and deduct cost
-                    if (hero.promote(newClass)) {
-                        // Update portrait immediately after promotion
-                        const portrait = document.getElementById('heroPortrait');
-                        portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
-                        
-                        this.showHeroTab('info');
-                        this.updateHeroList();
+                    if (stash.gold >= cost) {
+                        stash.gold -= cost;
+                        if (hero.promote(newClass)) {
+                            // Update portrait immediately after promotion
+                            const portrait = document.getElementById('heroPortrait');
+                            portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
+                            
+                            this.showHeroTab('info');
+                            this.updateHeroList();
+                        }
+                    } else {
+                        alert('Not enough gold!');
                     }
                 }
             }
@@ -2113,27 +2559,27 @@ showHeroInfoPopup(hero) {
                 const gearHtml = `
                     <div class="statRow">
                         <span class="statLabel">Head</span>
-                        <span class="statValue">${hero.gear.head ? hero.gear.head.name : 'Empty'}</span>
+                        <span class="statValue ${hero.gear.head ? hero.gear.head.getRarity() : ''}">${hero.gear.head ? hero.gear.head.name : 'Empty'}</span>
                     </div>
                     <div class="statRow">
                         <span class="statLabel">Chest</span>
-                        <span class="statValue">${hero.gear.chest ? hero.gear.chest.name : 'Empty'}</span>
+                        <span class="statValue ${hero.gear.chest ? hero.gear.chest.getRarity() : ''}">${hero.gear.chest ? hero.gear.chest.name : 'Empty'}</span>
                     </div>
                     <div class="statRow">
                         <span class="statLabel">Legs</span>
-                        <span class="statValue">${hero.gear.legs ? hero.gear.legs.name : 'Empty'}</span>
+                        <span class="statValue ${hero.gear.legs ? hero.gear.legs.getRarity() : ''}">${hero.gear.legs ? hero.gear.legs.name : 'Empty'}</span>
                     </div>
                     <div class="statRow">
                         <span class="statLabel">Weapon</span>
-                        <span class="statValue">${hero.gear.weapon ? hero.gear.weapon.name : 'Empty'}</span>
+                        <span class="statValue ${hero.gear.weapon ? hero.gear.weapon.getRarity() : ''}">${hero.gear.weapon ? hero.gear.weapon.name : 'Empty'}</span>
                     </div>
                     <div class="statRow">
                         <span class="statLabel">Offhand</span>
-                        <span class="statValue">${hero.gear.offhand ? hero.gear.offhand.name : 'Empty'}</span>
+                        <span class="statValue ${hero.gear.offhand ? hero.gear.offhand.getRarity() : ''}">${hero.gear.offhand ? hero.gear.offhand.name : 'Empty'}</span>
                     </div>
                     <div class="statRow">
                         <span class="statLabel">Trinket</span>
-                        <span class="statValue">${hero.gear.trinket ? hero.gear.trinket.name : 'Empty'}</span>
+                        <span class="statValue ${hero.gear.trinket ? hero.gear.trinket.getRarity() : ''}">${hero.gear.trinket ? hero.gear.trinket.name : 'Empty'}</span>
                     </div>
                 `;
                 document.getElementById('popupGear').innerHTML = gearHtml;
@@ -2423,7 +2869,7 @@ showBattleResults() {
                     ${result.leveledUp ? `<div style="color: #ffd700; font-size: 14px; font-weight: bold; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">Level Up! +${result.levelsGained}</div>` : ''}
                 </div>
             ` : '<div style="color: #ff4444; font-size: 12px;">Did not survive</div>'}
-            <div class="itemSlot"></div>
+            <div class="itemSlot">${result.item ? `<img src="https://puzzle-drops.github.io/TEVE/img/items/${result.item.id}.png" alt="${result.item.name}" class="${result.item.getRarity()}" style="width: 100%; height: 100%;" onerror="this.style.display='none'">` : ''}</div>
         `;
         
         heroGrid.appendChild(heroDiv);
@@ -2447,7 +2893,7 @@ closeBattleResults() {
     popup.style.display = 'none';
     
     if (this.pendingBattleResults) {
-        // Apply the results (only gold now, exp was already applied)
+        // Apply the results (gold and items)
         this.applyBattleResults();
         
         // Clear pending results
@@ -2463,8 +2909,20 @@ applyBattleResults() {
     
     const results = this.pendingBattleResults;
     
-    // Apply gold changes
-    this.gold = Math.max(0, this.gold + results.goldChange);
+    // Apply gold changes - add to appropriate stashes
+    results.heroResults.forEach(result => {
+        if (result.survived || result.gold) {
+            const familyName = this.getClassFamily(result.hero.className, result.hero.classTier);
+            if (result.gold) {
+                this.stashes[familyName].gold += result.gold;
+            }
+            
+            // Add items to stash
+            if (result.item) {
+                this.stashes[familyName].items.push(result.item);
+            }
+        }
+    });
     
     // Reset pending exp for all heroes (already applied in showBattleResults)
     results.heroResults.forEach(result => {
@@ -2532,6 +2990,10 @@ window.addEventListener('DOMContentLoaded', async () => {
                     
                     // Navigate between screens based on current screen
                     switch(game.currentScreen) {
+                        case 'individualStashScreen':
+                            game.showStash();
+                            e.preventDefault();
+                            break;
                         case 'partySelectScreen':
                             game.closeDungeonSelect();
                             e.preventDefault();
