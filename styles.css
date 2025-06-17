@@ -313,12 +313,12 @@ body {
 }
 
 .heroResult.red .itemSlot {
-    border: 3px solid #ff4444;
+    border: 2px solid #ff4444;
     box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
 }
 
 .heroResult.golden .itemSlot {
-    border: 1px solid #ffd700;
+    border: 2px solid #ffd700;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
 }
 
