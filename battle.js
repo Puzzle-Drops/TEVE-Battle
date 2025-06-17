@@ -76,14 +76,14 @@ class BattleUnit {
 
 	get armor() {
 		const stats = this.stats;
-		const gearArmor = this.isEnemy ? 0 : (this.source.gearStats.armor || 0);
-		return (0.25 * stats.str) + (0.05 * stats.agi) + gearArmor;
+		const gearArmor = this.isEnemy ? 0 : this.source.armor;
+		return gearArmor;
 	}
 
 	get resist() {
 		const stats = this.stats;
-		const gearResist = this.isEnemy ? 0 : (this.source.gearStats.resist || 0);
-		return (0.25 * stats.int) + gearResist;
+		const gearResist = this.isEnemy ? 0 : this.source.resist;
+		return gearResist;
 	}
 
 	get physicalDamageReduction() {
@@ -100,7 +100,7 @@ class BattleUnit {
 
         const agi = this.stats.agi;
 
-        let speed = 100 + 100 * (agi / (agi + 1000));
+        let speed = this.isEnemy ? 100 + 100 * (agi / (agi + 1000)) : this.source.actionBarSpeed;
 
         
 
@@ -916,7 +916,9 @@ showSpellAnimation(caster, spellName, effects) {
 			this.currentUnit.reduceCooldowns();
 			// Apply HP regen after turn
 			if (this.currentUnit.isAlive) {
-				const regen = Math.floor(this.currentUnit.stats.str * 0.05);
+				const regen = Math.floor(this.currentUnit.isEnemy ? 
+					this.currentUnit.stats.str * 0.05 : 
+					this.currentUnit.source.hpRegen);
 				if (regen > 0) {
 					const actualRegen = Math.min(regen, this.currentUnit.maxHp - this.currentUnit.currentHp);
 					if (actualRegen > 0) {
@@ -1326,24 +1328,59 @@ calculateWaveExp() {
 // Get dungeon data
 const dungeonId = this.game.currentDungeon.id;
 const dungeonConfig = dungeonData.dungeons[dungeonId];
-const rewards = dungeonConfig.rewards || { gold: 0, exp: 0 };
+const rewards = dungeonConfig.rewards || { gold: 0, exp: 0, items: [] };
         
-
-        // Calculate gold changes
-
-        let goldChange = 0;
-
-        if (victory) {
-
-            goldChange = rewards.gold;
-
-        } else {
-
-            goldChange = -Math.floor(rewards.gold / 4); // Lose 1/4 gold on defeat
-
-        }
-
-        
+        // Process items for each hero
+        const itemRolls = [];
+        this.party.forEach(unit => {
+            if (!unit || !unit.source) return;
+            
+            const hero = unit.source;
+            
+            // Check if villager (they only get gold)
+            if (hero.className.includes('villager') || hero.className.includes('tester')) {
+                itemRolls.push({
+                    hero: hero,
+                    gold: Math.floor(rewards.gold / this.party.length),
+                    item: null
+                });
+            } else if (unit.isAlive) {
+                // 50% chance for item
+                if (Math.random() < 0.5) {
+                    // Get item from dungeon rewards
+                    if (rewards.items && rewards.items.length > 0) {
+                        const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
+                        const item = new Item(itemId);
+                        itemRolls.push({
+                            hero: hero,
+                            gold: 0,
+                            item: item
+                        });
+                    } else {
+                        // No items available, give gold instead
+                        itemRolls.push({
+                            hero: hero,
+                            gold: Math.floor(rewards.gold / this.party.length),
+                            item: null
+                        });
+                    }
+                } else {
+                    // Failed item roll, get gold
+                    itemRolls.push({
+                        hero: hero,
+                        gold: Math.floor(rewards.gold / this.party.length),
+                        item: null
+                    });
+                }
+            } else {
+                // Dead heroes get nothing
+                itemRolls.push({
+                    hero: hero,
+                    gold: 0,
+                    item: null
+                });
+            }
+        });
 
         // Store battle results
 
@@ -1355,17 +1392,19 @@ const rewards = dungeonConfig.rewards || { gold: 0, exp: 0 };
 
             time: timeString,
 
-            goldChange: goldChange,
+            goldChange: 0, // No longer used at this level
 
             dungeonBonusExp: victory ? rewards.exp : 0,
 
             // In endBattle method, when creating heroResults:
-heroResults: this.party.map(unit => {
+heroResults: this.party.map((unit, index) => {
     if (!unit) return null;
     const hero = unit.source;
     const waveExp = hero.pendingExp;
     const dungeonBonus = victory && unit.isAlive ? rewards.exp : 0;
     const totalExp = waveExp + dungeonBonus;
+    
+    const itemRoll = itemRolls[index];
     
     console.log(`${hero.name} final exp: ${waveExp} (waves) + ${dungeonBonus} (dungeon) = ${totalExp} total`);
     
@@ -1373,7 +1412,8 @@ heroResults: this.party.map(unit => {
         hero: hero,
         expGained: totalExp,
         survived: unit.isAlive,
-        items: [] // Placeholder for future loot system
+        item: itemRoll.item,
+        gold: itemRoll.gold
     };
 }).filter(r => r !== null)
 
