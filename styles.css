@@ -295,6 +295,21 @@ body {
     transform: scale(1.05);
 }
 
+/* Gold reward styling in battle results */
+.heroResult .itemSlot.golden {
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.heroResult .itemSlot.golden:hover {
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+}
+
+/* Gold image in item slots */
+.itemSlot.golden img {
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+}
+
 /* Ensure item tooltip has higher max-height */
 .itemTooltip {
     min-width: 250px;
