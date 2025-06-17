@@ -121,7 +121,7 @@ Each Class 1 category shares a stash. When clicking the stash tab it should show
 Once you click one you will see the stash. Items can be withdrawn from the inventory and placed in the stash whenever. So a Champion and an Avenger and a swordsman can all share gear, but cannot share with a Hierophant or a templar, or anyone else. These will be named after their first class name. Villagers cannot access any stashes at all. Items can be viewed, sold, and equipped from the stash ui. So the shared stash of the Templar class would include Templar, Arch Templar, Dark Templar, Dark Arch Templar, High Templar, Grand Templar. In the stash if you click an item you have the option to equip it, sell it, or blacksmith it. If you blacksmith it costs more money depending on the level of the item, but it adds one additional roll to the item for a high cost. If your item is already purple, it will add cdr roll to the item and make it golden.
 
 -Villagers
-You start with 3 villagers. To get more you have to get lucky drops from dungeons to recruit more villagers. They are very rare.
+You start with 3 villagers. Two male, one female. Gaining more hasn't been decided how yet.
 
 -Levels
 Start at level 1. 500 is max level. Promotions are below
@@ -136,7 +136,7 @@ Villagers start with a star, every class tier up you get another star, and a fin
 Scaling should be a mix of linear and parabolic. Getting to level 450 is the same exp as getting to level 500.
 
 -Exp
-Gain exp after completing a dungeon. You have to have survived to be granted the exp.
+You gain exp for each enemy wave defeated if you are a live upon completing that wave. Additional exp reward upon dungeon completion if alive.
 
 -Stats
 Every class has different stat modifiers. Each base stat for a class is equal to the Level of the hero multiplied by their class modifier for that stat.
@@ -179,8 +179,9 @@ Each unit begins combat with an action bar value of 0. During every cycle, each 
 (1-500 ) Class 4: Final class. Gain aura that defines your class and makes every level count for the full team.
 Consume all exp upon going to next class and start again at 0 exp, level 1. All classes of a type share the first two Classes. Acolytes upgrade to clerics who then have a class split at 3. They all do this. You must choose which path to take.
 
+Class paths:
 Acolyte -> Cleric -> Priest (Male) / Priestess (Female) -> Hierophant
-Acolyte -> Cleric -> Matriarch (Female) / Luminary (Male) -> Prophetess (Female) / Prophet (Male)
+Acolyte -> Cleric -> Luminary (Male) / Matriarch (Female) -> Prophet (Male) / Prophetess (Female)
 Archer -> Ranger -> Marksman -> Sniper
 Archer -> Ranger -> Tracker -> Monster Hunter
 Druid -> Arch Druid -> Shapeshifter -> Runemaster
@@ -195,6 +196,40 @@ Thief -> Rogue -> Assassin -> Phantom Assassin
 Thief -> Rogue -> Stalker -> Master Stalker
 Witch Hunter -> Slayer -> Inquisitor -> Grand Inquisitor
 Witch Hunter -> Slayer -> Witcher -> Professional Witcher
+
+Class 4s:
+Hierophant (Male)
+Hierophant (Female)
+Prophet (Male)
+Prophetess (Female)
+Sniper (Male)
+Sniper (Female)
+Monster Hunter (Male)
+Monster Hunter (Female)
+Runemaster (Male)
+Runemaster (Female)
+Summoner (Male)
+Summoner (Female)
+White Wizard (Male)
+White Witch (Female)
+Arch Sage (Male)
+Arch Sage (Female)
+Champion (Male)
+Champion (Female)
+Avenger (Male)
+Avenger (Female)
+Dark Arch Templar (Male)
+Dark Arch Templar (Female)
+Grand Templar (Male)
+Grand Templar (Female)
+Phantom Assassin (Male)
+Phantom Assassin (Female)
+Master Stalker (Male)
+Master Stalker (Female)
+Grand Inquisitor (Male)
+Grand Inquisitor (Female)
+Professional Witcher (Male)
+Professional Witcher (Female)
 
 -Abilities
 Villager has 2 abilities: punch (basic) and fury (doubles action bar gain for a few turns).
