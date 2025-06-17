@@ -752,8 +752,13 @@ getTooltip(showMax = false) {
             }
 
             generateName() {
-                const names = ['Aelar', 'Brin', 'Cara', 'Dain', 'Eira', 'Finn', 'Gwen', 'Hal'];
-                return names[Math.floor(Math.random() * names.length)];
+                const maleNames = ['Aelar', 'Brin', 'Dain', 'Finn', 'Hal', 'Kael', 'Liam', 'Magnus', 
+                                   'Nolan', 'Owen', 'Quinn', 'Rowan', 'Soren', 'Thane', 'Ulric', 'Viktor'];
+                const femaleNames = ['Aria', 'Cara', 'Eira', 'Gwen', 'Ivy', 'Jade', 'Kira', 'Luna', 
+                                     'Maya', 'Nova', 'Ophelia', 'Piper', 'Rose', 'Sage', 'Tara', 'Vera'];
+                
+                const nameList = this.gender === 'male' ? maleNames : femaleNames;
+                return nameList[Math.floor(Math.random() * nameList.length)];
             }
 
             get classData() {
