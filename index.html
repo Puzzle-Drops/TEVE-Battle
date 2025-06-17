@@ -531,27 +531,6 @@ class Item {
             attackSpeed: 0,
             cdr: 0
         };
-
-	    getStars() {
-    let starCount = 0;
-    
-    // Count 5/5 quality rolls only
-    if (this.quality1 === 5) starCount++;
-    if (this.quality2 === 5) starCount++;
-    if (this.quality3 === 5) starCount++;
-    if (this.quality4 === 5) starCount++;
-    
-    // Stars turn red at 3 or 4 stars
-    const colorClass = starCount >= 3 ? 'red' : 'golden';
-    const stars = '★'.repeat(starCount);
-    
-    return {
-        count: starCount,
-        html: stars,
-        colorClass: colorClass,
-        fullHtml: stars ? `<span class="itemStars ${colorClass}">${stars}</span>` : ''
-    };
-}
         
         // Process each roll with its quality percentage
         if (this.quality1 > 0) {
@@ -573,7 +552,28 @@ class Item {
         
         return stats;
     }
+
+	    getStars() {
+    let starCount = 0;
     
+    // Count 5/5 quality rolls only
+    if (this.quality1 === 5) starCount++;
+    if (this.quality2 === 5) starCount++;
+    if (this.quality3 === 5) starCount++;
+    if (this.quality4 === 5) starCount++;
+    
+    // Stars turn red at 3 or 4 stars
+    const colorClass = starCount >= 3 ? 'red' : 'golden';
+    const stars = '★'.repeat(starCount);
+    
+    return {
+        count: starCount,
+        html: stars,
+        colorClass: colorClass,
+        fullHtml: stars ? `<span class="itemStars ${colorClass}">${stars}</span>` : ''
+    };
+}
+	
     applyStatValue(stats, rollType, value) {
         switch(rollType) {
             case 'str':
