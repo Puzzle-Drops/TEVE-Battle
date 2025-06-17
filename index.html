@@ -836,14 +836,14 @@ init() {
     // Hero 0: Druid (Level 185)
     this.heroes[1].level = 50;
     this.heroes[1].promote('druid_male');
-    //this.heroes[1].promote('druid_female');
+    this.heroes[1].promote('druid_female');
     this.heroes[1].level = 185;
     this.heroes[1].exp = 900;
     this.heroes[1].expToNext = this.heroes[0].calculateExpToNext();
     
     // Hero 12: Tester (Level 50 with godlike stats)
     this.heroes[0] = new Hero('tester_male');
-    this.heroes[0].gender = 'male'; // Tester is always male
+    this.heroes[0].gender = 'male';
     this.heroes[0].level = 50;
     this.heroes[0].exp = 0;
     this.heroes[0].expToNext = this.heroes[12].calculateExpToNext();
