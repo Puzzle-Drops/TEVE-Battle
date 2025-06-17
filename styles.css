@@ -734,10 +734,25 @@ body {
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
     color: #4dd0e1;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
+    display: flex;
+    gap: 20px;
+}
+
+.autoToggleContainer label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.autoToggleContainer input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 .battleLog {
@@ -1814,6 +1829,29 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.autoTogglesPartySelect {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    padding: 10px;
+    background: rgba(10, 25, 41, 0.9);
+    border: 1px solid #2a6a8a;
+    font-size: 16px;
+}
+
+.autoTogglesPartySelect label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.autoTogglesPartySelect input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
 }
 
 .startBattleBtn {
