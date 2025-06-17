@@ -531,6 +531,27 @@ class Item {
             attackSpeed: 0,
             cdr: 0
         };
+
+	    getStars() {
+    let starCount = 0;
+    
+    // Count 5/5 quality rolls only
+    if (this.quality1 === 5) starCount++;
+    if (this.quality2 === 5) starCount++;
+    if (this.quality3 === 5) starCount++;
+    if (this.quality4 === 5) starCount++;
+    
+    // Stars turn red at 3 or 4 stars
+    const colorClass = starCount >= 3 ? 'red' : 'golden';
+    const stars = '★'.repeat(starCount);
+    
+    return {
+        count: starCount,
+        html: stars,
+        colorClass: colorClass,
+        fullHtml: stars ? `<span class="itemStars ${colorClass}">${stars}</span>` : ''
+    };
+}
         
         // Process each roll with its quality percentage
         if (this.quality1 > 0) {
@@ -588,44 +609,46 @@ class Item {
         }
     }
     
-    getTooltip(showMax = false) {
-        const stats = this.getStats();
-        const rarity = this.getRarity();
-        let tooltip = `<div class="itemTooltip ${rarity}">`;
-        tooltip += `<div class="itemName">${this.name} - Level ${this.level}</div>`;
-        tooltip += `<div class="itemQuality">Quality: ${this.getQualityPercent()}%</div>`;
-        
-        // Show item image if available
-        tooltip += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${this.id}.png" alt="${this.name}" onerror="this.style.display='none'"></div>`;
-        
-        // Show stats with max values if alt is held
-        if (this.quality1 > 0) {
-            const value = Math.floor(this.value1 * (this.quality1 / 5));
-            const maxValue = showMax ? ` (${this.value1})` : '';
-            tooltip += this.getStatLine(this.roll1, value, maxValue);
-        }
-        if (this.quality2 > 0) {
-            const value = Math.floor(this.value2 * (this.quality2 / 5));
-            const maxValue = showMax ? ` (${this.value2})` : '';
-            tooltip += this.getStatLine(this.roll2, value, maxValue);
-        }
-        if (this.quality3 > 0) {
-            const value = Math.floor(this.value3 * (this.quality3 / 5));
-            const maxValue = showMax ? ` (${this.value3})` : '';
-            tooltip += this.getStatLine(this.roll3, value, maxValue);
-        }
-        if (this.quality4 > 0) {
-            const value = Math.floor(10 * (this.quality4 / 5));
-            const maxValue = showMax ? ' (10)' : '';
-            tooltip += `<div class="itemStat">+${value}%${maxValue} Cooldown Reduction</div>`;
-        }
-        
-        tooltip += `<div class="itemSellValue">Sell Value: <span class="goldText">${this.sellcost} gold</span></div>`;
-        tooltip += `</div>`;
-        
-        return tooltip;
+getTooltip(showMax = false) {
+    const stats = this.getStats();
+    const rarity = this.getRarity();
+    const starData = this.getStars();
+    
+    let tooltip = `<div class="itemTooltip ${rarity}">`;
+    tooltip += `<div class="itemName">${this.name} - Level ${this.level}</div>`;
+    tooltip += `<div class="itemQuality">Quality: ${this.getQualityPercent()}% ${starData.html ? `<span class="itemStars ${starData.colorClass}">${starData.html}</span>` : ''}</div>`;
+    
+    // Show item image if available
+    tooltip += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${this.id}.png" alt="${this.name}" onerror="this.style.display='none'"></div>`;
+    
+    // Show stats with max values if alt is held
+    if (this.quality1 > 0) {
+        const value = Math.floor(this.value1 * (this.quality1 / 5));
+        const maxValue = showMax ? ` (${this.value1})` : '';
+        tooltip += this.getStatLine(this.roll1, value, maxValue);
+    }
+    if (this.quality2 > 0) {
+        const value = Math.floor(this.value2 * (this.quality2 / 5));
+        const maxValue = showMax ? ` (${this.value2})` : '';
+        tooltip += this.getStatLine(this.roll2, value, maxValue);
+    }
+    if (this.quality3 > 0) {
+        const value = Math.floor(this.value3 * (this.quality3 / 5));
+        const maxValue = showMax ? ` (${this.value3})` : '';
+        tooltip += this.getStatLine(this.roll3, value, maxValue);
+    }
+    if (this.quality4 > 0) {
+        const value = Math.floor(10 * (this.quality4 / 5));
+        const maxValue = showMax ? ' (10)' : '';
+        tooltip += `<div class="itemStat">+${value}%${maxValue} Cooldown Reduction</div>`;
     }
     
+    tooltip += `<div class="itemSellValue">Sell Value: <span class="goldText">${this.sellcost} gold</span></div>`;
+    tooltip += `</div>`;
+    
+    return tooltip;
+}
+	
     getStatLine(rollType, value, maxValue) {
         switch(rollType) {
             case 'str':
