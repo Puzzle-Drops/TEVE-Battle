@@ -491,27 +491,11 @@ class Item {
     }
     
     getQualityPercent() {
-        let totalQuality = 0;
-        let maxQuality = 0;
+        // Calculate based on all 4 possible rolls
+        let totalQuality = this.quality1 + this.quality2 + this.quality3 + this.quality4;
+        const maxPossibleQuality = 20; // 4 rolls * 5 max each
         
-        if (this.quality1 > 0) {
-            totalQuality += this.quality1;
-            maxQuality += 5;
-        }
-        if (this.quality2 > 0) {
-            totalQuality += this.quality2;
-            maxQuality += 5;
-        }
-        if (this.quality3 > 0) {
-            totalQuality += this.quality3;
-            maxQuality += 5;
-        }
-        if (this.quality4 > 0) {
-            totalQuality += this.quality4;
-            maxQuality += 5;
-        }
-        
-        return maxQuality > 0 ? Math.floor((totalQuality / maxQuality) * 100) : 0;
+        return Math.floor((totalQuality / maxPossibleQuality) * 100);
     }
     
     getStats() {
@@ -560,12 +544,10 @@ class Item {
                 stats.int += value;
                 break;
             case 'allstats':
-                // For allstats, give double to one random stat and normal to others
-                const mainStat = ['str', 'agi', 'int'][Math.floor(Math.random() * 3)];
-                stats[mainStat] += value * 2;
-                if (mainStat !== 'str') stats.str += value;
-                if (mainStat !== 'agi') stats.agi += value;
-                if (mainStat !== 'int') stats.int += value;
+                // All stats get same value (no doubling)
+                stats.str += value;
+                stats.agi += value;
+                stats.int += value;
                 break;
             case 'hp':
                 stats.hp += value * 10;
@@ -632,11 +614,7 @@ class Item {
             case 'int':
                 return `<div class="itemStat">+${value}${maxValue} INT</div>`;
             case 'allstats':
-                // Show which stat got the bonus
-                const mainStat = ['str', 'agi', 'int'][Math.floor(Math.random() * 3)];
-                let statText = `<div class="itemStat">+${value * 2}${maxValue ? ` (${maxValue * 2})` : ''} ${mainStat.toUpperCase()}, `;
-                statText += `+${value}${maxValue} to other stats</div>`;
-                return statText;
+                return `<div class="itemStat">+${value}${maxValue} All Stats</div>`;
             case 'hp':
                 return `<div class="itemStat">+${value * 10}${maxValue ? ` (${maxValue * 10})` : ''} HP</div>`;
             case 'armor':
@@ -1476,8 +1454,37 @@ enterDungeon(tierName, dungeonIndex) {
                         border-radius: 4px;
                         z-index: 1002;
                         pointer-events: none;
+                        max-height: 600px;
+                        overflow-y: auto;
                     `;
                     document.body.appendChild(tooltip);
+                }
+                
+                // Store item reference for alt key updates
+                tooltip._currentItem = item;
+                
+                // Add colored border based on rarity
+                const rarity = item.getRarity();
+                switch(rarity) {
+                    case 'golden':
+                        tooltip.style.borderColor = '#ffd700';
+                        tooltip.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
+                        break;
+                    case 'purple':
+                        tooltip.style.borderColor = '#d896ff';
+                        tooltip.style.boxShadow = '0 0 20px rgba(216, 150, 255, 0.3)';
+                        break;
+                    case 'blue':
+                        tooltip.style.borderColor = '#4dd0e1';
+                        tooltip.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.3)';
+                        break;
+                    case 'green':
+                        tooltip.style.borderColor = '#00ff88';
+                        tooltip.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.3)';
+                        break;
+                    default:
+                        tooltip.style.borderColor = '#2a6a8a';
+                        tooltip.style.boxShadow = '';
                 }
                 
                 tooltip.innerHTML = item.getTooltip(showMax);
@@ -1502,6 +1509,7 @@ enterDungeon(tierName, dungeonIndex) {
                 const tooltip = document.getElementById('itemTooltipDiv');
                 if (tooltip) {
                     tooltip.style.display = 'none';
+                    tooltip._currentItem = null;
                 }
             }
 
@@ -2050,7 +2058,10 @@ hideStatTooltip() {
                             </div>
                         </div>
                         <div style="flex: 1;">
-                            <h3>${familyName} Stash</h3>
+                            <h3 style="text-align: center;">
+                                ${familyName} Stash 
+                                <span style="color: #ffd700; margin-left: 10px;">💰 ${stash.gold.toLocaleString()}</span>
+                            </h3>
                             <div style="margin-top: 20px; background: rgba(10, 25, 41, 0.8); padding: 10px; min-height: 300px; max-height: 400px; overflow-y: auto; border: 1px solid #2a6a8a;">
                                 ${stash && stash.items.length > 0 ? `
                                     <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 10px;">
@@ -2670,92 +2681,6 @@ showHeroInfoPopup(hero) {
                 popup.style.display = 'block';
             }
 
-showEnemyInfoPopup(enemy) {
-    const popup = document.getElementById('heroInfoPopup');
-    document.getElementById('popupHeroName').textContent = `Lv.${enemy.level} ${enemy.name}`;
-    
-    // Show enemy stats in double column format
-    const stats = enemy.baseStats;
-    const statsHtml = `
-        <div style="display: flex; gap: 40px;">
-            <div style="flex: 1;">
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Health Points')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">HP</span>
-                    <span class="statValue">${enemy.hp}</span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Strength')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">STR</span>
-                    <span class="statValue">${stats.str}</span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Agility')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">AGI</span>
-                    <span class="statValue">${stats.agi}</span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Intelligence')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">INT</span>
-                    <span class="statValue">${stats.int}</span>
-                </div>
-            </div>
-            <div style="flex: 1;">
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'HP Regeneration')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Regen</span>
-                    <span class="statValue">${(stats.str * 0.05).toFixed(1)}</span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Atk Spd</span>
-                    <span class="statValue">${(100 + 100 * (stats.agi / (stats.agi + 1000))).toFixed(1)}%</span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Armor</span>
-                    <span class="statValue">${Math.floor(enemy.armor)} <span style="color: #6a9aaa;">(${(enemy.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Resist</span>
-                    <span class="statValue">${Math.floor(enemy.resist)} <span style="color: #6a9aaa;">(${(enemy.magicDamageReduction * 100).toFixed(1)}%)</span></span>
-                </div>
-            </div>
-        </div>
-    `;
-    document.getElementById('popupStats').innerHTML = statsHtml;
-                
-                // Show ability icons with tooltips
-                const enemyAbilitiesHtml = `
-                    <div style="display: flex; gap: 8px; margin-top: 10px;">
-                        ${enemy.abilities.map((ability, index) => {
-                            return `
-                                <div class="abilityIconSmall" 
-                                     data-ability-index="${index}"
-                                     data-enemy-type="enemy">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" 
-                                         style="width: 40px; height: 40px;" 
-                                         alt="${ability.name}" 
-                                         onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'width:40px;height:40px;background:#2a4a6a;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;\\'>⚔️</div>'">
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                `;
-                document.getElementById('popupAbilities').innerHTML = enemyAbilitiesHtml;
-                
-                // Add event listeners for tooltips
-                const abilityIcons = document.querySelectorAll('#popupAbilities .abilityIconSmall');
-                abilityIcons.forEach((icon, index) => {
-                    icon.addEventListener('mouseenter', (e) => {
-                        const ability = enemy.abilities[index];
-                        const tooltipHtml = this.formatAbilityTooltip(ability, 1);
-                        this.showAbilityTooltipFromHTML(e, tooltipHtml);
-                    });
-                    icon.addEventListener('mouseleave', () => {
-                        this.hideAbilityTooltip();
-                    });
-                });
-                
-                // No gear for enemies
-                document.getElementById('popupGear').innerHTML = `<p style="color: #6a9aaa; text-align: center; margin-top: 20px;">No gear equipped</p>`;
-
-                popup.style.display = 'block';
-            }
-
             closeHeroInfo() {
                 document.getElementById('heroInfoPopup').style.display = 'none';
                 this.hideAbilityTooltip();
@@ -2926,6 +2851,11 @@ showBattleResults() {
         const heroDiv = document.createElement('div');
         heroDiv.className = `heroResult ${result.survived ? '' : 'dead'}`;
         
+        // Add item rarity border if hero got an item
+        if (result.item) {
+            heroDiv.classList.add(result.item.getRarity());
+        }
+        
         // Generate stars using consolidated function
         const starData = hero.getStars();
         
@@ -2952,7 +2882,7 @@ showBattleResults() {
                     ${result.leveledUp ? `<div style="color: #ffd700; font-size: 14px; font-weight: bold; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">Level Up! +${result.levelsGained}</div>` : ''}
                 </div>
             ` : '<div style="color: #ff4444; font-size: 12px;">Did not survive</div>'}
-            <div class="itemSlot">${result.item ? `<img src="https://puzzle-drops.github.io/TEVE/img/items/${result.item.id}.png" alt="${result.item.name}" class="${result.item.getRarity()}" style="width: 100%; height: 100%;" onerror="this.style.display='none'">` : ''}</div>
+            <div class="itemSlot" ${result.item ? `onmouseover="game.showItemTooltip(event, game.pendingBattleResults.heroResults[${results.heroResults.indexOf(result)}].item)" onmouseout="game.hideItemTooltip()"` : ''}>${result.item ? `<img src="https://puzzle-drops.github.io/TEVE/img/items/${result.item.id}.png" alt="${result.item.name}" class="${result.item.getRarity()}" style="width: 100%; height: 100%;" onerror="this.style.display='none'">` : ''}</div>
         `;
         
         heroGrid.appendChild(heroDiv);
@@ -3022,7 +2952,7 @@ applyBattleResults() {
                 while (hero.exp >= hero.expToNext && hero.level < 500) {
                     hero.exp -= hero.expToNext;
                     hero.level++;
-                    hero.expToNext = hero.calculateExpToNext(); // THIS LINE WAS MISSING!
+                    hero.expToNext = hero.calculateExpToNext();
                     
                     // Update abilities if needed
                     hero.abilities = hero.getClassAbilities();
@@ -3100,20 +3030,11 @@ window.addEventListener('DOMContentLoaded', async () => {
             // Add global handler for alt key to update item tooltips
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Alt') {
-                    // Check if tooltip is currently showing
+                    e.preventDefault(); // Prevent default Alt key behavior
+                    // Update any visible item tooltip
                     const tooltip = document.getElementById('itemTooltipDiv');
-                    if (tooltip && tooltip.style.display === 'block') {
-                        // Find the element being hovered
-                        const hovered = document.querySelector(':hover');
-                        if (hovered && hovered.classList.contains('stashItemSlot')) {
-                            // Update tooltip with max values
-                            const itemIndex = Array.from(hovered.parentNode.children).indexOf(hovered);
-                            const family = game.currentStashFamily;
-                            if (family && game.stashes[family.name] && game.stashes[family.name].items[itemIndex]) {
-                                const item = game.stashes[family.name].items[itemIndex];
-                                tooltip.innerHTML = item.getTooltip(true);
-                            }
-                        }
+                    if (tooltip && tooltip.style.display === 'block' && tooltip._currentItem) {
+                        tooltip.innerHTML = tooltip._currentItem.getTooltip(true);
                     }
                 }
             });
@@ -3122,16 +3043,8 @@ window.addEventListener('DOMContentLoaded', async () => {
                 if (e.key === 'Alt') {
                     // Update tooltip without max values
                     const tooltip = document.getElementById('itemTooltipDiv');
-                    if (tooltip && tooltip.style.display === 'block') {
-                        const hovered = document.querySelector(':hover');
-                        if (hovered && hovered.classList.contains('stashItemSlot')) {
-                            const itemIndex = Array.from(hovered.parentNode.children).indexOf(hovered);
-                            const family = game.currentStashFamily;
-                            if (family && game.stashes[family.name] && game.stashes[family.name].items[itemIndex]) {
-                                const item = game.stashes[family.name].items[itemIndex];
-                                tooltip.innerHTML = item.getTooltip(false);
-                            }
-                        }
+                    if (tooltip && tooltip.style.display === 'block' && tooltip._currentItem) {
+                        tooltip.innerHTML = tooltip._currentItem.getTooltip(false);
                     }
                 }
             });
