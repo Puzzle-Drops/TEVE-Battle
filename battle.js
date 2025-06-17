@@ -1359,6 +1359,7 @@ const rewards = dungeonConfig.rewards || { gold: 0, exp: 0, items: [] };
                     } else {
                         // No items available, give gold instead
                         itemRolls.push({
+			    console.log("no items avialable.");
                             hero: hero,
                             gold: Math.floor(rewards.gold / this.party.length),
                             item: null
