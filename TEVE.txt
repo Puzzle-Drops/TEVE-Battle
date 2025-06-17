@@ -91,33 +91,31 @@ Enter dungeon (button)
 When you click the enter dungeon button, you get a compact list of your heroes. You may select 5 heroes to enter. When your party beats a dungeon they roll for loot, and go again. Anybody who died will be revived to full hp before the next dungeon starts. This will repeat until the player exits or until the party wipes. If your full team dies you get one more try. After two wipes in a row meaning every member of your party has died it will automatically begin the dungeon one tier down so from forgotten crypt to icy highland instead.
 
 -Items-
-Items are obtained from dungeons and are incredibly rare, and they can give up to 3 types of rolls on them. The first stat is guaranteed and rolls for 75-100% of the offered stat. The second stat is a 50% chance and rolls for 50-100% of the offered stat. The final is stats at a 50% chance as well for 1-100% at the offered stat. Offered stats are half the level of the item. So 1-100 for a 100 stat increase. If it rolls 80, it will give +80 stats to two of them, and +160 to one random stat of the three.
-Head: Armor, str/agi/int, stats
-Chest: Armor, str/agi/int, stats
-Legs: Armor, str/agi/int, stats
-Weapon: Main stat, offensive passive, stats
-Offhand: HP, cdr, stats
-Trinket: stats, stats, stats (one piece found from each dungeon of that tier, automatically combines and rolls stats then.
-For example: You get a helm, it is level 50 gear. Max rolls are half the level of the item so it would be +25 armor, +25 either str, agi, or int, + 50 to a random stat, +25 to the other two. When the item rolls for you, it automatically has the first stat which is armor, so it rolls between 18.75 armor and 25. You get 21. It has a 50% chance, if it fails you have a +21 armor helmet and that is it. If it succeeds you roll for 12.5-25 for the second roll. You roll a 14, and this helmt is a str helmet. Now you have a +21 armor, +14 str helmet. Next for another 50% roll check if you pass the additional stats roll for 25 all stats (+25 agi/int, +50 str) . You roll a 8. So now your finished lucky item is a helmet with +21 armor, +14 str, and +8 agi/int, + 16 str. Later on there is one more roll you can do which is cooldown reduction from smithing at the stash. Smithing will add one roll to an item for a gold cost. The gold cost scales with the item level and how many tiers it already has. So a level 50 item with one roll can be extended to two rolls for 5000 gold. A level 500 item with 3 rolls on it can be extended to 4 rolls with 1m gold. The fourth roll is not possible without smithing. A 3 roll item being smithed makes it roll 1-10% cdr. Items should show the rolls when hovered. If holding alt or long pressing on mobile, it will show the high and low rolls in parentheses next to them. Items with first roll are green, second roll blue, third roll purple, forth roll gold. For our helmet example look below.
-Item on hover:
-Helmet of Valor
-Item level 50
-+21 Armor
-+14 Str
-+16 Str, + 8 Agi, Int
-+2% Cdr
-Item on hover while holding alt:
-Helmet of Valor
-Item level 50
-+21(12.5-25) Armor
-+14(12.5-25) Str
-+16(2-50) Str, + 8(1-25) Agi, Int
-+2%(1-10) Cdr
+Items are obtained from dungeons and are incredibly rare, and they can give up to 3 types of rolls on them. The first stat is guaranteed and rolls for 20-100% of the offered stat via a 1-5 quality roll. The second stat is a 50% chance and rolls for 20-100% of the offered stat via another quality roll. The final is stats at a 50% chance as well for again 20-100% at the offer them.
+Head, Chest, Legs, Trinket, Weapon, Offhand are the 6 gear types.
+        "cloth_armor": {
+            "id": "cloth_armor",
+            "name": "Cloth Armor",
+            "slot": "chest",
+            "level": 5,
+            "roll1": "armor",
+            "value1": 10,
+            "roll2": "int",
+            "value2": "5",
+            "roll3": "resist",
+            "value3": "5",
+            "roll4": "allstats",
+            "value4": 5,
+            "sellcost": 50
+        },
+
+This item if rolled the 50% additional roll successfully twice, would have +armor, +int, and +resist. We would roll a 1-5 roll for quality on each value. So a 2/5, 3/5, 5/5 rolls cloth armor would be +4 armor, +3 int, +5 resist for a total item quality of 66.6% rounded up to 67%. Every perfect quality roll adds a star to an item. So this item would have one star. An item with 4/5, 4/5, 4/5, 5/5 would be one star. Four star items make the stars red.
 
 -Stash
-Each Class 1 category shares a stash. When clicking the stash tab it should show a compact list of all the stashes. 4x2 grid list of the class icon and then the class name.
-[] Acolyte, [] Archer, [] Druid, [] Initiate
-[] Swordsman, [] Templar, [] Thief, [] Witch Hunter
+Each Class 1 category shares a stash. When clicking the stash tab it should show a compact list of all the stashes. 3x3 grid list of the class icon and then the class name.
+[] Villager [] Acolyte [] Archer
+[] Druid [] Initiate [] Swordsman
+[] Templar [] Thief [] Witch Hunter
 
 Once you click one you will see the stash. Items can be withdrawn from the inventory and placed in the stash whenever. So a Champion and an Avenger and a swordsman can all share gear, but cannot share with a Hierophant or a templar, or anyone else. These will be named after their first class name. Villagers cannot access any stashes at all. Items can be viewed, sold, and equipped from the stash ui. So the shared stash of the Templar class would include Templar, Arch Templar, Dark Templar, Dark Arch Templar, High Templar, Grand Templar. In the stash if you click an item you have the option to equip it, sell it, or blacksmith it. If you blacksmith it costs more money depending on the level of the item, but it adds one additional roll to the item for a high cost. If your item is already purple, it will add cdr roll to the item and make it golden.
 
