@@ -3177,11 +3177,9 @@ results.heroResults.forEach(result => {
     const heroDiv = document.createElement('div');
     heroDiv.className = `heroResult ${result.survived ? '' : 'dead'}`;
     
-    // Add item rarity border if hero got an item, or gold border if got gold
+    // Add item rarity border if hero got an item
     if (result.item) {
         heroDiv.classList.add(result.item.getRarity());
-    } else if (result.gold > 0) {
-        heroDiv.classList.add('golden');
     }
     
     // Generate stars using consolidated function
