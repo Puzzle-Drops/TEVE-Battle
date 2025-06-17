@@ -3316,9 +3316,9 @@ if (result.item) {
 });    
     popup.style.display = 'block';
     
-    // Handle auto replay if enabled and victory
+// Handle auto replay if enabled and victory
     if (this.autoReplay && results.victory) {
-        let countdown = 5;
+        let countdown = 10;
         this.updateAutoReplayText(countdown);
         
         this.autoReplayTimer = setInterval(() => {
@@ -3338,6 +3338,9 @@ closeBattleResults() {
     const popup = document.getElementById('battleResultsPopup');
     popup.style.display = 'none';
     
+    // Check if this was a manual click during auto replay
+    const wasManualClick = this.autoReplayTimer !== null;
+    
     // Clear any auto replay timer
     if (this.autoReplayTimer) {
         clearInterval(this.autoReplayTimer);
@@ -3349,8 +3352,8 @@ closeBattleResults() {
         // Apply the results (gold and items)
         this.applyBattleResults();
         
-        // Check if auto replay is enabled and it was a victory
-        const shouldAutoReplay = this.autoReplay && this.pendingBattleResults.victory;
+        // Check if auto replay is enabled and it was a victory, but NOT a manual click
+        const shouldAutoReplay = this.autoReplay && this.pendingBattleResults.victory && !wasManualClick;
         
         // Clear pending results
         this.pendingBattleResults = null;
@@ -3359,7 +3362,7 @@ closeBattleResults() {
             // Auto start next battle
             this.startBattle();
         } else {
-            // Return to party select
+            // Return to party select (either manual click or not auto replay)
             this.showPartySelect();
         }
     }
