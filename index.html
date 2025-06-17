@@ -617,13 +617,13 @@ getTooltip(showMax = false) {
     let tooltip = `<div class="itemTooltip ${rarity}">`;
     tooltip += `<div class="itemName">${this.name} - Level ${this.level}</div>`;
     
-    // Quality and stars inline
-    tooltip += `<div class="itemQualityLine">`;
-    tooltip += `<span class="itemQualityText">Quality: ${this.getQualityPercent()}%</span>`;
+    // Quality on its own line
+    tooltip += `<div class="itemQualityText">Quality: ${this.getQualityPercent()}%</div>`;
+    
+    // Stars on their own line if they exist
     if (starData.html) {
-        tooltip += `<span class="itemStarsInline ${starData.colorClass}">${starData.html}</span>`;
+        tooltip += `<div class="itemStarsInline ${starData.colorClass}">${starData.html}</div>`;
     }
-    tooltip += `</div>`;
     
     // Show item image if available
     tooltip += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${this.id}.png" alt="${this.name}" onerror="this.style.display='none'"></div>`;
