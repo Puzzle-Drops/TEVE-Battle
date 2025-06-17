@@ -148,9 +148,9 @@
                 <div class="heroStats">
                     <div class="heroTabs">
                         <button class="tabButton active" onclick="game.showHeroTab('info')">Info</button>
+                        <button class="tabButton" onclick="game.showHeroTab('gear')">Gear</button>
                         <button class="tabButton" onclick="game.showHeroTab('skills')">Skills</button>
                         <button class="tabButton" onclick="game.showHeroTab('promote')">Promote</button>
-                        <button class="tabButton" onclick="game.showHeroTab('gear')">Gear</button>
                         <button class="tabButton" onclick="game.showHeroTab('log')">Log</button>
                     </div>
                     <div class="tabContent" id="heroContent">
@@ -615,15 +615,21 @@ getTooltip(showMax = false) {
     const starData = this.getStars();
     
     let tooltip = `<div class="itemTooltip ${rarity}">`;
-    tooltip += `<div class="itemName">${this.name} - Level ${this.level}</div>`;
+    tooltip += `<div class="itemName">${this.name}</div>`;
     
-    // Quality on its own line
+    // Level on its own line
+    tooltip += `<div class="itemLevel">Level ${this.level}</div>`;
+    
+    // Quality
     tooltip += `<div class="itemQualityText">Quality: ${this.getQualityPercent()}%</div>`;
     
-    // Stars on their own line if they exist
+    // Stars if they exist
     if (starData.html) {
         tooltip += `<div class="itemStarsInline ${starData.colorClass}">${starData.html}</div>`;
     }
+    
+    // Always show divider line
+    tooltip += `<div class="itemDivider"></div>`;
     
     // Show item image if available
     tooltip += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${this.id}.png" alt="${this.name}" onerror="this.style.display='none'"></div>`;
@@ -650,12 +656,11 @@ getTooltip(showMax = false) {
         tooltip += this.getStatLine(this.roll4, value, maxValue);
     }
     
-    tooltip += `<div class="itemSellValue">Sell Value: <span class="goldText">${this.sellcost} gold</span></div>`;
+    tooltip += `<div class="itemSellValue">Sell Value: <span class="goldText">${this.sellcost}g</span></div>`;
     tooltip += `</div>`;
     
     return tooltip;
-}
-	
+}	
     getStatLine(rollType, value, maxValue) {
         switch(rollType) {
             case 'str':
