@@ -893,22 +893,28 @@ class Item {
                 return true;
             }
             
-            equipItem(item, slot) {
-                if (!item || item.slot !== slot) return false;
-                
-                // Unequip current item if any
-                if (this.gear[slot]) {
-                    this.unequipItem(slot);
-                }
-                
-                // Equip new item
-                this.gear[slot] = item;
-                
-                // Update gear stats
-                this.updateGearStats();
-                
-                return true;
-            }
+equipItem(item, slot) {
+    if (!item || item.slot !== slot) return false;
+    
+    // Villagers can only equip items level 50 and below
+    if ((this.className.includes('villager') || this.className.includes('tester')) && item.level > 50) {
+        alert('Villagers can only equip items level 50 and below!');
+        return false;
+    }
+    
+    // Unequip current item if any
+    if (this.gear[slot]) {
+        this.unequipItem(slot);
+    }
+    
+    // Equip new item
+    this.gear[slot] = item;
+    
+    // Update gear stats
+    this.updateGearStats();
+    
+    return true;
+}
             
             unequipItem(slot) {
                 const item = this.gear[slot];
@@ -1469,18 +1475,21 @@ showIndividualStash(family) {
                 }
             }
 		
-            showItemOptions(item, itemIndex, family) {
-                // TODO: Show popup with options to equip or sell
-                const sellValue = item.sellcost;
-                if (confirm(`Sell ${item.name} for ${sellValue} gold?`)) {
-                    // Remove item from stash
-                    this.stashes[family.name].items.splice(itemIndex, 1);
-                    // Add gold
-                    this.stashes[family.name].gold += sellValue;
-                    // Refresh display
-                    this.showIndividualStash(family);
-                }
-            }
+showItemOptions(item, itemIndex, family) {
+    // Hide item tooltip first
+    this.hideItemTooltip();
+    
+    // TODO: Show popup with options to equip or sell
+    const sellValue = item.sellcost;
+    if (confirm(`Sell ${item.name} for ${sellValue} gold?`)) {
+        // Remove item from stash
+        this.stashes[family.name].items.splice(itemIndex, 1);
+        // Add gold
+        this.stashes[family.name].gold += sellValue;
+        // Refresh display
+        this.showIndividualStash(family);
+    }
+}
 
             showItemTooltip(event, item) {
                 // Check if alt key is held
