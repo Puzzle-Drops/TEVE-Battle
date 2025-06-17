@@ -254,6 +254,12 @@ body {
     margin-bottom: 20px;
 }
 
+/* Center stash family names in stash screen */
+.individualStashScreen .stashHeader h2 {
+    text-align: center;
+    width: 100%;
+}
+
 /* Hero result item borders based on rarity */
 .heroResult.green {
     border-color: #00ff88;
