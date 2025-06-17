@@ -308,3 +308,104 @@ Final Aetherium - Eternal Singularity (Ascended 3) (Lv 500)
 -Transcendent - Items Class 4 and level 500 required
 Rite of Passage - All dungeons in a row without stopping (Transcendent) (Lv 1000)
 
+
+===========================
+OFFENSIVE DPS & PUNISHERS
+===========================
+
+Dark Arch Templar (Male/Female)
+  Role           : High DPS punisher
+  Male Passive   : Applies Bleed to debuffed targets
+  Female Passive : Applies Blight to debuffed targets
+
+White Wizard / White Witch
+  Role           : Cleanse + magical DPS hybrid
+  Male Passive   : Bonus damage vs debuffed or slowed targets
+  Female Passive : Extends cleanse duration or reduces cooldowns
+
+Sniper (Male/Female)
+  Role           : Single-target burst DPS
+  Male Passive   : Bonus crit damage to low-HP targets
+  Female Passive : Ignores a portion of Shield or Armor
+
+Monster Hunter (Male/Female)
+  Role           : AOE sustained DPS
+  Male Passive   : Bonus damage to debuffed enemies
+  Female Passive : Applies Bleed with basic attacks
+
+Professional Witcher (Male/Female)
+  Role           : Anti-magic DPS + buff strip
+  Male Passive   : Bonus damage per debuff on target
+  Female Passive : Removes one buff on critical hit
+
+===========================
+TANKS & DEFENSIVE ROLES
+===========================
+
+Champion (Male/Female)
+  Role           : Anti-physical tank with crowd control
+  Male Passive   : Chance to stun attacker when hit
+  Female Passive : Applies Slow or Taunt on counterattack
+
+Avenger (Male/Female)
+  Role           : Anti-physical retaliatory tank
+  Male Passive   : Reflects part of physical damage taken
+  Female Passive : Gains turn meter when damaged
+
+Runemaster (Male/Female)
+  Role           : Anti-mage tank
+  Male Passive   : Reduces incoming magic damage
+  Female Passive : Chance to Silence magic attackers
+
+Master Stalker (Male/Female)
+  Role           : Evade-based tank with anti-heal
+  Male Passive   : Increased dodge chance vs bleeding enemies
+  Female Passive : Applies Blight when evading attacks
+
+===========================
+HEALERS & SUPPORTS
+===========================
+
+Hierophant (Male/Female)
+  Role           : Buff-based healer
+  Male Passive   : Allies gain a 1-turn shield when buffed
+  Female Passive : Buffed allies gain small health regeneration
+
+Prophet / Prophetess
+  Role           : Primary healer with team-wide Immune
+  Male Passive   : Allies gain small turn meter boost when healed
+  Female Passive : Immune buff lasts +1 turn
+
+Summoner (Male/Female)
+  Role           : Small heals, turn meter boost, AOE debuffer
+  Male Passive   : Allies gain +5% extra turn meter
+  Female Passive : AOE debuff applies one extra random debuff
+
+===========================
+CONTROL, DEBUFF, UTILITY
+===========================
+
+Grand Templar (Male/Female)
+  Role           : Spellcasting support with CC
+  Male Passive   : Skills have a chance to Stun
+  Female Passive : Applies Slow on basic attacks
+
+Arch Sage (Male/Female)
+  Role           : Crowd control specialist
+  Male Passive   : Reduces turn meter of debuffed enemies
+  Female Passive : Debuffs last +1 turn
+
+Grand Inquisitor (Male/Female)
+  Role           : All-rounder with buff steal + buff strip utility
+  Male Passive   : 10% chance to steal a buff when attacking
+  Female Passive : Gains turn meter when removing a buff
+
+Phantom Assassin (Male/Female)
+  Role           : Critical strike assassin
+  Male Passive   : Chance to reset a cooldown on kill
+  Female Passive : Increased crit chance vs taunted enemies
+
+Witch Hunter / Slayer
+  Role           : Buff strip + DPS utility
+  Male Passive   : Bonus damage vs buffed enemies
+  Female Passive : Removes one buff from enemies on skill use
