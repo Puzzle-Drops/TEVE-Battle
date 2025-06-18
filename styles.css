@@ -1563,27 +1563,13 @@ body {
     image-rendering: pixelated;
     object-fit: contain;
 }
+
 #partySelectScreen {
     display: none;
     height: 100vh;
+    background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     position: relative;
     overflow: hidden;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: #0a0f1a;
-}
-
-#partySelectScreen::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(10, 25, 41, 0.25) 0%, rgba(10, 15, 26, 0.25) 100%);
-    pointer-events: none;
-    z-index: 0;
 }
 
 .partySelectContainer {
