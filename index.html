@@ -1724,25 +1724,31 @@ hideGoldTooltip() {
                 // Don't show enemies here - they'll be shown when battle starts
             }
 
-            startBattle() {
-                // Create party array from selected heroes
-                const party = this.selectedParty.map(heroIndex => 
-                    heroIndex !== null ? this.heroes[heroIndex] : null
-                ).filter(hero => hero !== null);
-                
-                // Show battle screen
-                this.showBattle();
-                
-                // Create and start battle with waves
-                this.currentBattle = new Battle(this, party, this.dungeonWaves);
-                
-                // Set auto mode if enabled
-                if (this.autoBattle) {
-                    this.currentBattle.autoMode = true;
-                }
-                
-                this.currentBattle.start();
-            }
+startBattle() {
+    // Clean up any existing battle timer interval
+    if (this.currentBattle && this.currentBattle.timerInterval) {
+        clearInterval(this.currentBattle.timerInterval);
+        this.currentBattle.timerInterval = null;
+    }
+    
+    // Create party array from selected heroes
+    const party = this.selectedParty.map(heroIndex => 
+        heroIndex !== null ? this.heroes[heroIndex] : null
+    ).filter(hero => hero !== null);
+    
+    // Show battle screen
+    this.showBattle();
+    
+    // Create and start battle with waves
+    this.currentBattle = new Battle(this, party, this.dungeonWaves);
+    
+    // Set auto mode if enabled
+    if (this.autoBattle) {
+        this.currentBattle.autoMode = true;
+    }
+    
+    this.currentBattle.start();
+}
             
 toggleAutoBattle(enabled) {
     this.autoBattle = enabled;
