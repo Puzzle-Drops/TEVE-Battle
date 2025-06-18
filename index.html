@@ -1616,7 +1616,7 @@ itemDiv.oncontextmenu = (e) => {
 		}
             }
 		
-showItemOptions(item, itemIndex, family) {
+showItemOptions(item, itemIndex, family, isEquipped = false, slot = null) {
     // Hide item tooltip first
     this.hideItemTooltip();
     
@@ -1629,34 +1629,89 @@ showItemOptions(item, itemIndex, family) {
     menu.id = 'itemContextMenu';
     
     // Store item reference for later use
-    this.contextMenuItem = { item, itemIndex, family };
+    this.contextMenuItem = { item, itemIndex, family, isEquipped, slot };
+    
+    // Get stash for gold checks
+    const familyName = isEquipped ? 
+        this.getClassFamily(this.heroes[this.selectedHero].className, this.heroes[this.selectedHero].classTier) : 
+        family.name;
+    const stash = this.stashes[familyName];
     
     // Add options
     const options = [];
     
-    // Equip option (if there's a selected hero)
-    if (this.currentScreen === 'heroesScreen' && this.selectedHero !== undefined) {
+    // Equip/Unequip option
+    if (isEquipped) {
+        options.push({
+            text: 'Unequip',
+            action: () => {
+                this.unequipGear(slot);
+                this.closeItemContextMenu();
+            }
+        });
+    } else if (this.currentScreen === 'heroesScreen' && this.selectedHero !== undefined) {
         options.push({
             text: 'Equip',
-            action: () => this.equipFromContextMenu()
+            action: () => {
+                this.equipFromContextMenu();
+                this.closeItemContextMenu();
+            }
         });
     }
     
     // Refine option
     const refineCost = item.getRefineCost();
-    const canAfford = this.stashes[family.name].gold >= refineCost;
+    const canAfford = stash.gold >= refineCost;
     options.push({
         text: `Refine`,
         cost: refineCost,
         disabled: item.refined || !canAfford,
-        action: () => this.refineFromContextMenu()
+        action: () => {
+            if (stash.gold >= refineCost && item.canRefine()) {
+                // Deduct gold
+                stash.gold -= refineCost;
+                
+                // Refine the item
+                item.refine();
+                
+                // Update displays
+                if (isEquipped) {
+                    // Update gear stats if equipped
+                    this.heroes[this.selectedHero].updateGearStats();
+                    this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+                } else {
+                    // Refresh stash display
+                    this.showIndividualStash(family);
+                }
+            }
+            this.closeItemContextMenu();
+        }
     });
     
     // Sell option
     options.push({
         text: 'Sell',
-        cost: -item.sellcost, // Negative to show gain
-        action: () => this.sellFromContextMenu()
+        cost: -item.sellcost,
+        action: () => {
+            if (isEquipped) {
+                // Unequip first
+                this.heroes[this.selectedHero].unequipItem(slot);
+            } else {
+                // Remove from stash
+                this.stashes[family.name].items.splice(itemIndex, 1);
+            }
+            
+            // Add gold
+            stash.gold += item.sellcost;
+            
+            // Refresh display
+            if (isEquipped) {
+                this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+            } else {
+                this.showIndividualStash(family);
+            }
+            this.closeItemContextMenu();
+        }
     });
     
     // Create menu HTML
@@ -1683,10 +1738,7 @@ showItemOptions(item, itemIndex, family) {
     const menuOptions = menu.querySelectorAll('.itemContextOption');
     menuOptions.forEach((elem, index) => {
         if (!options[index].disabled) {
-            elem.onclick = () => {
-                options[index].action();
-                this.closeItemContextMenu();
-            };
+            elem.onclick = options[index].action;
         }
     });
     
@@ -2512,6 +2564,7 @@ showGearTab(hero, content) {
                         ${hero.gear.trinket ? 
                             `<div class="gearItem ${hero.gear.trinket.getRarity()}" 
                                  onclick="game.unequipGear('trinket')"
+                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'trinket')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.trinket)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
@@ -2530,6 +2583,7 @@ showGearTab(hero, content) {
                         ${hero.gear.head ? 
                             `<div class="gearItem ${hero.gear.head.getRarity()}"
                                  onclick="game.unequipGear('head')"
+                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'head')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.head)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
@@ -2548,6 +2602,7 @@ showGearTab(hero, content) {
                         ${hero.gear.weapon ? 
                             `<div class="gearItem ${hero.gear.weapon.getRarity()}"
                                  onclick="game.unequipGear('weapon')"
+                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'weapon')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.weapon)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
@@ -2566,6 +2621,7 @@ showGearTab(hero, content) {
                         ${hero.gear.chest ? 
                             `<div class="gearItem ${hero.gear.chest.getRarity()}"
                                  onclick="game.unequipGear('chest')"
+                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'chest')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.chest)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
@@ -2584,6 +2640,7 @@ showGearTab(hero, content) {
                         ${hero.gear.offhand ? 
                             `<div class="gearItem ${hero.gear.offhand.getRarity()}"
                                  onclick="game.unequipGear('offhand')"
+                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'offhand')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.offhand)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
@@ -2602,6 +2659,7 @@ showGearTab(hero, content) {
                         ${hero.gear.legs ? 
                             `<div class="gearItem ${hero.gear.legs.getRarity()}"
                                  onclick="game.unequipGear('legs')"
+                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'legs')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.legs)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
