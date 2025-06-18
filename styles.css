@@ -413,7 +413,39 @@ body {
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
 }
 
-/* Gold stars for 5-star items */
+/* Item stars matching rarity colors */
+.itemStars.green {
+    color: #00ff88;
+    text-shadow: 
+        0 0 4px rgba(0, 0, 0, 0.9),
+        1px 1px 2px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 1);
+}
+
+.itemStars.blue {
+    color: #00c3ff;
+    text-shadow: 
+        0 0 4px rgba(0, 0, 0, 0.9),
+        1px 1px 2px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 1);
+}
+
+.itemStars.purple {
+    color: #d896ff;
+    text-shadow: 
+        0 0 4px rgba(0, 0, 0, 0.9),
+        1px 1px 2px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 1);
+}
+
+.itemStars.red {
+    color: #ff4444;
+    text-shadow: 
+        0 0 4px rgba(0, 0, 0, 0.9),
+        1px 1px 2px rgba(0, 0, 0, 1),
+        -1px -1px 2px rgba(0, 0, 0, 1);
+}
+
 .itemStars.gold {
     color: #ffd700;
     text-shadow: 
