@@ -234,6 +234,7 @@ body {
 }
 
 
+/* Wave counter styling */
 .waveCounter {
     position: absolute;
     top: 20px;
@@ -245,20 +246,18 @@ body {
     font-size: 24px;
     font-weight: bold;
     box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
-    text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
+    text-align: center;
+    min-width: 160px;
 }
 
-.battleTimer {
-    position: absolute;
-    top: 20px;
-    right: 220px;
-    padding: 10px 20px;
-    background: rgba(10, 25, 41, 0.9);
-    border: 1px solid #2a6a8a;
-    color: #4dd0e1;
+.waveCounter .battleTimerText {
+    font-size: 22px;
+    color: #b0e0f0;
+    margin-bottom: 4px;
+}
+
+.waveCounter .waveText {
     font-size: 24px;
-    font-weight: bold;
-    box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
 }
 
