@@ -461,12 +461,9 @@ start() {
     this.startTimerUpdate();
 }
 
-    createBattleUI() {
-    // Create wave counter
+createBattleUI() {
+    // Create wave counter (with timer)
     this.createWaveCounter();
-    
-    // Create timer
-    this.createTimer();
     
     // Create dungeon name display
     this.createDungeonNameDisplay();
@@ -477,24 +474,7 @@ start() {
     }
 }
 
-createTimer() {
-    // Remove any existing timer
-    const existingTimer = document.getElementById('battleTimer');
-    if (existingTimer) {
-        existingTimer.remove();
-    }
-    
-    // Create new timer
-    const timer = document.createElement('div');
-    timer.id = 'battleTimer';
-    timer.className = 'battleTimer';
-    timer.textContent = '00:00';
-    
-    const battleScene = document.getElementById('battleScene');
-    if (battleScene) {
-        battleScene.appendChild(timer);
-    }
-}
+
 
 createDungeonNameDisplay() {
     // Remove any existing dungeon name
@@ -554,12 +534,15 @@ startTimerUpdate() {
 }
 
 updateTimer() {
-    const timer = document.getElementById('battleTimer');
-    if (timer && this.startTime) {
-        const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
-        const minutes = Math.floor(elapsed / 60);
-        const seconds = elapsed % 60;
-        timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    const waveCounter = document.getElementById('waveCounter');
+    if (waveCounter && this.startTime) {
+        const timerElement = waveCounter.querySelector('.battleTimerText');
+        if (timerElement) {
+            const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
     }
 }
 
@@ -576,56 +559,38 @@ updateAutomaticModeDisplay() {
     }
 }
 
-    createWaveCounter() {
-
-        // Remove any existing wave counter
-
-        const existingCounter = document.getElementById('waveCounter');
-
-        if (existingCounter) {
-
-            existingCounter.remove();
-
-        }
-
-        
-
-        // Create new wave counter
-
-        const waveCounter = document.createElement('div');
-
-        waveCounter.id = 'waveCounter';
-
-        waveCounter.className = 'waveCounter';
-
-        waveCounter.textContent = `Wave: ${this.currentWave + 1}/${this.enemyWaves.length}`;
-
-        
-
-        const battleScene = document.getElementById('battleScene');
-
-        if (battleScene) {
-
-            battleScene.appendChild(waveCounter);
-
-        }
-
+createWaveCounter() {
+    // Remove any existing wave counter
+    const existingCounter = document.getElementById('waveCounter');
+    if (existingCounter) {
+        existingCounter.remove();
     }
-
     
-
-    updateWaveCounter() {
-
-        const waveCounter = document.getElementById('waveCounter');
-
-        if (waveCounter) {
-
-            waveCounter.textContent = `Wave: ${this.currentWave + 1}/${this.enemyWaves.length}`;
-
-        }
-
+    // Create new wave counter with timer
+    const waveCounter = document.createElement('div');
+    waveCounter.id = 'waveCounter';
+    waveCounter.className = 'waveCounter';
+    waveCounter.innerHTML = `
+        <div class="battleTimerText">00:00</div>
+        <div class="waveText">Wave: ${this.currentWave + 1}/${this.enemyWaves.length}</div>
+    `;
+    
+    const battleScene = document.getElementById('battleScene');
+    if (battleScene) {
+        battleScene.appendChild(waveCounter);
     }
+}
 
+	
+updateWaveCounter() {
+    const waveCounter = document.getElementById('waveCounter');
+    if (waveCounter) {
+        const waveText = waveCounter.querySelector('.waveText');
+        if (waveText) {
+            waveText.textContent = `Wave: ${this.currentWave + 1}/${this.enemyWaves.length}`;
+        }
+    }
+}
     
 
     battleLoop() {
@@ -1399,13 +1364,6 @@ if (this.timerInterval) {
 
         }
 
-        // Clean up wave counter
-// Don't remove wave counter anymore - keep it visible
-// const waveCounter = document.getElementById('waveCounter');
-// if (waveCounter) {
-//     waveCounter.remove();
-// }
-
         
 
 // Clean up level indicator event listeners
@@ -1422,17 +1380,12 @@ if (this.timerInterval) {
             });
         }
 
-	    // Clean up UI elements when battle ends (but keep wave counter)
-const elementsToCleanup = ['battleTimer', 'dungeonNameDisplay'];
-if (!this.game.autoReplay) {
-    elementsToCleanup.push('automaticModeDisplay');
+// Hide exit button when showing results
+const exitButton = document.querySelector('.exitBattleButton');
+if (exitButton) {
+    exitButton.style.display = 'none';
 }
-elementsToCleanup.forEach(id => {
-    const element = document.getElementById(id);
-    if (element) {
-        element.remove();
-    }
-});
+
 	    
         // Close any open popup
         this.game.closeHeroInfo();
