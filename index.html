@@ -2735,6 +2735,13 @@ equipFromStash(itemIndex, slot) {
                             e.stopPropagation();
                             this.showEnemyInfoPopup(enemy);
                         };
+			    // Add right-click handler for enemy info
+slot.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.showEnemyInfoPopup(enemy);
+});
+			    
                     }
                 });
             }
@@ -2800,7 +2807,13 @@ equipFromStash(itemIndex, slot) {
                 });
                 wrapper.addEventListener('mouseup', () => clearTimeout(pressTimer));
                 wrapper.addEventListener('mouseleave', () => clearTimeout(pressTimer));
-                
+
+		    // Right-click for info
+wrapper.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    this.showHeroInfoPopup(hero);
+});
+		    
                 return wrapper;
             }
 		
