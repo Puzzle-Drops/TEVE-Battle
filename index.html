@@ -301,23 +301,11 @@
                 <div class="dungeonInfo" id="dungeonInfo">Defeated Satyrs in 02:45</div>
             </div>
             
-            <div class="rewardsSection">
-                <div class="rewardLine">
-                    <span class="rewardLabel">Gold Reward:</span>
-                    <span class="rewardValue" id="goldReward">+1000</span>
-                </div>
-                <div class="rewardLine">
-                    <span class="rewardLabel">Dungeon Bonus EXP:</span>
-                    <span class="rewardValue" id="bonusExp">+500</span>
-                </div>
-            </div>
-            
             <div class="heroResultsSection">
-                <div class="heroResultsTitle">Heroes</div>
-                <div class="heroResultsGrid" id="heroResultsGrid">
-                    <!-- Hero results will be generated here -->
-                </div>
-            </div>
+    <div class="heroResultsGrid" id="heroResultsGrid">
+        <!-- Hero results will be generated here -->
+    </div>
+</div>
             
             <button class="closeResultsBtn" onclick="game.closeBattleResults()">Continue</button>
         </div>
@@ -1738,6 +1726,11 @@ startBattle() {
     
     // Show battle screen
     this.showBattle();
+
+	// If auto replay is on, ensure auto battle is also on
+if (this.autoReplay && !this.autoBattle) {
+    this.toggleAutoBattle(true);
+}
     
     // Create and start battle with waves
     this.currentBattle = new Battle(this, party, this.dungeonWaves);
@@ -1757,6 +1750,11 @@ toggleAutoBattle(enabled) {
     if (battleToggle) battleToggle.checked = enabled;
     const partyToggle = document.getElementById('autoBattleToggle');
     if (partyToggle) partyToggle.checked = enabled;
+    
+    // If disabling auto battle while auto replay is on, turn off auto replay
+    if (!enabled && this.autoReplay) {
+        this.toggleAutoReplay(false);
+    }
     
     // Update current battle if running
     if (this.currentBattle) {
@@ -3281,14 +3279,7 @@ if (exitButton) {
     const infoElement = document.getElementById('dungeonInfo');
     const actionText = results.victory ? 'Defeated' : 'Failed';
     infoElement.textContent = `${actionText} ${results.dungeonName} in ${results.time}`;
-    
-    // Update rewards
-    const goldElement = document.getElementById('goldReward');
-    goldElement.textContent = results.goldChange >= 0 ? `+${results.goldChange}` : results.goldChange;
-    goldElement.className = `rewardValue ${results.goldChange >= 0 ? 'positive' : 'negative'}`;
-    
-    document.getElementById('bonusExp').textContent = `+${results.dungeonBonusExp}`;
-    
+	
     // Generate hero results
     const heroGrid = document.getElementById('heroResultsGrid');
     heroGrid.innerHTML = '';
