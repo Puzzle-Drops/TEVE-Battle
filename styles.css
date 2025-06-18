@@ -233,7 +233,7 @@ body {
     background-color: #0a0f1a; /* Fallback color */
 }
 
-/* Wave counter styling */
+
 .waveCounter {
     position: absolute;
     top: 20px;
@@ -246,6 +246,67 @@ body {
     font-weight: bold;
     box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
+}
+
+.battleTimer {
+    position: absolute;
+    top: 20px;
+    right: 220px;
+    padding: 10px 20px;
+    background: rgba(10, 25, 41, 0.9);
+    border: 1px solid #2a6a8a;
+    color: #4dd0e1;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
+    text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
+}
+
+.dungeonNameDisplay {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 30px;
+    background: rgba(10, 25, 41, 0.9);
+    border: 1px solid #2a6a8a;
+    color: #4dd0e1;
+    font-size: 28px;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
+    text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
+}
+
+.automaticModeDisplay {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    padding: 15px 20px;
+    background: rgba(10, 25, 41, 0.9);
+    border: 1px solid #2a6a8a;
+    color: #4dd0e1;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
+    text-align: center;
+    min-width: 180px;
+}
+
+.autoModeTitle {
+    font-size: 20px;
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
+}
+
+.autoModeTime {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: #b0e0f0;
+}
+
+.autoModeCompletions {
+    font-size: 16px;
+    color: #6a9aaa;
 }
 
 /* Centered stash family name in hero gear panel */
