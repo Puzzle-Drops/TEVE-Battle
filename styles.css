@@ -392,6 +392,35 @@ body {
     filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
 }
 
+/* Gold rarity items - 5 star perfect items */
+.stashItemSlot.gold {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+}
+
+.gearItem.gold {
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+}
+
+.heroResult.gold {
+    border-color: #ffd700;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+}
+
+.itemTooltip.gold .itemName {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+/* Gold stars for 5-star items */
+.itemStars.gold {
+    color: #ffd700;
+    text-shadow: 
+        0 0 8px rgba(255, 215, 0, 0.9),
+        0 0 15px rgba(255, 215, 0, 0.6);
+}
+
 /* Ensure item tooltip has higher max-height */
 .itemTooltip {
     min-width: 200px;
