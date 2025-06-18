@@ -2669,11 +2669,11 @@ equipFromStash(itemIndex, slot) {
                 // Update dungeon info
                 document.getElementById('dungeonName').textContent = this.currentDungeon.name;
 
-// Set background for entire party select screen
-    const partySelectScreen = document.getElementById('partySelectScreen');
-    if (partySelectScreen && this.currentDungeon) {
+// Set background for battle preview
+    const battlePreview = document.querySelector('.battlePreview');
+    if (battlePreview && this.currentDungeon) {
         const dungeonName = this.currentDungeon.name.toLowerCase().replace(/ /g, '_');
-        partySelectScreen.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
+        battlePreview.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
     }
 
 		    // Set toggle states
