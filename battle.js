@@ -275,6 +275,12 @@ constructor(game, party, enemyWaves) {
     this.running = true;
     this.processingWaveTransition = false;
     this.targetingState = null;
+
+	// Clear any existing timer interval from previous battles
+if (this.timerInterval) {
+    clearInterval(this.timerInterval);
+    this.timerInterval = null;
+}
     
     // Add timer tracking
     this.startTime = Date.now();
@@ -448,6 +454,15 @@ start() {
     this.log("Battle started!");
     this.log(`Your party: ${this.party.map(u => u.name).join(', ')}`);
     
+    // Reset start time for this battle
+    this.startTime = Date.now();
+    
+    // Clear any existing timer interval
+    if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+    }
+    
     // Create UI elements
     this.createBattleUI();
     
@@ -526,6 +541,12 @@ createAutomaticModeDisplay() {
 }
 
 startTimerUpdate() {
+    // Clear any existing interval first
+    if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+    }
+    
     // Update timer every second
     this.timerInterval = setInterval(() => {
         this.updateTimer();
@@ -1345,7 +1366,6 @@ calculateWaveExp() {
     endBattle(victory) {
 
         this.running = false;
-
         this.endTime = Date.now();
 
 	    // Clear timer interval
