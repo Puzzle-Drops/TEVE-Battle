@@ -451,49 +451,6 @@ body {
     color: #6a9aaa;
 }
 
-.rewardsSection {
-    margin: 20px 0;
-    padding: 20px;
-    background: rgba(10, 25, 41, 0.8);
-    border: 1px solid #2a6a8a;
-}
-
-.rewardLine {
-    font-size: 20px;
-    margin: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.rewardLabel {
-    color: #6a9aaa;
-}
-
-.rewardValue {
-    color: #b0e0f0;
-    font-weight: bold;
-}
-
-.rewardValue.positive {
-    color: #00ff88;
-}
-
-.rewardValue.negative {
-    color: #ff4444;
-}
-
-.heroResultsSection {
-    margin-top: 30px;
-}
-
-.heroResultsTitle {
-    font-size: 24px;
-    color: #4dd0e1;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
 .heroResultsGrid {
     display: flex;
     gap: 15px;
@@ -501,6 +458,9 @@ body {
     flex-wrap: wrap;
 }
 
+.heroResultsSection {
+    margin-top: 20px;
+}
 
 .heroResult {
     background: rgba(10, 25, 41, 0.8);
