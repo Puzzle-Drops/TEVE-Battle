@@ -237,7 +237,7 @@ body {
 /* Wave counter styling */
 .waveCounter {
     position: absolute;
-    top: 20px;
+    top: 78px;
     right: 20px;
     padding: 10px 20px;
     background: rgba(10, 25, 41, 0.9);
@@ -247,7 +247,7 @@ body {
     font-weight: bold;
     box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
     text-align: center;
-    min-width: 160px;
+    min-width: 200px;
 }
 
 .waveCounter .battleTimerText {
@@ -264,9 +264,8 @@ body {
 .dungeonNameDisplay {
     position: absolute;
     top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 30px;
+    left: 10px;
+    padding: 10px 20px;
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
     color: #4dd0e1;
@@ -274,13 +273,14 @@ body {
     font-weight: bold;
     box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
+    min-width: 200px;
 }
 
 .automaticModeDisplay {
     position: absolute;
-    top: 105px;
-    right: 20px;
-    padding: 15px 20px;
+    top: 162px;
+    right: 10px;
+    padding: 10px 20px;
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
     color: #4dd0e1;
@@ -288,7 +288,7 @@ body {
     font-weight: bold;
     box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
     text-align: center;
-    min-width: 180px;
+    min-width: 200px;
 }
 
 .autoModeTitle {
