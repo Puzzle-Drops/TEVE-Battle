@@ -1602,10 +1602,6 @@ body {
     justify-content: center;
     gap: 60px;
     padding: 40px;
-    position: relative;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 
 .battlePreview::before {
