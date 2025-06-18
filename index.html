@@ -448,6 +448,7 @@ class Item {
         this.quality2 = 0;
         this.quality3 = 0;
         this.quality4 = 0;
+	this.refined = false;
         
         // Stats this item can roll
         this.roll1 = template.roll1;
@@ -617,7 +618,8 @@ getTooltip(showMax = false) {
     const starData = this.getStars();
     
     let tooltip = `<div class="itemTooltip ${rarity}">`;
-    tooltip += `<div class="itemName">${this.name}</div>`;
+    tooltip += `<div class="itemName">${this.name}${this.refined ? '<span style="float: right; font-size: 16px;">*</span>' : ''}</div>`;
+
     
     // Level on its own line
     tooltip += `<div class="itemLevelText">Level ${this.level}</div>`;
@@ -663,6 +665,74 @@ getTooltip(showMax = false) {
     
     return tooltip;
 }	
+
+	canRefine() {
+    return !this.refined;
+}
+
+getRefineCost() {
+    const qualityPercent = this.getQualityPercent() / 100;
+    return Math.floor((this.level + (this.level * qualityPercent)) * 500);
+}
+
+refine() {
+    if (this.refined) return false;
+    
+    // Count current rolls
+    let rollCount = 0;
+    if (this.quality1 > 0) rollCount++;
+    if (this.quality2 > 0) rollCount++;
+    if (this.quality3 > 0) rollCount++;
+    if (this.quality4 > 0) rollCount++;
+    
+    if (rollCount < 4) {
+        // Add a new roll
+        if (this.quality2 === 0) {
+            this.quality2 = Math.floor(Math.random() * 5) + 1;
+            console.log(`Refining: Added roll 2 (${this.roll2}): ${this.quality2}/5`);
+        } else if (this.quality3 === 0) {
+            this.quality3 = Math.floor(Math.random() * 5) + 1;
+            console.log(`Refining: Added roll 3 (${this.roll3}): ${this.quality3}/5`);
+        } else if (this.quality4 === 0) {
+            this.quality4 = Math.floor(Math.random() * 5) + 1;
+            console.log(`Refining: Added CDR roll: ${this.quality4}/5`);
+        }
+    } else {
+        // Find lowest quality roll and make it 5/5
+        let lowestValue = 5;
+        let lowestRoll = null;
+        
+        if (this.quality1 < lowestValue) {
+            lowestValue = this.quality1;
+            lowestRoll = 1;
+        }
+        if (this.quality2 < lowestValue) {
+            lowestValue = this.quality2;
+            lowestRoll = 2;
+        }
+        if (this.quality3 < lowestValue) {
+            lowestValue = this.quality3;
+            lowestRoll = 3;
+        }
+        if (this.quality4 < lowestValue) {
+            lowestValue = this.quality4;
+            lowestRoll = 4;
+        }
+        
+        // Set the lowest roll to 5/5
+        if (lowestRoll === 1) this.quality1 = 5;
+        else if (lowestRoll === 2) this.quality2 = 5;
+        else if (lowestRoll === 3) this.quality3 = 5;
+        else if (lowestRoll === 4) this.quality4 = 5;
+        
+        console.log(`Refining: Upgraded roll ${lowestRoll} from ${lowestValue}/5 to 5/5`);
+    }
+    
+    this.refined = true;
+    console.log(`Item refined: ${this.name} - New quality: ${this.getQualityPercent()}%`);
+    return true;
+}
+	
     getStatLine(rollType, value, maxValue) {
         switch(rollType) {
             case 'str':
