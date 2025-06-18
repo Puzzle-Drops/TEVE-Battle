@@ -454,13 +454,13 @@ class Item {
         this.roll1 = template.roll1;
         this.roll2 = template.roll2;
         this.roll3 = template.roll3;
-        this.roll4 = template.roll4 || 'cdr';
+        this.roll4 = template.roll4;
         
         // Max values for each roll
         this.value1 = template.value1 || Math.floor(this.level / 2);
         this.value2 = template.value2 || Math.floor(this.level / 2);
         this.value3 = template.value3 || Math.floor(this.level / 2);
-        this.value4 = template.value4 || 10; // CDR is always max 10%
+        this.value4 = template.value4 || Math.floot(this.level / 2);
         
         // Roll the item
         this.rollItem();
@@ -469,22 +469,28 @@ class Item {
     }
     
     rollItem() {
-        // First roll is guaranteed, rolls 1-5 quality
-        this.quality1 = Math.floor(Math.random() * 5) + 1;
-        console.log(`  Roll 1 (${this.roll1}): ${this.quality1}/5`);
+    // First roll is guaranteed, rolls 1-5 quality
+    this.quality1 = Math.floor(Math.random() * 5) + 1;
+    console.log(`  Roll 1 (${this.roll1}): ${this.quality1}/5`);
+    
+    // Second roll has 40% chance
+    if (Math.random() < 0.4) {
+        this.quality2 = Math.floor(Math.random() * 5) + 1;
+        console.log(`  Roll 2 (${this.roll2}): ${this.quality2}/5`);
         
-        // Second roll has 50% chance
-        if (Math.random() < 0.5) {
-            this.quality2 = Math.floor(Math.random() * 5) + 1;
-            console.log(`  Roll 2 (${this.roll2}): ${this.quality2}/5`);
+        // Third roll has 35% chance (only if got second)
+        if (Math.random() < 0.35) {
+            this.quality3 = Math.floor(Math.random() * 5) + 1;
+            console.log(`  Roll 3 (${this.roll3}): ${this.quality3}/5`);
             
-            // Third roll has 50% chance (only if got second)
-            if (Math.random() < 0.5) {
-                this.quality3 = Math.floor(Math.random() * 5) + 1;
-                console.log(`  Roll 3 (${this.roll3}): ${this.quality3}/5`);
+            // Fourth roll has 30% chance (only if got third)
+            if (Math.random() < 0.30) {
+                this.quality4 = Math.floor(Math.random() * 5) + 1;
+                console.log(`  Roll 4 (${this.roll4}): ${this.quality4}/5`);
             }
         }
     }
+}
     
     getRarity() {
         if (this.quality4 > 0) return 'red';
@@ -1603,17 +1609,18 @@ sortedItems.forEach((item, index) => {
     const starData = item.getStars();
     
     const itemDiv = document.createElement('div');
-    itemDiv.className = `stashItemSlot ${item.getRarity()}`;
-    itemDiv.innerHTML = `
-        <div class="itemContainer">
-            <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
-                 alt="${item.name}"
-                 onerror="this.style.display='none'">
-            ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-            <div class="itemLevel">${item.level}</div>
-            <div class="itemQuality">${item.getQualityPercent()}%</div>
-        </div>
-    `;
+itemDiv.className = `stashItemSlot ${item.getRarity()}`;
+itemDiv.innerHTML = `
+    <div class="itemContainer">
+        <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
+             alt="${item.name}"
+             onerror="this.style.display='none'">
+        ${item.refined ? '<div class="itemRefined">*</div>' : ''}
+        ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
+        <div class="itemLevel">${item.level}</div>
+        <div class="itemQuality">${item.getQualityPercent()}%</div>
+    </div>
+`;
     
     // Add click handler
     // Left click to equip (if in hero screen)
@@ -2624,6 +2631,7 @@ showGearTab(hero, content) {
                                     <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.trinket.id}.png" 
                                          alt="${hero.gear.trinket.name}"
                                          onerror="this.style.display='none'">
+			            ${hero.gear.trinket.refined ? '<div class="itemRefined">*</div>' : ''}
                                     ${hero.gear.trinket.getStars().html ? `<div class="itemStars ${hero.gear.trinket.getStars().colorClass}">${hero.gear.trinket.getStars().html}</div>` : ''}
                                     <div class="itemLevel">${hero.gear.trinket.level}</div>
                                     <div class="itemQuality">${hero.gear.trinket.getQualityPercent()}%</div>
@@ -2643,6 +2651,7 @@ showGearTab(hero, content) {
                                     <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.head.id}.png" 
                                          alt="${hero.gear.head.name}"
                                          onerror="this.style.display='none'">
+			            ${hero.gear.head.refined ? '<div class="itemRefined">*</div>' : ''}
                                     ${hero.gear.head.getStars().html ? `<div class="itemStars ${hero.gear.head.getStars().colorClass}">${hero.gear.head.getStars().html}</div>` : ''}
                                     <div class="itemLevel">${hero.gear.head.level}</div>
                                     <div class="itemQuality">${hero.gear.head.getQualityPercent()}%</div>
@@ -2662,6 +2671,7 @@ showGearTab(hero, content) {
                                     <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.weapon.id}.png" 
                                          alt="${hero.gear.weapon.name}"
                                          onerror="this.style.display='none'">
+			            ${hero.gear.weapon.refined ? '<div class="itemRefined">*</div>' : ''}
                                     ${hero.gear.weapon.getStars().html ? `<div class="itemStars ${hero.gear.weapon.getStars().colorClass}">${hero.gear.weapon.getStars().html}</div>` : ''}
                                     <div class="itemLevel">${hero.gear.weapon.level}</div>
                                     <div class="itemQuality">${hero.gear.weapon.getQualityPercent()}%</div>
@@ -2681,6 +2691,7 @@ showGearTab(hero, content) {
                                     <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.chest.id}.png" 
                                          alt="${hero.gear.chest.name}"
                                          onerror="this.style.display='none'">
+			            ${hero.gear.chest.refined ? '<div class="itemRefined">*</div>' : ''}
                                     ${hero.gear.chest.getStars().html ? `<div class="itemStars ${hero.gear.chest.getStars().colorClass}">${hero.gear.chest.getStars().html}</div>` : ''}
                                     <div class="itemLevel">${hero.gear.chest.level}</div>
                                     <div class="itemQuality">${hero.gear.chest.getQualityPercent()}%</div>
@@ -2700,6 +2711,7 @@ showGearTab(hero, content) {
                                     <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.offhand.id}.png" 
                                          alt="${hero.gear.offhand.name}"
                                          onerror="this.style.display='none'">
+			            ${hero.gear.offhand.refined ? '<div class="itemRefined">*</div>' : ''}
                                     ${hero.gear.offhand.getStars().html ? `<div class="itemStars ${hero.gear.offhand.getStars().colorClass}">${hero.gear.offhand.getStars().html}</div>` : ''}
                                     <div class="itemLevel">${hero.gear.offhand.level}</div>
                                     <div class="itemQuality">${hero.gear.offhand.getQualityPercent()}%</div>
@@ -2719,6 +2731,7 @@ showGearTab(hero, content) {
                                     <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.legs.id}.png" 
                                          alt="${hero.gear.legs.name}"
                                          onerror="this.style.display='none'">
+			            ${hero.gear.legs.refined ? '<div class="itemRefined">*</div>' : ''}
                                     ${hero.gear.legs.getStars().html ? `<div class="itemStars ${hero.gear.legs.getStars().colorClass}">${hero.gear.legs.getStars().html}</div>` : ''}
                                     <div class="itemLevel">${hero.gear.legs.level}</div>
                                     <div class="itemQuality">${hero.gear.legs.getQualityPercent()}%</div>
@@ -2747,12 +2760,14 @@ showGearTab(hero, content) {
          onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}])"
          onmouseout="game.hideItemTooltip()">
                                     <div class="itemContainer">
-                                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
-                                             alt="${item.name}"
-                                             onerror="this.style.display='none'">
-                                        ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-                                        <div class="itemLevel">${item.level}</div>
-                                        <div class="itemQuality">${item.getQualityPercent()}%</div>
+    <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
+         alt="${item.name}"
+         onerror="this.style.display='none'">
+    ${item.refined ? '<div class="itemRefined">*</div>' : ''}
+    ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
+    <div class="itemLevel">${item.level}</div>
+    <div class="itemQuality">${item.getQualityPercent()}%</div>
+</div>
                                     </div>
                                 </div>
                             `;}).join('')}
@@ -3381,6 +3396,7 @@ const gearHtml = `
                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.trinket.id}.png" 
                              alt="${hero.gear.trinket.name}"
                              onerror="this.style.display='none'">
+			${hero.gear.trinket.refined ? '<div class="itemRefined">*</div>' : ''}
                         ${hero.gear.trinket.getStars().html ? `<div class="itemStars ${hero.gear.trinket.getStars().colorClass}">${hero.gear.trinket.getStars().html}</div>` : ''}
                         <div class="itemLevel">${hero.gear.trinket.level}</div>
                         <div class="itemQuality">${hero.gear.trinket.getQualityPercent()}%</div>
@@ -3398,6 +3414,7 @@ const gearHtml = `
                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.head.id}.png" 
                              alt="${hero.gear.head.name}"
                              onerror="this.style.display='none'">
+			${hero.gear.head.refined ? '<div class="itemRefined">*</div>' : ''}
                         ${hero.gear.head.getStars().html ? `<div class="itemStars ${hero.gear.head.getStars().colorClass}">${hero.gear.head.getStars().html}</div>` : ''}
                         <div class="itemLevel">${hero.gear.head.level}</div>
                         <div class="itemQuality">${hero.gear.head.getQualityPercent()}%</div>
@@ -3415,6 +3432,7 @@ const gearHtml = `
                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.weapon.id}.png" 
                              alt="${hero.gear.weapon.name}"
                              onerror="this.style.display='none'">
+			${hero.gear.weapon.refined ? '<div class="itemRefined">*</div>' : ''}
                         ${hero.gear.weapon.getStars().html ? `<div class="itemStars ${hero.gear.weapon.getStars().colorClass}">${hero.gear.weapon.getStars().html}</div>` : ''}
                         <div class="itemLevel">${hero.gear.weapon.level}</div>
                         <div class="itemQuality">${hero.gear.weapon.getQualityPercent()}%</div>
@@ -3432,6 +3450,7 @@ const gearHtml = `
                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.chest.id}.png" 
                              alt="${hero.gear.chest.name}"
                              onerror="this.style.display='none'">
+			${hero.gear.chest.refined ? '<div class="itemRefined">*</div>' : ''}
                         ${hero.gear.chest.getStars().html ? `<div class="itemStars ${hero.gear.chest.getStars().colorClass}">${hero.gear.chest.getStars().html}</div>` : ''}
                         <div class="itemLevel">${hero.gear.chest.level}</div>
                         <div class="itemQuality">${hero.gear.chest.getQualityPercent()}%</div>
@@ -3449,6 +3468,7 @@ const gearHtml = `
                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.offhand.id}.png" 
                              alt="${hero.gear.offhand.name}"
                              onerror="this.style.display='none'">
+			${hero.gear.offhand.refined ? '<div class="itemRefined">*</div>' : ''}
                         ${hero.gear.offhand.getStars().html ? `<div class="itemStars ${hero.gear.offhand.getStars().colorClass}">${hero.gear.offhand.getStars().html}</div>` : ''}
                         <div class="itemLevel">${hero.gear.offhand.level}</div>
                         <div class="itemQuality">${hero.gear.offhand.getQualityPercent()}%</div>
@@ -3466,6 +3486,7 @@ const gearHtml = `
                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.legs.id}.png" 
                              alt="${hero.gear.legs.name}"
                              onerror="this.style.display='none'">
+			${hero.gear.legs.refined ? '<div class="itemRefined">*</div>' : ''}
                         ${hero.gear.legs.getStars().html ? `<div class="itemStars ${hero.gear.legs.getStars().colorClass}">${hero.gear.legs.getStars().html}</div>` : ''}
                         <div class="itemLevel">${hero.gear.legs.level}</div>
                         <div class="itemQuality">${hero.gear.legs.getQualityPercent()}%</div>
@@ -3772,14 +3793,15 @@ results.heroResults.forEach(result => {
 let rewardSlotHTML = '';
 if (result.item) {
     const starData = result.item.getStars();
-    rewardSlotHTML = `<div class="itemSlot" onmouseover="game.showItemTooltip(event, game.pendingBattleResults.heroResults[${results.heroResults.indexOf(result)}].item)" onmouseout="game.hideItemTooltip()">
-        <div class="itemContainer">
-            <img src="https://puzzle-drops.github.io/TEVE/img/items/${result.item.id}.png" alt="${result.item.name}" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
-            ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-            <div class="itemLevel">${result.item.level}</div>
-            <div class="itemQuality">${result.item.getQualityPercent()}%</div>
-        </div>
-    </div>`;
+rewardSlotHTML = `<div class="itemSlot" onmouseover="game.showItemTooltip(event, game.pendingBattleResults.heroResults[${results.heroResults.indexOf(result)}].item)" onmouseout="game.hideItemTooltip()">
+    <div class="itemContainer">
+        <img src="https://puzzle-drops.github.io/TEVE/img/items/${result.item.id}.png" alt="${result.item.name}" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
+        ${result.item.refined ? '<div class="itemRefined">*</div>' : ''}
+        ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
+        <div class="itemLevel">${result.item.level}</div>
+        <div class="itemQuality">${result.item.getQualityPercent()}%</div>
+    </div>
+</div>`;
 } else if (result.gold > 0) {
     rewardSlotHTML = `<div class="itemSlot golden" onmouseover="game.showGoldTooltip(event, ${result.gold})" onmouseout="game.hideGoldTooltip()">
         <img src="https://puzzle-drops.github.io/TEVE/img/items/gold.png" alt="Gold" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
@@ -3827,7 +3849,7 @@ if (result.item) {
     
 // Handle auto replay if enabled and victory
     if (this.autoReplay && results.victory) {
-        let countdown = 10;
+        let countdown = 6;
         this.updateAutoReplayText(countdown);
         
         this.autoReplayTimer = setInterval(() => {
