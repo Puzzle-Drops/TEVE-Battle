@@ -2894,7 +2894,14 @@ wrapper.addEventListener('contextmenu', (e) => {
                         });
                         slot.addEventListener('mouseup', () => clearTimeout(pressTimer));
                         slot.addEventListener('mouseleave', () => clearTimeout(pressTimer));
-                        
+
+// Add right-click handler for hero info
+slot.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.showHeroInfoPopup(hero);
+});
+			    
                         // Add click handler for removal (but not if dragging)
                         slot.onclick = (e) => {
                             if (!slot.classList.contains('dragging')) {
