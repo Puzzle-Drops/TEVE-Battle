@@ -2684,14 +2684,15 @@ showGearTab(hero, content) {
                     ${stash && sortedStashItems.length > 0 ? `
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, 60px); gap: 10px;">
                             ${sortedStashItems.map((item, sortedIndex) => {
-                                // Find the original index of this item in the unsorted array
-                                const originalIndex = stash.items.indexOf(item);
-                                const starData = item.getStars();
-                                return `
-                                <div class="stashItemSlot ${item.getRarity()}" 
-                                     onclick="game.equipFromStash(${originalIndex}, '${item.slot}')"
-                                     onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}])"
-                                     onmouseout="game.hideItemTooltip()">
+    // Find the original index of this item in the unsorted array
+    const originalIndex = stash.items.indexOf(item);
+    const starData = item.getStars();
+    return `
+    <div class="stashItemSlot ${item.getRarity()}" 
+         onclick="game.equipFromStash(${originalIndex}, '${item.slot}')"
+         oncontextmenu="event.preventDefault(); game.showItemOptions(game.stashes['${familyName}'].items[${originalIndex}], ${originalIndex}, {name: '${familyName}', classes: game.currentStashFamily.classes})"
+         onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}])"
+         onmouseout="game.hideItemTooltip()">
                                     <div class="itemContainer">
                                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                              alt="${item.name}"
