@@ -1934,7 +1934,7 @@ body {
     padding: 20px;
     z-index: 1001;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-    min-width: 600px;
+    min-width: 700px;
 }
 
 .heroInfoHeader {
