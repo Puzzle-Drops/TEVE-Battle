@@ -2812,3 +2812,50 @@ body {
     background-color: #2a6a8a;
     margin: 8px 0 10px 0;
 }
+
+/* Item Context Menu */
+.itemContextMenu {
+    position: fixed;
+    background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
+    border: 2px solid #2a6a8a;
+    padding: 5px 0;
+    z-index: 10001;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    min-width: 150px;
+}
+
+.itemContextOption {
+    padding: 10px 20px;
+    cursor: pointer;
+    color: #b0e0f0;
+    font-size: 16px;
+    transition: all 0.2s;
+    border-bottom: 1px solid rgba(42, 106, 138, 0.3);
+}
+
+.itemContextOption:last-child {
+    border-bottom: none;
+}
+
+.itemContextOption:hover {
+    background: rgba(42, 106, 138, 0.5);
+    color: #4dd0e1;
+    text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
+}
+
+.itemContextOption.disabled {
+    color: #6a6a6a;
+    cursor: not-allowed;
+}
+
+.itemContextOption.disabled:hover {
+    background: none;
+    color: #6a6a6a;
+    text-shadow: none;
+}
+
+.itemContextOption .costText {
+    font-size: 14px;
+    color: #ffd700;
+    margin-left: 10px;
+}
