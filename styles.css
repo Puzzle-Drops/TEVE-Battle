@@ -2048,8 +2048,8 @@ body {
 }
 
 .abilityIconSmall {
-    width: 40px;
-    height: 40px;
+    width: 64px;
+    height: 64px;
     border: 1px solid #2a6a8a;
     border-radius: 3px;
     cursor: pointer;
