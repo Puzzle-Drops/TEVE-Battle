@@ -448,19 +448,22 @@ class Item {
         this.quality2 = 0;
         this.quality3 = 0;
         this.quality4 = 0;
-	this.refined = false;
+	this.quality5 = 0;
+	this.refined = false; // +5 all stats after refining a perfect item
         
         // Stats this item can roll
         this.roll1 = template.roll1;
         this.roll2 = template.roll2;
         this.roll3 = template.roll3;
         this.roll4 = template.roll4;
+	this.roll5 = null; // +5 all stats after refining a perfect item
         
         // Max values for each roll
         this.value1 = template.value1 || Math.floor(this.level / 2);
         this.value2 = template.value2 || Math.floor(this.level / 2);
         this.value3 = template.value3 || Math.floor(this.level / 2);
         this.value4 = template.value4 || Math.floot(this.level / 2);
+	this.value5 = 5; // + 5 all stats after refining a perfect item
         
         // Roll the item
         this.rollItem();
@@ -493,6 +496,7 @@ class Item {
 }
     
     getRarity() {
+	if (this.quality5 > 0) return 'gold';
         if (this.quality4 > 0) return 'red';
         if (this.quality3 > 0) return 'purple';
         if (this.quality2 > 0) return 'blue';
@@ -500,69 +504,79 @@ class Item {
     }
     
     getQualityPercent() {
-        // Calculate quality based on average of existing rolls
-        let totalQuality = 0;
-        let rollCount = 0;
-        
-        if (this.quality1 > 0) {
-            totalQuality += this.quality1;
-            rollCount++;
-        }
-        if (this.quality2 > 0) {
-            totalQuality += this.quality2;
-            rollCount++;
-        }
-        if (this.quality3 > 0) {
-            totalQuality += this.quality3;
-            rollCount++;
-        }
-        if (this.quality4 > 0) {
-            totalQuality += this.quality4;
-            rollCount++;
-        }
-        
-        if (rollCount === 0) return 0;
-        
-        // Calculate average quality (1-5) and convert to percentage
-        const averageQuality = totalQuality / rollCount;
-        return Math.floor((averageQuality / 5) * 100);
+    // Calculate quality based on average of existing rolls
+    let totalQuality = 0;
+    let rollCount = 0;
+    
+    if (this.quality1 > 0) {
+        totalQuality += this.quality1;
+        rollCount++;
+    }
+    if (this.quality2 > 0) {
+        totalQuality += this.quality2;
+        rollCount++;
+    }
+    if (this.quality3 > 0) {
+        totalQuality += this.quality3;
+        rollCount++;
+    }
+    if (this.quality4 > 0) {
+        totalQuality += this.quality4;
+        rollCount++;
+    }
+    if (this.quality5 > 0) {  // Add this block
+        totalQuality += this.quality5;
+        rollCount++;
     }
     
-    getStats() {
-        const stats = {
-            str: 0,
-            agi: 0,
-            int: 0,
-            hp: 0,
-            armor: 0,
-            resist: 0,
-            hpRegen: 0,
-            attackSpeed: 0,
-            cdr: 0
-        };
-        
-        // Process each roll with its quality percentage
-        if (this.quality1 > 0) {
-            const value = Math.floor(this.value1 * (this.quality1 / 5));
-            this.applyStatValue(stats, this.roll1, value);
-        }
-        if (this.quality2 > 0) {
-            const value = Math.floor(this.value2 * (this.quality2 / 5));
-            this.applyStatValue(stats, this.roll2, value);
-        }
-        if (this.quality3 > 0) {
-            const value = Math.floor(this.value3 * (this.quality3 / 5));
-            this.applyStatValue(stats, this.roll3, value);
-        }
-        if (this.quality4 > 0) {
-            // Fourth roll is CDR (1-10%)
-            stats.cdr = Math.floor(10 * (this.quality4 / 5));
-        }
-        
-        return stats;
+    if (rollCount === 0) return 0;
+    
+    // Calculate average quality (1-5) and convert to percentage
+    const averageQuality = totalQuality / rollCount;
+    return Math.floor((averageQuality / 5) * 100);
+}
+    
+getStats() {
+    const stats = {
+        str: 0,
+        agi: 0,
+        int: 0,
+        hp: 0,
+        armor: 0,
+        resist: 0,
+        hpRegen: 0,
+        attackSpeed: 0,
+        cdr: 0
+    };
+    
+    // Process each roll with its quality percentage
+    if (this.quality1 > 0) {
+        const value = Math.floor(this.value1 * (this.quality1 / 5));
+        this.applyStatValue(stats, this.roll1, value);
     }
+    if (this.quality2 > 0) {
+        const value = Math.floor(this.value2 * (this.quality2 / 5));
+        this.applyStatValue(stats, this.roll2, value);
+    }
+    if (this.quality3 > 0) {
+        const value = Math.floor(this.value3 * (this.quality3 / 5));
+        this.applyStatValue(stats, this.roll3, value);
+    }
+    if (this.quality4 > 0) {
+        const value = Math.floor(this.value4 * (this.quality4 / 5));
+        this.applyStatValue(stats, this.roll4, value);
+    }
+    if (this.quality5 > 0) {  // Add this block for 5th roll
+        // 5th roll is always allstats with value 5
+        stats.str += 5;
+        stats.agi += 5;
+        stats.int += 5;
+    }
+    
+    return stats;
+}
 
-	    getStars() {
+getStars() {
     let starCount = 0;
     
     // Count 5/5 quality rolls only
@@ -570,9 +584,10 @@ class Item {
     if (this.quality2 === 5) starCount++;
     if (this.quality3 === 5) starCount++;
     if (this.quality4 === 5) starCount++;
+    if (this.quality5 === 5) starCount++;  // Add this line
     
-    // Stars turn red at 3 or 4 stars
-    const colorClass = starCount >= 3 ? 'red' : 'golden';
+    // 5 star items are gold, 3-4 stars are red
+    const colorClass = starCount === 5 ? 'gold' : (starCount >= 3 ? 'red' : 'golden');
     const stars = '★'.repeat(starCount);
     
     return {
@@ -665,6 +680,9 @@ getTooltip(showMax = false) {
         const maxValue = showMax ? ` (${this.value4})` : '';
         tooltip += this.getStatLine(this.roll4, value, maxValue);
     }
+if (this.quality5 > 0) {
+    tooltip += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);">+5 All Stats</div>`;
+}
     
     tooltip += `<div class="itemSellValue">Sell Value: <span class="goldText">${this.sellcost}g</span></div>`;
     tooltip += `</div>`;
@@ -691,7 +709,19 @@ refine() {
     if (this.quality3 > 0) rollCount++;
     if (this.quality4 > 0) rollCount++;
     
-    if (rollCount < 4) {
+    // Check if all 4 rolls are perfect 5/5
+    const isPerfect4Roll = rollCount === 4 && 
+                          this.quality1 === 5 && 
+                          this.quality2 === 5 && 
+                          this.quality3 === 5 && 
+                          this.quality4 === 5;
+    
+    if (isPerfect4Roll) {
+        // Add 5th roll: +5 all stats
+        this.roll5 = 'allstats';
+        this.quality5 = 5;
+        console.log(`Refining: Added perfect 5th roll (+5 All Stats)`);
+    } else if (rollCount < 4) {
         // Add a new roll
         if (this.quality2 === 0) {
             this.quality2 = Math.floor(Math.random() * 5) + 1;
@@ -701,7 +731,7 @@ refine() {
             console.log(`Refining: Added roll 3 (${this.roll3}): ${this.quality3}/5`);
         } else if (this.quality4 === 0) {
             this.quality4 = Math.floor(Math.random() * 5) + 1;
-            console.log(`Refining: Added CDR roll: ${this.quality4}/5`);
+            console.log(`Refining: Added roll 4 (${this.roll4}): ${this.quality4}/5`);
         }
     } else {
         // Find lowest quality roll and make it 5/5
