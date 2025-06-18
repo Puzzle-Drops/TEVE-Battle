@@ -1770,6 +1770,11 @@ toggleAutoReplay(enabled) {
     const partyToggle = document.getElementById('autoReplayToggleParty');
     if (partyToggle) partyToggle.checked = enabled;
     
+    // If enabling auto replay, also enable auto battle
+    if (enabled) {
+        this.toggleAutoBattle(true);
+    }
+    
     // Cancel any existing timer if disabling
     if (!enabled) {
         if (this.autoReplayTimer) {
@@ -1792,7 +1797,7 @@ toggleAutoReplay(enabled) {
         }
     }
 }
-
+		
             exitBattle() {
                 if (this.currentBattle) {
                     // Clear any active targeting
