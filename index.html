@@ -1682,59 +1682,64 @@ showItemOptions(item, itemIndex, family, isEquipped = false, slot = null) {
     }
     
     // Refine option
-    const refineCost = item.getRefineCost();
-    const canAfford = stash.gold >= refineCost;
-    options.push({
-        text: `Refine`,
-        cost: refineCost,
-        disabled: item.refined || !canAfford,
-        action: () => {
-            if (stash.gold >= refineCost && item.canRefine()) {
-                // Deduct gold
-                stash.gold -= refineCost;
-                
-                // Refine the item
-                item.refine();
-                
-                // Update displays
+const refineCost = item.getRefineCost();
+const canAfford = stash.gold >= refineCost;
+options.push({
+    text: `Refine`,
+    cost: refineCost,
+    disabled: item.refined || !canAfford,
+    action: () => {
+        if (stash.gold >= refineCost && item.canRefine()) {
+            // Deduct gold
+            stash.gold -= refineCost;
+            
+            // Refine the item
+            item.refine();
+            
+            // Update displays based on current screen
+            if (isEquipped || this.currentScreen === 'heroesScreen') {
+                // Stay on hero screen and refresh gear tab
+                const hero = this.heroes[this.selectedHero];
                 if (isEquipped) {
-                    // Update gear stats if equipped
-                    this.heroes[this.selectedHero].updateGearStats();
-                    this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
-                } else {
-                    // Refresh stash display
-                    this.showIndividualStash(family);
+                    hero.updateGearStats();
                 }
-            }
-            this.closeItemContextMenu();
-        }
-    });
-    
-    // Sell option
-    options.push({
-        text: 'Sell',
-        cost: -item.sellcost,
-        action: () => {
-            if (isEquipped) {
-                // Unequip first
-                this.heroes[this.selectedHero].unequipItem(slot);
+                this.showGearTab(hero, document.getElementById('heroContent'));
             } else {
-                // Remove from stash
-                this.stashes[family.name].items.splice(itemIndex, 1);
-            }
-            
-            // Add gold
-            stash.gold += item.sellcost;
-            
-            // Refresh display
-            if (isEquipped) {
-                this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
-            } else {
+                // Only go to stash screen if we're already on individual stash screen
                 this.showIndividualStash(family);
             }
-            this.closeItemContextMenu();
         }
-    });
+        this.closeItemContextMenu();
+    }
+});
+    
+// Sell option
+options.push({
+    text: 'Sell',
+    cost: -item.sellcost,
+    action: () => {
+        if (isEquipped) {
+            // Unequip first
+            this.heroes[this.selectedHero].unequipItem(slot);
+        } else {
+            // Remove from stash
+            this.stashes[familyName].items.splice(itemIndex, 1);
+        }
+        
+        // Add gold
+        stash.gold += item.sellcost;
+        
+        // Refresh display based on current screen
+        if (this.currentScreen === 'heroesScreen') {
+            // Stay on hero screen
+            this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+        } else {
+            // Only go to stash screen if we're already there
+            this.showIndividualStash(family);
+        }
+        this.closeItemContextMenu();
+    }
+});
     
     // Create menu HTML
     let menuHTML = '';
@@ -1785,6 +1790,12 @@ showItemOptions(item, itemIndex, family, isEquipped = false, slot = null) {
     }, 10);
 }
 
+		showItemOptionsFromGearTab(itemIndex, familyName) {
+    const family = { name: familyName };
+    const item = this.stashes[familyName].items[itemIndex];
+    this.showItemOptions(item, itemIndex, family, false, null);
+}
+		
 closeItemContextMenu() {
     const menu = document.getElementById('itemContextMenu');
     if (menu) {
@@ -2706,15 +2717,15 @@ showGearTab(hero, content) {
                     ${stash && sortedStashItems.length > 0 ? `
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, 60px); gap: 10px;">
                             ${sortedStashItems.map((item, sortedIndex) => {
-                                // Find the original index of this item in the unsorted array
-                                const originalIndex = stash.items.indexOf(item);
-                                const starData = item.getStars();
-                                return `
-                                <div class="stashItemSlot ${item.getRarity()}" 
-                                     onclick="game.equipFromStash(${originalIndex}, '${item.slot}')"
-				     oncontextmenu="event.preventDefault(); game.showItemOptions(game.stashes['${familyName}'].items[${originalIndex}], ${originalIndex}, {name: '${familyName}', classes: game.currentStashFamily.classes})"
-                                     onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}])"
-                                     onmouseout="game.hideItemTooltip()">
+    // Find the original index of this item in the unsorted array
+    const originalIndex = stash.items.indexOf(item);
+    const starData = item.getStars();
+    return `
+    <div class="stashItemSlot ${item.getRarity()}" 
+         onclick="game.equipFromStash(${originalIndex}, '${item.slot}')"
+         oncontextmenu="event.preventDefault(); game.showItemOptionsFromGearTab(${originalIndex}, '${familyName}')"
+         onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}])"
+         onmouseout="game.hideItemTooltip()">
                                     <div class="itemContainer">
                                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                              alt="${item.name}"
