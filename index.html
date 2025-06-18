@@ -1347,15 +1347,34 @@ init() {
     this.heroes[4].expToNext = this.heroes[4].calculateExpToNext();
     this.heroes[5].level = 50;
     this.heroes[5].expToNext = this.heroes[5].calculateExpToNext();
+	
+// Generate a perfect 4-roll minor trinket for testing
+const perfectTrinket = new Item('minor_trinket');
+perfectTrinket.quality1 = 5;
+perfectTrinket.quality2 = 5;
+perfectTrinket.quality3 = 5;
+perfectTrinket.quality4 = 5;
+console.log('Generated perfect 4-roll trinket:', {
+    name: perfectTrinket.name,
+    rarity: perfectTrinket.getRarity(),
+    quality: perfectTrinket.getQualityPercent() + '%',
+    stars: perfectTrinket.getStars().count,
+    stats: perfectTrinket.getStats()
+});
 
+// Add to villager stash
+this.stashes['Villager'].items.push(perfectTrinket);
+
+
+	
 // Generate 100 Satyr dungeon items for testing
     if (dungeonData && dungeonData.dungeons.satyrs) {
         const satyrDungeon = dungeonData.dungeons.satyrs;
         const itemPool = satyrDungeon.rewards.items || [];
         
-        console.log('Generating 2000 Satyr dungeon items...');
+        console.log('Generating 200 Satyr dungeon items...');
         
-        for (let i = 0; i < 2000; i++) {
+        for (let i = 0; i < 200; i++) {
             if (itemPool.length > 0) {
                 // Pick a random item from the dungeon's item pool
                 const itemId = itemPool[Math.floor(Math.random() * itemPool.length)];
@@ -1368,6 +1387,9 @@ init() {
         
         console.log(`Generated ${this.stashes['Villager'].items.length} items in Villager stash`);
     }
+
+
+
 	
 }
 
