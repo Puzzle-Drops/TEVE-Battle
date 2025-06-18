@@ -584,10 +584,30 @@ getStars() {
     if (this.quality2 === 5) starCount++;
     if (this.quality3 === 5) starCount++;
     if (this.quality4 === 5) starCount++;
-    if (this.quality5 === 5) starCount++;  // Add this line
+    if (this.quality5 === 5) starCount++;
     
-    // 5 star items are gold, 3-4 stars are red
-    const colorClass = starCount === 5 ? 'gold' : (starCount >= 3 ? 'red' : 'golden');
+    // Stars color matches item rarity
+    const rarity = this.getRarity();
+    let colorClass;
+    switch(rarity) {
+        case 'gold':
+            colorClass = 'gold';
+            break;
+        case 'red':
+            colorClass = 'red';
+            break;
+        case 'purple':
+            colorClass = 'purple';
+            break;
+        case 'blue':
+            colorClass = 'blue';
+            break;
+        case 'green':
+        default:
+            colorClass = 'green';
+            break;
+    }
+    
     const stars = '★'.repeat(starCount);
     
     return {
@@ -1639,8 +1659,8 @@ showIndividualStash(family) {
                         return b.level - a.level;
                     }
                     
-                    // Then by rarity order: red > purple > blue > green
-                    const rarityOrder = { red: 4, purple: 3, blue: 2, green: 1 };
+                    // Then by rarity order: gold > red > purple > blue > green
+                    const rarityOrder = { gold: 5, red: 4, purple: 3, blue: 2, green: 1 };
                     const aRarity = rarityOrder[a.getRarity()];
                     const bRarity = rarityOrder[b.getRarity()];
                     
@@ -2653,8 +2673,8 @@ showGearTab(hero, content) {
             return b.level - a.level;
         }
         
-        // Then by rarity order: red > purple > blue > green
-        const rarityOrder = { red: 4, purple: 3, blue: 2, green: 1 };
+        // Then by rarity order: gold > red > purple > blue > green
+        const rarityOrder = { gold: 5, red: 4, purple: 3, blue: 2, green: 1 };
         const aRarity = rarityOrder[a.getRarity()];
         const bRarity = rarityOrder[b.getRarity()];
         
