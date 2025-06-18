@@ -3011,9 +3011,8 @@ showHeroInfoPopup(hero) {
                     });
                 });
                 
-                // Show gear in grid format
+// Show gear in grid format
 const gearHtml = `
-    <h3 style="margin: 0 0 10px 0; color: #4dd0e1;">Gear</h3>
     <div class="gearGrid">
         <div class="gearSlot">
             <div class="gearLabel">Trinket</div>
@@ -3204,10 +3203,28 @@ showEnemyInfoPopup(enemy) {
         });
     });
     
-// No gear for enemies - show empty grid
+// Show empty gear grid for enemies
 const emptyGearHtml = `
-    <h3 style="margin: 0 0 10px 0; color: #4dd0e1;">Gear</h3>
-    <p style="color: #6a9aaa; text-align: center; margin-top: 20px;">Enemies do not have gear</p>
+    <div class="gearGrid">
+        <div class="gearSlot">
+            <div class="gearLabel">Trinket</div>
+        </div>
+        <div class="gearSlot">
+            <div class="gearLabel">Head</div>
+        </div>
+        <div class="gearSlot">
+            <div class="gearLabel">Weapon</div>
+        </div>
+        <div class="gearSlot">
+            <div class="gearLabel">Chest</div>
+        </div>
+        <div class="gearSlot">
+            <div class="gearLabel">Offhand</div>
+        </div>
+        <div class="gearSlot">
+            <div class="gearLabel">Legs</div>
+        </div>
+    </div>
 `;
 document.getElementById('popupGear').innerHTML = emptyGearHtml;
 	
