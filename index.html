@@ -332,8 +332,8 @@
             <div class="confirmText" id="confirmText"></div>
             <div class="confirmCost" id="confirmCost"></div>
             <div class="confirmButtons">
-    <button class="confirmBtn confirmYes" onclick="game.handleConfirmYes()">Yes</button>
-    <button class="confirmBtn confirmNo" onclick="game.handleConfirmNo()">No</button>
+                <button class="confirmBtn confirmYes" onclick="game.confirmPromotion()">Yes</button>
+                <button class="confirmBtn confirmNo" onclick="game.cancelPromotion()">No</button>
             </div>
         </div>
     </div>
@@ -1608,22 +1608,6 @@ enterDungeon(tierName, dungeonIndex) {
                 this.renderStashList();
             }
 
-handleConfirmYes() {
-    if (this.pendingPromotion) {
-        this.confirmPromotion();
-    } else if (this.pendingSell) {
-        this.confirmSell();
-    }
-}
-
-handleConfirmNo() {
-    if (this.pendingPromotion) {
-        this.cancelPromotion();
-    } else if (this.pendingSell) {
-        this.cancelSell();
-    }
-}
-		
             renderStashList() {
                 const stashList = document.getElementById('stashList');
                 stashList.innerHTML = '';
@@ -1813,7 +1797,25 @@ options.push({
     text: 'Sell',
     cost: -item.sellcost,
     action: () => {
-        this.showSellConfirmation(item, itemIndex, familyName, isEquipped, slot);
+        if (isEquipped) {
+            // Unequip first
+            this.heroes[this.selectedHero].unequipItem(slot);
+        } else {
+            // Remove from stash
+            this.stashes[familyName].items.splice(itemIndex, 1);
+        }
+        
+        // Add gold
+        stash.gold += item.sellcost;
+        
+        // Refresh display based on current screen
+        if (this.currentScreen === 'heroesScreen') {
+            // Stay on hero screen
+            this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+        } else {
+            // Only go to stash screen if we're already there
+            this.showIndividualStash(family);
+        }
         this.closeItemContextMenu();
     }
 });
@@ -3021,73 +3023,6 @@ equipFromStash(itemIndex, slot) {
                 this.pendingPromotion = null;
             }
 
-showSellConfirmation(item, itemIndex, familyName, isEquipped = false, slot = null) {
-    const modal = document.getElementById('confirmModal');
-    const confirmText = document.getElementById('confirmText');
-    const confirmCost = document.getElementById('confirmCost');
-    
-    // Store the sell context
-    this.pendingSell = {
-        item: item,
-        itemIndex: itemIndex,
-        familyName: familyName,
-        isEquipped: isEquipped,
-        slot: slot
-    };
-    
-    confirmText.textContent = `Sell ${item.name} (${item.getQualityPercent()}% quality)?`;
-    confirmCost.innerHTML = `💰 +${item.sellcost}`;
-    confirmCost.style.color = '#00ff88'; // Green for gaining gold
-    
-    modal.style.display = 'flex';
-}
-
-confirmSell() {
-    const modal = document.getElementById('confirmModal');
-    modal.style.display = 'none';
-    
-    if (this.pendingSell) {
-        const { item, itemIndex, familyName, isEquipped, slot } = this.pendingSell;
-        const stash = this.stashes[familyName];
-        
-        if (isEquipped) {
-            // Unequip first
-            this.heroes[this.selectedHero].unequipItem(slot);
-        } else {
-            // Remove from stash
-            stash.items.splice(itemIndex, 1);
-        }
-        
-        // Add gold
-        stash.gold += item.sellcost;
-        
-        // Refresh display based on current screen
-        if (this.currentScreen === 'heroesScreen') {
-            this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
-        } else if (this.currentScreen === 'individualStashScreen') {
-            this.showIndividualStash(this.currentStashFamily);
-        }
-        
-        this.closeItemContextMenu();
-        this.pendingSell = null;
-        
-        // Reset confirm cost color
-        document.getElementById('confirmCost').style.color = '';
-    }
-}
-
-cancelSell() {
-    const modal = document.getElementById('confirmModal');
-    modal.style.display = 'none';
-    this.pendingSell = null;
-    
-    // Reset confirm cost color
-    document.getElementById('confirmCost').style.color = '';
-}
-
-
-
-		
             editHeroName() {
                 const hero = this.heroes[this.selectedHero];
                 const nameElement = document.getElementById('heroNameText');
@@ -4132,18 +4067,6 @@ window.addEventListener('DOMContentLoaded', async () => {
                         return;
                     }
 
-// Close confirmation modal if open
-const confirmModal = document.getElementById('confirmModal');
-if (confirmModal && confirmModal.style.display === 'flex') {
-    if (game.pendingPromotion) {
-        game.cancelPromotion();
-    } else if (game.pendingSell) {
-        game.cancelSell();
-    }
-    e.preventDefault();
-    return;
-}
-			
 			        // Close item context menu if open
         const contextMenu = document.getElementById('itemContextMenu');
         if (contextMenu) {
