@@ -1387,18 +1387,24 @@ if (this.timerInterval) {
         
 
 // Clean up level indicator event listeners
-        for (let i = 1; i <= 5; i++) {
-            ['party', 'enemy'].forEach(type => {
-                const element = document.getElementById(`${type}${i}`);
-                if (element) {
-                    const levelIndicator = element.querySelector('.levelIndicator');
-                    if (levelIndicator && levelIndicator._unitInfoHandler) {
-                        levelIndicator.removeEventListener('click', levelIndicator._unitInfoHandler);
-                        delete levelIndicator._unitInfoHandler;
-                    }
-                }
-            });
+for (let i = 1; i <= 5; i++) {
+    ['party', 'enemy'].forEach(type => {
+        const element = document.getElementById(`${type}${i}`);
+        if (element) {
+            const levelIndicator = element.querySelector('.levelIndicator');
+            if (levelIndicator && levelIndicator._unitInfoHandler) {
+                levelIndicator.removeEventListener('click', levelIndicator._unitInfoHandler);
+                delete levelIndicator._unitInfoHandler;
+            }
+            
+            // Also clean up right-click handlers
+            if (element._rightClickHandler) {
+                element.removeEventListener('contextmenu', element._rightClickHandler);
+                delete element._rightClickHandler;
+            }
         }
+    });
+}
 
 // Hide exit button when showing results
 const exitButton = document.querySelector('.exitBattleButton');
@@ -1888,6 +1894,38 @@ if (levelIndicator) {
                         levelIndicator.addEventListener('selectstart', (e) => e.preventDefault());
                     }
                 }
+
+		    // Add right-click handler for the entire unit slot
+if (unit.isAlive) {
+    // Store reference to current unit for the handler
+    const currentUnit = unit;
+    
+    // Remove any existing right-click handler
+    if (element._rightClickHandler) {
+        element.removeEventListener('contextmenu', element._rightClickHandler);
+    }
+    
+    // Create new right-click handler
+    const rightClickHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Close any existing popup first
+        this.game.closeHeroInfo();
+        
+        // Show popup
+        if (currentUnit.isEnemy) {
+            this.game.showEnemyInfoPopup(currentUnit.source);
+        } else {
+            this.game.showHeroInfoPopup(currentUnit.source);
+        }
+    };
+    
+    // Store and add the handler
+    element._rightClickHandler = rightClickHandler;
+    element.addEventListener('contextmenu', rightClickHandler);
+}
+		    
                 // Update unit appearance with sprites
 
 if (unitDiv) {
