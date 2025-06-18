@@ -1795,6 +1795,17 @@ options.push({
     const item = this.stashes[familyName].items[itemIndex];
     this.showItemOptions(item, itemIndex, family, false, null);
 }
+
+showEquippedItemOptions(slot) {
+    const hero = this.heroes[this.selectedHero];
+    const item = hero.gear[slot];
+    if (!item) return;
+    
+    const familyName = this.getClassFamily(hero.className, hero.classTier);
+    const family = { name: familyName };
+    
+    this.showItemOptions(item, null, family, true, slot);
+}
 		
 closeItemContextMenu() {
     const menu = document.getElementById('itemContextMenu');
@@ -2606,7 +2617,7 @@ showGearTab(hero, content) {
                         ${hero.gear.trinket ? 
                             `<div class="gearItem ${hero.gear.trinket.getRarity()}" 
                                  onclick="game.unequipGear('trinket')"
-                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'trinket')"
+                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('trinket')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.trinket)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
@@ -2625,7 +2636,7 @@ showGearTab(hero, content) {
                         ${hero.gear.head ? 
                             `<div class="gearItem ${hero.gear.head.getRarity()}"
                                  onclick="game.unequipGear('head')"
-                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'head')"
+                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('head')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.head)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
@@ -2644,7 +2655,7 @@ showGearTab(hero, content) {
                         ${hero.gear.weapon ? 
                             `<div class="gearItem ${hero.gear.weapon.getRarity()}"
                                  onclick="game.unequipGear('weapon')"
-                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'weapon')"
+                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('weapon')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.weapon)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
@@ -2663,7 +2674,7 @@ showGearTab(hero, content) {
                         ${hero.gear.chest ? 
                             `<div class="gearItem ${hero.gear.chest.getRarity()}"
                                  onclick="game.unequipGear('chest')"
-                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'chest')"
+                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('chest')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.chest)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
@@ -2682,7 +2693,7 @@ showGearTab(hero, content) {
                         ${hero.gear.offhand ? 
                             `<div class="gearItem ${hero.gear.offhand.getRarity()}"
                                  onclick="game.unequipGear('offhand')"
-                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'offhand')"
+                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('offhand')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.offhand)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
@@ -2701,7 +2712,7 @@ showGearTab(hero, content) {
                         ${hero.gear.legs ? 
                             `<div class="gearItem ${hero.gear.legs.getRarity()}"
                                  onclick="game.unequipGear('legs')"
-                                 oncontextmenu="event.preventDefault(); game.showItemOptions(game.heroes[${this.selectedHero}].gear.trinket, null, null, true, 'legs')"
+                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('legs')"
                                  onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.legs)"
                                  onmouseout="game.hideItemTooltip()">
                                 <div class="itemContainer">
