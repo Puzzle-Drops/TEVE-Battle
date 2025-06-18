@@ -2565,8 +2565,17 @@ hideStatTooltip() {
 showGearTab(hero, content) {
     // Get the stash for this hero's class family
     const familyName = this.getClassFamily(hero.className, hero.classTier);
-    const stash = this.stashes[familyName];
+    if (!this.currentStashFamily) {
+        this.currentStashFamily = this.classFamilies.find(f => f.name === familyName) || { name: familyName, classes: [] };
+        // Special case for Villager
+        if (familyName === 'Villager') {
+            this.currentStashFamily = { name: 'Villager', icon: '👥', classes: ['Villager', 'Tester'] };
+        }
+    }
     
+    // Get the stash for this hero's class family
+    const stash = this.stashes[familyName];
+	
     // Sort stash items
     const sortedStashItems = [...stash.items].sort((a, b) => {
         // First sort by level (highest first)
