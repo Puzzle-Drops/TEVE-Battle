@@ -274,6 +274,7 @@ body {
     box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
     min-width: 200px;
+    text-align: center;
 }
 
 .automaticModeDisplay {
