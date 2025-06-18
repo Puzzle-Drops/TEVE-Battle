@@ -129,7 +129,7 @@
                 </div>
                 <div class="autoToggleContainer">
                     <label style="color: #b0e0f0;">
-                        <input type="checkbox" id="autoModeToggle" onchange="game.currentBattle && game.currentBattle.toggleAutoMode(this.checked)">
+                        <input type="checkbox" id="autoModeToggle" onchange="game.toggleAutoBattleInBattle(this.checked)">
                         Auto Battle
                     </label>
                     <label style="color: #b0e0f0; margin-left: 20px;">
@@ -1152,7 +1152,17 @@ equipItem(item, slot) {
                 this.classFamilies = unitData?.classFamilies || [];                
                 this.init();
             }
-            
+
+toggleAutoBattleInBattle(enabled) {
+    // Update auto battle state
+    this.toggleAutoBattle(enabled);
+    
+    // If we have a current battle, update its auto mode
+    if (this.currentBattle) {
+        this.currentBattle.toggleAutoMode(enabled);
+    }
+}
+		
             // Consolidated star generation function
             generateStars(config) {
                 let starCount = 0;
