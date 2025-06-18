@@ -54,7 +54,6 @@ These should be formatted in a grid like so:
   Offhand  |    Legs
  [      ]  |  [      ]
 
-The brackets indicate a square section to load in the gear image. The header indicates what gear piece it is. Only a head gear piece can go in the head slot. The gear img should be cenetered vertically and horizontally and should fill the area while maintaining aspect ratio. They should be squares anyway. The titles for that gear slot should be top-centered.
 
 To the right of this should be the shared stash of that class rather than the portrait. So if we pull up a Dark Arch Templar's Character UI Panel, underneath it should show the shared stash of the Templar class. Which includes Templar, Arch Templar, Dark Templar, Dark Arch Templar, High Templar, Grand Templar.
 
@@ -110,6 +109,9 @@ Head, Chest, Legs, Trinket, Weapon, Offhand are the 6 gear types.
         },
 
 This item if rolled the 35% additional roll successfully twice, would have +armor, +int, and +resist. We would roll a 1-5 roll for quality on each value. So a 2/5, 3/5, 5/5 rolls cloth armor would be +4 armor, +3 int, +5 resist for a total item quality of 66.6% rounded up to 67%. Every perfect quality roll adds a star to an item. So this item would have one star. An item with 4/5, 4/5, 4/5, 5/5 would be one star. Four star items make the stars red.
+
+-Refining items
+Item refinement is done by right clicking an item and click refine. The cost is ((item level + (item level * quality%)) * 500). The refinement process takes an item that has 2 rolls, and rolls 1-5 on the 3rd roll. Or if you have a 4 roll item, it raises your lowest quality roll to a 5/5. You can only refine an item once.
 
 -Stash
 Each Class 1 category shares a stash. When clicking the stash tab it should show a compact list of all the stashes. 3x3 grid list of the class icon and then the class name.
