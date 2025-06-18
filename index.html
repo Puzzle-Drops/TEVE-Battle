@@ -2278,9 +2278,9 @@ showGearTab(hero, content) {
     });
     
     content.innerHTML = `
-        <div style="display: flex; gap: 40px;">
-            <div style="flex: 1;">
-                <h3>Equipped Gear</h3>
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 0 0 auto;">
+                <h3>Gear</h3>
                 <div class="gearGrid">
                     <div class="gearSlot">
                         <div class="gearLabel">Trinket</div>
@@ -2392,14 +2392,14 @@ showGearTab(hero, content) {
                     </div>
                 </div>
             </div>
-            <div style="flex: 1;">
-                <h3 style="text-align: center;">
+            <div style="flex: 1; display: flex; flex-direction: column;">
+                <h3 style="text-align: center; margin-bottom: 20px;">
                     ${familyName} Stash 
                     <span style="color: #ffd700; margin-left: 10px;">💰 ${stash.gold.toLocaleString()}</span>
                 </h3>
-                <div style="margin-top: 20px; background: rgba(10, 25, 41, 0.8); padding: 10px; min-height: 300px; max-height: 400px; overflow-y: auto; border: 1px solid #2a6a8a;">
+                <div style="flex: 1; background: rgba(10, 25, 41, 0.8); padding: 10px; overflow-y: auto; border: 1px solid #2a6a8a;">
                     ${stash && sortedStashItems.length > 0 ? `
-                        <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 10px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, 60px); gap: 10px;">
                             ${sortedStashItems.map((item, sortedIndex) => {
                                 // Find the original index of this item in the unsorted array
                                 const originalIndex = stash.items.indexOf(item);
