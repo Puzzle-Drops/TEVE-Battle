@@ -592,8 +592,8 @@ createWaveCounter() {
     waveCounter.id = 'waveCounter';
     waveCounter.className = 'waveCounter';
     waveCounter.innerHTML = `
-        <div class="battleTimerText">00:00</div>
         <div class="waveText">Wave: ${this.currentWave + 1}/${this.enemyWaves.length}</div>
+	<div class="battleTimerText">00:00</div>        
     `;
     
     const battleScene = document.getElementById('battleScene');
