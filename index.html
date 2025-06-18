@@ -692,7 +692,6 @@ getTooltip(showMax = false) {
 // Hero Class
         class Hero {
             constructor(className = null) {
-                this.name = this.generateName();
                 
                 // Determine gender from className if provided, otherwise random
                 if (className) {
@@ -711,7 +710,7 @@ getTooltip(showMax = false) {
                     this.gender = Math.random() < 0.5 ? 'male' : 'female';
                     this.className = `villager_${this.gender}`;
                 }
-                
+                this.name = this.generateName();
                 this.level = 5;
                 this.exp = 0;
                 this.expToNext = this.calculateExpToNext();
