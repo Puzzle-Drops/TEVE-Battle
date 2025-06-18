@@ -1602,15 +1602,17 @@ body {
     padding: 40px;
 }
 
-.battlePreview::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(10, 25, 41, 0.85);
-    pointer-events: none;
+.battlePreview {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    padding: 40px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.3; /* Adjust this value to your liking */
 }
 
 .battlePreview > * {
