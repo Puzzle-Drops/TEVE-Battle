@@ -1744,19 +1744,23 @@ hideGoldTooltip() {
                 this.currentBattle.start();
             }
             
-            toggleAutoBattle(enabled) {
-                this.autoBattle = enabled;
-                // Update both toggle elements
-                const battleToggle = document.getElementById('autoModeToggle');
-                if (battleToggle) battleToggle.checked = enabled;
-                const partyToggle = document.getElementById('autoBattleToggle');
-                if (partyToggle) partyToggle.checked = enabled;
-                
-                // Update current battle if running
-                if (this.currentBattle) {
-                    this.currentBattle.toggleAutoMode(enabled);
-                }
-            }
+toggleAutoBattle(enabled) {
+    this.autoBattle = enabled;
+    // Update both toggle elements
+    const battleToggle = document.getElementById('autoModeToggle');
+    if (battleToggle) battleToggle.checked = enabled;
+    const partyToggle = document.getElementById('autoBattleToggle');
+    if (partyToggle) partyToggle.checked = enabled;
+    
+    // Update current battle if running
+    if (this.currentBattle) {
+        this.currentBattle.toggleAutoMode(enabled);
+        // If enabling auto mode during a battle, it should persist
+        if (enabled) {
+            this.currentBattle.autoMode = true;
+        }
+    }
+}
             
 toggleAutoReplay(enabled) {
     this.autoReplay = enabled;
@@ -1806,15 +1810,20 @@ toggleAutoReplay(enabled) {
                         }
                     });
                     
-// Clean up any lingering UI elements
-const elementsToRemove = ['waveCounter', 'battleTimer', 'dungeonNameDisplay', 'automaticModeDisplay'];
+// Clean up all UI elements when exiting
+const elementsToRemove = ['waveCounter', 'dungeonNameDisplay', 'automaticModeDisplay'];
 elementsToRemove.forEach(id => {
     const element = document.getElementById(id);
     if (element) {
         element.remove();
     }
 });
-                    
+
+// Show exit button in case it was hidden
+const exitButton = document.querySelector('.exitBattleButton');
+if (exitButton) {
+    exitButton.style.display = '';
+}          
                     // Clear ability panel
                     document.getElementById('abilityPanel').innerHTML = '';
                     
@@ -3223,6 +3232,12 @@ formatAbilityTooltip(ability, level) {
 
 showBattleResults() {
     if (!this.pendingBattleResults) return;
+
+	// Hide exit button when showing results
+const exitButton = document.querySelector('.exitBattleButton');
+if (exitButton) {
+    exitButton.style.display = 'none';
+}
     
     const results = this.pendingBattleResults;
     
@@ -3361,6 +3376,12 @@ if (result.item) {
 closeBattleResults() {
     const popup = document.getElementById('battleResultsPopup');
     popup.style.display = 'none';
+
+	// Show exit button again
+const exitButton = document.querySelector('.exitBattleButton');
+if (exitButton) {
+    exitButton.style.display = '';
+}
     
     // Check if this was a manual click during auto replay
     const wasManualClick = this.autoReplayTimer !== null;
