@@ -1353,9 +1353,9 @@ init() {
         const satyrDungeon = dungeonData.dungeons.satyrs;
         const itemPool = satyrDungeon.rewards.items || [];
         
-        console.log('Generating 100 Satyr dungeon items...');
+        console.log('Generating 2000 Satyr dungeon items...');
         
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 2000; i++) {
             if (itemPool.length > 0) {
                 // Pick a random item from the dungeon's item pool
                 const itemId = itemPool[Math.floor(Math.random() * itemPool.length)];
@@ -2798,7 +2798,6 @@ showGearTab(hero, content) {
     <div class="itemLevel">${item.level}</div>
     <div class="itemQuality">${item.getQualityPercent()}%</div>
 </div>
-                                    </div>
                                 </div>
                             `;}).join('')}
                         </div>
