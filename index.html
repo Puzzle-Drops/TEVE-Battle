@@ -2045,20 +2045,21 @@ renderCollectionLog() {
                 const isCollected = !!collectionData;
                 
                 // Create item thumbnail
-                const thumbnailDiv = document.createElement('div');
-                thumbnailDiv.className = `collectionItemThumbnail ${rarity} ${isCollected ? 'collected' : ''}`;
-                thumbnailDiv.innerHTML = `
-                    <div class="itemContainer">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${itemId}.png" 
-                             alt="${itemTemplate.name}"
-                             style="width: 100%; height: 100%;"
-                             onerror="this.style.display='none'">
-                        ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-                        <div class="itemLevel">${itemTemplate.level}</div>
-                        <div class="itemQuality">100%</div>
-                        ${isCollected ? '<div class="collectionCheckmark">✓</div>' : ''}
-                    </div>
-                `;
+const thumbnailDiv = document.createElement('div');
+// Use stashItemSlot class for consistent styling
+thumbnailDiv.className = `stashItemSlot ${rarity} ${isCollected ? 'collected' : ''}`;
+thumbnailDiv.style.opacity = isCollected ? '1' : '0.4';
+thumbnailDiv.innerHTML = `
+    <div class="itemContainer">
+        <img src="https://puzzle-drops.github.io/TEVE/img/items/${itemId}.png" 
+             alt="${itemTemplate.name}"
+             onerror="this.style.display='none'">
+        ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
+        <div class="itemLevel">${itemTemplate.level}</div>
+        <div class="itemQuality">100%</div>
+        ${isCollected ? '<div class="collectionCheckmark">✓</div>' : ''}
+    </div>
+`;
                 
                 // Add hover tooltip
                 if (isCollected) {
