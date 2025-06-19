@@ -1698,13 +1698,8 @@ body {
     z-index: 1;
 }
 
-/* Optional: Make battle preview area slightly transparent */
-.battlePreview {
-    background: rgba(10, 15, 26, 0.5); /* Added transparency */
-}
-
 .dungeonTitle {
-    font-size: 36px;
+    font-size: 48px;
     color: #4dd0e1;
     text-shadow: 0 0 20px rgba(77, 208, 225, 0.5);
     margin-bottom: 10px;
@@ -1717,7 +1712,8 @@ body {
     justify-content: center;
     gap: 60px;
     padding: 40px;
-    padding-top: 80px;
+    padding-top: 200px;
+    background: rgba(10, 15, 26, 0.35);
 }
 
 .partyFormation {
@@ -1728,7 +1724,7 @@ body {
 }
 
 .partySlot {
-    background: rgba(10, 25, 41, 0.8);
+    background: rgba(10, 25, 41, 0.75);
     border: 2px solid #2a6a8a;
     border-radius: 8px;
     display: flex;
@@ -1791,7 +1787,7 @@ body {
 }
 
 .partySlot.filled {
-    background: rgba(42, 106, 138, 0.4);
+    background: rgba(42, 106, 138, 0.5);
     border-color: #4dd0e1;
 }
 
@@ -1864,7 +1860,7 @@ body {
 }
 
 .enemySlot {
-    background: rgba(10, 25, 41, 0.8);
+    background: rgba(10, 25, 41, 0.75);
     border: 2px solid #2a6a8a;
     border-radius: 8px;
     display: flex;
@@ -1901,7 +1897,7 @@ body {
 }
 
 .enemySlot.filled {
-    background: rgba(138, 42, 42, 0.4);
+    background: rgba(138, 42, 42, 0.5);
     border-color: #aa5a5a;
 }
 
