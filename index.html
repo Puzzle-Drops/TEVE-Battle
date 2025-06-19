@@ -668,7 +668,7 @@ getStars() {
                 stats.int += value;
                 break;
             case 'hp':
-                stats.hp += value * 10;
+                stats.hp += value;
                 break;
             case 'armor':
                 stats.armor += value;
@@ -835,13 +835,15 @@ getStatLine(rollType, value, maxValue, rarity = 'green') {
         case 'allstats':
             return `<div class="itemStat ${rarity}">+${value}${maxValue} All Stats</div>`;
         case 'hp':
-            return `<div class="itemStat ${rarity}">+${value * 10}${maxValue ? ` (${maxValue * 10})` : ''} HP</div>`;
+            return `<div class="itemStat ${rarity}">+${value}${maxValue ? ` (${maxValue})` : ''} HP</div>`;
         case 'armor':
             return `<div class="itemStat ${rarity}">+${value}${maxValue} Armor</div>`;
         case 'resist':
             return `<div class="itemStat ${rarity}">+${value}${maxValue} Resist</div>`;
         case 'hpRegen':
             return `<div class="itemStat ${rarity}">+${(value * 0.1).toFixed(1)}${maxValue ? ` (${(maxValue * 0.1).toFixed(1)})` : ''} HP Regen</div>`;
+        case 'attack':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} Attack</div>`;
         case 'attackSpeed':
             return `<div class="itemStat ${rarity}">+${value}%${maxValue ? ` (${maxValue}%)` : ''} Attack Speed</div>`;
         default:
@@ -1147,8 +1149,8 @@ equipItem(item, slot) {
                     armor: 0,
                     resist: 0,
                     hpRegen: 0,
+		    attack: 0,
                     attackSpeed: 0,
-                    cdr: 0
                 };
                 
                 // Add stats from all equipped items
@@ -1735,24 +1737,39 @@ showIndividualStash(family) {
                 const items = this.stashes[family.name].items;
                 
                 // Sort items
-                const sortedItems = [...items].sort((a, b) => {
-                    // First sort by level (highest first)
-                    if (a.level !== b.level) {
-                        return b.level - a.level;
-                    }
-                    
-                    // Then by rarity order: gold > red > purple > blue > green
-                    const rarityOrder = { gold: 5, red: 4, purple: 3, blue: 2, green: 1 };
-                    const aRarity = rarityOrder[a.getRarity()];
-                    const bRarity = rarityOrder[b.getRarity()];
-                    
-                    if (aRarity !== bRarity) {
-                        return bRarity - aRarity;
-                    }
-                    
-                    // Finally by quality percentage (highest first)
-                    return b.getQualityPercent() - a.getQualityPercent();
-                });
+const sortedItems = [...items].sort((a, b) => {
+    // First sort by level (highest first)
+    if (a.level !== b.level) {
+        return b.level - a.level;
+    }
+    
+    // Then by rarity order (which is the same as number of rolls)
+    const rarityOrder = { gold: 5, red: 4, purple: 3, blue: 2, green: 1 };
+    const aRarity = rarityOrder[a.getRarity()];
+    const bRarity = rarityOrder[b.getRarity()];
+    
+    if (aRarity !== bRarity) {
+        return bRarity - aRarity;
+    }
+    
+    // Then by quality percentage (highest first)
+    const aQuality = a.getQualityPercent();
+    const bQuality = b.getQualityPercent();
+    if (aQuality !== bQuality) {
+        return bQuality - aQuality;
+    }
+    
+    // Then by gear slot
+    const slotOrder = { weapon: 1, offhand: 2, head: 3, chest: 4, legs: 5, trinket: 6 };
+    const aSlot = slotOrder[a.slot] || 7;
+    const bSlot = slotOrder[b.slot] || 7;
+    if (aSlot !== bSlot) {
+        return aSlot - bSlot;
+    }
+    
+    // Finally by item name
+    return a.name.localeCompare(b.name);
+});
                 
                 if (sortedItems.length === 0) {
                     inventory.innerHTML = '<p style="text-align: center; color: #6a9aaa; margin-top: 50px;">No items in stash</p>';
@@ -2796,25 +2813,40 @@ showGearTab(hero, content) {
     // Get the stash for this hero's class family
     const stash = this.stashes[familyName];
 	
-    // Sort stash items
-    const sortedStashItems = [...stash.items].sort((a, b) => {
-        // First sort by level (highest first)
-        if (a.level !== b.level) {
-            return b.level - a.level;
-        }
-        
-        // Then by rarity order: gold > red > purple > blue > green
-        const rarityOrder = { gold: 5, red: 4, purple: 3, blue: 2, green: 1 };
-        const aRarity = rarityOrder[a.getRarity()];
-        const bRarity = rarityOrder[b.getRarity()];
-        
-        if (aRarity !== bRarity) {
-            return bRarity - aRarity;
-        }
-        
-        // Finally by quality percentage (highest first)
-        return b.getQualityPercent() - a.getQualityPercent();
-    });
+// Sort stash items
+const sortedItems = [...items].sort((a, b) => {
+    // First sort by level (highest first)
+    if (a.level !== b.level) {
+        return b.level - a.level;
+    }
+    
+    // Then by rarity order (which is the same as number of rolls)
+    const rarityOrder = { gold: 5, red: 4, purple: 3, blue: 2, green: 1 };
+    const aRarity = rarityOrder[a.getRarity()];
+    const bRarity = rarityOrder[b.getRarity()];
+    
+    if (aRarity !== bRarity) {
+        return bRarity - aRarity;
+    }
+    
+    // Then by quality percentage (highest first)
+    const aQuality = a.getQualityPercent();
+    const bQuality = b.getQualityPercent();
+    if (aQuality !== bQuality) {
+        return bQuality - aQuality;
+    }
+    
+    // Then by gear slot
+    const slotOrder = { weapon: 1, offhand: 2, head: 3, chest: 4, legs: 5, trinket: 6 };
+    const aSlot = slotOrder[a.slot] || 7;
+    const bSlot = slotOrder[b.slot] || 7;
+    if (aSlot !== bSlot) {
+        return aSlot - bSlot;
+    }
+    
+    // Finally by item name
+    return a.name.localeCompare(b.name);
+});
     
     content.innerHTML = `
         <div style="display: flex; gap: 20px; height: 100%;">
