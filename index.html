@@ -668,10 +668,10 @@ getTooltip(showMax = false) {
     // Quality
     tooltip += `<div class="itemQualityText">Quality: ${this.getQualityPercent()}%</div>`;
     
-    // Stars if they exist
-    if (starData.html) {
-        tooltip += `<div class="itemStarsInline ${starData.colorClass}">${starData.html}</div>`;
-    }
+// Stars if they exist
+if (starData.html) {
+    tooltip += `<div class="itemStarsInline ${rarity}">${starData.html}</div>`;
+}
     
     // Always show divider line
     tooltip += `<div class="itemDivider"></div>`;
