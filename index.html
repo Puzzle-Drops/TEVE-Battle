@@ -789,30 +789,30 @@ refine() {
     return true;
 }
 	
-    getStatLine(rollType, value, maxValue) {
-        switch(rollType) {
-            case 'str':
-                return `<div class="itemStat">+${value}${maxValue} STR</div>`;
-            case 'agi':
-                return `<div class="itemStat">+${value}${maxValue} AGI</div>`;
-            case 'int':
-                return `<div class="itemStat">+${value}${maxValue} INT</div>`;
-            case 'allstats':
-                return `<div class="itemStat">+${value}${maxValue} All Stats</div>`;
-            case 'hp':
-                return `<div class="itemStat">+${value * 10}${maxValue ? ` (${maxValue * 10})` : ''} HP</div>`;
-            case 'armor':
-                return `<div class="itemStat">+${value}${maxValue} Armor</div>`;
-            case 'resist':
-                return `<div class="itemStat">+${value}${maxValue} Resist</div>`;
-            case 'hpRegen':
-                return `<div class="itemStat">+${(value * 0.1).toFixed(1)}${maxValue ? ` (${(maxValue * 0.1).toFixed(1)})` : ''} HP Regen</div>`;
-            case 'attackSpeed':
-                return `<div class="itemStat">+${value}%${maxValue ? ` (${maxValue}%)` : ''} Attack Speed</div>`;
-            default:
-                return '';
-        }
+getStatLine(rollType, value, maxValue, rarity = 'green') {
+    switch(rollType) {
+        case 'str':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} STR</div>`;
+        case 'agi':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} AGI</div>`;
+        case 'int':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} INT</div>`;
+        case 'allstats':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} All Stats</div>`;
+        case 'hp':
+            return `<div class="itemStat ${rarity}">+${value * 10}${maxValue ? ` (${maxValue * 10})` : ''} HP</div>`;
+        case 'armor':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} Armor</div>`;
+        case 'resist':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} Resist</div>`;
+        case 'hpRegen':
+            return `<div class="itemStat ${rarity}">+${(value * 0.1).toFixed(1)}${maxValue ? ` (${(maxValue * 0.1).toFixed(1)})` : ''} HP Regen</div>`;
+        case 'attackSpeed':
+            return `<div class="itemStat ${rarity}">+${value}%${maxValue ? ` (${maxValue}%)` : ''} Attack Speed</div>`;
+        default:
+            return '';
     }
+}
 }
 
 // Hero Class
