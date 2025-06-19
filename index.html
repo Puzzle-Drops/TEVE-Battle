@@ -1970,7 +1970,7 @@ renderCollectionLog() {
     document.getElementById('collectionProgressFill').style.width = progressPercent + '%';
     document.getElementById('collectionProgressPercent').textContent = 
         Math.floor(progressPercent) + '%';
-	
+    
     // Render each dungeon
     dungeonsWithItems.forEach((dungeonInfo, index) => {
         const dungeonDiv = document.createElement('div');
@@ -2016,82 +2016,80 @@ renderCollectionLog() {
             const rowDiv = document.createElement('div');
             rowDiv.className = 'itemCollectionRow';
             
-            // Create a perfect 4-roll display item for the thumbnail
-            const displayItem = new Item(itemId);
-            displayItem.quality1 = 5;
-            displayItem.quality2 = 5;
-            displayItem.quality3 = 5;
-            displayItem.quality4 = 5;
-            
-            const starData = displayItem.getStars();
-            const rarity = displayItem.getRarity();
-            
-            // Create item thumbnail
-            const thumbnailDiv = document.createElement('div');
-            thumbnailDiv.className = `itemCollectionThumbnail ${rarity}`;
-            thumbnailDiv.innerHTML = `
-                <div class="itemContainer">
-                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${itemId}.png" 
-                         alt="${itemTemplate.name}"
-                         style="width: 100%; height: 100%;"
-                         onerror="this.style.display='none'">
-                    ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-                    <div class="itemLevel">${itemTemplate.level}</div>
-                    <div class="itemQuality">100%</div>
-                </div>
-            `;
-            
-            // Add hover tooltip
-            thumbnailDiv.onmouseover = (e) => {
-                const tempItem = new Item(itemId);
-                tempItem.quality1 = 5;
-                tempItem.quality2 = 5;
-                tempItem.quality3 = 5;
-                tempItem.quality4 = 5;
-                this.showItemTooltip(e, tempItem);
-            };
-            thumbnailDiv.onmouseout = () => {
-                this.hideItemTooltip();
-            };
-            
-            rowDiv.appendChild(thumbnailDiv);
-            
             const gridDiv = document.createElement('div');
             gridDiv.className = 'itemQualityGrid';
             
-            // Create 4 quality slots
+            // Create 4 item thumbnails (1-roll green, 2-roll blue, 3-roll purple, 4-roll red)
             for (let quality = 1; quality <= 4; quality++) {
-                const slotDiv = document.createElement('div');
-                slotDiv.className = 'collectionSlot';
+                // Create display item with specific number of rolls
+                const displayItem = new Item(itemId);
                 
+                // First, clear all qualities to 0
+                displayItem.quality1 = 0;
+                displayItem.quality2 = 0;
+                displayItem.quality3 = 0;
+                displayItem.quality4 = 0;
+                displayItem.quality5 = 0;
+                
+                // Then set only the exact number of perfect rolls
+                for (let i = 1; i <= quality; i++) {
+                    displayItem[`quality${i}`] = 5;
+                }
+                
+                const starData = displayItem.getStars();
+                const rarity = displayItem.getRarity();
+                
+                // Check if this quality is collected
                 const collectionKey = `${itemId}_${quality}`;
                 const collectionData = dungeonCollection[collectionKey];
+                const isCollected = !!collectionData;
                 
-                if (collectionData) {
-                    slotDiv.classList.add('collected');
-                    
-                    // Determine rarity based on quality level
-                    const rarity = quality === 4 ? 'red' : 
-                                  quality === 3 ? 'purple' : 
-                                  quality === 2 ? 'blue' : 'green';
-                    slotDiv.classList.add(rarity);
-                    
-                    // Add checkmark
-                    const checkmark = document.createElement('div');
-                    checkmark.className = 'collectionCheckmark';
-                    checkmark.innerHTML = '✓';
-                    slotDiv.appendChild(checkmark);
-                    
-                    // Add tooltip on hover
-                    slotDiv.onmouseover = (e) => {
+                // Create item thumbnail
+                const thumbnailDiv = document.createElement('div');
+                thumbnailDiv.className = `collectionItemThumbnail ${rarity} ${isCollected ? 'collected' : ''}`;
+                thumbnailDiv.innerHTML = `
+                    <div class="itemContainer">
+                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${itemId}.png" 
+                             alt="${itemTemplate.name}"
+                             style="width: 100%; height: 100%;"
+                             onerror="this.style.display='none'">
+                        ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
+                        <div class="itemLevel">${itemTemplate.level}</div>
+                        <div class="itemQuality">100%</div>
+                        ${isCollected ? '<div class="collectionCheckmark">✓</div>' : ''}
+                    </div>
+                `;
+                
+                // Add hover tooltip
+                if (isCollected) {
+                    thumbnailDiv.onmouseover = (e) => {
                         this.showCollectionTooltip(e, itemId, quality, collectionData);
                     };
-                    slotDiv.onmouseout = () => {
+                    thumbnailDiv.onmouseout = () => {
+                        this.hideItemTooltip();
+                    };
+                } else {
+                    thumbnailDiv.onmouseover = (e) => {
+                        // Create a fresh item for tooltip with proper quality
+                        const hoverItem = new Item(itemId);
+                        // Clear all qualities first
+                        hoverItem.quality1 = 0;
+                        hoverItem.quality2 = 0;
+                        hoverItem.quality3 = 0;
+                        hoverItem.quality4 = 0;
+                        hoverItem.quality5 = 0;
+                        // Set only the exact number of perfect rolls
+                        for (let i = 1; i <= quality; i++) {
+                            hoverItem[`quality${i}`] = 5;
+                        }
+                        this.showItemTooltip(e, hoverItem);
+                    };
+                    thumbnailDiv.onmouseout = () => {
                         this.hideItemTooltip();
                     };
                 }
                 
-                gridDiv.appendChild(slotDiv);
+                gridDiv.appendChild(thumbnailDiv);
             }
             
             rowDiv.appendChild(gridDiv);
