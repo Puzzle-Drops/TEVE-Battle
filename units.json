@@ -830,156 +830,182 @@
       "name": "Satyr Instigator",
       "boss": true,
       "modifiers": { "str": 1.5, "agi": 1.3, "int": 1.2 },
+      "mainstat": "str",
       "spells": ["slash", "bite", "fury"]
     },
     "frostfang": {
       "name": "Frostfang",
       "boss": true,
       "modifiers": { "str": 2.0, "agi": 3.5, "int": 0.8 },
+      "mainstat": "agi",
       "spells": ["bite", "frost_breath"]
     },
     "goblin_king": {
       "name": "Goblin King",
       "boss": true,
       "modifiers": { "str": 1.8, "agi": 1.8, "int": 4.2 },
+      "mainstat": "int",
       "spells": ["slash", "gold_toss", "summon_goblins"]
     },
     "satyr_youth": {
       "name": "Satyr Youth",
       "boss": false,
       "modifiers": { "str": 0.8, "agi": 1.3, "int": 0.9 },
+      "mainstat": "agi",
       "spells": ["slash"]
     },
     "aggressive_satyr": {
       "name": "Aggressive Satyr",
       "boss": false,
       "modifiers": { "str": 1.2, "agi": 1.0, "int": 0.8 },
+      "mainstat": "str",
       "spells": ["slash", "bite"]
     },
     "stitch": {
       "name": "Stitch",
       "boss": true,
       "modifiers": { "str": 2.2, "agi": 1.0, "int": 1.5 },
+      "mainstat": "str",
       "spells": ["slash", "poison_strike"]
     },
     "centaur_bloodhorn": {
       "name": "Centaur Bloodhorn",
       "boss": true,
       "modifiers": { "str": 2.5, "agi": 1.8, "int": 1.0 },
+      "mainstat": "str",
       "spells": ["blade_strike", "fury"]
     },
     "lich_queen": {
       "name": "Lich Queen",
       "boss": true,
       "modifiers": { "str": 1.0, "agi": 1.0, "int": 3.0 },
+      "mainstat": "int",
       "spells": ["frost_bolt", "shadow_strike", "mana_burn"]
     },
     "naga_ranger": {
       "name": "Naga Ranger",
       "boss": true,
       "modifiers": { "str": 1.5, "agi": 2.5, "int": 1.5 },
+      "mainstat": "agi",
       "spells": ["poison_strike", "multishot"]
     },
     "devourer": {
       "name": "Devourer",
       "boss": true,
       "modifiers": { "str": 3.0, "agi": 0.8, "int": 1.2 },
+      "mainstat": "str",
       "spells": ["bite", "poison_strike"]
     },
     "rotwood_horror": {
       "name": "Rotwood Horror",
       "boss": true,
       "modifiers": { "str": 2.8, "agi": 0.5, "int": 2.0 },
+      "mainstat": "str",
       "spells": ["poison_strike", "shadow_strike"]
     },
     "hades": {
       "name": "Hades",
       "boss": true,
       "modifiers": { "str": 2.5, "agi": 2.0, "int": 2.5 },
+      "mainstat": "str",
       "spells": ["shadow_strike", "holy_fire", "psi_storm"]
     },
     "mindreaver": {
       "name": "Mindreaver",
       "boss": true,
       "modifiers": { "str": 1.0, "agi": 1.5, "int": 4.0 },
+      "mainstat": "int",
       "spells": ["mana_burn", "psi_storm", "shadow_strike"]
     },
     "flame_revenant": {
       "name": "Flame Revenant",
       "boss": true,
       "modifiers": { "str": 2.0, "agi": 1.5, "int": 3.0 },
+      "mainstat": "int",
       "spells": ["fireball", "holy_fire", "arcane_explosion"]
     },
     "unknown_entity": {
       "name": "???",
       "boss": true,
       "modifiers": { "str": 3.0, "agi": 3.0, "int": 3.0 },
+      "mainstat": "int",
       "spells": ["shadow_strike", "psi_storm", "mana_burn"]
     },
     "mirage": {
       "name": "Mirage",
       "boss": true,
       "modifiers": { "str": 2.0, "agi": 4.0, "int": 2.5 },
+      "mainstat": "agi",
       "spells": ["shadowstep", "smoke_bomb", "assassinate"]
     },
     "ancient_hydra": {
       "name": "Ancient Hydra",
       "boss": true,
       "modifiers": { "str": 4.0, "agi": 2.0, "int": 2.0 },
+      "mainstat": "str",
       "spells": ["bite", "multishot", "fury"]
     },
     "pugs": {
       "name": "Pugs",
       "boss": true,
       "modifiers": { "str": 3.5, "agi": 3.5, "int": 3.0 },
+      "mainstat": "str",
       "spells": ["blade_strike", "shield_bash", "royal_charge"]
     },
     "starweaver": {
       "name": "Starweaver",
       "boss": true,
       "modifiers": { "str": 2.0, "agi": 3.0, "int": 4.5 },
+      "mainstat": "int",
       "spells": ["arcane_explosion", "psi_storm", "mana_burn"]
     },
     "chronarch": {
       "name": "Chronarch",
       "boss": true,
       "modifiers": { "str": 3.0, "agi": 3.0, "int": 4.0 },
+      "mainstat": "int",
       "spells": ["frost_bolt", "shadowstep", "smoke_bomb"]
     },
     "elysian_watcher": {
       "name": "Elysian Watcher",
       "boss": true,
       "modifiers": { "str": 3.5, "agi": 3.5, "int": 3.5 },
+      "mainstat": "agi",
       "spells": ["holy_light", "divine_shield", "holy_fire"]
     },
     "sovereign": {
       "name": "Sovereign",
       "boss": true,
       "modifiers": { "str": 4.0, "agi": 3.0, "int": 4.0 },
+      "mainstat": "int",
       "spells": ["psi_storm", "arcane_explosion", "royal_charge"]
     },
     "worldshaper": {
       "name": "Worldshaper",
       "boss": true,
       "modifiers": { "str": 4.5, "agi": 3.5, "int": 4.5 },
+      "mainstat": "str",
       "spells": ["arcane_explosion", "psi_storm", "holy_fire", "mana_burn"]
     },
     "cosmic_archon": {
       "name": "Cosmic Archon",
       "boss": true,
       "modifiers": { "str": 5.0, "agi": 5.0, "int": 5.0 },
+      "mainstat": "agi",
       "spells": ["arcane_explosion", "psi_storm", "holy_fire", "shadow_strike"]
     },
     "primeval_entity": {
       "name": "Primeval Entity",
       "boss": true,
       "modifiers": { "str": 5.5, "agi": 4.5, "int": 5.5 },
+      "mainstat": "int",
       "spells": ["shadow_strike", "mana_burn", "psi_storm", "arcane_explosion"]
     },
     "eternal_singularity": {
       "name": "Eternal Singularity",
       "boss": true,
       "modifiers": { "str": 6.0, "agi": 6.0, "int": 6.0 },
+      "mainstat": "str",
       "spells": ["arcane_explosion", "psi_storm", "shadow_strike", "holy_fire", "mana_burn"]
     }
   },
