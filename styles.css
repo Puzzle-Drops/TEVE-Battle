@@ -2968,3 +2968,11 @@ body {
     color: #ffd700;
     margin-left: 10px;
 }
+
+/* Main stat highlighting */
+.statName.mainstat,
+.statLabel.mainstat {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    font-weight: bold;
+}
