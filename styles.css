@@ -3368,42 +3368,15 @@ body {
 }
 
 .collectionItemThumbnail {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     background: rgba(10, 25, 41, 0.8);
     border: 2px solid #2a6a8a;
+    padding: 2px;
     position: relative;
     cursor: pointer;
     transition: all 0.3s;
     opacity: 0.4;
-}
-
-.collectionItemThumbnail.collected {
-    opacity: 1;
-}
-
-.collectionItemThumbnail.green {
-    border-color: #00ff88;
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-}
-
-.collectionItemThumbnail.blue {
-    border-color: #00c3ff;
-    box-shadow: 0 0 15px rgba(0, 195, 255, 0.5);
-}
-
-.collectionItemThumbnail.purple {
-    border-color: #d896ff;
-    box-shadow: 0 0 10px rgba(216, 150, 255, 0.3);
-}
-
-.collectionItemThumbnail.red {
-    border-color: #ff4444;
-    box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
-}
-
-.collectionItemThumbnail:hover {
-    transform: scale(1.1);
 }
 
 .collectionSlot {
@@ -3507,4 +3480,39 @@ body {
     font-size: 16px;
     color: #b0e0f0;
     line-height: 1.5;
+}
+
+/* Collection log specific item styling */
+.itemQualityGrid .stashItemSlot {
+    display: inline-block;
+    margin: 0;
+}
+
+.itemQualityGrid .stashItemSlot.collected {
+    opacity: 1 !important;
+}
+
+.itemQualityGrid .stashItemSlot:not(.collected) {
+    opacity: 0.4 !important;
+}
+
+.itemQualityGrid .stashItemSlot:hover {
+    transform: scale(1.1);
+}
+
+/* Ensure checkmark appears above item content */
+.stashItemSlot .collectionCheckmark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    font-weight: bold;
+    color: #00ff88;
+    text-shadow: 
+        0 0 10px rgba(0, 255, 136, 0.8),
+        0 0 20px rgba(0, 255, 136, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.9);
+    z-index: 10;
+    pointer-events: none;
 }
