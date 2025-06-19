@@ -1654,7 +1654,7 @@ body {
 }
 
 .partySelectHeader {
-    background: linear-gradient(to bottom, rgba(42, 106, 138, 0.3) 0%, rgba(10, 25, 41, 0.5) 100%);
+    background: linear-gradient(to bottom, rgba(42, 106, 138) 0%, rgba(10, 25, 41) 100%);
     padding: 20px;
     text-align: center;
     border-bottom: 2px solid #2a6a8a;
@@ -1686,7 +1686,7 @@ body {
 }
 
 .dungeonTitle {
-    font-size: 28px;
+    font-size: 36px;
     color: #4dd0e1;
     text-shadow: 0 0 20px rgba(77, 208, 225, 0.5);
     margin-bottom: 10px;
