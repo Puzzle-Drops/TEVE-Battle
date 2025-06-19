@@ -2737,8 +2737,27 @@ body {
 
 .itemStat {
     font-size: 16px;
-    color: #00ff88;
     margin: 4px 0;
+}
+
+.itemStat.green {
+    color: #00ff88;
+}
+
+.itemStat.blue {
+    color: #00c3ff;
+}
+
+.itemStat.purple {
+    color: #d896ff;
+}
+
+.itemStat.red {
+    color: #ff4444;
+}
+
+.itemStat.gold {
+    color: #ffd700;
 }
 
 .itemSellValue {
@@ -2846,14 +2865,29 @@ body {
     margin-bottom: 10px;
 }
 
-.itemStarsInline.golden {
-    color: #ffd700;
-    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+.itemStarsInline.green {
+    color: #00ff88;
+    text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+}
+
+.itemStarsInline.blue {
+    color: #00c3ff;
+    text-shadow: 0 0 5px rgba(0, 195, 255, 0.5);
+}
+
+.itemStarsInline.purple {
+    color: #d896ff;
+    text-shadow: 0 0 5px rgba(216, 150, 255, 0.5);
 }
 
 .itemStarsInline.red {
     color: #ff4444;
     text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+}
+
+.itemStarsInline.gold {
+    color: #ffd700;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
 }
 
 /* Fix the item quality overlay on actual items */
