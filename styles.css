@@ -3289,20 +3289,62 @@ body {
 }
 
 .dungeonCollectionItems {
-    padding: 20px;
-    display: block;  /* Changed from none to block */
+    display: block;
     border-top: 1px solid #2a6a8a;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
+    padding: 0 20px;  /* Changed to 0 vertical padding */
 }
 
 .dungeonCollection.expanded .dungeonCollectionItems {
-    max-height: 500px;  /* Adjust if needed for more items */
+    max-height: 1000px;  /* Increased for more items */
+    padding: 20px;  /* Add padding when expanded */
 }
 
 .itemCollectionRow {
     margin-bottom: 20px;
+}
+
+.itemCollectionRow {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.itemCollectionThumbnail {
+    width: 60px;
+    height: 60px;
+    background: rgba(10, 25, 41, 0.8);
+    border: 2px solid #2a6a8a;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.itemCollectionThumbnail.green {
+    border-color: #00ff88;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.itemCollectionThumbnail.blue {
+    border-color: #00c3ff;
+    box-shadow: 0 0 15px rgba(0, 195, 255, 0.5);
+}
+
+.itemCollectionThumbnail.purple {
+    border-color: #d896ff;
+    box-shadow: 0 0 10px rgba(216, 150, 255, 0.3);
+}
+
+.itemCollectionThumbnail.red {
+    border-color: #ff4444;
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+}
+
+.itemCollectionThumbnail.gold {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
 }
 
 .itemCollectionName {
