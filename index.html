@@ -1961,11 +1961,16 @@ renderCollectionLog() {
     document.getElementById('collectionProgressFill').style.width = progressPercent + '%';
     document.getElementById('collectionProgressPercent').textContent = 
         Math.floor(progressPercent) + '%';
-    
+	
     // Render each dungeon
-    dungeonsWithItems.forEach(dungeonInfo => {
+    dungeonsWithItems.forEach((dungeonInfo, index) => {
         const dungeonDiv = document.createElement('div');
         dungeonDiv.className = 'dungeonCollection';
+        
+        // Auto-expand the first dungeon
+        if (index === 0) {
+            dungeonDiv.classList.add('expanded');
+        }
         
         // Count collection for this dungeon
         const dungeonCollection = this.collectionLog[dungeonInfo.id] || {};
