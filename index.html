@@ -2010,16 +2010,51 @@ renderCollectionLog() {
         itemsDiv.className = 'dungeonCollectionItems';
         
         dungeonInfo.items.forEach(itemId => {
-    const itemTemplate = itemData.items[itemId];  // Changed variable name
-    if (!itemTemplate) return;
-    
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'itemCollectionRow';
-    
-    const nameDiv = document.createElement('div');
-    nameDiv.className = 'itemCollectionName';
-    nameDiv.textContent = itemTemplate.name;  // Updated reference
-    rowDiv.appendChild(nameDiv);
+            const itemTemplate = itemData.items[itemId];
+            if (!itemTemplate) return;
+            
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'itemCollectionRow';
+            
+            // Create a perfect 4-roll display item for the thumbnail
+            const displayItem = new Item(itemId);
+            displayItem.quality1 = 5;
+            displayItem.quality2 = 5;
+            displayItem.quality3 = 5;
+            displayItem.quality4 = 5;
+            
+            const starData = displayItem.getStars();
+            const rarity = displayItem.getRarity();
+            
+            // Create item thumbnail
+            const thumbnailDiv = document.createElement('div');
+            thumbnailDiv.className = `itemCollectionThumbnail ${rarity}`;
+            thumbnailDiv.innerHTML = `
+                <div class="itemContainer">
+                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${itemId}.png" 
+                         alt="${itemTemplate.name}"
+                         style="width: 100%; height: 100%;"
+                         onerror="this.style.display='none'">
+                    ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
+                    <div class="itemLevel">${itemTemplate.level}</div>
+                    <div class="itemQuality">100%</div>
+                </div>
+            `;
+            
+            // Add hover tooltip
+            thumbnailDiv.onmouseover = (e) => {
+                const tempItem = new Item(itemId);
+                tempItem.quality1 = 5;
+                tempItem.quality2 = 5;
+                tempItem.quality3 = 5;
+                tempItem.quality4 = 5;
+                this.showItemTooltip(e, tempItem);
+            };
+            thumbnailDiv.onmouseout = () => {
+                this.hideItemTooltip();
+            };
+            
+            rowDiv.appendChild(thumbnailDiv);
             
             const gridDiv = document.createElement('div');
             gridDiv.className = 'itemQualityGrid';
