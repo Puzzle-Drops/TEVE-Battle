@@ -109,7 +109,7 @@
       "rewards": {
         "gold": 350,
         "exp": 500,
-        "items": ["rusty_sword", "cloth_armor", "minor_trinket"]
+        "items": ["rusty_amulet", "rusty_sword", "rusty_shield"]
       }
     },
     "icy_highland": {
@@ -129,7 +129,7 @@
       "rewards": {
         "gold": 500,
         "exp": 1250,
-        "items": []
+        "items": ["discarded_helmet", "discarded_chestplate", "discarded_boots"]
       }
     },
     "forgotten_crypt": {
