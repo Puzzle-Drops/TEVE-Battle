@@ -1454,7 +1454,7 @@ this.party.forEach(unit => {
             });
         } else if (unit.isAlive) {
             // 50% chance for item in easy dungeons
-            if (Math.random() < 0.5) {
+            if (Math.random() < 1.5) {
                 // Get item from dungeon rewards
                 if (rewards.items && rewards.items.length > 0) {
                     const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
