@@ -2008,28 +2008,116 @@ sellFromContextMenu() {
     this.showIndividualStash(family);
 }
 
-            showItemTooltip(event, item) {
-                // Check if alt key is held
-                const showMax = event.altKey;
-                
-                // Create or get tooltip element
-                let tooltip = document.getElementById('itemTooltipDiv');
-                if (!tooltip) {
-                    tooltip = document.createElement('div');
-                    tooltip.id = 'itemTooltipDiv';
-                    tooltip.style.cssText = `
-                        position: fixed;
-                        background: rgba(10, 15, 26, 0.95);
-                        border: 2px solid #2a6a8a;
-                        padding: 16px;
-                        border-radius: 4px;
-                        z-index: 10000;
-                        pointer-events: none;
-                        max-height: 600px;
-                        overflow-y: auto;
-                    `;
-                    document.body.appendChild(tooltip);
-                }
+            showItemTooltip(event, item, isStashItem = false) {
+    // Check if alt key is held
+    const showMax = event.altKey;
+    
+    // Check if we should show comparison (only in hero gear tab hovering stash items)
+    let showComparison = false;
+    let equippedItem = null;
+    if (isStashItem && this.currentScreen === 'heroesScreen' && this.currentTab === 'gear' && this.selectedHero !== undefined) {
+        const hero = this.heroes[this.selectedHero];
+        equippedItem = hero.gear[item.slot];
+        showComparison = equippedItem !== null;
+    }
+    
+    // Create or get tooltip element
+    let tooltip = document.getElementById('itemTooltipDiv');
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'itemTooltipDiv';
+        tooltip.style.cssText = `
+            position: fixed;
+            background: rgba(10, 15, 26, 0.95);
+            border: 2px solid #2a6a8a;
+            padding: 16px;
+            border-radius: 4px;
+            z-index: 10000;
+            pointer-events: none;
+            max-height: 600px;
+            overflow-y: auto;
+        `;
+        document.body.appendChild(tooltip);
+    }
+    
+    // Store item reference for alt key updates
+    tooltip._currentItem = item;
+    tooltip._isComparison = showComparison;
+    tooltip._equippedItem = equippedItem;
+    
+    // Build tooltip HTML
+    let tooltipHTML = '';
+    
+    if (showComparison) {
+        // Comparison layout
+        tooltipHTML = '<div style="display: flex; gap: 20px;">';
+        
+        // Hovered item (left)
+        tooltipHTML += '<div style="flex: 1;">';
+        tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
+        tooltipHTML += item.getTooltip(showMax);
+        tooltipHTML += '</div>';
+        
+        // Separator
+        tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
+        
+        // Equipped item (right)
+        tooltipHTML += '<div style="flex: 1;">';
+        tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
+        tooltipHTML += equippedItem.getTooltip(showMax);
+        tooltipHTML += '</div>';
+        
+        tooltipHTML += '</div>';
+    } else {
+        // Single item tooltip
+        tooltipHTML = item.getTooltip(showMax);
+    }
+    
+    // Add colored border based on rarity
+    const rarity = item.getRarity();
+    switch(rarity) {
+        case 'red':
+            tooltip.style.borderColor = '#ff4444';
+            tooltip.style.boxShadow = '0 0 20px rgba(255, 68, 68, 0.5)';
+            break;
+        case 'purple':
+            tooltip.style.borderColor = '#d896ff';
+            tooltip.style.boxShadow = '0 0 20px rgba(216, 150, 255, 0.3)';
+            break;
+        case 'blue':
+            tooltip.style.borderColor = '#4dd0e1';
+            tooltip.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.3)';
+            break;
+        case 'green':
+            tooltip.style.borderColor = '#00ff88';
+            tooltip.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.3)';
+            break;
+        case 'gold':
+            tooltip.style.borderColor = '#ffd700';
+            tooltip.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
+            break;
+        default:
+            tooltip.style.borderColor = '#2a6a8a';
+            tooltip.style.boxShadow = '';
+    }
+    
+    tooltip.innerHTML = tooltipHTML;
+    tooltip.style.display = 'block';
+    
+    // Position tooltip
+    const rect = event.target.getBoundingClientRect();
+    tooltip.style.left = rect.right + 10 + 'px';
+    tooltip.style.top = rect.top + 'px';
+    
+    // Adjust if tooltip goes off screen
+    const tooltipRect = tooltip.getBoundingClientRect();
+    if (tooltipRect.right > window.innerWidth) {
+        tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
+    }
+    if (tooltipRect.bottom > window.innerHeight) {
+        tooltip.style.top = (window.innerHeight - tooltipRect.height - 10) + 'px';
+    }
+}
                 
                 // Store item reference for alt key updates
                 tooltip._currentItem = item;
@@ -2892,7 +2980,7 @@ showGearTab(hero, content) {
     <div class="stashItemSlot ${item.getRarity()}" 
          onclick="game.equipFromStash(${originalIndex}, '${item.slot}')"
          oncontextmenu="event.preventDefault(); game.showItemOptionsFromGearTab(${originalIndex}, '${familyName}')"
-         onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}])"
+         onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}], true)"
          onmouseout="game.hideItemTooltip()">
                                     <div class="itemContainer">
     <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
@@ -4195,7 +4283,23 @@ document.addEventListener('keydown', (e) => {
         // Update any visible item tooltip
         const tooltip = document.getElementById('itemTooltipDiv');
         if (tooltip && tooltip.style.display === 'block' && tooltip._currentItem) {
-            tooltip.innerHTML = tooltip._currentItem.getTooltip(true);
+            if (tooltip._isComparison && tooltip._equippedItem) {
+                // Rebuild comparison tooltip with max values
+                let tooltipHTML = '<div style="display: flex; gap: 20px;">';
+                tooltipHTML += '<div style="flex: 1;">';
+                tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
+                tooltipHTML += tooltip._currentItem.getTooltip(true);
+                tooltipHTML += '</div>';
+                tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
+                tooltipHTML += '<div style="flex: 1;">';
+                tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
+                tooltipHTML += tooltip._equippedItem.getTooltip(true);
+                tooltipHTML += '</div>';
+                tooltipHTML += '</div>';
+                tooltip.innerHTML = tooltipHTML;
+            } else {
+                tooltip.innerHTML = tooltip._currentItem.getTooltip(true);
+            }
         }
     }
 });
@@ -4206,7 +4310,23 @@ document.addEventListener('keyup', (e) => {
         // Update tooltip without max values
         const tooltip = document.getElementById('itemTooltipDiv');
         if (tooltip && tooltip.style.display === 'block' && tooltip._currentItem) {
-            tooltip.innerHTML = tooltip._currentItem.getTooltip(false);
+            if (tooltip._isComparison && tooltip._equippedItem) {
+                // Rebuild comparison tooltip without max values
+                let tooltipHTML = '<div style="display: flex; gap: 20px;">';
+                tooltipHTML += '<div style="flex: 1;">';
+                tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
+                tooltipHTML += tooltip._currentItem.getTooltip(false);
+                tooltipHTML += '</div>';
+                tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
+                tooltipHTML += '<div style="flex: 1;">';
+                tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
+                tooltipHTML += tooltip._equippedItem.getTooltip(false);
+                tooltipHTML += '</div>';
+                tooltipHTML += '</div>';
+                tooltip.innerHTML = tooltipHTML;
+            } else {
+                tooltip.innerHTML = tooltip._currentItem.getTooltip(false);
+            }
         }
     }
 });
