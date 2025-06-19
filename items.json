@@ -90,6 +90,21 @@
             "value4": null,
             "sellcost": 5
         },
+        "rusty_trinket": {
+            "id": "rusty_trinket",
+            "name": "Rusty Trinket",
+            "slot": "trinket",
+            "level": 5,
+            "roll1": "allstats",
+            "value1": 10,
+            "roll2": "int",
+            "value2": 5,
+            "roll3": "resist",
+            "value3": 5,
+            "roll4": "allstats",
+            "value4": 10,
+            "sellcost": 100
+        },
         "rusty_sword": {
             "id": "rusty_sword",
             "name": "Rusty Sword",
@@ -119,21 +134,6 @@
             "roll4": "allstats",
             "value4": 5,
             "sellcost": 50
-        },
-        "rusty_trinket": {
-            "id": "rusty_trinket",
-            "name": "Rusty Trinket",
-            "slot": "trinket",
-            "level": 5,
-            "roll1": "allstats",
-            "value1": 10,
-            "roll2": "int",
-            "value2": 5,
-            "roll3": "resist",
-            "value3": 5,
-            "roll4": "allstats",
-            "value4": 10,
-            "sellcost": 100
         },
         "discarded_helmet": {
             "id": "discarded_helmet",
