@@ -2814,7 +2814,7 @@ showGearTab(hero, content) {
     const stash = this.stashes[familyName];
 	
 // Sort stash items
-const sortedItems = [...items].sort((a, b) => {
+const sortedStashItems = [...stash.items].sort((a, b) => {
     // First sort by level (highest first)
     if (a.level !== b.level) {
         return b.level - a.level;
