@@ -1338,6 +1338,11 @@ get mainstat() {
             }
 
 filterStashSlots(source) {
+
+    // Hide any existing tooltips before DOM manipulation
+    this.hideItemTooltip();
+    this.hideAbilityTooltip();
+
     if (source === 'gear') {
         // Store the current filter value
         const select = document.getElementById('gearStashFilterSelect');
@@ -1746,6 +1751,11 @@ enterDungeon(tierName, dungeonIndex) {
             }
 
 showIndividualStash(family) {
+
+     // Hide any existing tooltips before DOM manipulation
+    this.hideItemTooltip();
+    this.hideAbilityTooltip();
+
     this.hideAllScreens();
     this.currentScreen = 'individualStashScreen';
     document.getElementById('individualStashScreen').style.display = 'block';
@@ -2869,6 +2879,11 @@ hideStatTooltip() {
             }
 
 showGearTab(hero, content) {
+
+    // Hide any existing tooltips before DOM manipulation
+    this.hideItemTooltip();
+    this.hideAbilityTooltip();
+
     // Get the stash for this hero's class family
     const familyName = this.getClassFamily(hero.className, hero.classTier);
     if (!this.currentStashFamily) {
