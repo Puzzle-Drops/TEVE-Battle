@@ -3358,21 +3358,37 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 24px;
+    color: inherit;
+    text-shadow: 0 0 10px currentColor;
+}
+
+.collectionSlot.green .collectionCheckmark {
     color: #00ff88;
-    text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+}
+
+.collectionSlot.blue .collectionCheckmark {
+    color: #00c3ff;
+}
+
+.collectionSlot.purple .collectionCheckmark {
+    color: #d896ff;
+}
+
+.collectionSlot.red .collectionCheckmark {
+    color: #ff4444;
 }
 
 /* Collection Complete Popup */
 .collectionCompletePopup {
     display: none;
     position: fixed;
-    top: 50%;
+    top: 10%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     border: 3px solid #00ff88;
     padding: 30px;
-    z-index: 1004;
+    z-index: 10000;
     box-shadow: 0 0 50px rgba(0, 255, 136, 0.8);
     text-align: center;
     min-width: 400px;
