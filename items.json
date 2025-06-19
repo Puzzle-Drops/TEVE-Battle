@@ -105,10 +105,10 @@
             "value4": 5,
             "sellcost": 50
         },
-        "cloth_armor": {
-            "id": "cloth_armor",
-            "name": "Cloth Armor",
-            "slot": "chest",
+        "rusty_shield": {
+            "id": "rusty_shield",
+            "name": "Rusty Shield",
+            "slot": "offhand",
             "level": 5,
             "roll1": "armor",
             "value1": 10,
@@ -120,9 +120,9 @@
             "value4": 5,
             "sellcost": 50
         },
-        "minor_trinket": {
-            "id": "minor_trinket",
-            "name": "Minor Trinket",
+        "rusty_trinket": {
+            "id": "rusty_trinket",
+            "name": "Rusty Trinket",
             "slot": "trinket",
             "level": 5,
             "roll1": "allstats",
@@ -135,27 +135,50 @@
             "value4": 10,
             "sellcost": 100
         },
-        "iron_sword": {
-            "id": "iron_sword",
-            "name": "Iron Sword",
-            "slot": "weapon",
+        "discarded_helmet": {
+            "id": "discarded_helmet",
+            "name": "Discarded Helmet",
+            "slot": "helmet",
             "level": 25,
-            "roll1": "str",
-            "roll2": "str",
-            "roll3": "agi",
-            "roll4": "allstats",
-            "sellcost": 250
+            "roll1": "int",
+            "value1": 5,
+            "roll2": "armor",
+            "value2": 10,
+            "roll3": "resist",
+            "value3": 10,
+            "roll4": "hp",
+            "value4": 100,
+            "sellcost": 300
         },
-        "leather_armor": {
-            "id": "leather_armor",
-            "name": "Leather Armor",
+        "discarded_chestplate": {
+            "id": "discarded_chestplate",
+            "name": "Discarded Chestplate",
             "slot": "chest",
             "level": 25,
-            "roll1": "armor",
-            "roll2": "agi",
-            "roll3": "str",
-            "roll4": "armor",
-            "sellcost": 250
+            "roll1": "str",
+            "value1": 5,
+            "roll2": "armor",
+            "value2": 15,
+            "roll3": "resist",
+            "value3": 15,
+            "roll4": "hp",
+            "value4": 150,
+            "sellcost": 350
+        },
+        "discarded_boots": {
+            "id": "discarded_boots",
+            "name": "Discarded Boots",
+            "slot": "legs",
+            "level": 25,
+            "roll1": "agi",
+            "value1": 5,
+            "roll2": "armor",
+            "value2": 10,
+            "roll3": "resist",
+            "value3": 10,
+            "roll4": "hp",
+            "value4": 100,
+            "sellcost": 300
         },
         "blood_diamond": {
             "id": "blood_diamond",
