@@ -1327,6 +1327,9 @@ get mainstat() {
 		this.currentGearFilter = 'trinket'; // Add this line after other properties
 		this.currentStashFilter = null; // Add this line to track stash page filter
 		this.collectionLog = this.loadCollectionLog();
+		this.collectionLog = this.loadCollectionLog();
+		this.collectionPopupQueue = [];
+		this.collectionPopupActive = false;
 
 		    
                 // Initialize stashes for all class families including villager
@@ -1825,13 +1828,38 @@ checkItemForCollection(item, heroName, heroClass) {
 }
 		
 showCollectionCompletePopup(item, qualityLevel, heroName, heroClass) {
+    // Add to queue
+    this.collectionPopupQueue.push({
+        item: item,
+        qualityLevel: qualityLevel,
+        heroName: heroName,
+        heroClass: heroClass
+    });
+    
+    // If no popup is currently active, show the next one
+    if (!this.collectionPopupActive) {
+        this.showNextCollectionPopup();
+    }
+}
+
+showNextCollectionPopup() {
+    // Check if there are popups in queue
+    if (this.collectionPopupQueue.length === 0) {
+        this.collectionPopupActive = false;
+        return;
+    }
+    
+    // Get the next popup data
+    const popupData = this.collectionPopupQueue.shift();
+    this.collectionPopupActive = true;
+    
     const popup = document.getElementById('collectionCompletePopup');
     const itemDiv = document.getElementById('collectionCompleteItem');
     const infoDiv = document.getElementById('collectionCompleteInfo');
     
     // Create perfect display item
-    const displayItem = new Item(item.id);
-    for (let i = 1; i <= qualityLevel; i++) {
+    const displayItem = new Item(popupData.item.id);
+    for (let i = 1; i <= popupData.qualityLevel; i++) {
         displayItem[`quality${i}`] = 5;
     }
     
@@ -1858,7 +1886,7 @@ showCollectionCompletePopup(item, qualityLevel, heroName, heroClass) {
     itemDiv.innerHTML = `
         <div class="stashItemSlot ${rarity}" style="margin: 0 auto;">
             <div class="itemContainer">
-                <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
+                <img src="https://puzzle-drops.github.io/TEVE/img/items/${popupData.item.id}.png" 
                      alt="${displayItem.name}"
                      onerror="this.style.display='none'">
                 ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
@@ -1870,23 +1898,34 @@ showCollectionCompletePopup(item, qualityLevel, heroName, heroClass) {
     
     const timestamp = new Date().toLocaleString();
     infoDiv.innerHTML = `
-        Obtained by ${heroName}, the ${heroClass}.<br>
+        Obtained by ${popupData.heroName}, the ${popupData.heroClass}.<br>
         ${timestamp}
     `;
     
     popup.style.display = 'block';
     
-    // Add click handler to close
+    // Remove any existing handlers
+    const oldHandler = popup._closeHandler;
+    if (oldHandler) {
+        popup.removeEventListener('click', oldHandler);
+    }
+    
+    // Add click handler to close and show next
     const closeHandler = () => {
         popup.style.display = 'none';
         popup.removeEventListener('click', closeHandler);
+        popup._closeHandler = null;
+        // Show next popup if any
+        this.showNextCollectionPopup();
     };
+    
+    popup._closeHandler = closeHandler;
     
     setTimeout(() => {
         popup.addEventListener('click', closeHandler);
     }, 100);
 }
-
+		
 renderCollectionLog() {
     const content = document.getElementById('collectionContent');
     content.innerHTML = '';
@@ -4798,6 +4837,13 @@ window.addEventListener('DOMContentLoaded', async () => {
 const collectionPopup = document.getElementById('collectionCompletePopup');
 if (collectionPopup && collectionPopup.style.display === 'block') {
     collectionPopup.style.display = 'none';
+    // Remove the click handler
+    if (collectionPopup._closeHandler) {
+        collectionPopup.removeEventListener('click', collectionPopup._closeHandler);
+        collectionPopup._closeHandler = null;
+    }
+    // Show next popup if any
+    game.showNextCollectionPopup();
     e.preventDefault();
     return;
 }
