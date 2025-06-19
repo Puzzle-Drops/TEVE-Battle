@@ -1323,7 +1323,7 @@ checkBattleEnd() {
     
 calculateWaveExp() {
     // Base exp per enemy level
-    const baseExpPerLevel = 20;
+    const baseExpPerLevel = 25;
     let totalExp = 0;
     
     console.log(`calculateWaveExp called for wave ${this.currentWave}`);
