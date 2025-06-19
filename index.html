@@ -1289,7 +1289,8 @@ get mainstat() {
                 this.autoBattle = false; // Auto Battle state
                 this.autoReplay = false; // Auto Replay state
                 this.autoReplayTimer = null; // Timer for auto replay
-                this.currentGearFilter = 'trinket'; // Add this line after other properties  
+		this.currentGearFilter = 'trinket'; // Add this line after other properties
+		this.currentStashFilter = null; // Add this line to track stash page filter
 		    
                 // Initialize stashes for all class families including villager
                 this.stashes = {
@@ -1346,6 +1347,11 @@ filterStashSlots(source) {
         // Refresh the gear tab
         this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
     } else if (source === 'individual') {
+        // Store the current filter value for individual stash
+        const select = document.getElementById('stashSlotFilterSelect');
+        if (select) {
+            this.currentStashFilter = select.value;
+        }
         // Refresh the individual stash screen
         if (this.currentStashFamily) {
             this.showIndividualStash(this.currentStashFamily);
@@ -1353,7 +1359,7 @@ filterStashSlots(source) {
     }
 }
 
-
+		
 toggleAutoBattleInBattle(enabled) {
     // Update auto battle state
     this.toggleAutoBattle(enabled);
@@ -1750,6 +1756,16 @@ showIndividualStash(family) {
     const needsFilter = items.length > 100;
     const goldAmount = this.stashes[family.name].gold.toLocaleString();
     
+    // Get current filter value or default to trinket if first time
+    let filterValue = 'all';
+    if (needsFilter) {
+        // Check if we already have a filter value for this stash
+        if (!this.currentStashFilter) {
+            this.currentStashFilter = 'trinket'; // Only set default on first open
+        }
+        filterValue = this.currentStashFilter;
+    }
+    
     // Build header HTML with filter if needed
     let headerHTML = `${family.name} Stash`;
     if (needsFilter) {
@@ -1759,19 +1775,21 @@ showIndividualStash(family) {
             <div class="stashSlotFilter">
                 <label>Filter:</label>
                 <select id="stashSlotFilterSelect" onchange="game.filterStashSlots('individual')">
-                    <option value="all">All (${items.length})</option>
-                    <option value="trinket" selected>Trinket</option>
-                    <option value="head">Head</option>
-                    <option value="chest">Chest</option>
-                    <option value="legs">Legs</option>
-                    <option value="weapon">Weapon</option>
-                    <option value="offhand">Offhand</option>
+                    <option value="all" ${filterValue === 'all' ? 'selected' : ''}>All (${items.length})</option>
+                    <option value="trinket" ${filterValue === 'trinket' ? 'selected' : ''}>Trinket</option>
+                    <option value="head" ${filterValue === 'head' ? 'selected' : ''}>Head</option>
+                    <option value="chest" ${filterValue === 'chest' ? 'selected' : ''}>Chest</option>
+                    <option value="legs" ${filterValue === 'legs' ? 'selected' : ''}>Legs</option>
+                    <option value="weapon" ${filterValue === 'weapon' ? 'selected' : ''}>Weapon</option>
+                    <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
                 </select>
             </div>
         </div>`;
         document.getElementById('stashFamilyName').innerHTML = headerHTML;
     } else {
         document.getElementById('stashFamilyName').textContent = `${family.name} Stash`;
+        // Clear filter if we don't need it anymore
+        this.currentStashFilter = null;
     }
     
     document.getElementById('stashGoldAmount').textContent = goldAmount;
@@ -1782,11 +1800,8 @@ showIndividualStash(family) {
     
     // Filter items based on selection
     let itemsToShow = items;
-    if (needsFilter) {
-        const filterValue = document.getElementById('stashSlotFilterSelect')?.value || 'trinket';
-        if (filterValue !== 'all') {
-            itemsToShow = items.filter(item => item.slot === filterValue);
-        }
+    if (needsFilter && filterValue !== 'all') {
+        itemsToShow = items.filter(item => item.slot === filterValue);
     }
     
     // Sort items
