@@ -1338,6 +1338,10 @@ get mainstat() {
             }
 
 filterStashSlots(source) {
+    // Hide any visible tooltips first
+    this.hideItemTooltip();
+    this.hideAbilityTooltip();
+    
     if (source === 'gear') {
         // Store the current filter value
         const select = document.getElementById('gearStashFilterSelect');
