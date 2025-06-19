@@ -3196,15 +3196,10 @@ body {
 /* Collection Log Screen */
 .collectionLogScreen {
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
     height: 100vh;
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     padding: 20px;
     overflow-y: auto;
-    z-index: 1000;
 }
 
 .collectionHeader {
