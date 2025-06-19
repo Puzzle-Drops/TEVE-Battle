@@ -1486,6 +1486,16 @@ body {
     flex-wrap: wrap;
 }
 
+.promoteOptionsVillager {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 2px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .promoteButton {
     padding: 15px 40px;
     background: linear-gradient(135deg, #4dd0e1 0%, #2a9aaa 100%);
@@ -1506,11 +1516,19 @@ body {
     transform: translateY(-2px);
 }
 
-.promoteButton:disabled {
-    background: #1a3a4a;
-    cursor: not-allowed;
-    box-shadow: none;
-    color: #6a9aaa;
+.promoteButton:disabled,
+.promoteButton.disabled {
+    background: #1a3a4a !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    color: #6a9aaa !important;
+}
+
+.promoteButton.disabled:hover {
+    background: #1a3a4a !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    transform: none !important;
 }
 
 /* Item visual indicators */
