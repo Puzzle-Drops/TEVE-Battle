@@ -1857,8 +1857,16 @@ showNextCollectionPopup() {
     const itemDiv = document.getElementById('collectionCompleteItem');
     const infoDiv = document.getElementById('collectionCompleteInfo');
     
-    // Create perfect display item
+    // Create perfect display item with exact number of rolls
     const displayItem = new Item(popupData.item.id);
+    
+    // First, clear all qualities
+    displayItem.quality1 = 0;
+    displayItem.quality2 = 0;
+    displayItem.quality3 = 0;
+    displayItem.quality4 = 0;
+    
+    // Then set only the exact number of perfect rolls
     for (let i = 1; i <= popupData.qualityLevel; i++) {
         displayItem[`quality${i}`] = 5;
     }
