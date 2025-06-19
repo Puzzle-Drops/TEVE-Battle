@@ -12,6 +12,13 @@ const spellLogic = {
         battle.log(`${caster.name} enters a fury, increasing attack speed for 3 turns!`);
     },
 
+    throwRockLogic: function(battle, caster, target) {
+        const damage = caster.stats.int * 2;
+        battle.dealDamage(caster, target, damage, 'physical');
+        battle.applyDebuff(target, 'stun', 1, { stunned: true });
+        battle.log(`${caster.name} throws a rock at ${target.name} for ${Math.floor(damage)} damage and stuns them!`);
+    },
+    
     punchkillLogic: function(battle, caster, target) {
         const damage = 500000 + (.5*caster.stats.str) + (.5*caster.stats.agi) + (.5*caster.stats.int);
         battle.dealDamage(caster, target, damage, 'physical');
