@@ -2792,91 +2792,90 @@ hideStatTooltip() {
             }
 
             showPromoteTab(hero, content) {
-                const canPromote = hero.canPromote();
-                const promotions = hero.getPromotionOptions();
-                
-                // Special case for Awakening
-                if (promotions.includes('Awaken')) {
-                    content.innerHTML = `
-                        <div class="promoteContent">
-                            <div class="classCard">
-                                <h2>Awaken</h2>
-                                <div style="font-size: 24px; font-weight: bold; color: #d896ff; text-shadow: 0 0 12px rgba(216, 150, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">★★★★★★</div>
-                                <button class="promoteButton" style="background: linear-gradient(135deg, #d896ff 0%, #a855f7 100%); box-shadow: 0 0 20px rgba(216, 150, 255, 0.5); color: #0a1929;" onclick="game.showPromotionConfirm('Awaken')" 
-                                    onmouseover="this.style.background='linear-gradient(135deg, #e6b0ff 0%, #d896ff 100%)'; this.style.boxShadow='0 0 30px rgba(230, 176, 255, 0.7)'"
-                                    onmouseout="this.style.background='linear-gradient(135deg, #d896ff 0%, #a855f7 100%)'; this.style.boxShadow='0 0 20px rgba(216, 150, 255, 0.5)'">
-                                    Awaken<br>
-                                    <span style="font-size: 14px;">💰 -10000000</span>
-                                </button>
-                            </div>
+    const canPromote = hero.canPromote();
+    const promotions = hero.getPromotionOptions();
+    
+    // Special case for Awakening
+    if (promotions.includes('Awaken')) {
+        content.innerHTML = `
+            <div class="promoteContent">
+                <div class="classCard">
+                    <h2>Awaken</h2>
+                    <div style="font-size: 24px; font-weight: bold; color: #d896ff; text-shadow: 0 0 12px rgba(216, 150, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">★★★★★★</div>
+                    <button class="promoteButton ${canPromote ? '' : 'disabled'}" 
+                        style="${canPromote ? 'background: linear-gradient(135deg, #d896ff 0%, #a855f7 100%); box-shadow: 0 0 20px rgba(216, 150, 255, 0.5); color: #0a1929;' : ''}" 
+                        onclick="${canPromote ? 'game.showPromotionConfirm(\'Awaken\')' : ''}" 
+                        onmouseover="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #e6b0ff 0%, #d896ff 100%)\'; this.style.boxShadow=\'0 0 30px rgba(230, 176, 255, 0.7)\'' : ''}"
+                        onmouseout="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #d896ff 0%, #a855f7 100%)\'; this.style.boxShadow=\'0 0 20px rgba(216, 150, 255, 0.5)\'' : ''}"
+                        ${canPromote ? '' : 'disabled'}>
+                        ${canPromote ? 'Awaken<br><span style="font-size: 14px;">💰 -10000000</span>' : `Promotion requires:<br><span style="font-size: 14px;">Level 400</span>`}
+                    </button>
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    // Already awakened
+    if (hero.awakened) {
+        content.innerHTML = `
+            <div class="promoteContent">
+                <h2>No promotions available</h2>
+                <p>Hero has been awakened!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Get promotion level requirement
+    const promoteLevels = { 0: 50, 1: 100, 2: 200, 3: 300, 4: 400 };
+    const requiredLevel = promoteLevels[hero.classTier] || 999;
+    
+    // Determine if this is a villager (has 8 promotion options)
+    const isVillager = hero.classTier === 0 && promotions.length === 8;
+    const promoteClass = isVillager ? 'promoteOptionsVillager' : 'promoteOptions';
+    
+    content.innerHTML = `
+        <div class="promoteContent">
+            <div class="${promoteClass}">
+                ${promotions.map(promo => {
+                    const promoClass = unitData?.classes[promo];
+                    if (!promoClass) return '';
+                    
+                    // Generate stars for promotion class
+                    const promoStarData = this.generateStars({ 
+                        type: 'hero', 
+                        classTier: promoClass.tier, 
+                        awakened: false 
+                    });
+                    
+                    // Get display name
+                    let displayName = promoClass.name;
+                    
+                    const cost = 1000 * Math.pow(10, hero.classTier);
+                    
+                    return `
+                        <div class="classCard">
+                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${promo}_portrait.png" alt="${displayName}" 
+                                 style="width: 80px; height: 80px; object-fit: cover; object-position: top center; image-rendering: pixelated;"
+                                 onerror="this.style.display='none'">
+                            <div class="classStars" style="font-size: 24px; font-weight: bold; color: #ffd700; text-shadow: 0 0 12px rgba(255, 215, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${promoStarData.html}</div>
+                            <h2>${displayName}</h2>
+                            <button class="promoteButton ${canPromote ? '' : 'disabled'}" 
+                                onclick="${canPromote ? `game.showPromotionConfirm('${promo}')` : ''}"
+                                ${canPromote ? '' : 'disabled'}>
+                                ${canPromote ? 
+                                    `Promote<br><span style="font-size: 14px;">💰 -${cost}</span>` : 
+                                    `Promotion requires:<br><span style="font-size: 14px;">Level ${requiredLevel}</span>`
+                                }
+                            </button>
                         </div>
                     `;
-                    return;
-                }
-                
-                // Generate stars for current class using consolidated function
-                const currentStarData = hero.getStars();
-                
-                // Check if class 4 but not high enough level
-                if (hero.classTier === 4 && !hero.awakened) {
-                    content.innerHTML = `
-                        <div class="promoteContent">
-                            <p style="margin-top: 20px; font-size: 18px; color: #6a9aaa;">Reach level 400 to awaken</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Already awakened
-                if (hero.awakened) {
-                    content.innerHTML = `
-                        <div class="promoteContent">
-                            <h2>No promotions available</h2>
-                            <p>Hero has been awakened!</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                content.innerHTML = `
-                    <div class="promoteContent">
-                        ${canPromote ? `
-                            <div class="promoteOptions">
-                                ${promotions.map(promo => {
-                                    const promoClass = unitData?.classes[promo];
-                                    if (!promoClass) return '';
-                                    
-                                    // Generate stars for promotion class
-                                    const promoStarData = this.generateStars({ 
-                                        type: 'hero', 
-                                        classTier: promoClass.tier, 
-                                        awakened: false 
-                                    });
-                                    
-                                    // Get display name
-                                    let displayName = promoClass.name;
-                                    
-                                    return `
-                                        <div class="classCard">
-                                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${promo}_portrait.png" alt="${displayName}" 
-                                                 style="width: 80px; height: 80px; object-fit: cover; object-position: top center; image-rendering: pixelated;"
-                                                 onerror="this.style.display='none'">
-											<div class="classStars" style="font-size: 24px; font-weight: bold; color: #ffd700; text-shadow: 0 0 12px rgba(255, 215, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${promoStarData.html}</div>
-											<h2>${displayName}</h2>
-                                            <button class="promoteButton" onclick="game.showPromotionConfirm('${promo}')">
-                                                Promote<br>
-                                                <span style="font-size: 14px;">💰 -${1000 * Math.pow(10, hero.classTier)}</span>
-                                            </button>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        ` : `
-                            <p>Reach level ${[50, 100, 200, 300, 400][hero.classTier]} to ${hero.classTier === 4 ? 'awaken' : 'promote'}</p>
-                        `}
-                    </div>
-                `;
-            }
+                }).join('')}
+            </div>
+        </div>
+    `;
+}
 
 showGearTab(hero, content) {
 
