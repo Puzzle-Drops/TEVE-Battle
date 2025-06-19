@@ -3459,7 +3459,7 @@ body {
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     border: 3px solid #00ff88;
     padding: 30px;
-    z-index: 10000;
+    z-index: 11000;
     box-shadow: 0 0 50px rgba(0, 255, 136, 0.8);
     text-align: center;
     min-width: 400px;
