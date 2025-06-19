@@ -3308,7 +3308,7 @@ updateRewardsDisplay() {
         const rewards = this.currentDungeonData.rewards || { gold: 0, exp: 0, items: [] };
         
         // Update gold and exp display
-        document.getElementById('dungeonGoldReward').textContent = rewards.gold.toLocaleString();
+        document.getElementById('dungeonGoldReward').textContent = rewards.gold.toLocaleString() + 'g';
         document.getElementById('dungeonExpReward').textContent = `${rewards.exp.toLocaleString()} EXP`;
         
         // Update items grid
