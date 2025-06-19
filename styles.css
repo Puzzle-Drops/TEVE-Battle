@@ -1804,6 +1804,7 @@ body {
         0 0 30px rgba(255, 215, 0, 0.8),
         0 2px 4px rgba(0, 0, 0, 0.8);
     font-weight: bold;
+    padding-top: 160px;
 }
 
 .heroSelectArea {
