@@ -193,6 +193,7 @@
 
         <!-- Party Select Screen -->
         <div id="partySelectScreen">
+	    <div class="partySelectBattlefield"></div>
             <div class="partySelectContainer">
                 <div class="partySelectHeader">
                     <div class="dungeonTitle" id="dungeonName">Satyrs</div>
@@ -3209,15 +3210,22 @@ equipFromStash(itemIndex, slot) {
             }
 
             showPartySelect() {
-                this.hideAllScreens();
-                this.currentScreen = 'partySelectScreen';
-                document.getElementById('partySelectScreen').style.display = 'block';
-                
-                // Reset party selection if entering fresh (not from battle)
-                if (!this.currentBattle) {
-                    this.selectedParty = [null, null, null, null, null];
-                }
-                
+    this.hideAllScreens();
+    this.currentScreen = 'partySelectScreen';
+    document.getElementById('partySelectScreen').style.display = 'block';
+    
+    // Set battlefield background based on current dungeon
+    const battlefieldBg = document.querySelector('.partySelectBattlefield');
+    if (battlefieldBg && this.currentDungeon) {
+        const dungeonName = this.currentDungeon.name.toLowerCase().replace(/ /g, '_');
+        battlefieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
+    }
+    
+    // Reset party selection if entering fresh (not from battle)
+    if (!this.currentBattle) {
+        this.selectedParty = [null, null, null, null, null];
+    }
+		    
                 // Update dungeon info
                 document.getElementById('dungeonName').textContent = this.currentDungeon.name;
 
