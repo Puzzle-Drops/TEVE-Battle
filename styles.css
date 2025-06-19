@@ -3200,6 +3200,8 @@ body {
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     padding: 20px;
     overflow-y: auto;
+    position: relative;
+    z-index: 100;
 }
 
 .collectionHeader {
@@ -3290,12 +3292,15 @@ body {
 
 .dungeonCollectionItems {
     padding: 20px;
-    display: none;
+    display: block;  /* Changed from none to block */
     border-top: 1px solid #2a6a8a;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
 }
 
 .dungeonCollection.expanded .dungeonCollectionItems {
-    display: block;
+    max-height: 500px;  /* Adjust if needed for more items */
 }
 
 .itemCollectionRow {
