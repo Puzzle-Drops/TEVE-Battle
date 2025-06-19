@@ -1829,20 +1829,31 @@ showCollectionCompletePopup(item, qualityLevel, heroName, heroClass) {
     const itemDiv = document.getElementById('collectionCompleteItem');
     const infoDiv = document.getElementById('collectionCompleteInfo');
     
-    // Create item with exact number of perfect rolls for display
+    // Create perfect display item
     const displayItem = new Item(item.id);
-    
-    // Set only the exact number of rolls to perfect
     for (let i = 1; i <= qualityLevel; i++) {
         displayItem[`quality${i}`] = 5;
-    }
-    // Make sure higher rolls are 0
-    for (let i = qualityLevel + 1; i <= 4; i++) {
-        displayItem[`quality${i}`] = 0;
     }
     
     const starData = displayItem.getStars();
     const rarity = displayItem.getRarity();
+    
+    // Update popup styling based on rarity
+    const rarityColors = {
+        green: '#00ff88',
+        blue: '#00c3ff',
+        purple: '#d896ff',
+        red: '#ff4444'
+    };
+    const color = rarityColors[rarity] || '#00ff88';
+    
+    popup.style.borderColor = color;
+    popup.style.boxShadow = `0 0 50px ${color.replace('#', '#')}88`;
+    const titleElement = popup.querySelector('.collectionCompleteTitle');
+    if (titleElement) {
+        titleElement.style.color = color;
+        titleElement.style.textShadow = `0 0 20px ${color.replace('#', '#')}88`;
+    }
     
     itemDiv.innerHTML = `
         <div class="stashItemSlot ${rarity}" style="margin: 0 auto;">
@@ -1946,16 +1957,16 @@ renderCollectionLog() {
         itemsDiv.className = 'dungeonCollectionItems';
         
         dungeonInfo.items.forEach(itemId => {
-            const itemData = itemData.items[itemId];
-            if (!itemData) return;
-            
-            const rowDiv = document.createElement('div');
-            rowDiv.className = 'itemCollectionRow';
-            
-            const nameDiv = document.createElement('div');
-            nameDiv.className = 'itemCollectionName';
-            nameDiv.textContent = itemData.name;
-            rowDiv.appendChild(nameDiv);
+    const itemTemplate = itemData.items[itemId];  // Changed variable name
+    if (!itemTemplate) return;
+    
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'itemCollectionRow';
+    
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'itemCollectionName';
+    nameDiv.textContent = itemTemplate.name;  // Updated reference
+    rowDiv.appendChild(nameDiv);
             
             const gridDiv = document.createElement('div');
             gridDiv.className = 'itemQualityGrid';
