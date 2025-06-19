@@ -3045,7 +3045,7 @@ body {
 
 .rewardItemsGrid {
     display: grid;
-    grid-template-columns: repeat(3, 60px);
+    grid-template-columns: repeat(4, 64px);
     gap: 10px;
     justify-content: center;
 }
