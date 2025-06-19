@@ -679,27 +679,27 @@ if (starData.html) {
     // Show item image if available
     tooltip += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${this.id}.png" alt="${this.name}" onerror="this.style.display='none'"></div>`;
     
-    // Show stats with max values if alt is held
-    if (this.quality1 > 0) {
-        const value = Math.floor(this.value1 * (this.quality1 / 5));
-        const maxValue = showMax ? ` (${this.value1})` : '';
-        tooltip += this.getStatLine(this.roll1, value, maxValue);
-    }
-    if (this.quality2 > 0) {
-        const value = Math.floor(this.value2 * (this.quality2 / 5));
-        const maxValue = showMax ? ` (${this.value2})` : '';
-        tooltip += this.getStatLine(this.roll2, value, maxValue);
-    }
-    if (this.quality3 > 0) {
-        const value = Math.floor(this.value3 * (this.quality3 / 5));
-        const maxValue = showMax ? ` (${this.value3})` : '';
-        tooltip += this.getStatLine(this.roll3, value, maxValue);
-    }
-    if (this.quality4 > 0) {
-        const value = Math.floor(this.value4 * (this.quality4 / 5));
-        const maxValue = showMax ? ` (${this.value4})` : '';
-        tooltip += this.getStatLine(this.roll4, value, maxValue);
-    }
+// Show stats with max values if alt is held
+if (this.quality1 > 0) {
+    const value = Math.floor(this.value1 * (this.quality1 / 5));
+    const maxValue = showMax ? ` (${this.value1})` : '';
+    tooltip += this.getStatLine(this.roll1, value, maxValue, rarity);
+}
+if (this.quality2 > 0) {
+    const value = Math.floor(this.value2 * (this.quality2 / 5));
+    const maxValue = showMax ? ` (${this.value2})` : '';
+    tooltip += this.getStatLine(this.roll2, value, maxValue, rarity);
+}
+if (this.quality3 > 0) {
+    const value = Math.floor(this.value3 * (this.quality3 / 5));
+    const maxValue = showMax ? ` (${this.value3})` : '';
+    tooltip += this.getStatLine(this.roll3, value, maxValue, rarity);
+}
+if (this.quality4 > 0) {
+    const value = Math.floor(this.value4 * (this.quality4 / 5));
+    const maxValue = showMax ? ` (${this.value4})` : '';
+    tooltip += this.getStatLine(this.roll4, value, maxValue, rarity);
+}
 if (this.quality5 > 0) {
     tooltip += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);">+5 All Stats</div>`;
 }
