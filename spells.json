@@ -24,6 +24,19 @@
     "target": "self",
     "logicKey": "furyLogic"
   },
+  "throw_rock": {
+    "id": "throw_rock",
+    "name": "Throw Rock",
+    "description": "Throw a rock dealing 2x INT damage and stunning for 1 turn",
+    "cooldown": 3,
+    "effects": ["damage", "physical", "debuff", "stun"],
+    "scaling": {
+      "int": 2.0
+    },
+    "stunDuration": 1,
+    "target": "enemy",
+    "logicKey": "throwRockLogic"
+  },
   "natures_touch": {
     "id": "natures_touch",
     "name": "Nature's Touch",
