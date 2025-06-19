@@ -1338,10 +1338,6 @@ get mainstat() {
             }
 
 filterStashSlots(source) {
-    // Hide any visible tooltips first
-    this.hideItemTooltip();
-    this.hideAbilityTooltip();
-    
     if (source === 'gear') {
         // Store the current filter value
         const select = document.getElementById('gearStashFilterSelect');
@@ -1362,7 +1358,6 @@ filterStashSlots(source) {
         }
     }
 }
-
 		
 toggleAutoBattleInBattle(enabled) {
     // Update auto battle state
@@ -1885,6 +1880,9 @@ showIndividualStash(family) {
             inventory.appendChild(itemDiv);
         });
     }
+ // Hide any lingering tooltips after DOM update
+    this.hideItemTooltip();
+    this.hideAbilityTooltip();
 }
 		
 showItemOptions(item, itemIndex, family, isEquipped = false, slot = null) {
@@ -3108,6 +3106,10 @@ showGearTab(hero, content) {
             </div>
         </div>
     `;
+
+	 // Hide any lingering tooltips after DOM update
+    this.hideItemTooltip();
+    this.hideAbilityTooltip();
 }
 		
 unequipGear(slot) {
