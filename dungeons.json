@@ -109,7 +109,7 @@
       "rewards": {
         "gold": 350,
         "exp": 500,
-        "items": ["rusty_amulet", "rusty_sword", "rusty_shield"]
+        "items": ["rusty_trinket", "rusty_sword", "rusty_shield"]
       }
     },
     "icy_highland": {
