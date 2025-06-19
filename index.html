@@ -184,12 +184,16 @@
 
         <!-- Stash Screen -->
         <div id="stashScreen">
-            <h1 class="stashTitle">Stash</h1>
-            <div class="stashGrid" id="stashList">
-                <!-- Stash grid will be dynamically generated -->
-            </div>
-            <button class="backButton" onclick="game.showMainMenu()">Back</button>
-        </div>
+    <h1 class="stashTitle">Stash</h1>
+    <div class="stashGrid" id="stashList">
+        <!-- Stash grid will be dynamically generated -->
+    </div>
+    <button class="collectionLogButton" onclick="game.showCollectionLog()">
+        <span style="font-size: 24px; margin-right: 10px;">📖</span>
+        Collection Log
+    </button>
+    <button class="backButton" onclick="game.showMainMenu()">Back</button>
+</div>
 
         <!-- Party Select Screen -->
         <div id="partySelectScreen">
@@ -347,6 +351,37 @@
             <button class="backButton" onclick="game.showStash()">Back</button>
         </div>
     </div>
+
+<!-- Collection Log Screen -->
+<div id="collectionLogScreen" class="collectionLogScreen">
+    <div class="collectionHeader">
+        <h1>Collection Log</h1>
+        <div class="collectionProgress">
+            <div class="collectionProgressText" id="collectionProgressText">0/0 collected</div>
+            <div class="collectionProgressBar">
+                <div class="collectionProgressFill" id="collectionProgressFill"></div>
+                <div class="collectionProgressPercent" id="collectionProgressPercent">0%</div>
+            </div>
+        </div>
+    </div>
+    <div class="collectionContent" id="collectionContent">
+        <!-- Dungeon collections will be generated here -->
+    </div>
+    <button class="backButton" onclick="game.showStash()">Back</button>
+</div>
+
+<!-- Collection Complete Popup -->
+<div id="collectionCompletePopup" class="collectionCompletePopup">
+    <div class="collectionCompleteContent">
+        <div class="collectionCompleteTitle">Collection log slot completed!</div>
+        <div class="collectionCompleteItem" id="collectionCompleteItem">
+            <!-- Item will be shown here -->
+        </div>
+        <div class="collectionCompleteInfo" id="collectionCompleteInfo">
+            <!-- Hero info and timestamp -->
+        </div>
+    </div>
+</div>
 
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="confirmModal">
@@ -1291,6 +1326,8 @@ get mainstat() {
                 this.autoReplayTimer = null; // Timer for auto replay
 		this.currentGearFilter = 'trinket'; // Add this line after other properties
 		this.currentStashFilter = null; // Add this line to track stash page filter
+		this.collectionLog = this.loadCollectionLog();
+
 		    
                 // Initialize stashes for all class families including villager
                 this.stashes = {
@@ -1720,6 +1757,288 @@ enterDungeon(tierName, dungeonIndex) {
                 document.getElementById('stashScreen').style.display = 'block';
                 this.renderStashList();
             }
+
+showCollectionLog() {
+    this.hideAllScreens();
+    this.closeHeroInfo();
+    this.currentScreen = 'collectionLogScreen';
+    document.getElementById('collectionLogScreen').style.display = 'block';
+    this.renderCollectionLog();
+}
+
+loadCollectionLog() {
+    // In a real implementation, this would load from localStorage
+    // For now, return empty collection
+    return {};
+}
+
+saveCollectionLog() {
+    // In a real implementation, this would save to localStorage
+    // localStorage.setItem('teveCollectionLog', JSON.stringify(this.collectionLog));
+}
+
+initializeDungeonCollection(dungeonId) {
+    if (!this.collectionLog[dungeonId]) {
+        this.collectionLog[dungeonId] = {};
+    }
+}
+
+checkItemForCollection(item, heroName, heroClass) {
+    // Only process items from dungeon rewards
+    if (!this.currentDungeon) return;
+    
+    const dungeonId = this.currentDungeon.id;
+    this.initializeDungeonCollection(dungeonId);
+    
+    // Check if this item matches collection criteria
+    const qualityCount = [item.quality1, item.quality2, item.quality3, item.quality4]
+        .filter(q => q === 5).length;
+    
+    if (qualityCount > 0) {
+        const collectionKey = `${item.id}_${qualityCount}`;
+        
+        if (!this.collectionLog[dungeonId][collectionKey]) {
+            // New collection!
+            this.collectionLog[dungeonId][collectionKey] = {
+                itemId: item.id,
+                qualityLevel: qualityCount,
+                heroName: heroName,
+                heroClass: heroClass,
+                timestamp: new Date().toISOString()
+            };
+            
+            this.saveCollectionLog();
+            this.showCollectionCompletePopup(item, qualityCount, heroName, heroClass);
+        }
+    }
+}
+
+showCollectionCompletePopup(item, qualityLevel, heroName, heroClass) {
+    const popup = document.getElementById('collectionCompletePopup');
+    const itemDiv = document.getElementById('collectionCompleteItem');
+    const infoDiv = document.getElementById('collectionCompleteInfo');
+    
+    // Create perfect display item
+    const displayItem = new Item(item.id);
+    for (let i = 1; i <= qualityLevel; i++) {
+        displayItem[`quality${i}`] = 5;
+    }
+    
+    const starData = displayItem.getStars();
+    const rarity = displayItem.getRarity();
+    
+    itemDiv.innerHTML = `
+        <div class="stashItemSlot ${rarity}" style="margin: 0 auto;">
+            <div class="itemContainer">
+                <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
+                     alt="${displayItem.name}"
+                     onerror="this.style.display='none'">
+                ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
+                <div class="itemLevel">${displayItem.level}</div>
+                <div class="itemQuality">100%</div>
+            </div>
+        </div>
+    `;
+    
+    const timestamp = new Date().toLocaleString();
+    infoDiv.innerHTML = `
+        Obtained by ${heroName}, the ${heroClass}.<br>
+        ${timestamp}
+    `;
+    
+    popup.style.display = 'block';
+    
+    // Add click handler to close
+    const closeHandler = () => {
+        popup.style.display = 'none';
+        popup.removeEventListener('click', closeHandler);
+    };
+    
+    setTimeout(() => {
+        popup.addEventListener('click', closeHandler);
+    }, 100);
+}
+
+renderCollectionLog() {
+    const content = document.getElementById('collectionContent');
+    content.innerHTML = '';
+    
+    // Calculate total progress
+    let totalSlots = 0;
+    let collectedSlots = 0;
+    
+    // Get all dungeons that have items
+    const dungeonsWithItems = [];
+    Object.keys(dungeonData.dungeons).forEach(dungeonId => {
+        const dungeon = dungeonData.dungeons[dungeonId];
+        if (dungeon.rewards && dungeon.rewards.items && dungeon.rewards.items.length > 0) {
+            dungeonsWithItems.push({
+                id: dungeonId,
+                name: dungeon.name,
+                items: dungeon.rewards.items
+            });
+            // Each item has 4 quality levels to collect
+            totalSlots += dungeon.rewards.items.length * 4;
+        }
+    });
+    
+    // Count collected items
+    Object.values(this.collectionLog).forEach(dungeonCollection => {
+        collectedSlots += Object.keys(dungeonCollection).length;
+    });
+    
+    // Update progress display
+    document.getElementById('collectionProgressText').textContent = 
+        `${collectedSlots}/${totalSlots} collected`;
+    const progressPercent = totalSlots > 0 ? (collectedSlots / totalSlots * 100) : 0;
+    document.getElementById('collectionProgressFill').style.width = progressPercent + '%';
+    document.getElementById('collectionProgressPercent').textContent = 
+        Math.floor(progressPercent) + '%';
+    
+    // Render each dungeon
+    dungeonsWithItems.forEach(dungeonInfo => {
+        const dungeonDiv = document.createElement('div');
+        dungeonDiv.className = 'dungeonCollection';
+        
+        // Count collection for this dungeon
+        const dungeonCollection = this.collectionLog[dungeonInfo.id] || {};
+        const dungeonTotal = dungeonInfo.items.length * 4;
+        const dungeonCollected = Object.keys(dungeonCollection).length;
+        const isCompleted = dungeonCollected === dungeonTotal;
+        
+        if (isCompleted) {
+            dungeonDiv.classList.add('completed');
+        }
+        
+        // Header
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'dungeonCollectionHeader';
+        headerDiv.innerHTML = `
+            <span>${isCompleted ? '[✓]' : `[${dungeonCollected}/${dungeonTotal}]`} ${dungeonInfo.name}</span>
+            <span>${isCompleted ? '✓' : '▼'}</span>
+        `;
+        
+        headerDiv.onclick = () => {
+            dungeonDiv.classList.toggle('expanded');
+        };
+        
+        dungeonDiv.appendChild(headerDiv);
+        
+        // Items
+        const itemsDiv = document.createElement('div');
+        itemsDiv.className = 'dungeonCollectionItems';
+        
+        dungeonInfo.items.forEach(itemId => {
+            const itemData = itemData.items[itemId];
+            if (!itemData) return;
+            
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'itemCollectionRow';
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'itemCollectionName';
+            nameDiv.textContent = itemData.name;
+            rowDiv.appendChild(nameDiv);
+            
+            const gridDiv = document.createElement('div');
+            gridDiv.className = 'itemQualityGrid';
+            
+            // Create 4 quality slots
+            for (let quality = 1; quality <= 4; quality++) {
+                const slotDiv = document.createElement('div');
+                slotDiv.className = 'collectionSlot';
+                
+                const collectionKey = `${itemId}_${quality}`;
+                const collectionData = dungeonCollection[collectionKey];
+                
+                if (collectionData) {
+                    slotDiv.classList.add('collected');
+                    
+                    // Determine rarity based on quality level
+                    const rarity = quality === 4 ? 'red' : 
+                                  quality === 3 ? 'purple' : 
+                                  quality === 2 ? 'blue' : 'green';
+                    slotDiv.classList.add(rarity);
+                    
+                    // Add checkmark
+                    const checkmark = document.createElement('div');
+                    checkmark.className = 'collectionCheckmark';
+                    checkmark.innerHTML = '✓';
+                    slotDiv.appendChild(checkmark);
+                    
+                    // Add tooltip on hover
+                    slotDiv.onmouseover = (e) => {
+                        this.showCollectionTooltip(e, itemId, quality, collectionData);
+                    };
+                    slotDiv.onmouseout = () => {
+                        this.hideItemTooltip();
+                    };
+                }
+                
+                gridDiv.appendChild(slotDiv);
+            }
+            
+            rowDiv.appendChild(gridDiv);
+            itemsDiv.appendChild(rowDiv);
+        });
+        
+        dungeonDiv.appendChild(itemsDiv);
+        content.appendChild(dungeonDiv);
+    });
+}
+
+showCollectionTooltip(event, itemId, qualityLevel, collectionData) {
+    // Create perfect item for display
+    const displayItem = new Item(itemId);
+    for (let i = 1; i <= qualityLevel; i++) {
+        displayItem[`quality${i}`] = 5;
+    }
+    
+    // Get base tooltip
+    let tooltipHTML = displayItem.getTooltip(false);
+    
+    // Add collection info
+    const timestamp = new Date(collectionData.timestamp).toLocaleString();
+    tooltipHTML = tooltipHTML.replace('</div>', 
+        `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a6a8a; color: #00ff88;">
+            Obtained by ${collectionData.heroName}, the ${collectionData.heroClass}<br>
+            ${timestamp}
+        </div></div>`);
+    
+    // Show tooltip
+    let tooltip = document.getElementById('itemTooltipDiv');
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'itemTooltipDiv';
+        tooltip.style.cssText = `
+            position: fixed;
+            background: rgba(10, 15, 26, 0.95);
+            border: 2px solid #2a6a8a;
+            padding: 16px;
+            border-radius: 4px;
+            z-index: 10000;
+            pointer-events: none;
+        `;
+        document.body.appendChild(tooltip);
+    }
+    
+    tooltip.innerHTML = tooltipHTML;
+    tooltip.style.display = 'block';
+    
+    // Position tooltip
+    const rect = event.target.getBoundingClientRect();
+    tooltip.style.left = rect.right + 10 + 'px';
+    tooltip.style.top = rect.top + 'px';
+    
+    // Adjust if tooltip goes off screen
+    const tooltipRect = tooltip.getBoundingClientRect();
+    if (tooltipRect.right > window.innerWidth) {
+        tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
+    }
+    if (tooltipRect.bottom > window.innerHeight) {
+        tooltip.style.top = (window.innerHeight - tooltipRect.height - 10) + 'px';
+    }
+}
 
             renderStashList() {
                 const stashList = document.getElementById('stashList');
@@ -2523,6 +2842,7 @@ if (!this.autoReplay) {
                 document.getElementById('stashScreen').style.display = 'none';
                 document.getElementById('partySelectScreen').style.display = 'none';
                 document.getElementById('individualStashScreen').style.display = 'none';
+                document.getElementById('collectionLogScreen').style.display = 'none';
             }
 
             updateHeroList() {
@@ -4365,6 +4685,11 @@ applyBattleResults() {
             // Add items to stash
             if (result.item) {
                 this.stashes[familyName].items.push(result.item);
+                
+                // Check for collection
+                if (result.survived) {
+                    this.checkItemForCollection(result.item, result.hero.name, result.hero.displayClassName);
+                }
             }
         }
     });
@@ -4434,6 +4759,15 @@ window.addEventListener('DOMContentLoaded', async () => {
                         e.preventDefault();
                         return;
                     }
+
+// Close collection complete popup if open
+const collectionPopup = document.getElementById('collectionCompletePopup');
+if (collectionPopup && collectionPopup.style.display === 'block') {
+    collectionPopup.style.display = 'none';
+    e.preventDefault();
+    return;
+}
+
                     // Clear targeting in battle if active
                     if (game.currentBattle && game.currentBattle.targetingState) {
                         game.currentBattle.clearTargeting();
@@ -4461,6 +4795,10 @@ window.addEventListener('DOMContentLoaded', async () => {
                             break;
                         case 'heroesScreen':
                             game.showMainMenu();
+                            e.preventDefault();
+                            break;
+                        case 'collectionLogScreen':
+                            game.showStash();
                             e.preventDefault();
                             break;
                     }
