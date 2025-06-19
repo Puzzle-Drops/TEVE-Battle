@@ -3115,3 +3115,37 @@ body {
     border-color: #ffd700;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
 }
+
+/* Stash slot filter dropdown */
+.stashSlotFilter {
+    margin-left: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stashSlotFilter label {
+    color: #6a9aaa;
+    font-size: 16px;
+}
+
+.stashSlotFilter select {
+    background: rgba(10, 25, 41, 0.8);
+    border: 1px solid #2a6a8a;
+    color: #b0e0f0;
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.stashSlotFilter select:hover {
+    border-color: #4dd0e1;
+    box-shadow: 0 0 10px rgba(77, 208, 225, 0.3);
+}
+
+.stashSlotFilter select:focus {
+    outline: none;
+    border-color: #4dd0e1;
+    box-shadow: 0 0 15px rgba(77, 208, 225, 0.5);
+}
