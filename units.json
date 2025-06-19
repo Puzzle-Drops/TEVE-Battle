@@ -18,7 +18,7 @@
       "name": "Villager",
       "tier": 0,
       "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
-      "spells": ["punch", "fury"],
+      "spells": ["punch", "throw_rock"],
       "promotesTo": ["acolyte_female", "archer_female", "druid_female", "initiate_female", "swordsman_female", "templar_female", "thief_female", "witch_hunter_female"]
     },
     "acolyte_male": {
