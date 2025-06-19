@@ -726,7 +726,7 @@ if (this.quality5 > 0) {
 
 getRefineCost() {
     const qualityPercent = this.getQualityPercent() / 100;
-    return Math.floor((this.level + (this.level * qualityPercent)) * 500);
+    return Math.floor((this.level + (this.level * qualityPercent)) * 500)*10;
 }
 
 refine() {
