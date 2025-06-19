@@ -933,6 +933,15 @@ getStatLine(rollType, value, maxValue, rarity = 'green') {
                 return baseHp + this.gearStats.hp;
             }
 
+		get attack() {
+    const mainstatValue = this.totalStats[this.classData.mainstat || 'str'];
+    return mainstatValue + (this.gearStats.attack || 0);
+}
+
+get mainstat() {
+    return this.classData.mainstat || 'str';
+}
+		
             get hpRegen() {
                 const baseRegen = this.totalStats.str * 0.05;
                 return baseRegen + this.gearStats.hpRegen;
@@ -1182,7 +1191,18 @@ equipItem(item, slot) {
             get hp() {
                 return this.baseStats.str * 25;
             }
-			
+
+get attack() {
+    const enemyData = unitData?.enemies[this.enemyId];
+    const mainstat = enemyData?.mainstat || 'str';
+    return this.baseStats[mainstat];
+}
+
+get mainstat() {
+    const enemyData = unitData?.enemies[this.enemyId];
+    return enemyData?.mainstat || 'str';
+}
+		
 			get armor() {
 				const stats = this.baseStats;
 				return (0.25 * stats.str) + (0.05 * stats.agi);
