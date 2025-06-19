@@ -1790,38 +1790,55 @@ checkItemForCollection(item, heroName, heroClass) {
     const dungeonId = this.currentDungeon.id;
     this.initializeDungeonCollection(dungeonId);
     
-    // Check if this item matches collection criteria
-    const qualityCount = [item.quality1, item.quality2, item.quality3, item.quality4]
-        .filter(q => q === 5).length;
+    // Count total rolls on the item
+    let totalRolls = 0;
+    if (item.quality1 > 0) totalRolls++;
+    if (item.quality2 > 0) totalRolls++;
+    if (item.quality3 > 0) totalRolls++;
+    if (item.quality4 > 0) totalRolls++;
     
-    if (qualityCount > 0) {
-        const collectionKey = `${item.id}_${qualityCount}`;
+    // Check if ALL rolls are perfect (5/5)
+    let allPerfect = true;
+    if (totalRolls >= 1 && item.quality1 !== 5) allPerfect = false;
+    if (totalRolls >= 2 && item.quality2 !== 5) allPerfect = false;
+    if (totalRolls >= 3 && item.quality3 !== 5) allPerfect = false;
+    if (totalRolls >= 4 && item.quality4 !== 5) allPerfect = false;
+    
+    // Only count if ALL rolls are perfect
+    if (totalRolls > 0 && allPerfect) {
+        const collectionKey = `${item.id}_${totalRolls}`;
         
         if (!this.collectionLog[dungeonId][collectionKey]) {
             // New collection!
             this.collectionLog[dungeonId][collectionKey] = {
                 itemId: item.id,
-                qualityLevel: qualityCount,
+                qualityLevel: totalRolls,
                 heroName: heroName,
                 heroClass: heroClass,
                 timestamp: new Date().toISOString()
             };
             
             this.saveCollectionLog();
-            this.showCollectionCompletePopup(item, qualityCount, heroName, heroClass);
+            this.showCollectionCompletePopup(item, totalRolls, heroName, heroClass);
         }
     }
 }
-
+		
 showCollectionCompletePopup(item, qualityLevel, heroName, heroClass) {
     const popup = document.getElementById('collectionCompletePopup');
     const itemDiv = document.getElementById('collectionCompleteItem');
     const infoDiv = document.getElementById('collectionCompleteInfo');
     
-    // Create perfect display item
+    // Create item with exact number of perfect rolls for display
     const displayItem = new Item(item.id);
+    
+    // Set only the exact number of rolls to perfect
     for (let i = 1; i <= qualityLevel; i++) {
         displayItem[`quality${i}`] = 5;
+    }
+    // Make sure higher rolls are 0
+    for (let i = qualityLevel + 1; i <= 4; i++) {
+        displayItem[`quality${i}`] = 0;
     }
     
     const starData = displayItem.getStars();
@@ -1988,12 +2005,18 @@ renderCollectionLog() {
 }
 
 showCollectionTooltip(event, itemId, qualityLevel, collectionData) {
-    // Create perfect item for display
+    // Create item with exact number of rolls for display
     const displayItem = new Item(itemId);
+    
+    // Set only the exact number of rolls to perfect
     for (let i = 1; i <= qualityLevel; i++) {
         displayItem[`quality${i}`] = 5;
     }
-    
+    // Make sure higher rolls are 0
+    for (let i = qualityLevel + 1; i <= 4; i++) {
+        displayItem[`quality${i}`] = 0;
+    }
+
     // Get base tooltip
     let tooltipHTML = displayItem.getTooltip(false);
     
