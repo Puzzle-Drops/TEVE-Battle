@@ -668,10 +668,10 @@ getTooltip(showMax = false) {
     // Quality
     tooltip += `<div class="itemQualityText">Quality: ${this.getQualityPercent()}%</div>`;
     
-    // Stars if they exist
-    if (starData.html) {
-        tooltip += `<div class="itemStarsInline ${starData.colorClass}">${starData.html}</div>`;
-    }
+// Stars if they exist
+if (starData.html) {
+    tooltip += `<div class="itemStarsInline ${rarity}">${starData.html}</div>`;
+}
     
     // Always show divider line
     tooltip += `<div class="itemDivider"></div>`;
@@ -679,27 +679,27 @@ getTooltip(showMax = false) {
     // Show item image if available
     tooltip += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${this.id}.png" alt="${this.name}" onerror="this.style.display='none'"></div>`;
     
-    // Show stats with max values if alt is held
-    if (this.quality1 > 0) {
-        const value = Math.floor(this.value1 * (this.quality1 / 5));
-        const maxValue = showMax ? ` (${this.value1})` : '';
-        tooltip += this.getStatLine(this.roll1, value, maxValue);
-    }
-    if (this.quality2 > 0) {
-        const value = Math.floor(this.value2 * (this.quality2 / 5));
-        const maxValue = showMax ? ` (${this.value2})` : '';
-        tooltip += this.getStatLine(this.roll2, value, maxValue);
-    }
-    if (this.quality3 > 0) {
-        const value = Math.floor(this.value3 * (this.quality3 / 5));
-        const maxValue = showMax ? ` (${this.value3})` : '';
-        tooltip += this.getStatLine(this.roll3, value, maxValue);
-    }
-    if (this.quality4 > 0) {
-        const value = Math.floor(this.value4 * (this.quality4 / 5));
-        const maxValue = showMax ? ` (${this.value4})` : '';
-        tooltip += this.getStatLine(this.roll4, value, maxValue);
-    }
+// Show stats with max values if alt is held
+if (this.quality1 > 0) {
+    const value = Math.floor(this.value1 * (this.quality1 / 5));
+    const maxValue = showMax ? ` (${this.value1})` : '';
+    tooltip += this.getStatLine(this.roll1, value, maxValue, rarity);
+}
+if (this.quality2 > 0) {
+    const value = Math.floor(this.value2 * (this.quality2 / 5));
+    const maxValue = showMax ? ` (${this.value2})` : '';
+    tooltip += this.getStatLine(this.roll2, value, maxValue, rarity);
+}
+if (this.quality3 > 0) {
+    const value = Math.floor(this.value3 * (this.quality3 / 5));
+    const maxValue = showMax ? ` (${this.value3})` : '';
+    tooltip += this.getStatLine(this.roll3, value, maxValue, rarity);
+}
+if (this.quality4 > 0) {
+    const value = Math.floor(this.value4 * (this.quality4 / 5));
+    const maxValue = showMax ? ` (${this.value4})` : '';
+    tooltip += this.getStatLine(this.roll4, value, maxValue, rarity);
+}
 if (this.quality5 > 0) {
     tooltip += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);">+5 All Stats</div>`;
 }
@@ -789,29 +789,28 @@ refine() {
     return true;
 }
 	
-    getStatLine(rollType, value, maxValue) {
-        switch(rollType) {
-            case 'str':
-                return `<div class="itemStat">+${value}${maxValue} STR</div>`;
-            case 'agi':
-                return `<div class="itemStat">+${value}${maxValue} AGI</div>`;
-            case 'int':
-                return `<div class="itemStat">+${value}${maxValue} INT</div>`;
-            case 'allstats':
-                return `<div class="itemStat">+${value}${maxValue} All Stats</div>`;
-            case 'hp':
-                return `<div class="itemStat">+${value * 10}${maxValue ? ` (${maxValue * 10})` : ''} HP</div>`;
-            case 'armor':
-                return `<div class="itemStat">+${value}${maxValue} Armor</div>`;
-            case 'resist':
-                return `<div class="itemStat">+${value}${maxValue} Resist</div>`;
-            case 'hpRegen':
-                return `<div class="itemStat">+${(value * 0.1).toFixed(1)}${maxValue ? ` (${(maxValue * 0.1).toFixed(1)})` : ''} HP Regen</div>`;
-            case 'attackSpeed':
-                return `<div class="itemStat">+${value}%${maxValue ? ` (${maxValue}%)` : ''} Attack Speed</div>`;
-            default:
-                return '';
-        }
+getStatLine(rollType, value, maxValue, rarity = 'green') {
+    switch(rollType) {
+        case 'str':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} STR</div>`;
+        case 'agi':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} AGI</div>`;
+        case 'int':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} INT</div>`;
+        case 'allstats':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} All Stats</div>`;
+        case 'hp':
+            return `<div class="itemStat ${rarity}">+${value * 10}${maxValue ? ` (${maxValue * 10})` : ''} HP</div>`;
+        case 'armor':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} Armor</div>`;
+        case 'resist':
+            return `<div class="itemStat ${rarity}">+${value}${maxValue} Resist</div>`;
+        case 'hpRegen':
+            return `<div class="itemStat ${rarity}">+${(value * 0.1).toFixed(1)}${maxValue ? ` (${(maxValue * 0.1).toFixed(1)})` : ''} HP Regen</div>`;
+        case 'attackSpeed':
+            return `<div class="itemStat ${rarity}">+${value}%${maxValue ? ` (${maxValue}%)` : ''} Attack Speed</div>`;
+        default:
+            return '';
     }
 }
 
