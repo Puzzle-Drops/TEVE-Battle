@@ -247,6 +247,29 @@
             </div>
         </div>
     </div>
+    
+    <div class="vsText">VS</div>
+    
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <div class="rewardsLabel">
+            <span class="rewardsLabelText">Rewards</span>
+        </div>
+        <div class="rewardsContent" id="rewardsContent">
+            <div class="rewardStats">
+                <div class="rewardStat">
+                    <span class="goldIcon">💰</span>
+                    <span id="dungeonGoldReward">0</span>
+                </div>
+                <div class="rewardStat">
+                    <span class="expIcon">✨</span>
+                    <span id="dungeonExpReward">0 EXP</span>
+                </div>
+            </div>
+            <div class="rewardItemsGrid" id="rewardItemsGrid">
+                <!-- Items will be dynamically added here -->
+            </div>
+        </div>
+    </div>
 </div>
                 
                 <div class="heroSelectArea">
@@ -1598,6 +1621,9 @@ enterDungeon(tierName, dungeonIndex) {
     
     // Get dungeon ID from the dungeon object
     const dungeonId = dungeon.id || dungeon.name.toLowerCase().replace(/ /g, '_').replace('?', '');
+
+// Store dungeon data for rewards display
+    this.currentDungeonData = dungeonData.dungeons[dungeonId];
 	
     // Load waves from dungeon data
     if (dungeonData && dungeonData.dungeons[dungeonId]) {
@@ -3211,6 +3237,10 @@ equipFromStash(itemIndex, slot) {
                 
                 // Update enemy formation
                 this.updateEnemyFormation();
+
+		    // Update rewards display
+        this.updateRewardsDisplay();
+		    
             }
 
             updateEnemyFormation() {
@@ -3274,6 +3304,63 @@ slot.addEventListener('contextmenu', (e) => {
                 });
             }
 
+updateRewardsDisplay() {
+        if (!this.currentDungeonData) return;
+        
+        const rewards = this.currentDungeonData.rewards || { gold: 0, exp: 0, items: [] };
+        
+        // Update gold and exp display
+        document.getElementById('dungeonGoldReward').textContent = rewards.gold.toLocaleString();
+        document.getElementById('dungeonExpReward').textContent = `${rewards.exp.toLocaleString()} EXP`;
+        
+        // Update items grid
+        const itemsGrid = document.getElementById('rewardItemsGrid');
+        itemsGrid.innerHTML = '';
+        
+        if (rewards.items && rewards.items.length > 0) {
+            rewards.items.forEach(itemId => {
+                // Create a perfect 4-roll item for display
+                const displayItem = new Item(itemId);
+                
+                // Set all qualities to 5/5 if the item has the rolls
+                if (displayItem.roll1) displayItem.quality1 = 5;
+                if (displayItem.roll2) displayItem.quality2 = 5;
+                if (displayItem.roll3) displayItem.quality3 = 5;
+                if (displayItem.roll4) displayItem.quality4 = 5;
+                
+                const starData = displayItem.getStars();
+                const rarity = displayItem.getRarity();
+                
+                const itemSlot = document.createElement('div');
+                itemSlot.className = `rewardItemSlot ${rarity}`;
+                itemSlot.innerHTML = `
+                    <div class="itemContainer">
+                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${itemId}.png" 
+                             alt="${displayItem.name}"
+                             style="width: 100%; height: 100%;"
+                             onerror="this.style.display='none'">
+                        ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
+                        <div class="itemLevel">${displayItem.level}</div>
+                    </div>
+                `;
+                
+                // Add hover tooltip
+                itemSlot.onmouseover = (e) => {
+                    // Create a temporary reference for the tooltip
+                    this.tempRewardItem = displayItem;
+                    this.showItemTooltip(e, displayItem);
+                };
+                itemSlot.onmouseout = () => {
+                    this.hideItemTooltip();
+                    delete this.tempRewardItem;
+                };
+                
+                itemsGrid.appendChild(itemSlot);
+            });
+        }
+    }
+
+		
             renderHeroSelectList() {
                 const container = document.getElementById('heroSelectList');
                 container.innerHTML = '';
