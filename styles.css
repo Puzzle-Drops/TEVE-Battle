@@ -1682,7 +1682,7 @@ body {
 
 /* Optional: Make battle preview area slightly transparent */
 .battlePreview {
-    background: rgba(10, 15, 26, 0.85); /* Added transparency */
+    background: rgba(10, 15, 26, 0.5); /* Added transparency */
 }
 
 .dungeonTitle {
@@ -1695,10 +1695,11 @@ body {
 .battlePreview {
     flex: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     gap: 60px;
     padding: 40px;
+    padding-top: 80px;
 }
 
 .partyFormation {
@@ -3014,6 +3015,7 @@ body {
     border-radius: 4px;
     box-shadow: 0 0 15px rgba(42, 106, 138, 0.3);
     min-width: 180px;
+    margin-top: 0;
 }
 
 .rewardsLabelText {
