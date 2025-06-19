@@ -471,30 +471,40 @@ class Item {
         console.log(`Item created: ${this.name} (${this.getRarity()}) - Quality: ${this.getQualityPercent()}%`);
     }
     
-    rollItem() {
+rollItem() {
     // First roll is guaranteed, rolls 1-5 quality
     this.quality1 = Math.floor(Math.random() * 5) + 1;
     console.log(`  Roll 1 (${this.roll1}): ${this.quality1}/5`);
     
-    // Second roll has 40% chance
-    if (Math.random() < 0.4) {
+    // Second roll has 40% chance, but only if roll2 stat exists
+    if (this.roll2 && Math.random() < 0.4) {
         this.quality2 = Math.floor(Math.random() * 5) + 1;
         console.log(`  Roll 2 (${this.roll2}): ${this.quality2}/5`);
         
-        // Third roll has 35% chance (only if got second)
-        if (Math.random() < 0.35) {
+        // Third roll has 35% chance (only if got second and roll3 exists)
+        if (this.roll3 && Math.random() < 0.35) {
             this.quality3 = Math.floor(Math.random() * 5) + 1;
             console.log(`  Roll 3 (${this.roll3}): ${this.quality3}/5`);
             
-            // Fourth roll has 30% chance (only if got third)
-            if (Math.random() < 0.30) {
+            // Fourth roll has 30% chance (only if got third and roll4 exists)
+            if (this.roll4 && Math.random() < 0.30) {
                 this.quality4 = Math.floor(Math.random() * 5) + 1;
                 console.log(`  Roll 4 (${this.roll4}): ${this.quality4}/5`);
             }
         }
     }
 }
-    
+
+// Create an item with fixed quality values
+setFixedQuality(quality1 = 1, quality2 = 0, quality3 = 0, quality4 = 0, quality5 = 0) {
+    this.quality1 = quality1;
+    this.quality2 = quality2;
+    this.quality3 = quality3;
+    this.quality4 = quality4;
+    this.quality5 = quality5;
+    console.log(`Fixed quality item created: ${this.name} (${this.getRarity()}) - Quality: ${this.getQualityPercent()}%`);
+}
+	
     getRarity() {
 	if (this.quality5 > 0) return 'gold';
         if (this.quality4 > 0) return 'red';
@@ -1367,6 +1377,30 @@ init() {
     this.heroes[4].expToNext = this.heroes[4].calculateExpToNext();
     this.heroes[5].level = 50;
     this.heroes[5].expToNext = this.heroes[5].calculateExpToNext();
+
+    // Equip the first 3 villagers (not the tester) with starter gear
+    const villagerItems = ['villager_amulet', 'villager_sword', 'villager_shield', 
+                          'villager_helmet', 'villager_chestplate', 'villager_boots'];
+
+for (let i = 1; i <= 3; i++) {
+        const hero = this.heroes[i+5];
+        
+        // Create and equip each villager item
+        villagerItems.forEach(itemId => {
+            const item = new Item(itemId);
+            // Set quality to 1/5 for all stats
+            item.setFixedQuality(1);
+            // Mark as refined so it can't be improved
+            item.refined = true;
+            
+            // Equip the item to the appropriate slot
+            hero.equipItem(item, item.slot);
+        });
+        
+        console.log(`Equipped villager ${i+5} (${hero.name}) with starter gear`);
+    }
+
+
 	
 // Generate a perfect 4-roll minor trinket for testing
 const perfectTrinket = new Item('minor_trinket');
