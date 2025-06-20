@@ -120,13 +120,12 @@ testStunLogic: function(battle, caster, target) {
 },
 
 testTauntLogic: function(battle, caster, target) {
-    // Remove taunt from all other allies first
-    const allies = battle.getParty(caster);
-    allies.forEach(ally => {
-        ally.debuffs = ally.debuffs.filter(d => d.name !== 'Taunt');
+    // Apply taunt to the target, making them attack the caster
+    battle.applyDebuff(target, 'Taunt', 2, { 
+        tauntTarget: caster,
+        forcedTarget: caster.position,
+        forcedTargetIsEnemy: caster.isEnemy
     });
-    // Apply taunt to caster
-    battle.applyDebuff(caster, 'Taunt', 2, { taunt: true });
 },
     
     frostBreathLogic: function(battle, caster, targets) {
