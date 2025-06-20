@@ -719,13 +719,7 @@ this.allUnits.forEach(unit => {
 
     processTurn() {
     const unit = this.currentUnit;
-    
-    // Update buffs/debuffs at turn start
-    unit.updateBuffsDebuffs();
-    
-    // Apply DOT effects
-    this.applyDotEffects(unit);
-    
+        
     // Check if unit is stunned
     if (unit.debuffs.some(d => d.name === 'Stun' || d.stunned)) {
         this.log(`${unit.name} is stunned!`);
@@ -929,7 +923,10 @@ showSpellAnimation(caster, spellName, effects) {
 
 	endTurn() {
 		if (this.currentUnit) {
-			this.currentUnit.reduceCooldowns();
+
+
+
+			
 			// Apply HP regen after turn
 if (this.currentUnit.isAlive && !this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
     const regen = Math.floor(this.currentUnit.isEnemy ? 
@@ -943,6 +940,15 @@ if (this.currentUnit.isAlive && !this.currentUnit.debuffs.some(d => d.name === '
         }
     }
 }
+
+			this.currentUnit.updateBuffsDebuffs();
+			this.applyDotEffects(this.currentUnit);
+			this.currentUnit.reduceCooldowns();
+			
+
+
+
+			
 		}
 		this.currentUnit = null;
 		this.waitingForPlayer = false;
@@ -964,7 +970,7 @@ if (this.currentUnit.isAlive && !this.currentUnit.debuffs.some(d => d.name === '
 dealDamage(attacker, target, amount, damageType = 'physical') {
     if (!target.isAlive) return 0;
     
-    let damage = Math.floor(amount);
+    let damage = Math.round(amount); // Changed from Math.floor
     
     // Apply attacker's damage modifiers from buffs
     attacker.buffs.forEach(buff => {
@@ -1023,14 +1029,14 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
         }
     });
     
-    // Apply Attack Break LAST - this is the fix
+    // Apply Attack Break LAST
     attacker.debuffs.forEach(debuff => {
         if (debuff.name === 'Attack Break') {
             damage *= 0.5;
         }
     });
     
-    damage = Math.floor(damage);
+    damage = Math.round(damage); // Changed from Math.floor
     const previousHp = target.currentHp;
     target.currentHp = Math.max(0, target.currentHp - damage);
     
@@ -1046,11 +1052,15 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
 	
 
 triggerDeathAnimation(unit) {
+    // Only trigger if unit is actually alive (not already dead)
+    if (unit.currentHp > 0) return;
+    
     const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
     const element = document.getElementById(elementId);
     
     if (element) {
         const unitDiv = element.querySelector('.unit');
+        // Check if already dying to prevent retriggering
         if (unitDiv && !unitDiv.classList.contains('dying')) {
             unitDiv.classList.add('dying');
         }
@@ -1633,23 +1643,29 @@ showPlayerAbilities(unit) {
             game.hideAbilityTooltip();
         };
         
-        // Add click handler to ALL abilities (not just usable ones)
+// Add click handler to ALL abilities
 abilityDiv.onclick = () => {
     // Hide tooltip when clicked
     game.hideAbilityTooltip();
-    
-    // If this ability can't be used, just ignore the click
-    if (!unit.canUseAbility(actualIndex)) {
-        return;
-    }
     
     // If we're already targeting, clear it first
     if (this.targetingState) {
         this.clearTargeting();
     }
     
-    // Disable all other abilities
+    // Re-enable all abilities first
     const allAbilities = abilityPanel.querySelectorAll('.ability');
+    allAbilities.forEach(ab => {
+        ab.style.pointerEvents = '';
+        ab.style.opacity = '';
+    });
+    
+    // If this ability can't be used, just return after clearing
+    if (!unit.canUseAbility(actualIndex)) {
+        return;
+    }
+    
+    // Disable all other abilities
     allAbilities.forEach(ab => {
         if (ab !== abilityDiv) {
             ab.style.pointerEvents = 'none';
@@ -1955,35 +1971,38 @@ if (unit.isAlive) {
     element.addEventListener('contextmenu', rightClickHandler);
 }
 		    
-                // Update unit appearance with sprites
-
+// Update unit appearance with sprites
 if (unitDiv) {
     if (!unit.isAlive) {
-    // Don't immediately hide - let death animation play
-    if (!unitDiv.classList.contains('dying')) {
-        unitDiv.style.filter = 'grayscale(100%)';
+        // Don't immediately hide - let death animation play
+        if (!unitDiv.classList.contains('dying')) {
+            unitDiv.style.filter = 'grayscale(100%)';
+        }
+        if (levelIndicator) levelIndicator.style.display = 'none';
+        
+        // Hide health bar and action bar when dead
+        const healthBar = element.querySelector('.healthBar');
+        const actionBar = element.querySelector('.actionBar');
+        if (healthBar) {
+            healthBar.style.display = 'none';
+        }
+        if (actionBar) actionBar.style.display = 'none';
+    } else {
+        unitDiv.style.opacity = '';
+        unitDiv.style.filter = '';
+        // Don't remove dying class if unit is alive but has 0 hp (in death animation)
+        if (unit.currentHp > 0) {
+            unitDiv.classList.remove('dying');
+        }
+        if (levelIndicator) levelIndicator.style.display = '';
+        
+        // Show health bar and action bar when alive
+        const healthBar = element.querySelector('.healthBar');
+        const actionBar = element.querySelector('.actionBar');
+        if (healthBar) healthBar.style.display = '';
+        if (actionBar) actionBar.style.display = '';
     }
-    levelIndicator.style.display = 'none';
-    
-    // Hide health bar and action bar when dead
-    const healthBar = element.querySelector('.healthBar');
-    const actionBar = element.querySelector('.actionBar');
-    if (healthBar) {
-        healthBar.style.display = 'none';
-    }
-    if (actionBar) actionBar.style.display = 'none';
-} else {
-    unitDiv.style.opacity = '';
-    unitDiv.style.filter = '';
-    unitDiv.classList.remove('dying');
-    levelIndicator.style.display = '';
-    
-    // Show health bar and action bar when alive
-    const healthBar = element.querySelector('.healthBar');
-    const actionBar = element.querySelector('.actionBar');
-    if (healthBar) healthBar.style.display = '';
-    if (actionBar) actionBar.style.display = '';
-}
+	
                     // Update sprite for units
 
                     if (unit.isEnemy && unit.isAlive) {
