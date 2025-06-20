@@ -121,7 +121,6 @@
   "target": "all_allies",
   "logicKey": "loseLogic"
 },
-,
 "test_attack_boost": {
   "id": "test_attack_boost",
   "name": "Attack Boost Test",
