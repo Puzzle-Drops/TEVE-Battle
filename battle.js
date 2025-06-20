@@ -233,7 +233,6 @@ class BattleUnit {
     });
 }
 }
-}
 	
 class Battle {
 constructor(game, party, enemyWaves) {
