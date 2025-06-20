@@ -232,6 +232,7 @@ class BattleUnit {
         return debuff.duration === -1; // Permanent debuffs
     });
 }
+}
 	
 class Battle {
 constructor(game, party, enemyWaves) {
