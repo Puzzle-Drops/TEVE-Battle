@@ -66,6 +66,7 @@
     }
   },
   "frost_breath": {
+    "id": "frost_breath",
     "name": "Frost Breath",
     "description": "Breathe frost, slowing all enemies",
     "cooldown": 5,
@@ -77,6 +78,7 @@
     "logicKey": "frostBreathLogic"
   },
   "gold_toss": {
+    "id": "gold_toss",
     "name": "Gold Toss",
     "description": "Throw gold coins dealing random damage",
     "cooldown": 3,
@@ -89,6 +91,7 @@
     "logicKey": "goldTossLogic"
   },
   "summon_goblins": {
+    "id": "summon_goblines",
     "name": "Summon Goblins",
     "description": "Summon goblin minions to fight",
     "cooldown": 10,
