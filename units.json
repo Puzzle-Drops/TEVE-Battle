@@ -5,7 +5,7 @@
       "tier": 0,
       "modifiers": { "str": 10000.0, "agi": 10000.0, "int": 10000.0 },
       "mainstat": "str",
-      "spells": ["lose", "win"],
+      "spells": ["lose", "win", "test_attack_boost", "test_speed_boost", "test_armor_boost", "test_immune", "test_shield", "test_attack_break", "test_slow", "test_armor_break", "test_blight", "test_bleed", "test_stun", "test_taunt"],
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
     "villager_male": {
