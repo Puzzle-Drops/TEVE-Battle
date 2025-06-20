@@ -662,25 +662,32 @@ updateWaveCounter() {
 
         
 
-        // Progress action bars for all living units
-
-        let highestActionBar = 0;
-
-        this.allUnits.forEach(unit => {
-
-            if (unit.isAlive) {
-
-                unit.actionBar += unit.actionBarSpeed;
-
-                if (unit.actionBar > highestActionBar) {
-
-                    highestActionBar = unit.actionBar;
-
-                }
-
+        //// Progress action bars for all living units
+let highestActionBar = 0;
+this.allUnits.forEach(unit => {
+    if (unit.isAlive) {
+        let speed = unit.actionBarSpeed;
+        
+        // Apply speed buffs
+        unit.buffs.forEach(buff => {
+            if (buff.name === 'Speed Boost' || buff.actionBarMultiplier) {
+                speed *= buff.actionBarMultiplier || 1.5;
             }
-
         });
+        
+        // Apply speed debuffs
+        unit.debuffs.forEach(debuff => {
+            if (debuff.name === 'Slow' || debuff.actionBarSpeed) {
+                speed *= debuff.actionBarSpeed || 0.5;
+            }
+        });
+        
+        unit.actionBar += speed;
+        if (unit.actionBar > highestActionBar) {
+            highestActionBar = unit.actionBar;
+        }
+    }
+});
 
         
 
@@ -1009,18 +1016,18 @@ showSpellAnimation(caster, spellName, effects) {
 		if (this.currentUnit) {
 			this.currentUnit.reduceCooldowns();
 			// Apply HP regen after turn
-			if (this.currentUnit.isAlive) {
-				const regen = Math.floor(this.currentUnit.isEnemy ? 
-					this.currentUnit.stats.str * 0.05 : 
-					this.currentUnit.source.hpRegen);
-				if (regen > 0) {
-					const actualRegen = Math.min(regen, this.currentUnit.maxHp - this.currentUnit.currentHp);
-					if (actualRegen > 0) {
-						this.currentUnit.currentHp += actualRegen;
-						this.log(`${this.currentUnit.name} regenerates ${actualRegen} HP.`);
-					}
-				}
-			}
+if (this.currentUnit.isAlive && !this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
+    const regen = Math.floor(this.currentUnit.isEnemy ? 
+        this.currentUnit.stats.str * 0.05 : 
+        this.currentUnit.source.hpRegen);
+    if (regen > 0) {
+        const actualRegen = Math.min(regen, this.currentUnit.maxHp - this.currentUnit.currentHp);
+        if (actualRegen > 0) {
+            this.currentUnit.currentHp += actualRegen;
+            this.log(`${this.currentUnit.name} regenerates ${actualRegen} HP.`);
+        }
+    }
+}
 		}
 		this.currentUnit = null;
 		this.waitingForPlayer = false;
@@ -1044,15 +1051,57 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     
     let damage = Math.floor(amount);
     
+    // Apply attacker's damage modifiers from buffs
+    attacker.buffs.forEach(buff => {
+        if (buff.name === 'Attack Boost' || buff.damageMultiplier) {
+            damage *= 1.5;
+        }
+    });
+    
+    // Apply attacker's damage reduction from debuffs
+    attacker.debuffs.forEach(debuff => {
+        if (debuff.name === 'Attack Break') {
+            damage *= 0.5;
+        }
+    });
+    
     // Apply damage reduction based on type
     if (damageType === 'physical') {
-        damage = damage * (1 - target.physicalDamageReduction);
+        let targetArmor = target.armor;
+        
+        // Apply armor buffs/debuffs
+        target.buffs.forEach(buff => {
+            if (buff.name === 'Armor Boost') {
+                targetArmor *= 1.5;
+            }
+        });
+        target.debuffs.forEach(debuff => {
+            if (debuff.name === 'Armor Break') {
+                targetArmor *= 0.5;
+            }
+        });
+        
+        const physicalDR = (0.9 * targetArmor) / (targetArmor + 500);
+        damage = damage * (1 - physicalDR);
     } else {
         // All non-physical damage is considered magical
         damage = damage * (1 - target.magicDamageReduction);
     }
     
-    // Apply damage reduction from buffs
+    // Check for shields first
+    const shield = target.buffs.find(b => b.name === 'Shield');
+    if (shield && shield.shieldAmount > 0) {
+        const shieldDamage = Math.min(damage, shield.shieldAmount);
+        shield.shieldAmount -= shieldDamage;
+        damage -= shieldDamage;
+        
+        if (shield.shieldAmount <= 0) {
+            target.buffs = target.buffs.filter(b => b !== shield);
+            this.log(`${target.name}'s shield breaks!`);
+        }
+    }
+    
+    // Apply remaining damage reduction from buffs
     target.buffs.forEach(buff => {
         if (buff.damageReduction) {
             damage *= (1 - buff.damageReduction);
@@ -1070,6 +1119,8 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     const previousHp = target.currentHp;
     target.currentHp = Math.max(0, target.currentHp - damage);
     
+    this.log(`${attacker.name} deals ${damage} ${damageType} damage to ${target.name}!`);
+    
     // Check if target died
     if (previousHp > 0 && target.currentHp <= 0) {
         this.triggerDeathAnimation(target);
@@ -1077,6 +1128,7 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     
     return damage;
 }
+	
 
 triggerDeathAnimation(unit) {
     const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
@@ -1092,84 +1144,71 @@ triggerDeathAnimation(unit) {
     
 
     healUnit(target, amount) {
-
-        if (!target.isAlive) return 0;
-
-        
-
-        let heal = Math.floor(amount);
-
-        
-
-        // Apply healing received modifiers
-
-        if (target.healingReceived) {
-
-            heal *= target.healingReceived;
-
-        }
-
-        
-
-        heal = Math.floor(heal);
-
-        const actualHeal = Math.min(heal, target.maxHp - target.currentHp);
-
-        target.currentHp += actualHeal;
-
-        
-
-        return actualHeal;
-
+    if (!target.isAlive) return 0;
+    
+    // Check for blight
+    if (target.debuffs.some(d => d.name === 'Blight')) {
+        this.log(`${target.name} cannot be healed due to Blight!`);
+        return 0;
     }
+    
+    let heal = Math.floor(amount);
+    
+    // Apply healing received modifiers
+    if (target.healingReceived) {
+        heal *= target.healingReceived;
+    }
+    
+    heal = Math.floor(heal);
+    const actualHeal = Math.min(heal, target.maxHp - target.currentHp);
+    target.currentHp += actualHeal;
+    
+    this.log(`${target.name} is healed for ${actualHeal} HP!`);
+    
+    return actualHeal;
+}
 
     
 
     applyBuff(target, buffName, duration, effects) {
-
-        if (!target.isAlive) return;
-
-        
-
-        const buff = {
-
-            name: buffName,
-
-            duration: duration,
-
-            ...effects
-
-        };
-
-        
-
-        target.buffs.push(buff);
-
+    if (!target.isAlive) return;
+    
+    // Check for immunity
+    if (target.buffs.some(b => b.name === 'Immune' || b.immunity)) {
+        this.log(`${target.name} is immune to buffs!`);
+        return;
     }
+    
+    const buff = {
+        name: buffName,
+        duration: duration,
+        ...effects
+    };
+    
+    target.buffs.push(buff);
+    this.log(`${target.name} gains ${buffName}!`);
+}
 
     
 
     applyDebuff(target, debuffName, duration, effects) {
-
-        if (!target.isAlive) return;
-
-        
-
-        const debuff = {
-
-            name: debuffName,
-
-            duration: duration,
-
-            ...effects
-
-        };
-
-        
-
-        target.debuffs.push(debuff);
-
+    if (!target.isAlive) return;
+    
+    // Check for immunity
+    if (target.buffs.some(b => b.name === 'Immune' || b.immunity)) {
+        this.log(`${target.name} is immune to debuffs!`);
+        return;
     }
+    
+    const debuff = {
+        name: debuffName,
+        duration: duration,
+        ...effects
+    };
+    
+    target.debuffs.push(debuff);
+    this.log(`${target.name} suffers from ${debuffName}!`);
+}
 
     
 
@@ -1237,6 +1276,16 @@ applyDotEffects(unit) {
             this.log(`${unit.name} takes ${damage} damage from ${debuff.name}!`);
             
             // Check if unit died from DOT
+            if (previousHp > 0 && unit.currentHp <= 0) {
+                this.triggerDeathAnimation(unit);
+            }
+        } else if (debuff.name === 'Bleed' && unit.isAlive) {
+            const damage = Math.floor(unit.maxHp * 0.05);
+            const previousHp = unit.currentHp;
+            unit.currentHp = Math.max(0, unit.currentHp - damage);
+            this.log(`${unit.name} bleeds for ${damage} damage!`);
+            
+            // Check if unit died from bleed
             if (previousHp > 0 && unit.currentHp <= 0) {
                 this.triggerDeathAnimation(unit);
             }
@@ -1999,6 +2048,57 @@ if (unitDiv) {
 
                 }
 
+		    // Update or create buff/debuff container
+let buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+if (!buffDebuffContainer && unit.isAlive) {
+    buffDebuffContainer = document.createElement('div');
+    buffDebuffContainer.className = 'buffDebuffContainer';
+    element.appendChild(buffDebuffContainer);
+}
+
+// Update buffs and debuffs display
+if (buffDebuffContainer && unit.isAlive) {
+    buffDebuffContainer.innerHTML = '';
+    
+    // Display buffs
+    unit.buffs.forEach((buff, index) => {
+        const buffDiv = document.createElement('div');
+        buffDiv.className = 'buffIcon';
+        buffDiv.innerHTML = `
+            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${this.getBuffIconName(buff.name)}.png" 
+                 alt="${buff.name}"
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
+            ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
+        `;
+        
+        // Add hover tooltip
+        buffDiv.onmouseover = (e) => this.showBuffDebuffTooltip(e, buff, true);
+        buffDiv.onmouseout = () => this.hideBuffDebuffTooltip();
+        
+        buffDebuffContainer.appendChild(buffDiv);
+    });
+    
+    // Display debuffs
+    unit.debuffs.forEach((debuff, index) => {
+        const debuffDiv = document.createElement('div');
+        debuffDiv.className = 'debuffIcon';
+        debuffDiv.innerHTML = `
+            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${this.getDebuffIconName(debuff.name)}.png" 
+                 alt="${debuff.name}"
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
+            ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
+        `;
+        
+        // Add hover tooltip
+        debuffDiv.onmouseover = (e) => this.showBuffDebuffTooltip(e, debuff, false);
+        debuffDiv.onmouseout = () => this.hideBuffDebuffTooltip();
+        
+        buffDebuffContainer.appendChild(debuffDiv);
+    });
+} else if (buffDebuffContainer && !unit.isAlive) {
+    buffDebuffContainer.style.display = 'none';
+}
+
                 
 
                 // Update or create action bar
@@ -2116,5 +2216,102 @@ if (unitDiv) {
         }
 
     }
+
+getBuffIconName(buffName) {
+    const iconMap = {
+        'fury': 'speed_boost',
+        'beastForm': 'attack_boost',
+        'frostArmor': 'armor_boost',
+        'divineShield': 'immune',
+        'shield': 'shield',
+        'Attack Boost': 'attack_boost',
+        'Speed Boost': 'speed_boost',
+        'Armor Boost': 'armor_boost',
+        'Immune': 'immune',
+        'Shield': 'shield'
+    };
+    return iconMap[buffName] || 'buff';
+}
+
+getDebuffIconName(debuffName) {
+    const iconMap = {
+        'poison': 'poison',
+        'stun': 'stun',
+        'slow': 'slow',
+        'huntersMark': 'mark',
+        'Attack Break': 'attack_break',
+        'Slow': 'slow',
+        'Armor Break': 'armor_break',
+        'Blight': 'blight',
+        'Bleed': 'bleed',
+        'Stun': 'stun',
+        'Taunt': 'taunt'
+    };
+    return iconMap[debuffName] || 'debuff';
+}
+
+showBuffDebuffTooltip(event, buffDebuff, isBuff) {
+    let tooltip = document.getElementById('buffDebuffTooltip');
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'buffDebuffTooltip';
+        document.body.appendChild(tooltip);
+    }
+    
+    const descriptions = {
+        // Buffs
+        'fury': 'Increased attack speed by 50%',
+        'Attack Boost': 'Deal 50% increased damage',
+        'Speed Boost': '50% increased action bar progress',
+        'Armor Boost': '50% increased armor',
+        'Immune': 'Cannot gain debuffs',
+        'Shield': 'Attacks reduce shield HP before unit HP',
+        'beastForm': 'Transformed, gaining 50% STR and AGI',
+        'frostArmor': 'Reduces damage taken by 30%',
+        'divineShield': 'Immune to all damage',
+        
+        // Debuffs
+        'poison': 'Taking damage over time',
+        'Attack Break': '50% reduced attack damage',
+        'Slow': '50% reduced action bar progress',
+        'Armor Break': '50% reduced armor',
+        'Blight': 'No health regen, cannot be healed',
+        'Bleed': 'Takes 5% max HP damage each turn',
+        'Stun': 'Cannot act on next turn',
+        'Taunt': 'Must attack the taunting unit',
+        'huntersMark': 'Takes 25% increased damage'
+    };
+    
+    tooltip.className = isBuff ? 'buff' : 'debuff';
+    tooltip.innerHTML = `
+        <div class="buffDebuffTooltipTitle">${buffDebuff.name}</div>
+        <div class="buffDebuffTooltipDesc">${descriptions[buffDebuff.name] || 'Unknown effect'}</div>
+        ${buffDebuff.duration > 0 ? `<div style="margin-top: 5px; color: #6a9aaa;">Turns remaining: ${buffDebuff.duration}</div>` : ''}
+    `;
+    
+    tooltip.style.display = 'block';
+    
+    // Position tooltip
+    const rect = event.target.getBoundingClientRect();
+    tooltip.style.left = rect.left + 'px';
+    tooltip.style.top = (rect.bottom + 5) + 'px';
+    
+    // Adjust if tooltip goes off screen
+    const tooltipRect = tooltip.getBoundingClientRect();
+    if (tooltipRect.right > window.innerWidth) {
+        tooltip.style.left = (window.innerWidth - tooltipRect.width - 10) + 'px';
+    }
+    if (tooltipRect.bottom > window.innerHeight) {
+        tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
+    }
+}
+
+hideBuffDebuffTooltip() {
+    const tooltip = document.getElementById('buffDebuffTooltip');
+    if (tooltip) {
+        tooltip.style.display = 'none';
+    }
+}
+	
 
 }
