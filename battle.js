@@ -742,170 +742,101 @@ this.allUnits.forEach(unit => {
     
 
     processTurn() {
-
-        const unit = this.currentUnit;
-
-        
-
-        // Update buffs/debuffs at turn start
-
-        unit.updateBuffsDebuffs();
-
-        
-
-        // Apply DOT effects
-
-        this.applyDotEffects(unit);
-
-        
-
-        // Check if unit is stunned
-
-        if (unit.debuffs.some(d => d.stunned)) {
-
-            this.log(`${unit.name} is stunned!`);
-
-            this.endTurn();
-
-            return;
-
-        }
-
-        
-
-        // Check if it's a player unit and not in auto mode
-
-        if (!unit.isEnemy && !this.autoMode) {
-
-            this.waitingForPlayer = true;
-
-            this.showPlayerAbilities(unit);
-
-        } else {
-
-            // AI turn
-
-            this.executeAITurn(unit);
-
-        }
-
-    }
-
+    const unit = this.currentUnit;
     
+    // Update buffs/debuffs at turn start
+    unit.updateBuffsDebuffs();
+    
+    // Apply DOT effects
+    this.applyDotEffects(unit);
+    
+    // Check if unit is stunned
+    if (unit.debuffs.some(d => d.name === 'Stun' || d.stunned)) {
+        this.log(`${unit.name} is stunned!`);
+        // End turn immediately - no actions allowed
+        this.endTurn();
+        return;
+    }
+    
+    // Check if it's a player unit and not in auto mode
+    if (!unit.isEnemy && !this.autoMode) {
+        this.waitingForPlayer = true;
+        this.showPlayerAbilities(unit);
+    } else {
+        // AI turn
+        this.executeAITurn(unit);
+    }
+}
+
 
     executeAITurn(unit) {
-
-        // Find the strongest available ability
-
-        let bestAbility = null;
-
-        let bestIndex = -1;
-
-        
-
-        for (let i = unit.abilities.length - 1; i >= 0; i--) {
-
-            if (unit.canUseAbility(i)) {
-
-                bestAbility = unit.abilities[i];
-
-                bestIndex = i;
-
-                break;
-
-            }
-
-        }
-
-        
-
-        if (bestAbility && bestIndex >= 0) {
-
-            // Determine target based on ability
-
-            let target = null;
-
-            const spell = spellManager.getSpell(bestAbility.id);
-
-            
-
-            if (spell) {
-
-                switch (spell.target) {
-
-                    case 'enemy':
-    const enemies = unit.isEnemy ? this.party : this.enemies;
-    const aliveEnemies = enemies.filter(e => e && e.isAlive);
+    // Check if unit has taunt debuff and must attack specific target
+    const tauntDebuff = unit.debuffs.find(d => d.name === 'Taunt' && d.tauntTarget);
     
-    // Check for taunt
-    const tauntedEnemy = aliveEnemies.find(e => e.debuffs.some(d => d.name === 'Taunt'));
-    
-    if (tauntedEnemy && bestIndex === 0) { // Force basic attack on taunted target
-        target = tauntedEnemy;
-    } else if (aliveEnemies.length > 0) {
-        target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
-    }
-    break;
-
-                    case 'ally':
-
-                        const allies = unit.isEnemy ? this.enemies : this.party;
-
-                        const aliveAllies = allies.filter(a => a && a.isAlive);
-
-                        // Prioritize low HP allies for heals
-
-                        if (spell.effects.includes('heal')) {
-
-                            aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
-
-                        }
-
-                        if (aliveAllies.length > 0) {
-
-                            target = aliveAllies[0];
-
-                        }
-
-                        break;
-
-                    case 'self':
-
-                        target = unit;
-
-                        break;
-
-                    case 'all_enemies':
-
-                    case 'all_allies':
-
-                        target = 'all';
-
-                        break;
-
-                }
-
-                
-
-                if (target || spell.target === 'passive') {
-
-                    this.executeAbility(unit, bestIndex, target);
-
-                }
-
-            }
-
-        } else {
-
-            this.log(`${unit.name} has no abilities available!`);
-
-        }
-
-        
-
+    if (tauntDebuff && tauntDebuff.tauntTarget && tauntDebuff.tauntTarget.isAlive) {
+        // Force basic attack on taunting unit
+        const target = tauntDebuff.tauntTarget;
+        this.executeAbility(unit, 0, target); // Force skill 1 (basic attack)
         this.endTurn();
-
+        return;
     }
+    
+    // Normal AI behavior
+    let bestAbility = null;
+    let bestIndex = -1;
+    
+    for (let i = unit.abilities.length - 1; i >= 0; i--) {
+        if (unit.canUseAbility(i)) {
+            bestAbility = unit.abilities[i];
+            bestIndex = i;
+            break;
+        }
+    }
+    
+    if (bestAbility && bestIndex >= 0) {
+        // Determine target based on ability
+        let target = null;
+        const spell = spellManager.getSpell(bestAbility.id);
+        
+        if (spell) {
+            switch (spell.target) {
+                case 'enemy':
+                    const enemies = unit.isEnemy ? this.party : this.enemies;
+                    const aliveEnemies = enemies.filter(e => e && e.isAlive);
+                    if (aliveEnemies.length > 0) {
+                        target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+                    }
+                    break;
+                case 'ally':
+                    const allies = unit.isEnemy ? this.enemies : this.party;
+                    const aliveAllies = allies.filter(a => a && a.isAlive);
+                    // Prioritize low HP allies for heals
+                    if (spell.effects.includes('heal')) {
+                        aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+                    }
+                    if (aliveAllies.length > 0) {
+                        target = aliveAllies[0];
+                    }
+                    break;
+                case 'self':
+                    target = unit;
+                    break;
+                case 'all_enemies':
+                case 'all_allies':
+                    target = 'all';
+                    break;
+            }
+            
+            if (target || spell.target === 'passive') {
+                this.executeAbility(unit, bestIndex, target);
+            }
+        }
+    } else {
+        this.log(`${unit.name} has no abilities available!`);
+    }
+    
+    this.endTurn();
+}
 
     
 
@@ -952,64 +883,72 @@ this.allUnits.forEach(unit => {
     
 
 showSpellAnimation(caster, spellName, effects) {
-        const elementId = caster.isEnemy ? `enemy${caster.position + 1}` : `party${caster.position + 1}`;
-        const unitSlot = document.getElementById(elementId);
-        
-        if (unitSlot) {
-            // Clear any existing spell text first
-            const existingSpellText = unitSlot.querySelector('.spellText');
-            if (existingSpellText) {
-                existingSpellText.remove();
-            }
-            
-            // Determine animation type based on spell effects
-            let animationClass = 'casting-damage'; // default
-            
-            if (effects.includes('speed') || effects.includes('buff')) {
-                animationClass = 'casting-speed';
-            } else if (effects.includes('heal')) {
-                animationClass = 'casting-heal';
-            } else if (effects.includes('holy')) {
-                animationClass = 'casting-holy';
-            } else if (effects.includes('shadow') || effects.includes('debuff')) {
-                animationClass = 'casting-shadow';
-            } else if (effects.includes('shield') || effects.includes('defense')) {
-                animationClass = 'casting-shield';
-            } else if (effects.includes('summon') || effects.includes('transform')) {
-                animationClass = 'casting-summon';
-            }
-            
-            // Add animation to unit
-            unitSlot.classList.add(animationClass);
-            setTimeout(() => unitSlot.classList.remove(animationClass), 800);
-            
-            // Create spell text
-            const spellText = document.createElement('div');
-            spellText.className = 'spellText';
-            spellText.textContent = spellName;
-            
-            // Add appropriate color class based on spell type
-            if (effects.includes('damage')) spellText.classList.add('damage');
-            else if (effects.includes('heal')) spellText.classList.add('heal');
-            else if (effects.includes('buff')) spellText.classList.add('buff');
-            else if (effects.includes('debuff')) spellText.classList.add('debuff');
-            else if (effects.includes('holy')) spellText.classList.add('holy');
-            else if (effects.includes('shadow')) spellText.classList.add('shadow');
-            else if (effects.includes('fire')) spellText.classList.add('fire');
-            else if (effects.includes('frost')) spellText.classList.add('frost');
-            else if (effects.includes('arcane')) spellText.classList.add('arcane');
-            else spellText.classList.add('damage'); // default
-            
-            unitSlot.appendChild(spellText);
-            
-            // Remove spell text after animation
-            setTimeout(() => {
-                if (spellText.parentNode) {
-                    spellText.remove();
-                }
-            }, 3000);
+    // Clear any existing spell animations first
+    document.querySelectorAll('.spellText').forEach(text => text.remove());
+    
+    const elementId = caster.isEnemy ? `enemy${caster.position + 1}` : `party${caster.position + 1}`;
+    const unitSlot = document.getElementById(elementId);
+    
+    if (unitSlot) {
+        // Clear any existing spell text first
+        const existingSpellText = unitSlot.querySelector('.spellText');
+        if (existingSpellText) {
+            existingSpellText.remove();
         }
+        
+        // Determine animation type based on spell effects
+        let animationClass = 'casting-damage'; // default
+        
+        if (effects.includes('speed') || effects.includes('buff')) {
+            animationClass = 'casting-speed';
+        } else if (effects.includes('heal')) {
+            animationClass = 'casting-heal';
+        } else if (effects.includes('holy')) {
+            animationClass = 'casting-holy';
+        } else if (effects.includes('shadow') || effects.includes('debuff')) {
+            animationClass = 'casting-shadow';
+        } else if (effects.includes('shield') || effects.includes('defense')) {
+            animationClass = 'casting-shield';
+        } else if (effects.includes('summon') || effects.includes('transform')) {
+            animationClass = 'casting-summon';
+        }
+        
+        // Remove any existing animation classes
+        unitSlot.classList.remove('casting-damage', 'casting-speed', 'casting-heal', 
+                                  'casting-holy', 'casting-shadow', 'casting-shield', 
+                                  'casting-summon');
+        
+        // Add animation to unit
+        unitSlot.classList.add(animationClass);
+        setTimeout(() => unitSlot.classList.remove(animationClass), 800);
+        
+        // Create spell text
+        const spellText = document.createElement('div');
+        spellText.className = 'spellText';
+        spellText.textContent = spellName;
+        
+        // Add appropriate color class based on spell type
+        if (effects.includes('damage')) spellText.classList.add('damage');
+        else if (effects.includes('heal')) spellText.classList.add('heal');
+        else if (effects.includes('buff')) spellText.classList.add('buff');
+        else if (effects.includes('debuff')) spellText.classList.add('debuff');
+        else if (effects.includes('holy')) spellText.classList.add('holy');
+        else if (effects.includes('shadow')) spellText.classList.add('shadow');
+        else if (effects.includes('fire')) spellText.classList.add('fire');
+        else if (effects.includes('frost')) spellText.classList.add('frost');
+        else if (effects.includes('arcane')) spellText.classList.add('arcane');
+        else spellText.classList.add('damage'); // default
+        
+        unitSlot.appendChild(spellText);
+        
+        // Remove spell text after animation
+        setTimeout(() => {
+            if (spellText.parentNode) {
+                spellText.remove();
+            }
+        }, 3000);
     }
+}
     
 
 	endTurn() {
@@ -1683,8 +1622,22 @@ showPlayerAbilities(unit) {
         
         if (unit.canUseAbility(actualIndex)) {
             abilityDiv.onclick = () => {
+                // Check if we're already targeting - prevent multiple ability selection
+                if (this.targetingState) {
+                    return;
+                }
+                
                 // Hide tooltip when clicked
                 game.hideAbilityTooltip();
+                
+                // Disable all other abilities
+                const allAbilities = abilityPanel.querySelectorAll('.ability');
+                allAbilities.forEach(ab => {
+                    if (ab !== abilityDiv) {
+                        ab.style.pointerEvents = 'none';
+                        ab.style.opacity = '0.5';
+                    }
+                });
                 
                 if (spell) {
                     // For targeted abilities, highlight valid targets
@@ -1766,6 +1719,16 @@ selectTarget(caster, abilityIndex, targetType) {
 clearTargeting() {
     // Clear targeting state
     this.targetingState = null;
+    
+    // Re-enable all abilities
+    const abilityPanel = document.getElementById('abilityPanel');
+    if (abilityPanel) {
+        const allAbilities = abilityPanel.querySelectorAll('.ability');
+        allAbilities.forEach(ab => {
+            ab.style.pointerEvents = '';
+            ab.style.opacity = '';
+        });
+    }
     
     // Remove all targeting highlights and handlers
     this.allUnits.forEach(unit => {
@@ -2278,7 +2241,7 @@ showBuffDebuffTooltip(event, buffDebuff, isBuff) {
         'Blight': 'No health regen, cannot be healed',
         'Bleed': 'Takes 5% max HP damage each turn',
         'Stun': 'Cannot act on next turn',
-        'Taunt': 'Must attack the taunting unit',
+        'Taunt': 'Must attack the unit that taunted',
         'huntersMark': 'Takes 25% increased damage'
     };
     
