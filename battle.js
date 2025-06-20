@@ -834,18 +834,18 @@ this.allUnits.forEach(unit => {
                 switch (spell.target) {
 
                     case 'enemy':
-
-                        const enemies = unit.isEnemy ? this.party : this.enemies;
-
-                        const aliveEnemies = enemies.filter(e => e && e.isAlive);
-
-                        if (aliveEnemies.length > 0) {
-
-                            target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
-
-                        }
-
-                        break;
+    const enemies = unit.isEnemy ? this.party : this.enemies;
+    const aliveEnemies = enemies.filter(e => e && e.isAlive);
+    
+    // Check for taunt
+    const tauntedEnemy = aliveEnemies.find(e => e.debuffs.some(d => d.name === 'Taunt'));
+    
+    if (tauntedEnemy && bestIndex === 0) { // Force basic attack on taunted target
+        target = tauntedEnemy;
+    } else if (aliveEnemies.length > 0) {
+        target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+    }
+    break;
 
                     case 'ally':
 
