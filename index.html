@@ -2106,13 +2106,15 @@ showCollectionTooltip(event, itemId, qualityLevel, collectionData) {
     // Create item with exact number of rolls for display
     const displayItem = new Item(itemId);
     
+    // Clear all qualities first
+    displayItem.quality1 = 0;
+    displayItem.quality2 = 0;
+    displayItem.quality3 = 0;
+    displayItem.quality4 = 0;
+    
     // Set only the exact number of rolls to perfect
     for (let i = 1; i <= qualityLevel; i++) {
         displayItem[`quality${i}`] = 5;
-    }
-    // Make sure higher rolls are 0
-    for (let i = qualityLevel + 1; i <= 4; i++) {
-        displayItem[`quality${i}`] = 0;
     }
 
     // Get base tooltip
@@ -2121,7 +2123,7 @@ showCollectionTooltip(event, itemId, qualityLevel, collectionData) {
     // Add collection info
     const timestamp = new Date(collectionData.timestamp).toLocaleString();
     tooltipHTML = tooltipHTML.replace('</div>', 
-        `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a6a8a; color: #00ff88;">
+        `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a6a8a; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">
             Obtained by ${collectionData.heroName}, the ${collectionData.heroClass}<br>
             ${timestamp}
         </div></div>`);
