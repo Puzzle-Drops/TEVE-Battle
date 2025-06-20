@@ -52,7 +52,7 @@ winLogic: function(battle, caster, targets) {
     });
     
     // Apply speed buff to self
-    battle.applyBuff(caster, 'Speed Boost', 3, { actionBarMultiplier: 1.5 });
+    battle.applyBuff(caster, 'Speed Boost', 5, { actionBarMultiplier: 1.5 });
     
     battle.log(`${caster.name} uses Win! Victory is assured!`);
 },
