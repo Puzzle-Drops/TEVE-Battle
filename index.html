@@ -2903,21 +2903,32 @@ toggleAutoReplay(enabled) {
 }
 		
             exitBattle() {
-                if (this.currentBattle) {
-                    // Clear any active targeting
-                    if (this.currentBattle.targetingState) {
-                        this.currentBattle.clearTargeting();
-                    }
-                    
-                    // Stop the battle and clean up
-                    this.currentBattle.running = false;
-                    
-                    // Reset pending exp for all heroes in the party since battle was abandoned
-                    this.currentBattle.party.forEach(unit => {
-                        if (unit && unit.source) {
-                            unit.source.pendingExp = 0;
-                        }
-                    });
+    if (this.currentBattle) {
+        // Clear any active targeting
+        if (this.currentBattle.targetingState) {
+            this.currentBattle.clearTargeting();
+        }
+        
+        // Stop the battle and clean up
+        this.currentBattle.running = false;
+        
+        // Reset pending exp for all heroes in the party since battle was abandoned
+        this.currentBattle.party.forEach(unit => {
+            if (unit && unit.source) {
+                unit.source.pendingExp = 0;
+                // Clear all buffs and debuffs
+                unit.buffs = [];
+                unit.debuffs = [];
+            }
+        });
+        
+        // Clean up enemy buffs/debuffs too
+        this.currentBattle.enemies.forEach(unit => {
+            if (unit) {
+                unit.buffs = [];
+                unit.debuffs = [];
+            }
+        });
                     
 // Clean up all UI elements when exiting
 const elementsToRemove = ['waveCounter', 'dungeonNameDisplay', 'automaticModeDisplay'];
