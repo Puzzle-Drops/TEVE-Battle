@@ -2147,7 +2147,35 @@ showCollectionTooltip(event, itemId, qualityLevel, collectionData) {
     
     tooltip.innerHTML = tooltipHTML;
     tooltip.style.display = 'block';
-    
+
+// Add colored border based on rarity
+const rarity = displayItem.getRarity();
+switch(rarity) {
+    case 'red':
+        tooltip.style.borderColor = '#ff4444';
+        tooltip.style.boxShadow = '0 0 20px rgba(255, 68, 68, 0.5)';
+        break;
+    case 'purple':
+        tooltip.style.borderColor = '#d896ff';
+        tooltip.style.boxShadow = '0 0 20px rgba(216, 150, 255, 0.3)';
+        break;
+    case 'blue':
+        tooltip.style.borderColor = '#4dd0e1';
+        tooltip.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.3)';
+        break;
+    case 'green':
+        tooltip.style.borderColor = '#00ff88';
+        tooltip.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.3)';
+        break;
+    case 'gold':
+        tooltip.style.borderColor = '#ffd700';
+        tooltip.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
+        break;
+    default:
+        tooltip.style.borderColor = '#2a6a8a';
+        tooltip.style.boxShadow = '';
+}
+	
     // Position tooltip
     const rect = event.target.getBoundingClientRect();
     tooltip.style.left = rect.right + 10 + 'px';
