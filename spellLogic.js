@@ -7,9 +7,9 @@ const spellLogic = {
         battle.log(`${caster.name} punches ${target.name} for ${damage} damage!`);
     },
 
-    furyLogic: function(battle, caster, target) {
-        battle.applyBuff(caster, 'Speed Boost', 3, {});
-        battle.log(`${caster.name} enters a fury, increasing attack speed for 3 turns!`);
+    furyLogic: function(battle, caster, target, spell) {
+        battle.applyBuff(caster, 'Speed Boost', spell.duration || 3, {});
+        battle.log(`${caster.name} enters a fury, increasing attack speed for ${spell.duration || 3} turns!`);
     },
 
     throwRockLogic: function(battle, caster, target) {
@@ -41,7 +41,7 @@ slashkillLogic: function(battle, caster, target, spell) {
 },
 
 // Tester Spells
-winLogic: function(battle, caster, targets) {
+winLogic: function(battle, caster, targets, spell) {
     // Deal massive damage to all enemies
     const enemies = battle.getEnemies(caster);
     enemies.forEach(enemy => {
@@ -52,7 +52,7 @@ winLogic: function(battle, caster, targets) {
     });
     
     // Apply speed buff to self
-    battle.applyBuff(caster, 'Speed Boost', 5, {});
+    battle.applyBuff(caster, 'Speed Boost', spell.duration || 5, {});
     
     battle.log(`${caster.name} uses Win! Victory is assured!`);
 },
@@ -78,8 +78,8 @@ testAttackBoostLogic: function(battle, caster, target) {
     battle.applyBuff(target, 'Attack Boost', 2, { damageMultiplier: 1.5 });
 },
 
-testSpeedBoostLogic: function(battle, caster, target) {
-    battle.applyBuff(target, 'Speed Boost', 2, {});
+testSpeedBoostLogic: function(battle, caster, target, spell) {
+    battle.applyBuff(target, 'Speed Boost', spell.duration || 2, {});
 },
 
 testArmorBoostLogic: function(battle, caster, target) {
@@ -99,8 +99,8 @@ testAttackBreakLogic: function(battle, caster, target) {
     battle.applyDebuff(target, 'Attack Break', 2, { attackMultiplier: 0.5 });
 },
 
-testSlowLogic: function(battle, caster, target) {
-    battle.applyDebuff(target, 'Slow', 2, {});
+testSlowLogic: function(battle, caster, target, spell) {
+    battle.applyDebuff(target, 'Slow', spell.duration || 2, {});
 },
 
 testArmorBreakLogic: function(battle, caster, target) {
@@ -128,13 +128,13 @@ testTauntLogic: function(battle, caster, target) {
     });
 },
     
-    frostBreathLogic: function(battle, caster, targets) {
+    frostBreathLogic: function(battle, caster, targets, spell) {
         const enemies = battle.getEnemies(caster);
         enemies.forEach(enemy => {
             if (enemy.currentHp > 0) {
                 const damage = caster.baseStats.str * 2;
                 battle.dealDamage(caster, enemy, damage, 'magical');
-                battle.applyDebuff(enemy, 'slow', 2, {});
+                battle.applyDebuff(enemy, 'Slow', spell.slowDuration || 2, {});
             }
         });
         battle.log(`${caster.name} breathes frost!`);
