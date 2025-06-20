@@ -8,7 +8,7 @@ const spellLogic = {
     },
 
     furyLogic: function(battle, caster, target) {
-        battle.applyBuff(caster, 'fury', 3, { actionBarMultiplier: 1.5 });
+        battle.applyBuff(caster, 'Speed Boost', 3, { actionBarMultiplier: 1.5 });
         battle.log(`${caster.name} enters a fury, increasing attack speed for 3 turns!`);
     },
 
