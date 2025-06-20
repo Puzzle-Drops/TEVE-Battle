@@ -128,7 +128,7 @@
   "id": "test_attack_boost",
   "name": "Attack Boost Test",
   "description": "Grants Attack Boost buff for 2 turns",
-  "cooldown": 3,
+  "cooldown": 1,
   "effects": ["buff"],
   "target": "ally",
   "logicKey": "testAttackBoostLogic"
@@ -137,7 +137,7 @@
   "id": "test_speed_boost",
   "name": "Speed Boost Test",
   "description": "Grants Speed Boost buff for 2 turns",
-  "cooldown": 3,
+  "cooldown": 1,
   "effects": ["buff", "speed"],
   "target": "ally",
   "logicKey": "testSpeedBoostLogic"
@@ -146,7 +146,7 @@
   "id": "test_armor_boost",
   "name": "Armor Boost Test",
   "description": "Grants Armor Boost buff for 2 turns",
-  "cooldown": 3,
+  "cooldown": 1,
   "effects": ["buff", "defense"],
   "target": "ally",
   "logicKey": "testArmorBoostLogic"
@@ -155,7 +155,7 @@
   "id": "test_immune",
   "name": "Immunity Test",
   "description": "Grants Immunity buff for 2 turns",
-  "cooldown": 5,
+  "cooldown": 1,
   "effects": ["buff", "immunity"],
   "target": "ally",
   "logicKey": "testImmuneLogic"
@@ -164,7 +164,7 @@
   "id": "test_shield",
   "name": "Shield Test",
   "description": "Grants Shield buff that absorbs 200 damage",
-  "cooldown": 5,
+  "cooldown": 1,
   "effects": ["buff", "shield"],
   "target": "ally",
   "logicKey": "testShieldLogic"
@@ -173,7 +173,7 @@
   "id": "test_attack_break",
   "name": "Attack Break Test",
   "description": "Inflicts Attack Break debuff for 2 turns",
-  "cooldown": 3,
+  "cooldown": 1,
   "effects": ["debuff"],
   "target": "enemy",
   "logicKey": "testAttackBreakLogic"
@@ -182,7 +182,7 @@
   "id": "test_slow",
   "name": "Slow Test",
   "description": "Inflicts Slow debuff for 2 turns",
-  "cooldown": 3,
+  "cooldown": 1,
   "effects": ["debuff", "slow"],
   "target": "enemy",
   "logicKey": "testSlowLogic"
@@ -191,7 +191,7 @@
   "id": "test_armor_break",
   "name": "Armor Break Test",
   "description": "Inflicts Armor Break debuff for 2 turns",
-  "cooldown": 3,
+  "cooldown": 1,
   "effects": ["debuff"],
   "target": "enemy",
   "logicKey": "testArmorBreakLogic"
@@ -200,7 +200,7 @@
   "id": "test_blight",
   "name": "Blight Test",
   "description": "Inflicts Blight debuff for 2 turns",
-  "cooldown": 3,
+  "cooldown": 1,
   "effects": ["debuff"],
   "target": "enemy",
   "logicKey": "testBlightLogic"
@@ -209,7 +209,7 @@
   "id": "test_bleed",
   "name": "Bleed Test",
   "description": "Inflicts Bleed debuff for 2 turns",
-  "cooldown": 3,
+  "cooldown": 1,
   "effects": ["debuff", "dot"],
   "target": "enemy",
   "logicKey": "testBleedLogic"
@@ -218,7 +218,7 @@
   "id": "test_stun",
   "name": "Stun Test",
   "description": "Inflicts Stun debuff for 2 turns",
-  "cooldown": 5,
+  "cooldown": 1,
   "effects": ["debuff", "stun"],
   "target": "enemy",
   "logicKey": "testStunLogic"
@@ -227,9 +227,9 @@
   "id": "test_taunt",
   "name": "Taunt Test",
   "description": "Forces enemies to attack this unit for 2 turns",
-  "cooldown": 5,
+  "cooldown": 1,
   "effects": ["debuff"],
-  "target": "self",
+  "target": "enemy",
   "logicKey": "testTauntLogic"
 }
 }
