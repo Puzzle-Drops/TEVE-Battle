@@ -2,54 +2,30 @@
 
 class BattleUnit {
 
-    constructor(source, isEnemy = false, position = 0) {
-
-        this.source = source; // Reference to Hero or Enemy object
-
-        this.isEnemy = isEnemy;
-
-        this.position = position;
-
-        
-
-        // Battle stats
-
-        this.currentHp = this.maxHp;
-
-        this.actionBar = 0;
-
-        this.buffs = [];
-
-        this.debuffs = [];
-
-        this.cooldowns = {};
-
-        
-
-        // Initialize cooldowns
-
-        const abilities = this.abilities;
-
-        if (abilities && abilities.length > 0) {
-
-            abilities.forEach((ability, index) => {
-
-                if (ability.cooldown > 0) {
-
-                    this.cooldowns[index] = 0;
-
-                }
-
-            });
-
-        }
-
-        
-
-        console.log(`Created BattleUnit: ${this.name}, HP: ${this.currentHp}/${this.maxHp}, Speed: ${this.actionBarSpeed}`);
-
+   constructor(source, isEnemy = false, position = 0) {
+    this.source = source; // Reference to Hero or Enemy object
+    this.isEnemy = isEnemy;
+    this.position = position;
+    
+    // Battle stats
+    this.currentHp = this.maxHp;
+    this.actionBar = 0;
+    this.buffs = [];
+    this.debuffs = [];
+    this.cooldowns = {};
+    
+    // Initialize cooldowns
+    const abilities = this.abilities;
+    if (abilities && abilities.length > 0) {
+        abilities.forEach((ability, index) => {
+            if (ability.cooldown > 0) {
+                this.cooldowns[index] = 0;
+            }
+        });
     }
-
+    
+    console.log(`Created BattleUnit: ${this.name}, HP: ${this.currentHp}/${this.maxHp}, Speed: ${this.actionBarSpeed}`);
+}
     
 
     get name() {
@@ -997,13 +973,6 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
         }
     });
     
-    // Apply attacker's damage reduction from debuffs
-    attacker.debuffs.forEach(debuff => {
-        if (debuff.name === 'Attack Break') {
-            damage *= 0.5;
-        }
-    });
-    
     // Apply damage reduction based on type
     if (damageType === 'physical') {
         let targetArmor = target.armor;
@@ -1054,6 +1023,13 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
         }
     });
     
+    // Apply Attack Break LAST - this is the fix
+    attacker.debuffs.forEach(debuff => {
+        if (debuff.name === 'Attack Break') {
+            damage *= 0.5;
+        }
+    });
+    
     damage = Math.floor(damage);
     const previousHp = target.currentHp;
     target.currentHp = Math.max(0, target.currentHp - damage);
@@ -1075,7 +1051,7 @@ triggerDeathAnimation(unit) {
     
     if (element) {
         const unitDiv = element.querySelector('.unit');
-        if (unitDiv) {
+        if (unitDiv && !unitDiv.classList.contains('dying')) {
             unitDiv.classList.add('dying');
         }
     }
@@ -1148,7 +1124,6 @@ triggerDeathAnimation(unit) {
 }
 
     
-
     applyDebuff(target, debuffName, duration, effects) {
     if (!target.isAlive) return;
     
@@ -1158,14 +1133,33 @@ triggerDeathAnimation(unit) {
         return;
     }
     
-    const debuff = {
-        name: debuffName,
-        duration: duration,
-        ...effects
-    };
+    // Check if debuff already exists
+    const existingDebuff = target.debuffs.find(d => d.name === debuffName);
     
-    target.debuffs.push(debuff);
-    this.log(`${target.name} suffers from ${debuffName}!`);
+    if (existingDebuff) {
+        // Update duration to the higher value
+        const oldDuration = existingDebuff.duration;
+        existingDebuff.duration = Math.max(existingDebuff.duration, duration);
+        
+        // Update other effects if provided
+        Object.assign(existingDebuff, effects);
+        
+        if (existingDebuff.duration > oldDuration) {
+            this.log(`${target.name}'s ${debuffName} is refreshed to ${existingDebuff.duration} turns!`);
+        } else {
+            this.log(`${target.name} already has ${debuffName} with ${oldDuration} turns remaining!`);
+        }
+    } else {
+        // Create new debuff
+        const debuff = {
+            name: debuffName,
+            duration: duration,
+            ...effects
+        };
+        
+        target.debuffs.push(debuff);
+        this.log(`${target.name} suffers from ${debuffName}!`);
+    }
 }
 
     
