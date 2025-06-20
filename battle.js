@@ -1115,7 +1115,9 @@ triggerDeathAnimation(unit) {
         // Update other effects if provided
         Object.assign(existingBuff, effects);
         
+        // Mark as fresh if duration was increased
         if (existingBuff.duration > oldDuration) {
+            existingBuff.appliedThisTurn = true;
             this.log(`${target.name}'s ${buffName} is refreshed to ${existingBuff.duration} turns!`);
         } else {
             this.log(`${target.name} already has ${buffName} with ${oldDuration} turns remaining!`);
@@ -1125,6 +1127,7 @@ triggerDeathAnimation(unit) {
         const buff = {
             name: buffName,
             duration: duration,
+            appliedThisTurn: true, // Mark as just applied
             ...effects
         };
         
@@ -1154,7 +1157,9 @@ triggerDeathAnimation(unit) {
         // Update other effects if provided
         Object.assign(existingDebuff, effects);
         
+        // Mark as fresh if duration was increased
         if (existingDebuff.duration > oldDuration) {
+            existingDebuff.appliedThisTurn = true;
             this.log(`${target.name}'s ${debuffName} is refreshed to ${existingDebuff.duration} turns!`);
         } else {
             this.log(`${target.name} already has ${debuffName} with ${oldDuration} turns remaining!`);
@@ -1164,6 +1169,7 @@ triggerDeathAnimation(unit) {
         const debuff = {
             name: debuffName,
             duration: duration,
+            appliedThisTurn: true, // Mark as just applied
             ...effects
         };
         
