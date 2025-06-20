@@ -138,7 +138,7 @@
         "discarded_helmet": {
             "id": "discarded_helmet",
             "name": "Discarded Helmet",
-            "slot": "helmet",
+            "slot": "head",
             "level": 25,
             "roll1": "int",
             "value1": 5,
