@@ -1125,14 +1125,14 @@ body {
     display: flex;
     gap: 10px;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     margin-bottom: 0px;
     margin-left: 0;
-    margin-right: 0;
-    width: 100%;
+    margin-right: 20px;
+    width: auto;
     position: absolute;
     bottom: 20px;
-    left: 0;
+    left: auto;
     right: 0;
 }
 
