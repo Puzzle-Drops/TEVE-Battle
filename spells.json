@@ -1,19 +1,16 @@
 {
-  "punch": {
+"punch": {
     "id": "punch",
     "name": "Punch",
-    "description": "Basic attack dealing 5 + (.5 × all stats) damage",
+    "description": "Basic attack dealing damage equal to your Attack stat",
     "cooldown": 0,
     "effects": ["damage", "physical"],
     "scaling": {
-      "base": 5,
-      "str": 0.5,
-      "agi": 0.5,
-      "int": 0.5
+        "attack": 1.0
     },
     "target": "enemy",
     "logicKey": "punchLogic"
-  },
+},
   "fury": {
     "id": "fury",
     "name": "Fury",
