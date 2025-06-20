@@ -900,15 +900,6 @@ body {
     z-index: 0;
 }
 
-.abilityPanel {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 0px;
-    margin-left: auto;
-    margin-right: 160px;
-}
-
 .unitSlot {
     position: absolute;
     width: 180px;
@@ -1133,7 +1124,7 @@ body {
     position: absolute;
     bottom: 20px;
     left: auto;
-    right: 0;
+    right: 20px;
 }
 
 .statLine {
