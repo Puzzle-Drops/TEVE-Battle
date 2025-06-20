@@ -8,7 +8,7 @@ const spellLogic = {
     },
 
     furyLogic: function(battle, caster, target) {
-        battle.applyBuff(caster, 'Speed Boost', 3, { actionBarMultiplier: 1.5 });
+        battle.applyBuff(caster, 'Speed Boost', 3, {});
         battle.log(`${caster.name} enters a fury, increasing attack speed for 3 turns!`);
     },
 
@@ -52,7 +52,7 @@ winLogic: function(battle, caster, targets) {
     });
     
     // Apply speed buff to self
-    battle.applyBuff(caster, 'Speed Boost', 5, { actionBarMultiplier: 1.5 });
+    battle.applyBuff(caster, 'Speed Boost', 5, {});
     
     battle.log(`${caster.name} uses Win! Victory is assured!`);
 },
@@ -79,7 +79,7 @@ testAttackBoostLogic: function(battle, caster, target) {
 },
 
 testSpeedBoostLogic: function(battle, caster, target) {
-    battle.applyBuff(target, 'Speed Boost', 2, { actionBarMultiplier: 1.5 });
+    battle.applyBuff(target, 'Speed Boost', 2, {});
 },
 
 testArmorBoostLogic: function(battle, caster, target) {
@@ -100,7 +100,7 @@ testAttackBreakLogic: function(battle, caster, target) {
 },
 
 testSlowLogic: function(battle, caster, target) {
-    battle.applyDebuff(target, 'Slow', 2, { actionBarSpeed: 0.5 });
+    battle.applyDebuff(target, 'Slow', 2, {});
 },
 
 testArmorBreakLogic: function(battle, caster, target) {
@@ -133,8 +133,8 @@ testTauntLogic: function(battle, caster, target) {
         enemies.forEach(enemy => {
             if (enemy.currentHp > 0) {
                 const damage = caster.baseStats.str * 2;
-                battle.dealDamage(caster, enemy, damage, 'frost');
-                battle.applyDebuff(enemy, 'slow', 2, { actionBarSpeed: 0.5 });
+                battle.dealDamage(caster, enemy, damage, 'magical');
+                battle.applyDebuff(enemy, 'slow', 2, {});
             }
         });
         battle.log(`${caster.name} breathes frost!`);
