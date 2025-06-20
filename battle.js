@@ -195,49 +195,44 @@ class BattleUnit {
         });
 
     }
-
     
 
     updateBuffsDebuffs() {
-
-        // Reduce duration and remove expired buffs
-
-        this.buffs = this.buffs.filter(buff => {
-
-            if (buff.duration > 0) {
-
-                buff.duration--;
-
-                return buff.duration > 0;
-
-            }
-
-            return buff.duration === -1; // Permanent buffs
-
-        });
-
+    // Reduce duration and remove expired buffs
+    this.buffs = this.buffs.filter(buff => {
+        // Skip decrementing if this buff was applied this turn
+        if (buff.appliedThisTurn) {
+            buff.appliedThisTurn = false; // Clear the flag for next turn
+            // Keep the buff without decrementing
+            return true;
+        }
         
-
-        // Reduce duration and remove expired debuffs
-
-        this.debuffs = this.debuffs.filter(debuff => {
-
-            if (debuff.duration > 0) {
-
-                debuff.duration--;
-
-                return debuff.duration > 0;
-
-            }
-
-            return debuff.duration === -1; // Permanent debuffs
-
-        });
-
-    }
-
+        // For non-fresh buffs, decrement duration
+        if (buff.duration > 0) {
+            buff.duration--;
+            return buff.duration > 0;
+        }
+        return buff.duration === -1; // Permanent buffs
+    });
+    
+    // Reduce duration and remove expired debuffs
+    this.debuffs = this.debuffs.filter(debuff => {
+        // Skip decrementing if this debuff was applied this turn
+        if (debuff.appliedThisTurn) {
+            debuff.appliedThisTurn = false; // Clear the flag for next turn
+            // Keep the debuff without decrementing
+            return true;
+        }
+        
+        // For non-fresh debuffs, decrement duration
+        if (debuff.duration > 0) {
+            debuff.duration--;
+            return debuff.duration > 0;
+        }
+        return debuff.duration === -1; // Permanent debuffs
+    });
 }
-
+	
 class Battle {
 constructor(game, party, enemyWaves) {
     this.game = game;
