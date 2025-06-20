@@ -2,7 +2,7 @@
 const spellLogic = {
     // Villager Spells
     punchLogic: function(battle, caster, target) {
-        const damage = 5 + (.5*caster.stats.str) + (.5*caster.stats.agi) + (.5*caster.stats.int);
+        const damage = caster.source.attack;
         battle.dealDamage(caster, target, damage, 'physical');
         battle.log(`${caster.name} punches ${target.name} for ${damage} damage!`);
     },
