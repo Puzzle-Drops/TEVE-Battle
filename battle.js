@@ -1118,14 +1118,33 @@ triggerDeathAnimation(unit) {
         return;
     }
     
-    const buff = {
-        name: buffName,
-        duration: duration,
-        ...effects
-    };
+    // Check if buff already exists
+    const existingBuff = target.buffs.find(b => b.name === buffName);
     
-    target.buffs.push(buff);
-    this.log(`${target.name} gains ${buffName}!`);
+    if (existingBuff) {
+        // Update duration to the higher value
+        const oldDuration = existingBuff.duration;
+        existingBuff.duration = Math.max(existingBuff.duration, duration);
+        
+        // Update other effects if provided
+        Object.assign(existingBuff, effects);
+        
+        if (existingBuff.duration > oldDuration) {
+            this.log(`${target.name}'s ${buffName} is refreshed to ${existingBuff.duration} turns!`);
+        } else {
+            this.log(`${target.name} already has ${buffName} with ${oldDuration} turns remaining!`);
+        }
+    } else {
+        // Create new buff
+        const buff = {
+            name: buffName,
+            duration: duration,
+            ...effects
+        };
+        
+        target.buffs.push(buff);
+        this.log(`${target.name} gains ${buffName}!`);
+    }
 }
 
     
@@ -1620,36 +1639,40 @@ showPlayerAbilities(unit) {
             game.hideAbilityTooltip();
         };
         
-        if (unit.canUseAbility(actualIndex)) {
-            abilityDiv.onclick = () => {
-                // Check if we're already targeting - prevent multiple ability selection
-                if (this.targetingState) {
-                    return;
-                }
-                
-                // Hide tooltip when clicked
-                game.hideAbilityTooltip();
-                
-                // Disable all other abilities
-                const allAbilities = abilityPanel.querySelectorAll('.ability');
-                allAbilities.forEach(ab => {
-                    if (ab !== abilityDiv) {
-                        ab.style.pointerEvents = 'none';
-                        ab.style.opacity = '0.5';
-                    }
-                });
-                
-                if (spell) {
-                    // For targeted abilities, highlight valid targets
-                    if (spell.target === 'enemy' || spell.target === 'ally') {
-                        this.selectTarget(unit, actualIndex, spell.target);
-                    } else {
-                        this.executeAbility(unit, actualIndex, spell.target === 'self' ? unit : 'all');
-                        this.endTurn();
-                    }
-                }
-            };
+        // Add click handler to ALL abilities (not just usable ones)
+abilityDiv.onclick = () => {
+    // Hide tooltip when clicked
+    game.hideAbilityTooltip();
+    
+    // If this ability can't be used, just ignore the click
+    if (!unit.canUseAbility(actualIndex)) {
+        return;
+    }
+    
+    // If we're already targeting, clear it first
+    if (this.targetingState) {
+        this.clearTargeting();
+    }
+    
+    // Disable all other abilities
+    const allAbilities = abilityPanel.querySelectorAll('.ability');
+    allAbilities.forEach(ab => {
+        if (ab !== abilityDiv) {
+            ab.style.pointerEvents = 'none';
+            ab.style.opacity = '0.5';
         }
+    });
+    
+    if (spell) {
+        // For targeted abilities, highlight valid targets
+        if (spell.target === 'enemy' || spell.target === 'ally') {
+            this.selectTarget(unit, actualIndex, spell.target);
+        } else {
+            this.executeAbility(unit, actualIndex, spell.target === 'self' ? unit : 'all');
+            this.endTurn();
+        }
+    }
+};
         
         abilityPanel.appendChild(abilityDiv);
     });
