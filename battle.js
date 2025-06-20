@@ -639,19 +639,19 @@ this.allUnits.forEach(unit => {
     if (unit.isAlive) {
         let speed = unit.actionBarSpeed;
         
-        // Apply speed buffs
-        unit.buffs.forEach(buff => {
-            if (buff.name === 'Speed Boost' || buff.actionBarMultiplier) {
-                speed *= buff.actionBarMultiplier || 1.5;
-            }
-        });
-        
-        // Apply speed debuffs
-        unit.debuffs.forEach(debuff => {
-            if (debuff.name === 'Slow' || debuff.actionBarSpeed) {
-                speed *= debuff.actionBarSpeed || 0.5;
-            }
-        });
+        // Apply speed buffs (hardcoded +33%)
+unit.buffs.forEach(buff => {
+    if (buff.name === 'Speed Boost') {
+        speed *= 1.33;
+    }
+});
+
+// Apply speed debuffs (hardcoded -33%)
+unit.debuffs.forEach(debuff => {
+    if (debuff.name === 'Slow') {
+        speed *= 0.67;
+    }
+});
         
         unit.actionBar += speed;
         if (unit.actionBar > highestActionBar) {
@@ -1038,9 +1038,10 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     this.log(`${attacker.name} deals ${damage} ${damageType} damage to ${target.name}!`);
     
     // Check if target died
-    if (previousHp > 0 && target.currentHp <= 0) {
-        this.triggerDeathAnimation(target);
-    }
+if (previousHp > 0 && target.currentHp <= 0) {
+    this.triggerDeathAnimation(target);
+    this.handleUnitDeath(target);
+}
     
     return damage;
 }
@@ -1061,7 +1062,22 @@ triggerDeathAnimation(unit) {
         }
     }
 }
-    
+
+	handleUnitDeath(unit) {
+    // Check if this unit was the source of any taunts
+    this.allUnits.forEach(otherUnit => {
+        if (otherUnit.isAlive) {
+            // Remove any taunts where this unit was the taunt target
+            otherUnit.debuffs = otherUnit.debuffs.filter(debuff => {
+                if (debuff.name === 'Taunt' && debuff.tauntTarget === unit) {
+                    this.log(`${otherUnit.name}'s taunt ends as ${unit.name} has fallen!`);
+                    return false;
+                }
+                return true;
+            });
+        }
+    });
+}
 
     healUnit(target, amount) {
     if (!target.isAlive) return 0;
@@ -1239,19 +1255,21 @@ applyDotEffects(unit) {
             this.log(`${unit.name} takes ${damage} damage from ${debuff.name}!`);
             
             // Check if unit died from DOT
-            if (previousHp > 0 && unit.currentHp <= 0) {
-                this.triggerDeathAnimation(unit);
-            }
+if (previousHp > 0 && unit.currentHp <= 0) {
+    this.triggerDeathAnimation(unit);
+    this.handleUnitDeath(unit);
+}
         } else if (debuff.name === 'Bleed' && unit.isAlive) {
             const damage = Math.floor(unit.maxHp * 0.05);
             const previousHp = unit.currentHp;
             unit.currentHp = Math.max(0, unit.currentHp - damage);
             this.log(`${unit.name} bleeds for ${damage} damage!`);
             
-            // Check if unit died from bleed
-            if (previousHp > 0 && unit.currentHp <= 0) {
-                this.triggerDeathAnimation(unit);
-            }
+            // Check if unit died from DOT
+if (previousHp > 0 && unit.currentHp <= 0) {
+    this.triggerDeathAnimation(unit);
+    this.handleUnitDeath(unit);
+}
         }
     });
 }
@@ -1386,7 +1404,11 @@ if (this.timerInterval) {
     this.timerInterval = null;
 }
 
-        
+        // Clear all buffs and debuffs from all units
+this.allUnits.forEach(unit => {
+    unit.buffs = [];
+    unit.debuffs = [];
+});
 
         // Clear any active targeting
 
