@@ -83,7 +83,7 @@ testSpeedBoostLogic: function(battle, caster, target, spell) {
 },
 
 testArmorBoostLogic: function(battle, caster, target) {
-    battle.applyBuff(target, 'Armor Boost', 2, { armorMultiplier: 1.5 });
+    battle.applyBuff(target, 'Increase Defense', 2, {});
 },
 
 testImmuneLogic: function(battle, caster, target) {
@@ -104,9 +104,9 @@ testSlowLogic: function(battle, caster, target, spell) {
 },
 
 testArmorBreakLogic: function(battle, caster, target) {
-    battle.applyDebuff(target, 'Armor Break', 2, { armorMultiplier: 0.5 });
+    battle.applyDebuff(target, 'Reduce Defense', 2, {});
 },
-
+    
 testBlightLogic: function(battle, caster, target) {
     battle.applyDebuff(target, 'Blight', 2, { noHeal: true });
 },
