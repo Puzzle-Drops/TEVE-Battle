@@ -2356,6 +2356,7 @@ getBuffIconName(buffName) {
         'Attack Boost': 'attack_boost',
         'Speed Boost': 'speed_boost',
         'Armor Boost': 'armor_boost',
+        'Increase Defense': 'armor_boost',
         'Immune': 'immune',
         'Shield': 'shield'
     };
@@ -2371,6 +2372,7 @@ getDebuffIconName(debuffName) {
         'Attack Break': 'attack_break',
         'Slow': 'slow',
         'Armor Break': 'armor_break',
+        'Reduce Defense': 'armor_break',
         'Blight': 'blight',
         'Bleed': 'bleed',
         'Stun': 'stun',
@@ -2378,7 +2380,6 @@ getDebuffIconName(debuffName) {
     };
     return iconMap[debuffName] || 'debuff';
 }
-
 showBuffDebuffTooltip(event, buffDebuff, isBuff) {
     // Ensure we have valid buff/debuff data
     if (!buffDebuff || !buffDebuff.name) {
@@ -2407,29 +2408,31 @@ showBuffDebuffTooltip(event, buffDebuff, isBuff) {
         document.body.appendChild(tooltip);
     }
     
-    const descriptions = {
-        // Buffs
-        'fury': 'Increased attack speed by 33%',
-        'Attack Boost': 'Deal 50% increased damage',
-        'Speed Boost': '50% increased action bar progress',
-        'Armor Boost': '50% increased armor',
-        'Immune': 'Cannot gain debuffs',
-        'Shield': 'Attacks reduce shield HP before unit HP',
-        'beastForm': 'Transformed, gaining 50% STR and AGI',
-        'frostArmor': 'Reduces damage taken by 30%',
-        'divineShield': 'Immune to all damage',
-        
-        // Debuffs
-        'poison': 'Taking damage over time',
-        'Attack Break': '50% reduced attack damage',
-        'Slow': '33% reduced action bar progress',
-        'Armor Break': '50% reduced armor',
-        'Blight': 'No health regen, cannot be healed',
-        'Bleed': 'Takes 5% max HP damage each turn',
-        'Stun': 'Cannot act on next turn',
-        'Taunt': 'Must attack the unit that taunted',
-        'huntersMark': 'Takes 25% increased damage'
-    };
+const descriptions = {
+    // Buffs
+    'fury': 'Increased attack speed by 33%',
+    'Attack Boost': 'Deal 50% increased damage',
+    'Speed Boost': '50% increased action bar progress',
+    'Armor Boost': '50% increased armor',
+    'Increase Defense': 'Takes 25% less damage and gains +25% damage reduction',
+    'Immune': 'Cannot gain debuffs',
+    'Shield': 'Attacks reduce shield HP before unit HP',
+    'beastForm': 'Transformed, gaining 50% STR and AGI',
+    'frostArmor': 'Reduces damage taken by 30%',
+    'divineShield': 'Immune to all damage',
+    
+    // Debuffs
+    'poison': 'Taking damage over time',
+    'Attack Break': '50% reduced attack damage',
+    'Slow': '33% reduced action bar progress',
+    'Armor Break': '50% reduced armor',
+    'Reduce Defense': 'Takes 25% more damage and loses -25% damage reduction',
+    'Blight': 'No health regen, cannot be healed',
+    'Bleed': 'Takes 5% max HP damage each turn',
+    'Stun': 'Cannot act on next turn',
+    'Taunt': 'Must attack the unit that taunted',
+    'huntersMark': 'Takes 25% increased damage'
+};
     
     tooltip.className = isBuff ? 'buff' : 'debuff';
     tooltip.innerHTML = `
