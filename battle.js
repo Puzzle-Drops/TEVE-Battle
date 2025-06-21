@@ -15,6 +15,7 @@ class BattleUnit {
     this.cooldowns = {};
     this.turnStartBuffs = []; // Track buffs at turn start
     this.turnStartDebuffs = []; // Track debuffs at turn start
+    this.deathAnimationTriggered = false; // Track if death animation has played
     
     // Initialize cooldowns
     const abilities = this.abilities;
@@ -245,6 +246,7 @@ constructor(game, party, enemyWaves) {
     this.running = true;
     this.processingWaveTransition = false;
     this.targetingState = null;
+    this.battlePaused = false; // Pause for animations
 
 	// Clear any existing timer interval from previous battles
 if (this.timerInterval) {
@@ -606,7 +608,11 @@ updateWaveCounter() {
 
         }
 
-        
+        // If battle is paused for animations, wait
+    if (this.battlePaused) {
+        setTimeout(() => this.battleLoop(), 100);
+        return;
+    }
 
         // If waiting for player, don't progress
 
@@ -1061,10 +1067,18 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     
     this.log(`${attacker.name} deals ${damage} ${damageType} damage to ${target.name}!`);
     
-    // Check if target died
+// Check if target died
 if (previousHp > 0 && target.currentHp <= 0) {
     this.triggerDeathAnimation(target);
     this.handleUnitDeath(target);
+    
+    // Add a delay to let death animation play
+    if (!target.deathAnimationTriggered) {
+        this.battlePaused = true;
+        setTimeout(() => {
+            this.battlePaused = false;
+        }, 800);
+    }
 }
     
     return damage;
@@ -1072,17 +1086,22 @@ if (previousHp > 0 && target.currentHp <= 0) {
 	
 
 triggerDeathAnimation(unit) {
-    // Only trigger if unit is actually alive (not already dead)
-    if (unit.currentHp > 0) return;
+    // Only trigger if unit is dead and animation hasn't been triggered yet
+    if (unit.currentHp > 0 || unit.deathAnimationTriggered) return;
+    
+    unit.deathAnimationTriggered = true;
     
     const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
     const element = document.getElementById(elementId);
     
     if (element) {
         const unitDiv = element.querySelector('.unit');
-        // Check if already dying to prevent retriggering
-        if (unitDiv && !unitDiv.classList.contains('dying')) {
+        if (unitDiv) {
             unitDiv.classList.add('dying');
+            // Add a small delay to the battle loop to let animation play
+            setTimeout(() => {
+                // Animation complete, can continue
+            }, 800); // Match the CSS animation duration
         }
     }
 }
@@ -2063,26 +2082,23 @@ if (unit.isAlive) {
 // Update unit appearance with sprites
 if (unitDiv) {
     if (!unit.isAlive) {
-        // Don't immediately hide - let death animation play
-        if (!unitDiv.classList.contains('dying')) {
-            unitDiv.style.filter = 'grayscale(100%)';
+        // Only apply visual changes if death animation has been triggered
+        if (unit.deathAnimationTriggered) {
+            if (levelIndicator) levelIndicator.style.display = 'none';
+            
+            // Hide health bar and action bar when dead
+            const healthBar = element.querySelector('.healthBar');
+            const actionBar = element.querySelector('.actionBar');
+            if (healthBar) {
+                healthBar.style.display = 'none';
+            }
+            if (actionBar) actionBar.style.display = 'none';
         }
-        if (levelIndicator) levelIndicator.style.display = 'none';
-        
-        // Hide health bar and action bar when dead
-        const healthBar = element.querySelector('.healthBar');
-        const actionBar = element.querySelector('.actionBar');
-        if (healthBar) {
-            healthBar.style.display = 'none';
-        }
-        if (actionBar) actionBar.style.display = 'none';
     } else {
         unitDiv.style.opacity = '';
         unitDiv.style.filter = '';
-        // Don't remove dying class if unit is alive but has 0 hp (in death animation)
-        if (unit.currentHp > 0) {
-            unitDiv.classList.remove('dying');
-        }
+        unitDiv.classList.remove('dying');
+	    
         if (levelIndicator) levelIndicator.style.display = '';
         
         // Show health bar and action bar when alive
