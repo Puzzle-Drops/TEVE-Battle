@@ -288,108 +288,72 @@ if (this.timerInterval) {
     
 
     loadWave(waveIndex) {
-
-        if (waveIndex >= this.enemyWaves.length) {
-
-            return false;
-
-        }
-
-        
-
-        this.currentWave = waveIndex;
-        this.waveExpCalculated = false; // Reset exp calculation flag for new wave
-        const wave = this.enemyWaves[waveIndex];
-
-        
-// Clear any existing enemies and their UI
-for (let i = 1; i <= 5; i++) {
-    const element = document.getElementById(`enemy${i}`);
-    if (element) {
-        const unitDiv = element.querySelector('.unit');
-        if (unitDiv) {
-            delete unitDiv.dataset.spriteSet;
-            unitDiv.innerHTML = 'E' + i;
-            unitDiv.classList.remove('dying');
-            unitDiv.style.opacity = '';
-            unitDiv.style.filter = '';
-        }
-        // Remove any existing shadow
-        const shadow = element.querySelector('.unitShadow');
-        if (shadow) {
-            shadow.remove();
-        }
+    if (waveIndex >= this.enemyWaves.length) {
+        return false;
     }
-}
+    
+    this.currentWave = waveIndex;
+    this.waveExpCalculated = false; // Reset exp calculation flag for new wave
+    const wave = this.enemyWaves[waveIndex];
 
-        
-
-        // Clear enemies array
-
-        this.enemies = [];
-
-        
-
-        // Create battle units for this wave
-
-        wave.forEach((enemy, index) => {
-
-            if (enemy) {
-
-                const newUnit = new BattleUnit(enemy, true, index);
-
-                // Ensure HP is set properly
-
-                newUnit.currentHp = newUnit.maxHp;
-
-                this.enemies.push(newUnit);
-
-                console.log(`Created enemy: ${newUnit.name} with ${newUnit.currentHp}/${newUnit.maxHp} HP`);
-
+    // Clear any existing enemies and their UI
+    for (let i = 1; i <= 5; i++) {
+        const element = document.getElementById(`enemy${i}`);
+        if (element) {
+            const unitDiv = element.querySelector('.unit');
+            if (unitDiv) {
+                delete unitDiv.dataset.spriteSet;
+                unitDiv.innerHTML = 'E' + i;
+                unitDiv.classList.remove('dying');
+                unitDiv.style.opacity = '';
+                unitDiv.style.filter = '';
             }
-
-        });
-
-        
-
-        // Update all units list
-
-        this.allUnits = [...this.party, ...this.enemies];
-
-        
-
-        // Reset action bars for enemies
-
-        this.enemies.forEach(enemy => {
-
-            enemy.actionBar = 0;
-
-        });
-
-        
-
-        this.log(`Wave ${waveIndex + 1} begins!`);
-
-        this.log(`Enemies: ${this.enemies.map(u => u.name).join(', ')}`);
-
-        
-
-        // Update wave counter
-
-        this.updateWaveCounter();
-
-        
-
-        // Force complete UI update
-
-        this.updateUI();
-
-        
-
-        return true;
-
+            // Remove any existing shadow
+            const shadow = element.querySelector('.unitShadow');
+            if (shadow) {
+                shadow.remove();
+            }
+        }
     }
-
+    
+    // Clear enemies array
+    this.enemies = [];
+    
+    // Create battle units for this wave
+    wave.forEach((enemy, index) => {
+        if (enemy) {
+            const newUnit = new BattleUnit(enemy, true, index);
+            // Ensure HP is set properly
+            newUnit.currentHp = newUnit.maxHp;
+            this.enemies.push(newUnit);
+            console.log(`Created enemy: ${newUnit.name} with ${newUnit.currentHp}/${newUnit.maxHp} HP`);
+        }
+    });
+    
+    // Reset death animation flags for all units
+    this.enemies.forEach(enemy => {
+        enemy.deathAnimationTriggered = false;
+    });
+    
+    // Update all units list
+    this.allUnits = [...this.party, ...this.enemies];
+    
+    // Reset action bars for enemies
+    this.enemies.forEach(enemy => {
+        enemy.actionBar = 0;
+    });
+    
+    this.log(`Wave ${waveIndex + 1} begins!`);
+    this.log(`Enemies: ${this.enemies.map(u => u.name).join(', ')}`);
+    
+    // Update wave counter
+    this.updateWaveCounter();
+    
+    // Force complete UI update
+    this.updateUI();
+    
+    return true;
+}
     
 
     applyInitialPassives() {
@@ -1328,6 +1292,14 @@ if (previousHp > 0 && unit.currentHp <= 0) {
 if (previousHp > 0 && unit.currentHp <= 0) {
     this.triggerDeathAnimation(unit);
     this.handleUnitDeath(unit);
+    
+    // Add a delay to let death animation play
+    if (!unit.deathAnimationTriggered) {
+        this.battlePaused = true;
+        setTimeout(() => {
+            this.battlePaused = false;
+        }, 800);
+    }
 }
         }
     });
