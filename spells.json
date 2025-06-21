@@ -142,8 +142,8 @@
 },
 "test_armor_boost": {
   "id": "test_armor_boost",
-  "name": "Armor Boost Test",
-  "description": "Grants Armor Boost buff for 2 turns",
+  "name": "Increase Defense Test",
+  "description": "Grants Increase Defense Boost buff for 2 turns",
   "cooldown": 1,
   "effects": ["buff", "defense"],
   "target": "ally",
@@ -188,8 +188,8 @@
 },
 "test_armor_break": {
   "id": "test_armor_break",
-  "name": "Armor Break Test",
-  "description": "Inflicts Armor Break debuff for 2 turns",
+  "name": "Reduce Defense Test",
+  "description": "Inflicts Reduce Defense debuff for 2 turns",
   "cooldown": 1,
   "effects": ["debuff"],
   "target": "enemy",
