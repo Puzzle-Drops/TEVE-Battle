@@ -1712,7 +1712,6 @@ abilityDiv.onclick = () => {
     });
     
     // Apply centering based on ability count
-    abilityPanel.style.justifyContent = 'center';
     abilityPanel.style.width = '100%';
 }
 
