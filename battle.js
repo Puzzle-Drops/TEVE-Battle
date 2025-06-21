@@ -2128,13 +2128,20 @@ if (buffDebuffContainer && unit.isAlive) {
                 ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
             `;
             
-            // Store buff data on element for tooltip
-            buffDiv._buffData = buff;
+            // Create a closure to capture buff data
+            const buffData = {
+                name: buff.name,
+                duration: buff.duration,
+                ...buff
+            };
             
-            // Add event listeners with proper binding
-            buffDiv.addEventListener('mouseenter', (e) => {
-                this.showBuffDebuffTooltip(e, buffDiv._buffData, true);
-            });
+            // Add event listeners using closure
+            buffDiv.addEventListener('mouseenter', ((data) => {
+                return (e) => {
+                    this.showBuffDebuffTooltip(e, data, true);
+                };
+            })(buffData));
+            
             buffDiv.addEventListener('mouseleave', () => {
                 this.hideBuffDebuffTooltip();
             });
@@ -2155,13 +2162,20 @@ if (buffDebuffContainer && unit.isAlive) {
                 ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
             `;
             
-            // Store debuff data on element for tooltip
-            debuffDiv._debuffData = debuff;
+            // Create a closure to capture debuff data
+            const debuffData = {
+                name: debuff.name,
+                duration: debuff.duration,
+                ...debuff
+            };
             
-            // Add event listeners with proper binding
-            debuffDiv.addEventListener('mouseenter', (e) => {
-                this.showBuffDebuffTooltip(e, debuffDiv._debuffData, false);
-            });
+            // Add event listeners using closure
+            debuffDiv.addEventListener('mouseenter', ((data) => {
+                return (e) => {
+                    this.showBuffDebuffTooltip(e, data, false);
+                };
+            })(debuffData));
+            
             debuffDiv.addEventListener('mouseleave', () => {
                 this.hideBuffDebuffTooltip();
             });
@@ -2325,16 +2339,36 @@ getDebuffIconName(debuffName) {
 }
 
 showBuffDebuffTooltip(event, buffDebuff, isBuff) {
+    // Ensure we have valid buff/debuff data
+    if (!buffDebuff || !buffDebuff.name) {
+        console.warn('Invalid buff/debuff data for tooltip');
+        return;
+    }
+
+// Debug log to help identify issues
+    console.log('Showing buff/debuff tooltip:', buffDebuff.name, 'isBuff:', isBuff);
+	
     let tooltip = document.getElementById('buffDebuffTooltip');
     if (!tooltip) {
         tooltip = document.createElement('div');
         tooltip.id = 'buffDebuffTooltip';
+        tooltip.style.cssText = `
+            position: fixed;
+            background: rgba(10, 15, 26, 0.95);
+            border: 2px solid #2a6a8a;
+            padding: 12px;
+            border-radius: 4px;
+            z-index: 10002;
+            pointer-events: none;
+            max-width: 300px;
+            display: none;
+        `;
         document.body.appendChild(tooltip);
     }
     
     const descriptions = {
         // Buffs
-        'fury': 'Increased attack speed by 50%',
+        'fury': 'Increased attack speed by 33%',
         'Attack Boost': 'Deal 50% increased damage',
         'Speed Boost': '50% increased action bar progress',
         'Armor Boost': '50% increased armor',
@@ -2347,7 +2381,7 @@ showBuffDebuffTooltip(event, buffDebuff, isBuff) {
         // Debuffs
         'poison': 'Taking damage over time',
         'Attack Break': '50% reduced attack damage',
-        'Slow': '50% reduced action bar progress',
+        'Slow': '33% reduced action bar progress',
         'Armor Break': '50% reduced armor',
         'Blight': 'No health regen, cannot be healed',
         'Bleed': 'Takes 5% max HP damage each turn',
@@ -2384,6 +2418,8 @@ hideBuffDebuffTooltip() {
     const tooltip = document.getElementById('buffDebuffTooltip');
     if (tooltip) {
         tooltip.style.display = 'none';
+        // Clear tooltip content to prevent stale data
+        tooltip.innerHTML = '';
     }
 }
 	
