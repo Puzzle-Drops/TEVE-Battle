@@ -977,27 +977,48 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
         }
     });
     
+    // Apply Reduce Defense damage increase (25% more base damage)
+    const hasReduceDefense = target.debuffs.some(d => d.name === 'Reduce Defense');
+    if (hasReduceDefense) {
+        damage = Math.round(damage * 1.25);
+    }
+    
+    // Apply Increase Defense damage reduction (25% less base damage)
+    const hasIncreaseDefense = target.buffs.some(b => b.name === 'Increase Defense');
+    if (hasIncreaseDefense) {
+        damage = Math.round(damage * 0.75);
+    }
+    
     // Apply damage reduction based on type
     if (damageType === 'physical') {
-        let targetArmor = target.armor;
+        let physicalDR = target.physicalDamageReduction;
         
-        // Apply armor buffs/debuffs
-        target.buffs.forEach(buff => {
-            if (buff.name === 'Armor Boost') {
-                targetArmor *= 1.5;
-            }
-        });
-        target.debuffs.forEach(debuff => {
-            if (debuff.name === 'Armor Break') {
-                targetArmor *= 0.5;
-            }
-        });
+        // Apply Reduce Defense (flat -25 percentage points)
+        if (hasReduceDefense) {
+            physicalDR = Math.max(0, physicalDR - 0.25);
+        }
         
-        const physicalDR = (0.9 * targetArmor) / (targetArmor + 500);
+        // Apply Increase Defense (flat +25 percentage points, capped at 90%)
+        if (hasIncreaseDefense) {
+            physicalDR = Math.min(0.9, physicalDR + 0.25);
+        }
+        
         damage = damage * (1 - physicalDR);
     } else {
         // All non-physical damage is considered magical
-        damage = damage * (1 - target.magicDamageReduction);
+        let magicalDR = target.magicDamageReduction;
+        
+        // Apply Reduce Defense (flat -25 percentage points)
+        if (hasReduceDefense) {
+            magicalDR = Math.max(0, magicalDR - 0.25);
+        }
+        
+        // Apply Increase Defense (flat +25 percentage points, capped at 50%)
+        if (hasIncreaseDefense) {
+            magicalDR = Math.min(0.5, magicalDR + 0.25);
+        }
+        
+        damage = damage * (1 - magicalDR);
     }
     
     // Check for shields first
