@@ -1142,11 +1142,11 @@ triggerDeathAnimation(unit) {
         Object.assign(existingBuff, effects);
         
 // Log if duration was increased
-        if (existingDebuff.duration > oldDuration) {
-            this.log(`${target.name}'s ${debuffName} is refreshed to ${existingDebuff.duration} turns!`);
-        } else {
-            this.log(`${target.name} already has ${buffName} with ${oldDuration} turns remaining!`);
-        }
+if (existingBuff.duration > oldDuration) {
+    this.log(`${target.name}'s ${buffName} is refreshed to ${existingBuff.duration} turns!`);
+} else {
+    this.log(`${target.name} already has ${buffName} with ${oldDuration} turns remaining!`);
+}
     } else {
         // Create new buff
 const buff = {
@@ -1191,12 +1191,12 @@ const buff = {
         // Update other effects if provided
         Object.assign(existingDebuff, effects);
         
-        // Log if duration was increased
-        if (existingBuff.duration > oldDuration) {
-            this.log(`${target.name}'s ${buffName} is refreshed to ${existingBuff.duration} turns!`);
-        } else {
-            this.log(`${target.name} already has ${debuffName} with ${oldDuration} turns remaining!`);
-        }
+// Log if duration was increased
+if (existingDebuff.duration > oldDuration) {
+    this.log(`${target.name}'s ${debuffName} is refreshed to ${existingDebuff.duration} turns!`);
+} else {
+    this.log(`${target.name} already has ${debuffName} with ${oldDuration} turns remaining!`);
+}
     } else {
         // Create new debuff
 const debuff = {
