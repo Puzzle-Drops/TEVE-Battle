@@ -1146,6 +1146,8 @@ triggerDeathAnimation(unit) {
         target.buffs.push(buff);
         this.log(`${target.name} gains ${buffName}!`);
     }
+	        // Force UI update for this unit
+    this.forceBuffDebuffUIUpdate(target);
 }
 
     
@@ -1188,6 +1190,8 @@ triggerDeathAnimation(unit) {
         target.debuffs.push(debuff);
         this.log(`${target.name} suffers from ${debuffName}!`);
     }
+	        // Force UI update for this unit
+    this.forceBuffDebuffUIUpdate(target);
 }
 
     
@@ -1825,7 +1829,18 @@ clearTargeting() {
 
     }
 
+    forceBuffDebuffUIUpdate(unit) {
+    const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
+    const element = document.getElementById(elementId);
     
+    if (element) {
+        const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+        if (buffDebuffContainer) {
+            // Force state change to trigger update
+            buffDebuffContainer.dataset.state = '';
+        }
+    }
+},
 
     updateUI() {
 
@@ -2070,7 +2085,7 @@ if (unitDiv) {
 
                 }
 
-		    // Update or create buff/debuff container
+// Update or create buff/debuff container
 let buffDebuffContainer = element.querySelector('.buffDebuffContainer');
 if (!buffDebuffContainer && unit.isAlive) {
     buffDebuffContainer = document.createElement('div');
@@ -2080,43 +2095,70 @@ if (!buffDebuffContainer && unit.isAlive) {
 
 // Update buffs and debuffs display
 if (buffDebuffContainer && unit.isAlive) {
-    buffDebuffContainer.innerHTML = '';
-    
-    // Display buffs
-    unit.buffs.forEach((buff, index) => {
-        const buffDiv = document.createElement('div');
-        buffDiv.className = 'buffIcon';
-        buffDiv.innerHTML = `
-            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${this.getBuffIconName(buff.name)}.png" 
-                 alt="${buff.name}"
-                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
-            ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
-        `;
-        
-        // Add hover tooltip
-        buffDiv.onmouseover = (e) => this.showBuffDebuffTooltip(e, buff, true);
-        buffDiv.onmouseout = () => this.hideBuffDebuffTooltip();
-        
-        buffDebuffContainer.appendChild(buffDiv);
+    // Only update if the buffs/debuffs have changed
+    const currentBuffDebuffState = JSON.stringify({
+        buffs: unit.buffs.map(b => ({name: b.name, duration: b.duration})),
+        debuffs: unit.debuffs.map(d => ({name: d.name, duration: d.duration}))
     });
     
-    // Display debuffs
-    unit.debuffs.forEach((debuff, index) => {
-        const debuffDiv = document.createElement('div');
-        debuffDiv.className = 'debuffIcon';
-        debuffDiv.innerHTML = `
-            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${this.getDebuffIconName(debuff.name)}.png" 
-                 alt="${debuff.name}"
-                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
-            ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
-        `;
+    if (buffDebuffContainer.dataset.state !== currentBuffDebuffState) {
+        buffDebuffContainer.dataset.state = currentBuffDebuffState;
+        buffDebuffContainer.innerHTML = '';
         
-        // Add hover tooltip
-        debuffDiv.onmouseover = (e) => this.showBuffDebuffTooltip(e, debuff, false);
-        debuffDiv.onmouseout = () => this.hideBuffDebuffTooltip();
+        // Display buffs
+        unit.buffs.forEach((buff, index) => {
+            const buffDiv = document.createElement('div');
+            buffDiv.className = 'buffIcon';
+            const iconName = this.getBuffIconName(buff.name);
+            
+            buffDiv.innerHTML = `
+                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                     alt="${buff.name}"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
+                ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
+            `;
+            
+            // Store buff data on element for tooltip
+            buffDiv._buffData = buff;
+            
+            // Add event listeners with proper binding
+            buffDiv.addEventListener('mouseenter', (e) => {
+                this.showBuffDebuffTooltip(e, buffDiv._buffData, true);
+            });
+            buffDiv.addEventListener('mouseleave', () => {
+                this.hideBuffDebuffTooltip();
+            });
+            
+            buffDebuffContainer.appendChild(buffDiv);
+        });
         
-        buffDebuffContainer.appendChild(debuffDiv);
-    });
+        // Display debuffs
+        unit.debuffs.forEach((debuff, index) => {
+            const debuffDiv = document.createElement('div');
+            debuffDiv.className = 'debuffIcon';
+            const iconName = this.getDebuffIconName(debuff.name);
+            
+            debuffDiv.innerHTML = `
+                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                     alt="${debuff.name}"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
+                ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
+            `;
+            
+            // Store debuff data on element for tooltip
+            debuffDiv._debuffData = debuff;
+            
+            // Add event listeners with proper binding
+            debuffDiv.addEventListener('mouseenter', (e) => {
+                this.showBuffDebuffTooltip(e, debuffDiv._debuffData, false);
+            });
+            debuffDiv.addEventListener('mouseleave', () => {
+                this.hideBuffDebuffTooltip();
+            });
+            
+            buffDebuffContainer.appendChild(debuffDiv);
+        });
+    }
 } else if (buffDebuffContainer && !unit.isAlive) {
     buffDebuffContainer.style.display = 'none';
 }
