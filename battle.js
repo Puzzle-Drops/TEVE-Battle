@@ -200,33 +200,37 @@ class BattleUnit {
     
 
 updateBuffsDebuffs() {
+    // Initialize arrays if they don't exist
+    if (!this.turnStartBuffs) this.turnStartBuffs = [];
+    if (!this.turnStartDebuffs) this.turnStartDebuffs = [];
+    
     // Reduce duration and remove expired buffs
     this.buffs = this.buffs.filter(buff => {
-        // Only decrement if this buff existed at turn start
-        const existedAtTurnStart = this.turnStartBuffs.includes(buff.name);
+        // Only decrement if this buff existed at turn start and wasn't refreshed
+        const shouldDecrement = this.turnStartBuffs.includes(buff.name);
         
-        if (existedAtTurnStart && buff.duration > 0) {
+        if (shouldDecrement && buff.duration > 0) {
             buff.duration--;
             return buff.duration > 0;
         }
-        return buff.duration === -1 || buff.duration > 0; // Keep permanent buffs or buffs with remaining duration
+        return buff.duration === -1 || buff.duration > 0;
     });
     
     // Reduce duration and remove expired debuffs
     this.debuffs = this.debuffs.filter(debuff => {
-        // Only decrement if this debuff existed at turn start
-        const existedAtTurnStart = this.turnStartDebuffs.includes(debuff.name);
+        // Only decrement if this debuff existed at turn start and wasn't refreshed
+        const shouldDecrement = this.turnStartDebuffs.includes(debuff.name);
         
-        if (existedAtTurnStart && debuff.duration > 0) {
+        if (shouldDecrement && debuff.duration > 0) {
             debuff.duration--;
             return debuff.duration > 0;
         }
-        return debuff.duration === -1 || debuff.duration > 0; // Keep permanent debuffs or debuffs with remaining duration
+        return debuff.duration === -1 || debuff.duration > 0;
     });
 }
 
 	
-}
+} // < ----- end of battleunit class
 	
 class Battle {
 constructor(game, party, enemyWaves) {
@@ -1114,6 +1118,14 @@ triggerDeathAnimation(unit) {
         return;
     }
     
+    // Remove this buff from turn start tracking since it's being applied/refreshed
+    if (target.turnStartBuffs) {
+        const index = target.turnStartBuffs.indexOf(buffName);
+        if (index > -1) {
+            target.turnStartBuffs.splice(index, 1);
+        }
+    }
+    
     // Check if buff already exists
     const existingBuff = target.buffs.find(b => b.name === buffName);
     
@@ -1154,6 +1166,14 @@ const buff = {
     if (target.buffs.some(b => b.name === 'Immune' || b.immunity)) {
         this.log(`${target.name} is immune to debuffs!`);
         return;
+    }
+    
+    // Remove this debuff from turn start tracking since it's being applied/refreshed
+    if (target.turnStartDebuffs) {
+        const index = target.turnStartDebuffs.indexOf(debuffName);
+        if (index > -1) {
+            target.turnStartDebuffs.splice(index, 1);
+        }
     }
     
     // Check if debuff already exists
@@ -2424,4 +2444,4 @@ hideBuffDebuffTooltip() {
 }
 	
 
-}
+} // <- End of battle class
