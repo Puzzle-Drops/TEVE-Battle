@@ -13,6 +13,8 @@ class BattleUnit {
     this.buffs = [];
     this.debuffs = [];
     this.cooldowns = {};
+    this.turnStartBuffs = []; // Track buffs at turn start
+    this.turnStartDebuffs = []; // Track debuffs at turn start
     
     // Initialize cooldowns
     const abilities = this.abilities;
@@ -197,41 +199,33 @@ class BattleUnit {
     }
     
 
-    updateBuffsDebuffs() {
+updateBuffsDebuffs() {
     // Reduce duration and remove expired buffs
     this.buffs = this.buffs.filter(buff => {
-        // Skip decrementing if this buff was applied this turn
-        if (buff.appliedThisTurn) {
-            buff.appliedThisTurn = false; // Clear the flag for next turn
-            // Keep the buff without decrementing
-            return true;
-        }
+        // Only decrement if this buff existed at turn start
+        const existedAtTurnStart = this.turnStartBuffs.includes(buff.name);
         
-        // For non-fresh buffs, decrement duration
-        if (buff.duration > 0) {
+        if (existedAtTurnStart && buff.duration > 0) {
             buff.duration--;
             return buff.duration > 0;
         }
-        return buff.duration === -1; // Permanent buffs
+        return buff.duration === -1 || buff.duration > 0; // Keep permanent buffs or buffs with remaining duration
     });
     
     // Reduce duration and remove expired debuffs
     this.debuffs = this.debuffs.filter(debuff => {
-        // Skip decrementing if this debuff was applied this turn
-        if (debuff.appliedThisTurn) {
-            debuff.appliedThisTurn = false; // Clear the flag for next turn
-            // Keep the debuff without decrementing
-            return true;
-        }
+        // Only decrement if this debuff existed at turn start
+        const existedAtTurnStart = this.turnStartDebuffs.includes(debuff.name);
         
-        // For non-fresh debuffs, decrement duration
-        if (debuff.duration > 0) {
+        if (existedAtTurnStart && debuff.duration > 0) {
             debuff.duration--;
             return debuff.duration > 0;
         }
-        return debuff.duration === -1; // Permanent debuffs
+        return debuff.duration === -1 || debuff.duration > 0; // Keep permanent debuffs or debuffs with remaining duration
     });
 }
+
+	
 }
 	
 class Battle {
@@ -713,8 +707,12 @@ unit.debuffs.forEach(debuff => {
 
     
 
-    processTurn() {
+processTurn() {
     const unit = this.currentUnit;
+    
+    // Capture buffs/debuffs at turn start (before any actions)
+    unit.turnStartBuffs = unit.buffs.map(b => b.name);
+    unit.turnStartDebuffs = unit.debuffs.map(d => d.name);
         
     // Check if unit is stunned
     if (unit.debuffs.some(d => d.name === 'Stun' || d.stunned)) {
@@ -1127,19 +1125,17 @@ triggerDeathAnimation(unit) {
         // Update other effects if provided
         Object.assign(existingBuff, effects);
         
-        // Mark as fresh if duration was increased
-        if (existingBuff.duration > oldDuration) {
-            existingBuff.appliedThisTurn = true;
-            this.log(`${target.name}'s ${buffName} is refreshed to ${existingBuff.duration} turns!`);
+// Log if duration was increased
+        if (existingDebuff.duration > oldDuration) {
+            this.log(`${target.name}'s ${debuffName} is refreshed to ${existingDebuff.duration} turns!`);
         } else {
             this.log(`${target.name} already has ${buffName} with ${oldDuration} turns remaining!`);
         }
     } else {
         // Create new buff
-        const buff = {
+const buff = {
             name: buffName,
             duration: duration,
-            appliedThisTurn: true, // Mark as just applied
             ...effects
         };
         
@@ -1171,19 +1167,17 @@ triggerDeathAnimation(unit) {
         // Update other effects if provided
         Object.assign(existingDebuff, effects);
         
-        // Mark as fresh if duration was increased
-        if (existingDebuff.duration > oldDuration) {
-            existingDebuff.appliedThisTurn = true;
-            this.log(`${target.name}'s ${debuffName} is refreshed to ${existingDebuff.duration} turns!`);
+        // Log if duration was increased
+        if (existingBuff.duration > oldDuration) {
+            this.log(`${target.name}'s ${buffName} is refreshed to ${existingBuff.duration} turns!`);
         } else {
             this.log(`${target.name} already has ${debuffName} with ${oldDuration} turns remaining!`);
         }
     } else {
         // Create new debuff
-        const debuff = {
+const debuff = {
             name: debuffName,
             duration: duration,
-            appliedThisTurn: true, // Mark as just applied
             ...effects
         };
         
@@ -1829,15 +1823,31 @@ clearTargeting() {
 
     }
 
-    forceBuffDebuffUIUpdate(unit) {
+forceBuffDebuffUIUpdate(unit) {
     const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
     const element = document.getElementById(elementId);
     
     if (element) {
-        const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+        // Force a complete re-render of the buff/debuff container
+        let buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+        
+        // Create container if it doesn't exist
+        if (!buffDebuffContainer && unit.isAlive) {
+            buffDebuffContainer = document.createElement('div');
+            buffDebuffContainer.className = 'buffDebuffContainer';
+            element.appendChild(buffDebuffContainer);
+        }
+        
         if (buffDebuffContainer) {
-            // Force state change to trigger update
-            buffDebuffContainer.dataset.state = '';
+            // Clear and force state update
+            buffDebuffContainer.dataset.state = JSON.stringify({
+                buffs: unit.buffs.map(b => ({name: b.name, duration: b.duration})),
+                debuffs: unit.debuffs.map(d => ({name: d.name, duration: d.duration})),
+                timestamp: Date.now()
+            });
+            
+            // Trigger immediate UI update
+            this.updateUI();
         }
     }
 }
