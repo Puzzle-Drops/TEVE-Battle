@@ -1840,7 +1840,7 @@ clearTargeting() {
             buffDebuffContainer.dataset.state = '';
         }
     }
-},
+}
 
     updateUI() {
 
