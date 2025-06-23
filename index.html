@@ -2234,7 +2234,7 @@ showIndividualStash(family) {
     
     // Update header
     const items = this.stashes[family.name].items;
-    const needsFilter = items.length > 100;
+    const needsFilter = items.length > 250;
     const goldAmount = this.stashes[family.name].gold.toLocaleString();
     
     // Get current filter value or default to trinket if first time
