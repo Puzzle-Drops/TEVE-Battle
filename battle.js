@@ -1182,12 +1182,6 @@ triggerDeathAnimation(unit) {
     // Only trigger if unit is dead and animation hasn't been triggered yet
     if (unit.currentHp > 0 || unit.deathAnimationTriggered) return;
     
-    this.handleDeathAnimation(unit);
-}
-
-handleDeathAnimation(unit) {
-    if (!unit || unit.deathAnimationTriggered) return;
-    
     unit.deathAnimationTriggered = true;
     
     const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
