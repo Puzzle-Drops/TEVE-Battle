@@ -2010,177 +2010,178 @@ forceBuffDebuffUIUpdate(unit) {
     }
 }
 
-    updateUI() {
+updateUI() {
     // Update all unit displays
     this.allUnits.forEach(unit => {
         const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
         const element = document.getElementById(elementId);
         
         if (element) {
-            // IMPORTANT: Skip ALL updates for units that have already played death animation
+            // CRITICAL: If death animation has been triggered, only handle visibility for enemy slots
             if (unit.deathAnimationTriggered) {
-                // Just ensure the slot is visible for enemy slots
                 if (unit.isEnemy) {
                     element.style.display = unit.position < this.enemies.length ? 'block' : 'none';
                 }
-                return; // Skip this unit entirely
+                return; // Skip ALL other updates for this unit
             }
             
-            // Only update living units
-            if (unit.isAlive) {
-                const healthBar = element.querySelector('.healthFill');
-                const healthText = element.querySelector('.healthText');
+            // Only process living units from here on
+            if (!unit.isAlive) {
+                return; // Skip dead units that haven't animated yet (shouldn't happen, but safety check)
+            }
+            
+            const healthBar = element.querySelector('.healthFill');
+            const healthText = element.querySelector('.healthText');
+            
+            // Update health bar
+            if (healthBar) {
+                const hpPercent = (unit.currentHp / unit.maxHp) * 100;
+                healthBar.style.width = `${hpPercent}%`;
                 
-                // Update health bar
-                if (healthBar) {
-                    const hpPercent = (unit.currentHp / unit.maxHp) * 100;
-                    healthBar.style.width = `${hpPercent}%`;
+                // Change color based on HP
+                if (hpPercent > 60) {
+                    healthBar.style.background = 'linear-gradient(90deg, #00ff88 0%, #00cc66 100%)';
+                } else if (hpPercent > 30) {
+                    healthBar.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff8800 100%)';
+                } else {
+                    healthBar.style.background = 'linear-gradient(90deg, #ff4444 0%, #cc0000 100%)';
+                }
+            }
+            
+            if (healthText) {
+                healthText.textContent = `${Math.floor(unit.currentHp)}/${unit.maxHp}`;
+            }
+            
+            // Update level indicator
+            const levelIndicator = element.querySelector('.levelIndicator');
+            if (levelIndicator) {
+                // For heroes, show level and stars based on tier
+                if (!unit.isEnemy) {
+                    const hero = unit.source;
+                    const starData = hero.getStars();
                     
-                    // Change color based on HP
-                    if (hpPercent > 60) {
-                        healthBar.style.background = 'linear-gradient(90deg, #00ff88 0%, #00cc66 100%)';
-                    } else if (hpPercent > 30) {
-                        healthBar.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff8800 100%)';
-                    } else {
-                        healthBar.style.background = 'linear-gradient(90deg, #ff4444 0%, #cc0000 100%)';
+                    let html = '<div class="levelNumber">' + unit.source.level + '</div>';
+                    if (starData.html) {
+                        html += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
                     }
-                }
-                
-                if (healthText) {
-                    healthText.textContent = `${Math.floor(unit.currentHp)}/${unit.maxHp}`;
-                }
-                
-                // Update level indicator
-                const levelIndicator = element.querySelector('.levelIndicator');
-                if (levelIndicator) {
-                    // For heroes, show level and stars based on tier
-                    if (!unit.isEnemy) {
-                        const hero = unit.source;
-                        const starData = hero.getStars();
-                        
-                        let html = '<div class="levelNumber">' + unit.source.level + '</div>';
-                        if (starData.html) {
-                            html += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
-                        }
-                        levelIndicator.innerHTML = html;
-                    } else {
-                        // For enemies, show level and stars based on their star rating
-                        const enemy = unit.source;
-                        const starData = enemy.getStars();
-                        
-                        let html = '<div class="levelNumber">' + unit.source.level + '</div>';
-                        if (starData.html) {
-                            html += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
-                        }
-                        levelIndicator.innerHTML = html;
-                    }
-                }
-                
-                // Update action bar fill
-                const actionFill = element.querySelector('.actionFill');
-                if (actionFill) {
-                    const actionPercent = Math.min((unit.actionBar / 10000) * 100, 100);
-                    actionFill.style.width = `${actionPercent}%`;
+                    levelIndicator.innerHTML = html;
+                } else {
+                    // For enemies, show level and stars based on their star rating
+                    const enemy = unit.source;
+                    const starData = enemy.getStars();
                     
-                    // Glow when ready
-                    if (actionPercent >= 100) {
-                        actionFill.style.boxShadow = '0 0 10px rgba(77, 208, 225, 1)';
-                    } else {
-                        actionFill.style.boxShadow = '0 0 5px rgba(77, 208, 225, 0.5)';
+                    let html = '<div class="levelNumber">' + unit.source.level + '</div>';
+                    if (starData.html) {
+                        html += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
                     }
+                    levelIndicator.innerHTML = html;
                 }
+            }
+            
+            // Update action bar fill
+            const actionFill = element.querySelector('.actionFill');
+            if (actionFill) {
+                const actionPercent = Math.min((unit.actionBar / 10000) * 100, 100);
+                actionFill.style.width = `${actionPercent}%`;
                 
-                // Update buffs and debuffs display
-                const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-                if (buffDebuffContainer) {
-                    // Only update if the buffs/debuffs have changed
-                    const currentBuffDebuffState = JSON.stringify({
-                        buffs: unit.buffs.map(b => ({name: b.name, duration: b.duration})),
-                        debuffs: unit.debuffs.map(d => ({name: d.name, duration: d.duration}))
+                // Glow when ready
+                if (actionPercent >= 100) {
+                    actionFill.style.boxShadow = '0 0 10px rgba(77, 208, 225, 1)';
+                } else {
+                    actionFill.style.boxShadow = '0 0 5px rgba(77, 208, 225, 0.5)';
+                }
+            }
+            
+            // Update buffs and debuffs display
+            const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+            if (buffDebuffContainer) {
+                // Only update if the buffs/debuffs have changed
+                const currentBuffDebuffState = JSON.stringify({
+                    buffs: unit.buffs.map(b => ({name: b.name, duration: b.duration})),
+                    debuffs: unit.debuffs.map(d => ({name: d.name, duration: d.duration}))
+                });
+                
+                if (buffDebuffContainer.dataset.state !== currentBuffDebuffState) {
+                    buffDebuffContainer.dataset.state = currentBuffDebuffState;
+                    buffDebuffContainer.innerHTML = '';
+                    
+                    // Display buffs
+                    unit.buffs.forEach((buff, index) => {
+                        const buffDiv = document.createElement('div');
+                        buffDiv.className = 'buffIcon';
+                        const iconName = this.getBuffIconName(buff.name);
+                        
+                        buffDiv.innerHTML = `
+                            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                                 alt="${buff.name}"
+                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
+                            ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
+                        `;
+                        
+                        // Create a closure to capture buff data
+                        const buffData = {
+                            name: buff.name,
+                            duration: buff.duration,
+                            ...buff
+                        };
+                        
+                        // Add event listeners using closure
+                        buffDiv.addEventListener('mouseenter', ((data) => {
+                            return (e) => {
+                                this.showBuffDebuffTooltip(e, data, true);
+                            };
+                        })(buffData));
+                        
+                        buffDiv.addEventListener('mouseleave', () => {
+                            this.hideBuffDebuffTooltip();
+                        });
+                        
+                        buffDebuffContainer.appendChild(buffDiv);
                     });
                     
-                    if (buffDebuffContainer.dataset.state !== currentBuffDebuffState) {
-                        buffDebuffContainer.dataset.state = currentBuffDebuffState;
-                        buffDebuffContainer.innerHTML = '';
+                    // Display debuffs
+                    unit.debuffs.forEach((debuff, index) => {
+                        const debuffDiv = document.createElement('div');
+                        debuffDiv.className = 'debuffIcon';
+                        const iconName = this.getDebuffIconName(debuff.name);
                         
-                        // Display buffs
-                        unit.buffs.forEach((buff, index) => {
-                            const buffDiv = document.createElement('div');
-                            buffDiv.className = 'buffIcon';
-                            const iconName = this.getBuffIconName(buff.name);
-                            
-                            buffDiv.innerHTML = `
-                                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
-                                     alt="${buff.name}"
-                                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
-                                ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
-                            `;
-                            
-                            // Create a closure to capture buff data
-                            const buffData = {
-                                name: buff.name,
-                                duration: buff.duration,
-                                ...buff
+                        debuffDiv.innerHTML = `
+                            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                                 alt="${debuff.name}"
+                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
+                            ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
+                        `;
+                        
+                        // Create a closure to capture debuff data
+                        const debuffData = {
+                            name: debuff.name,
+                            duration: debuff.duration,
+                            ...debuff
+                        };
+                        
+                        // Add event listeners using closure
+                        debuffDiv.addEventListener('mouseenter', ((data) => {
+                            return (e) => {
+                                this.showBuffDebuffTooltip(e, data, false);
                             };
-                            
-                            // Add event listeners using closure
-                            buffDiv.addEventListener('mouseenter', ((data) => {
-                                return (e) => {
-                                    this.showBuffDebuffTooltip(e, data, true);
-                                };
-                            })(buffData));
-                            
-                            buffDiv.addEventListener('mouseleave', () => {
-                                this.hideBuffDebuffTooltip();
-                            });
-                            
-                            buffDebuffContainer.appendChild(buffDiv);
+                        })(debuffData));
+                        
+                        debuffDiv.addEventListener('mouseleave', () => {
+                            this.hideBuffDebuffTooltip();
                         });
                         
-                        // Display debuffs
-                        unit.debuffs.forEach((debuff, index) => {
-                            const debuffDiv = document.createElement('div');
-                            debuffDiv.className = 'debuffIcon';
-                            const iconName = this.getDebuffIconName(debuff.name);
-                            
-                            debuffDiv.innerHTML = `
-                                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
-                                     alt="${debuff.name}"
-                                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
-                                ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
-                            `;
-                            
-                            // Create a closure to capture debuff data
-                            const debuffData = {
-                                name: debuff.name,
-                                duration: debuff.duration,
-                                ...debuff
-                            };
-                            
-                            // Add event listeners using closure
-                            debuffDiv.addEventListener('mouseenter', ((data) => {
-                                return (e) => {
-                                    this.showBuffDebuffTooltip(e, data, false);
-                                };
-                            })(debuffData));
-                            
-                            debuffDiv.addEventListener('mouseleave', () => {
-                                this.hideBuffDebuffTooltip();
-                            });
-                            
-                            buffDebuffContainer.appendChild(debuffDiv);
-                        });
-                    }
+                        buffDebuffContainer.appendChild(debuffDiv);
+                    });
                 }
             }
             
-            // Highlight current unit
+            // Highlight current unit (only for living units)
             if (unit === this.currentUnit) {
                 element.style.border = '2px solid #4dd0e1';
                 element.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
                 // Add active turn circle
                 let activeCircle = element.querySelector('.activeCircle');
-                if (!activeCircle && unit.isAlive) {
+                if (!activeCircle) {
                     activeCircle = document.createElement('div');
                     activeCircle.className = 'activeCircle';
                     element.appendChild(activeCircle);
