@@ -1720,9 +1720,45 @@ class Battle {
                     targetArrow.remove();
                 }
                 
+                // Remove only the click handler we added for targeting
+                const clickHandlers = element.getEventListeners ? element.getEventListeners('click') : [];
+                
                 // Clone to remove event listeners
                 const newElement = element.cloneNode(true);
                 element.parentNode.replaceChild(newElement, element);
+                
+                // Re-attach the persistent handlers we need
+                const newLevelIndicator = newElement.querySelector('.levelIndicator');
+                if (newLevelIndicator && unit) {
+                    // Re-add level indicator click handler
+                    const clickHandler = (e) => {
+                        e.stopPropagation();
+                        this.game.closeHeroInfo();
+                        if (unit.isEnemy) {
+                            this.game.showEnemyInfoPopup(unit.source);
+                        } else {
+                            this.game.showHeroInfoPopup(unit.source);
+                        }
+                    };
+                    newLevelIndicator._unitInfoHandler = clickHandler;
+                    newLevelIndicator.addEventListener('click', clickHandler);
+                    newLevelIndicator.addEventListener('selectstart', (e) => e.preventDefault());
+                    newLevelIndicator.style.cursor = 'pointer';
+                }
+                
+                // Re-add right-click handler
+                const rightClickHandler = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.game.closeHeroInfo();
+                    if (unit.isEnemy) {
+                        this.game.showEnemyInfoPopup(unit.source);
+                    } else {
+                        this.game.showHeroInfoPopup(unit.source);
+                    }
+                };
+                newElement._rightClickHandler = rightClickHandler;
+                newElement.addEventListener('contextmenu', rightClickHandler);
             }
         });
     }
