@@ -3050,7 +3050,7 @@ if (!this.autoReplay) {
         ${canPromote ? `<div class="promoteArrowThumb ${isAwakenable ? 'awaken' : 'normal'}">^</div>` : ''}
     </div>
 
-    <div class="thumbClass">${hero.displayClassName} ${hero.gender === 'male' ? '♂' : '♀'}</div>
+    <div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
     <div class="thumbName">${hero.name}</div>
 `;
 
@@ -3126,7 +3126,7 @@ if (!this.autoReplay) {
 				content.innerHTML = `
 					<div style="margin-bottom: 20px;">
 						${starData.html ? `<div style="font-size: 48px; font-weight: bold; ${starData.colorClass === 'awakened' ? 'color: #d896ff;' : 'color: #ffd700;'} text-shadow: 0 0 12px ${starData.colorClass === 'awakened' ? 'rgba(216, 150, 255, 0.9)' : 'rgba(255, 215, 0, 0.9)'}, 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${starData.html}</div>` : ''}
-						<div class="heroName">${hero.displayClassName} ${hero.gender === 'male' ? '♂' : '♀'}</div>
+						<div class="heroName">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
 						<div style="font-size: 32px; color: #6a9aaa; cursor: pointer;" onclick="game.editHeroName()">
 							<span id="heroNameText">${hero.name}</span>
 						</div>
@@ -4042,7 +4042,7 @@ updateRewardsDisplay() {
         <div class="thumbLevel">${hero.level}</div>
     </div>
 
-    <div class="thumbClass">${hero.displayClassName} ${hero.gender === 'male' ? '♂' : '♀'}</div>
+    <div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
     <div class="thumbName">${hero.name}</div>
 `;
                 
@@ -4113,7 +4113,7 @@ wrapper.addEventListener('contextmenu', (e) => {
                                     ${starData.html ? `<div class="thumbStars ${starData.colorClass}">${starData.html}</div>` : ''}
                                     <div class="thumbLevel">${hero.level}</div>
                                 </div>
-                                <div class="thumbClass">${hero.displayClassName} ${hero.gender === 'male' ? '♂' : '♀'}</div>
+                                <div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
                                 <div class="thumbName">${hero.name}</div>
                             </div>
                         `;
@@ -4204,7 +4204,7 @@ slot.addEventListener('contextmenu', (e) => {
 
 showHeroInfoPopup(hero) {
     const popup = document.getElementById('heroInfoPopup');
-    document.getElementById('popupHeroName').textContent = `Lv.${hero.level} ${hero.displayClassName} ${hero.gender === 'male' ? '♂' : '♀'} | ${hero.name}`;
+    document.getElementById('popupHeroName').innerHTML = `Lv.${hero.level} ${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span> | ${hero.name}`;
     
     // Show stats in double column format
     const stats = hero.totalStats;
@@ -4727,7 +4727,7 @@ rewardSlotHTML = `<div class="itemSlot" onmouseover="game.showItemTooltip(event,
             <div class="thumbLevel" style="position: absolute; bottom: 0; right: 0; font-size: 14px;">${hero.level}</div>
         </div>
         <div class="heroResultClass">${hero.name}</div>
-        <div class="heroResultName">${hero.displayClassName} ${hero.gender === 'male' ? '♂' : '♀'}</div>
+        <div class="heroResultName">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
         ${result.survived ? `
             <div class="expGainBar">
                 <div class="expGainFill" style="width: 0%"></div>
