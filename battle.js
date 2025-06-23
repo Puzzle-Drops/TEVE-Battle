@@ -2167,36 +2167,28 @@ forceBuffDebuffUIUpdate(unit) {
                 }
                 
                 // Add event delegation for buff/debuff tooltips (only once per container)
-if (!buffDebuffContainer.dataset.hasListeners) {
-    buffDebuffContainer.dataset.hasListeners = 'true';
-    
-    buffDebuffContainer.addEventListener('mouseenter', (e) => {
-        const target = e.target.closest('.buffIcon, .debuffIcon');
-        if (target && target.dataset.buffName) {
-            const buffData = {
-                name: target.dataset.buffName,
-                duration: parseInt(target.dataset.buffDuration) || 0
-            };
-            const isBuff = target.dataset.isBuffTrue === 'true';
-            
-            // Create event with correct target for positioning
-            const tooltipEvent = {
-                target: target,  // Use the icon container, not inner elements
-                clientX: e.clientX,
-                clientY: e.clientY
-            };
-            
-            this.showBuffDebuffTooltip(tooltipEvent, buffData, isBuff);
-        }
-    }, true);
-    
-    buffDebuffContainer.addEventListener('mouseleave', (e) => {
-        const target = e.target.closest('.buffIcon, .debuffIcon');
-        if (target) {
-            this.hideBuffDebuffTooltip();
-        }
-    }, true);
-}
+                if (!buffDebuffContainer.dataset.hasListeners) {
+                    buffDebuffContainer.dataset.hasListeners = 'true';
+                    
+                    buffDebuffContainer.addEventListener('mouseenter', (e) => {
+                        const target = e.target.closest('.buffIcon, .debuffIcon');
+                        if (target && target.dataset.buffName) {
+                            const buffData = {
+                                name: target.dataset.buffName,
+                                duration: parseInt(target.dataset.buffDuration) || 0
+                            };
+                            const isBuff = target.dataset.isBuffTrue === 'true';
+                            this.showBuffDebuffTooltip(e, buffData, isBuff);
+                        }
+                    }, true);
+                    
+                    buffDebuffContainer.addEventListener('mouseleave', (e) => {
+                        const target = e.target.closest('.buffIcon, .debuffIcon');
+                        if (target) {
+                            this.hideBuffDebuffTooltip();
+                        }
+                    }, true);
+                }
             } else if (buffDebuffContainer && !unit.isAlive) {
                 buffDebuffContainer.style.display = 'none';
             }
@@ -2300,21 +2292,14 @@ getDebuffIconName(debuffName) {
     return iconMap[debuffName] || 'debuff';
 }
 showBuffDebuffTooltip(event, buffDebuff, isBuff) {
-    try {
-        // Ensure we have valid buff/debuff data
-        if (!buffDebuff || !buffDebuff.name) {
-            console.warn('Invalid buff/debuff data for tooltip');
-            return;
-        }
-        
-        // Ensure we have a valid event target
-        if (!event || !event.target) {
-            console.warn('Invalid event for buff/debuff tooltip');
-            return;
-        }
+    // Ensure we have valid buff/debuff data
+    if (!buffDebuff || !buffDebuff.name) {
+        console.warn('Invalid buff/debuff data for tooltip');
+        return;
+    }
 
-        // Debug log to help identify issues
-        console.log('Showing buff/debuff tooltip:', buffDebuff.name, 'isBuff:', isBuff, 'target:', event.target);
+// Debug log to help identify issues
+    console.log('Showing buff/debuff tooltip:', buffDebuff.name, 'isBuff:', isBuff);
 	
     let tooltip = document.getElementById('buffDebuffTooltip');
     if (!tooltip) {
@@ -2382,32 +2367,14 @@ const descriptions = {
     if (tooltipRect.bottom > window.innerHeight) {
         tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
     }
-    if (tooltipRect.left < 0) {
-        tooltip.style.left = '10px';
-    }
-    if (tooltipRect.top < 0) {
-        tooltip.style.top = '10px';
-    }
-    
-    } catch (error) {
-        console.error('Error showing buff/debuff tooltip:', error, 'Unit position:', event.target);
-        this.hideBuffDebuffTooltip();
-    }
 }
 
 hideBuffDebuffTooltip() {
-    try {
-        const tooltip = document.getElementById('buffDebuffTooltip');
-        if (tooltip) {
-            tooltip.style.display = 'none';
-            // Clear tooltip content to prevent stale data
-            tooltip.innerHTML = '';
-            // Reset position to prevent stuck tooltips
-            tooltip.style.left = '';
-            tooltip.style.top = '';
-        }
-    } catch (error) {
-        console.error('Error hiding buff/debuff tooltip:', error);
+    const tooltip = document.getElementById('buffDebuffTooltip');
+    if (tooltip) {
+        tooltip.style.display = 'none';
+        // Clear tooltip content to prevent stale data
+        tooltip.innerHTML = '';
     }
 }
 	
