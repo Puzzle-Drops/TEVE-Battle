@@ -684,10 +684,16 @@ unit.debuffs.forEach(debuff => {
 processTurn() {
     const unit = this.currentUnit;
     
+    // Force update all buff/debuff displays at turn start
+    this.allUnits.forEach(u => {
+        if (u.isAlive) {
+            this.forceBuffDebuffUIUpdate(u);
+        }
+    });
+    
     // Capture buffs/debuffs at turn start (before any actions)
     unit.turnStartBuffs = unit.buffs.map(b => b.name);
-    unit.turnStartDebuffs = unit.debuffs.map(d => d.name);
-        
+    unit.turnStartDebuffs = unit.debuffs.map(d => d.name);        
     // Check if unit is stunned
     if (unit.debuffs.some(d => d.name === 'Stun' || d.stunned)) {
         this.log(`${unit.name} is stunned!`);
@@ -1820,6 +1826,10 @@ clearTargeting() {
     this.allUnits.forEach(unit => {
         const element = document.getElementById(unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`);
         if (element) {
+            // Preserve death animation state
+            const unitDiv = element.querySelector('.unit');
+            const hadDyingClass = unitDiv && unitDiv.classList.contains('dying');
+            
             element.style.cursor = '';
             element.style.filter = '';
             
@@ -1829,9 +1839,17 @@ clearTargeting() {
                 targetArrow.remove();
             }
             
-            // Clone to remove event listeners
+// Clone to remove event listeners
             const newElement = element.cloneNode(true);
             element.parentNode.replaceChild(newElement, element);
+            
+            // Restore death animation state if unit was dead
+            if (hadDyingClass && !unit.isAlive && unit.deathAnimationTriggered) {
+                const newUnitDiv = newElement.querySelector('.unit');
+                if (newUnitDiv && !newUnitDiv.classList.contains('dying')) {
+                    newUnitDiv.classList.add('dying');
+                }
+            }
         }
     });
 }
@@ -1871,6 +1889,9 @@ forceBuffDebuffUIUpdate(unit) {
         }
         
         if (buffDebuffContainer) {
+            // Force clear the dataset to ensure update
+            delete buffDebuffContainer.dataset.state;
+            
             // Clear and force state update
             buffDebuffContainer.dataset.state = JSON.stringify({
                 buffs: unit.buffs.map(b => ({name: b.name, duration: b.duration})),
@@ -2056,6 +2077,10 @@ if (unitDiv) {
     if (!unit.isAlive) {
         // Only apply visual changes if death animation has been triggered
         if (unit.deathAnimationTriggered) {
+            // Ensure dying class is maintained for dead units
+            if (!unitDiv.classList.contains('dying')) {
+                unitDiv.classList.add('dying');
+            }
             if (levelIndicator) levelIndicator.style.display = 'none';
             
             // Hide health bar and action bar when dead
