@@ -13,6 +13,7 @@ class BattleUnit {
         this.debuffs = [];
         this.cooldowns = {};
         this.isDead = false; // Track if unit has died this wave
+        this.deathAnimated = false; // Track if death animation has been played
         this.uiInitialized = false; // Track if UI has been created
         
         // Initialize cooldowns
@@ -224,6 +225,7 @@ class Battle {
                 // Ensure HP is set properly
                 newUnit.currentHp = newUnit.maxHp;
                 newUnit.isDead = false;
+                newUnit.deathAnimated = false; // Reset death animation flag
                 newUnit.uiInitialized = false;
                 this.enemies.push(newUnit);
                 console.log(`Created enemy: ${newUnit.name} with ${newUnit.currentHp}/${newUnit.maxHp} HP`);
@@ -1040,8 +1042,11 @@ class Battle {
             }
         });
         
-        // Trigger death animation
-        this.triggerDeathAnimation(unit);
+        // Trigger death animation only if not already animated
+        if (!unit.deathAnimated) {
+            unit.deathAnimated = true;
+            this.triggerDeathAnimation(unit);
+        }
     }
 
     triggerDeathAnimation(unit) {
@@ -1050,7 +1055,7 @@ class Battle {
         
         if (element) {
             const unitDiv = element.querySelector('.unit');
-            if (unitDiv) {
+            if (unitDiv && !unitDiv.classList.contains('dying')) {
                 unitDiv.classList.add('dying');
                 
                 // Hide UI elements after animation
@@ -1272,6 +1277,7 @@ class Battle {
                         if (unit && !unit.isAlive) {
                             unit.currentHp = unit.maxHp;
                             unit.isDead = false;
+                            unit.deathAnimated = false; // Reset death animation flag
                             this.log(`${unit.name} revived for next wave!`);
                             
                             // Reset death animation
@@ -1759,6 +1765,14 @@ class Battle {
                 };
                 newElement._rightClickHandler = rightClickHandler;
                 newElement.addEventListener('contextmenu', rightClickHandler);
+                
+                // If unit is dead and animated, ensure dying class is preserved
+                if (unit.isDead && unit.deathAnimated) {
+                    const unitDiv = newElement.querySelector('.unit');
+                    if (unitDiv && !unitDiv.classList.contains('dying')) {
+                        unitDiv.classList.add('dying');
+                    }
+                }
             }
         });
     }
@@ -1781,8 +1795,8 @@ class Battle {
             
             if (!element) return;
             
-            // Skip dead units entirely
-            if (!unit.isAlive) {
+            // Skip dead units entirely - no UI updates for them
+            if (!unit.isAlive || unit.isDead) {
                 return;
             }
             
