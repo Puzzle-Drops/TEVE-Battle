@@ -906,6 +906,12 @@ class Battle {
             this.applyDotEffects(this.currentUnit);
             this.currentUnit.reduceCooldowns();
         }
+        
+        // Clear any active targeting before ending turn
+        if (this.targetingState) {
+            this.clearTargeting();
+        }
+        
         this.currentUnit = null;
         this.waitingForPlayer = false;
         this.turn++;
@@ -1056,15 +1062,18 @@ class Battle {
         if (element) {
             const unitDiv = element.querySelector('.unit');
             if (unitDiv && !unitDiv.classList.contains('dying')) {
+                // Only add dying class if it doesn't already have it
                 unitDiv.classList.add('dying');
                 
                 // Hide UI elements after animation
                 setTimeout(() => {
-                    if (element) {
-                        const healthBar = element.querySelector('.healthBar');
-                        const actionBar = element.querySelector('.actionBar');
-                        const levelIndicator = element.querySelector('.levelIndicator');
-                        const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+                    // Double-check element still exists and unit is still dead
+                    const currentElement = document.getElementById(elementId);
+                    if (currentElement && unit.isDead) {
+                        const healthBar = currentElement.querySelector('.healthBar');
+                        const actionBar = currentElement.querySelector('.actionBar');
+                        const levelIndicator = currentElement.querySelector('.levelIndicator');
+                        const buffDebuffContainer = currentElement.querySelector('.buffDebuffContainer');
                         
                         if (healthBar) healthBar.style.display = 'none';
                         if (actionBar) actionBar.style.display = 'none';
@@ -1654,6 +1663,7 @@ class Battle {
         if (abilityPanel) {
             abilityPanel.innerHTML = '';
         }
+        // Don't trigger any targeting clear here - just hide the abilities
     }
     
     selectTarget(caster, abilityIndex, targetType) {
@@ -1664,10 +1674,10 @@ class Battle {
             targetType: targetType
         };
 
-        // Highlight valid targets
+        // Highlight valid targets - only alive units
         const validTargets = targetType === 'enemy' ? 
-            this.enemies.filter(e => e && e.isAlive) : 
-            this.party.filter(p => p && p.isAlive);
+            this.enemies.filter(e => e && e.isAlive && !e.isDead) : 
+            this.party.filter(p => p && p.isAlive && !p.isDead);
         
         // Add click handlers to valid targets
         validTargets.forEach(target => {
@@ -1715,6 +1725,11 @@ class Battle {
         
         // Remove all targeting highlights and handlers
         this.allUnits.forEach(unit => {
+            // Skip dead units entirely - no need to update their DOM
+            if (unit.isDead || !unit.isAlive) {
+                return;
+            }
+            
             const element = document.getElementById(unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`);
             if (element) {
                 element.style.cursor = '';
@@ -1765,14 +1780,6 @@ class Battle {
                 };
                 newElement._rightClickHandler = rightClickHandler;
                 newElement.addEventListener('contextmenu', rightClickHandler);
-                
-                // If unit is dead and animated, ensure dying class is preserved
-                if (unit.isDead && unit.deathAnimated) {
-                    const unitDiv = newElement.querySelector('.unit');
-                    if (unitDiv && !unitDiv.classList.contains('dying')) {
-                        unitDiv.classList.add('dying');
-                    }
-                }
             }
         });
     }
