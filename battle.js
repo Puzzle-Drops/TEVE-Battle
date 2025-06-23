@@ -2093,23 +2093,32 @@ updateUI() {
             }
             
             // Update buffs and debuffs display
-            const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-            if (buffDebuffContainer) {
-                // Only update if the buffs/debuffs have changed
-                const currentBuffDebuffState = JSON.stringify({
-                    buffs: unit.buffs.map(b => ({name: b.name, duration: b.duration})),
-                    debuffs: unit.debuffs.map(d => ({name: d.name, duration: d.duration}))
-                });
-                
-                if (buffDebuffContainer.dataset.state !== currentBuffDebuffState) {
-                    buffDebuffContainer.dataset.state = currentBuffDebuffState;
-                    buffDebuffContainer.innerHTML = '';
+const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+if (buffDebuffContainer) {
+    // DEBUG: Log which unit we're updating
+    console.log(`[BUFF DEBUG] Updating buffs/debuffs for unit: ${unit.name} (position: ${unit.position}, isEnemy: ${unit.isEnemy})`);
+    
+    // Only update if the buffs/debuffs have changed
+    const currentBuffDebuffState = JSON.stringify({
+        buffs: unit.buffs.map(b => ({name: b.name, duration: b.duration})),
+        debuffs: unit.debuffs.map(d => ({name: d.name, duration: d.duration}))
+    });
+    
+    if (buffDebuffContainer.dataset.state !== currentBuffDebuffState) {
+        console.log(`[BUFF DEBUG] State changed for ${unit.name}, updating container`);
+        console.log(`[BUFF DEBUG] Buffs:`, unit.buffs);
+        console.log(`[BUFF DEBUG] Debuffs:`, unit.debuffs);
+        
+        buffDebuffContainer.dataset.state = currentBuffDebuffState;
+        buffDebuffContainer.innerHTML = '';
                     
                     // Display buffs
-                    unit.buffs.forEach((buff, index) => {
-                        const buffDiv = document.createElement('div');
-                        buffDiv.className = 'buffIcon';
-                        const iconName = this.getBuffIconName(buff.name);
+unit.buffs.forEach((buff, index) => {
+    console.log(`[BUFF DEBUG] Creating buff icon for ${unit.name}: ${buff.name} (index: ${index})`);
+    
+    const buffDiv = document.createElement('div');
+    buffDiv.className = 'buffIcon';
+    const iconName = this.getBuffIconName(buff.name);
                         
                         buffDiv.innerHTML = `
                             <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
@@ -2126,17 +2135,28 @@ updateUI() {
                         };
                         
                         // Add event listeners using closure
-                        buffDiv.addEventListener('mouseenter', ((data) => {
-                            return (e) => {
-                                this.showBuffDebuffTooltip(e, data, true);
-                            };
-                        })(buffData));
-                        
-                        buffDiv.addEventListener('mouseleave', () => {
-                            this.hideBuffDebuffTooltip();
-                        });
-                        
-                        buffDebuffContainer.appendChild(buffDiv);
+const mouseEnterHandler = ((data) => {
+    return (e) => {
+        console.log(`[BUFF DEBUG] Mouse enter on buff for ${unit.name}:`, data);
+        this.showBuffDebuffTooltip(e, data, true);
+    };
+})(buffData);
+
+const mouseLeaveHandler = () => {
+    console.log(`[BUFF DEBUG] Mouse leave on buff for ${unit.name}`);
+    this.hideBuffDebuffTooltip();
+};
+
+buffDiv.addEventListener('mouseenter', mouseEnterHandler);
+buffDiv.addEventListener('mouseleave', mouseLeaveHandler);
+
+// Store handlers for debugging
+buffDiv._mouseEnterHandler = mouseEnterHandler;
+buffDiv._mouseLeaveHandler = mouseLeaveHandler;
+
+console.log(`[BUFF DEBUG] Event listeners attached to buff icon for ${unit.name}`);
+
+buffDebuffContainer.appendChild(buffDiv);
                     });
                     
                     // Display debuffs
@@ -2210,6 +2230,82 @@ updateUI() {
             element.style.display = 'none';
         }
     }
+}
+
+debugFirstSlot() {
+    console.log('[BUFF DEBUG] === DEBUGGING FIRST SLOT ===');
+    
+    // Check the first party member
+    const firstUnit = this.party[0];
+    if (!firstUnit) {
+        console.log('[BUFF DEBUG] No unit in first party slot');
+        return;
+    }
+    
+    console.log('[BUFF DEBUG] First unit:', firstUnit.name);
+    console.log('[BUFF DEBUG] Position:', firstUnit.position);
+    console.log('[BUFF DEBUG] Buffs:', firstUnit.buffs);
+    console.log('[BUFF DEBUG] Debuffs:', firstUnit.debuffs);
+    
+    // Check the DOM element
+    const element = document.getElementById('party1');
+    if (!element) {
+        console.log('[BUFF DEBUG] No DOM element found for party1');
+        return;
+    }
+    
+    console.log('[BUFF DEBUG] DOM element found:', element);
+    
+    // Check buff/debuff container
+    const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+    if (!buffDebuffContainer) {
+        console.log('[BUFF DEBUG] No buffDebuffContainer found');
+        return;
+    }
+    
+    console.log('[BUFF DEBUG] BuffDebuffContainer found:', buffDebuffContainer);
+    console.log('[BUFF DEBUG] Container state:', buffDebuffContainer.dataset.state);
+    console.log('[BUFF DEBUG] Container children:', buffDebuffContainer.children.length);
+    
+    // Check each buff/debuff icon
+    const buffIcons = buffDebuffContainer.querySelectorAll('.buffIcon');
+    const debuffIcons = buffDebuffContainer.querySelectorAll('.debuffIcon');
+    
+    console.log('[BUFF DEBUG] Buff icons found:', buffIcons.length);
+    console.log('[BUFF DEBUG] Debuff icons found:', debuffIcons.length);
+    
+    // Check event listeners
+    buffIcons.forEach((icon, index) => {
+        console.log(`[BUFF DEBUG] Buff icon ${index}:`, icon);
+        console.log(`[BUFF DEBUG] Has mouseenter handler:`, !!icon._mouseEnterHandler);
+        console.log(`[BUFF DEBUG] Has mouseleave handler:`, !!icon._mouseLeaveHandler);
+    });
+    
+    console.log('[BUFF DEBUG] === END DEBUG ===');
+}
+
+forceUpdateFirstSlot() {
+    console.log('[BUFF FIX] Forcing update on first slot');
+    
+    const firstUnit = this.party[0];
+    if (!firstUnit || !firstUnit.isAlive) return;
+    
+    const element = document.getElementById('party1');
+    if (!element) return;
+    
+    // Remove and recreate the buff/debuff container
+    const oldContainer = element.querySelector('.buffDebuffContainer');
+    if (oldContainer) {
+        oldContainer.remove();
+    }
+    
+    // Create new container
+    const buffDebuffContainer = document.createElement('div');
+    buffDebuffContainer.className = 'buffDebuffContainer';
+    element.appendChild(buffDebuffContainer);
+    
+    // Force immediate UI update for this unit
+    this.forceBuffDebuffUIUpdate(firstUnit);
 }
 
 getBuffIconName(buffName) {
