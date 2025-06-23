@@ -12,7 +12,8 @@ class BattleUnit {
         this.buffs = [];
         this.debuffs = [];
         this.cooldowns = {};
-        this.deathAnimationTriggered = false; // Track if death animation has played
+        this.isDead = false; // Track if unit has died this wave
+        this.uiInitialized = false; // Track if UI has been created
         
         // Initialize cooldowns
         const abilities = this.abilities;
@@ -86,7 +87,7 @@ class BattleUnit {
     }
     
     get isAlive() {
-        return this.currentHp > 0;
+        return this.currentHp > 0 && !this.isDead;
     }
     
     get abilities() {
@@ -198,7 +199,7 @@ class Battle {
         this.applyInitialPassives();
 
         // Initialize UI elements for all units
-        this.initializeUnitUI();
+        this.initializeAllUI();
     }
     
     loadWave(waveIndex) {
@@ -210,25 +211,8 @@ class Battle {
         this.waveExpCalculated = false; // Reset exp calculation flag for new wave
         const wave = this.enemyWaves[waveIndex];
 
-        // Clear any existing enemies and their UI
-        for (let i = 1; i <= 5; i++) {
-            const element = document.getElementById(`enemy${i}`);
-            if (element) {
-                const unitDiv = element.querySelector('.unit');
-                if (unitDiv) {
-                    delete unitDiv.dataset.spriteSet;
-                    unitDiv.innerHTML = 'E' + i;
-                    unitDiv.classList.remove('dying');
-                    unitDiv.style.opacity = '';
-                    unitDiv.style.filter = '';
-                }
-                // Remove any existing shadow
-                const shadow = element.querySelector('.unitShadow');
-                if (shadow) {
-                    shadow.remove();
-                }
-            }
-        }
+        // Clean up previous wave's enemy UI completely
+        this.cleanupEnemyUI();
         
         // Clear enemies array
         this.enemies = [];
@@ -239,14 +223,11 @@ class Battle {
                 const newUnit = new BattleUnit(enemy, true, index);
                 // Ensure HP is set properly
                 newUnit.currentHp = newUnit.maxHp;
+                newUnit.isDead = false;
+                newUnit.uiInitialized = false;
                 this.enemies.push(newUnit);
                 console.log(`Created enemy: ${newUnit.name} with ${newUnit.currentHp}/${newUnit.maxHp} HP`);
             }
-        });
-        
-        // Reset death animation flags for all units
-        this.enemies.forEach(enemy => {
-            enemy.deathAnimationTriggered = false;
         });
         
         // Update all units list
@@ -263,8 +244,8 @@ class Battle {
         // Update wave counter
         this.updateWaveCounter();
         
-        // Initialize UI elements for all units
-        this.initializeUnitUI();
+        // Initialize UI for new enemies
+        this.initializeEnemyUI();
 
         // Force complete UI update
         this.updateUI();
@@ -272,127 +253,199 @@ class Battle {
         return true;
     }
 
-    initializeUnitUI() {
-        // Initialize UI elements for all units
-        this.allUnits.forEach(unit => {
-            const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
-            const element = document.getElementById(elementId);
-            
-            if (!element) return;
-            
-            // Reset death animation flag
-            unit.deathAnimationTriggered = false;
-            
-            // Make sure element is visible
-            element.style.display = unit.isAlive ? 'block' : 'none';
-            
-            // Create health bar if it doesn't exist
-            let healthBar = element.querySelector('.healthBar');
-            if (!healthBar) {
-                healthBar = document.createElement('div');
-                healthBar.className = 'healthBar';
-                healthBar.innerHTML = `
-                    <div class="healthFill" style="width: 100%"></div>
-                    <div class="healthText">100/100</div>
-                `;
-                element.appendChild(healthBar);
-            }
-            
-            // Create action bar if it doesn't exist
-            let actionBar = element.querySelector('.actionBar');
-            if (!actionBar) {
-                actionBar = document.createElement('div');
-                actionBar.className = 'actionBar';
-                actionBar.style.cssText = 'width: 80%; height: 10px; background: #0a1929; border: 1px solid #2a6a8a; margin-top: 0px; position: relative;';
+    cleanupEnemyUI() {
+        // Completely clean up all enemy UI elements
+        for (let i = 1; i <= 5; i++) {
+            const element = document.getElementById(`enemy${i}`);
+            if (element) {
+                // Remove all child elements except the unit div
+                const unitDiv = element.querySelector('.unit');
                 
-                const actionFill = document.createElement('div');
-                actionFill.className = 'actionFill';
-                actionFill.style.cssText = 'height: 100%; background: linear-gradient(90deg, #4dd0e1 0%, #2a9aaa 100%); transition: width 0.1s; box-shadow: 0 0 5px rgba(77, 208, 225, 0.5);';
+                // Remove all other elements
+                const elementsToRemove = element.querySelectorAll('.healthBar, .actionBar, .levelIndicator, .unitShadow, .buffDebuffContainer, .activeCircle, .targetArrow');
+                elementsToRemove.forEach(el => el.remove());
                 
-                actionBar.appendChild(actionFill);
-                element.appendChild(actionBar);
-            }
-            
-            // Create level indicator if it doesn't exist
-            let levelIndicator = element.querySelector('.levelIndicator');
-            if (!levelIndicator) {
-                levelIndicator = document.createElement('div');
-                levelIndicator.className = 'levelIndicator';
-                element.appendChild(levelIndicator);
-                
-                // Add click handler for unit info
-                levelIndicator.style.cursor = 'pointer';
-                const clickHandler = (e) => {
-                    e.stopPropagation();
-                    this.game.closeHeroInfo();
-                    if (unit.isEnemy) {
-                        this.game.showEnemyInfoPopup(unit.source);
-                    } else {
-                        this.game.showHeroInfoPopup(unit.source);
-                    }
-                };
-                levelIndicator._unitInfoHandler = clickHandler;
-                levelIndicator.addEventListener('click', clickHandler);
-                levelIndicator.addEventListener('selectstart', (e) => e.preventDefault());
-            }
-            
-            // Add right-click handler for the entire unit slot
-            if (!element._rightClickHandler) {
-                const rightClickHandler = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.game.closeHeroInfo();
-                    if (unit.isEnemy) {
-                        this.game.showEnemyInfoPopup(unit.source);
-                    } else {
-                        this.game.showHeroInfoPopup(unit.source);
-                    }
-                };
-                element._rightClickHandler = rightClickHandler;
-                element.addEventListener('contextmenu', rightClickHandler);
-            }
-            
-            // Create shadow if it doesn't exist
-            let shadow = element.querySelector('.unitShadow');
-            if (!shadow) {
-                shadow = document.createElement('div');
-                shadow.className = 'unitShadow';
-                element.appendChild(shadow);
-            }
-            
-            // Create buff/debuff container if it doesn't exist
-            let buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-            if (!buffDebuffContainer) {
-                buffDebuffContainer = document.createElement('div');
-                buffDebuffContainer.className = 'buffDebuffContainer';
-                element.appendChild(buffDebuffContainer);
-            }
-            
-            // Update sprite
-            const unitDiv = element.querySelector('.unit');
-            if (unitDiv) {
-                if (unit.isEnemy) {
-                    const enemyId = unit.source.enemyId;
-                    unitDiv.innerHTML = `
-                        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${enemyId}.png" alt="${unit.name}" 
-                             style="image-rendering: pixelated; object-fit: contain;"
-                             onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${unit.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${unit.source.level}</div></div>'">
-                    `;
-                } else {
-                    const hero = unit.source;
-                    unitDiv.innerHTML = `
-                        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" 
-                             style="image-rendering: pixelated; object-fit: contain;"
-                             onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
-                    `;
+                // Reset unit div
+                if (unitDiv) {
+                    unitDiv.className = 'unit'; // Remove any animation classes
+                    unitDiv.innerHTML = ''; // Clear content
+                    unitDiv.style.opacity = '';
+                    unitDiv.style.filter = '';
                 }
                 
-                // Reset death animation class
-                unitDiv.classList.remove('dying');
-                unitDiv.style.opacity = '';
-                unitDiv.style.filter = '';
+                // Hide the slot
+                element.style.display = 'none';
+                element.style.border = '';
+                element.style.boxShadow = '';
+                element.style.cursor = '';
+                element.style.filter = '';
+                
+                // Remove any event handlers
+                const newElement = element.cloneNode(true);
+                element.parentNode.replaceChild(newElement, element);
+            }
+        }
+    }
+
+    initializeAllUI() {
+        // Initialize party UI (only needs to be done once)
+        this.party.forEach(unit => {
+            if (!unit.uiInitialized) {
+                this.createUnitUI(unit);
+                unit.uiInitialized = true;
             }
         });
+        
+        // Initialize enemy UI
+        this.initializeEnemyUI();
+    }
+
+    initializeEnemyUI() {
+        // Initialize UI for current wave enemies
+        this.enemies.forEach(unit => {
+            if (!unit.uiInitialized) {
+                this.createUnitUI(unit);
+                unit.uiInitialized = true;
+            }
+        });
+        
+        // Show/hide enemy slots based on enemy count
+        for (let i = 1; i <= 5; i++) {
+            const element = document.getElementById(`enemy${i}`);
+            if (element) {
+                if (i <= this.enemies.length) {
+                    element.style.display = 'block';
+                } else {
+                    element.style.display = 'none';
+                }
+            }
+        }
+    }
+
+    createUnitUI(unit) {
+        const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
+        const element = document.getElementById(elementId);
+        
+        if (!element) return;
+        
+        // Make sure element is visible
+        element.style.display = 'block';
+        
+        // Get or create unit div
+        let unitDiv = element.querySelector('.unit');
+        if (!unitDiv) {
+            unitDiv = document.createElement('div');
+            unitDiv.className = 'unit';
+            element.appendChild(unitDiv);
+        }
+        
+        // Set unit sprite/content
+        if (unit.isEnemy) {
+            const enemyId = unit.source.enemyId;
+            unitDiv.innerHTML = `
+                <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${enemyId}.png" alt="${unit.name}" 
+                     style="image-rendering: pixelated; object-fit: contain;"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${unit.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${unit.source.level}</div></div>'">
+            `;
+        } else {
+            const hero = unit.source;
+            unitDiv.innerHTML = `
+                <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" 
+                     style="image-rendering: pixelated; object-fit: contain;"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
+            `;
+        }
+        
+        // Create health bar
+        let healthBar = element.querySelector('.healthBar');
+        if (!healthBar) {
+            healthBar = document.createElement('div');
+            healthBar.className = 'healthBar';
+            healthBar.innerHTML = `
+                <div class="healthFill" style="width: 100%"></div>
+                <div class="healthText">${unit.currentHp}/${unit.maxHp}</div>
+            `;
+            element.appendChild(healthBar);
+        }
+        
+        // Create action bar
+        let actionBar = element.querySelector('.actionBar');
+        if (!actionBar) {
+            actionBar = document.createElement('div');
+            actionBar.className = 'actionBar';
+            actionBar.style.cssText = 'width: 80%; height: 10px; background: #0a1929; border: 1px solid #2a6a8a; margin-top: 0px; position: relative;';
+            
+            const actionFill = document.createElement('div');
+            actionFill.className = 'actionFill';
+            actionFill.style.cssText = 'height: 100%; background: linear-gradient(90deg, #4dd0e1 0%, #2a9aaa 100%); transition: width 0.1s; box-shadow: 0 0 5px rgba(77, 208, 225, 0.5);';
+            actionFill.style.width = '0%';
+            
+            actionBar.appendChild(actionFill);
+            element.appendChild(actionBar);
+        }
+        
+        // Create level indicator
+        let levelIndicator = element.querySelector('.levelIndicator');
+        if (!levelIndicator) {
+            levelIndicator = document.createElement('div');
+            levelIndicator.className = 'levelIndicator';
+            element.appendChild(levelIndicator);
+            
+            // Add click handler for unit info
+            levelIndicator.style.cursor = 'pointer';
+            const clickHandler = (e) => {
+                e.stopPropagation();
+                this.game.closeHeroInfo();
+                if (unit.isEnemy) {
+                    this.game.showEnemyInfoPopup(unit.source);
+                } else {
+                    this.game.showHeroInfoPopup(unit.source);
+                }
+            };
+            levelIndicator._unitInfoHandler = clickHandler;
+            levelIndicator.addEventListener('click', clickHandler);
+            levelIndicator.addEventListener('selectstart', (e) => e.preventDefault());
+        }
+        
+        // Update level indicator content
+        const starData = unit.isEnemy ? unit.source.getStars() : unit.source.getStars();
+        let html = '<div class="levelNumber">' + unit.source.level + '</div>';
+        if (starData.html) {
+            html += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
+        }
+        levelIndicator.innerHTML = html;
+        
+        // Add right-click handler for the entire unit slot
+        if (!element._rightClickHandler) {
+            const rightClickHandler = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.game.closeHeroInfo();
+                if (unit.isEnemy) {
+                    this.game.showEnemyInfoPopup(unit.source);
+                } else {
+                    this.game.showHeroInfoPopup(unit.source);
+                }
+            };
+            element._rightClickHandler = rightClickHandler;
+            element.addEventListener('contextmenu', rightClickHandler);
+        }
+        
+        // Create shadow
+        let shadow = element.querySelector('.unitShadow');
+        if (!shadow) {
+            shadow = document.createElement('div');
+            shadow.className = 'unitShadow';
+            element.appendChild(shadow);
+        }
+        
+        // Create buff/debuff container
+        let buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+        if (!buffDebuffContainer) {
+            buffDebuffContainer = document.createElement('div');
+            buffDebuffContainer.className = 'buffDebuffContainer';
+            element.appendChild(buffDebuffContainer);
+        }
     }
 
     applyInitialPassives() {
@@ -869,7 +922,7 @@ class Battle {
     dealDamage(attacker, target, amount, damageType = 'physical') {
         if (!target.isAlive) return 0;
         
-        let damage = Math.round(amount); // Changed from Math.floor
+        let damage = Math.round(amount);
         
         // Apply attacker's damage modifiers from buffs
         attacker.buffs.forEach(buff => {
@@ -956,7 +1009,7 @@ class Battle {
             }
         });
         
-        damage = Math.round(damage); // Changed from Math.floor
+        damage = Math.round(damage);
         const previousHp = target.currentHp;
         target.currentHp = Math.max(0, target.currentHp - damage);
         
@@ -964,25 +1017,40 @@ class Battle {
         
         // Check if target died
         if (previousHp > 0 && target.currentHp <= 0) {
-            this.triggerDeathAnimation(target);
             this.handleUnitDeath(target);
         }
         
         return damage;
     }
 
+    handleUnitDeath(unit) {
+        unit.isDead = true;
+        
+        // Check if this unit was the source of any taunts
+        this.allUnits.forEach(otherUnit => {
+            if (otherUnit.isAlive) {
+                // Remove any taunts where this unit was the taunt target
+                otherUnit.debuffs = otherUnit.debuffs.filter(debuff => {
+                    if (debuff.name === 'Taunt' && debuff.tauntTarget === unit) {
+                        this.log(`${otherUnit.name}'s taunt ends as ${unit.name} has fallen!`);
+                        return false;
+                    }
+                    return true;
+                });
+            }
+        });
+        
+        // Trigger death animation
+        this.triggerDeathAnimation(unit);
+    }
+
     triggerDeathAnimation(unit) {
-        // Only trigger if unit is dead and animation hasn't been triggered yet
-        if (unit.currentHp > 0 || unit.deathAnimationTriggered) return;
-        
-        unit.deathAnimationTriggered = true;
-        
         const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
         const element = document.getElementById(elementId);
         
         if (element) {
             const unitDiv = element.querySelector('.unit');
-            if (unitDiv && !unitDiv.classList.contains('dying')) { // Check if already has dying class
+            if (unitDiv) {
                 unitDiv.classList.add('dying');
                 
                 // Hide UI elements after animation
@@ -1001,22 +1069,6 @@ class Battle {
                 }, 800); // Match CSS animation duration
             }
         }
-    }
-
-    handleUnitDeath(unit) {
-        // Check if this unit was the source of any taunts
-        this.allUnits.forEach(otherUnit => {
-            if (otherUnit.isAlive) {
-                // Remove any taunts where this unit was the taunt target
-                otherUnit.debuffs = otherUnit.debuffs.filter(debuff => {
-                    if (debuff.name === 'Taunt' && debuff.tauntTarget === unit) {
-                        this.log(`${otherUnit.name}'s taunt ends as ${unit.name} has fallen!`);
-                        return false;
-                    }
-                    return true;
-                });
-            }
-        });
     }
 
     healUnit(target, amount) {
@@ -1160,7 +1212,6 @@ class Battle {
                 
                 // Check if unit died from DOT
                 if (previousHp > 0 && unit.currentHp <= 0) {
-                    this.triggerDeathAnimation(unit);
                     this.handleUnitDeath(unit);
                 }
             } else if (debuff.name === 'Bleed' && unit.isAlive) {
@@ -1171,7 +1222,6 @@ class Battle {
                 
                 // Check if unit died from DOT
                 if (previousHp > 0 && unit.currentHp <= 0) {
-                    this.triggerDeathAnimation(unit);
                     this.handleUnitDeath(unit);
                 }
             }
@@ -1221,6 +1271,7 @@ class Battle {
                     this.party.forEach((unit, index) => {
                         if (unit && !unit.isAlive) {
                             unit.currentHp = unit.maxHp;
+                            unit.isDead = false;
                             this.log(`${unit.name} revived for next wave!`);
                             
                             // Reset death animation
@@ -1233,6 +1284,17 @@ class Battle {
                                     unitDiv.style.opacity = '';
                                     unitDiv.style.filter = '';
                                 }
+                                
+                                // Show UI elements again
+                                const healthBar = element.querySelector('.healthBar');
+                                const actionBar = element.querySelector('.actionBar');
+                                const levelIndicator = element.querySelector('.levelIndicator');
+                                const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+                                
+                                if (healthBar) healthBar.style.display = '';
+                                if (actionBar) actionBar.style.display = '';
+                                if (levelIndicator) levelIndicator.style.display = '';
+                                if (buffDebuffContainer) buffDebuffContainer.style.display = '';
                             }
                         }
                     });
@@ -1681,175 +1743,128 @@ class Battle {
             const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
             const element = document.getElementById(elementId);
             
-            if (element) {
-                // CRITICAL: If death animation has been triggered, only handle visibility for enemy slots
-                if (unit.deathAnimationTriggered) {
-                    if (unit.isEnemy) {
-                        element.style.display = unit.position < this.enemies.length ? 'block' : 'none';
-                    }
-                    return; // Skip ALL other updates for this unit
-                }
+            if (!element) return;
+            
+            // Skip dead units entirely
+            if (!unit.isAlive) {
+                return;
+            }
+            
+            // Update health bar
+            const healthBar = element.querySelector('.healthFill');
+            const healthText = element.querySelector('.healthText');
+            
+            if (healthBar) {
+                const hpPercent = (unit.currentHp / unit.maxHp) * 100;
+                healthBar.style.width = `${hpPercent}%`;
                 
-                // Only process living units from here on
-                if (!unit.isAlive) {
-                    return; // Skip dead units that haven't animated yet (shouldn't happen, but safety check)
-                }
-                
-                const healthBar = element.querySelector('.healthFill');
-                const healthText = element.querySelector('.healthText');
-                
-                // Update health bar
-                if (healthBar) {
-                    const hpPercent = (unit.currentHp / unit.maxHp) * 100;
-                    healthBar.style.width = `${hpPercent}%`;
-                    
-                    // Change color based on HP
-                    if (hpPercent > 60) {
-                        healthBar.style.background = 'linear-gradient(90deg, #00ff88 0%, #00cc66 100%)';
-                    } else if (hpPercent > 30) {
-                        healthBar.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff8800 100%)';
-                    } else {
-                        healthBar.style.background = 'linear-gradient(90deg, #ff4444 0%, #cc0000 100%)';
-                    }
-                }
-                
-                if (healthText) {
-                    healthText.textContent = `${Math.floor(unit.currentHp)}/${unit.maxHp}`;
-                }
-                
-                // Update level indicator
-                const levelIndicator = element.querySelector('.levelIndicator');
-                if (levelIndicator) {
-                    // For heroes, show level and stars based on tier
-                    if (!unit.isEnemy) {
-                        const hero = unit.source;
-                        const starData = hero.getStars();
-                        
-                        let html = '<div class="levelNumber">' + unit.source.level + '</div>';
-                        if (starData.html) {
-                            html += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
-                        }
-                        levelIndicator.innerHTML = html;
-                    } else {
-                        // For enemies, show level and stars based on their star rating
-                        const enemy = unit.source;
-                        const starData = enemy.getStars();
-                        
-                        let html = '<div class="levelNumber">' + unit.source.level + '</div>';
-                        if (starData.html) {
-                            html += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
-                        }
-                        levelIndicator.innerHTML = html;
-                    }
-                }
-                
-                // Update action bar fill
-                const actionFill = element.querySelector('.actionFill');
-                if (actionFill) {
-                    const actionPercent = Math.min((unit.actionBar / 10000) * 100, 100);
-                    actionFill.style.width = `${actionPercent}%`;
-                    
-                    // Glow when ready
-                    if (actionPercent >= 100) {
-                        actionFill.style.boxShadow = '0 0 10px rgba(77, 208, 225, 1)';
-                    } else {
-                        actionFill.style.boxShadow = '0 0 5px rgba(77, 208, 225, 0.5)';
-                    }
-                }
-                
-                // Update buffs and debuffs display - SIMPLIFIED
-                const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-                if (buffDebuffContainer) {
-                    buffDebuffContainer.innerHTML = '';
-                    
-                    // Display buffs first
-                    unit.buffs.forEach((buff, index) => {
-                        const buffDiv = document.createElement('div');
-                        buffDiv.className = 'buffIcon';
-                        const iconName = this.getBuffIconName(buff.name);
-                        
-                        buffDiv.innerHTML = `
-                            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
-                                 alt="${buff.name}"
-                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
-                            ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
-                        `;
-                        
-                        // Add tooltip on hover
-                        buffDiv.onmouseenter = (e) => {
-                            this.showBuffDebuffTooltip(e, buff, true);
-                        };
-                        
-                        buffDiv.onmouseleave = () => {
-                            this.hideBuffDebuffTooltip();
-                        };
-                        
-                        buffDebuffContainer.appendChild(buffDiv);
-                    });
-                    
-                    // Display debuffs after buffs
-                    unit.debuffs.forEach((debuff, index) => {
-                        const debuffDiv = document.createElement('div');
-                        debuffDiv.className = 'debuffIcon';
-                        const iconName = this.getDebuffIconName(debuff.name);
-                        
-                        debuffDiv.innerHTML = `
-                            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
-                                 alt="${debuff.name}"
-                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
-                            ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
-                        `;
-                        
-                        // Add tooltip on hover
-                        debuffDiv.onmouseenter = (e) => {
-                            this.showBuffDebuffTooltip(e, debuff, false);
-                        };
-                        
-                        debuffDiv.onmouseleave = () => {
-                            this.hideBuffDebuffTooltip();
-                        };
-                        
-                        buffDebuffContainer.appendChild(debuffDiv);
-                    });
-                }
-                
-                // Highlight current unit - fixed active circle
-                if (unit === this.currentUnit && unit.isAlive) {
-                    element.style.border = '2px solid #4dd0e1';
-                    element.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
-                    
-                    // Add active turn circle - make sure it's only added once
-                    let activeCircle = element.querySelector('.activeCircle');
-                    if (!activeCircle) {
-                        activeCircle = document.createElement('div');
-                        activeCircle.className = 'activeCircle';
-                        element.appendChild(activeCircle);
-                    }
+                // Change color based on HP
+                if (hpPercent > 60) {
+                    healthBar.style.background = 'linear-gradient(90deg, #00ff88 0%, #00cc66 100%)';
+                } else if (hpPercent > 30) {
+                    healthBar.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff8800 100%)';
                 } else {
-                    element.style.border = '';
-                    element.style.boxShadow = '';
-                    
-                    // Remove active circle
-                    const activeCircle = element.querySelector('.activeCircle');
-                    if (activeCircle) {
-                        activeCircle.remove();
-                    }
+                    healthBar.style.background = 'linear-gradient(90deg, #ff4444 0%, #cc0000 100%)';
                 }
+            }
+            
+            if (healthText) {
+                healthText.textContent = `${Math.floor(unit.currentHp)}/${unit.maxHp}`;
+            }
+            
+            // Update action bar fill
+            const actionFill = element.querySelector('.actionFill');
+            if (actionFill) {
+                const actionPercent = Math.min((unit.actionBar / 10000) * 100, 100);
+                actionFill.style.width = `${actionPercent}%`;
                 
-                // Show/hide enemy slots based on how many enemies are in this wave
-                if (unit.isEnemy) {
-                    element.style.display = unit.position < this.enemies.length ? 'block' : 'none';
+                // Glow when ready
+                if (actionPercent >= 100) {
+                    actionFill.style.boxShadow = '0 0 10px rgba(77, 208, 225, 1)';
+                } else {
+                    actionFill.style.boxShadow = '0 0 5px rgba(77, 208, 225, 0.5)';
+                }
+            }
+            
+            // Update buffs and debuffs display
+            const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+            if (buffDebuffContainer) {
+                buffDebuffContainer.innerHTML = '';
+                
+                // Display buffs first
+                unit.buffs.forEach((buff, index) => {
+                    const buffDiv = document.createElement('div');
+                    buffDiv.className = 'buffIcon';
+                    const iconName = this.getBuffIconName(buff.name);
+                    
+                    buffDiv.innerHTML = `
+                        <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                             alt="${buff.name}"
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
+                        ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
+                    `;
+                    
+                    // Add tooltip on hover
+                    buffDiv.onmouseenter = (e) => {
+                        this.showBuffDebuffTooltip(e, buff, true);
+                    };
+                    
+                    buffDiv.onmouseleave = () => {
+                        this.hideBuffDebuffTooltip();
+                    };
+                    
+                    buffDebuffContainer.appendChild(buffDiv);
+                });
+                
+                // Display debuffs after buffs
+                unit.debuffs.forEach((debuff, index) => {
+                    const debuffDiv = document.createElement('div');
+                    debuffDiv.className = 'debuffIcon';
+                    const iconName = this.getDebuffIconName(debuff.name);
+                    
+                    debuffDiv.innerHTML = `
+                        <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                             alt="${debuff.name}"
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
+                        ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
+                    `;
+                    
+                    // Add tooltip on hover
+                    debuffDiv.onmouseenter = (e) => {
+                        this.showBuffDebuffTooltip(e, debuff, false);
+                    };
+                    
+                    debuffDiv.onmouseleave = () => {
+                        this.hideBuffDebuffTooltip();
+                    };
+                    
+                    buffDebuffContainer.appendChild(debuffDiv);
+                });
+            }
+            
+            // Highlight current unit
+            if (unit === this.currentUnit && unit.isAlive) {
+                element.style.border = '2px solid #4dd0e1';
+                element.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
+                
+                // Add active turn circle
+                let activeCircle = element.querySelector('.activeCircle');
+                if (!activeCircle) {
+                    activeCircle = document.createElement('div');
+                    activeCircle.className = 'activeCircle';
+                    element.appendChild(activeCircle);
+                }
+            } else {
+                element.style.border = '';
+                element.style.boxShadow = '';
+                
+                // Remove active circle
+                const activeCircle = element.querySelector('.activeCircle');
+                if (activeCircle) {
+                    activeCircle.remove();
                 }
             }
         });
-        
-        // Hide empty enemy slots
-        for (let i = this.enemies.length + 1; i <= 5; i++) {
-            const element = document.getElementById(`enemy${i}`);
-            if (element) {
-                element.style.display = 'none';
-            }
-        }
     }
 
     getBuffIconName(buffName) {
