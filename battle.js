@@ -1165,13 +1165,6 @@ if (previousHp > 0 && target.currentHp <= 0) {
     this.triggerDeathAnimation(target);
     this.handleUnitDeath(target);
     
-    // Add a delay to let death animation play
-    if (!target.deathAnimationTriggered) {
-        this.battlePaused = true;
-        setTimeout(() => {
-            this.battlePaused = false;
-        }, 800);
-    }
 }
     
     return damage;
@@ -1189,24 +1182,24 @@ triggerDeathAnimation(unit) {
     
     if (element) {
         const unitDiv = element.querySelector('.unit');
-        if (unitDiv) {
+        if (unitDiv && !unitDiv.classList.contains('dying')) { // Check if already has dying class
             unitDiv.classList.add('dying');
+            
+            // Hide UI elements after animation
+            setTimeout(() => {
+                if (element) {
+                    const healthBar = element.querySelector('.healthBar');
+                    const actionBar = element.querySelector('.actionBar');
+                    const levelIndicator = element.querySelector('.levelIndicator');
+                    const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+                    
+                    if (healthBar) healthBar.style.display = 'none';
+                    if (actionBar) actionBar.style.display = 'none';
+                    if (levelIndicator) levelIndicator.style.display = 'none';
+                    if (buffDebuffContainer) buffDebuffContainer.style.display = 'none';
+                }
+            }, 800); // Match CSS animation duration
         }
-        
-        // Hide UI elements after animation
-        setTimeout(() => {
-            if (element) {
-                const healthBar = element.querySelector('.healthBar');
-                const actionBar = element.querySelector('.actionBar');
-                const levelIndicator = element.querySelector('.levelIndicator');
-                const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-                
-                if (healthBar) healthBar.style.display = 'none';
-                if (actionBar) actionBar.style.display = 'none';
-                if (levelIndicator) levelIndicator.style.display = 'none';
-                if (buffDebuffContainer) buffDebuffContainer.style.display = 'none';
-            }
-        }, 800); // Match CSS animation duration
     }
 }
 
@@ -1433,13 +1426,6 @@ if (previousHp > 0 && unit.currentHp <= 0) {
     this.triggerDeathAnimation(unit);
     this.handleUnitDeath(unit);
     
-    // Add a delay to let death animation play
-    if (!unit.deathAnimationTriggered) {
-        this.battlePaused = true;
-        setTimeout(() => {
-            this.battlePaused = false;
-        }, 800);
-    }
 }
         }
     });
@@ -2031,8 +2017,17 @@ forceBuffDebuffUIUpdate(unit) {
         const element = document.getElementById(elementId);
         
         if (element) {
-            // Only update if unit is alive or death animation hasn't been triggered
-            if (unit.isAlive || !unit.deathAnimationTriggered) {
+            // IMPORTANT: Skip ALL updates for units that have already played death animation
+            if (unit.deathAnimationTriggered) {
+                // Just ensure the slot is visible for enemy slots
+                if (unit.isEnemy) {
+                    element.style.display = unit.position < this.enemies.length ? 'block' : 'none';
+                }
+                return; // Skip this unit entirely
+            }
+            
+            // Only update living units
+            if (unit.isAlive) {
                 const healthBar = element.querySelector('.healthFill');
                 const healthText = element.querySelector('.healthText');
                 
@@ -2057,7 +2052,7 @@ forceBuffDebuffUIUpdate(unit) {
                 
                 // Update level indicator
                 const levelIndicator = element.querySelector('.levelIndicator');
-                if (levelIndicator && unit.isAlive) {
+                if (levelIndicator) {
                     // For heroes, show level and stars based on tier
                     if (!unit.isEnemy) {
                         const hero = unit.source;
@@ -2097,7 +2092,7 @@ forceBuffDebuffUIUpdate(unit) {
                 
                 // Update buffs and debuffs display
                 const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-                if (buffDebuffContainer && unit.isAlive) {
+                if (buffDebuffContainer) {
                     // Only update if the buffs/debuffs have changed
                     const currentBuffDebuffState = JSON.stringify({
                         buffs: unit.buffs.map(b => ({name: b.name, duration: b.duration})),
