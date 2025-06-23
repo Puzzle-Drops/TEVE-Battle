@@ -3613,3 +3613,14 @@ body {
     color: #b0e0f0;
 }
 
+/* Gender symbol colors */
+.gender-male {
+    color: #4dd0e1;
+    text-shadow: 0 0 5px rgba(77, 208, 225, 0.5);
+}
+
+.gender-female {
+    color: #ff69b4;
+    text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
+}
+
