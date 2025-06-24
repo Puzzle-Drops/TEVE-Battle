@@ -3518,6 +3518,7 @@ body {
     justify-content: flex-start;
     padding: 0 30px;
     pointer-events: auto;
+    z-index: 10000;
 }
 
 .buffIcon, .debuffIcon {
