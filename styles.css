@@ -2427,7 +2427,7 @@ body {
         0 2px 4px rgba(0, 0, 0, 1);
     white-space: nowrap;
     letter-spacing: 1px;
-    margin-top: 70%;
+    margin-top: 50%;
     animation: spellCast 1.5s ease-out forwards;
     z-index: 2;
 }
