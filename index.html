@@ -2798,18 +2798,25 @@ hideGoldTooltip() {
                 ).filter(hero => hero !== null);
                 
                 partyUnits.forEach((hero, index) => {
-                    const slot = document.getElementById(`party${index + 1}`);
-                    if (slot) {
-                        slot.style.display = 'block';
-                        const unitDiv = slot.querySelector('.unit');
-                        
-                        unitDiv.innerHTML = `
-                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_portrait.png" alt="${hero.displayClassName}" 
-                                 style="width: 100%; image-rendering: pixelated; object-fit: contain;"
-                                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
-                        `;
-                    }
-                });
+    const slot = document.getElementById(`party${index + 1}`);
+    if (slot) {
+        slot.style.display = 'block';
+        let unitDiv = slot.querySelector('.unit');
+        
+        // Create unit div if it doesn't exist
+        if (!unitDiv) {
+            unitDiv = document.createElement('div');
+            unitDiv.className = 'unit';
+            slot.appendChild(unitDiv);
+        }
+        
+        unitDiv.innerHTML = `
+            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_portrait.png" alt="${hero.displayClassName}" 
+                 style="width: 100%; image-rendering: pixelated; object-fit: contain;"
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
+        `;
+    }
+});
                 
                 // Don't show enemies here - they'll be shown when battle starts
             }
