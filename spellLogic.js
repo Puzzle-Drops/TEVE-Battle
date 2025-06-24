@@ -15,7 +15,7 @@ const spellLogic = {
     throwRockLogic: function(battle, caster, target) {
         const damage = caster.stats.int * 2;
         battle.dealDamage(caster, target, damage, 'physical');
-        battle.applyDebuff(target, 'stun', 1, { stunned: true });
+        battle.applyDebuff(target, 'Stun', 1, { stunned: true });
         battle.log(`${caster.name} throws a rock at ${target.name} for ${Math.floor(damage)} damage and stuns them!`);
     },
 
