@@ -825,6 +825,13 @@ body {
     margin: 0;
 }
 
+.unitSlot .actionFill {
+    height: 100%;
+    background: linear-gradient(90deg, rgb(77, 208, 225) 0%, rgb(42, 154, 170) 100%);
+    transition: width 0.1s;
+    box-shadow: rgb(77, 208, 225) 0px 0px 10px;
+}
+
 .actionBar {
     margin-top: 0 !important;
 }
