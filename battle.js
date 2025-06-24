@@ -377,8 +377,7 @@ class Battle {
         // Create unit div
         const unitDiv = document.createElement('div');
         unitDiv.className = 'unit';
-        unitDiv.style.display = 'block';
-        unitDiv.style.opacity = '1';
+        unitDiv.style.cssText = 'display: block; opacity: 1; position: relative; width: 100%; height: 100%;';
         element.appendChild(unitDiv);
         
         // Set unit sprite/content
@@ -386,15 +385,15 @@ class Battle {
             const enemyId = unit.source.enemyId;
             unitDiv.innerHTML = `
                 <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${enemyId}.png" alt="${unit.name}" 
-                     style="image-rendering: pixelated; object-fit: contain;"
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${unit.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${unit.source.level}</div></div>'">
+                     style="image-rendering: pixelated; object-fit: contain; width: auto; height: auto; max-width: 100%; max-height: 100%; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: auto;\\'><div>${unit.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${unit.source.level}</div></div>'">
             `;
         } else {
             const hero = unit.source;
             unitDiv.innerHTML = `
                 <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" 
-                     style="image-rendering: pixelated; object-fit: contain;"
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
+                     style="image-rendering: pixelated; object-fit: contain; width: auto; height: auto; max-width: 100%; max-height: 100%; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: auto;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
             `;
         }
         
