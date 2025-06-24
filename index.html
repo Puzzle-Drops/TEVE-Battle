@@ -123,23 +123,24 @@
                 </div>
             </div>
 
-            <div class="battleUI">
-                <div class="battleLog" id="battleLog">
-                    Battle started!<br>
-                </div>
-                <div class="autoToggleContainer">
-                    <label style="color: #b0e0f0;">
-                        <input type="checkbox" id="autoModeToggle" onchange="game.toggleAutoBattleInBattle(this.checked)">
-                        Auto Battle
-                    </label>
-                    <label style="color: #b0e0f0; margin-left: 20px;">
-                        <input type="checkbox" id="autoReplayToggle" onchange="game.toggleAutoReplay(this.checked)">
-                        Auto Replay
-                    </label>
-                </div>
-		    <div class="abilityPanel" id="abilityPanel">
-                </div>
-            </div>
+<div class="battleLog" id="battleLog">
+    Battle started!<br>
+</div>
+<div class="autoToggleContainer">
+    <label style="color: #b0e0f0;">
+        <input type="checkbox" id="autoModeToggle" onchange="game.toggleAutoBattleInBattle(this.checked)">
+        Auto Battle
+    </label>
+    <label style="color: #b0e0f0; margin-left: 20px;">
+        <input type="checkbox" id="autoReplayToggle" onchange="game.toggleAutoReplay(this.checked)">
+        Auto Replay
+    </label>
+</div>
+
+<div class="battleUI">
+    <div class="abilityPanel" id="abilityPanel">
+    </div>
+</div>
             <button class="exitBattleButton" onclick="game.exitBattle()">Exit Battle</button>
         </div>
 
