@@ -736,7 +736,7 @@ body {
 
 .levelIndicator {
     position: absolute;
-    left: -14px;
+    left: 24px;
     top: -15px;
     width: 40px;
     height: 40px;
@@ -801,10 +801,12 @@ body {
 .unitSlot img {
         width: 256px;
 	max-height: 256px;
+	position: relative;
+	top: 4px;
 }
 
 .unitSlot .healthBar {
-	left: 44px;
+	left: 54px;
 	width: 65%;
 	top: -10px;
 }
@@ -812,7 +814,7 @@ body {
 .unitSlot .actionBar {
     position: absolute;
     top: 0px;
-    left: 44px;
+    left: 54px;
     width: 65%;
     height: 10px;
     background: #0a1929;
@@ -3511,8 +3513,8 @@ body {
 .buffDebuffContainer {
     position: absolute;
     top: -40px;
-    left: 15px;
-    width: 88%;
+    left: 27px;
+    width: 100%;
     height: 30px;
     display: flex;
     gap: 2px;
@@ -3558,6 +3560,7 @@ body {
     width: 100%;
     height: 100%;
     image-rendering: pixelated;
+    position: static;
 }
 
 .buffDebuffDuration {
