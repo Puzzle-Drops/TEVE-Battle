@@ -664,11 +664,11 @@ body {
 
 .unitShadow {
     position: absolute;
-    bottom: -5px;
+    top: 90%
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
-    height: 12px;
+    width: 40%;
+    height: 24px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 50%;
     filter: blur(3px);
@@ -803,6 +803,7 @@ body {
 	max-height: 256px;
 	position: relative;
 	top: 4px;
+	z-index: 1;
 }
 
 .unitSlot .healthBar {
@@ -889,19 +890,6 @@ body {
     background: rgba(42, 106, 138, 0.5);
     border-color: #4dd0e1;
     box-shadow: 0 0 20px rgba(77, 208, 225, 0.7);
-}
-
-.unitShadow {
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 12px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 50%;
-    filter: blur(3px);
-    z-index: 0;
 }
 
 .unitSlot {
@@ -1129,6 +1117,7 @@ body {
     bottom: 20px;
     left: auto;
     right: 20px;
+    z-index: 10;
 }
 
 .statLine {
