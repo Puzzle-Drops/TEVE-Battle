@@ -419,7 +419,7 @@ class Battle {
         healthBar.className = 'healthBar';
         healthBar.innerHTML = `
             <div class="healthFill" style="width: 100%"></div>
-            <div class="healthText">${unit.currentHp}/${unit.maxHp}</div>
+            <div class="healthText">${unit.currentHp}</div>
         `;
         element.appendChild(healthBar);
         
@@ -912,8 +912,12 @@ class Battle {
         const unitSlot = document.getElementById(elementId);
         
         if (unitSlot) {
-            // Clear any existing spell text first
-            const existingSpellText = unitSlot.querySelector('.spellText');
+            // Get animation container
+            const animContainer = unitSlot.querySelector('.unitAnimationContainer');
+            if (!animContainer) return;
+            
+            // Clear any existing spell text in this container
+            const existingSpellText = animContainer.querySelector('.spellText');
             if (existingSpellText) {
                 existingSpellText.remove();
             }
@@ -935,20 +939,16 @@ class Battle {
                 animationClass = 'casting-summon';
             }
             
-            // Apply animation to the animation container
-            const animContainer = unitSlot.querySelector('.unitAnimationContainer');
-            if (animContainer) {
-                // Remove any existing animation classes
-                animContainer.classList.remove('casting-damage', 'casting-speed', 'casting-heal', 
-                                            'casting-holy', 'casting-shadow', 'casting-shield', 
-                                            'casting-summon');
-                
-                // Add animation
-                animContainer.classList.add(animationClass);
-                setTimeout(() => animContainer.classList.remove(animationClass), 800);
-            }
+            // Remove any existing animation classes
+            animContainer.classList.remove('casting-damage', 'casting-speed', 'casting-heal', 
+                                        'casting-holy', 'casting-shadow', 'casting-shield', 
+                                        'casting-summon');
             
-            // Create spell text
+            // Add animation
+            animContainer.classList.add(animationClass);
+            setTimeout(() => animContainer.classList.remove(animationClass), 800);
+            
+            // Create spell text inside animation container
             const spellText = document.createElement('div');
             spellText.className = 'spellText';
             spellText.textContent = spellName;
@@ -965,7 +965,7 @@ class Battle {
             else if (effects.includes('arcane')) spellText.classList.add('arcane');
             else spellText.classList.add('damage'); // default
             
-            unitSlot.appendChild(spellText);
+            animContainer.appendChild(spellText);
             
             // Remove spell text after animation
             setTimeout(() => {
@@ -1185,8 +1185,15 @@ class Battle {
         if (attackerElement) {
             const attackerAnimContainer = attackerElement.querySelector('.unitAnimationContainer');
             if (attackerAnimContainer) {
-                attackerAnimContainer.classList.add('unit-lunge');
-                setTimeout(() => attackerAnimContainer.classList.remove('unit-lunge'), 600);
+                // Add directional lunge class based on attacker's side
+                if (attacker.isEnemy) {
+                    attackerAnimContainer.classList.add('unit-lunge-left');
+                } else {
+                    attackerAnimContainer.classList.add('unit-lunge-right');
+                }
+                setTimeout(() => {
+                    attackerAnimContainer.classList.remove('unit-lunge-left', 'unit-lunge-right');
+                }, 600);
             }
         }
         
@@ -1194,8 +1201,15 @@ class Battle {
         if (targetElement) {
             const targetAnimContainer = targetElement.querySelector('.unitAnimationContainer');
             if (targetAnimContainer) {
-                targetAnimContainer.classList.add('unit-recoil');
-                setTimeout(() => targetAnimContainer.classList.remove('unit-recoil'), 600);
+                // Add directional recoil class based on target's side
+                if (target.isEnemy) {
+                    targetAnimContainer.classList.add('unit-recoil-right');
+                } else {
+                    targetAnimContainer.classList.add('unit-recoil-left');
+                }
+                setTimeout(() => {
+                    targetAnimContainer.classList.remove('unit-recoil-left', 'unit-recoil-right');
+                }, 600);
             }
         }
     }
@@ -1245,9 +1259,16 @@ class Battle {
             const animContainer = element.querySelector('.unitAnimationContainer');
             if (animContainer) {
                 const unitDiv = animContainer.querySelector('.unit');
+                const unitShadow = animContainer.querySelector('.unitShadow');
+                
                 if (unitDiv && !unitDiv.classList.contains('dying')) {
                     // Only add dying class if it doesn't already have it
                     unitDiv.classList.add('dying');
+                    
+                    // Hide shadow immediately when dying
+                    if (unitShadow) {
+                        unitShadow.style.display = 'none';
+                    }
                     
                     // Hide UI elements after animation
                     setTimeout(() => {
@@ -1496,10 +1517,14 @@ class Battle {
                                     const animContainer = element.querySelector('.unitAnimationContainer');
                                     if (animContainer) {
                                         const unitDiv = animContainer.querySelector('.unit');
+                                        const unitShadow = animContainer.querySelector('.unitShadow');
                                         if (unitDiv) {
                                             unitDiv.classList.remove('dying');
                                             unitDiv.style.opacity = '';
                                             unitDiv.style.filter = '';
+                                        }
+                                        if (unitShadow) {
+                                            unitShadow.style.display = '';
                                         }
                                     }
                                 }
@@ -2018,7 +2043,7 @@ class Battle {
             }
             
             if (healthText) {
-                healthText.textContent = `${Math.floor(unit.currentHp)}/${unit.maxHp}`;
+                healthText.textContent = `${Math.floor(unit.currentHp)}`;
             }
             
             // Update action bar fill
