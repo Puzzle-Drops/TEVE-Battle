@@ -374,12 +374,17 @@ class Battle {
         // Clear any previous content to ensure fresh UI
         element.innerHTML = '';
         
-        // Create unit div
+        // Create animation container for unit, shadow, and active circle
+        const animContainer = document.createElement('div');
+        animContainer.className = 'unitAnimationContainer';
+        element.appendChild(animContainer);
+        
+        // Create unit div inside animation container
         const unitDiv = document.createElement('div');
         unitDiv.className = 'unit';
         unitDiv.style.display = 'block';
         unitDiv.style.opacity = '1';
-        element.appendChild(unitDiv);
+        animContainer.appendChild(unitDiv);
         
         // Set unit sprite/content
         if (unit.isEnemy) {
@@ -398,7 +403,18 @@ class Battle {
             `;
         }
         
-        // Create health bar
+        // Create shadow inside animation container
+        const shadow = document.createElement('div');
+        shadow.className = 'unitShadow';
+        animContainer.appendChild(shadow);
+        
+        // Create active turn circle inside animation container
+        const activeCircle = document.createElement('div');
+        activeCircle.className = 'unitActiveCircle';
+        activeCircle.style.display = 'none'; // Hidden by default
+        animContainer.appendChild(activeCircle);
+        
+        // Create health bar (static)
         const healthBar = document.createElement('div');
         healthBar.className = 'healthBar';
         healthBar.innerHTML = `
@@ -407,7 +423,7 @@ class Battle {
         `;
         element.appendChild(healthBar);
         
-        // Create action bar
+        // Create action bar (static)
         const actionBar = document.createElement('div');
         actionBar.className = 'actionBar';
         
@@ -418,7 +434,7 @@ class Battle {
         actionBar.appendChild(actionFill);
         element.appendChild(actionBar);
         
-        // Create level indicator
+        // Create level indicator (static)
         const levelIndicator = document.createElement('div');
         levelIndicator.className = 'levelIndicator';
         element.appendChild(levelIndicator);
@@ -460,18 +476,7 @@ class Battle {
         element._rightClickHandler = rightClickHandler;
         element.addEventListener('contextmenu', rightClickHandler);
         
-        // Create shadow
-        const shadow = document.createElement('div');
-        shadow.className = 'unitShadow';
-        element.appendChild(shadow);
-        
-        // Create active turn circle
-        const activeCircle = document.createElement('div');
-        activeCircle.className = 'unitActiveCircle';
-        activeCircle.style.display = 'none'; // Hidden by default
-        element.appendChild(activeCircle);
-        
-        // Create buff/debuff container
+        // Create buff/debuff container (static)
         const buffDebuffContainer = document.createElement('div');
         buffDebuffContainer.className = 'buffDebuffContainer';
         element.appendChild(buffDebuffContainer);
@@ -517,15 +522,14 @@ class Battle {
                     const actionBar = element.querySelector('.actionBar');
                     const levelIndicator = element.querySelector('.levelIndicator');
                     const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-                    const unitShadow = element.querySelector('.unitShadow');
-                    const unitDiv = element.querySelector('.unit');
-                    const unitActiveCircle = element.querySelector('.unitActiveCircle');
+                    const animContainer = element.querySelector('.unitAnimationContainer');
+                    const unitDiv = animContainer ? animContainer.querySelector('.unit') : null;
+                    const unitActiveCircle = animContainer ? animContainer.querySelector('.unitActiveCircle') : null;
                     
                     if (healthBar) healthBar.style.display = '';
                     if (actionBar) actionBar.style.display = '';
                     if (levelIndicator) levelIndicator.style.display = '';
                     if (buffDebuffContainer) buffDebuffContainer.style.display = '';
-                    if (unitShadow) unitShadow.style.display = '';
                     if (unitActiveCircle) unitActiveCircle.style.display = 'none'; // Ensure it's hidden
                     if (unitDiv) {
                         unitDiv.style.opacity = '1';
@@ -782,9 +786,12 @@ class Battle {
             const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
             const element = document.getElementById(elementId);
             if (element) {
-                const activeCircle = element.querySelector('.unitActiveCircle');
-                if (activeCircle) {
-                    activeCircle.style.display = 'block';
+                const animContainer = element.querySelector('.unitAnimationContainer');
+                if (animContainer) {
+                    const activeCircle = animContainer.querySelector('.unitActiveCircle');
+                    if (activeCircle) {
+                        activeCircle.style.display = 'block';
+                    }
                 }
             }
         }
@@ -928,14 +935,18 @@ class Battle {
                 animationClass = 'casting-summon';
             }
             
-            // Remove any existing animation classes
-            unitSlot.classList.remove('casting-damage', 'casting-speed', 'casting-heal', 
-                                      'casting-holy', 'casting-shadow', 'casting-shield', 
-                                      'casting-summon');
-            
-            // Add animation to unit
-            unitSlot.classList.add(animationClass);
-            setTimeout(() => unitSlot.classList.remove(animationClass), 800);
+            // Apply animation to the animation container
+            const animContainer = unitSlot.querySelector('.unitAnimationContainer');
+            if (animContainer) {
+                // Remove any existing animation classes
+                animContainer.classList.remove('casting-damage', 'casting-speed', 'casting-heal', 
+                                            'casting-holy', 'casting-shadow', 'casting-shield', 
+                                            'casting-summon');
+                
+                // Add animation
+                animContainer.classList.add(animationClass);
+                setTimeout(() => animContainer.classList.remove(animationClass), 800);
+            }
             
             // Create spell text
             const spellText = document.createElement('div');
@@ -971,9 +982,12 @@ class Battle {
             const elementId = this.currentUnit.isEnemy ? `enemy${this.currentUnit.position + 1}` : `party${this.currentUnit.position + 1}`;
             const element = document.getElementById(elementId);
             if (element) {
-                const activeCircle = element.querySelector('.unitActiveCircle');
-                if (activeCircle) {
-                    activeCircle.style.display = 'none';
+                const animContainer = element.querySelector('.unitAnimationContainer');
+                if (animContainer) {
+                    const activeCircle = animContainer.querySelector('.unitActiveCircle');
+                    if (activeCircle) {
+                        activeCircle.style.display = 'none';
+                    }
                 }
             }
             
@@ -1112,12 +1126,78 @@ class Battle {
         
         this.log(`${attacker.name} deals ${damage} ${damageType} damage to ${target.name}!`);
         
+        // Show damage animation
+        this.showDamageAnimation(attacker, target, damage, damageType);
+        
         // Check if target died
         if (previousHp > 0 && target.currentHp <= 0) {
             this.handleUnitDeath(target);
         }
         
         return damage;
+    }
+    
+    showDamageAnimation(attacker, target, damage, damageType) {
+        // Show damage number
+        const targetId = target.isEnemy ? `enemy${target.position + 1}` : `party${target.position + 1}`;
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+            // Get health bar position for damage number spawn
+            const healthBar = targetElement.querySelector('.healthBar');
+            const healthFill = healthBar ? healthBar.querySelector('.healthFill') : null;
+            
+            if (healthBar && healthFill) {
+                // Calculate position at end of health fill
+                const fillWidth = parseFloat(healthFill.style.width || '100');
+                const fillPixelWidth = (healthBar.offsetWidth * fillWidth) / 100;
+                
+                // Create damage number
+                const damageNum = document.createElement('div');
+                damageNum.className = 'damageNumber';
+                damageNum.textContent = `-${damage}`;
+                
+                // Add damage type class for color
+                if (damageType === 'physical') damageNum.classList.add('physical');
+                else if (damageType === 'magical') damageNum.classList.add('magical');
+                else if (damageType === 'pure') damageNum.classList.add('pure');
+                else damageNum.classList.add('physical'); // default
+                
+                // Position at end of health fill
+                damageNum.style.left = `${54 + fillPixelWidth}px`; // 54px is the healthBar left offset
+                damageNum.style.top = '0px'; // Start from health bar position
+                
+                targetElement.appendChild(damageNum);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    if (damageNum.parentNode) {
+                        damageNum.remove();
+                    }
+                }, 1500);
+            }
+        }
+        
+        // Animate attacker lunge
+        const attackerId = attacker.isEnemy ? `enemy${attacker.position + 1}` : `party${attacker.position + 1}`;
+        const attackerElement = document.getElementById(attackerId);
+        
+        if (attackerElement) {
+            const attackerAnimContainer = attackerElement.querySelector('.unitAnimationContainer');
+            if (attackerAnimContainer) {
+                attackerAnimContainer.classList.add('unit-lunge');
+                setTimeout(() => attackerAnimContainer.classList.remove('unit-lunge'), 600);
+            }
+        }
+        
+        // Animate target recoil
+        if (targetElement) {
+            const targetAnimContainer = targetElement.querySelector('.unitAnimationContainer');
+            if (targetAnimContainer) {
+                targetAnimContainer.classList.add('unit-recoil');
+                setTimeout(() => targetAnimContainer.classList.remove('unit-recoil'), 600);
+            }
+        }
     }
 
     handleUnitDeath(unit) {
@@ -1127,9 +1207,12 @@ class Battle {
         const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
         const element = document.getElementById(elementId);
         if (element) {
-            const activeCircle = element.querySelector('.unitActiveCircle');
-            if (activeCircle) {
-                activeCircle.style.display = 'none';
+            const animContainer = element.querySelector('.unitAnimationContainer');
+            if (animContainer) {
+                const activeCircle = animContainer.querySelector('.unitActiveCircle');
+                if (activeCircle) {
+                    activeCircle.style.display = 'none';
+                }
             }
         }
         
@@ -1159,29 +1242,30 @@ class Battle {
         const element = document.getElementById(elementId);
         
         if (element) {
-            const unitDiv = element.querySelector('.unit');
-            if (unitDiv && !unitDiv.classList.contains('dying')) {
-                // Only add dying class if it doesn't already have it
-                unitDiv.classList.add('dying');
-                
-                // Hide UI elements after animation
-                setTimeout(() => {
-                    // Double-check element still exists and unit is still dead
-                    const currentElement = document.getElementById(elementId);
-                    if (currentElement && unit.isDead) {
-                        const healthBar = currentElement.querySelector('.healthBar');
-                        const actionBar = currentElement.querySelector('.actionBar');
-                        const levelIndicator = currentElement.querySelector('.levelIndicator');
-                        const buffDebuffContainer = currentElement.querySelector('.buffDebuffContainer');
-                        const unitShadow = currentElement.querySelector('.unitShadow');
-                        
-                        if (healthBar) healthBar.style.display = 'none';
-                        if (actionBar) actionBar.style.display = 'none';
-                        if (levelIndicator) levelIndicator.style.display = 'none';
-                        if (buffDebuffContainer) buffDebuffContainer.style.display = 'none';
-                        if (unitShadow) unitShadow.style.display = 'none';
-                    }
-                }, 800); // Match CSS animation duration
+            const animContainer = element.querySelector('.unitAnimationContainer');
+            if (animContainer) {
+                const unitDiv = animContainer.querySelector('.unit');
+                if (unitDiv && !unitDiv.classList.contains('dying')) {
+                    // Only add dying class if it doesn't already have it
+                    unitDiv.classList.add('dying');
+                    
+                    // Hide UI elements after animation
+                    setTimeout(() => {
+                        // Double-check element still exists and unit is still dead
+                        const currentElement = document.getElementById(elementId);
+                        if (currentElement && unit.isDead) {
+                            const healthBar = currentElement.querySelector('.healthBar');
+                            const actionBar = currentElement.querySelector('.actionBar');
+                            const levelIndicator = currentElement.querySelector('.levelIndicator');
+                            const buffDebuffContainer = currentElement.querySelector('.buffDebuffContainer');
+                            
+                            if (healthBar) healthBar.style.display = 'none';
+                            if (actionBar) actionBar.style.display = 'none';
+                            if (levelIndicator) levelIndicator.style.display = 'none';
+                            if (buffDebuffContainer) buffDebuffContainer.style.display = 'none';
+                        }
+                    }, 800); // Match CSS animation duration
+                }
             }
         }
     }
@@ -1409,11 +1493,14 @@ class Battle {
                                 
                                 // Reset death animation
                                 if (element) {
-                                    const unitDiv = element.querySelector('.unit');
-                                    if (unitDiv) {
-                                        unitDiv.classList.remove('dying');
-                                        unitDiv.style.opacity = '';
-                                        unitDiv.style.filter = '';
+                                    const animContainer = element.querySelector('.unitAnimationContainer');
+                                    if (animContainer) {
+                                        const unitDiv = animContainer.querySelector('.unit');
+                                        if (unitDiv) {
+                                            unitDiv.classList.remove('dying');
+                                            unitDiv.style.opacity = '';
+                                            unitDiv.style.filter = '';
+                                        }
                                     }
                                 }
                             }
@@ -1426,14 +1513,13 @@ class Battle {
                                 const actionBar = element.querySelector('.actionBar');
                                 const levelIndicator = element.querySelector('.levelIndicator');
                                 const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-                                const unitShadow = element.querySelector('.unitShadow');
-                                const unitActiveCircle = element.querySelector('.unitActiveCircle');
+                                const animContainer = element.querySelector('.unitAnimationContainer');
+                                const unitActiveCircle = animContainer ? animContainer.querySelector('.unitActiveCircle') : null;
                                 
                                 if (healthBar) healthBar.style.display = '';
                                 if (actionBar) actionBar.style.display = '';
                                 if (levelIndicator) levelIndicator.style.display = '';
                                 if (buffDebuffContainer) buffDebuffContainer.style.display = '';
-                                if (unitShadow) unitShadow.style.display = '';
                                 if (unitActiveCircle) unitActiveCircle.style.display = 'none'; // Ensure it's hidden
                             }
                         }
