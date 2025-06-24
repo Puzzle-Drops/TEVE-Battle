@@ -3741,6 +3741,10 @@ body {
     animation: unitRecoilRight 0.6s ease-out;
 }
 
+/* Stun visual effect transition */
+.unitAnimationContainer {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
 
 /* Update existing animation classes to target animation container */
 .unitAnimationContainer.casting-damage {
