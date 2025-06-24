@@ -1436,20 +1436,29 @@ class Battle {
     }
     
     endBattle(victory) {
-        this.running = false;
-        this.endTime = Date.now();
+    this.running = false;
+    this.endTime = Date.now();
 
-        // Clear timer interval
-        if (this.timerInterval) {
-            clearInterval(this.timerInterval);
-            this.timerInterval = null;
-        }
+    // Clear timer interval
+    if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+    }
 
-        // Clear all buffs and debuffs from all units
-        this.allUnits.forEach(unit => {
-            unit.buffs = [];
-            unit.debuffs = [];
+    // Clear all buffs and debuffs from all units
+    this.allUnits.forEach(unit => {
+        unit.buffs = [];
+        unit.debuffs = [];
+    });
+    
+    // Clear pending exp for all party members if defeat
+    if (!victory) {
+        this.party.forEach(unit => {
+            if (unit && unit.source) {
+                unit.source.pendingExp = 0;
+            }
         });
+    }
 
         // Clear any active targeting
         if (this.targetingState) {
