@@ -1623,7 +1623,6 @@ class Battle {
                 // Re-enable all abilities first
                 const allAbilities = abilityPanel.querySelectorAll('.ability');
                 allAbilities.forEach(ab => {
-                    ab.style.pointerEvents = '';
                     ab.style.opacity = '';
                 });
                 
@@ -1632,10 +1631,9 @@ class Battle {
                     return;
                 }
                 
-                // Disable all other abilities
+                // Visually disable all other abilities (but keep them clickable)
                 allAbilities.forEach(ab => {
                     if (ab !== abilityDiv) {
-                        ab.style.pointerEvents = 'none';
                         ab.style.opacity = '0.5';
                     }
                 });
@@ -1718,7 +1716,6 @@ class Battle {
         if (abilityPanel) {
             const allAbilities = abilityPanel.querySelectorAll('.ability');
             allAbilities.forEach(ab => {
-                ab.style.pointerEvents = '';
                 ab.style.opacity = '';
             });
         }
