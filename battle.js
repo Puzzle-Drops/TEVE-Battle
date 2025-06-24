@@ -366,18 +366,29 @@ class Battle {
         
         if (!element) return;
         
-        // Make sure element is visible
+        // Make sure element is visible and positioned
         element.style.display = 'block';
         element.style.opacity = '1';
         element.style.visibility = 'visible';
+        element.style.position = 'relative'; // Ensure relative positioning for child elements
         
         // Clear any previous content to ensure fresh UI
         element.innerHTML = '';
         
+        // Element order and positioning:
+        // Top area (UI elements):
+        //   - Buff/Debuff container (top: 5px)
+        //   - Health bar (top: 40px)
+        //   - Action bar (top: 65px)
+        //   - Level indicator (top: 40px, right: 5px)
+        // Bottom area:
+        //   - Unit sprite (256x256px, bottom aligned)
+        //   - Shadow (very bottom)
+        
         // Create unit div
         const unitDiv = document.createElement('div');
         unitDiv.className = 'unit';
-        unitDiv.style.cssText = 'display: block; opacity: 1; position: relative; width: 100%; height: 100%;';
+        unitDiv.style.cssText = 'display: block; opacity: 1; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 256px; height: 256px; z-index: 5;';
         element.appendChild(unitDiv);
         
         // Set unit sprite/content
@@ -385,31 +396,32 @@ class Battle {
             const enemyId = unit.source.enemyId;
             unitDiv.innerHTML = `
                 <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${enemyId}.png" alt="${unit.name}" 
-                     style="image-rendering: pixelated; object-fit: contain; width: auto; height: auto; max-width: 100%; max-height: 100%; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);"
+                     style="image-rendering: pixelated; width: 256px; height: 256px;"
                      onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: auto;\\'><div>${unit.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${unit.source.level}</div></div>'">
             `;
         } else {
             const hero = unit.source;
             unitDiv.innerHTML = `
                 <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" 
-                     style="image-rendering: pixelated; object-fit: contain; width: auto; height: auto; max-width: 100%; max-height: 100%; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);"
+                     style="image-rendering: pixelated; width: 256px; height: 256px;"
                      onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: auto;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
             `;
         }
         
-        // Create health bar
+        // Create health bar (at top, below buffs/debuffs)
         const healthBar = document.createElement('div');
         healthBar.className = 'healthBar';
+        healthBar.style.cssText = 'position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 80%; z-index: 10;';
         healthBar.innerHTML = `
             <div class="healthFill" style="width: 100%"></div>
             <div class="healthText">${unit.currentHp}/${unit.maxHp}</div>
         `;
         element.appendChild(healthBar);
         
-        // Create action bar
+        // Create action bar (below health bar)
         const actionBar = document.createElement('div');
         actionBar.className = 'actionBar';
-        actionBar.style.cssText = 'width: 80%; height: 10px; background: #0a1929; border: 1px solid #2a6a8a; margin-top: 0px; position: relative;';
+        actionBar.style.cssText = 'position: absolute; top: 65px; left: 50%; transform: translateX(-50%); width: 80%; height: 10px; background: #0a1929; border: 1px solid #2a6a8a; z-index: 10;';
         
         const actionFill = document.createElement('div');
         actionFill.className = 'actionFill';
@@ -422,6 +434,7 @@ class Battle {
         // Create level indicator
         const levelIndicator = document.createElement('div');
         levelIndicator.className = 'levelIndicator';
+        levelIndicator.style.cssText = 'position: absolute; top: 40px; right: 5px; z-index: 11;'; // Positioned at same height as health bar
         element.appendChild(levelIndicator);
         
         // Add click handler for unit info
@@ -461,14 +474,16 @@ class Battle {
         element._rightClickHandler = rightClickHandler;
         element.addEventListener('contextmenu', rightClickHandler);
         
-        // Create shadow
+        // Create shadow (at the bottom where unit stands)
         const shadow = document.createElement('div');
         shadow.className = 'unitShadow';
+        shadow.style.cssText = 'position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 200px; height: 40px; z-index: 1;';
         element.appendChild(shadow);
         
-        // Create buff/debuff container
+        // Create buff/debuff container (positioned at very top)
         const buffDebuffContainer = document.createElement('div');
         buffDebuffContainer.className = 'buffDebuffContainer';
+        buffDebuffContainer.style.cssText = 'position: absolute; top: 5px; left: 50%; transform: translateX(-50%); z-index: 12;';
         element.appendChild(buffDebuffContainer);
     }
 
@@ -521,6 +536,7 @@ class Battle {
                     if (unitDiv) {
                         unitDiv.style.opacity = '1';
                         unitDiv.style.display = 'block';
+                        unitDiv.style.filter = '';
                         unitDiv.classList.remove('dying');
                     }
                 }
