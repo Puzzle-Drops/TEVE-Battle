@@ -6,13 +6,13 @@ class BattleUnit {
         this.isEnemy = isEnemy;
         this.position = position;
         
-        // Battle stats
+        // Battle stats - ensure proper initialization
         this.currentHp = this.maxHp;
         this.actionBar = 0;
         this.buffs = [];
         this.debuffs = [];
         this.cooldowns = {};
-        this.isDead = false; // Track if unit has died this wave
+        this.isDead = false; // Explicitly set to false at start
         this.deathAnimated = false; // Track if death animation has been played
         this.uiInitialized = false; // Track if UI has been created
         
@@ -26,7 +26,7 @@ class BattleUnit {
             });
         }
         
-        console.log(`Created BattleUnit: ${this.name}, HP: ${this.currentHp}/${this.maxHp}, Speed: ${this.actionBarSpeed}`);
+        console.log(`Created BattleUnit: ${this.name}, HP: ${this.currentHp}/${this.maxHp}, Speed: ${this.actionBarSpeed}, Alive: ${this.isAlive}`);
     }
     
     get name() {
@@ -187,8 +187,16 @@ class Battle {
         // Track exp earned per wave for each hero
         this.waveExpEarned = [];
         
-        // Create battle units for party
-        this.party = party.map((hero, index) => hero ? new BattleUnit(hero, false, index) : null).filter(u => u);
+        // Create battle units for party and ensure they're properly initialized
+        this.party = party.map((hero, index) => {
+            if (!hero) return null;
+            const unit = new BattleUnit(hero, false, index);
+            // Ensure party members start alive
+            unit.currentHp = unit.maxHp;
+            unit.isDead = false;
+            unit.deathAnimated = false;
+            return unit;
+        }).filter(u => u);
         
         // Initialize with first wave of enemies
         this.enemies = [];
@@ -290,11 +298,17 @@ class Battle {
     }
 
     initializeAllUI() {
-        // Initialize party UI (only needs to be done once)
+        // Initialize party UI - ensure all party slots are properly shown
         this.party.forEach(unit => {
             if (!unit.uiInitialized) {
                 this.createUnitUI(unit);
                 unit.uiInitialized = true;
+            }
+            // Ensure party unit slots are visible
+            const elementId = `party${unit.position + 1}`;
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.display = 'block';
             }
         });
         
@@ -468,6 +482,16 @@ class Battle {
     start() {
         this.log("Battle started!");
         this.log(`Your party: ${this.party.map(u => u.name).join(', ')}`);
+        
+        // Ensure all party members start alive
+        this.party.forEach(unit => {
+            if (unit) {
+                unit.currentHp = unit.maxHp;
+                unit.isDead = false;
+                unit.deathAnimated = false;
+                unit.actionBar = 0;
+            }
+        });
         
         // Reset start time for this battle
         this.startTime = Date.now();
@@ -1283,24 +1307,33 @@ class Battle {
                     
                     // Revive dead party members between waves
                     this.party.forEach((unit, index) => {
-                        if (unit && !unit.isAlive) {
-                            unit.currentHp = unit.maxHp;
-                            unit.isDead = false;
-                            unit.deathAnimated = false; // Reset death animation flag
-                            this.log(`${unit.name} revived for next wave!`);
-                            
-                            // Reset death animation
+                        if (unit) {
+                            // Always ensure UI is properly shown for party members
                             const elementId = `party${unit.position + 1}`;
                             const element = document.getElementById(elementId);
-                            if (element) {
-                                const unitDiv = element.querySelector('.unit');
-                                if (unitDiv) {
-                                    unitDiv.classList.remove('dying');
-                                    unitDiv.style.opacity = '';
-                                    unitDiv.style.filter = '';
-                                }
+                            
+                            if (!unit.isAlive || unit.isDead) {
+                                // Revive the unit
+                                unit.currentHp = unit.maxHp;
+                                unit.isDead = false;
+                                unit.deathAnimated = false; // Reset death animation flag
+                                this.log(`${unit.name} revived for next wave!`);
                                 
-                                // Show UI elements again
+                                // Reset death animation
+                                if (element) {
+                                    const unitDiv = element.querySelector('.unit');
+                                    if (unitDiv) {
+                                        unitDiv.classList.remove('dying');
+                                        unitDiv.style.opacity = '';
+                                        unitDiv.style.filter = '';
+                                    }
+                                }
+                            }
+                            
+                            // Ensure UI elements are visible for all party members
+                            if (element) {
+                                element.style.display = 'block';
+                                
                                 const healthBar = element.querySelector('.healthBar');
                                 const actionBar = element.querySelector('.actionBar');
                                 const levelIndicator = element.querySelector('.levelIndicator');
@@ -1395,7 +1428,7 @@ class Battle {
             this.clearTargeting();
         }
         
-        // Clean up level indicator event listeners
+        // Clean up level indicator event listeners for both party and enemies
         for (let i = 1; i <= 5; i++) {
             ['party', 'enemy'].forEach(type => {
                 const element = document.getElementById(`${type}${i}`);
@@ -1693,7 +1726,12 @@ class Battle {
                     element.appendChild(targetArrow);
                 }
                 
-                const clickHandler = () => {
+                const clickHandler = (e) => {
+                    // Don't trigger if clicking on level indicator
+                    if (e.target.closest('.levelIndicator')) {
+                        return;
+                    }
+                    
                     // Remove all handlers and highlighting
                     this.clearTargeting();
                     
@@ -1702,6 +1740,8 @@ class Battle {
                     this.endTurn();
                 };
                 
+                // Store handler reference so we can remove it later
+                element._targetingHandler = clickHandler;
                 element.addEventListener('click', clickHandler);
             }
         });
@@ -1722,13 +1762,9 @@ class Battle {
         
         // Remove all targeting highlights and handlers
         this.allUnits.forEach(unit => {
-            // Skip dead units entirely - no need to update their DOM
-            if (unit.isDead || !unit.isAlive) {
-                return;
-            }
-            
             const element = document.getElementById(unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`);
             if (element) {
+                // Always clean up targeting visuals
                 element.style.cursor = '';
                 element.style.filter = '';
                 
@@ -1738,45 +1774,16 @@ class Battle {
                     targetArrow.remove();
                 }
                 
-                // Remove only the click handler we added for targeting
-                const clickHandlers = element.getEventListeners ? element.getEventListeners('click') : [];
-                
-                // Clone to remove event listeners
-                const newElement = element.cloneNode(true);
-                element.parentNode.replaceChild(newElement, element);
-                
-                // Re-attach the persistent handlers we need
-                const newLevelIndicator = newElement.querySelector('.levelIndicator');
-                if (newLevelIndicator && unit) {
-                    // Re-add level indicator click handler
-                    const clickHandler = (e) => {
-                        e.stopPropagation();
-                        this.game.closeHeroInfo();
-                        if (unit.isEnemy) {
-                            this.game.showEnemyInfoPopup(unit.source);
-                        } else {
-                            this.game.showHeroInfoPopup(unit.source);
-                        }
-                    };
-                    newLevelIndicator._unitInfoHandler = clickHandler;
-                    newLevelIndicator.addEventListener('click', clickHandler);
-                    newLevelIndicator.addEventListener('selectstart', (e) => e.preventDefault());
-                    newLevelIndicator.style.cursor = 'pointer';
+                // Remove targeting handler if exists
+                if (element._targetingHandler) {
+                    element.removeEventListener('click', element._targetingHandler);
+                    delete element._targetingHandler;
                 }
                 
-                // Re-add right-click handler
-                const rightClickHandler = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.game.closeHeroInfo();
-                    if (unit.isEnemy) {
-                        this.game.showEnemyInfoPopup(unit.source);
-                    } else {
-                        this.game.showHeroInfoPopup(unit.source);
-                    }
-                };
-                newElement._rightClickHandler = rightClickHandler;
-                newElement.addEventListener('contextmenu', rightClickHandler);
+                // Skip further DOM manipulation for dead units
+                if (unit.isDead || !unit.isAlive) {
+                    return;
+                }
             }
         });
     }
