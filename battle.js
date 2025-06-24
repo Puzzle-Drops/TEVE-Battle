@@ -1435,7 +1435,7 @@ class Battle {
         return totalExp;
     }
     
-endBattle(victory) {
+    endBattle(victory) {
     this.running = false;
     this.endTime = Date.now();
 
@@ -1460,56 +1460,53 @@ endBattle(victory) {
         });
     }
 
-    // Clear any active targeting
-    if (this.targetingState) {
-        this.clearTargeting();
-    }
-    
-    // Clean up level indicator event listeners for both party and enemies
-    for (let i = 1; i <= 5; i++) {
-        ['party', 'enemy'].forEach(type => {
-            const element = document.getElementById(`${type}${i}`);
-            if (element) {
-                const levelIndicator = element.querySelector('.levelIndicator');
-                if (levelIndicator && levelIndicator._unitInfoHandler) {
-                    levelIndicator.removeEventListener('click', levelIndicator._unitInfoHandler);
-                    delete levelIndicator._unitInfoHandler;
+        // Clear any active targeting
+        if (this.targetingState) {
+            this.clearTargeting();
+        }
+        
+        // Clean up level indicator event listeners for both party and enemies
+        for (let i = 1; i <= 5; i++) {
+            ['party', 'enemy'].forEach(type => {
+                const element = document.getElementById(`${type}${i}`);
+                if (element) {
+                    const levelIndicator = element.querySelector('.levelIndicator');
+                    if (levelIndicator && levelIndicator._unitInfoHandler) {
+                        levelIndicator.removeEventListener('click', levelIndicator._unitInfoHandler);
+                        delete levelIndicator._unitInfoHandler;
+                    }
+                    
+                    // Also clean up right-click handlers
+                    if (element._rightClickHandler) {
+                        element.removeEventListener('contextmenu', element._rightClickHandler);
+                        delete element._rightClickHandler;
+                    }
                 }
-                
-                // Also clean up right-click handlers
-                if (element._rightClickHandler) {
-                    element.removeEventListener('contextmenu', element._rightClickHandler);
-                    delete element._rightClickHandler;
-                }
-            }
-        });
-    }
+            });
+        }
 
-    // Hide exit button when showing results
-    const exitButton = document.querySelector('.exitBattleButton');
-    if (exitButton) {
-        exitButton.style.display = 'none';
-    }
-    
-    // Close any open popup
-    this.game.closeHeroInfo();
+        // Hide exit button when showing results
+        const exitButton = document.querySelector('.exitBattleButton');
+        if (exitButton) {
+            exitButton.style.display = 'none';
+        }
+        
+        // Close any open popup
+        this.game.closeHeroInfo();
 
-    // Calculate battle duration
-    const duration = Math.floor((this.endTime - this.startTime) / 1000);
-    const minutes = Math.floor(duration / 60);
-    const seconds = duration % 60;
-    const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    
-    // Get dungeon data
-    const dungeonId = this.game.currentDungeon.id;
-    const dungeonConfig = dungeonData.dungeons[dungeonId];
-    const rewards = dungeonConfig.rewards || { gold: 0, exp: 0, items: [] };
-    
-    // Process items for each hero
-    const itemRolls = [];
-
-    // Only process items on victory
-    if (victory) {
+        // Calculate battle duration
+        const duration = Math.floor((this.endTime - this.startTime) / 1000);
+        const minutes = Math.floor(duration / 60);
+        const seconds = duration % 60;
+        const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        // Get dungeon data
+        const dungeonId = this.game.currentDungeon.id;
+        const dungeonConfig = dungeonData.dungeons[dungeonId];
+        const rewards = dungeonConfig.rewards || { gold: 0, exp: 0, items: [] };
+        
+        // Process items for each hero
+        const itemRolls = [];
         this.party.forEach(unit => {
             if (!unit || !unit.source) return;
             
@@ -1530,7 +1527,7 @@ endBattle(victory) {
                     });
                 } else if (unit.isAlive) {
                     // 50% chance for item in easy dungeons
-                    if (Math.random() < 0.5) {  // FIXED: Changed from 1.5 to 0.5
+                    if (Math.random() < 1.5) {
                         // Get item from dungeon rewards
                         if (rewards.items && rewards.items.length > 0) {
                             const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
@@ -1568,7 +1565,7 @@ endBattle(victory) {
                 // Non-villager heroes - original logic
                 if (unit.isAlive) {
                     // 50% chance for item
-                    if (Math.random() < 0.5) {  // FIXED: Changed from 1.5 to 0.5
+                    if (Math.random() < 1.5) {
                         // Get item from dungeon rewards
                         if (rewards.items && rewards.items.length > 0) {
                             const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
@@ -1604,50 +1601,48 @@ endBattle(victory) {
                 }
             }
         });
-    } else {
-        // On defeat, everyone gets nothing
-        this.party.forEach(unit => {
-            if (!unit || !unit.source) return;
-            itemRolls.push({
-                hero: unit.source,
-                gold: 0,
-                item: null
-            });
-        });
+        
+        // Store battle results
+        this.game.pendingBattleResults = {
+            victory: victory,
+            dungeonName: this.game.currentDungeon.name,
+            time: timeString,
+            goldChange: 0, // No longer used at this level
+            dungeonBonusExp: victory ? rewards.exp : 0,
+            // In endBattle method, when creating heroResults:
+            heroResults: this.party.map((unit, index) => {
+                if (!unit) return null;
+                const hero = unit.source;
+                const waveExp = hero.pendingExp;
+                const dungeonBonus = victory && unit.isAlive ? rewards.exp : 0;
+                const totalExp = waveExp + dungeonBonus;
+                
+                const itemRoll = itemRolls[index];
+                
+                return {
+                    hero: hero,
+                    expGained: totalExp,
+                    survived: unit.isAlive,
+                    item: itemRoll.item,
+                    gold: itemRoll.gold
+                };
+            }).filter(r => r !== null)
+        };
+        
+        // Show results popup
+        setTimeout(() => {
+            this.game.showBattleResults();
+        }, 1000);
     }
     
-    // Store battle results
-    this.game.pendingBattleResults = {
-        victory: victory,
-        dungeonName: this.game.currentDungeon.name,
-        time: timeString,
-        goldChange: 0, // No longer used at this level
-        dungeonBonusExp: victory ? rewards.exp : 0,
-        // In endBattle method, when creating heroResults:
-        heroResults: this.party.map((unit, index) => {
-            if (!unit) return null;
-            const hero = unit.source;
-            const waveExp = hero.pendingExp;
-            const dungeonBonus = victory && unit.isAlive ? rewards.exp : 0;
-            const totalExp = waveExp + dungeonBonus;
-            
-            const itemRoll = itemRolls[index];
-            
-            return {
-                hero: hero,
-                expGained: totalExp,
-                survived: unit.isAlive,
-                item: itemRoll.item,
-                gold: itemRoll.gold
-            };
-        }).filter(r => r !== null)
-    };
-    
-    // Show results popup
-    setTimeout(() => {
-        this.game.showBattleResults();
-    }, 1000);
-}
+    log(message) {
+        this.battleLog.push(message);
+        const logElement = document.getElementById('battleLog');
+        if (logElement) {
+            logElement.innerHTML = this.battleLog.slice(-50).join('<br>') + '<br>';
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+    }
     
     showPlayerAbilities(unit) {
         const abilityPanel = document.getElementById('abilityPanel');
