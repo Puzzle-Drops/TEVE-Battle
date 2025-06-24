@@ -25,8 +25,6 @@ class BattleUnit {
                 }
             });
         }
-        
-        console.log(`Created BattleUnit: ${this.name}, HP: ${this.currentHp}/${this.maxHp}, Speed: ${this.actionBarSpeed}, Alive: ${this.isAlive}`);
     }
     
     get name() {
@@ -169,6 +167,20 @@ class Battle {
             this.timerInterval = null;
         }
         
+        // Clean up any lingering UI state from previous battles
+        for (let i = 1; i <= 5; i++) {
+            const partyElement = document.getElementById(`party${i}`);
+            if (partyElement) {
+                partyElement.style.display = 'none';
+                partyElement.innerHTML = '';
+            }
+            const enemyElement = document.getElementById(`enemy${i}`);
+            if (enemyElement) {
+                enemyElement.style.display = 'none';
+                enemyElement.innerHTML = '';
+            }
+        }
+        
         // Add timer tracking
         this.startTime = Date.now();
         this.endTime = null;
@@ -178,8 +190,7 @@ class Battle {
         this.currentWave = 0;
         this.waveExpCalculated = false; // Track if exp was calculated for current wave
         
-        console.log('Battle created with enemyWaves:', enemyWaves);
-        console.log('Number of waves:', enemyWaves ? enemyWaves.length : 0);
+        console.log('Battle created with enemyWaves:', enemyWaves ? enemyWaves.length : 0);
         
         // Store the original wave data for exp calculation
         this.dungeonWaves = enemyWaves;
@@ -195,6 +206,7 @@ class Battle {
             unit.currentHp = unit.maxHp;
             unit.isDead = false;
             unit.deathAnimated = false;
+            unit.uiInitialized = false; // Force UI creation
             return unit;
         }).filter(u => u);
         
@@ -209,6 +221,17 @@ class Battle {
 
         // Initialize UI elements for all units
         this.initializeAllUI();
+        
+        // Force initial UI update to ensure party is visible
+        this.party.forEach(unit => {
+            const elementId = `party${unit.position + 1}`;
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.display = 'block';
+                element.style.opacity = '1';
+                element.style.visibility = 'visible';
+            }
+        });
     }
     
     loadWave(waveIndex) {
@@ -236,7 +259,6 @@ class Battle {
                 newUnit.deathAnimated = false; // Reset death animation flag
                 newUnit.uiInitialized = false;
                 this.enemies.push(newUnit);
-                console.log(`Created enemy: ${newUnit.name} with ${newUnit.currentHp}/${newUnit.maxHp} HP`);
             }
         });
         
@@ -268,20 +290,8 @@ class Battle {
         for (let i = 1; i <= 5; i++) {
             const element = document.getElementById(`enemy${i}`);
             if (element) {
-                // Remove all child elements except the unit div
-                const unitDiv = element.querySelector('.unit');
-                
-                // Remove all other elements
-                const elementsToRemove = element.querySelectorAll('.healthBar, .actionBar, .levelIndicator, .unitShadow, .buffDebuffContainer, .activeCircle, .targetArrow');
-                elementsToRemove.forEach(el => el.remove());
-                
-                // Reset unit div
-                if (unitDiv) {
-                    unitDiv.className = 'unit'; // Remove any animation classes
-                    unitDiv.innerHTML = ''; // Clear content
-                    unitDiv.style.opacity = '';
-                    unitDiv.style.filter = '';
-                }
+                // Clear all content
+                element.innerHTML = '';
                 
                 // Hide the slot
                 element.style.display = 'none';
@@ -289,31 +299,43 @@ class Battle {
                 element.style.boxShadow = '';
                 element.style.cursor = '';
                 element.style.filter = '';
-                
-                // Remove any event handlers
-                const newElement = element.cloneNode(true);
-                element.parentNode.replaceChild(newElement, element);
+                element.style.opacity = '';
+                element.style.visibility = '';
             }
         }
     }
 
     initializeAllUI() {
         // Initialize party UI - ensure all party slots are properly shown
-        this.party.forEach(unit => {
-            if (!unit.uiInitialized) {
-                this.createUnitUI(unit);
-                unit.uiInitialized = true;
-            }
-            // Ensure party unit slots are visible
+        this.party.forEach((unit, index) => {
+            // First ensure the slot is visible
             const elementId = `party${unit.position + 1}`;
             const element = document.getElementById(elementId);
             if (element) {
                 element.style.display = 'block';
+                element.style.opacity = '1';
+                element.style.visibility = 'visible';
             }
+            
+            // Force recreate the UI
+            unit.uiInitialized = false;
+            this.createUnitUI(unit);
+            unit.uiInitialized = true;
         });
+        
+        // Hide unused party slots
+        for (let i = this.party.length + 1; i <= 5; i++) {
+            const element = document.getElementById(`party${i}`);
+            if (element) {
+                element.style.display = 'none';
+            }
+        }
         
         // Initialize enemy UI
         this.initializeEnemyUI();
+        
+        // Force an initial UI update to ensure health bars are correct
+        setTimeout(() => this.updateUI(), 0);
     }
 
     initializeEnemyUI() {
@@ -346,14 +368,18 @@ class Battle {
         
         // Make sure element is visible
         element.style.display = 'block';
+        element.style.opacity = '1';
+        element.style.visibility = 'visible';
         
-        // Get or create unit div
-        let unitDiv = element.querySelector('.unit');
-        if (!unitDiv) {
-            unitDiv = document.createElement('div');
-            unitDiv.className = 'unit';
-            element.appendChild(unitDiv);
-        }
+        // Clear any previous content to ensure fresh UI
+        element.innerHTML = '';
+        
+        // Create unit div
+        const unitDiv = document.createElement('div');
+        unitDiv.className = 'unit';
+        unitDiv.style.display = 'block';
+        unitDiv.style.opacity = '1';
+        element.appendChild(unitDiv);
         
         // Set unit sprite/content
         if (unit.isEnemy) {
@@ -373,55 +399,46 @@ class Battle {
         }
         
         // Create health bar
-        let healthBar = element.querySelector('.healthBar');
-        if (!healthBar) {
-            healthBar = document.createElement('div');
-            healthBar.className = 'healthBar';
-            healthBar.innerHTML = `
-                <div class="healthFill" style="width: 100%"></div>
-                <div class="healthText">${unit.currentHp}/${unit.maxHp}</div>
-            `;
-            element.appendChild(healthBar);
-        }
+        const healthBar = document.createElement('div');
+        healthBar.className = 'healthBar';
+        healthBar.innerHTML = `
+            <div class="healthFill" style="width: 100%"></div>
+            <div class="healthText">${unit.currentHp}/${unit.maxHp}</div>
+        `;
+        element.appendChild(healthBar);
         
         // Create action bar
-        let actionBar = element.querySelector('.actionBar');
-        if (!actionBar) {
-            actionBar = document.createElement('div');
-            actionBar.className = 'actionBar';
-            actionBar.style.cssText = 'width: 80%; height: 10px; background: #0a1929; border: 1px solid #2a6a8a; margin-top: 0px; position: relative;';
-            
-            const actionFill = document.createElement('div');
-            actionFill.className = 'actionFill';
-            actionFill.style.cssText = 'height: 100%; background: linear-gradient(90deg, #4dd0e1 0%, #2a9aaa 100%); transition: width 0.1s; box-shadow: 0 0 5px rgba(77, 208, 225, 0.5);';
-            actionFill.style.width = '0%';
-            
-            actionBar.appendChild(actionFill);
-            element.appendChild(actionBar);
-        }
+        const actionBar = document.createElement('div');
+        actionBar.className = 'actionBar';
+        actionBar.style.cssText = 'width: 80%; height: 10px; background: #0a1929; border: 1px solid #2a6a8a; margin-top: 0px; position: relative;';
+        
+        const actionFill = document.createElement('div');
+        actionFill.className = 'actionFill';
+        actionFill.style.cssText = 'height: 100%; background: linear-gradient(90deg, #4dd0e1 0%, #2a9aaa 100%); transition: width 0.1s; box-shadow: 0 0 5px rgba(77, 208, 225, 0.5);';
+        actionFill.style.width = '0%';
+        
+        actionBar.appendChild(actionFill);
+        element.appendChild(actionBar);
         
         // Create level indicator
-        let levelIndicator = element.querySelector('.levelIndicator');
-        if (!levelIndicator) {
-            levelIndicator = document.createElement('div');
-            levelIndicator.className = 'levelIndicator';
-            element.appendChild(levelIndicator);
-            
-            // Add click handler for unit info
-            levelIndicator.style.cursor = 'pointer';
-            const clickHandler = (e) => {
-                e.stopPropagation();
-                this.game.closeHeroInfo();
-                if (unit.isEnemy) {
-                    this.game.showEnemyInfoPopup(unit.source);
-                } else {
-                    this.game.showHeroInfoPopup(unit.source);
-                }
-            };
-            levelIndicator._unitInfoHandler = clickHandler;
-            levelIndicator.addEventListener('click', clickHandler);
-            levelIndicator.addEventListener('selectstart', (e) => e.preventDefault());
-        }
+        const levelIndicator = document.createElement('div');
+        levelIndicator.className = 'levelIndicator';
+        element.appendChild(levelIndicator);
+        
+        // Add click handler for unit info
+        levelIndicator.style.cursor = 'pointer';
+        const clickHandler = (e) => {
+            e.stopPropagation();
+            this.game.closeHeroInfo();
+            if (unit.isEnemy) {
+                this.game.showEnemyInfoPopup(unit.source);
+            } else {
+                this.game.showHeroInfoPopup(unit.source);
+            }
+        };
+        levelIndicator._unitInfoHandler = clickHandler;
+        levelIndicator.addEventListener('click', clickHandler);
+        levelIndicator.addEventListener('selectstart', (e) => e.preventDefault());
         
         // Update level indicator content
         const starData = unit.isEnemy ? unit.source.getStars() : unit.source.getStars();
@@ -432,36 +449,28 @@ class Battle {
         levelIndicator.innerHTML = html;
         
         // Add right-click handler for the entire unit slot
-        if (!element._rightClickHandler) {
-            const rightClickHandler = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.game.closeHeroInfo();
-                if (unit.isEnemy) {
-                    this.game.showEnemyInfoPopup(unit.source);
-                } else {
-                    this.game.showHeroInfoPopup(unit.source);
-                }
-            };
-            element._rightClickHandler = rightClickHandler;
-            element.addEventListener('contextmenu', rightClickHandler);
-        }
+        const rightClickHandler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.game.closeHeroInfo();
+            if (unit.isEnemy) {
+                this.game.showEnemyInfoPopup(unit.source);
+            } else {
+                this.game.showHeroInfoPopup(unit.source);
+            }
+        };
+        element._rightClickHandler = rightClickHandler;
+        element.addEventListener('contextmenu', rightClickHandler);
         
         // Create shadow
-        let shadow = element.querySelector('.unitShadow');
-        if (!shadow) {
-            shadow = document.createElement('div');
-            shadow.className = 'unitShadow';
-            element.appendChild(shadow);
-        }
+        const shadow = document.createElement('div');
+        shadow.className = 'unitShadow';
+        element.appendChild(shadow);
         
         // Create buff/debuff container
-        let buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-        if (!buffDebuffContainer) {
-            buffDebuffContainer = document.createElement('div');
-            buffDebuffContainer.className = 'buffDebuffContainer';
-            element.appendChild(buffDebuffContainer);
-        }
+        const buffDebuffContainer = document.createElement('div');
+        buffDebuffContainer.className = 'buffDebuffContainer';
+        element.appendChild(buffDebuffContainer);
     }
 
     applyInitialPassives() {
@@ -483,13 +492,39 @@ class Battle {
         this.log("Battle started!");
         this.log(`Your party: ${this.party.map(u => u.name).join(', ')}`);
         
-        // Ensure all party members start alive
+        // Ensure all party members start alive and visible
         this.party.forEach(unit => {
             if (unit) {
                 unit.currentHp = unit.maxHp;
                 unit.isDead = false;
                 unit.deathAnimated = false;
                 unit.actionBar = 0;
+                
+                // Force UI refresh for party member
+                const elementId = `party${unit.position + 1}`;
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.style.display = 'block';
+                    element.style.opacity = '1';
+                    element.style.visibility = 'visible';
+                    
+                    // Ensure all UI elements are visible
+                    const healthBar = element.querySelector('.healthBar');
+                    const actionBar = element.querySelector('.actionBar');
+                    const levelIndicator = element.querySelector('.levelIndicator');
+                    const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+                    const unitDiv = element.querySelector('.unit');
+                    
+                    if (healthBar) healthBar.style.display = '';
+                    if (actionBar) actionBar.style.display = '';
+                    if (levelIndicator) levelIndicator.style.display = '';
+                    if (buffDebuffContainer) buffDebuffContainer.style.display = '';
+                    if (unitDiv) {
+                        unitDiv.style.opacity = '1';
+                        unitDiv.style.display = 'block';
+                        unitDiv.classList.remove('dying');
+                    }
+                }
             }
         });
         
@@ -1293,7 +1328,6 @@ class Battle {
                         const prevExp = hero.pendingExp;
                         hero.pendingExp += waveExp;
                         this.log(`${hero.name} earned ${waveExp} exp from wave ${this.currentWave + 1} (total pending: ${hero.pendingExp})`);
-                        console.log(`${hero.name}: ${prevExp} + ${waveExp} = ${hero.pendingExp} pending exp`);
                     }
                 });
             }
@@ -1370,17 +1404,12 @@ class Battle {
         const baseExpPerLevel = 25;
         let totalExp = 0;
         
-        console.log(`calculateWaveExp called for wave ${this.currentWave}`);
-        console.log('dungeonWaves:', this.dungeonWaves);
-        
         // Safety check
         if (!this.dungeonWaves || !Array.isArray(this.dungeonWaves)) {
-            console.error('dungeonWaves is not properly initialized');
             return 0;
         }
         
         if (this.currentWave >= this.dungeonWaves.length) {
-            console.error(`Invalid wave index: ${this.currentWave} >= ${this.dungeonWaves.length}`);
             return 0;
         }
         
@@ -1388,22 +1417,17 @@ class Battle {
         const currentWaveEnemies = this.dungeonWaves[this.currentWave];
         
         if (!currentWaveEnemies) {
-            console.error(`No enemies found for wave ${this.currentWave}`);
             return 0;
         }
-        
-        console.log(`Calculating exp for wave ${this.currentWave + 1}:`, currentWaveEnemies);
         
         // Calculate exp based on enemy levels
         currentWaveEnemies.forEach(enemy => {
             if (enemy) {
                 const expFromEnemy = enemy.level * baseExpPerLevel;
                 totalExp += expFromEnemy;
-                console.log(`Enemy ${enemy.name} (Lv${enemy.level}): ${expFromEnemy} exp`);
             }
         });
         
-        console.log(`Total wave exp: ${totalExp}`);
         return totalExp;
     }
     
@@ -1581,8 +1605,6 @@ class Battle {
                 const totalExp = waveExp + dungeonBonus;
                 
                 const itemRoll = itemRolls[index];
-                
-                console.log(`${hero.name} final exp: ${waveExp} (waves) + ${dungeonBonus} (dungeon) = ${totalExp} total`);
                 
                 return {
                     hero: hero,
