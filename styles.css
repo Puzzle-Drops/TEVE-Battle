@@ -2529,11 +2529,11 @@ body {
 
 .unitActiveCircle {
     position: absolute;
-    top: 88%;
+    top: 80%;
     left: 50%;
     transform: translateX(-50%);
     width: 80%;
-    height: 48px;
+    height: 80px;
     border: 3px solid #ffd700;
     border-radius: 50%;
     box-shadow: 
@@ -2541,7 +2541,7 @@ body {
         0 0 60px rgba(255, 215, 0, 0.7),
         inset 0 0 30px rgba(255, 215, 0, 0.5);
     animation: unitActiveGlow 2s ease-in-out infinite;
-    z-index: 2;
+    z-index: 0;
     pointer-events: none;
     display: none; /* Hidden by default */
 }
