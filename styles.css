@@ -2430,6 +2430,7 @@ body {
     margin-top: 40%;
     animation: spellCast 1.5s ease-out forwards;
     z-index: 15;
+    position: relative;
 }
 
 /* Spell type colors */
