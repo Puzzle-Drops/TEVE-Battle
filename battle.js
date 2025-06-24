@@ -410,11 +410,9 @@ class Battle {
         // Create action bar
         const actionBar = document.createElement('div');
         actionBar.className = 'actionBar';
-        //actionBar.style.cssText = 'width: 80%; height: 10px; background: #0a1929; border: 1px solid #2a6a8a; margin-top: 0px; position: relative;';
         
         const actionFill = document.createElement('div');
         actionFill.className = 'actionFill';
-        actionFill.style.cssText = 'height: 100%; background: linear-gradient(90deg, #4dd0e1 0%, #2a9aaa 100%); transition: width 0.1s; box-shadow: 0 0 5px rgba(77, 208, 225, 0.5);';
         actionFill.style.width = '0%';
         
         actionBar.appendChild(actionFill);
