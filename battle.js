@@ -465,6 +465,12 @@ class Battle {
         shadow.className = 'unitShadow';
         element.appendChild(shadow);
         
+        // Create active turn circle
+        const activeCircle = document.createElement('div');
+        activeCircle.className = 'unitActiveCircle';
+        activeCircle.style.display = 'none'; // Hidden by default
+        element.appendChild(activeCircle);
+        
         // Create buff/debuff container
         const buffDebuffContainer = document.createElement('div');
         buffDebuffContainer.className = 'buffDebuffContainer';
@@ -513,12 +519,14 @@ class Battle {
                     const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
                     const unitShadow = element.querySelector('.unitShadow');
                     const unitDiv = element.querySelector('.unit');
+                    const unitActiveCircle = element.querySelector('.unitActiveCircle');
                     
                     if (healthBar) healthBar.style.display = '';
                     if (actionBar) actionBar.style.display = '';
                     if (levelIndicator) levelIndicator.style.display = '';
                     if (buffDebuffContainer) buffDebuffContainer.style.display = '';
                     if (unitShadow) unitShadow.style.display = '';
+                    if (unitActiveCircle) unitActiveCircle.style.display = 'none'; // Ensure it's hidden
                     if (unitDiv) {
                         unitDiv.style.opacity = '1';
                         unitDiv.style.display = 'block';
@@ -769,6 +777,18 @@ class Battle {
     processTurn() {
         const unit = this.currentUnit;
         
+        // Show active circle for current unit
+        if (unit) {
+            const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
+            const element = document.getElementById(elementId);
+            if (element) {
+                const activeCircle = element.querySelector('.unitActiveCircle');
+                if (activeCircle) {
+                    activeCircle.style.display = 'block';
+                }
+            }
+        }
+        
         // Check if unit is stunned
         if (unit.debuffs.some(d => d.name === 'Stun' || d.stunned)) {
             this.log(`${unit.name} is stunned!`);
@@ -947,6 +967,16 @@ class Battle {
     
     endTurn() {
         if (this.currentUnit) {
+            // Hide active circle for current unit
+            const elementId = this.currentUnit.isEnemy ? `enemy${this.currentUnit.position + 1}` : `party${this.currentUnit.position + 1}`;
+            const element = document.getElementById(elementId);
+            if (element) {
+                const activeCircle = element.querySelector('.unitActiveCircle');
+                if (activeCircle) {
+                    activeCircle.style.display = 'none';
+                }
+            }
+            
             // Apply HP regen after turn
             if (this.currentUnit.isAlive && !this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
                 const regen = Math.floor(this.currentUnit.isEnemy ? 
@@ -1092,6 +1122,16 @@ class Battle {
 
     handleUnitDeath(unit) {
         unit.isDead = true;
+        
+        // Hide active circle on death
+        const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
+        const element = document.getElementById(elementId);
+        if (element) {
+            const activeCircle = element.querySelector('.unitActiveCircle');
+            if (activeCircle) {
+                activeCircle.style.display = 'none';
+            }
+        }
         
         // Check if this unit was the source of any taunts
         this.allUnits.forEach(otherUnit => {
@@ -1375,12 +1415,14 @@ class Battle {
                                 const levelIndicator = element.querySelector('.levelIndicator');
                                 const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
                                 const unitShadow = element.querySelector('.unitShadow');
+                                const unitActiveCircle = element.querySelector('.unitActiveCircle');
                                 
                                 if (healthBar) healthBar.style.display = '';
                                 if (actionBar) actionBar.style.display = '';
                                 if (levelIndicator) levelIndicator.style.display = '';
                                 if (buffDebuffContainer) buffDebuffContainer.style.display = '';
                                 if (unitShadow) unitShadow.style.display = '';
+                                if (unitActiveCircle) unitActiveCircle.style.display = 'none'; // Ensure it's hidden
                             }
                         }
                     });
@@ -1936,29 +1978,6 @@ class Battle {
                     
                     buffDebuffContainer.appendChild(debuffDiv);
                 });
-            }
-            
-            // Highlight current unit
-            if (unit === this.currentUnit && unit.isAlive) {
-                element.style.border = '2px solid #4dd0e1';
-                element.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
-                
-                // Add active turn circle
-                let activeCircle = element.querySelector('.activeCircle');
-                if (!activeCircle) {
-                    activeCircle = document.createElement('div');
-                    activeCircle.className = 'activeCircle';
-                    element.appendChild(activeCircle);
-                }
-            } else {
-                element.style.border = '';
-                element.style.boxShadow = '';
-                
-                // Remove active circle
-                const activeCircle = element.querySelector('.activeCircle');
-                if (activeCircle) {
-                    activeCircle.remove();
-                }
             }
         });
     }
