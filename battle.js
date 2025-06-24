@@ -511,12 +511,14 @@ class Battle {
                     const actionBar = element.querySelector('.actionBar');
                     const levelIndicator = element.querySelector('.levelIndicator');
                     const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+                    const unitShadow = element.querySelector('.unitShadow');
                     const unitDiv = element.querySelector('.unit');
                     
                     if (healthBar) healthBar.style.display = '';
                     if (actionBar) actionBar.style.display = '';
                     if (levelIndicator) levelIndicator.style.display = '';
                     if (buffDebuffContainer) buffDebuffContainer.style.display = '';
+                    if (unitShadow) unitShadow.style.display = '';
                     if (unitDiv) {
                         unitDiv.style.opacity = '1';
                         unitDiv.style.display = 'block';
@@ -1131,11 +1133,13 @@ class Battle {
                         const actionBar = currentElement.querySelector('.actionBar');
                         const levelIndicator = currentElement.querySelector('.levelIndicator');
                         const buffDebuffContainer = currentElement.querySelector('.buffDebuffContainer');
+                        const unitShadow = currentElement.querySelector('.unitShadow');
                         
                         if (healthBar) healthBar.style.display = 'none';
                         if (actionBar) actionBar.style.display = 'none';
                         if (levelIndicator) levelIndicator.style.display = 'none';
                         if (buffDebuffContainer) buffDebuffContainer.style.display = 'none';
+                        if (unitShadow) unitShadow.style.display = 'none';
                     }
                 }, 800); // Match CSS animation duration
             }
@@ -1370,11 +1374,13 @@ class Battle {
                                 const actionBar = element.querySelector('.actionBar');
                                 const levelIndicator = element.querySelector('.levelIndicator');
                                 const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+                                const unitShadow = element.querySelector('.unitShadow');
                                 
                                 if (healthBar) healthBar.style.display = '';
                                 if (actionBar) actionBar.style.display = '';
                                 if (levelIndicator) levelIndicator.style.display = '';
                                 if (buffDebuffContainer) buffDebuffContainer.style.display = '';
+                                if (unitShadow) unitShadow.style.display = '';
                             }
                         }
                     });
