@@ -816,7 +816,7 @@ body {
 
 .unitSlot .actionBar {
     position: absolute;
-    top: 0px;
+    top: 9px;
     left: 54px;
     width: 65%;
     height: 10px;
