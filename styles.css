@@ -3698,28 +3698,27 @@ body {
 /* Directional lunge animations */
 @keyframes unitLungeRight {
     0%   { transform: translateX(0); }
-    10%  { transform: translateX(-10px); }    /* quick backward prep */
-    30%  { transform: translateX(70px); }     /* hard lunge forward */
-    50%  { transform: translateX(70px); }     /* brief hold */
+    15%  { transform: translateX(-15px); }    /* slower backward windup */
+    25%  { transform: translateX(80px); }     /* explosive lunge forward */
+    35%  { transform: translateX(80px); }     /* hold at impact */
     100% { transform: translateX(0); }        /* smooth return */
 }
 
 @keyframes unitLungeLeft {
     0%   { transform: translateX(0); }
-    10%  { transform: translateX(10px); }     /* quick backward prep */
-    30%  { transform: translateX(-70px); }    /* hard lunge forward */
-    50%  { transform: translateX(-70px); }    /* brief hold */
+    15%  { transform: translateX(15px); }     /* slower backward windup */
+    25%  { transform: translateX(-80px); }    /* explosive lunge forward */
+    35%  { transform: translateX(-80px); }    /* hold at impact */
     100% { transform: translateX(0); }        /* smooth return */
 }
 
 .unitAnimationContainer.unit-lunge-right {
-    animation: unitLungeRight 0.45s ease-out;
+    animation: unitLungeRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .unitAnimationContainer.unit-lunge-left {
-    animation: unitLungeLeft 0.45s ease-out;
+    animation: unitLungeLeft 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-
 
 /* Directional recoil animations */
 @keyframes unitRecoilLeft {
