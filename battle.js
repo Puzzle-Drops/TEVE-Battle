@@ -1220,13 +1220,19 @@ class Battle {
             return;
         }
         
+        // Check if caster is buffing themselves during their turn
+        let adjustedDuration = duration;
+        if (target === this.currentUnit) {
+            adjustedDuration = duration + 1;
+        }
+        
         // Check if buff already exists
         const existingBuff = target.buffs.find(b => b.name === buffName);
         
         if (existingBuff) {
             // Update duration to the higher value
             const oldDuration = existingBuff.duration;
-            existingBuff.duration = Math.max(existingBuff.duration, duration);
+            existingBuff.duration = Math.max(existingBuff.duration, adjustedDuration);
             
             // Update other effects if provided
             Object.assign(existingBuff, effects);
@@ -1241,7 +1247,7 @@ class Battle {
             // Create new buff
             const buff = {
                 name: buffName,
-                duration: duration,
+                duration: adjustedDuration,
                 ...effects
             };
             
@@ -1259,13 +1265,19 @@ class Battle {
             return;
         }
         
+        // Check if caster is debuffing themselves during their turn
+        let adjustedDuration = duration;
+        if (target === this.currentUnit) {
+            adjustedDuration = duration + 1;
+        }
+        
         // Check if debuff already exists
         const existingDebuff = target.debuffs.find(d => d.name === debuffName);
         
         if (existingDebuff) {
             // Update duration to the higher value
             const oldDuration = existingDebuff.duration;
-            existingDebuff.duration = Math.max(existingDebuff.duration, duration);
+            existingDebuff.duration = Math.max(existingDebuff.duration, adjustedDuration);
             
             // Update other effects if provided
             Object.assign(existingDebuff, effects);
@@ -1280,7 +1292,7 @@ class Battle {
             // Create new debuff
             const debuff = {
                 name: debuffName,
-                duration: duration,
+                duration: adjustedDuration,
                 ...effects
             };
             
