@@ -505,29 +505,32 @@ class Battle {
     }
 
     updateStunVisuals(unit) {
-        const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
-        const element = document.getElementById(elementId);
-        
-        if (!element) return;
-        
-        const animContainer = element.querySelector('.unitAnimationContainer');
-        if (!animContainer) return;
-        
-        const isStunned = unit.debuffs.some(d => d.name === 'Stun' || d.stunned);
-        
-        if (isStunned) {
-            // Apply stun visuals
-            const tiltDegrees = unit.isEnemy ? -8 : 8;
-            animContainer.style.transform = `rotate(${tiltDegrees}deg)`;
-            animContainer.style.opacity = '0.75';
-            animContainer.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-        } else {
-            // Remove stun visuals
-            animContainer.style.transform = '';
-            animContainer.style.opacity = '';
-            animContainer.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-        }
+    const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
+    const element = document.getElementById(elementId);
+    
+    if (!element) return;
+    
+    const animContainer = element.querySelector('.unitAnimationContainer');
+    if (!animContainer) return;
+    
+    const unitDiv = animContainer.querySelector('.unit');
+    if (!unitDiv) return;
+    
+    const isStunned = unit.debuffs.some(d => d.name === 'Stun' || d.stunned);
+    
+    if (isStunned) {
+        // Apply stun visuals to unit img only
+        const tiltDegrees = unit.isEnemy ? -8 : 8;
+        unitDiv.style.transform = `rotate(${tiltDegrees}deg)`;
+        unitDiv.style.opacity = '0.75';
+        unitDiv.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+    } else {
+        // Remove stun visuals from unit img
+        unitDiv.style.transform = '';
+        unitDiv.style.opacity = '';
+        unitDiv.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
     }
+}
 
     applyInitialPassives() {
         // Apply passive abilities at battle start
@@ -1262,41 +1265,41 @@ class Battle {
     }
 
     handleUnitDeath(unit) {
-        unit.isDead = true;
-        
-        // Hide active circle on death
-        const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
-        const element = document.getElementById(elementId);
-        if (element) {
-            const animContainer = element.querySelector('.unitAnimationContainer');
-            if (animContainer) {
-                const activeCircle = animContainer.querySelector('.unitActiveCircle');
-                if (activeCircle) {
-                    activeCircle.style.display = 'none';
-                }
+    unit.isDead = true;
+    
+    // Hide active circle on death
+    const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
+    const element = document.getElementById(elementId);
+    if (element) {
+        const animContainer = element.querySelector('.unitAnimationContainer');
+        if (animContainer) {
+            const activeCircle = animContainer.querySelector('.unitActiveCircle');
+            if (activeCircle) {
+                activeCircle.style.display = 'none';
             }
-        }
-        
-        // Check if this unit was the source of any taunts
-        this.allUnits.forEach(otherUnit => {
-            if (otherUnit.isAlive) {
-                // Remove any taunts where this unit was the taunt target
-                otherUnit.debuffs = otherUnit.debuffs.filter(debuff => {
-                    if (debuff.name === 'Taunt' && debuff.tauntTarget === unit) {
-                        this.log(`${otherUnit.name}'s taunt ends as ${unit.name} has fallen!`);
-                        return false;
-                    }
-                    return true;
-                });
-            }
-        });
-        
-        // Trigger death animation only if not already animated
-        if (!unit.deathAnimated) {
-            unit.deathAnimated = true;
-            this.triggerDeathAnimation(unit);
         }
     }
+    
+    // Check if this unit was the source of any taunts
+    this.allUnits.forEach(otherUnit => {
+        if (otherUnit.isAlive) {
+            // Remove any taunts where this unit was the taunt target
+            otherUnit.debuffs = otherUnit.debuffs.filter(debuff => {
+                if (debuff.name === 'Taunt' && debuff.tauntTarget === unit) {
+                    this.log(`${otherUnit.name}'s taunt ends as ${unit.name} has fallen!`);
+                    return false;
+                }
+                return true;
+            });
+        }
+    });
+    
+    // Trigger death animation only if not already animated
+    if (!unit.deathAnimated) {
+        unit.deathAnimated = true;
+        this.triggerDeathAnimation(unit);
+    }
+}
 
     triggerDeathAnimation(unit) {
         const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
