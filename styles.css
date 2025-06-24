@@ -3699,16 +3699,26 @@ body {
 /* Directional lunge animations */
 @keyframes unitLungeRight {
     0%   { transform: translateX(0); }
-    10%  { transform: translateX(-10px); }  /* slight backward prep */
-    30%  { transform: translateX(60px); }   /* quick forward lunge */
-    100% { transform: translateX(0); }      /* return to original */
+    10%  { transform: translateX(-10px); }    /* quick backward prep */
+    30%  { transform: translateX(70px); }     /* hard lunge forward */
+    50%  { transform: translateX(70px); }     /* brief hold */
+    100% { transform: translateX(0); }        /* smooth return */
 }
 
 @keyframes unitLungeLeft {
     0%   { transform: translateX(0); }
-    10%  { transform: translateX(10px); }   /* slight backward prep */
-    30%  { transform: translateX(-60px); }  /* quick forward lunge */
-    100% { transform: translateX(0); }      /* return to original */
+    10%  { transform: translateX(10px); }     /* quick backward prep */
+    30%  { transform: translateX(-70px); }    /* hard lunge forward */
+    50%  { transform: translateX(-70px); }    /* brief hold */
+    100% { transform: translateX(0); }        /* smooth return */
+}
+
+.unitAnimationContainer.unit-lunge-right {
+    animation: unitLungeRight 0.45s ease-out;
+}
+
+.unitAnimationContainer.unit-lunge-left {
+    animation: unitLungeLeft 0.45s ease-out;
 }
 
 
@@ -3723,15 +3733,6 @@ body {
     0% { transform: translateX(0); }
     50% { transform: translateX(12px); }
     100% { transform: translateX(0); }
-}
-
-/* Apply directional animations */
-.unitAnimationContainer.unit-lunge-right {
-    animation: unitLungeRight 0.6s ease-out;
-}
-
-.unitAnimationContainer.unit-lunge-left {
-    animation: unitLungeLeft 0.6s ease-out;
 }
 
 .unitAnimationContainer.unit-recoil-left {
