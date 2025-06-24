@@ -664,11 +664,11 @@ body {
 
 .unitShadow {
     position: absolute;
-    top: 90%
+    top: 88%
     left: 50%;
     transform: translateX(-50%);
-    width: 40%;
-    height: 24px;
+    width: 55%;
+    height: 32px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 50%;
     filter: blur(3px);
