@@ -238,7 +238,8 @@ body {
 .waveCounter {
     position: absolute;
     top: 78px;
-    right: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 10px 20px;
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
@@ -265,7 +266,8 @@ body {
 .dungeonNameDisplay {
     position: absolute;
     top: 20px;
-    right: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 10px 20px;
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
@@ -282,7 +284,8 @@ body {
 .automaticModeDisplay {
     position: absolute;
     top: 160px;
-    right: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 10px 20px;
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
@@ -869,9 +872,9 @@ body {
 .battleLog {
     position: absolute;
     top: 20px;
-    left: 20px;
-    width: 400px;
-    height: 140px;
+    right: 10px;
+    width: 500px;
+    height: 200px;
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
     padding: 10px;
@@ -884,12 +887,12 @@ body {
 .exitBattleButton {
     position: absolute;
     top: 20px;
-    left: 20px;
+    left: 10px;
     padding: 10px 20px;
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
     color: #4dd0e1;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0 0 15px rgba(42, 106, 138, 0.5);
