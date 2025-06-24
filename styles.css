@@ -3654,7 +3654,7 @@ body {
 /* Damage Number Animation */
 .damageNumber {
     position: absolute;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: bold;
     text-shadow: 
         0 0 10px rgba(0, 0, 0, 0.9),
