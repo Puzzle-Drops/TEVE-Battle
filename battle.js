@@ -879,12 +879,19 @@ class Battle {
             return;
         }
         
-        // Check if it's a player unit and not in auto mode
-        if (!unit.isEnemy && !this.autoMode) {
+        // Check if unit is taunted
+        const tauntDebuff = unit.debuffs.find(d => d.name === 'Taunt' && d.tauntTarget);
+        const isTaunted = tauntDebuff && tauntDebuff.tauntTarget && tauntDebuff.tauntTarget.isAlive;
+        
+        // Check if it's a player unit and not in auto mode and not taunted
+        if (!unit.isEnemy && !this.autoMode && !isTaunted) {
             this.waitingForPlayer = true;
             this.showPlayerAbilities(unit);
         } else {
-            // AI turn
+            // AI turn (or taunted player unit)
+            if (isTaunted && !unit.isEnemy && !this.autoMode) {
+                this.log(`${unit.name} is taunted and must attack ${tauntDebuff.tauntTarget.name}!`);
+            }
             this.executeAITurn(unit);
         }
     }
@@ -896,7 +903,18 @@ class Battle {
         if (tauntDebuff && tauntDebuff.tauntTarget && tauntDebuff.tauntTarget.isAlive) {
             // Force basic attack on taunting unit
             const target = tauntDebuff.tauntTarget;
-            this.executeAbility(unit, 0, target); // Force skill 1 (basic attack)
+            // Find first non-passive ability (usually skill 1)
+            let attackIndex = -1;
+            for (let i = 0; i < unit.abilities.length; i++) {
+                const ability = unit.abilities[i];
+                if (ability && !ability.passive) {
+                    attackIndex = i;
+                    break;
+                }
+            }
+            if (attackIndex >= 0) {
+                this.executeAbility(unit, attackIndex, target);
+            }
             this.endTurn();
             return;
         }
@@ -905,11 +923,26 @@ class Battle {
         let bestAbility = null;
         let bestIndex = -1;
         
+        // Start from the end and find the first non-passive ability that can be used
         for (let i = unit.abilities.length - 1; i >= 0; i--) {
-            if (unit.canUseAbility(i)) {
-                bestAbility = unit.abilities[i];
+            const ability = unit.abilities[i];
+            if (ability && !ability.passive && unit.canUseAbility(i)) {
+                bestAbility = ability;
                 bestIndex = i;
                 break;
+            }
+        }
+        
+        // If taunted and no abilities available except skill 1, force skill 1
+        if (tauntDebuff && bestIndex === -1) {
+            // Find first non-passive ability (usually skill 1)
+            for (let i = 0; i < unit.abilities.length; i++) {
+                const ability = unit.abilities[i];
+                if (ability && !ability.passive) {
+                    bestAbility = ability;
+                    bestIndex = i;
+                    break;
+                }
             }
         }
         
@@ -1080,8 +1113,10 @@ class Battle {
                 }
             }
 
-            this.currentUnit.updateBuffsDebuffs();
+            // Apply DOT effects first (before buff/debuff duration update)
             this.applyDotEffects(this.currentUnit);
+            // Then update buff/debuff durations
+            this.currentUnit.updateBuffsDebuffs();
             this.currentUnit.reduceCooldowns();
         }
         
@@ -2009,6 +2044,13 @@ showDodgeAnimation(target) {
                 abilityDiv.classList.add('onCooldown');
             }
             
+            // Add passive class if it's a passive ability
+            if (ability.passive) {
+                abilityDiv.classList.add('passive');
+                abilityDiv.style.opacity = '0.5';
+                abilityDiv.style.cursor = 'default';
+            }
+            
             const spell = spellManager.getSpell(ability.id);
             const iconUrl = `https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png`;
             
@@ -2027,44 +2069,46 @@ showDodgeAnimation(target) {
                 game.hideAbilityTooltip();
             };
             
-            // Add click handler to ALL abilities
-            abilityDiv.onclick = () => {
-                // Hide tooltip when clicked
-                game.hideAbilityTooltip();
-                
-                // If we're already targeting, clear it first
-                if (this.targetingState) {
-                    this.clearTargeting();
-                }
-                
-                // Re-enable all abilities first
-                const allAbilities = abilityPanel.querySelectorAll('.ability');
-                allAbilities.forEach(ab => {
-                    ab.style.opacity = '';
-                });
-                
-                // If this ability can't be used, just return after clearing
-                if (!unit.canUseAbility(actualIndex)) {
-                    return;
-                }
-                
-                // Visually disable all other abilities (but keep them clickable)
-                allAbilities.forEach(ab => {
-                    if (ab !== abilityDiv) {
-                        ab.style.opacity = '0.5';
+            // Add click handler only to non-passive abilities
+            if (!ability.passive) {
+                abilityDiv.onclick = () => {
+                    // Hide tooltip when clicked
+                    game.hideAbilityTooltip();
+                    
+                    // If we're already targeting, clear it first
+                    if (this.targetingState) {
+                        this.clearTargeting();
                     }
-                });
-                
-                if (spell) {
-                    // For targeted abilities, highlight valid targets
-                    if (spell.target === 'enemy' || spell.target === 'ally') {
-                        this.selectTarget(unit, actualIndex, spell.target);
-                    } else {
-                        this.executeAbility(unit, actualIndex, spell.target === 'self' ? unit : 'all');
-                        this.endTurn();
+                    
+                    // Re-enable all abilities first
+                    const allAbilities = abilityPanel.querySelectorAll('.ability');
+                    allAbilities.forEach(ab => {
+                        ab.style.opacity = '';
+                    });
+                    
+                    // If this ability can't be used, just return after clearing
+                    if (!unit.canUseAbility(actualIndex)) {
+                        return;
                     }
-                }
-            };
+                    
+                    // Visually disable all other abilities (but keep them clickable)
+                    allAbilities.forEach(ab => {
+                        if (ab !== abilityDiv) {
+                            ab.style.opacity = '0.5';
+                        }
+                    });
+                    
+                    if (spell) {
+                        // For targeted abilities, highlight valid targets
+                        if (spell.target === 'enemy' || spell.target === 'ally') {
+                            this.selectTarget(unit, actualIndex, spell.target);
+                        } else {
+                            this.executeAbility(unit, actualIndex, spell.target === 'self' ? unit : 'all');
+                            this.endTurn();
+                        }
+                    }
+                };
+            }
             
             abilityPanel.appendChild(abilityDiv);
         });
@@ -2383,7 +2427,7 @@ showDodgeAnimation(target) {
             'Increase Speed': '+33% action bar progress',
             'Increase Defense': '+25% damage reduction, and -25% damage taken',
             'Immune': 'Cannot gain debuffs',
-            'Shield': `Absorbs ${buffDebuff.shieldAmount || 0} damage`,
+            'Shield': `Absorbs ${Math.round(buffDebuff.shieldAmount || 0)} damage`,
             
             // Debuffs
             'Reduce Attack': '-50% attack damage',
