@@ -122,61 +122,61 @@
     "waves": [
         {
             "enemies": [
-                { "id": "murkin_warrior", "level": 15 },
-                { "id": "murkin_warrior", "level": 15 },
-                { "id": "murkin_warrior", "level": 15 }
+                { "id": "murkin_warrior", "level": 10 },
+                { "id": "murkin_warrior", "level": 10 },
+                { "id": "murkin_warrior", "level": 10 }
             ]
         },
         {
             "enemies": [
-                { "id": "murkin_warrior", "level": 18 },
-                { "id": "murkin_warrior", "level": 18 },
+                { "id": "murkin_warrior", "level": 13 },
+                { "id": "murkin_warrior", "level": 13 },
+                { "id": "murkin_brawler", "level": 15 },
+                { "id": "murkin_brawler", "level": 15 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "murkin_elder", "level": 17 },
+                { "id": "murkin_warrior", "level": 15 },
+                { "id": "murkin_warrior", "level": 15 },
+                { "id": "murkin_initiate", "level": 13 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "murkin_brawler", "level": 17 },
+                { "id": "murkin_brawler", "level": 17 },
+                { "id": "murkin_initiate", "level": 15 },
+                { "id": "murkin_initiate", "level": 15 },
+                { "id": "murkin_warrior", "level": 17 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "murkin_elder", "level": 19 },
+                { "id": "murkin_elder", "level": 19 },
+                { "id": "murkin_initiate", "level": 17 },
+                { "id": "murkin_warrior", "level": 17 },
+                { "id": "murkin_warrior", "level": 17 }
+            ]
+        },
+        {
+            "enemies": [
                 { "id": "murkin_brawler", "level": 20 },
-                { "id": "murkin_brawler", "level": 20 }
-            ]
-        },
-        {
-            "enemies": [
-                { "id": "murkin_elder", "level": 22 },
-                { "id": "murkin_warrior", "level": 20 },
-                { "id": "murkin_warrior", "level": 20 },
+                { "id": "murkin_brawler", "level": 20 },
+                { "id": "murkin_brawler", "level": 20 },
+                { "id": "murkin_initiate", "level": 18 },
                 { "id": "murkin_initiate", "level": 18 }
             ]
         },
         {
             "enemies": [
-                { "id": "murkin_brawler", "level": 22 },
-                { "id": "murkin_brawler", "level": 22 },
-                { "id": "murkin_initiate", "level": 20 },
-                { "id": "murkin_initiate", "level": 20 },
-                { "id": "murkin_warrior", "level": 22 }
-            ]
-        },
-        {
-            "enemies": [
-                { "id": "murkin_elder", "level": 24 },
-                { "id": "murkin_elder", "level": 24 },
-                { "id": "murkin_initiate", "level": 22 },
-                { "id": "murkin_warrior", "level": 22 },
-                { "id": "murkin_warrior", "level": 22 }
-            ]
-        },
-        {
-            "enemies": [
-                { "id": "murkin_brawler", "level": 25 },
-                { "id": "murkin_brawler", "level": 25 },
-                { "id": "murkin_brawler", "level": 25 },
-                { "id": "murkin_initiate", "level": 23 },
-                { "id": "murkin_initiate", "level": 23 }
-            ]
-        },
-        {
-            "enemies": [
-                { "id": "murkin_chieftain", "level": 30 },
-                { "id": "murkin_elder", "level": 25 },
-                { "id": "murkin_elder", "level": 25 },
-                { "id": "murkin_initiate", "level": 23 },
-                { "id": "murkin_warrior", "level": 23 }
+                { "id": "murkin_chieftain", "level": 25 },
+                { "id": "murkin_elder", "level": 20 },
+                { "id": "murkin_elder", "level": 20 },
+                { "id": "murkin_initiate", "level": 18 },
+                { "id": "murkin_warrior", "level": 18 }
             ]
         }
     ],
