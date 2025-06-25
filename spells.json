@@ -121,114 +121,114 @@
   "target": "all_allies",
   "logicKey": "loseLogic"
 },
-"test_attack_boost": {
-  "id": "test_attack_boost",
+"increase_attack_test": {
+  "id": "increase_attack_test",
   "name": "Increase Attack Test",
   "description": "Grants Increase Attack buff for 2 turns",
   "cooldown": 1,
   "effects": ["buff"],
   "target": "ally",
-  "logicKey": "testAttackBoostLogic"
+  "logicKey": "increaseAttackTestLogic"
 },
-"test_speed_boost": {
-  "id": "test_speed_boost",
+"increase_speed_test": {
+  "id": "increase_speed_test",
   "name": "Increase Speed Test",
   "description": "Grants Increase Speed buff for 2 turns",
   "cooldown": 1,
   "duration": 2,
   "effects": ["buff", "speed"],
   "target": "ally",
-  "logicKey": "testSpeedBoostLogic"
+  "logicKey": "increaseSpeedTestLogic"
 },
-"test_armor_boost": {
-  "id": "test_armor_boost",
+"increase_defense_test": {
+  "id": "increase_defense_test",
   "name": "Increase Defense Test",
   "description": "Grants Increase Defense buff for 2 turns",
   "cooldown": 1,
   "effects": ["buff", "defense"],
   "target": "ally",
-  "logicKey": "testArmorBoostLogic"
+  "logicKey": "increaseDefenseTestLogic"
 },
-"test_immune": {
-  "id": "test_immune",
-  "name": "Immunity Test",
+"immune_test": {
+  "id": "immune_test",
+  "name": "Immune Test",
   "description": "Grants Immune buff for 2 turns",
   "cooldown": 1,
   "effects": ["buff", "immunity"],
   "target": "ally",
-  "logicKey": "testImmuneLogic"
+  "logicKey": "immuneTestLogic"
 },
-"test_shield": {
-  "id": "test_shield",
+"shield_test": {
+  "id": "shield_test",
   "name": "Shield Test",
   "description": "Grants Shield buff that absorbs 200 damage",
   "cooldown": 1,
   "effects": ["buff", "shield"],
   "target": "ally",
-  "logicKey": "testShieldLogic"
+  "logicKey": "shieldTestLogic"
 },
-"test_attack_break": {
-  "id": "test_attack_break",
+"reduce_attack_test": {
+  "id": "reduce_attack_test",
   "name": "Reduce Attack Test",
   "description": "Inflicts Reduce Attack debuff for 2 turns",
   "cooldown": 1,
   "effects": ["debuff"],
   "target": "enemy",
-  "logicKey": "testAttackBreakLogic"
+  "logicKey": "reduceAttackTestLogic"
 },
-"test_slow": {
-  "id": "test_slow",
+"reduce_speed_test": {
+  "id": "reduce_speed_test",
   "name": "Reduce Speed Test",
   "description": "Inflicts Reduce Speed debuff for 2 turns",
   "cooldown": 1,
   "duration": 2,
   "effects": ["debuff", "slow"],
   "target": "enemy",
-  "logicKey": "testSlowLogic"
+  "logicKey": "reduceSpeedTestLogic"
 },
-"test_armor_break": {
-  "id": "test_armor_break",
+"reduce_defense_test": {
+  "id": "reduce_defense_test",
   "name": "Reduce Defense Test",
   "description": "Inflicts Reduce Defense debuff for 2 turns",
   "cooldown": 1,
   "effects": ["debuff"],
   "target": "enemy",
-  "logicKey": "testArmorBreakLogic"
+  "logicKey": "reduceDefenseTestLogic"
 },
-"test_blight": {
-  "id": "test_blight",
+"blight_test": {
+  "id": "blight_test",
   "name": "Blight Test",
   "description": "Inflicts Blight debuff for 2 turns",
   "cooldown": 1,
   "effects": ["debuff"],
   "target": "enemy",
-  "logicKey": "testBlightLogic"
+  "logicKey": "blightTestLogic"
 },
-"test_bleed": {
-  "id": "test_bleed",
+"bleed_test": {
+  "id": "bleed_test",
   "name": "Bleed Test",
   "description": "Inflicts Bleed debuff for 2 turns",
   "cooldown": 1,
   "effects": ["debuff", "dot"],
   "target": "enemy",
-  "logicKey": "testBleedLogic"
+  "logicKey": "bleedTestLogic"
 },
-"test_stun": {
-  "id": "test_stun",
+"stun_test": {
+  "id": "stun_test",
   "name": "Stun Test",
   "description": "Inflicts Stun debuff for 2 turns",
   "cooldown": 1,
   "effects": ["debuff", "stun"],
   "target": "enemy",
-  "logicKey": "testStunLogic"
+  "logicKey": "stunTestLogic"
 },
-"test_taunt": {
-  "id": "test_taunt",
+"taunt_test": {
+  "id": "taunt_test",
   "name": "Taunt Test",
   "description": "Forces enemies to attack this unit for 2 turns",
   "cooldown": 1,
   "effects": ["debuff"],
   "target": "enemy",
-  "logicKey": "testTauntLogic"
+  "logicKey": "tauntTestLogic"
 }
 }
