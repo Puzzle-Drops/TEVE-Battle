@@ -112,46 +112,100 @@
         "items": ["rusty_trinket", "rusty_sword", "rusty_shield"]
       }
     },
-    "icy_highland": {
-      "id": "icy_highland",
-      "name": "Icy Highland",
-      "boss": "Frostfang",
-      "tier": "Easy",
-      "subtitle": "Easy 2",
-      "level": 25,
-      "waves": [
+    "murkin_wetlands": {
+    "id": "murkin_wetlands",
+    "name": "Murkin Wetlands",
+    "boss": "Murkin Chieftain",
+    "tier": "Easy",
+    "subtitle": "Easy 2",
+    "level": 25,
+    "waves": [
         {
-          "enemies": [
-            { "id": "frostfang", "level": 38 }
-          ]
+            "enemies": [
+                { "id": "murkin_warrior", "level": 15 },
+                { "id": "murkin_warrior", "level": 15 },
+                { "id": "murkin_warrior", "level": 15 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "murkin_warrior", "level": 18 },
+                { "id": "murkin_warrior", "level": 18 },
+                { "id": "murkin_brawler", "level": 20 },
+                { "id": "murkin_brawler", "level": 20 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "murkin_elder", "level": 22 },
+                { "id": "murkin_warrior", "level": 20 },
+                { "id": "murkin_warrior", "level": 20 },
+                { "id": "murkin_initiate", "level": 18 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "murkin_brawler", "level": 22 },
+                { "id": "murkin_brawler", "level": 22 },
+                { "id": "murkin_initiate", "level": 20 },
+                { "id": "murkin_initiate", "level": 20 },
+                { "id": "murkin_warrior", "level": 22 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "murkin_elder", "level": 24 },
+                { "id": "murkin_elder", "level": 24 },
+                { "id": "murkin_initiate", "level": 22 },
+                { "id": "murkin_warrior", "level": 22 },
+                { "id": "murkin_warrior", "level": 22 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "murkin_brawler", "level": 25 },
+                { "id": "murkin_brawler", "level": 25 },
+                { "id": "murkin_brawler", "level": 25 },
+                { "id": "murkin_initiate", "level": 23 },
+                { "id": "murkin_initiate", "level": 23 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "murkin_chieftain", "level": 30 },
+                { "id": "murkin_elder", "level": 25 },
+                { "id": "murkin_elder", "level": 25 },
+                { "id": "murkin_initiate", "level": 23 },
+                { "id": "murkin_warrior", "level": 23 }
+            ]
         }
-      ],
+    ],
       "rewards": {
-        "gold": 500,
-        "exp": 1250,
+        "gold": 800,
+        "exp": 1800,
         "items": ["discarded_helmet", "discarded_chestplate", "discarded_boots"]
       }
     },
-    "forgotten_crypt": {
-      "id": "forgotten_crypt",
-      "name": "Forgotten Crypt",
-      "boss": "Stitch",
-      "tier": "Easy",
-      "subtitle": "Easy 3",
-      "level": 50,
-      "waves": [
+    "icy_highland": {
+    "id": "icy_highland",
+    "name": "Icy Highland",
+    "boss": "Frostfang",
+    "tier": "Easy",
+    "subtitle": "Easy 3",
+    "level": 50,
+    "waves": [
         {
-          "enemies": [
-            { "id": "stitch", "level": 75 }
-          ]
+            "enemies": [
+                { "id": "frostfang", "level": 75 }
+            ]
         }
-      ],
-      "rewards": {
-        "gold": 500,
-        "exp": 250,
+    ],
+    "rewards": {
+        "gold": 1400,
+        "exp": 2750,
         "items": []
-      }
-    },
+    }
+},
     "gold_mine": {
       "id": "gold_mine",
       "name": "Gold Mine",
