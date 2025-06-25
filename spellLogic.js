@@ -159,7 +159,7 @@ warCryLogic: function(battle, caster, target, spell) {
         });
         
         //caster.currentHp = 0;
-        battle.dealDamage(caster, caster, damage, 'pure');
+        battle.dealDamage(caster, caster, 100000000, 'pure');
         
     },
 
