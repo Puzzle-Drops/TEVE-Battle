@@ -1011,7 +1011,7 @@ getStatLine(rollType, value, maxValue, rarity = 'green') {
             }
 
             get hp() {
-                const baseHp = this.totalStats.str * 25;
+                const baseHp = this.totalStats.str * 5;
                 return baseHp + this.gearStats.hp;
             }
 
@@ -1271,7 +1271,7 @@ equipItem(item, slot) {
             }
 
             get hp() {
-                return this.baseStats.str * 25;
+                return this.baseStats.str * 5;
             }
 
 get attack() {
@@ -3216,7 +3216,7 @@ showStatTooltip(event, statName) {
 		"Agility": "Increases Attack Speed and slightly boosts Armor.<br>Boosts Agility-based abilities.",
 		"Intelligence": "Increases Resistance (magic defense).<br>Boosts Intelligence-based abilities.",
 
-		"Health Points": "Scales with STR.<br><code>25 × STR</code>",
+		"Health Points": "Scales with STR.<br><code>5 × STR</code>",
 		"HP Regeneration": "Scales with STR. Regain HP after your turn.<br><code>0.05 × STR</code>",
 		"Attack": "Your total offensive power.<br>Equals your main stat + gear bonuses.",
 		"Attack Speed": "Increases how fast you attack. Scales with Agility.<br><code>100 + 100 × (AGI / (AGI + 1000))</code>",
