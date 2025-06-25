@@ -1109,6 +1109,15 @@ class Battle {
         if (!target.isAlive) return 0;
         
         let damage = Math.round(amount);
+
+if (damageType === 'physical' && target.physicalDodgeChance) {
+        if (Math.random() < target.physicalDodgeChance) {
+            this.log(`${target.name} dodges the attack!`);
+            // Show dodge animation
+            this.showDodgeAnimation(target);
+            return 0;
+        }
+    }
         
         // Apply attacker's damage modifiers from buffs
         attacker.buffs.forEach(buff => {
@@ -1288,6 +1297,51 @@ class Battle {
             }
         }
     }
+
+showDodgeAnimation(target) {
+    const targetId = target.isEnemy ? `enemy${target.position + 1}` : `party${target.position + 1}`;
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+        // Create dodge text
+        const dodgeText = document.createElement('div');
+        dodgeText.className = 'dodgeText';
+        dodgeText.textContent = 'Dodge!';
+        dodgeText.style.cssText = `
+            position: absolute;
+            left: 50%;
+            top: 30%;
+            transform: translateX(-50%);
+            color: #4dd0e1;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(77, 208, 225, 0.8);
+            animation: dodgeFloat 1s ease-out;
+            pointer-events: none;
+            z-index: 100;
+        `;
+        
+        targetElement.appendChild(dodgeText);
+        
+        // Animate target dodge
+        const animContainer = targetElement.querySelector('.unitAnimationContainer');
+        if (animContainer) {
+            animContainer.classList.add('unit-dodge');
+            setTimeout(() => {
+                animContainer.classList.remove('unit-dodge');
+            }, 600);
+        }
+        
+        // Remove dodge text after animation
+        setTimeout(() => {
+            if (dodgeText.parentNode) {
+                dodgeText.remove();
+            }
+        }, 1000);
+    }
+}
+
+
 
     handleUnitDeath(unit) {
     unit.isDead = true;
