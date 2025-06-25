@@ -2276,9 +2276,9 @@ class Battle {
 
     getBuffIconName(buffName) {
         const iconMap = {
-            'Increase Attack': 'attack_boost',
-            'Increase Speed': 'speed_boost',
-            'Increase Defense': 'armor_boost',
+            'Increase Attack': 'increase_attack',
+            'Increase Speed': 'increase_speed',
+            'Increase Defense': 'increase_defense',
             'Immune': 'immune',
             'Shield': 'shield'
         };
@@ -2287,9 +2287,9 @@ class Battle {
 
     getDebuffIconName(debuffName) {
         const iconMap = {
-            'Reduce Attack': 'attack_break',
-            'Reduce Speed': 'slow',
-            'Reduce Defense': 'armor_break',
+            'Reduce Attack': 'reduce_attack',
+            'Reduce Speed': 'reduce_speed',
+            'Reduce Defense': 'reduce_defense',
             'Blight': 'blight',
             'Bleed': 'bleed',
             'Stun': 'stun',
