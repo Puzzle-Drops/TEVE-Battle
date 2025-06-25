@@ -76,7 +76,8 @@ protectiveBarrierLogic: function(battle, caster, target, spell) {
         aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
         const lowestHpAlly = aliveAllies[0];
         
-        battle.applyShield(lowestHpAlly, spell.shieldAmount);
+        // Use applyBuff with -1 duration for permanent shield
+        battle.applyBuff(lowestHpAlly, 'Shield', -1, { shieldAmount: spell.shieldAmount });
     }
 },
 
