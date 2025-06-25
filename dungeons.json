@@ -57,8 +57,8 @@
   },
   "dungeons": {
     "satyrs": {
-      "id": "satyrs",
-      "name": "Satyrs",
+      "id": "satyrs_glade",
+      "name": "Satyrs Glade",
       "boss": "Satyr Instigator",
       "tier": "Easy",
       "subtitle": "Easy 1",
@@ -109,7 +109,7 @@
       "rewards": {
         "gold": 350,
         "exp": 500,
-        "items": ["rusty_trinket", "rusty_sword", "rusty_shield"]
+        "items": ["glade_focus", "glade_fangblade", "glade_wicker_guard", "glade_horncap", "glade_hidewrap", "glade_stepbinds", "glade_shadowfang"]
       }
     },
     "murkin_wetlands": {
