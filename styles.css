@@ -3780,7 +3780,26 @@ body {
     margin-right: 10px;
 }
 
+/* Prevent dragging of battle unit images */
+.unitSlot img,
+.unit img,
+.unitAnimationContainer img {
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    pointer-events: none;
+}
 
+/* Ensure the unit container can still receive clicks */
+.unitAnimationContainer {
+    pointer-events: auto;
+}
+
+.unit {
+    pointer-events: auto;
+}
 
 /* Gender symbol colors */
 .gender-male {
