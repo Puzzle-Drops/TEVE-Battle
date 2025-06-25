@@ -62,6 +62,137 @@
       "floor": 5
     }
   },
+// ADD THIS at the end of spells.json (after "taunt_test", before the final closing brace):
+,
+"spear_thrust": {
+    "id": "spear_thrust",
+    "name": "Spear Thrust",
+    "description": "Thrust spear dealing 1.5x STR damage with 30% chance to cause Bleed",
+    "cooldown": 0,
+    "effects": ["damage", "physical", "debuff", "bleed"],
+    "scaling": {
+        "str": 1.5
+    },
+    "bleedChance": 0.3,
+    "bleedDuration": 2,
+    "target": "enemy",
+    "logicKey": "spearThrustLogic"
+},
+"defensive_formation": {
+    "id": "defensive_formation",
+    "name": "Defensive Formation",
+    "description": "Take a defensive stance, gaining Increase Defense for 2 turns",
+    "cooldown": 4,
+    "effects": ["buff", "defense"],
+    "duration": 2,
+    "target": "self",
+    "logicKey": "defensiveFormationLogic"
+},
+"crushing_strike": {
+    "id": "crushing_strike",
+    "name": "Crushing Strike",
+    "description": "Heavy hammer strike dealing 2x STR damage",
+    "cooldown": 2,
+    "effects": ["damage", "physical"],
+    "scaling": {
+        "str": 2.0
+    },
+    "target": "enemy",
+    "logicKey": "crushingStrikeLogic"
+},
+"armor_break": {
+    "id": "armor_break",
+    "name": "Armor Break",
+    "description": "Break enemy armor dealing 1.5x STR damage and applying Reduce Defense",
+    "cooldown": 4,
+    "effects": ["damage", "physical", "debuff"],
+    "scaling": {
+        "str": 1.5
+    },
+    "debuffDuration": 3,
+    "target": "enemy",
+    "logicKey": "armorBreakLogic"
+},
+"crystal_shard": {
+    "id": "crystal_shard",
+    "name": "Crystal Shard",
+    "description": "Hurl a magical crystal dealing 1.8x INT damage",
+    "cooldown": 0,
+    "effects": ["damage", "magical"],
+    "scaling": {
+        "int": 1.8
+    },
+    "target": "enemy",
+    "logicKey": "crystalShardLogic"
+},
+"protective_barrier": {
+    "id": "protective_barrier",
+    "name": "Protective Barrier",
+    "description": "Grant lowest HP ally a 100 HP Shield",
+    "cooldown": 5,
+    "effects": ["buff", "shield"],
+    "shieldAmount": 100,
+    "target": "ally",
+    "logicKey": "protectiveBarrierLogic"
+},
+"staff_whack": {
+    "id": "staff_whack",
+    "name": "Staff Whack",
+    "description": "Basic staff attack dealing 1.2x STR damage",
+    "cooldown": 0,
+    "effects": ["damage", "physical"],
+    "scaling": {
+        "str": 1.2
+    },
+    "target": "enemy",
+    "logicKey": "staffWhackLogic"
+},
+"ancient_protection": {
+    "id": "ancient_protection",
+    "name": "Ancient Protection",
+    "description": "50% chance to dodge physical attacks",
+    "cooldown": 0,
+    "effects": ["passive", "evasion"],
+    "passive": true,
+    "dodgeChance": 0.5,
+    "target": "self",
+    "logicKey": "ancientProtectionLogic"
+},
+"ancestral_taunt": {
+    "id": "ancestral_taunt",
+    "name": "Ancestral Taunt",
+    "description": "Force all enemies to attack this unit for 1 turns",
+    "cooldown": 5,
+    "effects": ["debuff", "control"],
+    "tauntDuration": 1,
+    "target": "all_enemies",
+    "logicKey": "ancestralTauntLogic"
+},
+"chieftains_hammer": {
+    "id": "chieftains_hammer",
+    "name": "Chieftain's Hammer",
+    "description": "Mighty hammer blow dealing 2x STR damage with 15% chance to Stun",
+    "cooldown": 0,
+    "effects": ["damage", "physical", "debuff", "stun"],
+    "scaling": {
+        "str": 2.0
+    },
+    "stunChance": 0.15,
+    "stunDuration": 1,
+    "target": "enemy",
+    "logicKey": "chieftainsHammerLogic"
+},
+"war_cry": {
+    "id": "war_cry",
+    "name": "War Cry",
+    "description": "Rally allies with Increase Attack for 3 turns and gain Increase Speed for 1 turn",
+    "cooldown": 5,
+    "effects": ["buff", "aoe"],
+    "allyBuffDuration": 3,
+    "selfSpeedDuration": 1,
+    "target": "all_allies",
+    "logicKey": "warCryLogic"
+},
   "frost_breath": {
     "id": "frost_breath",
     "name": "Frost Breath",
