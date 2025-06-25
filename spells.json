@@ -25,7 +25,7 @@
     "id": "throw_rock",
     "name": "Throw Rock",
     "description": "Throw a rock dealing 2x INT damage and stunning for 1 turn",
-    "cooldown": 3,
+    "cooldown": 7,
     "effects": ["damage", "physical", "debuff", "stun"],
     "scaling": {
       "int": 2.0
