@@ -4,19 +4,16 @@ const spellLogic = {
     punchLogic: function(battle, caster, target) {
         const damage = caster.source.attack;
         battle.dealDamage(caster, target, damage, 'physical');
-        battle.log(`${caster.name} punches ${target.name} for ${damage} damage!`);
     },
 
     furyLogic: function(battle, caster, target, spell) {
         battle.applyBuff(caster, 'Increase Speed', spell.duration || 3, {});
-        battle.log(`${caster.name} enters a fury, increasing attack speed for ${spell.duration || 3} turns!`);
     },
 
     throwRockLogic: function(battle, caster, target) {
         const damage = caster.stats.int * 2;
         battle.dealDamage(caster, target, damage, 'physical');
         battle.applyDebuff(target, 'Stun', 1, { stunned: true });
-        battle.log(`${caster.name} throws a rock at ${target.name} for ${Math.floor(damage)} damage and stuns them!`);
     },
 
     // Boss Spells
@@ -24,21 +21,18 @@ const spellLogic = {
         const { percent, cap } = spell.scaling;
         const damage = Math.min(target.maxHp * percent, cap);
         battle.dealDamage(caster, target, damage, 'physical');
-        battle.log(`${caster.name} slashes ${target.name} for ${Math.round(damage)} damage!`);
     },
 
     biteLogic: function(battle, caster, target, spell) {
         const { percent, floor } = spell.scaling;
         const damage = Math.max(target.maxHp * percent, floor);
         battle.dealDamage(caster, target, damage, 'physical');
-        battle.log(`${caster.name} bites ${target.name} for ${Math.round(damage)} damage!`);
     },
     
     slashkillLogic: function(battle, caster, target, spell) {
         const { percent, cap } = spell.scaling;
         const damage = Math.min(target.maxHp * percent, cap);
         battle.dealDamage(caster, target, damage, 'physical');
-        battle.log(`${caster.name} kills ${target.name} for ${Math.round(damage)} damage!`);
     },
 
     // Tester Spells
@@ -55,7 +49,6 @@ const spellLogic = {
         // Apply speed buff to self
         battle.applyBuff(caster, 'Increase Speed', spell.duration || 5, {});
         
-        battle.log(`${caster.name} uses Win! Victory is assured!`);
     },
 
     loseLogic: function(battle, caster, targets) {
@@ -68,10 +61,9 @@ const spellLogic = {
             }
         });
         
-        // Set own HP to 0
-        caster.currentHp = 0;
+        //caster.currentHp = 0;
+        battle.dealDamage(caster, caster, damage, 'pure');
         
-        battle.log(`${caster.name} uses Lose! Self-destruction initiated!`);
     },
 
     // Test Buff Spells
@@ -138,14 +130,12 @@ const spellLogic = {
                 battle.applyDebuff(enemy, 'Reduce Speed', spell.slowDuration || 2, {});
             }
         });
-        battle.log(`${caster.name} breathes frost!`);
     },
 
     goldTossLogic: function(battle, caster, target) {
         const randomMultiplier = Math.random() * 3;
         const damage = caster.baseStats.str * randomMultiplier;
         battle.dealDamage(caster, target, damage, 'physical');
-        battle.log(`${caster.name} tosses gold coins for ${Math.floor(damage)} damage!`);
     },
 
     summonGoblinsLogic: function(battle, caster, target) {
@@ -158,7 +148,6 @@ const spellLogic = {
                 int: caster.baseStats.int * 0.5
             });
         }
-        battle.log(`${caster.name} summons goblin minions!`);
     }
 };
 
