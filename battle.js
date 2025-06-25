@@ -520,7 +520,7 @@ class Battle {
     
     if (isStunned) {
         // Apply stun visuals to unit img only
-        const tiltDegrees = unit.isEnemy ? -8 : 8;
+        const tiltDegrees = unit.isEnemy ? -4 : 4;
         unitDiv.style.transform = `rotate(${tiltDegrees}deg)`;
         unitDiv.style.opacity = '0.75';
         unitDiv.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
