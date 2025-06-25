@@ -3929,3 +3929,37 @@ body {
 .unitAnimationContainer.casting-transform {
     animation: unitBounce 0.8s ease-in-out;
 }
+
+/* ADD THIS at the end of styles.css: */
+
+/* Dodge animation */
+@keyframes dodgeFloat {
+    0% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-40px);
+    }
+}
+
+.unit-dodge {
+    animation: unitDodge 0.6s ease-out;
+}
+
+@keyframes unitDodge {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-15px);
+    }
+    75% {
+        transform: translateX(15px);
+    }
+}
+
+.dodgeText {
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
