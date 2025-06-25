@@ -406,21 +406,23 @@ class Battle {
         animContainer.appendChild(unitDiv);
         
         // Set unit sprite/content
-        if (unit.isEnemy) {
-            const enemyId = unit.source.enemyId;
-            unitDiv.innerHTML = `
-                <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${enemyId}.png" alt="${unit.name}" 
-                     style="image-rendering: pixelated; object-fit: contain;"
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${unit.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${unit.source.level}</div></div>'">
-            `;
-        } else {
-            const hero = unit.source;
-            unitDiv.innerHTML = `
-                <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" 
-                     style="image-rendering: pixelated; object-fit: contain;"
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
-            `;
-        }
+if (unit.isEnemy) {
+    const enemyId = unit.source.enemyId;
+    unitDiv.innerHTML = `
+        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${enemyId}.png" alt="${unit.name}" 
+             style="image-rendering: pixelated; object-fit: contain;"
+             draggable="false"
+             onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${unit.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${unit.source.level}</div></div>'">
+    `;
+} else {
+    const hero = unit.source;
+    unitDiv.innerHTML = `
+        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" 
+             style="image-rendering: pixelated; object-fit: contain;"
+             draggable="false"
+             onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
+    `;
+}
         
         // Create shadow inside animation container
         const shadow = document.createElement('div');
@@ -1704,57 +1706,31 @@ showDodgeAnimation(target) {
                     this.processingWaveTransition = true;
                     this.log("Wave cleared!");
                     
-                    // Revive dead party members between waves
-                    this.party.forEach((unit, index) => {
-                        if (unit) {
-                            // Always ensure UI is properly shown for party members
-                            const elementId = `party${unit.position + 1}`;
-                            const element = document.getElementById(elementId);
-                            
-                            if (!unit.isAlive || unit.isDead) {
-                                // Revive the unit
-                                unit.currentHp = unit.maxHp;
-                                unit.isDead = false;
-                                unit.deathAnimated = false; // Reset death animation flag
-                                this.log(`${unit.name} revived for next wave!`);
-                                
-                                // Reset death animation
-                                if (element) {
-                                    const animContainer = element.querySelector('.unitAnimationContainer');
-                                    if (animContainer) {
-                                        const unitDiv = animContainer.querySelector('.unit');
-                                        const unitShadow = animContainer.querySelector('.unitShadow');
-                                        if (unitDiv) {
-                                            unitDiv.classList.remove('dying');
-                                            unitDiv.style.opacity = '';
-                                            unitDiv.style.filter = '';
-                                        }
-                                        if (unitShadow) {
-                                            unitShadow.style.display = '';
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            // Ensure UI elements are visible for all party members
-                            if (element) {
-                                element.style.display = 'block';
-                                
-                                const healthBar = element.querySelector('.healthBar');
-                                const actionBar = element.querySelector('.actionBar');
-                                const levelIndicator = element.querySelector('.levelIndicator');
-                                const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-                                const animContainer = element.querySelector('.unitAnimationContainer');
-                                const unitActiveCircle = animContainer ? animContainer.querySelector('.unitActiveCircle') : null;
-                                
-                                if (healthBar) healthBar.style.display = '';
-                                if (actionBar) actionBar.style.display = '';
-                                if (levelIndicator) levelIndicator.style.display = '';
-                                if (buffDebuffContainer) buffDebuffContainer.style.display = '';
-                                if (unitActiveCircle) unitActiveCircle.style.display = 'none'; // Ensure it's hidden
-                            }
-                        }
-                    });
+                    // Only update UI for living party members - don't revive dead ones
+this.party.forEach((unit, index) => {
+    if (unit && unit.isAlive && !unit.isDead) {
+        // Only ensure UI is properly shown for LIVING party members
+        const elementId = `party${unit.position + 1}`;
+        const element = document.getElementById(elementId);
+        
+        if (element) {
+            element.style.display = 'block';
+            
+            const healthBar = element.querySelector('.healthBar');
+            const actionBar = element.querySelector('.actionBar');
+            const levelIndicator = element.querySelector('.levelIndicator');
+            const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+            const animContainer = element.querySelector('.unitAnimationContainer');
+            const unitActiveCircle = animContainer ? animContainer.querySelector('.unitActiveCircle') : null;
+            
+            if (healthBar) healthBar.style.display = '';
+            if (actionBar) actionBar.style.display = '';
+            if (levelIndicator) levelIndicator.style.display = '';
+            if (buffDebuffContainer) buffDebuffContainer.style.display = '';
+            if (unitActiveCircle) unitActiveCircle.style.display = 'none'; // Ensure it's hidden
+        }
+    }
+});
                     
                     // Load next wave
                     setTimeout(() => {
