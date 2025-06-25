@@ -62,8 +62,6 @@
       "floor": 5
     }
   },
-// ADD THIS at the end of spells.json (after "taunt_test", before the final closing brace):
-,
 "spear_thrust": {
     "id": "spear_thrust",
     "name": "Spear Thrust",
