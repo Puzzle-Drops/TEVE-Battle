@@ -3526,7 +3526,7 @@ body {
 /* Buff/Debuff Display System */
 .buffDebuffContainer {
     position: absolute;
-    top: -48px;
+    top: -50px;
     left: 25px;
     width: 100%;
     height: 32px;
