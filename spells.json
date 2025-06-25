@@ -24,11 +24,11 @@
   "throw_rock": {
     "id": "throw_rock",
     "name": "Throw Rock",
-    "description": "Throw a rock dealing 2x INT damage and stunning for 1 turn",
+    "description": "Throw a rock dealing damage + 0.75x INT and stunning for 1 turn",
     "cooldown": 7,
     "effects": ["damage", "physical", "debuff", "stun"],
     "scaling": {
-      "int": 2.0
+      "int": 0.75
     },
     "stunDuration": 1,
     "target": "enemy",
@@ -65,11 +65,11 @@
 "spear_thrust": {
     "id": "spear_thrust",
     "name": "Spear Thrust",
-    "description": "Thrust spear dealing 1.5x STR damage with 30% chance to cause Bleed",
+    "description": "Thrust spear dealing damage + 0.5x STR with 30% chance to cause Bleed",
     "cooldown": 0,
     "effects": ["damage", "physical", "debuff", "bleed"],
     "scaling": {
-        "str": 1.5
+        "str": 0.5
     },
     "bleedChance": 0.3,
     "bleedDuration": 2,
@@ -89,11 +89,11 @@
 "crushing_strike": {
     "id": "crushing_strike",
     "name": "Crushing Strike",
-    "description": "Heavy hammer strike dealing 2x STR damage",
+    "description": "Heavy hammer strike dealing damage + 1x STR",
     "cooldown": 2,
     "effects": ["damage", "physical"],
     "scaling": {
-        "str": 2.0
+        "str": 1.0
     },
     "target": "enemy",
     "logicKey": "crushingStrikeLogic"
@@ -101,11 +101,11 @@
 "armor_break": {
     "id": "armor_break",
     "name": "Armor Break",
-    "description": "Break enemy armor dealing 1.5x STR damage and applying Reduce Defense",
+    "description": "Break enemy armor dealing damage + 0.5x STR and applying Reduce Defense",
     "cooldown": 4,
     "effects": ["damage", "physical", "debuff"],
     "scaling": {
-        "str": 1.5
+        "str": 0.5
     },
     "debuffDuration": 3,
     "target": "enemy",
@@ -114,11 +114,11 @@
 "crystal_shard": {
     "id": "crystal_shard",
     "name": "Crystal Shard",
-    "description": "Hurl a magical crystal dealing 1.8x INT damage",
+    "description": "Hurl a magical crystal dealing damage + 0.8x INT",
     "cooldown": 0,
     "effects": ["damage", "magical"],
     "scaling": {
-        "int": 1.8
+        "int": 0.8
     },
     "target": "enemy",
     "logicKey": "crystalShardLogic"
@@ -136,11 +136,11 @@
 "staff_whack": {
     "id": "staff_whack",
     "name": "Staff Whack",
-    "description": "Basic staff attack dealing 1.2x STR damage",
+    "description": "Basic staff attack dealing damage + 0.2x STR",
     "cooldown": 0,
     "effects": ["damage", "physical"],
     "scaling": {
-        "str": 1.2
+        "str": 0.2
     },
     "target": "enemy",
     "logicKey": "staffWhackLogic"
@@ -169,11 +169,11 @@
 "chieftains_hammer": {
     "id": "chieftains_hammer",
     "name": "Chieftain's Hammer",
-    "description": "Mighty hammer blow dealing 2x STR damage with 15% chance to Stun",
+    "description": "Mighty hammer blow dealing damage + 1x STR with 15% chance to Stun",
     "cooldown": 0,
     "effects": ["damage", "physical", "debuff", "stun"],
     "scaling": {
-        "str": 2.0
+        "str": 1.0
     },
     "stunChance": 0.15,
     "stunDuration": 1,
