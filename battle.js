@@ -809,14 +809,14 @@ class Battle {
                 
                 // Apply speed buffs (hardcoded +33%)
                 unit.buffs.forEach(buff => {
-                    if (buff.name === 'Speed Boost') {
+                    if (buff.name === 'Increase Speed') {
                         speed *= 1.33;
                     }
                 });
 
                 // Apply speed debuffs (hardcoded -33%)
                 unit.debuffs.forEach(debuff => {
-                    if (debuff.name === 'Slow') {
+                    if (debuff.name === 'Reduce Speed') {
                         speed *= 0.67;
                     }
                 });
@@ -1112,7 +1112,7 @@ class Battle {
         
         // Apply attacker's damage modifiers from buffs
         attacker.buffs.forEach(buff => {
-            if (buff.name === 'Attack Boost' || buff.damageMultiplier) {
+            if (buff.name === 'Increase Attack' || buff.damageMultiplier) {
                 damage *= 1.5;
             }
         });
@@ -1188,9 +1188,9 @@ class Battle {
             }
         });
         
-        // Apply Attack Break LAST
+        // Apply Reduce Attack LAST
         attacker.debuffs.forEach(debuff => {
-            if (debuff.name === 'Attack Break') {
+            if (debuff.name === 'Reduce Attack') {
                 damage *= 0.5;
             }
         });
@@ -2273,14 +2273,8 @@ class Battle {
 
     getBuffIconName(buffName) {
         const iconMap = {
-            'fury': 'speed_boost',
-            'beastForm': 'attack_boost',
-            'frostArmor': 'armor_boost',
-            'divineShield': 'immune',
-            'shield': 'shield',
-            'Attack Boost': 'attack_boost',
-            'Speed Boost': 'speed_boost',
-            'Armor Boost': 'armor_boost',
+            'Increase Attack': 'attack_boost',
+            'Increase Speed': 'speed_boost',
             'Increase Defense': 'armor_boost',
             'Immune': 'immune',
             'Shield': 'shield'
@@ -2290,13 +2284,8 @@ class Battle {
 
     getDebuffIconName(debuffName) {
         const iconMap = {
-            'poison': 'poison',
-            'stun': 'stun',
-            'slow': 'slow',
-            'huntersMark': 'mark',
-            'Attack Break': 'attack_break',
-            'Slow': 'slow',
-            'Armor Break': 'armor_break',
+            'Reduce Attack': 'attack_break',
+            'Reduce Speed': 'slow',
             'Reduce Defense': 'armor_break',
             'Blight': 'blight',
             'Bleed': 'bleed',
@@ -2333,28 +2322,20 @@ class Battle {
         
         const descriptions = {
             // Buffs
-            'fury': 'Increased attack speed by 33%',
-            'Attack Boost': 'Deal 50% increased damage',
-            'Speed Boost': '50% increased action bar progress',
-            'Armor Boost': '50% increased armor',
-            'Increase Defense': 'Takes 25% less damage and gains +25% damage reduction',
+            'Increase Attack': '+50% attack damage',
+            'Increase Speed': '+33% action bar progress',
+            'Increase Defense': '+25% damage reduction, and -25% damage taken',
             'Immune': 'Cannot gain debuffs',
             'Shield': `Absorbs ${buffDebuff.shieldAmount || 0} damage`,
-            'beastForm': 'Transformed, gaining 50% STR and AGI',
-            'frostArmor': 'Reduces damage taken by 30%',
-            'divineShield': 'Immune to all damage',
             
             // Debuffs
-            'poison': 'Taking damage over time',
-            'Attack Break': '50% reduced attack damage',
-            'Slow': '33% reduced action bar progress',
-            'Armor Break': '50% reduced armor',
-            'Reduce Defense': 'Takes 25% more damage and loses -25% damage reduction',
+            'Reduce Attack': '-50% attack damage',
+            'Reduce Speed': '-33% action bar progress',
+            'Reduce Defense': '-25% damage reduction, and +25% damage taken',
             'Blight': 'No health regen, cannot be healed',
             'Bleed': 'Takes 5% max HP damage each turn',
             'Stun': 'Cannot act on next turn',
-            'Taunt': 'Must attack the unit that taunted',
-            'huntersMark': 'Takes 25% increased damage'
+            'Taunt': 'Must attack the unit that taunted'
         };
         
         tooltip.className = isBuff ? 'buff' : 'debuff';
