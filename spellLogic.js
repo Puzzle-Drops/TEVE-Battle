@@ -35,6 +35,102 @@ const spellLogic = {
         battle.dealDamage(caster, target, damage, 'physical');
     },
 
+// Murkin Spells
+spearThrustLogic: function(battle, caster, target, spell) {
+    const damage = caster.stats.str * 1.5;
+    battle.dealDamage(caster, target, damage, 'physical');
+    
+    // 30% chance to apply bleed
+    if (Math.random() < spell.bleedChance) {
+        battle.applyDebuff(target, 'Bleed', spell.bleedDuration, { bleedDamage: true });
+    }
+},
+
+defensiveFormationLogic: function(battle, caster, target, spell) {
+    battle.applyBuff(caster, 'Increase Defense', spell.duration, {});
+},
+
+crushingStrikeLogic: function(battle, caster, target, spell) {
+    const damage = caster.stats.str * 2.0;
+    battle.dealDamage(caster, target, damage, 'physical');
+},
+
+armorBreakLogic: function(battle, caster, target, spell) {
+    const damage = caster.stats.str * 1.5;
+    battle.dealDamage(caster, target, damage, 'physical');
+    battle.applyDebuff(target, 'Reduce Defense', spell.debuffDuration, {});
+},
+
+crystalShardLogic: function(battle, caster, target, spell) {
+    const damage = caster.stats.int * 1.8;
+    battle.dealDamage(caster, target, damage, 'magical');
+},
+
+protectiveBarrierLogic: function(battle, caster, target, spell) {
+    // Find lowest HP ally
+    const allies = battle.getParty(caster);
+    const aliveAllies = allies.filter(a => a && a.isAlive);
+    
+    if (aliveAllies.length > 0) {
+        // Sort by HP percentage
+        aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+        const lowestHpAlly = aliveAllies[0];
+        
+        battle.applyShield(lowestHpAlly, spell.shieldAmount);
+    }
+},
+
+staffWhackLogic: function(battle, caster, target, spell) {
+    const damage = caster.stats.str * 1.2;
+    battle.dealDamage(caster, target, damage, 'physical');
+},
+
+ancientProtectionLogic: function(battle, caster) {
+    // This is a passive ability - the dodge logic will be handled in battle.js
+    // We need to add a permanent effect to the caster
+    if (!caster.ancientProtectionApplied) {
+        caster.ancientProtectionApplied = true;
+        caster.physicalDodgeChance = 0.5;
+    }
+},
+
+ancestralTauntLogic: function(battle, caster, target, spell) {
+    // Apply taunt to all enemies
+    const enemies = battle.getEnemies(caster);
+    enemies.forEach(enemy => {
+        if (enemy.isAlive) {
+            battle.applyDebuff(enemy, 'Taunt', spell.tauntDuration, { 
+                tauntTarget: caster,
+                forcedTarget: caster.position,
+                forcedTargetIsEnemy: caster.isEnemy
+            });
+        }
+    });
+},
+
+chieftainsHammerLogic: function(battle, caster, target, spell) {
+    const damage = caster.stats.str * 2.0;
+    battle.dealDamage(caster, target, damage, 'physical');
+    
+    // 15% chance to stun
+    if (Math.random() < spell.stunChance) {
+        battle.applyDebuff(target, 'Stun', spell.stunDuration, { stunned: true });
+    }
+},
+
+warCryLogic: function(battle, caster, target, spell) {
+    // Apply Increase Attack to all allies
+    const allies = battle.getParty(caster);
+    allies.forEach(ally => {
+        if (ally.isAlive) {
+            battle.applyBuff(ally, 'Increase Attack', spell.allyBuffDuration, { damageMultiplier: 1.5 });
+        }
+    });
+    
+    // Apply Increase Speed to self only
+    battle.applyBuff(caster, 'Increase Speed', spell.selfSpeedDuration, {});
+},
+
     // Tester Spells
     winLogic: function(battle, caster, targets, spell) {
         // Deal massive damage to all enemies
