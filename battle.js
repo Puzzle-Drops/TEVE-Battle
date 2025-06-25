@@ -2213,6 +2213,9 @@ class Battle {
             if (unit._lastBuffDebuffState !== currentBuffDebuffState) {
                 unit._lastBuffDebuffState = currentBuffDebuffState;
                 
+                // Hide tooltip when buff/debuff state changes since icons are being recreated
+                this.hideBuffDebuffTooltip();
+                
                 const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
                 if (buffDebuffContainer) {
                     buffDebuffContainer.innerHTML = '';
