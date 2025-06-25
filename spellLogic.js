@@ -75,52 +75,52 @@ const spellLogic = {
     },
 
     // Test Buff Spells
-    testAttackBoostLogic: function(battle, caster, target) {
+    increaseAttackTestLogic: function(battle, caster, target) {
         battle.applyBuff(target, 'Increase Attack', 2, { damageMultiplier: 1.5 });
     },
 
-    testSpeedBoostLogic: function(battle, caster, target, spell) {
+    increaseSpeedTestLogic: function(battle, caster, target, spell) {
         battle.applyBuff(target, 'Increase Speed', spell.duration || 2, {});
     },
 
-    testArmorBoostLogic: function(battle, caster, target) {
+    increaseDefenseTestLogic: function(battle, caster, target) {
         battle.applyBuff(target, 'Increase Defense', 2, {});
     },
 
-    testImmuneLogic: function(battle, caster, target) {
+    immuneTestLogic: function(battle, caster, target) {
         battle.applyBuff(target, 'Immune', 2, { immunity: true });
     },
 
-    testShieldLogic: function(battle, caster, target) {
+    shieldTestLogic: function(battle, caster, target) {
         battle.applyBuff(target, 'Shield', -1, { shieldAmount: 200 });
     },
 
     // Test Debuff Spells
-    testAttackBreakLogic: function(battle, caster, target) {
+    reduceAttackTestLogic: function(battle, caster, target) {
         battle.applyDebuff(target, 'Reduce Attack', 2, { attackMultiplier: 0.5 });
     },
 
-    testSlowLogic: function(battle, caster, target, spell) {
+    reduceSpeedTestLogic: function(battle, caster, target, spell) {
         battle.applyDebuff(target, 'Reduce Speed', spell.duration || 2, {});
     },
 
-    testArmorBreakLogic: function(battle, caster, target) {
+    reduceDefenseTestLogic: function(battle, caster, target) {
         battle.applyDebuff(target, 'Reduce Defense', 2, {});
     },
     
-    testBlightLogic: function(battle, caster, target) {
+    blightTestLogic: function(battle, caster, target) {
         battle.applyDebuff(target, 'Blight', 2, { noHeal: true });
     },
 
-    testBleedLogic: function(battle, caster, target) {
+    bleedTestLogic: function(battle, caster, target) {
         battle.applyDebuff(target, 'Bleed', 2, { bleedDamage: true });
     },
 
-    testStunLogic: function(battle, caster, target) {
+    stunTestLogic: function(battle, caster, target) {
         battle.applyDebuff(target, 'Stun', 2, { stunned: true });
     },
 
-    testTauntLogic: function(battle, caster, target) {
+    tauntTestLogic: function(battle, caster, target) {
         // Apply taunt to the target, making them attack the caster
         battle.applyDebuff(target, 'Taunt', 2, { 
             tauntTarget: caster,
