@@ -126,10 +126,10 @@
 "protective_barrier": {
     "id": "protective_barrier",
     "name": "Protective Barrier",
-    "description": "Grant lowest HP ally a 100 HP Shield",
+    "description": "Grant lowest HP ally a 50 HP Shield",
     "cooldown": 5,
     "effects": ["buff", "shield"],
-    "shieldAmount": 100,
+    "shieldAmount": 50,
     "target": "ally",
     "logicKey": "protectiveBarrierLogic"
 },
