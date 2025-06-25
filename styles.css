@@ -826,6 +826,7 @@ body {
     background: #0a1929;
     border: 1px solid #2a6a8a;
     margin: 0;
+    z-index: 4;
 }
 
 .unitSlot .actionFill {
@@ -3639,6 +3640,7 @@ body {
 /* Add to styles.css - Shield bar styling */
 .healthBarContainer {
     position: relative;
+    z-index: 4;
 }
 
 .healthBar {
