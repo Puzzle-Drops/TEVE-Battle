@@ -1319,7 +1319,8 @@ get mainstat() {
                             cooldown: spell.cooldown,
                             currentCooldown: 0,
                             icon: `${spell.id}.png`,
-                            effects: spell.effects
+                            effects: spell.effects,
+			    passive: spell.passive || false
                         });
                     }
                 });
