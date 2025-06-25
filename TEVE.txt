@@ -251,16 +251,15 @@ Ability levels just add to the flat damage at the front end. For instance: damag
 Abilities can have multiple affects. These are called buffs or debuffs. For instance the villager has a buff he applies to himself in the fury ability. He speeds himself up. While this affect is active, it should be displayed above the unit's healthbar as an icon with a small number in the bottom right of that icon. Debuffs work the same way, but are negative.
 
 --Buffs
-Attack boost: deal 50% increased damage
-Speed boost: 50% increased action bar progress
-Armor boost: 50% increased armor
+Increase Attack: deal 50% increased damage
+Increase Speed: 33% increased action bar progress
+Increase Defense: 50% increased armor
 Immune: cannot gain debuffs
 Shield: attacks reduce shield hp before unit hp
-
 --Debuffs
-Attack break: 50% attack
-Slow: 50% action bar progress
-Armor break: 50% armor
+Reduce Attack: 50% attack
+Reduce Speed: -33% action bar progress
+Reduce Defense: -25% armor, +25% damage taken
 Blight: no health regen, not valid healing target
 Bleed: deals 5% max hp damage on turn start
 Stun: turn ends on turn start
