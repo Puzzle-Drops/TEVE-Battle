@@ -854,7 +854,7 @@ body {
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
     display: flex;
     gap: 20px;
-    z-index: 10;
+    z-index: 11;
 }
 
 .autoToggleContainer label {
