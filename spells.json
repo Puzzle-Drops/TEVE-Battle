@@ -14,7 +14,7 @@
   "fury": {
     "id": "fury",
     "name": "Fury",
-    "description": "Increased attack speed for 3 turns",
+    "description": "Gain Increase Speed buff for 3 turns",
     "cooldown": 5,
     "effects": ["buff", "speed"],
     "duration": 3,
@@ -65,7 +65,7 @@
   "frost_breath": {
     "id": "frost_breath",
     "name": "Frost Breath",
-    "description": "Breathe frost, slowing all enemies",
+    "description": "Breathe frost on all enemies, applying Reduce Speed",
     "cooldown": 5,
     "effects": ["damage", "magical", "debuff", "slow", "aoe"],
     "scaling": {
@@ -100,7 +100,7 @@
 "win": {
   "id": "win",
   "name": "Win",
-  "description": "Instantly defeat all enemies and gain speed",
+  "description": "Instantly defeat all enemies and gain Increase Speed",
   "cooldown": 0,
   "effects": ["damage", "pure", "aoe", "buff", "speed"],
   "scaling": {
@@ -123,8 +123,8 @@
 },
 "test_attack_boost": {
   "id": "test_attack_boost",
-  "name": "Attack Boost Test",
-  "description": "Grants Attack Boost buff for 2 turns",
+  "name": "Increase Attack Test",
+  "description": "Grants Increase Attack buff for 2 turns",
   "cooldown": 1,
   "effects": ["buff"],
   "target": "ally",
@@ -132,8 +132,8 @@
 },
 "test_speed_boost": {
   "id": "test_speed_boost",
-  "name": "Speed Boost Test",
-  "description": "Grants Speed Boost buff for 2 turns",
+  "name": "Increase Speed Test",
+  "description": "Grants Increase Speed buff for 2 turns",
   "cooldown": 1,
   "duration": 2,
   "effects": ["buff", "speed"],
@@ -143,7 +143,7 @@
 "test_armor_boost": {
   "id": "test_armor_boost",
   "name": "Increase Defense Test",
-  "description": "Grants Increase Defense Boost buff for 2 turns",
+  "description": "Grants Increase Defense buff for 2 turns",
   "cooldown": 1,
   "effects": ["buff", "defense"],
   "target": "ally",
@@ -152,7 +152,7 @@
 "test_immune": {
   "id": "test_immune",
   "name": "Immunity Test",
-  "description": "Grants Immunity buff for 2 turns",
+  "description": "Grants Immune buff for 2 turns",
   "cooldown": 1,
   "effects": ["buff", "immunity"],
   "target": "ally",
@@ -169,8 +169,8 @@
 },
 "test_attack_break": {
   "id": "test_attack_break",
-  "name": "Attack Break Test",
-  "description": "Inflicts Attack Break debuff for 2 turns",
+  "name": "Reduce Attack Test",
+  "description": "Inflicts Reduce Attack debuff for 2 turns",
   "cooldown": 1,
   "effects": ["debuff"],
   "target": "enemy",
@@ -178,8 +178,8 @@
 },
 "test_slow": {
   "id": "test_slow",
-  "name": "Slow Test",
-  "description": "Inflicts Slow debuff for 2 turns",
+  "name": "Reduce Speed Test",
+  "description": "Inflicts Reduce Speed debuff for 2 turns",
   "cooldown": 1,
   "duration": 2,
   "effects": ["debuff", "slow"],
