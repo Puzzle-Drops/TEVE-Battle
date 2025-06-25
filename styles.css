@@ -3633,6 +3633,29 @@ body {
     color: #b0e0f0;
 }
 
+/* Add to styles.css - Shield bar styling */
+.healthBarContainer {
+    position: relative;
+}
+
+.healthBar {
+    position: relative;
+    overflow: visible; /* Allow shield to extend beyond */
+}
+
+.shieldFill {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(90deg, #ffffff 0%, #e0e0e0 100%);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    z-index: 1;
+}
+
+/* Ensure health text appears above both bars */
+.healthText {
+    z-index: 2;
+}
+
 /* Gender symbol colors */
 .gender-male {
     color: #4dd0e1;
