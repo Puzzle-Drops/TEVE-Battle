@@ -3553,12 +3553,10 @@ body {
 }
 
 .buffIcon {
-    border: 1px solid #00c3ff;
     box-shadow: 0 0 10px rgba(0, 195, 255, 0.5);
 }
 
 .debuffIcon {
-    border: 1px solid #ff4444;
     box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
 }
 
