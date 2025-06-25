@@ -24,7 +24,7 @@
   "throw_rock": {
     "id": "throw_rock",
     "name": "Throw Rock",
-    "description": "Throw a rock dealing damage + 0.75x INT and stunning for 1 turn",
+    "description": "Throw a rock dealing attack + 0.75x INT and stunning for 1 turn",
     "cooldown": 7,
     "effects": ["damage", "physical", "debuff", "stun"],
     "scaling": {
@@ -65,7 +65,7 @@
 "spear_thrust": {
     "id": "spear_thrust",
     "name": "Spear Thrust",
-    "description": "Thrust spear dealing damage + 0.5x STR with 30% chance to cause Bleed",
+    "description": "Thrust spear dealing attack + 0.5x STR with 30% chance to cause Bleed",
     "cooldown": 0,
     "effects": ["damage", "physical", "debuff", "bleed"],
     "scaling": {
@@ -89,8 +89,8 @@
 "crushing_strike": {
     "id": "crushing_strike",
     "name": "Crushing Strike",
-    "description": "Heavy hammer strike dealing damage + 1x STR",
-    "cooldown": 2,
+    "description": "Heavy hammer strike dealing attack + 1x STR",
+    "cooldown": 0,
     "effects": ["damage", "physical"],
     "scaling": {
         "str": 1.0
@@ -101,7 +101,7 @@
 "armor_break": {
     "id": "armor_break",
     "name": "Armor Break",
-    "description": "Break enemy armor dealing damage + 0.5x STR and applying Reduce Defense",
+    "description": "Break enemy armor dealing attack + 0.5x STR and applying Reduce Defense",
     "cooldown": 4,
     "effects": ["damage", "physical", "debuff"],
     "scaling": {
@@ -114,7 +114,7 @@
 "crystal_shard": {
     "id": "crystal_shard",
     "name": "Crystal Shard",
-    "description": "Hurl a magical crystal dealing damage + 0.8x INT",
+    "description": "Hurl a magical crystal dealing attack + 0.8x INT",
     "cooldown": 0,
     "effects": ["damage", "magical"],
     "scaling": {
@@ -136,7 +136,7 @@
 "staff_whack": {
     "id": "staff_whack",
     "name": "Staff Whack",
-    "description": "Basic staff attack dealing damage + 0.2x STR",
+    "description": "Basic staff attack dealing attack + 0.2x STR",
     "cooldown": 0,
     "effects": ["damage", "physical"],
     "scaling": {
@@ -169,7 +169,7 @@
 "chieftains_hammer": {
     "id": "chieftains_hammer",
     "name": "Chieftain's Hammer",
-    "description": "Mighty hammer blow dealing damage + 1x STR with 15% chance to Stun",
+    "description": "Mighty hammer blow dealing attack + 1x STR with 15% chance to Stun",
     "cooldown": 0,
     "effects": ["damage", "physical", "debuff", "stun"],
     "scaling": {
