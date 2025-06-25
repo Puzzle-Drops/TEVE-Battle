@@ -93,6 +93,11 @@ class BattleUnit {
         return this.source.abilities || [];
     }
     
+    get currentShield() {
+        const shieldBuff = this.buffs.find(b => b.name === 'Shield');
+        return shieldBuff ? shieldBuff.shieldAmount : 0;
+    }
+    
     canUseAbility(abilityIndex) {
         const ability = this.abilities[abilityIndex];
         if (!ability) return false;
@@ -428,14 +433,34 @@ class Battle {
         activeCircle.style.display = 'none'; // Hidden by default
         animContainer.appendChild(activeCircle);
         
-        // Create health bar (static)
+        // Create health bar container (static)
+        const healthBarContainer = document.createElement('div');
+        healthBarContainer.className = 'healthBarContainer';
+        element.appendChild(healthBarContainer);
+        
+        // Create health bar elements
         const healthBar = document.createElement('div');
         healthBar.className = 'healthBar';
-        healthBar.innerHTML = `
-            <div class="healthFill" style="width: 100%"></div>
-            <div class="healthText">${unit.currentHp}</div>
-        `;
-        element.appendChild(healthBar);
+        healthBarContainer.appendChild(healthBar);
+        
+        // Create health fill
+        const healthFill = document.createElement('div');
+        healthFill.className = 'healthFill';
+        healthFill.style.width = '100%';
+        healthBar.appendChild(healthFill);
+        
+        // Create shield fill
+        const shieldFill = document.createElement('div');
+        shieldFill.className = 'shieldFill';
+        shieldFill.style.width = '0%';
+        shieldFill.style.display = 'none';
+        healthBar.appendChild(shieldFill);
+        
+        // Create health text
+        const healthText = document.createElement('div');
+        healthText.className = 'healthText';
+        healthText.textContent = unit.currentHp;
+        healthBar.appendChild(healthText);
         
         // Create action bar (static)
         const actionBar = document.createElement('div');
@@ -1375,6 +1400,35 @@ class Battle {
             return;
         }
         
+        // Special handling for shields
+        if (buffName === 'Shield' && effects.shieldAmount !== undefined) {
+            // Check if shield already exists
+            const existingShield = target.buffs.find(b => b.name === 'Shield');
+            
+            if (existingShield) {
+                // Compare shield amounts and keep the higher one
+                if (effects.shieldAmount > existingShield.shieldAmount) {
+                    existingShield.shieldAmount = effects.shieldAmount;
+                    existingShield.duration = duration;
+                    this.log(`${target.name}'s shield is strengthened to ${effects.shieldAmount} HP!`);
+                } else {
+                    this.log(`${target.name} already has a stronger shield (${existingShield.shieldAmount} HP)!`);
+                }
+            } else {
+                // Create new shield
+                const shield = {
+                    name: buffName,
+                    duration: duration,
+                    shieldAmount: effects.shieldAmount,
+                    ...effects
+                };
+                
+                target.buffs.push(shield);
+                this.log(`${target.name} gains a ${effects.shieldAmount} HP shield!`);
+            }
+            return;
+        }
+        
         // Check if caster is buffing themselves during their turn
         let adjustedDuration = duration;
         if (target === this.currentUnit) {
@@ -1464,8 +1518,8 @@ class Battle {
     applyShield(target, amount) {
         if (!target.isAlive) return;
         
-        // For now, treat shields as temporary HP
-        target.currentHp += Math.floor(amount);
+        // Apply shield as a buff
+        this.applyBuff(target, 'Shield', 3, { shieldAmount: Math.floor(amount) });
     }
     
     removeBuffs(target) {
@@ -2087,26 +2141,53 @@ class Battle {
                 return;
             }
             
-            // Update health bar
-            const healthBar = element.querySelector('.healthFill');
+            // Update health and shield bars
+            const healthBar = element.querySelector('.healthBar');
+            const healthFill = element.querySelector('.healthFill');
+            const shieldFill = element.querySelector('.shieldFill');
             const healthText = element.querySelector('.healthText');
             
-            if (healthBar) {
-                const hpPercent = (unit.currentHp / unit.maxHp) * 100;
-                healthBar.style.width = `${hpPercent}%`;
+            if (healthBar && healthFill && shieldFill) {
+                const currentShield = unit.currentShield;
+                const totalMax = unit.maxHp + currentShield;
                 
-                // Change color based on HP
-                if (hpPercent > 60) {
-                    healthBar.style.background = 'linear-gradient(90deg, #00ff88 0%, #00cc66 100%)';
-                } else if (hpPercent > 30) {
-                    healthBar.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff8800 100%)';
+                // Calculate percentages
+                const hpPercent = (unit.currentHp / totalMax) * 100;
+                const shieldPercent = (currentShield / totalMax) * 100;
+                
+                // Update health bar width and position
+                healthFill.style.width = `${hpPercent}%`;
+                healthFill.style.position = 'absolute';
+                healthFill.style.left = '0';
+                
+                // Update shield bar
+                if (currentShield > 0) {
+                    shieldFill.style.display = 'block';
+                    shieldFill.style.width = `${shieldPercent}%`;
+                    shieldFill.style.position = 'absolute';
+                    shieldFill.style.left = `${hpPercent}%`;
                 } else {
-                    healthBar.style.background = 'linear-gradient(90deg, #ff4444 0%, #cc0000 100%)';
+                    shieldFill.style.display = 'none';
+                }
+                
+                // Change health bar color based on HP percentage (of max HP, not total)
+                const hpOfMaxPercent = (unit.currentHp / unit.maxHp) * 100;
+                if (hpOfMaxPercent > 60) {
+                    healthFill.style.background = 'linear-gradient(90deg, #00ff88 0%, #00cc66 100%)';
+                } else if (hpOfMaxPercent > 30) {
+                    healthFill.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff8800 100%)';
+                } else {
+                    healthFill.style.background = 'linear-gradient(90deg, #ff4444 0%, #cc0000 100%)';
                 }
             }
             
             if (healthText) {
-                healthText.textContent = `${Math.floor(unit.currentHp)}`;
+                // Show current HP with shield if present
+                if (unit.currentShield > 0) {
+                    healthText.textContent = `${Math.floor(unit.currentHp)}+${Math.floor(unit.currentShield)}`;
+                } else {
+                    healthText.textContent = `${Math.floor(unit.currentHp)}`;
+                }
             }
             
             // Update action bar fill
@@ -2125,7 +2206,7 @@ class Battle {
             
             // Update buffs and debuffs display only if changed
             const currentBuffDebuffState = JSON.stringify({
-                buffs: unit.buffs.map(b => ({ name: b.name, duration: b.duration })),
+                buffs: unit.buffs.map(b => ({ name: b.name, duration: b.duration, shieldAmount: b.shieldAmount })),
                 debuffs: unit.debuffs.map(d => ({ name: d.name, duration: d.duration }))
             });
             
@@ -2258,7 +2339,7 @@ class Battle {
             'Armor Boost': '50% increased armor',
             'Increase Defense': 'Takes 25% less damage and gains +25% damage reduction',
             'Immune': 'Cannot gain debuffs',
-            'Shield': 'Attacks reduce shield HP before unit HP',
+            'Shield': `Absorbs ${buffDebuff.shieldAmount || 0} damage`,
             'beastForm': 'Transformed, gaining 50% STR and AGI',
             'frostArmor': 'Reduces damage taken by 30%',
             'divineShield': 'Immune to all damage',
