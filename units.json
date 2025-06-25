@@ -861,6 +861,41 @@
       "mainstat": "str",
       "spells": ["slash", "bite"]
     },
+"murkin_warrior": {
+    "name": "Murkin Warrior",
+    "boss": false,
+    "modifiers": { "str": 1.4, "agi": 1.2, "int": 0.8 },
+    "mainstat": "str",
+    "spells": ["spear_thrust", "defensive_formation"]
+},
+"murkin_brawler": {
+    "name": "Murkin Brawler",
+    "boss": false,
+    "modifiers": { "str": 1.6, "agi": 1.0, "int": 0.8 },
+    "mainstat": "str",
+    "spells": ["crushing_strike", "armor_break"]
+},
+"murkin_initiate": {
+    "name": "Murkin Initiate",
+    "boss": false,
+    "modifiers": { "str": 0.8, "agi": 1.0, "int": 1.4 },
+    "mainstat": "int",
+    "spells": ["crystal_shard", "protective_barrier"]
+},
+"murkin_elder": {
+    "name": "Murkin Elder",
+    "boss": false,
+    "modifiers": { "str": 1.2, "agi": 1.5, "int": 1.0 },
+    "mainstat": "agi",
+    "spells": ["staff_whack", "ancient_protection", "ancestral_taunt"]
+},
+"murkin_chieftain": {
+    "name": "Murkin Chieftain",
+    "boss": true,
+    "modifiers": { "str": 2.0, "agi": 1.5, "int": 1.5 },
+    "mainstat": "str",
+    "spells": ["chieftains_hammer", "war_cry"]
+},
     "stitch": {
       "name": "Stitch",
       "boss": true,
