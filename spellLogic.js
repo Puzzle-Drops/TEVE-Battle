@@ -11,7 +11,7 @@ const spellLogic = {
     },
 
     throwRockLogic: function(battle, caster, target) {
-        const damage = caster.stats.int * 2;
+        const damage = caster.source.attack + (caster.stats.int * 0.75);
         battle.dealDamage(caster, target, damage, 'physical');
         battle.applyDebuff(target, 'Stun', 1, { stunned: true });
     },
@@ -37,7 +37,7 @@ const spellLogic = {
 
 // Murkin Spells
 spearThrustLogic: function(battle, caster, target, spell) {
-    const damage = caster.stats.str * 1.5;
+    const damage = caster.source.attack + (caster.stats.str * 0.5);
     battle.dealDamage(caster, target, damage, 'physical');
     
     // 30% chance to apply bleed
@@ -51,18 +51,18 @@ defensiveFormationLogic: function(battle, caster, target, spell) {
 },
 
 crushingStrikeLogic: function(battle, caster, target, spell) {
-    const damage = caster.stats.str * 2.0;
+    const damage = caster.source.attack + (caster.stats.str * 1.0);
     battle.dealDamage(caster, target, damage, 'physical');
 },
 
 armorBreakLogic: function(battle, caster, target, spell) {
-    const damage = caster.stats.str * 1.5;
+    const damage = caster.source.attack + (caster.stats.str * 0.5);
     battle.dealDamage(caster, target, damage, 'physical');
     battle.applyDebuff(target, 'Reduce Defense', spell.debuffDuration, {});
 },
 
 crystalShardLogic: function(battle, caster, target, spell) {
-    const damage = caster.stats.int * 1.8;
+    const damage = caster.source.attack + (caster.stats.int * 0.8);
     battle.dealDamage(caster, target, damage, 'magical');
 },
 
@@ -82,7 +82,7 @@ protectiveBarrierLogic: function(battle, caster, target, spell) {
 },
 
 staffWhackLogic: function(battle, caster, target, spell) {
-    const damage = caster.stats.str * 1.2;
+    const damage = caster.source.attack + (caster.stats.str * 0.2);
     battle.dealDamage(caster, target, damage, 'physical');
 },
 
@@ -110,7 +110,7 @@ ancestralTauntLogic: function(battle, caster, target, spell) {
 },
 
 chieftainsHammerLogic: function(battle, caster, target, spell) {
-    const damage = caster.stats.str * 2.0;
+    const damage = caster.source.attack + (caster.stats.str * 1.0);
     battle.dealDamage(caster, target, damage, 'physical');
     
     // 15% chance to stun
