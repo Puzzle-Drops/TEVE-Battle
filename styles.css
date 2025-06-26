@@ -3102,7 +3102,7 @@ body {
 
 .rewardItemsGrid {
     display: grid;
-    grid-template-columns: repeat(4, 64px);
+    grid-template-columns: repeat(3, 64px);
     gap: 10px;
     justify-content: center;
 }
