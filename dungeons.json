@@ -56,7 +56,7 @@
     }
   },
   "dungeons": {
-    "satyrs": {
+    "satyrs_glade": {
       "id": "satyrs_glade",
       "name": "Satyrs Glade",
       "boss": "Satyr Instigator",
