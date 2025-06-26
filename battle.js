@@ -1105,36 +1105,6 @@ if (unit.isEnemy) {
                 this.executeAbility(unit, i, target);
                 this.endTurn();
                 return;
-            } else {
-                console.log(`No target found for ${ability.name} with target type: ${spell.target}`);
-            }
-        }
-        
-        // Fallback: If we get here and haven't used any ability, force use first available ability
-        console.log(`${unit.name} falling back to first available ability`);
-        for (let i = 0; i < unit.abilities.length; i++) {
-            const ability = unit.abilities[i];
-            if (ability && !ability.passive && unit.canUseAbility(i)) {
-                const spell = spellManager.getSpell(ability.id);
-                if (spell) {
-                    let target = null;
-                    // Simple fallback targeting
-                    if (spell.target === 'enemy') {
-                        const enemies = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
-                        if (enemies.length > 0) target = enemies[0];
-                    } else if (spell.target === 'ally' || spell.target === 'self') {
-                        target = unit;
-                    } else if (spell.target === 'all_enemies' || spell.target === 'all_allies') {
-                        target = 'all';
-                    }
-                    
-                    if (target) {
-                        console.log(`Fallback: ${unit.name} using ${ability.name}`);
-                        this.executeAbility(unit, i, target);
-                        this.endTurn();
-                        return;
-                    }
-                }
             }
         }
         
