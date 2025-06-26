@@ -197,8 +197,8 @@
         {
             "enemies": [
                 { "id": "frost_wolf", "level": 35 },
-                { "id": "frost_troll", "level": 35 },
-                { "id": "frost_troll", "level": 35 }
+                { "id": "ice_troll", "level": 35 },
+                { "id": "ice_troll", "level": 35 }
             ]
         },
         {
@@ -265,7 +265,7 @@
     "rewards": {
         "gold": 2400,
         "exp": 5750,
-        "items": ["icy_wolfhood", "icy_mauler_plate", "icy_tundrastride", "icy_howler", "icy_frostfang", "icy_fangguard", "icy_shardcore"]
+        "items": ["icy_wolfhood", "icy_mauler_plate", "icy_tundrastride", "icy_howler", "icy_fangguard", "icy_shardcore", "icy_frostfang"]
     }
 },
     "gold_mine": {
