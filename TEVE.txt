@@ -267,54 +267,54 @@ Taunt: forces skill 1 attack on unit that cast taunt
 
 Dungeons:
 -Easy
-Satyrs Glade - Satyr Instigator (Easy  1) (Lv 0)
-Murkin Wetlands - Murkin Chieftain (Easy 2) (Lv 25)
-Icy Highland - Frostfang (Easy 3) (Lv 50)
+Satyrs Glade – Satyr Instigator (Easy 1) (Lv 0)
+Murkin Wetlands – Murkin Chieftain (Easy 2) (Lv 25)
+Icy Highland – Frostfang (Easy 3) (Lv 50)
 
 -Medium
-Haunted Wood - Banshee Queen (Medium 1) (lvl 75)
-Forgotten Crypt - Stitch (Medium 2) (Lv 100)
-Bandit Den - Bandit Lord (Medium 3) (Lv 125)
+Sorrowshade Hollow – Banshee Queen (Medium 1) (Lv 75)
+Forgotten Crypt – Stitch (Medium 2) (Lv 100)
+Bandit Den – Bandit Lord (Medium 3) (Lv 125)
 
 -Hard
-Gold Mine - Goblin King (Hard 1) (Lv 150)
-Centaur Mountain - Centaur Bloodhorn (Hard 2) (Lv 175)
-Orc Warlands - Orc Shaman (Hard 3) (lvl 200)
+Gold Mine – Goblin King (Hard 1) (Lv 150)
+Centaur Cliffs – Centaur Bloodhorn (Hard 2) (Lv 175)
+Orc Warlands – Orc Shaman (Hard 3) (Lv 200)
 
--Heroic
-Snapdragon Swamp - Owlkin King? (Heroic 1) (Lv 225)
-Lizardman Volcano - Lizardman Trickster (Heroic 2) (Lv 250)
-Puzzle Sanctuary - Lich Queen (Heroic 3) (Lv 275)
+-Forsaken
+Snapdragon Swamp – Owlkin King (Forsaken 1) (Lv 225)
+Lizardman Volcano – Lizardman Trickster (Forsaken 2) (Lv 250)
+Puzzle Sanctuary – Lich Queen (Forsaken 3) (Lv 275)
 
 -Nightmare
-Elven Woodland - Elven Wolfrider (Nightmare 1) (Lv 300)
-Naga Ruins - Naga Ranger (Nightmare 2) (Lv 325)
-Forgotten Sewers - Devourer (Nightmare 3) (Lv 350)
+Bloodleaf Depths – Elven Wolfrider (Nightmare 1) (Lv 300)
+Naga Ruins – Naga Ranger (Nightmare 2) (Lv 325)
+Forgotten Sewers – Devourer (Nightmare 3) (Lv 350)
 
 -Hell
-Oblivion - Hades (Hell 1) (Lv 375)
-Abyssal Labyrinth - Mindreaver (Hell 2) (Lv 400)
-Scorching Crater - Flame Revenant (Hell 3) (Lv 425)
+Oblivion – Hades (Hell 1) (Lv 375)
+Abyssal Labyrinth – Mindreaver (Hell 2) (Lv 400)
+Scorching Crater – Flame Revenant (Hell 3) (Lv 425)
 
 -Impossible
-Tristam (Impossible 1) (Lv 450)
-City of Illusions - Mirage (Impossible 2) (Lv 475)
-Dragon Fortress - Ancient Hydra (Impossible 3) (Lv 500)
+Tristam Plague – ??? (Impossible 1) (Lv 450)
+City of Illusions – Mirage (Impossible 2) (Lv 475)
+Dragon Fortress – Ancient Hydra (Impossible 3) (Lv 500)
 
 -Mythical
-Marine Fortress - Pugs (Mythical 1) (Lv 500)
-Astral Nexus (Mythical 2) (Lv 500)
-Temple of Time (Mythical 3) (Lv 500)
+Marine Fortress – Pugs (Mythical 1) (Lv 500)
+Astral Nexus – ??? (Mythical 2) (Lv 500)
+Temple of Time – ??? (Mythical 3) (Lv 500)
 
 -Divine
-Celestial Garden - Elysian Watcher (Divine 1) (Lv 500)
-Throne of Storms - Sovereign (Divine 2) (Lv 500)
-Heart of the World - Worldshaper (Divine 3) (Lv 500)
+Celestial Garden – Elysian Watcher (Divine 1) (Lv 500)
+Throne of Storms – Sovereign (Divine 2) (Lv 500)
+Heart of the World – Worldshaper (Divine 3) (Lv 500)
 
 -Ascended
-Starlight Citadel - Cosmic Archon (Ascended 1) (Lv 500)
-Origin Core - Primeval Entity (Ascended 2) (Lv 500)
-Final Aetherium - Eternal Singularity (Ascended 3) (Lv 500)
+Starlight Citadel – Cosmic Archon (Ascended 1) (Lv 500)
+Origin Core – Primeval Entity (Ascended 2) (Lv 500)
+Final Aetherium – Eternal Singularity (Ascended 3) (Lv 500)
 
 -Transcendent - Items Class 4 and level 500 required
 Rite of Passage - All dungeons in a row without stopping (Transcendent) (Lv 1000)
