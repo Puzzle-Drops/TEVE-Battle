@@ -24,7 +24,7 @@
   "throw_rock": {
     "id": "throw_rock",
     "name": "Throw Rock",
-    "description": "Throw a rock dealing attack + 0.75x INT and stunning for 1 turn",
+    "description": "Throw a rock dealing attack + 0.75x INT damage and stunning for 1 turn",
     "cooldown": 7,
     "effects": ["damage", "physical", "debuff", "stun", "debuff_stun"],
     "scaling": {
