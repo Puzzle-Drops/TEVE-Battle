@@ -109,7 +109,7 @@
       "rewards": {
         "gold": 350,
         "exp": 500,
-        "items": ["glade_focus", "glade_fangblade", "glade_wicker_guard", "glade_horncap", "glade_hidewrap", "glade_stepbinds", "glade_shadowfang"]
+        "items": ["glade_horncap", "glade_hidewrap", "glade_stepbinds", "glade_focus", "glade_wicker_guard", "glade_fangblade", "glade_shadowfang"]
       }
     },
     "murkin_wetlands": {
@@ -183,7 +183,7 @@
       "rewards": {
         "gold": 800,
         "exp": 1800,
-        "items": ["discarded_helmet", "discarded_chestplate", "discarded_boots"]
+        "items": ["wetland_miretooth", "wetland_soddenwrap", "wetland_fenstompers", "wetland_mirecharm", "wetland_brackenguard", "wetland_blightmaul", "wetland_murkspire"]
       }
     },
     "icy_highland": {
