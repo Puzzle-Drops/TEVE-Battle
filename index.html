@@ -1538,28 +1538,9 @@ for (let i = 1; i <= 3; i++) {
 
 
 	
-// Generate a perfect 4-roll minor trinket for testing
-const perfectTrinket = new Item('rusty_trinket');
-perfectTrinket.quality1 = 5;
-perfectTrinket.quality2 = 5;
-perfectTrinket.quality3 = 5;
-perfectTrinket.quality4 = 5;
-console.log('Generated perfect 4-roll trinket:', {
-    name: perfectTrinket.name,
-    rarity: perfectTrinket.getRarity(),
-    quality: perfectTrinket.getQualityPercent() + '%',
-    stars: perfectTrinket.getStars().count,
-    stats: perfectTrinket.getStats()
-});
-
-// Add to villager stash
-this.stashes['Villager'].items.push(perfectTrinket);
-
-
-	
-// Generate 100 Satyr dungeon items for testing
-    if (dungeonData && dungeonData.dungeons.satyrs) {
-        const satyrDungeon = dungeonData.dungeons.satyrs;
+// Generate 200 Satyr dungeon items for testing
+    if (dungeonData && dungeonData.dungeons.satyrs_glade) {
+        const satyrDungeon = dungeonData.dungeons.satyrs_glade;
         const itemPool = satyrDungeon.rewards.items || [];
         
         console.log('Generating 200 Satyr dungeon items...');
