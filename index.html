@@ -4925,7 +4925,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         
         // Generate items from first three dungeons after game is initialized
         if (window.devConsole && dungeonData && dungeonData.dungeons) {
-            console.log('Generating items from first three dungeons...');
             
             // First three dungeons in order
             const firstThreeDungeons = [
@@ -4937,11 +4936,9 @@ window.addEventListener('DOMContentLoaded', async () => {
             // Generate 200 items from each dungeon
             firstThreeDungeons.forEach((dungeonId, index) => {
                 if (dungeonData.dungeons[dungeonId]) {
-                    console.log(`Generating 200 items from ${dungeonData.dungeons[dungeonId].name}...`);
                     window.devConsole.generateItems('Villager', dungeonId, 200);
                 }
             });
-            
             console.log(`Total items in Villager stash: ${window.game.stashes['Villager'].items.length}`);
         }
     }
