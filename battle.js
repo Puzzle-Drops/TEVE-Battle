@@ -1035,10 +1035,12 @@ if (unit.isEnemy) {
                             });
                             
                             // Debug logging
+                            /*
                             console.log(`${unit.name} using ${ability.name}:`);
                             console.log(`- Total targets: ${targets.length}`);
                             console.log(`- Unaffected targets: ${unaffectedTargets.length}`);
                             console.log(`- Unaffected: ${unaffectedTargets.map(t => t.name).join(', ')}`);
+                            */
                             
                             // If some targets don't have the debuffs, choose from them
                             if (unaffectedTargets.length > 0) {
