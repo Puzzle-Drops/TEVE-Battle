@@ -3365,14 +3365,14 @@ if (!this.autoReplay) {
 					
 				<div style="margin-top: 40px; display: flex; gap: 60px;">
     <div style="flex: 1;">
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'Health Points')" onmouseout="game.hideStatTooltip()">
-            <span class="statName">HP</span>
-            <span class="statValue">${hero.hp}</span>
-        </div>
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack')" onmouseout="game.hideStatTooltip()">
-            <span class="statName">Attack</span>
-            <span class="statValue">${hero.attack}</span>
-        </div>
+<div class="statLine" onmouseover="game.showStatTooltip(event, 'Health Points')" onmouseout="game.hideStatTooltip()">
+    <span class="statName">HP</span>
+    <span class="statValue">${baseStats.str * 5} ${hero.gearStats.hp > 0 ? `<span class="statBonus">+${hero.gearStats.hp}</span>` : ''}</span>
+</div>
+<div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack')" onmouseout="game.hideStatTooltip()">
+    <span class="statName">Attack</span>
+    <span class="statValue">${stats[hero.mainstat || 'str']} ${hero.gearStats.attack > 0 ? `<span class="statBonus">+${hero.gearStats.attack}</span>` : ''}</span>
+</div>
         <div class="statLine" onmouseover="game.showStatTooltip(event, 'Strength')" onmouseout="game.hideStatTooltip()">
             <span class="statName ${hero.mainstat === 'str' ? 'mainstat' : ''}">STR</span>
             <span class="statValue">${baseStats.str} ${hero.gearStats.str > 0 ? `<span class="statBonus">+${hero.gearStats.str}</span>` : ''}</span>
