@@ -1384,9 +1384,22 @@ get mainstat() {
 		this.currentGearFilter = 'trinket'; // Add this line after other properties
 		this.currentStashFilter = null; // Add this line to track stash page filter
 		this.collectionLog = this.loadCollectionLog();
-		this.collectionLog = this.loadCollectionLog();
 		this.collectionPopupQueue = [];
 		this.collectionPopupActive = false;
+
+// Sort settings for items
+this.sortSettings = {
+    order: ['level', 'rarity', 'quality', 'name'],
+    direction: {
+        level: 'desc',
+        rarity: 'desc', 
+        quality: 'desc',
+        name: 'asc'
+    }
+};
+this.loadSortSettings(); // Load saved settings
+
+
 
 		    
                 // Initialize stashes for all class families including villager
@@ -2277,6 +2290,7 @@ showIndividualStash(family) {
                 <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
             </select>
         </div>
+        <button id="stashSortButton" class="sortSettingsButton" onclick="game.toggleSortSettings('stash')" title="Sort Settings">↕️</button>
     </div>`;
     document.getElementById('stashFamilyName').innerHTML = headerHTML;
     
@@ -2292,40 +2306,8 @@ showIndividualStash(family) {
         itemsToShow = items.filter(item => item.slot === filterValue);
     }
     
-    // Sort items
-    const sortedItems = [...itemsToShow].sort((a, b) => {
-        // First sort by level (highest first)
-        if (a.level !== b.level) {
-            return b.level - a.level;
-        }
-        
-        // Then by rarity order (which is the same as number of rolls)
-        const rarityOrder = { gold: 5, red: 4, purple: 3, blue: 2, green: 1 };
-        const aRarity = rarityOrder[a.getRarity()];
-        const bRarity = rarityOrder[b.getRarity()];
-        
-        if (aRarity !== bRarity) {
-            return bRarity - aRarity;
-        }
-        
-        // Then by quality percentage (highest first)
-        const aQuality = a.getQualityPercent();
-        const bQuality = b.getQualityPercent();
-        if (aQuality !== bQuality) {
-            return bQuality - aQuality;
-        }
-        
-        // Then by gear slot
-        const slotOrder = { weapon: 1, offhand: 2, head: 3, chest: 4, legs: 5, trinket: 6 };
-        const aSlot = slotOrder[a.slot] || 7;
-        const bSlot = slotOrder[b.slot] || 7;
-        if (aSlot !== bSlot) {
-            return aSlot - bSlot;
-        }
-        
-        // Finally by item name
-        return a.name.localeCompare(b.name);
-    });
+    // Sort items using custom sort settings
+    const sortedItems = this.sortItems(itemsToShow);
     
     if (sortedItems.length === 0) {
         inventory.innerHTML = '<p style="text-align: center; color: #6a9aaa; margin-top: 50px;">No items in stash</p>';
@@ -2769,6 +2751,234 @@ hideGoldTooltip() {
     if (tooltip) {
         tooltip.style.display = 'none';
     }
+}
+
+loadSortSettings() {
+    const saved = localStorage.getItem('teveSortSettings');
+    if (saved) {
+        try {
+            const settings = JSON.parse(saved);
+            this.sortSettings = settings;
+        } catch (e) {
+            console.error('Failed to load sort settings:', e);
+        }
+    }
+}
+
+saveSortSettings() {
+    localStorage.setItem('teveSortSettings', JSON.stringify(this.sortSettings));
+}
+
+toggleSortSettings(source) {
+    const panel = document.getElementById('sortSettingsPanel');
+    const button = document.querySelector(`#${source}SortButton`);
+    
+    if (panel && panel.style.display === 'block') {
+        panel.style.display = 'none';
+        button.classList.remove('active');
+    } else {
+        this.showSortSettings(source);
+        button.classList.add('active');
+    }
+}
+
+showSortSettings(source) {
+    // Close any existing panel
+    const existingPanel = document.getElementById('sortSettingsPanel');
+    if (existingPanel) {
+        existingPanel.remove();
+    }
+    
+    // Remove active class from all buttons
+    document.querySelectorAll('.sortSettingsButton').forEach(btn => btn.classList.remove('active'));
+    
+    // Create new panel
+    const panel = document.createElement('div');
+    panel.id = 'sortSettingsPanel';
+    panel.className = 'sortSettingsPanel';
+    
+    // Build sort criteria list
+    const criteriaHTML = this.sortSettings.order.map((criteria, index) => {
+        const labels = {
+            level: 'Level',
+            rarity: 'Rarity',
+            quality: 'Quality %',
+            name: 'Name'
+        };
+        const direction = this.sortSettings.direction[criteria];
+        const arrow = direction === 'desc' ? '↓' : '↑';
+        
+        return `
+            <li class="sortCriteriaItem" draggable="true" data-criteria="${criteria}" data-index="${index}">
+                <span class="dragHandle">≡</span>
+                <span class="sortCriteriaLabel">${labels[criteria]}</span>
+                <button class="sortDirectionToggle" onclick="game.toggleSortDirection('${criteria}', '${source}')">${arrow}</button>
+            </li>
+        `;
+    }).join('');
+    
+    panel.innerHTML = `
+        <h4>Sort Order</h4>
+        <ul class="sortCriteriaList">
+            ${criteriaHTML}
+        </ul>
+        <button class="resetSortButton" onclick="game.resetSortSettings('${source}')">Reset to Default</button>
+    `;
+    
+    // Position panel below the button
+    const button = document.querySelector(`#${source}SortButton`);
+    const rect = button.getBoundingClientRect();
+    panel.style.position = 'fixed';
+    panel.style.top = (rect.bottom + 5) + 'px';
+    panel.style.left = rect.left + 'px';
+    
+    document.body.appendChild(panel);
+    
+    // Add drag and drop event listeners
+    this.setupSortDragDrop(source);
+    
+    // Close panel when clicking outside
+    setTimeout(() => {
+        document.addEventListener('click', (e) => {
+            if (!panel.contains(e.target) && e.target.id !== `${source}SortButton`) {
+                panel.style.display = 'none';
+                button.classList.remove('active');
+            }
+        }, { once: true });
+    }, 10);
+}
+
+setupSortDragDrop(source) {
+    const items = document.querySelectorAll('.sortCriteriaItem');
+    let draggedItem = null;
+    
+    items.forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+            draggedItem = item;
+            item.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        
+        item.addEventListener('dragend', () => {
+            item.classList.remove('dragging');
+        });
+        
+        item.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            if (item !== draggedItem) {
+                item.classList.add('dragover');
+            }
+        });
+        
+        item.addEventListener('dragleave', () => {
+            item.classList.remove('dragover');
+        });
+        
+        item.addEventListener('drop', (e) => {
+            e.preventDefault();
+            item.classList.remove('dragover');
+            
+            if (item !== draggedItem) {
+                const allItems = [...items];
+                const draggedIndex = allItems.indexOf(draggedItem);
+                const targetIndex = allItems.indexOf(item);
+                
+                // Update sort order
+                const newOrder = [...this.sortSettings.order];
+                const [removed] = newOrder.splice(draggedIndex, 1);
+                newOrder.splice(targetIndex, 0, removed);
+                this.sortSettings.order = newOrder;
+                
+                // Save and refresh
+                this.saveSortSettings();
+                this.showSortSettings(source);
+                
+                // Refresh the current view
+                if (source === 'gear') {
+                    this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+                } else if (source === 'stash') {
+                    this.showIndividualStash(this.currentStashFamily);
+                }
+            }
+        });
+    });
+}
+
+toggleSortDirection(criteria, source) {
+    this.sortSettings.direction[criteria] = 
+        this.sortSettings.direction[criteria] === 'desc' ? 'asc' : 'desc';
+    
+    this.saveSortSettings();
+    this.showSortSettings(source);
+    
+    // Refresh the current view
+    if (source === 'gear') {
+        this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+    } else if (source === 'stash') {
+        this.showIndividualStash(this.currentStashFamily);
+    }
+}
+
+resetSortSettings(source) {
+    this.sortSettings = {
+        order: ['level', 'rarity', 'quality', 'name'],
+        direction: {
+            level: 'desc',
+            rarity: 'desc',
+            quality: 'desc',
+            name: 'asc'
+        }
+    };
+    
+    this.saveSortSettings();
+    this.showSortSettings(source);
+    
+    // Refresh the current view
+    if (source === 'gear') {
+        this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+    } else if (source === 'stash') {
+        this.showIndividualStash(this.currentStashFamily);
+    }
+}
+
+sortItems(items) {
+    const rarityOrder = { gold: 5, red: 4, purple: 3, blue: 2, green: 1 };
+    const slotOrder = { weapon: 1, offhand: 2, head: 3, chest: 4, legs: 5, trinket: 6 };
+    
+    return [...items].sort((a, b) => {
+        for (const criteria of this.sortSettings.order) {
+            let comparison = 0;
+            const direction = this.sortSettings.direction[criteria];
+            
+            switch (criteria) {
+                case 'level':
+                    comparison = a.level - b.level;
+                    break;
+                case 'rarity':
+                    const aRarity = rarityOrder[a.getRarity()];
+                    const bRarity = rarityOrder[b.getRarity()];
+                    comparison = aRarity - bRarity;
+                    break;
+                case 'quality':
+                    comparison = a.getQualityPercent() - b.getQualityPercent();
+                    break;
+                case 'name':
+                    comparison = a.name.localeCompare(b.name);
+                    break;
+            }
+            
+            if (comparison !== 0) {
+                return direction === 'desc' ? -comparison : comparison;
+            }
+        }
+        
+        // Final tiebreaker: slot order
+        const aSlot = slotOrder[a.slot] || 7;
+        const bSlot = slotOrder[b.slot] || 7;
+        return aSlot - bSlot;
+    });
 }
 		
             showBattle() {
@@ -3409,40 +3619,8 @@ showGearTab(hero, content) {
         itemsToShow = items.filter(item => item.slot === filterValue);
     }
 
-    // Sort stash items
-    const sortedStashItems = [...itemsToShow].sort((a, b) => {
-        // First sort by level (highest first)
-        if (a.level !== b.level) {
-            return b.level - a.level;
-        }
-        
-        // Then by rarity order (which is the same as number of rolls)
-        const rarityOrder = { gold: 5, red: 4, purple: 3, blue: 2, green: 1 };
-        const aRarity = rarityOrder[a.getRarity()];
-        const bRarity = rarityOrder[b.getRarity()];
-        
-        if (aRarity !== bRarity) {
-            return bRarity - aRarity;
-        }
-        
-        // Then by quality percentage (highest first)
-        const aQuality = a.getQualityPercent();
-        const bQuality = b.getQualityPercent();
-        if (aQuality !== bQuality) {
-            return bQuality - aQuality;
-        }
-        
-        // Then by gear slot
-        const slotOrder = { weapon: 1, offhand: 2, head: 3, chest: 4, legs: 5, trinket: 6 };
-        const aSlot = slotOrder[a.slot] || 7;
-        const bSlot = slotOrder[b.slot] || 7;
-        if (aSlot !== bSlot) {
-            return aSlot - bSlot;
-        }
-        
-        // Finally by item name
-        return a.name.localeCompare(b.name);
-    });
+    // Sort stash items using custom sort settings
+    const sortedStashItems = this.sortItems(itemsToShow);
 
     content.innerHTML = `
         <div style="display: flex; gap: 20px; height: 100%;">
@@ -3587,6 +3765,7 @@ showGearTab(hero, content) {
                             <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
                         </select>
                     </div>
+                    <button id="gearSortButton" class="sortSettingsButton" onclick="game.toggleSortSettings('gear')" title="Sort Settings">↕️</button>
                 </h3>
                 <div style="flex: 1; background: rgba(10, 25, 41, 0.8); padding: 10px; overflow-y: auto;">
                     ${stash && sortedStashItems.length > 0 ? `
