@@ -1241,15 +1241,43 @@ if (damageType === 'physical' && target.physicalDodgeChance) {
             }
         });
         
+// Apply passive damage reduction (like Thick Hide)
+if (target.damageReduction) {
+    damage *= (1 - target.damageReduction);
+}
+
         damage = Math.round(damage);
         const previousHp = target.currentHp;
         target.currentHp = Math.max(0, target.currentHp - damage);
+
+
+// Check for on-hit effects from attacker
+if (attacker.onHitEffects && target.isAlive) {
+    attacker.onHitEffects.forEach(effect => {
+        if (effect.type === 'debuff' && Math.random() < effect.chance) {
+            this.applyDebuff(target, effect.debuffName, effect.duration, {});
+        }
+    });
+}
+
+// Check for on-damage-taken effects from target
+if (target.onDamageTaken && target.isAlive && damage > 0) {
+    target.onDamageTaken.forEach(effect => {
+        if (effect.type === 'buff') {
+            this.applyBuff(target, effect.buffName, effect.duration, {});
+        }
+    });
+}
+
         
         this.log(`${attacker.name} deals ${damage} ${damageType} damage to ${target.name}!`);
         
         // Show damage animation
         this.showDamageAnimation(attacker, target, damage, damageType);
         
+
+
+
         // Check if target died
         if (previousHp > 0 && target.currentHp <= 0) {
             this.handleUnitDeath(target);
