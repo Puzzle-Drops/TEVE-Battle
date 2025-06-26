@@ -3827,6 +3827,122 @@ body {
     text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
 }
 
+/* Sort Settings Panel */
+.sortSettingsButton {
+    background: rgba(10, 25, 41, 0.8);
+    border: 1px solid #2a6a8a;
+    color: #6a9aaa;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.sortSettingsButton:hover {
+    background: rgba(20, 40, 60, 0.9);
+    color: #4dd0e1;
+    border-color: #4dd0e1;
+}
+
+.sortSettingsButton.active {
+    color: #ffd700;
+    border-color: #ffd700;
+}
+
+.sortSettingsPanel {
+    position: absolute;
+    background: rgba(10, 15, 26, 0.95);
+    border: 2px solid #2a6a8a;
+    border-radius: 4px;
+    padding: 15px;
+    z-index: 1000;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    min-width: 250px;
+}
+
+.sortSettingsPanel h4 {
+    margin: 0 0 10px 0;
+    color: #4dd0e1;
+    font-size: 18px;
+}
+
+.sortCriteriaList {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+}
+
+.sortCriteriaItem {
+    background: rgba(10, 25, 41, 0.8);
+    border: 1px solid #2a6a8a;
+    padding: 8px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    cursor: move;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.sortCriteriaItem:hover {
+    background: rgba(20, 40, 60, 0.9);
+    border-color: #4dd0e1;
+}
+
+.sortCriteriaItem.dragging {
+    opacity: 0.5;
+}
+
+.sortCriteriaItem.dragover {
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.dragHandle {
+    margin-right: 10px;
+    color: #6a9aaa;
+}
+
+.sortCriteriaLabel {
+    flex: 1;
+    color: #b0e0f0;
+}
+
+.sortDirectionToggle {
+    background: transparent;
+    border: 1px solid #2a6a8a;
+    color: #6a9aaa;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 3px;
+}
+
+.sortDirectionToggle:hover {
+    border-color: #4dd0e1;
+    color: #4dd0e1;
+}
+
+.resetSortButton {
+    width: 100%;
+    background: rgba(10, 25, 41, 0.8);
+    border: 1px solid #2a6a8a;
+    color: #6a9aaa;
+    padding: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 4px;
+}
+
+.resetSortButton:hover {
+    background: rgba(20, 40, 60, 0.9);
+    color: #4dd0e1;
+    border-color: #4dd0e1;
+}
+
+
 /* Unit Animation Container */
 .unitAnimationContainer {
     position: absolute;
