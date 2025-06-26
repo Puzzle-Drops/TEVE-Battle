@@ -24,6 +24,7 @@
         </div>
     </div>
 </div>
+	
 	<!-- Developer Console -->
 <div id="devConsole" style="display: none;">
     <div class="devConsoleHeader">
@@ -2232,39 +2233,39 @@ showIndividualStash(family) {
     
     // Update header
     const items = this.stashes[family.name].items;
-    const needsFilter = items.length > 250;
     const goldAmount = this.stashes[family.name].gold.toLocaleString();
     
-    // Get current filter value or default to trinket if first time
+    // Always show filter, but default based on item count
     let filterValue = 'all';
-    if (needsFilter) {
+    if (items.length > 250) {
         // Check if we already have a filter value for this stash
         if (!this.currentStashFilter) {
             this.currentStashFilter = 'trinket'; // Only set default on first open
         }
         filterValue = this.currentStashFilter;
+    } else {
+        // For smaller stashes, default to all unless user has already selected something
+        filterValue = this.currentStashFilter || 'all';
     }
     
-    // Build header HTML with filter if needed
-    let headerHTML = `${family.name} Stash`;
-    if (needsFilter) {
-        headerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 100%;">
-            <span>${family.name} Stash</span>
-            <span style="color: #ffd700; margin-left: 20px;">💰 ${goldAmount}</span>
-            <div class="stashSlotFilter">
-                <label>Filter:</label>
-                <select id="stashSlotFilterSelect" onchange="game.filterStashSlots('individual')">
-                    <option value="all" ${filterValue === 'all' ? 'selected' : ''}>All (${items.length})</option>
-                    <option value="trinket" ${filterValue === 'trinket' ? 'selected' : ''}>Trinket</option>
-                    <option value="head" ${filterValue === 'head' ? 'selected' : ''}>Head</option>
-                    <option value="chest" ${filterValue === 'chest' ? 'selected' : ''}>Chest</option>
-                    <option value="legs" ${filterValue === 'legs' ? 'selected' : ''}>Legs</option>
-                    <option value="weapon" ${filterValue === 'weapon' ? 'selected' : ''}>Weapon</option>
-                    <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
-                </select>
-            </div>
-        </div>`;
-        document.getElementById('stashFamilyName').innerHTML = headerHTML;
+    // Build header HTML with filter (always show)
+    let headerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 100%;">
+        <span>${family.name} Stash</span>
+        <span style="color: #ffd700; margin-left: 20px;">💰 ${goldAmount}</span>
+        <div class="stashSlotFilter">
+            <label>Filter:</label>
+            <select id="stashSlotFilterSelect" onchange="game.filterStashSlots('individual')">
+                <option value="all" ${filterValue === 'all' ? 'selected' : ''}>All (${items.length})</option>
+                <option value="trinket" ${filterValue === 'trinket' ? 'selected' : ''}>Trinket</option>
+                <option value="head" ${filterValue === 'head' ? 'selected' : ''}>Head</option>
+                <option value="chest" ${filterValue === 'chest' ? 'selected' : ''}>Chest</option>
+                <option value="legs" ${filterValue === 'legs' ? 'selected' : ''}>Legs</option>
+                <option value="weapon" ${filterValue === 'weapon' ? 'selected' : ''}>Weapon</option>
+                <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
+            </select>
+        </div>
+    </div>`;
+    document.getElementById('stashFamilyName').innerHTML = headerHTML;
     } else {
         document.getElementById('stashFamilyName').textContent = `${family.name} Stash`;
         // Clear filter if we don't need it anymore
@@ -2277,9 +2278,9 @@ showIndividualStash(family) {
     const inventory = document.getElementById('stashInventory');
     inventory.innerHTML = '';
     
-    // Filter items based on selection
+// Filter items based on selection
     let itemsToShow = items;
-    if (needsFilter && filterValue !== 'all') {
+    if (filterValue !== 'all') {
         itemsToShow = items.filter(item => item.slot === filterValue);
     }
     
@@ -3385,16 +3386,19 @@ showGearTab(hero, content) {
     // Get the stash for this hero's class family
     const stash = this.stashes[familyName];
     const items = stash.items;
-    const needsFilter = items.length > 100;
-
+    
+    // Always show filter, but default based on item count
+    let filterValue = 'all';
+    if (items.length > 100) {
+        filterValue = this.currentGearFilter || 'trinket';
+    } else {
+        filterValue = this.currentGearFilter || 'all';
+    }
+    
     // Filter items based on selection
     let itemsToShow = items;
-    let filterValue = 'all';
-    if (needsFilter) {
-        filterValue = this.currentGearFilter || 'trinket';
-        if (filterValue !== 'all') {
-            itemsToShow = items.filter(item => item.slot === filterValue);
-        }
+    if (filterValue !== 'all') {
+        itemsToShow = items.filter(item => item.slot === filterValue);
     }
 
     // Sort stash items
@@ -3563,20 +3567,18 @@ showGearTab(hero, content) {
                 <h3 style="text-align: center; margin-bottom: 20px;">
                     ${familyName} Stash 
                     <span style="color: #ffd700; margin-left: 10px;">💰 ${stash.gold.toLocaleString()}</span>
-                    ${needsFilter ? `
-                        <div class="stashSlotFilter" style="display: inline-flex; margin-left: 20px;">
-                            <label>Filter:</label>
-                            <select id="gearStashFilterSelect" onchange="game.filterStashSlots('gear')">
-                                <option value="all">All (${items.length})</option>
-                                <option value="trinket" ${filterValue === 'trinket' ? 'selected' : ''}>Trinket</option>
-                                <option value="head" ${filterValue === 'head' ? 'selected' : ''}>Head</option>
-                                <option value="chest" ${filterValue === 'chest' ? 'selected' : ''}>Chest</option>
-                                <option value="legs" ${filterValue === 'legs' ? 'selected' : ''}>Legs</option>
-                                <option value="weapon" ${filterValue === 'weapon' ? 'selected' : ''}>Weapon</option>
-                                <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
-                            </select>
-                        </div>
-                    ` : ''}
+                    <div class="stashSlotFilter" style="display: inline-flex; margin-left: 20px;">
+                        <label>Filter:</label>
+                        <select id="gearStashFilterSelect" onchange="game.filterStashSlots('gear')">
+                            <option value="all" ${filterValue === 'all' ? 'selected' : ''}>All (${items.length})</option>
+                            <option value="trinket" ${filterValue === 'trinket' ? 'selected' : ''}>Trinket</option>
+                            <option value="head" ${filterValue === 'head' ? 'selected' : ''}>Head</option>
+                            <option value="chest" ${filterValue === 'chest' ? 'selected' : ''}>Chest</option>
+                            <option value="legs" ${filterValue === 'legs' ? 'selected' : ''}>Legs</option>
+                            <option value="weapon" ${filterValue === 'weapon' ? 'selected' : ''}>Weapon</option>
+                            <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
+                        </select>
+                    </div>
                 </h3>
                 <div style="flex: 1; background: rgba(10, 25, 41, 0.8); padding: 10px; overflow-y: auto;">
                     ${stash && sortedStashItems.length > 0 ? `
