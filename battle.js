@@ -976,22 +976,6 @@ if (unit.isEnemy) {
                     }
                     break;
                     
-                case 'self':
-                    target = unit;
-                    
-                    // Check if self already has all buffs this ability applies
-                    if (!doesDamage && buffEffects.length > 0) {
-                        const allHaveBuffs = buffEffects.every(buffEffect => {
-                            const buffName = this.getBuffNameFromEffect(buffEffect);
-                            return unit.buffs.some(b => b.name === buffName);
-                        });
-                        
-                        if (allHaveBuffs) {
-                            skipAbility = true;
-                        }
-                    }
-                    break;
-                    
                 case 'all_enemies':
                     targets = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
                     
