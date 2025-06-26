@@ -568,12 +568,20 @@ if (unit.isEnemy) {
             }
             
             unit.abilities.forEach((ability, index) => {
-                if (ability.passive && spellLogic[ability.logicKey]) {
-                    try {
-                        console.log(`Applying passive ${ability.name} to ${unit.name}`);
-                        spellLogic[ability.logicKey](this, unit);
-                    } catch (error) {
-                        console.error(`Error applying passive ${ability.name}:`, error);
+                if (ability.passive) {
+                    // Get spell data
+                    const spell = spellManager.getSpell(ability.id);
+                    console.log(`Passive ability ${ability.name} spell data:`, spell);
+                    
+                    if (spell && spell.logicKey && spellLogic[spell.logicKey]) {
+                        try {
+                            console.log(`Applying passive ${ability.name} to ${unit.name}`);
+                            spellLogic[spell.logicKey](this, unit);
+                        } catch (error) {
+                            console.error(`Error applying passive ${ability.name}:`, error);
+                        }
+                    } else {
+                        console.log(`Missing spell data or logic for passive ${ability.name}`);
                     }
                 }
             });
