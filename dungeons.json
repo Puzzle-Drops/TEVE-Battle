@@ -203,7 +203,7 @@
     "rewards": {
         "gold": 1400,
         "exp": 2750,
-        "items": []
+        "items": ["icy_wolfhood", "icy_mauler_plate", "icy_tundrastride", "icy_howler", "icy_frostfang", "icy_fangguard", "icy_shardcore"]
     }
 },
     "gold_mine": {
