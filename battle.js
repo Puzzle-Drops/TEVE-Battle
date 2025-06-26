@@ -921,76 +921,173 @@ if (unit.isEnemy) {
             return;
         }
         
-        // Normal AI behavior
-        let bestAbility = null;
-        let bestIndex = -1;
-        
-        // Start from the end and find the first non-passive ability that can be used
+        // Normal AI behavior - check abilities from highest to lowest
         for (let i = unit.abilities.length - 1; i >= 0; i--) {
             const ability = unit.abilities[i];
-            if (ability && !ability.passive && unit.canUseAbility(i)) {
-                bestAbility = ability;
-                bestIndex = i;
-                break;
-            }
-        }
-        
-        // If taunted and no abilities available except skill 1, force skill 1
-        if (tauntDebuff && bestIndex === -1) {
-            // Find first non-passive ability (usually skill 1)
-            for (let i = 0; i < unit.abilities.length; i++) {
-                const ability = unit.abilities[i];
-                if (ability && !ability.passive) {
-                    bestAbility = ability;
-                    bestIndex = i;
-                    break;
-                }
-            }
-        }
-        
-        if (bestAbility && bestIndex >= 0) {
-            // Determine target based on ability
-            let target = null;
-            const spell = spellManager.getSpell(bestAbility.id);
+            if (!ability || ability.passive || !unit.canUseAbility(i)) continue;
             
-            if (spell) {
-                switch (spell.target) {
-                    case 'enemy':
-                        const enemies = unit.isEnemy ? this.party : this.enemies;
-                        const aliveEnemies = enemies.filter(e => e && e.isAlive);
-                        if (aliveEnemies.length > 0) {
-                            target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+            const spell = spellManager.getSpell(ability.id);
+            if (!spell) continue;
+            
+            // Check if this ability would be redundant
+            const effects = spell.effects || [];
+            const doesDamage = effects.includes('damage');
+            
+            // Get buff/debuff effects
+            const buffEffects = effects.filter(e => e.startsWith('buff_'));
+            const debuffEffects = effects.filter(e => e.startsWith('debuff_'));
+            
+            // Determine potential targets
+            let targets = [];
+            let skipAbility = false;
+            
+            switch (spell.target) {
+                case 'enemy':
+                    targets = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
+                    
+                    // Check if all enemies already have all debuffs this ability applies
+                    if (!doesDamage && debuffEffects.length > 0 && targets.length > 0) {
+                        const allHaveDebuffs = debuffEffects.every(debuffEffect => {
+                            const debuffName = this.getDebuffNameFromEffect(debuffEffect);
+                            return targets.every(target => target.debuffs.some(d => d.name === debuffName));
+                        });
+                        
+                        if (allHaveDebuffs) {
+                            skipAbility = true;
                         }
-                        break;
-                    case 'ally':
-                        const allies = unit.isEnemy ? this.enemies : this.party;
-                        const aliveAllies = allies.filter(a => a && a.isAlive);
+                    }
+                    break;
+                    
+                case 'ally':
+                    targets = unit.isEnemy ? this.enemies.filter(e => e && e.isAlive) : this.party.filter(p => p && p.isAlive);
+                    
+                    // Check if all allies already have all buffs this ability applies
+                    if (!doesDamage && buffEffects.length > 0 && targets.length > 0) {
+                        const allHaveBuffs = buffEffects.every(buffEffect => {
+                            const buffName = this.getBuffNameFromEffect(buffEffect);
+                            return targets.every(target => target.buffs.some(b => b.name === buffName));
+                        });
+                        
+                        if (allHaveBuffs) {
+                            skipAbility = true;
+                        }
+                    }
+                    break;
+                    
+                case 'self':
+                    targets = [unit];
+                    
+                    // Check if self already has all buffs this ability applies
+                    if (!doesDamage && buffEffects.length > 0) {
+                        const allHaveBuffs = buffEffects.every(buffEffect => {
+                            const buffName = this.getBuffNameFromEffect(buffEffect);
+                            return unit.buffs.some(b => b.name === buffName);
+                        });
+                        
+                        if (allHaveBuffs) {
+                            skipAbility = true;
+                        }
+                    }
+                    break;
+                    
+                case 'all_enemies':
+                    targets = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
+                    
+                    // Check if all enemies already have all debuffs this ability applies
+                    if (!doesDamage && debuffEffects.length > 0 && targets.length > 0) {
+                        const allHaveDebuffs = debuffEffects.every(debuffEffect => {
+                            const debuffName = this.getDebuffNameFromEffect(debuffEffect);
+                            return targets.every(target => target.debuffs.some(d => d.name === debuffName));
+                        });
+                        
+                        if (allHaveDebuffs) {
+                            skipAbility = true;
+                        }
+                    }
+                    break;
+                    
+                case 'all_allies':
+                    targets = unit.isEnemy ? this.enemies.filter(e => e && e.isAlive) : this.party.filter(p => p && p.isAlive);
+                    
+                    // Check if all allies already have all buffs this ability applies
+                    if (!doesDamage && buffEffects.length > 0 && targets.length > 0) {
+                        const allHaveBuffs = buffEffects.every(buffEffect => {
+                            const buffName = this.getBuffNameFromEffect(buffEffect);
+                            return targets.every(target => target.buffs.some(b => b.name === buffName));
+                        });
+                        
+                        if (allHaveBuffs) {
+                            skipAbility = true;
+                        }
+                    }
+                    break;
+            }
+            
+            // Skip this ability if it would be redundant
+            if (skipAbility) {
+                continue;
+            }
+            
+            // Execute the ability
+            let target = null;
+            switch (spell.target) {
+                case 'enemy':
+                    if (targets.length > 0) {
+                        target = targets[Math.floor(Math.random() * targets.length)];
+                    }
+                    break;
+                case 'ally':
+                    if (targets.length > 0) {
                         // Prioritize low HP allies for heals
                         if (spell.effects.includes('heal')) {
-                            aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+                            targets.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
                         }
-                        if (aliveAllies.length > 0) {
-                            target = aliveAllies[0];
-                        }
-                        break;
-                    case 'self':
-                        target = unit;
-                        break;
-                    case 'all_enemies':
-                    case 'all_allies':
-                        target = 'all';
-                        break;
-                }
-                
-                if (target || spell.target === 'passive') {
-                    this.executeAbility(unit, bestIndex, target);
-                }
+                        target = targets[0];
+                    }
+                    break;
+                case 'self':
+                    target = unit;
+                    break;
+                case 'all_enemies':
+                case 'all_allies':
+                    target = 'all';
+                    break;
             }
-        } else {
-            this.log(`${unit.name} has no abilities available!`);
+            
+            if (target || spell.target === 'passive') {
+                this.executeAbility(unit, i, target);
+                this.endTurn();
+                return;
+            }
         }
         
+        // If no abilities were used, log and end turn
+        this.log(`${unit.name} has no abilities available!`);
         this.endTurn();
+    }
+
+    getBuffNameFromEffect(effect) {
+        const mapping = {
+            'buff_increase_attack': 'Increase Attack',
+            'buff_increase_speed': 'Increase Speed',
+            'buff_increase_defense': 'Increase Defense',
+            'buff_immune': 'Immune',
+            'buff_shield': 'Shield'
+        };
+        return mapping[effect] || '';
+    }
+
+    getDebuffNameFromEffect(effect) {
+        const mapping = {
+            'debuff_reduce_attack': 'Reduce Attack',
+            'debuff_reduce_speed': 'Reduce Speed',
+            'debuff_reduce_defense': 'Reduce Defense',
+            'debuff_blight': 'Blight',
+            'debuff_bleed': 'Bleed',
+            'debuff_stun': 'Stun',
+            'debuff_taunt': 'Taunt'
+        };
+        return mapping[effect] || '';
     }
     
     executeAbility(caster, abilityIndex, target) {
