@@ -31,7 +31,8 @@ class DevConsole {
             unlockAll: () => this.unlockAllContent(),
             battle: () => this.showBattleInfo(),
             stash: (family) => this.showStash(family),
-            givePerfectItem: (itemId, heroIndex) => this.givePerfectItem(itemId, heroIndex)
+            givePerfectItem: (itemId, heroIndex) => this.givePerfectItem(itemId, heroIndex),
+            generateItems: (stashFamily, dungeonName, count) => this.generateItems(stashFamily, dungeonName, count)
         };
         
         this.init();
@@ -325,6 +326,7 @@ class DevConsole {
 - addGold(family, amount) - Add gold to a stash (e.g., "Villager", 1000000)
 - addItem(itemId, heroIndex) - Give item to hero
 - givePerfectItem(itemId, heroIndex) - Give perfect 4-roll item
+- generateItems(family, dungeon, count) - Generate dungeon items (e.g., "Villager", "satyrs_glade", 100)
 - stash(family) - Show stash contents
 
 <span style="color: #ffd700;">Game State:</span>
@@ -601,6 +603,82 @@ Press \` to toggle console</span>`;
         this.addLog('info', output, true);
     }
     
+generateItems(stashFamily, dungeonName, count) {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        // Validate stash family
+        if (!game.stashes[stashFamily]) {
+            this.addLog('error', `Stash family "${stashFamily}" not found`);
+            this.addLog('info', 'Available families: ' + Object.keys(game.stashes).join(', '));
+            return;
+        }
+        
+        // Validate dungeon
+        const dungeonId = dungeonName.toLowerCase().replace(/ /g, '_');
+        const dungeon = dungeonData?.dungeons[dungeonId];
+        if (!dungeon) {
+            this.addLog('error', `Dungeon "${dungeonName}" not found`);
+            // Show available dungeons
+            const availableDungeons = Object.keys(dungeonData?.dungeons || {}).join(', ');
+            this.addLog('info', 'Available dungeons: ' + availableDungeons);
+            return;
+        }
+        
+        // Validate count
+        count = parseInt(count);
+        if (isNaN(count) || count <= 0) {
+            this.addLog('error', 'Count must be a positive number');
+            return;
+        }
+        
+        // Get item pool from dungeon
+        const itemPool = dungeon.rewards?.items || [];
+        if (itemPool.length === 0) {
+            this.addLog('error', `Dungeon "${dungeonName}" has no items in its loot pool`);
+            return;
+        }
+        
+        // Generate items
+        const generatedItems = [];
+        for (let i = 0; i < count; i++) {
+            const itemId = itemPool[Math.floor(Math.random() * itemPool.length)];
+            const item = new Item(itemId);
+            game.stashes[stashFamily].items.push(item);
+            generatedItems.push(item);
+        }
+        
+        // Report results
+        this.addLog('info', `Generated ${count} items from ${dungeon.name} in ${stashFamily} stash`);
+        
+        // Show rarity distribution
+        const rarityCount = {};
+        generatedItems.forEach(item => {
+            const rarity = item.getRarity();
+            rarityCount[rarity] = (rarityCount[rarity] || 0) + 1;
+        });
+        
+        let distribution = 'Rarity distribution: ';
+        Object.entries(rarityCount).forEach(([rarity, cnt]) => {
+            const percentage = ((cnt / count) * 100).toFixed(1);
+            distribution += `<span style="color: ${this.getRarityColor(rarity)}">${rarity}: ${cnt} (${percentage}%)</span> `;
+        });
+        this.addLog('info', distribution, true);
+    }
+    
+    getRarityColor(rarity) {
+        const colors = {
+            green: '#00ff88',
+            blue: '#00c3ff',
+            purple: '#d896ff',
+            red: '#ff4444',
+            gold: '#ffd700'
+        };
+        return colors[rarity] || '#ffffff';
+    }
+
     unlockAll() {
         if (!window.game) {
             this.addLog('error', 'Game not initialized');
