@@ -975,7 +975,7 @@ if (unit.isEnemy) {
                     break;
                     
                 case 'self':
-                    targets = [unit];
+                    target = unit;
                     
                     // Check if self already has all buffs this ability applies
                     if (!doesDamage && buffEffects.length > 0) {
@@ -1033,16 +1033,55 @@ if (unit.isEnemy) {
             switch (spell.target) {
                 case 'enemy':
                     if (targets.length > 0) {
-                        target = targets[Math.floor(Math.random() * targets.length)];
+                        // For abilities that apply debuffs, prioritize targets without those debuffs
+                        if (debuffEffects.length > 0) {
+                            // Find targets that don't have all the debuffs this ability applies
+                            const unaffectedTargets = targets.filter(t => {
+                                return !debuffEffects.every(debuffEffect => {
+                                    const debuffName = this.getDebuffNameFromEffect(debuffEffect);
+                                    return t.debuffs.some(d => d.name === debuffName);
+                                });
+                            });
+                            
+                            // If some targets don't have the debuffs, choose from them
+                            if (unaffectedTargets.length > 0) {
+                                target = unaffectedTargets[Math.floor(Math.random() * unaffectedTargets.length)];
+                            } else {
+                                // All targets have the debuffs, but if ability deals damage, still use it
+                                target = targets[Math.floor(Math.random() * targets.length)];
+                            }
+                        } else {
+                            // No debuffs to apply, random target
+                            target = targets[Math.floor(Math.random() * targets.length)];
+                        }
                     }
                     break;
                 case 'ally':
                     if (targets.length > 0) {
-                        // Prioritize low HP allies for heals
-                        if (spell.effects.includes('heal')) {
+                        // For abilities that apply buffs, prioritize targets without those buffs
+                        if (buffEffects.length > 0 && !spell.effects.includes('heal')) {
+                            // Find targets that don't have all the buffs this ability applies
+                            const unaffectedTargets = targets.filter(t => {
+                                return !buffEffects.every(buffEffect => {
+                                    const buffName = this.getBuffNameFromEffect(buffEffect);
+                                    return t.buffs.some(b => b.name === buffName);
+                                });
+                            });
+                            
+                            // If some targets don't have the buffs, choose from them
+                            if (unaffectedTargets.length > 0) {
+                                target = unaffectedTargets[0];
+                            } else {
+                                // All targets have the buffs, still use if it does something else
+                                target = targets[0];
+                            }
+                        } else if (spell.effects.includes('heal')) {
+                            // Prioritize low HP allies for heals
                             targets.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+                            target = targets[0];
+                        } else {
+                            target = targets[0];
                         }
-                        target = targets[0];
                     }
                     break;
                 case 'self':
