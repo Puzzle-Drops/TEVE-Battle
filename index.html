@@ -24,7 +24,6 @@
         </div>
     </div>
 </div>
-	
 	<!-- Developer Console -->
 <div id="devConsole" style="display: none;">
     <div class="devConsoleHeader">
@@ -2266,11 +2265,6 @@ showIndividualStash(family) {
         </div>
     </div>`;
     document.getElementById('stashFamilyName').innerHTML = headerHTML;
-    } else {
-        document.getElementById('stashFamilyName').textContent = `${family.name} Stash`;
-        // Clear filter if we don't need it anymore
-        this.currentStashFilter = null;
-    }
     
     document.getElementById('stashGoldAmount').textContent = goldAmount;
     
@@ -2278,7 +2272,7 @@ showIndividualStash(family) {
     const inventory = document.getElementById('stashInventory');
     inventory.innerHTML = '';
     
-// Filter items based on selection
+    // Filter items based on selection
     let itemsToShow = items;
     if (filterValue !== 'all') {
         itemsToShow = items.filter(item => item.slot === filterValue);
