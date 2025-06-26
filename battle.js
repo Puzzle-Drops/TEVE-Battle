@@ -1513,12 +1513,6 @@ showDodgeAnimation(target) {
     applyBuff(target, buffName, duration, effects) {
         if (!target.isAlive) return;
         
-        // Check for immunity
-        if (target.buffs.some(b => b.name === 'Immune' || b.immunity)) {
-            this.log(`${target.name} is immune to buffs!`);
-            return;
-        }
-        
         // Special handling for shields
         if (buffName === 'Shield' && effects.shieldAmount !== undefined) {
             // Check if shield already exists
