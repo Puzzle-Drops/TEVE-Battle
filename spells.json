@@ -191,6 +191,159 @@
     "target": "all_allies",
     "logicKey": "warCryLogic"
 },
+"axe_throw": {
+    "id": "axe_throw",
+    "name": "Axe Throw",
+    "description": "Throw an axe dealing attack + 0.6x AGI with 40% chance to cause Bleed",
+    "cooldown": 0,
+    "effects": ["damage", "physical", "debuff", "bleed"],
+    "scaling": {
+        "agi": 0.6
+    },
+    "bleedChance": 0.4,
+    "bleedDuration": 3,
+    "target": "enemy",
+    "logicKey": "axeThrowLogic"
+},
+"berserker_rage": {
+    "id": "berserker_rage",
+    "name": "Berserker Rage",
+    "description": "Enter a rage, gaining Increase Speed for 2 turns",
+    "cooldown": 4,
+    "effects": ["buff", "speed"],
+    "duration": 2,
+    "target": "self",
+    "logicKey": "berserkerRageLogic"
+},
+"dual_axes": {
+    "id": "dual_axes",
+    "name": "Dual Axes",
+    "description": "Strike twice with axes dealing attack + 0.8x AGI each, 50% bleed chance per hit",
+    "cooldown": 3,
+    "effects": ["damage", "physical", "debuff", "bleed"],
+    "scaling": {
+        "agi": 0.8
+    },
+    "bleedChance": 0.5,
+    "bleedDuration": 3,
+    "hitCount": 2,
+    "target": "enemy",
+    "logicKey": "dualAxesLogic"
+},
+"rallying_cry": {
+    "id": "rallying_cry",
+    "name": "Rallying Cry",
+    "description": "Rally all allies with Increase Speed for 3 turns",
+    "cooldown": 5,
+    "effects": ["buff", "aoe", "speed"],
+    "duration": 3,
+    "target": "all_allies",
+    "logicKey": "rallyingCryLogic"
+},
+"frost_bolt": {
+    "id": "frost_bolt",
+    "name": "Frost Bolt",
+    "description": "Icy bolt dealing attack + 1.0x INT and draining 15% action bar",
+    "cooldown": 0,
+    "effects": ["damage", "magical", "frost"],
+    "scaling": {
+        "int": 1.0
+    },
+    "actionBarDrain": 0.15,
+    "target": "enemy",
+    "logicKey": "frostBoltLogic"
+},
+"chilling_touch": {
+    "id": "chilling_touch",
+    "name": "Chilling Touch",
+    "description": "30% chance to apply Reduce Speed on basic attacks",
+    "cooldown": 0,
+    "effects": ["passive", "debuff", "slow"],
+    "passive": true,
+    "slowChance": 0.3,
+    "slowDuration": 2,
+    "target": "self",
+    "logicKey": "chillingTouchLogic"
+},
+"savage_bite": {
+    "id": "savage_bite",
+    "name": "Savage Bite",
+    "description": "Vicious bite dealing attack + 0.7x STR",
+    "cooldown": 0,
+    "effects": ["damage", "physical"],
+    "scaling": {
+        "str": 0.7
+    },
+    "target": "enemy",
+    "logicKey": "savageBiteLogic"
+},
+"pack_fury": {
+    "id": "pack_fury",
+    "name": "Pack Fury",
+    "description": "Gain Increase Attack for 2 turns when taking damage",
+    "cooldown": 0,
+    "effects": ["passive", "buff"],
+    "passive": true,
+    "buffDuration": 2,
+    "target": "self",
+    "logicKey": "packFuryLogic"
+},
+"chilling_howl": {
+    "id": "chilling_howl",
+    "name": "Chilling Howl",
+    "description": "Howl that applies Reduce Attack and Reduce Speed to all enemies",
+    "cooldown": 5,
+    "effects": ["debuff", "aoe", "frost"],
+    "debuffDuration": 3,
+    "target": "all_enemies",
+    "logicKey": "chillingHowlLogic"
+},
+"crushing_blow": {
+    "id": "crushing_blow",
+    "name": "Crushing Blow",
+    "description": "Massive strike dealing attack + 1.2x STR",
+    "cooldown": 0,
+    "effects": ["damage", "physical"],
+    "scaling": {
+        "str": 1.2
+    },
+    "target": "enemy",
+    "logicKey": "crushingBlowLogic"
+},
+"thick_hide": {
+    "id": "thick_hide",
+    "name": "Thick Hide",
+    "description": "Take 20% less damage from all sources",
+    "cooldown": 0,
+    "effects": ["passive", "defense"],
+    "passive": true,
+    "damageReduction": 0.2,
+    "target": "self",
+    "logicKey": "thickHideLogic"
+},
+"maul": {
+    "id": "maul",
+    "name": "Maul",
+    "description": "Brutal maul dealing attack + 1.0x STR and causing Bleed",
+    "cooldown": 0,
+    "effects": ["damage", "physical", "debuff", "bleed"],
+    "scaling": {
+        "str": 1.0
+    },
+    "bleedDuration": 3,
+    "target": "enemy",
+    "logicKey": "maulLogic"
+},
+"rampage": {
+    "id": "rampage",
+    "name": "Rampage",
+    "description": "Go on a rampage, causing all enemies to Bleed for 4 turns",
+    "cooldown": 6,
+    "effects": ["debuff", "aoe", "bleed"],
+    "bleedDuration": 4,
+    "target": "all_enemies",
+    "logicKey": "rampageLogic"
+},
   "frost_breath": {
     "id": "frost_breath",
     "name": "Frost Breath",
