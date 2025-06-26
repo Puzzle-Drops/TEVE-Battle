@@ -189,20 +189,82 @@
     "icy_highland": {
     "id": "icy_highland",
     "name": "Icy Highland",
-    "boss": "Frostfang",
+    "boss": "Grizzly Ice Bear",
     "tier": "Easy",
     "subtitle": "Easy 3",
     "level": 50,
     "waves": [
         {
             "enemies": [
-                { "id": "frostfang", "level": 75 }
+                { "id": "frost_wolf", "level": 35 },
+                { "id": "frost_troll", "level": 35 },
+                { "id": "frost_troll", "level": 35 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "ice_troll", "level": 35 },
+                { "id": "ice_troll", "level": 35 },
+                { "id": "frost_wolf", "level": 36 },
+                { "id": "frost_wolf", "level": 36 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "water_elemental", "level": 38 },
+                { "id": "water_elemental", "level": 38 },
+                { "id": "ice_troll", "level": 36 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "ice_bear", "level": 40 },
+                { "id": "frost_wolf", "level": 38 },
+                { "id": "frost_wolf", "level": 38 },
+                { "id": "ice_troll", "level": 36 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "ice_troll_king", "level": 40 },
+                { "id": "ice_troll", "level": 38 },
+                { "id": "ice_troll", "level": 38 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "water_elemental", "level": 40 },
+                { "id": "water_elemental", "level": 40 },
+                { "id": "water_elemental", "level": 40 },
+                { "id": "ice_bear", "level": 42 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "frostfang", "level": 45 },
+                { "id": "frost_wolf", "level": 40 },
+                { "id": "frost_wolf", "level": 40 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "ice_bear", "level": 43 },
+                { "id": "ice_bear", "level": 43 },
+                { "id": "water_elemental", "level": 42 },
+                { "id": "ice_troll", "level": 41 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "grizzly_ice_bear", "level": 50 },
+                { "id": "ice_bear", "level": 45 },
+                { "id": "ice_bear", "level": 45 }
             ]
         }
     ],
     "rewards": {
-        "gold": 1400,
-        "exp": 2750,
+        "gold": 2400,
+        "exp": 5750,
         "items": ["icy_wolfhood", "icy_mauler_plate", "icy_tundrastride", "icy_howler", "icy_frostfang", "icy_fangguard", "icy_shardcore"]
     }
 },
