@@ -1392,7 +1392,11 @@ if (attacker.onHitEffects && target.isAlive) {
 if (target.onDamageTaken && target.isAlive && damage > 0) {
     target.onDamageTaken.forEach(effect => {
         if (effect.type === 'buff') {
-            this.applyBuff(target, effect.buffName, effect.duration, {});
+            // Log Pack Fury activation
+            if (effect.buffName === 'Increase Attack' && target.packFuryApplied) {
+                this.log(`${target.name}'s Pack Fury activates!`);
+            }
+            this.applyBuff(target, effect.buffName, effect.duration, effect.buffEffects || {});
         }
     });
 }
@@ -1811,7 +1815,7 @@ showDodgeAnimation(target) {
                     this.handleUnitDeath(unit);
                 }
             } else if (debuff.name === 'Bleed' && unit.isAlive) {
-                const damage = Math.floor(unit.maxHp * 0.05);
+                const damage = Math.ceil(unit.maxHp * 0.05);
                 const previousHp = unit.currentHp;
                 unit.currentHp = Math.max(0, unit.currentHp - damage);
                 this.log(`${unit.name} bleeds for ${damage} damage!`);
