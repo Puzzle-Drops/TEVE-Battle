@@ -131,6 +131,130 @@ warCryLogic: function(battle, caster, target, spell) {
     // Apply Increase Speed to self only
     battle.applyBuff(caster, 'Increase Speed', spell.selfSpeedDuration, {});
 },
+// Icy Highland Enemy Spells
+axeThrowLogic: function(battle, caster, target, spell) {
+    const damage = caster.source.attack + (caster.stats.agi * 0.6);
+    battle.dealDamage(caster, target, damage, 'physical');
+    
+    // 40% chance to apply bleed
+    if (Math.random() < spell.bleedChance) {
+        battle.applyDebuff(target, 'Bleed', spell.bleedDuration, { bleedDamage: true });
+    }
+},
+
+berserkerRageLogic: function(battle, caster, target, spell) {
+    battle.applyBuff(caster, 'Increase Speed', spell.duration, {});
+},
+
+dualAxesLogic: function(battle, caster, target, spell) {
+    // Hit twice
+    for (let i = 0; i < spell.hitCount; i++) {
+        const damage = caster.source.attack + (caster.stats.agi * 0.8);
+        battle.dealDamage(caster, target, damage, 'physical');
+        
+        // 50% chance to apply bleed per hit
+        if (Math.random() < spell.bleedChance) {
+            battle.applyDebuff(target, 'Bleed', spell.bleedDuration, { bleedDamage: true });
+        }
+    }
+},
+
+rallyingCryLogic: function(battle, caster, target, spell) {
+    // Apply Increase Speed to all allies
+    const allies = battle.getParty(caster);
+    allies.forEach(ally => {
+        if (ally.isAlive) {
+            battle.applyBuff(ally, 'Increase Speed', spell.duration, {});
+        }
+    });
+},
+
+frostBoltLogic: function(battle, caster, target, spell) {
+    const damage = caster.source.attack + (caster.stats.int * 1.0);
+    battle.dealDamage(caster, target, damage, 'magical');
+    
+    // Drain 15% of target's action bar
+    if (target.isAlive) {
+        const drain = target.actionBar * spell.actionBarDrain;
+        target.actionBar = Math.max(0, target.actionBar - drain);
+        battle.log(`${target.name}'s action bar drained by ${Math.floor(drain)}!`);
+    }
+},
+
+chillingTouchLogic: function(battle, caster) {
+    // This is a passive ability - the effect will be handled elsewhere
+    if (!caster.chillingTouchApplied) {
+        caster.chillingTouchApplied = true;
+        caster.onHitEffects = caster.onHitEffects || [];
+        caster.onHitEffects.push({
+            type: 'debuff',
+            debuffName: 'Reduce Speed',
+            chance: 0.3,
+            duration: 2
+        });
+    }
+},
+
+savageBiteLogic: function(battle, caster, target, spell) {
+    const damage = caster.source.attack + (caster.stats.str * 0.7);
+    battle.dealDamage(caster, target, damage, 'physical');
+},
+
+packFuryLogic: function(battle, caster) {
+    // This is a passive ability - the effect will be handled when taking damage
+    if (!caster.packFuryApplied) {
+        caster.packFuryApplied = true;
+        caster.onDamageTaken = caster.onDamageTaken || [];
+        caster.onDamageTaken.push({
+            type: 'buff',
+            buffName: 'Increase Attack',
+            duration: 2
+        });
+    }
+},
+
+chillingHowlLogic: function(battle, caster, target, spell) {
+    // Apply both Reduce Attack and Reduce Speed to all enemies
+    const enemies = battle.getEnemies(caster);
+    enemies.forEach(enemy => {
+        if (enemy.isAlive) {
+            battle.applyDebuff(enemy, 'Reduce Attack', spell.debuffDuration, {});
+            battle.applyDebuff(enemy, 'Reduce Speed', spell.debuffDuration, {});
+        }
+    });
+},
+
+crushingBlowLogic: function(battle, caster, target, spell) {
+    const damage = caster.source.attack + (caster.stats.str * 1.2);
+    battle.dealDamage(caster, target, damage, 'physical');
+},
+
+thickHideLogic: function(battle, caster, spell) {
+    // This is a passive ability - apply permanent damage reduction
+    if (!caster.thickHideApplied) {
+        caster.thickHideApplied = true;
+        caster.damageReduction = (caster.damageReduction || 0) + spell.damageReduction;
+    }
+},
+
+maulLogic: function(battle, caster, target, spell) {
+    const damage = caster.source.attack + (caster.stats.str * 1.0);
+    battle.dealDamage(caster, target, damage, 'physical');
+    
+    // Always apply bleed
+    battle.applyDebuff(target, 'Bleed', spell.bleedDuration, { bleedDamage: true });
+},
+
+rampageLogic: function(battle, caster, target, spell) {
+    // Apply bleed to all enemies
+    const enemies = battle.getEnemies(caster);
+    enemies.forEach(enemy => {
+        if (enemy.isAlive) {
+            battle.applyDebuff(enemy, 'Bleed', spell.bleedDuration, { bleedDamage: true });
+        }
+    });
+    battle.log(`${caster.name} goes on a rampage, causing all enemies to bleed!`);
+},
 
     // Tester Spells
     winLogic: function(battle, caster, targets, spell) {
