@@ -660,10 +660,15 @@ generateItems(stashFamily, dungeonName, count) {
             rarityCount[rarity] = (rarityCount[rarity] || 0) + 1;
         });
         
+        // Display in correct order: green, blue, purple, red, gold
+        const rarityOrder = ['green', 'blue', 'purple', 'red', 'gold'];
         let distribution = 'Rarity distribution: ';
-        Object.entries(rarityCount).forEach(([rarity, cnt]) => {
-            const percentage = ((cnt / count) * 100).toFixed(1);
-            distribution += `<span style="color: ${this.getRarityColor(rarity)}">${rarity}: ${cnt} (${percentage}%)</span> `;
+        rarityOrder.forEach(rarity => {
+            if (rarityCount[rarity]) {
+                const cnt = rarityCount[rarity];
+                const percentage = ((cnt / count) * 100).toFixed(1);
+                distribution += `<span style="color: ${this.getRarityColor(rarity)}">${rarity}: ${cnt} (${percentage}%)</span> `;
+            }
         });
         this.addLog('info', distribution, true);
     }
