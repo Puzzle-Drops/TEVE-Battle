@@ -562,9 +562,15 @@ if (unit.isEnemy) {
     applyInitialPassives() {
         // Apply passive abilities at battle start
         this.allUnits.forEach(unit => {
+            // Debug: Check if unit has abilities
+            if (unit.name.includes('Frost Wolf')) {
+                console.log(`${unit.name} abilities:`, unit.abilities);
+            }
+            
             unit.abilities.forEach((ability, index) => {
                 if (ability.passive && spellLogic[ability.logicKey]) {
                     try {
+                        console.log(`Applying passive ${ability.name} to ${unit.name}`);
                         spellLogic[ability.logicKey](this, unit);
                     } catch (error) {
                         console.error(`Error applying passive ${ability.name}:`, error);
@@ -1389,6 +1395,10 @@ if (attacker.onHitEffects && target.isAlive) {
 }
 
 // Check for on-damage-taken effects from target
+if (target.name.includes('Frost Wolf')) {
+    console.log(`${target.name} took damage. onDamageTaken:`, target.onDamageTaken);
+    console.log(`packFuryApplied:`, target.packFuryApplied);
+}
 if (target.onDamageTaken && target.isAlive && damage > 0) {
     target.onDamageTaken.forEach(effect => {
         if (effect.type === 'buff') {
