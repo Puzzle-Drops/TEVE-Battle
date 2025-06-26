@@ -923,7 +923,7 @@
     "modifiers": { "str": 2.0, "agi": 3.5, "int": 0.8 },
     "mainstat": "agi",
     "spells": ["savage_bite", "frost_breath", "chilling_howl"]
-}
+},
 "ice_bear": {
     "name": "Ice Bear",
     "boss": false,
