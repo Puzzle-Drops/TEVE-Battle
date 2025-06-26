@@ -1043,6 +1043,12 @@ if (unit.isEnemy) {
                                 });
                             });
                             
+                            // Debug logging
+                            console.log(`${unit.name} using ${ability.name}:`);
+                            console.log(`- Total targets: ${targets.length}`);
+                            console.log(`- Unaffected targets: ${unaffectedTargets.length}`);
+                            console.log(`- Unaffected: ${unaffectedTargets.map(t => t.name).join(', ')}`);
+                            
                             // If some targets don't have the debuffs, choose from them
                             if (unaffectedTargets.length > 0) {
                                 target = unaffectedTargets[Math.floor(Math.random() * unaffectedTargets.length)];
@@ -1733,18 +1739,24 @@ showDodgeAnimation(target) {
         const existingDebuff = target.debuffs.find(d => d.name === debuffName);
         
         if (existingDebuff) {
-            // Update duration to the higher value
-            const oldDuration = existingDebuff.duration;
-            existingDebuff.duration = Math.max(existingDebuff.duration, adjustedDuration);
-            
-            // Update other effects if provided
-            Object.assign(existingDebuff, effects);
-            
-            // Log if duration was increased
-            if (existingDebuff.duration > oldDuration) {
-                this.log(`${target.name}'s ${debuffName} is refreshed to ${existingDebuff.duration} turns!`);
+            // Special handling for Bleed - it stacks duration
+            if (debuffName === 'Bleed') {
+                existingDebuff.duration += adjustedDuration;
+                this.log(`${target.name}'s ${debuffName} stacks to ${existingDebuff.duration} turns!`);
             } else {
-                this.log(`${target.name} already has ${debuffName} with ${oldDuration} turns remaining!`);
+                // Normal debuffs - update duration to the higher value
+                const oldDuration = existingDebuff.duration;
+                existingDebuff.duration = Math.max(existingDebuff.duration, adjustedDuration);
+                
+                // Update other effects if provided
+                Object.assign(existingDebuff, effects);
+                
+                // Log if duration was increased
+                if (existingDebuff.duration > oldDuration) {
+                    this.log(`${target.name}'s ${debuffName} is refreshed to ${existingDebuff.duration} turns!`);
+                } else {
+                    this.log(`${target.name} already has ${debuffName} with ${oldDuration} turns remaining!`);
+                }
             }
         } else {
             // Create new debuff
