@@ -267,8 +267,11 @@ Taunt: forces skill 1 attack on unit that cast taunt
 
 Dungeons:
 -Easy - Items no requirements
-Satyrs - Satyr Instigator (Easy  1) (Lv 0)
-Icy Highland - Frostfang (Easy 2) (Lv 25)
+Satyrs Glade - Satyr Instigator (Easy  1) (Lv 0)
+Murkin Wetlands - Murkin Chieftain (Easy 2) (Lv 25)
+Icy Highland - Frostfang (Easy 3) (Lv 50)
+
+
 Forgotten Crypt - Stitch (Easy 3) (Lv 50)
 
 -Hard - Items Class 1 required
