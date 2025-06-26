@@ -833,13 +833,6 @@
       "mainstat": "str",
       "spells": ["slash", "bite", "fury"]
     },
-    "frostfang": {
-      "name": "Frostfang",
-      "boss": true,
-      "modifiers": { "str": 2.0, "agi": 3.5, "int": 0.8 },
-      "mainstat": "agi",
-      "spells": ["bite", "frost_breath"]
-    },
     "goblin_king": {
       "name": "Goblin King",
       "boss": true,
@@ -895,6 +888,55 @@
     "modifiers": { "str": 2.0, "agi": 1.5, "int": 1.5 },
     "mainstat": "str",
     "spells": ["chieftains_hammer", "war_cry"]
+},
+"ice_troll": {
+    "name": "Ice Troll",
+    "boss": false,
+    "modifiers": { "str": 1.2, "agi": 1.8, "int": 1.0 },
+    "mainstat": "agi",
+    "spells": ["axe_throw", "berserker_rage"]
+},
+"ice_troll_king": {
+    "name": "Ice Troll King",
+    "boss": true,
+    "modifiers": { "str": 1.5, "agi": 2.2, "int": 1.3 },
+    "mainstat": "agi",
+    "spells": ["dual_axes", "rallying_cry"]
+},
+"water_elemental": {
+    "name": "Water Elemental",
+    "boss": false,
+    "modifiers": { "str": 0.8, "agi": 1.2, "int": 2.0 },
+    "mainstat": "int",
+    "spells": ["frost_bolt", "chilling_touch"]
+},
+"frost_wolf": {
+    "name": "Frost Wolf",
+    "boss": false,
+    "modifiers": { "str": 1.4, "agi": 1.7, "int": 0.9 },
+    "mainstat": "agi",
+    "spells": ["savage_bite", "pack_fury"]
+},
+"frostfang": {
+    "name": "Frostfang",
+    "boss": true,
+    "modifiers": { "str": 2.0, "agi": 3.5, "int": 0.8 },
+    "mainstat": "agi",
+    "spells": ["savage_bite", "frost_breath", "chilling_howl"]
+}
+"ice_bear": {
+    "name": "Ice Bear",
+    "boss": false,
+    "modifiers": { "str": 2.0, "agi": 1.0, "int": 1.0 },
+    "mainstat": "str",
+    "spells": ["crushing_blow", "thick_hide"]
+},
+"grizzly_ice_bear": {
+    "name": "Grizzly Ice Bear",
+    "boss": true,
+    "modifiers": { "str": 2.5, "agi": 1.3, "int": 1.2 },
+    "mainstat": "str",
+    "spells": ["maul", "rampage"]
 },
     "stitch": {
       "name": "Stitch",
