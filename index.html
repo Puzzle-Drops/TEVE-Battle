@@ -1575,28 +1575,27 @@ for (let i = 1; i <= 3; i++) {
     }
 */
 
-	
-// Generate 200 Satyr dungeon items for testing
-    if (dungeonData && dungeonData.dungeons.satyrs_glade) {
-        const satyrDungeon = dungeonData.dungeons.satyrs_glade;
-        const itemPool = satyrDungeon.rewards.items || [];
-        
-        console.log('Generating 200 Satyr dungeon items...');
-        
-        for (let i = 0; i < 200; i++) {
-            if (itemPool.length > 0) {
-                // Pick a random item from the dungeon's item pool
-                const itemId = itemPool[Math.floor(Math.random() * itemPool.length)];
-                const item = new Item(itemId);
-                
-                // Add to villager stash
-                this.stashes['Villager'].items.push(item);
-            }
+// Generate items from the listed dungeons using devConsole function
+if (window.devConsole && dungeonData && dungeonData.dungeons) {
+    console.log('Generating items from first three dungeons...');
+    
+    // Dungeons in order
+    const firstThreeDungeons = [
+        'satyrs_glade',
+        'murkin_wetlands', 
+        'icy_highland'
+    ];
+    
+    // Generate 200 items from each dungeon
+    firstThreeDungeons.forEach((dungeonId, index) => {
+        if (dungeonData.dungeons[dungeonId]) {
+            console.log(`Generating 200 items from ${dungeonData.dungeons[dungeonId].name}...`);
+            window.devConsole.generateItems('Villager', dungeonId, 200);
         }
-        
-        console.log(`Generated ${this.stashes['Villager'].items.length} items in Villager stash`);
-    }
-
+    });
+    
+    console.log(`Total items in Villager stash: ${this.stashes['Villager'].items.length}`);
+}
 
 
 	
