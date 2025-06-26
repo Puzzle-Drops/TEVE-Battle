@@ -280,9 +280,9 @@
 "pack_fury": {
     "id": "pack_fury",
     "name": "Pack Fury",
-    "description": "Gain Increase Attack for 2 turns when taking damage",
+    "description": "Gain Increase Attack buff for 2 turns when taking damage",
     "cooldown": 0,
-    "effects": ["passive", "buff"],
+    "effects": ["passive", "buff", "buff_increase_attack"],
     "passive": true,
     "buffDuration": 2,
     "target": "self",
