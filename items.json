@@ -241,6 +241,21 @@
         "value4": 150,
         "sellcost": 550
     },
+    "wetland_mirecharm": {
+        "id": "wetland_mirecharm",
+        "name": "Wetland Mirecharm",
+        "slot": "trinket",
+        "level": 25,
+        "roll1": "str",
+        "value1": 12,
+        "roll2": "int",
+        "value2": 12,
+        "roll3": "allstats",
+        "value3": 10,
+        "roll4": "resist",
+        "value4": 15,
+        "sellcost": 550
+    },
     "wetland_fenstompers": {
         "id": "wetland_fenstompers",
         "name": "Wetland Fenstompers",
