@@ -32,7 +32,12 @@ class DevConsole {
             battle: () => this.showBattleInfo(),
             stash: (family) => this.showStash(family),
             givePerfectItem: (itemId, heroIndex) => this.givePerfectItem(itemId, heroIndex),
-            generateItems: (stashFamily, dungeonName, count) => this.generateItems(stashFamily, dungeonName, count)
+            generateItems: (stashFamily, dungeonName, count) => this.generateItems(stashFamily, dungeonName, count),
+            setSpellLevel: (level) => this.setCurrentUnitSpellLevel(level),
+            buff: (unitIndex, buffName, duration) => this.applyBuffToUnit(unitIndex, buffName, duration),
+            debuff: (unitIndex, debuffName, duration) => this.applyDebuffToUnit(unitIndex, debuffName, duration),
+            shield: (unitIndex, amount) => this.applyShieldToUnit(unitIndex, amount),
+            listUnits: () => this.listBattleUnits()
         };
         
         this.init();
@@ -322,6 +327,14 @@ class DevConsole {
 - promoteHero(heroIndex, className) - Promote a hero
 - maxHero(heroIndex) - Max out a hero (level 500, awakened)
 
+<span style="color: #ffd700;">Battle Commands:</span>
+- battle() - Show current battle info
+- listUnits() - List all units with indices
+- setSpellLevel(level) - Set spell level for current unit's turn
+- buff(unitIndex, buffName, duration) - Apply buff to unit
+- debuff(unitIndex, debuffName, duration) - Apply debuff to unit
+- shield(unitIndex, amount) - Apply shield to unit
+
 <span style="color: #ffd700;">Item/Gold Commands:</span>
 - addGold(family, amount) - Add gold to a stash (e.g., "Villager", 1000000)
 - addItem(itemId, heroIndex) - Give item to hero
@@ -330,7 +343,6 @@ class DevConsole {
 - stash(family) - Show stash contents
 
 <span style="color: #ffd700;">Game State:</span>
-- battle() - Show current battle info
 - unlockAll() - Unlock all content
 - game - Access game instance
 - game.currentBattle - Current battle state
@@ -603,7 +615,7 @@ Press \` to toggle console</span>`;
         this.addLog('info', output, true);
     }
     
-generateItems(stashFamily, dungeonName, count) {
+    generateItems(stashFamily, dungeonName, count) {
         if (!window.game) {
             this.addLog('error', 'Game not initialized');
             return;
@@ -703,6 +715,168 @@ generateItems(stashFamily, dungeonName, count) {
         });
         
         this.addLog('info', 'Unlocked all content! All stashes have max gold, all heroes level 300');
+    }
+    
+    setCurrentUnitSpellLevel(level) {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        if (!battle.currentUnit) {
+            this.addLog('error', "It's not anyone's turn yet");
+            return;
+        }
+        
+        const unit = battle.currentUnit;
+        const oldLevel = unit.spellLevel;
+        
+        // Clamp level between 1 and 5
+        level = Math.max(1, Math.min(5, parseInt(level)));
+        
+        // Update spell level
+        unit.source.spellLevel = level;
+        
+        // Update abilities to reflect new level
+        unit.abilities.forEach(ability => {
+            if (ability.level !== undefined) {
+                ability.level = level;
+            }
+        });
+        
+        this.addLog('info', `Set ${unit.name}'s spell level from ${oldLevel} to ${level}`);
+    }
+
+    applyBuffToUnit(unitIndex, buffName, duration) {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        const allUnits = [...battle.party, ...battle.enemies];
+        
+        if (unitIndex < 0 || unitIndex >= allUnits.length) {
+            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+            return;
+        }
+        
+        const unit = allUnits[unitIndex];
+        if (!unit || !unit.isAlive) {
+            this.addLog('error', 'Unit is dead or invalid');
+            return;
+        }
+        
+        // Validate buff name
+        const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield'];
+        if (!validBuffs.includes(buffName)) {
+            this.addLog('error', `Invalid buff name. Valid buffs: ${validBuffs.join(', ')}`);
+            return;
+        }
+        
+        duration = parseInt(duration) || 3;
+        
+        // Apply the buff
+        battle.applyBuff(unit, buffName, duration, {});
+        this.addLog('info', `Applied ${buffName} to ${unit.name} for ${duration} turns`);
+    }
+
+    applyDebuffToUnit(unitIndex, debuffName, duration) {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        const allUnits = [...battle.party, ...battle.enemies];
+        
+        if (unitIndex < 0 || unitIndex >= allUnits.length) {
+            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+            return;
+        }
+        
+        const unit = allUnits[unitIndex];
+        if (!unit || !unit.isAlive) {
+            this.addLog('error', 'Unit is dead or invalid');
+            return;
+        }
+        
+        // Validate debuff name
+        const validDebuffs = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Stun', 'Taunt', 'Silence', 'Marked'];
+        if (!validDebuffs.includes(debuffName)) {
+            this.addLog('error', `Invalid debuff name. Valid debuffs: ${validDebuffs.join(', ')}`);
+            return;
+        }
+        
+        duration = parseInt(duration) || 3;
+        
+        // Apply the debuff with appropriate effects
+        const effects = {};
+        if (debuffName === 'Stun') effects.stunned = true;
+        if (debuffName === 'Bleed') effects.bleedDamage = true;
+        if (debuffName === 'Blight') effects.noHeal = true;
+        
+        battle.applyDebuff(unit, debuffName, duration, effects);
+        this.addLog('info', `Applied ${debuffName} to ${unit.name} for ${duration} turns`);
+    }
+
+    applyShieldToUnit(unitIndex, amount) {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        const allUnits = [...battle.party, ...battle.enemies];
+        
+        if (unitIndex < 0 || unitIndex >= allUnits.length) {
+            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+            return;
+        }
+        
+        const unit = allUnits[unitIndex];
+        if (!unit || !unit.isAlive) {
+            this.addLog('error', 'Unit is dead or invalid');
+            return;
+        }
+        
+        amount = parseInt(amount) || 100;
+        
+        // Apply shield as a buff with -1 duration (permanent until depleted)
+        battle.applyBuff(unit, 'Shield', -1, { shieldAmount: amount });
+        this.addLog('info', `Applied ${amount} HP shield to ${unit.name}`);
+    }
+
+    listBattleUnits() {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        let output = '<span style="color: #4dd0e1; font-size: 16px;">═══ Battle Units ═══</span>\n\n';
+        
+        output += '<span style="color: #00ff88;">Party:</span>\n';
+        battle.party.forEach((unit, index) => {
+            if (unit) {
+                const status = unit.isAlive ? `HP: ${unit.currentHp}/${unit.maxHp}` : '(DEAD)';
+                const current = battle.currentUnit === unit ? ' <span style="color: #ffd700;">← Current Turn</span>' : '';
+                output += `[${index}] ${unit.name} - ${status}${current}\n`;
+            }
+        });
+        
+        output += '\n<span style="color: #ff4444;">Enemies:</span>\n';
+        battle.enemies.forEach((unit, index) => {
+            if (unit) {
+                const status = unit.isAlive ? `HP: ${unit.currentHp}/${unit.maxHp}` : '(DEAD)';
+                const current = battle.currentUnit === unit ? ' <span style="color: #ffd700;">← Current Turn</span>' : '';
+                const globalIndex = battle.party.length + index;
+                output += `[${globalIndex}] ${unit.name} - ${status}${current}\n`;
+            }
+        });
+        
+        this.addLog('info', output, true);
     }
     
     toggle() {
