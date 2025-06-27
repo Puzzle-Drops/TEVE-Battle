@@ -5,7 +5,7 @@
       "tier": 0,
       "modifiers": { "str": 10000.0, "agi": 10000.0, "int": 10000.0 },
       "mainstat": "str",
-      "spells": ["increase_attack_test", "increase_speed_test", "increase_defense_test", "immune_test", "shield_test", "reduce_attack_test", "reduce_speed_test", "reduce_defense_test", "blight_test", "bleed_test", "stun_test", "taunt_test", "lose", "win"],
+      "spells": ["increase_attack_test", "increase_speed_test", "increase_defense_test", "immune_test", "shield_test", "reduce_attack_test", "reduce_speed_test", "reduce_defense_test", "blight_test", "bleed_test", "stun_test", "taunt_test", "silence_test", "marked_test", "lose", "win"],
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
     "villager_male": {
