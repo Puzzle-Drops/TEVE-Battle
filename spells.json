@@ -17,7 +17,7 @@
     "name": "Fury",
     "description": "Gain Increase Speed buff for {duration} turns",
     "cooldown": [5, 5, 4, 4, 3],
-    "effects": ["buff", "speed", "buff_increase_speed"],
+    "effects": ["buff", "buff_increase_speed"],
     "duration": [3, 3, 3, 4, 4],
     "target": "self",
     "logicKey": "furyLogic"
@@ -27,7 +27,7 @@
     "name": "Throw Rock",
     "description": "Throw a rock dealing {baseDamage} + attack + {intScaling}x INT damage and stunning for {stunDuration} turn",
     "cooldown": [7, 7, 6, 6, 5],
-    "effects": ["damage", "physical", "debuff", "stun", "debuff_stun"],
+    "effects": ["damage", "physical", "debuff", "debuff_stun"],
     "scaling": {
         "base": [50, 100, 200, 350, 500],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
