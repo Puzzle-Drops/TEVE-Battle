@@ -564,24 +564,26 @@ if (unit.isEnemy) {
 }
 
     applyInitialPassives() {
-        // Apply passive abilities at battle start
-        this.allUnits.forEach(unit => {
-            unit.abilities.forEach((ability, index) => {
-                if (ability.passive) {
-                    // Get spell data
-                    const spell = spellManager.getSpell(ability.id);
-                    
-                    if (spell && spell.logicKey && spellLogic[spell.logicKey]) {
-                        try {
-                            spellLogic[spell.logicKey](this, unit);
-                        } catch (error) {
-                            console.error(`Error applying passive ${ability.name}:`, error);
-                        }
+    // Apply passive abilities at battle start
+    this.allUnits.forEach(unit => {
+        unit.abilities.forEach((ability, index) => {
+            if (ability.passive) {
+                // Get spell data
+                const spell = spellManager.getSpell(ability.id);
+                
+                if (spell && spell.logicKey && spellLogic[spell.logicKey]) {
+                    try {
+                        const spellLevel = ability.level || unit.spellLevel || 1;
+                        // Pass all required parameters including spell and spellLevel
+                        spellLogic[spell.logicKey](this, unit, unit, spell, spellLevel);
+                    } catch (error) {
+                        console.error(`Error applying passive ${ability.name}:`, error);
                     }
                 }
-            });
+            }
         });
-    }
+    });
+}
     
     start() {
         this.log("Battle started!");
