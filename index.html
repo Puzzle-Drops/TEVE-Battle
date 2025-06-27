@@ -4965,18 +4965,10 @@ const effectOrder = [
 // Add effect tags in the specified order
 effectOrder.forEach(effect => {
     if (effects.includes(effect.key)) {
-        // Determine color class based on effect type
-        let colorClass = '';
-        if (effect.key === 'buff' || effect.key.startsWith('buff_')) {
-            colorClass = 'buff-tag';
-        } else if (effect.key === 'debuff' || effect.key.startsWith('debuff_')) {
-            colorClass = 'debuff-tag';
-        }
-        
-        effectTags += `<span class="abilityEffectTag ${effect.key} ${colorClass}">${effect.display}</span>`;
+        effectTags += `<span class="abilityEffectTag ${effect.key}">${effect.display}</span>`;
     }
-});    
-    
+});
+	
     // Format cooldown with level scaling
     let cooldownText = 'Cooldown: ';
     if (ability.passive || effects.includes('passive')) {
