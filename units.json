@@ -46,7 +46,7 @@
       "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
       "mainstat": "int",
       "spells": ["holy_light", "divine_shield"],
-      "promotesTo": ["priest_male", "luminary_male"]
+      "promotesTo": ["priest_male", "patriarch_male"]
     },
     "cleric_female": {
       "name": "Cleric",
@@ -90,8 +90,8 @@
       "ultimateSpell": "heavens_wrath",
       "promotesTo": []
     },
-    "luminary_male": {
-      "name": "Luminary",
+    "patriarch_male": {
+      "name": "Patriarch",
       "tier": 3,
       "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
       "mainstat": "int",
@@ -1087,7 +1087,7 @@
     }
   },
 "classFamilies": [
-    { "name": "Acolyte", "icon": "✚", "classes": ["Acolyte", "Cleric", "Priest", "Priestess", "Hierophant", "Luminary", "Matriarch", "Prophet", "Prophetess"] },
+    { "name": "Acolyte", "icon": "✚", "classes": ["Acolyte", "Cleric", "Priest", "Priestess", "Hierophant", "Patriarch", "Matriarch", "Prophet", "Prophetess"] },
     { "name": "Archer", "icon": "🏹", "classes": ["Archer", "Ranger", "Marksman", "Sniper", "Tracker", "Monster Hunter"] },
     { "name": "Druid", "icon": "🌿", "classes": ["Druid", "Arch Druid", "Shapeshifter", "Runemaster", "Shaman", "Summoner"] },
     { "name": "Initiate", "icon": "✨", "classes": ["Initiate", "Mage", "Wizard", "Witch", "White Wizard", "White Witch", "Sage", "Arch Sage"] },
