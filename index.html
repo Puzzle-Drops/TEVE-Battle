@@ -1200,9 +1200,9 @@ get mainstat() {
 equipItem(item, slot) {
     if (!item || item.slot !== slot) return false;
     
-    // Villagers can only equip items level 50 and below
-    if ((this.className.includes('villager') || this.className.includes('tester')) && item.level > 50) {
-        alert('Villagers can only equip items level 50 and below!');
+    // Villagers can only equip items level 60 and below
+    if ((this.className.includes('villager') || this.className.includes('tester')) && item.level > 70) {
+        alert('Villagers can only equip items level 70 and below!');
         return false;
     }
     
@@ -3951,8 +3951,8 @@ equipFromStash(itemIndex, slot) {
     
     if (item && item.slot === slot) {
         // Check villager restriction
-        if ((hero.className.includes('villager') || hero.className.includes('tester')) && item.level > 50) {
-            alert('Villagers can only equip items level 50 and below!');
+        if ((hero.className.includes('villager') || hero.className.includes('tester')) && item.level > 70) {
+            alert('Villagers can only equip items level 70 and below!');
             return;
         }
         
