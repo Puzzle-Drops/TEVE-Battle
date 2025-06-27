@@ -1022,10 +1022,22 @@ getStatLine(rollType, value, maxValue, rarity = 'green') {
             }
 
 get spellLevel() {
-    // Calculate spell level from tier, clamped between 1 and 5
-    if (this.awakened) return 5;
-    const tier = this.classTier || 0;
-    return Math.max(1, Math.min(5, tier + 1));
+    // Check for override first
+    if (this._overrideSpellLevel !== undefined) {
+        return this._overrideSpellLevel;
+    }
+    // Implementation varies based on class tier and awakened status
+    if (this.classTier === 0) return 1;
+    if (this.classTier === 1) return 1;
+    if (this.classTier === 2) return 2;
+    if (this.classTier === 3) return 3;
+    if (this.classTier === 4 && !this.awakened) return 4;
+    if (this.classTier === 4 && this.awakened) return 5;
+    return 1;
+}
+
+set spellLevel(value) {
+    this._overrideSpellLevel = value;
 }
 
             get baseStats() {
