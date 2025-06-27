@@ -719,17 +719,17 @@ body {
 
 /* Party positions - more horizontal spacing */
 .party1 { left: 33%; top: 56%; }
-.party2 { left: 24%; top: 40%; }
-.party3 { left: 20%; top: 70%; }
-.party4 { left: 14%; top: 31%; }
-.party5 { left: 10%; top: 58%; }
+.party2 { left: 22%; top: 40%; }
+.party3 { left: 18%; top: 70%; }
+.party4 { left: 12%; top: 31%; }
+.party5 { left: 8%; top: 58%; }
 
 /* Enemy positions - mirrored */
 .enemy1 { right: 33%; top: 56%; }
-.enemy2 { right: 24%; top: 40%; }
-.enemy3 { right: 20%; top: 70%; }
-.enemy4 { right: 14%; top: 31%; }
-.enemy5 { right: 10%; top: 58%; }
+.enemy2 { right: 22%; top: 40%; }
+.enemy3 { right: 18%; top: 70%; }
+.enemy4 { right: 12%; top: 31%; }
+.enemy5 { right: 8%; top: 58%; }
 
 /* Battle UI */
 .battleUI {
