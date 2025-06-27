@@ -1544,8 +1544,8 @@ body {
 
 .itemStars {
     position: absolute;
-    bottom: 2px;
-    left: 2px;
+    bottom: 0px;
+    left: 0px;
     font-size: 12px;
     font-weight: bold;
     letter-spacing: -3px;
@@ -1566,8 +1566,8 @@ body {
 
 .itemLevel {
     position: absolute;
-    bottom: 2px;
-    right: 2px;
+    bottom: 0px;
+    right: 0px;
     font-size: 12px;
     font-weight: bold;
     color: #fff;
@@ -2948,8 +2948,8 @@ body {
 /* Fix the item quality overlay on actual items */
 .itemContainer .itemQuality {
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: 0px;
+    right: 0px;
     font-size: 12px;
     font-weight: bold;
     color: #fff;
