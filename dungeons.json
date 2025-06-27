@@ -43,12 +43,12 @@
     "Divine": {
       "tier": 8,
       "color": "divine",
-      "position": { "x": 17, "y": 70 }
+      "position": { "x": 23, "y": 75 }
     },
     "Ascended": {
       "tier": 9,
       "color": "ascended",
-      "position": { "x": 19, "y": 80 }
+      "position": { "x": 50, "y": 50 }
     },
     "Transcendent": {
       "tier": 10,
