@@ -182,7 +182,7 @@ Consume all exp upon going to next class and start again at 0 exp, level 1. All 
 
 Class paths:
 Acolyte -> Cleric -> Priest (Male) / Priestess (Female) -> Hierophant
-Acolyte -> Cleric -> Luminary (Male) / Matriarch (Female) -> Prophet (Male) / Prophetess (Female)
+Acolyte -> Cleric -> Patriarch (Male) / Matriarch (Female) -> Prophet (Male) / Prophetess (Female)
 Archer -> Ranger -> Marksman -> Sniper
 Archer -> Ranger -> Tracker -> Monster Hunter
 Druid -> Arch Druid -> Shapeshifter -> Runemaster
