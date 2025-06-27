@@ -50,8 +50,9 @@
         </div>
 
         <!-- Battle Scene -->
-        <div id="battleScene">
-            <div class="battleField">
+<div id="battleScene">
+    <div class="battleFieldBackground"></div>
+    <div class="battleField">
                 <!-- Party Units -->
                 <div class="unitSlot party1" id="party1">
                     <div class="healthBar">
@@ -2982,17 +2983,17 @@ sortItems(items) {
 }
 		
             showBattle() {
-                this.hideAllScreens();
-                this.closeHeroInfo(); // Close any open popups
-                this.currentScreen = 'battleScene';
-                document.getElementById('battleScene').style.display = 'block';
-                
-                // Set battlefield background based on current dungeon
-                const battleField = document.querySelector('.battleField');
-                if (battleField && this.currentDungeon) {
-                    const dungeonName = this.currentDungeon.name.toLowerCase().replace(/ /g, '_');
-                    battleField.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
-                }
+    this.hideAllScreens();
+    this.closeHeroInfo(); // Close any open popups
+    this.currentScreen = 'battleScene';
+    document.getElementById('battleScene').style.display = 'block';
+    
+    // Set battlefield background based on current dungeon
+    const battleFieldBg = document.querySelector('.battleFieldBackground');
+    if (battleFieldBg && this.currentDungeon) {
+        const dungeonName = this.currentDungeon.name.toLowerCase().replace(/ /g, '_');
+        battleFieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
+    }
                 
               // Set auto toggles based on saved states
                 document.getElementById('autoModeToggle').checked = this.autoBattle;
