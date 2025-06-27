@@ -718,135 +718,167 @@ Press \` to toggle console</span>`;
     }
     
     setCurrentUnitSpellLevel(level) {
-        if (!window.game || !game.currentBattle) {
-            this.addLog('error', 'No battle in progress');
-            return;
-        }
-        
-        const battle = game.currentBattle;
-        if (!battle.currentUnit) {
-            this.addLog('error', "It's not anyone's turn yet");
-            return;
-        }
-        
-        const unit = battle.currentUnit;
-        const oldLevel = unit.spellLevel;
-        
-        // Clamp level between 1 and 5
-        level = Math.max(1, Math.min(5, parseInt(level)));
-        
-        // Update spell level
-        unit.source.spellLevel = level;
-        
-        // Update abilities to reflect new level
-        unit.abilities.forEach(ability => {
-            if (ability.level !== undefined) {
-                ability.level = level;
-            }
-        });
-        
-        this.addLog('info', `Set ${unit.name}'s spell level from ${oldLevel} to ${level}`);
+    if (!window.game || !game.currentBattle) {
+        this.addLog('error', 'No battle in progress');
+        return;
     }
+    
+    const battle = game.currentBattle;
+    if (!battle.currentUnit) {
+        this.addLog('error', "It's not anyone's turn yet");
+        return;
+    }
+    
+    const unit = battle.currentUnit;
+    const oldLevel = unit.spellLevel;
+    
+    // Clamp level between 1 and 5
+    level = Math.max(1, Math.min(5, parseInt(level)));
+    
+    // For enemies, we can set spellLevel directly
+    if (unit.isEnemy) {
+        unit.source.spellLevel = level;
+    } else {
+        // For heroes, we need to store an override on the battle unit itself
+        unit._overrideSpellLevel = level;
+        
+        // Modify the getter to use our override
+        Object.defineProperty(unit, 'spellLevel', {
+            get: function() {
+                return this._overrideSpellLevel || this.source.spellLevel || 1;
+            },
+            configurable: true
+        });
+    }
+    
+    // Update abilities to reflect new level
+    unit.abilities.forEach(ability => {
+        if (ability.level !== undefined) {
+            ability.level = level;
+        }
+    });
+    
+    this.addLog('info', `Set ${unit.name}'s spell level from ${oldLevel} to ${level}`);
+    
+    // Update the battle UI to reflect changes if needed
+    if (battle.updateUI) {
+        battle.updateUI();
+    }
+}
 
     applyBuffToUnit(unitIndex, buffName, duration) {
-        if (!window.game || !game.currentBattle) {
-            this.addLog('error', 'No battle in progress');
-            return;
-        }
-        
-        const battle = game.currentBattle;
-        const allUnits = [...battle.party, ...battle.enemies];
-        
-        if (unitIndex < 0 || unitIndex >= allUnits.length) {
-            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
-            return;
-        }
-        
-        const unit = allUnits[unitIndex];
-        if (!unit || !unit.isAlive) {
-            this.addLog('error', 'Unit is dead or invalid');
-            return;
-        }
-        
-        // Validate buff name
-        const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield'];
-        if (!validBuffs.includes(buffName)) {
-            this.addLog('error', `Invalid buff name. Valid buffs: ${validBuffs.join(', ')}`);
-            return;
-        }
-        
-        duration = parseInt(duration) || 3;
-        
-        // Apply the buff
-        battle.applyBuff(unit, buffName, duration, {});
-        this.addLog('info', `Applied ${buffName} to ${unit.name} for ${duration} turns`);
+    if (!window.game || !game.currentBattle) {
+        this.addLog('error', 'No battle in progress');
+        return;
     }
+    
+    const battle = game.currentBattle;
+    const allUnits = [...battle.party, ...battle.enemies];
+    
+    if (unitIndex < 0 || unitIndex >= allUnits.length) {
+        this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+        return;
+    }
+    
+    const unit = allUnits[unitIndex];
+    if (!unit || !unit.isAlive) {
+        this.addLog('error', 'Unit is dead or invalid');
+        return;
+    }
+    
+    // Validate buff name
+    const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield'];
+    if (!validBuffs.includes(buffName)) {
+        this.addLog('error', `Invalid buff name. Valid buffs: ${validBuffs.join(', ')}`);
+        return;
+    }
+    
+    duration = parseInt(duration) || 3;
+    
+    // Apply the buff
+    battle.applyBuff(unit, buffName, duration, {});
+    this.addLog('info', `Applied ${buffName} to ${unit.name} for ${duration} turns`);
+    
+    // Update the battle UI to show the buff
+    battle.updateUI();
+}
 
-    applyDebuffToUnit(unitIndex, debuffName, duration) {
-        if (!window.game || !game.currentBattle) {
-            this.addLog('error', 'No battle in progress');
-            return;
-        }
-        
-        const battle = game.currentBattle;
-        const allUnits = [...battle.party, ...battle.enemies];
-        
-        if (unitIndex < 0 || unitIndex >= allUnits.length) {
-            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
-            return;
-        }
-        
-        const unit = allUnits[unitIndex];
-        if (!unit || !unit.isAlive) {
-            this.addLog('error', 'Unit is dead or invalid');
-            return;
-        }
-        
-        // Validate debuff name
-        const validDebuffs = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Stun', 'Taunt', 'Silence', 'Marked'];
-        if (!validDebuffs.includes(debuffName)) {
-            this.addLog('error', `Invalid debuff name. Valid debuffs: ${validDebuffs.join(', ')}`);
-            return;
-        }
-        
-        duration = parseInt(duration) || 3;
-        
-        // Apply the debuff with appropriate effects
-        const effects = {};
-        if (debuffName === 'Stun') effects.stunned = true;
-        if (debuffName === 'Bleed') effects.bleedDamage = true;
-        if (debuffName === 'Blight') effects.noHeal = true;
-        
-        battle.applyDebuff(unit, debuffName, duration, effects);
-        this.addLog('info', `Applied ${debuffName} to ${unit.name} for ${duration} turns`);
+applyDebuffToUnit(unitIndex, debuffName, duration) {
+    if (!window.game || !game.currentBattle) {
+        this.addLog('error', 'No battle in progress');
+        return;
     }
+    
+    const battle = game.currentBattle;
+    const allUnits = [...battle.party, ...battle.enemies];
+    
+    if (unitIndex < 0 || unitIndex >= allUnits.length) {
+        this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+        return;
+    }
+    
+    const unit = allUnits[unitIndex];
+    if (!unit || !unit.isAlive) {
+        this.addLog('error', 'Unit is dead or invalid');
+        return;
+    }
+    
+    // Validate debuff name
+    const validDebuffs = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Stun', 'Taunt', 'Silence', 'Marked'];
+    if (!validDebuffs.includes(debuffName)) {
+        this.addLog('error', `Invalid debuff name. Valid debuffs: ${validDebuffs.join(', ')}`);
+        return;
+    }
+    
+    duration = parseInt(duration) || 3;
+    
+    // Apply the debuff with appropriate effects
+    const effects = {};
+    if (debuffName === 'Stun') effects.stunned = true;
+    if (debuffName === 'Bleed') effects.bleedDamage = true;
+    if (debuffName === 'Blight') effects.noHeal = true;
+    
+    battle.applyDebuff(unit, debuffName, duration, effects);
+    this.addLog('info', `Applied ${debuffName} to ${unit.name} for ${duration} turns`);
+    
+    // Update the battle UI to show the debuff
+    battle.updateUI();
+    
+    // If applying stun, also update stun visuals
+    if (debuffName === 'Stun') {
+        battle.updateStunVisuals(unit);
+    }
+}
 
-    applyShieldToUnit(unitIndex, amount) {
-        if (!window.game || !game.currentBattle) {
-            this.addLog('error', 'No battle in progress');
-            return;
-        }
-        
-        const battle = game.currentBattle;
-        const allUnits = [...battle.party, ...battle.enemies];
-        
-        if (unitIndex < 0 || unitIndex >= allUnits.length) {
-            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
-            return;
-        }
-        
-        const unit = allUnits[unitIndex];
-        if (!unit || !unit.isAlive) {
-            this.addLog('error', 'Unit is dead or invalid');
-            return;
-        }
-        
-        amount = parseInt(amount) || 100;
-        
-        // Apply shield as a buff with -1 duration (permanent until depleted)
-        battle.applyBuff(unit, 'Shield', -1, { shieldAmount: amount });
-        this.addLog('info', `Applied ${amount} HP shield to ${unit.name}`);
+applyShieldToUnit(unitIndex, amount) {
+    if (!window.game || !game.currentBattle) {
+        this.addLog('error', 'No battle in progress');
+        return;
     }
+    
+    const battle = game.currentBattle;
+    const allUnits = [...battle.party, ...battle.enemies];
+    
+    if (unitIndex < 0 || unitIndex >= allUnits.length) {
+        this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+        return;
+    }
+    
+    const unit = allUnits[unitIndex];
+    if (!unit || !unit.isAlive) {
+        this.addLog('error', 'Unit is dead or invalid');
+        return;
+    }
+    
+    amount = parseInt(amount) || 100;
+    
+    // Apply shield as a buff with -1 duration (permanent until depleted)
+    battle.applyBuff(unit, 'Shield', -1, { shieldAmount: amount });
+    this.addLog('info', `Applied ${amount} HP shield to ${unit.name}`);
+    
+    // Update the battle UI to show the shield
+    battle.updateUI();
+}
 
     listBattleUnits() {
         if (!window.game || !game.currentBattle) {
