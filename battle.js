@@ -1345,37 +1345,39 @@ if (unit.isEnemy) {
             damage = Math.round(damage * 0.75);
         }
         
-        // Apply damage reduction based on type
-        if (damageType === 'physical') {
-            let physicalDR = target.physicalDamageReduction;
-            
-            // Apply Reduce Defense (flat -25 percentage points)
-            if (hasReduceDefense) {
-                physicalDR = Math.max(0, physicalDR - 0.25);
-            }
-            
-            // Apply Increase Defense (flat +25 percentage points, capped at 90%)
-            if (hasIncreaseDefense) {
-                physicalDR = Math.min(0.9, physicalDR + 0.25);
-            }
-            
-            damage = damage * (1 - physicalDR);
-        } else {
-            // All non-physical damage is considered magical
-            let magicalDR = target.magicDamageReduction;
-            
-            // Apply Reduce Defense (flat -25 percentage points)
-            if (hasReduceDefense) {
-                magicalDR = Math.max(0, magicalDR - 0.25);
-            }
-            
-            // Apply Increase Defense (flat +25 percentage points, capped at 50%)
-            if (hasIncreaseDefense) {
-                magicalDR = Math.min(0.5, magicalDR + 0.25);
-            }
-            
-            damage = damage * (1 - magicalDR);
+        // Apply damage reduction based on type (skip for pure damage)
+if (damageType !== 'pure') {
+    if (damageType === 'physical') {
+        let physicalDR = target.physicalDamageReduction;
+        
+        // Apply Reduce Defense (flat -25 percentage points)
+        if (hasReduceDefense) {
+            physicalDR = Math.max(0, physicalDR - 0.25);
         }
+        
+        // Apply Increase Defense (flat +25 percentage points, capped at 90%)
+        if (hasIncreaseDefense) {
+            physicalDR = Math.min(0.9, physicalDR + 0.25);
+        }
+        
+        damage = damage * (1 - physicalDR);
+    } else if (damageType === 'magical') {
+        // All non-physical, non-pure damage is considered magical
+        let magicalDR = target.magicDamageReduction;
+        
+        // Apply Reduce Defense (flat -25 percentage points)
+        if (hasReduceDefense) {
+            magicalDR = Math.max(0, magicalDR - 0.25);
+        }
+        
+        // Apply Increase Defense (flat +25 percentage points, capped at 50%)
+        if (hasIncreaseDefense) {
+            magicalDR = Math.min(0.5, magicalDR + 0.25);
+        }
+        
+        damage = damage * (1 - magicalDR);
+    }
+}
         
         // Check for shields first
         const shield = target.buffs.find(b => b.name === 'Shield');
@@ -1416,8 +1418,8 @@ if (unit.isEnemy) {
             }
         });
         
-// Apply passive damage reduction (like Thick Hide)
-if (target.damageReduction) {
+// Apply passive damage reduction (like Thick Hide) - skip for pure damage
+if (target.damageReduction && damageType !== 'pure') {
     damage *= (1 - target.damageReduction);
 }
 
