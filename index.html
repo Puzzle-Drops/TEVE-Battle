@@ -4908,31 +4908,20 @@ formatAbilityTooltip(ability, level) {
     
     // Define the order of effects and their display names
 const effectOrder = [
+
+    // Core effects
+    { key: 'passive', display: 'Passive' },
+    { key: 'aoe', display: 'AOE' },
+    { key: 'heal', display: 'Heal' },
+	
     // Damage types
     { key: 'damage', display: 'Damage' },
     { key: 'physical', display: 'Physical' },
     { key: 'magical', display: 'Magical' },
     { key: 'pure', display: 'Pure' },
     
-    // Core effects
-    { key: 'heal', display: 'Heal' },
-    { key: 'aoe', display: 'AOE' },
-    { key: 'passive', display: 'Passive' },
-    
     // Special effects
-    { key: 'dot', display: 'DOT' },
-    { key: 'speed', display: 'Speed' },
-    { key: 'defense', display: 'Defense' },
-    { key: 'shield', display: 'Shield' },
-    { key: 'control', display: 'Control' },
     { key: 'evasion', display: 'Evasion' },
-    { key: 'frost', display: 'Frost' },
-    { key: 'bleed', display: 'Bleed' },
-    { key: 'slow', display: 'Slow' },
-    { key: 'stun', display: 'Stun' },
-    { key: 'immunity', display: 'Immunity' },
-    { key: 'summon', display: 'Summon' },
-    { key: 'random', display: 'Random' },
 
     // Buffs
     { key: 'buff', display: 'Buff' },
