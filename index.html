@@ -1129,25 +1129,32 @@ get mainstat() {
     const abilityLevel = this.spellLevel;
     
     // Add abilities from spell list
-    spells.forEach((spell, index) => {
-        if (spell) {
-            const ability = {
-                id: spell.id,
-                name: spell.name,
-                cooldown: spell.cooldown,
-                currentCooldown: 0,
-                level: abilityLevel,
-                description: spell.description,
-                icon: `${spell.id}.png`,
-                effects: spell.effects,
-                passive: spell.passive || false
-            };
-            
-            abilities.push(ability);
+spells.forEach((spell, index) => {
+    if (spell) {
+        // Get the correct cooldown for this spell level
+        let cooldownValue = 0;
+        if (Array.isArray(spell.cooldown)) {
+            const cooldownIndex = Math.max(0, Math.min(4, abilityLevel - 1));
+            cooldownValue = spell.cooldown[cooldownIndex] || spell.cooldown[0];
+        } else {
+            cooldownValue = spell.cooldown || 0;
         }
-    });
-                
-                
+        
+        const ability = {
+            id: spell.id,
+            name: spell.name,
+            cooldown: cooldownValue,
+            currentCooldown: 0,
+            level: abilityLevel,
+            description: spell.description,
+            icon: `${spell.id}.png`,
+            effects: spell.effects,
+            passive: spell.passive || false
+        };
+        
+        abilities.push(ability);
+    }
+});
                 
                 return abilities;
             }
@@ -1353,20 +1360,29 @@ get mainstat() {
     const spells = spellManager.getSpellsByIds(spellIds);
     
     spells.forEach((spell, index) => {
-        if (spell) {
-            abilities.push({
-                id: spell.id,
-                name: spell.name,
-                description: spell.description,
-                cooldown: spell.cooldown,
-                currentCooldown: 0,
-                level: this.spellLevel,
-                icon: `${spell.id}.png`,
-                effects: spell.effects,
-                passive: spell.passive || false
-            });
+    if (spell) {
+        // Get the correct cooldown for this spell level
+        let cooldownValue = 0;
+        if (Array.isArray(spell.cooldown)) {
+            const cooldownIndex = Math.max(0, Math.min(4, this.spellLevel - 1));
+            cooldownValue = spell.cooldown[cooldownIndex] || spell.cooldown[0];
+        } else {
+            cooldownValue = spell.cooldown || 0;
         }
-    });
+        
+        abilities.push({
+            id: spell.id,
+            name: spell.name,
+            description: spell.description,
+            cooldown: cooldownValue,
+            currentCooldown: 0,
+            level: this.spellLevel,
+            icon: `${spell.id}.png`,
+            effects: spell.effects,
+            passive: spell.passive || false
+        });
+    }
+});
     
     return abilities;
 }
@@ -4949,10 +4965,17 @@ const effectOrder = [
 // Add effect tags in the specified order
 effectOrder.forEach(effect => {
     if (effects.includes(effect.key)) {
-        effectTags += `<span class="abilityEffectTag ${effect.key}">${effect.display}</span>`;
+        // Determine color class based on effect type
+        let colorClass = '';
+        if (effect.key === 'buff' || effect.key.startsWith('buff_')) {
+            colorClass = 'buff-tag';
+        } else if (effect.key === 'debuff' || effect.key.startsWith('debuff_')) {
+            colorClass = 'debuff-tag';
+        }
+        
+        effectTags += `<span class="abilityEffectTag ${effect.key} ${colorClass}">${effect.display}</span>`;
     }
-});
-    
+});    
     
     // Format cooldown with level scaling
     let cooldownText = 'Cooldown: ';
