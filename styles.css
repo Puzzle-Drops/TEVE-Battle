@@ -214,23 +214,33 @@ body {
     text-shadow: 0 0 20px rgba(77, 208, 225, 0.8);
 }
 
-/* Battle Scene */
 #battleScene {
     display: none;
     height: 100%;
     background: #0a0f1a;
     position: relative;
+    overflow: hidden; /* Hide the parts of background that extend beyond */
+}
+
+.battleFieldBackground {
+    position: absolute;
+    width: 125%;
+    height: 125%;
+    left: -12.5%; /* Center the extra width */
+    top: -12.5%; /* Push up to show more bottom */
+    background-image: url('https://puzzle-drops.github.io/TEVE/img/fields/satyrs.png');
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-color: #0a0f1a; /* Fallback color */
+    z-index: 0;
 }
 
 .battleField {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: url('https://puzzle-drops.github.io/TEVE/img/fields/satyrs.png');
-    background-size: cover;
-    background-position: bottom;
-    background-repeat: no-repeat;
-    background-color: #0a0f1a; /* Fallback color */
+    z-index: 1; /* Ensure battlefield is above background */
 }
 
 
