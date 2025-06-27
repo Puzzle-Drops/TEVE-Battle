@@ -3,56 +3,52 @@
     "Easy": {
       "tier": 0,
       "color": "easy",
-      "position": { "x": 50, "y": 80 },
-      "requirement": "Items no requirements"
+      "position": { "x": 50, "y": 80 }
+    },
+    "Medium": {
+      "tier": 1,
+      "color": "medium", 
+      "position": { "x": 70, "y": 75 }
     },
     "Hard": {
-      "tier": 1,
-      "color": "hard", 
-      "position": { "x": 70, "y": 75 },
-      "requirement": "Items Class 1 required"
+      "tier": 2,
+      "color": "hard",
+      "position": { "x": 85, "y": 60 }
+    },
+    "Forsaken": {
+      "tier": 3,
+      "color": "forsaken",
+      "position": { "x": 80, "y": 40 }
     },
     "Nightmare": {
-      "tier": 2,
+      "tier": 4,
       "color": "nightmare",
-      "position": { "x": 85, "y": 60 },
-      "requirement": "Items Class 2 required"
+      "position": { "x": 65, "y": 25 }
     },
     "Hell": {
-      "tier": 3,
+      "tier": 5,
       "color": "hell",
-      "position": { "x": 80, "y": 40 },
-      "requirement": "Items Class 3 required"
+      "position": { "x": 35, "y": 25 }
     },
     "Impossible": {
-      "tier": 4,
+      "tier": 6,
       "color": "impossible",
-      "position": { "x": 65, "y": 25 },
-      "requirement": "Items Class 4 required"
+      "position": { "x": 20, "y": 40 }
     },
     "Mythical": {
-      "tier": 5,
+      "tier": 7,
       "color": "mythical",
-      "position": { "x": 35, "y": 25 },
-      "requirement": "Items Class 4 and level 500 required"
+      "position": { "x": 15, "y": 60 }
     },
     "Divine": {
-      "tier": 6,
+      "tier": 8,
       "color": "divine",
-      "position": { "x": 20, "y": 40 },
-      "requirement": "Items Class 4 and level 500 required"
+      "position": { "x": 50, "y": 10 }
     },
     "Ascended": {
-      "tier": 7,
+      "tier": 9,
       "color": "ascended",
-      "position": { "x": 15, "y": 60 },
-      "requirement": "Items Class 4 and level 500 required"
-    },
-    "Transcendent": {
-      "tier": 8,
-      "color": "transcendent",
-      "position": { "x": 50, "y": 10 },
-      "requirement": "Items Class 4 and level 500 required"
+      "position": { "x": 85, "y": 40 }
     }
   },
   "dungeons": {
