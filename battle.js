@@ -885,6 +885,30 @@ if (unit.isEnemy) {
             this.endTurn();
             return;
         }
+
+        // Check if unit is silenced
+        const silenceDebuff = unit.debuffs.find(d => d.name === 'Silence');
+        if (silenceDebuff) {
+            this.log(`${unit.name} is silenced and must use basic attack!`);
+            // Force skill 1 on random enemy
+            const enemies = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
+            if (enemies.length > 0) {
+                const randomTarget = enemies[Math.floor(Math.random() * enemies.length)];
+                // Find first non-passive ability (skill 1)
+                let skill1Index = -1;
+                for (let i = 0; i < unit.abilities.length; i++) {
+                    if (unit.abilities[i] && !unit.abilities[i].passive) {
+                        skill1Index = i;
+                        break;
+                    }
+                }
+                if (skill1Index >= 0) {
+                    this.executeAbility(unit, skill1Index, randomTarget);
+                }
+            }
+            this.endTurn();
+            return;
+        }
         
         // Check if unit is taunted
         const tauntDebuff = unit.debuffs.find(d => d.name === 'Taunt' && d.tauntTarget);
@@ -1123,7 +1147,9 @@ if (unit.isEnemy) {
             'debuff_blight': 'Blight',
             'debuff_bleed': 'Bleed',
             'debuff_stun': 'Stun',
-            'debuff_taunt': 'Taunt'
+            'debuff_taunt': 'Taunt',
+            'debuff_silence': 'Silence',
+            'debuff_marked': 'Marked'
         };
         return mapping[effect] || '';
     }
@@ -1282,14 +1308,16 @@ if (unit.isEnemy) {
         
         let damage = Math.round(amount);
 
-if (damageType === 'physical' && target.physicalDodgeChance) {
-        if (Math.random() < target.physicalDodgeChance) {
-            this.log(`${target.name} dodges the attack!`);
-            // Show dodge animation
-            this.showDodgeAnimation(target);
-            return 0;
+        // Check if target can dodge (Marked prevents all dodging)
+        const isMarked = target.debuffs.some(d => d.name === 'Marked');
+        if (damageType === 'physical' && target.physicalDodgeChance && !isMarked) {
+            if (Math.random() < target.physicalDodgeChance) {
+                this.log(`${target.name} dodges the attack!`);
+                // Show dodge animation
+                this.showDodgeAnimation(target);
+                return 0;
+            }
         }
-    }
         
         // Apply attacker's damage modifiers from buffs
         attacker.buffs.forEach(buff => {
@@ -1368,6 +1396,11 @@ if (damageType === 'physical' && target.physicalDodgeChance) {
                 damage *= debuff.damageTakenMultiplier;
             }
         });
+
+        // Apply Marked damage increase (25% more damage)
+        if (target.debuffs.some(d => d.name === 'Marked')) {
+            damage *= 1.25;
+        }
         
         // Apply Reduce Attack LAST
         attacker.debuffs.forEach(debuff => {
@@ -1651,6 +1684,12 @@ showDodgeAnimation(target) {
     
     applyBuff(target, buffName, duration, effects) {
         if (!target.isAlive) return;
+        
+        // Check if target is marked (prevents gaining buffs)
+        if (target.debuffs.some(d => d.name === 'Marked')) {
+            this.log(`${target.name} is marked and cannot gain buffs!`);
+            return;
+        }
         
         // Special handling for shields
         if (buffName === 'Shield' && effects.shieldAmount !== undefined) {
@@ -2534,7 +2573,9 @@ this.party.forEach((unit, index) => {
             'Blight': 'blight',
             'Bleed': 'bleed',
             'Stun': 'stun',
-            'Taunt': 'taunt'
+            'Taunt': 'taunt',
+            'Silence': 'silence',
+            'Marked': 'marked'
         };
         return iconMap[debuffName] || 'debuff';
     }
@@ -2579,7 +2620,9 @@ this.party.forEach((unit, index) => {
             'Blight': 'No health regen, cannot be healed',
             'Bleed': 'Takes 5% max HP damage each turn',
             'Stun': 'Cannot act on next turn',
-            'Taunt': 'Must attack the unit that taunted'
+            'Taunt': 'Must attack the unit that taunted',
+            'Silence': 'Forces skill 1 attack on random enemy',
+            'Marked': '+25% damage taken, cannot gain buffs or evade'
         };
         
         tooltip.className = isBuff ? 'buff' : 'debuff';
