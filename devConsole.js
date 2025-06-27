@@ -735,21 +735,8 @@ Press \` to toggle console</span>`;
     // Clamp level between 1 and 5
     level = Math.max(1, Math.min(5, parseInt(level)));
     
-    // For enemies, we can set spellLevel directly
-    if (unit.isEnemy) {
-        unit.source.spellLevel = level;
-    } else {
-        // For heroes, we need to store an override on the battle unit itself
-        unit._overrideSpellLevel = level;
-        
-        // Modify the getter to use our override
-        Object.defineProperty(unit, 'spellLevel', {
-            get: function() {
-                return this._overrideSpellLevel || this.source.spellLevel || 1;
-            },
-            configurable: true
-        });
-    }
+    // For both enemies and heroes, we can now use the setter
+    unit.source.spellLevel = level;
     
     // Update abilities to reflect new level
     unit.abilities.forEach(ability => {
