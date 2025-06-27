@@ -904,7 +904,7 @@ if (unit.isEnemy) {
     }
 
     executeAITurn(unit) {
-        console.log(`AI Turn: ${unit.name}, abilities: ${unit.abilities.length}`);
+        //console.log(`AI Turn: ${unit.name}, abilities: ${unit.abilities.length}`);
         
         // Check if unit has taunt debuff and must attack specific target
         const tauntDebuff = unit.debuffs.find(d => d.name === 'Taunt' && d.tauntTarget);
