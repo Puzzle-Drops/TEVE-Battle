@@ -341,7 +341,13 @@ rampageLogic: function(battle, caster, target, spell) {
             forcedTargetIsEnemy: caster.isEnemy
         });
     },
-    
+    silenceTestLogic: function(battle, caster, target) {
+    battle.applyDebuff(target, 'Silence', 2, {});
+},
+
+markedTestLogic: function(battle, caster, target) {
+    battle.applyDebuff(target, 'Marked', 2, {});
+},
     frostBreathLogic: function(battle, caster, targets, spell) {
         const enemies = battle.getEnemies(caster);
         enemies.forEach(enemy => {
