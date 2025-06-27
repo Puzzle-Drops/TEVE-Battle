@@ -3358,168 +3358,173 @@ if (!this.autoReplay) {
         </div>
         <div class="expBar" style="position: relative; height: 40px; border: 1px solid #2a6a8a;">
             <div class="expFill" style="width: ${hero.level >= 500 ? '100' : Math.max(0, Math.min((hero.exp / hero.expToNext) * 100, 100))}%; height: 100%; background: ${hero.level >= 500 ? 'linear-gradient(90deg, #d896ff 0%, #a855f7 100%)' : 'linear-gradient(90deg, #0066cc 0%, #0099ff 100%)'}; box-shadow: 0 0 10px ${hero.level >= 500 ? 'rgba(216, 150, 255, 0.5)' : 'rgba(0, 153, 255, 0.5)'};"></div>
-            <div class="expText" style="position: absolute; t<div style="margin-top: 40px; display: flex; gap: 40px;">
-    <div style="flex: 0 0 auto;">
-        <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
-            <div class="gearSlot" style="cursor: default;">
-                <div class="gearLabel" style="font-size: 10px;">Trinket</div>
-                ${hero.gear.trinket ? 
-                    `<div class="gearItem ${hero.gear.trinket.getRarity()}" 
-                         style="pointer-events: all;"
-                         onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.trinket)"
-                         onmouseout="game.hideItemTooltip()">
-                        <div class="itemContainer">
-                            <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.trinket.id}.png" 
-                                 alt="${hero.gear.trinket.name}"
-                                 onerror="this.style.display='none'">
-                            ${hero.gear.trinket.refined ? '<div class="itemRefined">*</div>' : ''}
-                            ${hero.gear.trinket.getStars().html ? `<div class="itemStars ${hero.gear.trinket.getStars().colorClass}">${hero.gear.trinket.getStars().html}</div>` : ''}
-                            <div class="itemLevel">${hero.gear.trinket.level}</div>
-                            <div class="itemQuality">${hero.gear.trinket.getQualityPercent()}%</div>
-                        </div>
-                    </div>` 
-                    : ''}
-            </div>
-            <div class="gearSlot" style="cursor: default;">
-                <div class="gearLabel" style="font-size: 10px;">Head</div>
-                ${hero.gear.head ? 
-                    `<div class="gearItem ${hero.gear.head.getRarity()}"
-                         style="pointer-events: all;"
-                         onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.head)"
-                         onmouseout="game.hideItemTooltip()">
-                        <div class="itemContainer">
-                            <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.head.id}.png" 
-                                 alt="${hero.gear.head.name}"
-                                 onerror="this.style.display='none'">
-                            ${hero.gear.head.refined ? '<div class="itemRefined">*</div>' : ''}
-                            ${hero.gear.head.getStars().html ? `<div class="itemStars ${hero.gear.head.getStars().colorClass}">${hero.gear.head.getStars().html}</div>` : ''}
-                            <div class="itemLevel">${hero.gear.head.level}</div>
-                            <div class="itemQuality">${hero.gear.head.getQualityPercent()}%</div>
-                        </div>
-                    </div>` 
-                    : ''}
-            </div>
-            <div class="gearSlot" style="cursor: default;">
-                <div class="gearLabel" style="font-size: 10px;">Weapon</div>
-                ${hero.gear.weapon ? 
-                    `<div class="gearItem ${hero.gear.weapon.getRarity()}"
-                         style="pointer-events: all;"
-                         onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.weapon)"
-                         onmouseout="game.hideItemTooltip()">
-                        <div class="itemContainer">
-                            <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.weapon.id}.png" 
-                                 alt="${hero.gear.weapon.name}"
-                                 onerror="this.style.display='none'">
-                            ${hero.gear.weapon.refined ? '<div class="itemRefined">*</div>' : ''}
-                            ${hero.gear.weapon.getStars().html ? `<div class="itemStars ${hero.gear.weapon.getStars().colorClass}">${hero.gear.weapon.getStars().html}</div>` : ''}
-                            <div class="itemLevel">${hero.gear.weapon.level}</div>
-                            <div class="itemQuality">${hero.gear.weapon.getQualityPercent()}%</div>
-                        </div>
-                    </div>` 
-                    : ''}
-            </div>
-            <div class="gearSlot" style="cursor: default;">
-                <div class="gearLabel" style="font-size: 10px;">Chest</div>
-                ${hero.gear.chest ? 
-                    `<div class="gearItem ${hero.gear.chest.getRarity()}"
-                         style="pointer-events: all;"
-                         onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.chest)"
-                         onmouseout="game.hideItemTooltip()">
-                        <div class="itemContainer">
-                            <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.chest.id}.png" 
-                                 alt="${hero.gear.chest.name}"
-                                 onerror="this.style.display='none'">
-                            ${hero.gear.chest.refined ? '<div class="itemRefined">*</div>' : ''}
-                            ${hero.gear.chest.getStars().html ? `<div class="itemStars ${hero.gear.chest.getStars().colorClass}">${hero.gear.chest.getStars().html}</div>` : ''}
-                            <div class="itemLevel">${hero.gear.chest.level}</div>
-                            <div class="itemQuality">${hero.gear.chest.getQualityPercent()}%</div>
-                        </div>
-                    </div>` 
-                    : ''}
-            </div>
-            <div class="gearSlot" style="cursor: default;">
-                <div class="gearLabel" style="font-size: 10px;">Offhand</div>
-                ${hero.gear.offhand ? 
-                    `<div class="gearItem ${hero.gear.offhand.getRarity()}"
-                         style="pointer-events: all;"
-                         onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.offhand)"
-                         onmouseout="game.hideItemTooltip()">
-                        <div class="itemContainer">
-                            <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.offhand.id}.png" 
-                                 alt="${hero.gear.offhand.name}"
-                                 onerror="this.style.display='none'">
-                            ${hero.gear.offhand.refined ? '<div class="itemRefined">*</div>' : ''}
-                            ${hero.gear.offhand.getStars().html ? `<div class="itemStars ${hero.gear.offhand.getStars().colorClass}">${hero.gear.offhand.getStars().html}</div>` : ''}
-                            <div class="itemLevel">${hero.gear.offhand.level}</div>
-                            <div class="itemQuality">${hero.gear.offhand.getQualityPercent()}%</div>
-                        </div>
-                    </div>` 
-                    : ''}
-            </div>
-            <div class="gearSlot" style="cursor: default;">
-                <div class="gearLabel" style="font-size: 10px;">Legs</div>
-                ${hero.gear.legs ? 
-                    `<div class="gearItem ${hero.gear.legs.getRarity()}"
-                         style="pointer-events: all;"
-                         onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.legs)"
-                         onmouseout="game.hideItemTooltip()">
-                        <div class="itemContainer">
-                            <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.legs.id}.png" 
-                                 alt="${hero.gear.legs.name}"
-                                 onerror="this.style.display='none'">
-                            ${hero.gear.legs.refined ? '<div class="itemRefined">*</div>' : ''}
-                            ${hero.gear.legs.getStars().html ? `<div class="itemStars ${hero.gear.legs.getStars().colorClass}">${hero.gear.legs.getStars().html}</div>` : ''}
-                            <div class="itemLevel">${hero.gear.legs.level}</div>
-                            <div class="itemQuality">${hero.gear.legs.getQualityPercent()}%</div>
-                        </div>
-                    </div>` 
-                    : ''}
+            <div class="expText" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: ${hero.level >= 500 ? '#fff' : '#6a9aaa'};">
+                ${hero.level >= 500 ? 'Max Level' : `${hero.exp} / ${hero.expToNext} (${((hero.exp / hero.expToNext) * 100).toFixed(1)}%)`}
             </div>
         </div>
-    </div>
-    
-    <div style="flex: 1;">
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'Health Points')" onmouseout="game.hideStatTooltip()">
-            <span class="statName">HP</span>
-            <span class="statValue">${baseStats.str * 5} ${hero.gearStats.hp > 0 ? `<span class="statBonus">+${hero.gearStats.hp}</span>` : ''}</span>
+        
+        <div style="margin-top: 40px; display: flex; gap: 40px; align-items: flex-start;">
+            <div style="flex: 0 0 auto; min-width: 138px;">
+                <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
+                    <div class="gearSlot" style="cursor: default;">
+                        <div class="gearLabel" style="font-size: 10px;">Trinket</div>
+                        ${hero.gear.trinket ? 
+                            `<div class="gearItem ${hero.gear.trinket.getRarity()}" 
+                                 style="pointer-events: all;"
+                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.trinket)"
+                                 onmouseout="game.hideItemTooltip()">
+                                <div class="itemContainer">
+                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.trinket.id}.png" 
+                                         alt="${hero.gear.trinket.name}"
+                                         onerror="this.style.display='none'">
+                                    ${hero.gear.trinket.refined ? '<div class="itemRefined">*</div>' : ''}
+                                    ${hero.gear.trinket.getStars().html ? `<div class="itemStars ${hero.gear.trinket.getStars().colorClass}">${hero.gear.trinket.getStars().html}</div>` : ''}
+                                    <div class="itemLevel">${hero.gear.trinket.level}</div>
+                                    <div class="itemQuality">${hero.gear.trinket.getQualityPercent()}%</div>
+                                </div>
+                            </div>` 
+                            : ''}
+                    </div>
+                    <div class="gearSlot" style="cursor: default;">
+                        <div class="gearLabel" style="font-size: 10px;">Head</div>
+                        ${hero.gear.head ? 
+                            `<div class="gearItem ${hero.gear.head.getRarity()}"
+                                 style="pointer-events: all;"
+                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.head)"
+                                 onmouseout="game.hideItemTooltip()">
+                                <div class="itemContainer">
+                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.head.id}.png" 
+                                         alt="${hero.gear.head.name}"
+                                         onerror="this.style.display='none'">
+                                    ${hero.gear.head.refined ? '<div class="itemRefined">*</div>' : ''}
+                                    ${hero.gear.head.getStars().html ? `<div class="itemStars ${hero.gear.head.getStars().colorClass}">${hero.gear.head.getStars().html}</div>` : ''}
+                                    <div class="itemLevel">${hero.gear.head.level}</div>
+                                    <div class="itemQuality">${hero.gear.head.getQualityPercent()}%</div>
+                                </div>
+                            </div>` 
+                            : ''}
+                    </div>
+                    <div class="gearSlot" style="cursor: default;">
+                        <div class="gearLabel" style="font-size: 10px;">Weapon</div>
+                        ${hero.gear.weapon ? 
+                            `<div class="gearItem ${hero.gear.weapon.getRarity()}"
+                                 style="pointer-events: all;"
+                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.weapon)"
+                                 onmouseout="game.hideItemTooltip()">
+                                <div class="itemContainer">
+                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.weapon.id}.png" 
+                                         alt="${hero.gear.weapon.name}"
+                                         onerror="this.style.display='none'">
+                                    ${hero.gear.weapon.refined ? '<div class="itemRefined">*</div>' : ''}
+                                    ${hero.gear.weapon.getStars().html ? `<div class="itemStars ${hero.gear.weapon.getStars().colorClass}">${hero.gear.weapon.getStars().html}</div>` : ''}
+                                    <div class="itemLevel">${hero.gear.weapon.level}</div>
+                                    <div class="itemQuality">${hero.gear.weapon.getQualityPercent()}%</div>
+                                </div>
+                            </div>` 
+                            : ''}
+                    </div>
+                    <div class="gearSlot" style="cursor: default;">
+                        <div class="gearLabel" style="font-size: 10px;">Chest</div>
+                        ${hero.gear.chest ? 
+                            `<div class="gearItem ${hero.gear.chest.getRarity()}"
+                                 style="pointer-events: all;"
+                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.chest)"
+                                 onmouseout="game.hideItemTooltip()">
+                                <div class="itemContainer">
+                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.chest.id}.png" 
+                                         alt="${hero.gear.chest.name}"
+                                         onerror="this.style.display='none'">
+                                    ${hero.gear.chest.refined ? '<div class="itemRefined">*</div>' : ''}
+                                    ${hero.gear.chest.getStars().html ? `<div class="itemStars ${hero.gear.chest.getStars().colorClass}">${hero.gear.chest.getStars().html}</div>` : ''}
+                                    <div class="itemLevel">${hero.gear.chest.level}</div>
+                                    <div class="itemQuality">${hero.gear.chest.getQualityPercent()}%</div>
+                                </div>
+                            </div>` 
+                            : ''}
+                    </div>
+                    <div class="gearSlot" style="cursor: default;">
+                        <div class="gearLabel" style="font-size: 10px;">Offhand</div>
+                        ${hero.gear.offhand ? 
+                            `<div class="gearItem ${hero.gear.offhand.getRarity()}"
+                                 style="pointer-events: all;"
+                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.offhand)"
+                                 onmouseout="game.hideItemTooltip()">
+                                <div class="itemContainer">
+                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.offhand.id}.png" 
+                                         alt="${hero.gear.offhand.name}"
+                                         onerror="this.style.display='none'">
+                                    ${hero.gear.offhand.refined ? '<div class="itemRefined">*</div>' : ''}
+                                    ${hero.gear.offhand.getStars().html ? `<div class="itemStars ${hero.gear.offhand.getStars().colorClass}">${hero.gear.offhand.getStars().html}</div>` : ''}
+                                    <div class="itemLevel">${hero.gear.offhand.level}</div>
+                                    <div class="itemQuality">${hero.gear.offhand.getQualityPercent()}%</div>
+                                </div>
+                            </div>` 
+                            : ''}
+                    </div>
+                    <div class="gearSlot" style="cursor: default;">
+                        <div class="gearLabel" style="font-size: 10px;">Legs</div>
+                        ${hero.gear.legs ? 
+                            `<div class="gearItem ${hero.gear.legs.getRarity()}"
+                                 style="pointer-events: all;"
+                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.legs)"
+                                 onmouseout="game.hideItemTooltip()">
+                                <div class="itemContainer">
+                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.legs.id}.png" 
+                                         alt="${hero.gear.legs.name}"
+                                         onerror="this.style.display='none'">
+                                    ${hero.gear.legs.refined ? '<div class="itemRefined">*</div>' : ''}
+                                    ${hero.gear.legs.getStars().html ? `<div class="itemStars ${hero.gear.legs.getStars().colorClass}">${hero.gear.legs.getStars().html}</div>` : ''}
+                                    <div class="itemLevel">${hero.gear.legs.level}</div>
+                                    <div class="itemQuality">${hero.gear.legs.getQualityPercent()}%</div>
+                                </div>
+                            </div>` 
+                            : ''}
+                    </div>
+                </div>
+            </div>
+            
+            <div style="flex: 1; min-width: 200px;">
+                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Health Points')" onmouseout="game.hideStatTooltip()">
+                    <span class="statName">HP</span>
+                    <span class="statValue">${baseStats.str * 5} ${hero.gearStats.hp > 0 ? `<span class="statBonus">+${hero.gearStats.hp}</span>` : ''}</span>
+                </div>
+                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack')" onmouseout="game.hideStatTooltip()">
+                    <span class="statName">Attack</span>
+                    <span class="statValue">${stats[hero.mainstat || 'str']} ${hero.gearStats.attack > 0 ? `<span class="statBonus">+${hero.gearStats.attack}</span>` : ''}</span>
+                </div>
+                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Strength')" onmouseout="game.hideStatTooltip()">
+                    <span class="statName ${hero.mainstat === 'str' ? 'mainstat' : ''}">STR</span>
+                    <span class="statValue">${baseStats.str} ${hero.gearStats.str > 0 ? `<span class="statBonus">+${hero.gearStats.str}</span>` : ''}</span>
+                </div>
+                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Agility')" onmouseout="game.hideStatTooltip()">
+                    <span class="statName ${hero.mainstat === 'agi' ? 'mainstat' : ''}">AGI</span>
+                    <span class="statValue">${baseStats.agi} ${hero.gearStats.agi > 0 ? `<span class="statBonus">+${hero.gearStats.agi}</span>` : ''}</span>
+                </div>
+                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Intelligence')" onmouseout="game.hideStatTooltip()">
+                    <span class="statName ${hero.mainstat === 'int' ? 'mainstat' : ''}">INT</span>
+                    <span class="statValue">${baseStats.int} ${hero.gearStats.int > 0 ? `<span class="statBonus">+${hero.gearStats.int}</span>` : ''}</span>
+                </div>
+            </div>
+            
+            <div style="flex: 1; min-width: 200px;">
+                <div class="statLine" onmouseover="game.showStatTooltip(event, 'HP Regeneration')" onmouseout="game.hideStatTooltip()">
+                    <span class="statName">Regen</span>
+                    <span class="statValue">${baseHpRegen.toFixed(1)} ${hero.gearStats.hpRegen > 0 ? `<span class="statBonus">+${hero.gearStats.hpRegen.toFixed(1)}</span>` : ''}</span>
+                </div>
+                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
+                    <span class="statName">Atk Spd</span>
+                    <span class="statValue">${baseAttackSpeed.toFixed(1)}% ${hero.gearStats.attackSpeed > 0 ? `<span class="statBonus">+${hero.gearStats.attackSpeed.toFixed(1)}%</span>` : ''}</span>
+                </div>
+                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
+                    <span class="statName">Armor</span>
+                    <span class="statValue">${baseArmor} ${hero.gearStats.armor > 0 ? `<span class="statBonus">+${hero.gearStats.armor}</span>` : ''} <span style="color: #6a9aaa;">(${(physicalDR * 100).toFixed(1)}%)</span></span>
+                </div>
+                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
+                    <span class="statName">Resist</span>
+                    <span class="statValue">${baseResist} ${hero.gearStats.resist > 0 ? `<span class="statBonus">+${hero.gearStats.resist}</span>` : ''} <span style="color: #6a9aaa;">(${(magicalDR * 100).toFixed(1)}%)</span></span>
+                </div>
+            </div>
         </div>
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack')" onmouseout="game.hideStatTooltip()">
-            <span class="statName">Attack</span>
-            <span class="statValue">${stats[hero.mainstat || 'str']} ${hero.gearStats.attack > 0 ? `<span class="statBonus">+${hero.gearStats.attack}</span>` : ''}</span>
-        </div>
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'Strength')" onmouseout="game.hideStatTooltip()">
-            <span class="statName ${hero.mainstat === 'str' ? 'mainstat' : ''}">STR</span>
-            <span class="statValue">${baseStats.str} ${hero.gearStats.str > 0 ? `<span class="statBonus">+${hero.gearStats.str}</span>` : ''}</span>
-        </div>
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'Agility')" onmouseout="game.hideStatTooltip()">
-            <span class="statName ${hero.mainstat === 'agi' ? 'mainstat' : ''}">AGI</span>
-            <span class="statValue">${baseStats.agi} ${hero.gearStats.agi > 0 ? `<span class="statBonus">+${hero.gearStats.agi}</span>` : ''}</span>
-        </div>
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'Intelligence')" onmouseout="game.hideStatTooltip()">
-            <span class="statName ${hero.mainstat === 'int' ? 'mainstat' : ''}">INT</span>
-            <span class="statValue">${baseStats.int} ${hero.gearStats.int > 0 ? `<span class="statBonus">+${hero.gearStats.int}</span>` : ''}</span>
-        </div>
-    </div>
-    
-    <div style="flex: 1;">
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'HP Regeneration')" onmouseout="game.hideStatTooltip()">
-            <span class="statName">Regen</span>
-            <span class="statValue">${baseHpRegen.toFixed(1)} ${hero.gearStats.hpRegen > 0 ? `<span class="statBonus">+${hero.gearStats.hpRegen.toFixed(1)}</span>` : ''}</span>
-        </div>
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
-            <span class="statName">Atk Spd</span>
-            <span class="statValue">${baseAttackSpeed.toFixed(1)}% ${hero.gearStats.attackSpeed > 0 ? `<span class="statBonus">+${hero.gearStats.attackSpeed.toFixed(1)}%</span>` : ''}</span>
-        </div>
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
-            <span class="statName">Armor</span>
-            <span class="statValue">${baseArmor} ${hero.gearStats.armor > 0 ? `<span class="statBonus">+${hero.gearStats.armor}</span>` : ''} <span style="color: #6a9aaa;">(${(physicalDR * 100).toFixed(1)}%)</span></span>
-        </div>
-        <div class="statLine" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
-            <span class="statName">Resist</span>
-            <span class="statValue">${baseResist} ${hero.gearStats.resist > 0 ? `<span class="statBonus">+${hero.gearStats.resist}</span>` : ''} <span style="color: #6a9aaa;">(${(magicalDR * 100).toFixed(1)}%)</span></span>
-        </div>
-    </div>
-</div>
     `;
 }
 			
