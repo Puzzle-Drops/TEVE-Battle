@@ -2,98 +2,105 @@
 "punch": {
     "id": "punch",
     "name": "Punch",
-    "description": "Basic attack dealing damage equal to your Attack stat",
-    "cooldown": 0,
+    "description": "Basic attack dealing {baseDamage} + attack stat damage",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
-        "attack": 1.0
+        "base": [0, 0, 0, 0, 0],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0]
     },
     "target": "enemy",
     "logicKey": "punchLogic"
 },
-  "fury": {
+"fury": {
     "id": "fury",
     "name": "Fury",
-    "description": "Gain Increase Speed buff for 3 turns",
-    "cooldown": 5,
+    "description": "Gain Increase Speed buff for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
     "effects": ["buff", "speed", "buff_increase_speed"],
-    "duration": 3,
+    "duration": [3, 3, 3, 4, 4],
     "target": "self",
     "logicKey": "furyLogic"
-  },
-  "throw_rock": {
+},
+"throw_rock": {
     "id": "throw_rock",
     "name": "Throw Rock",
-    "description": "Throw a rock dealing attack + 0.75x INT damage and stunning for 1 turn",
-    "cooldown": 7,
+    "description": "Throw a rock dealing {baseDamage} + attack + {intScaling}x INT damage and stunning for {stunDuration} turn",
+    "cooldown": [7, 7, 6, 6, 5],
     "effects": ["damage", "physical", "debuff", "stun", "debuff_stun"],
     "scaling": {
-      "int": 0.75
+        "base": [50, 100, 200, 350, 500],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.75, 1.0, 1.25, 1.5, 2.0]
     },
-    "stunDuration": 1,
+    "stunDuration": [1, 1, 1, 1, 2],
     "target": "enemy",
     "logicKey": "throwRockLogic"
-  },
+},
 "slash": {
     "id": "slash",
     "name": "Slash",
-    "description": "Deals 5% of target's max HP or 5 damage, whichever is lower.",
-    "cooldown": 0,
+    "description": "Deals {percent} of target's max HP or {cap} damage, whichever is lower",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "target": "enemy",
     "logicKey": "slashLogic",
     "scaling": {
-      "type": "hpPercentMinCap",
-      "percent": 0.05,
-      "cap": 5
+        "type": "hpPercentMinCap",
+        "percent": [0.05, 0.06, 0.07, 0.08, 0.10],
+        "cap": [5, 10, 20, 40, 80]
     }
-  },
-  "bite": {
+},
+"bite": {
     "id": "bite",
     "name": "Bite",
-    "description": "Deals 5% of target's max HP or 5 damage, whichever is higher.",
-    "cooldown": 3,
+    "description": "Deals {percent} of target's max HP or {floor} damage, whichever is higher",
+    "cooldown": [3, 3, 3, 2, 2],
     "effects": ["damage", "physical"],
     "target": "enemy",
     "logicKey": "biteLogic",
     "scaling": {
-      "type": "hpPercentMaxFloor",
-      "percent": 0.05,
-      "floor": 5
+        "type": "hpPercentMaxFloor",
+        "percent": [0.05, 0.06, 0.07, 0.08, 0.10],
+        "floor": [5, 10, 20, 40, 80]
     }
-  },
+},
 "spear_thrust": {
     "id": "spear_thrust",
     "name": "Spear Thrust",
-    "description": "Thrust spear dealing attack + 0.5x STR with 30% chance to cause Bleed",
-    "cooldown": 0,
+    "description": "Thrust spear dealing {baseDamage} + attack + {strScaling}x STR with {bleedChance} chance to cause Bleed for {bleedDuration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical", "debuff", "bleed", "debuff_bleed"],
     "scaling": {
-        "str": 0.5
+        "base": [25, 50, 100, 200, 350],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.5, 0.75, 1.0, 1.25, 1.5]
     },
-    "bleedChance": 0.3,
-    "bleedDuration": 2,
+    "bleedChance": [0.3, 0.35, 0.4, 0.45, 0.5],
+    "bleedDuration": [2, 2, 3, 3, 4],
     "target": "enemy",
     "logicKey": "spearThrustLogic"
 },
 "defensive_formation": {
     "id": "defensive_formation",
     "name": "Defensive Formation",
-    "description": "Take a defensive stance, gaining Increase Defense for 2 turns",
-    "cooldown": 4,
+    "description": "Take a defensive stance, gaining Increase Defense for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
     "effects": ["buff", "defense", "buff_increase_defense"],
-    "duration": 2,
+    "duration": [2, 2, 3, 3, 4],
     "target": "self",
     "logicKey": "defensiveFormationLogic"
 },
 "crushing_strike": {
     "id": "crushing_strike",
     "name": "Crushing Strike",
-    "description": "Heavy hammer strike dealing attack + .75x STR",
-    "cooldown": 0,
+    "description": "Heavy hammer strike dealing {baseDamage} + attack + {strScaling}x STR",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
-        "str": 0.75
+        "base": [50, 100, 200, 350, 500],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.75, 1.0, 1.25, 1.5, 2.0]
     },
     "target": "enemy",
     "logicKey": "crushingStrikeLogic"
@@ -101,24 +108,28 @@
 "armor_break": {
     "id": "armor_break",
     "name": "Armor Break",
-    "description": "Break enemy armor dealing attack + 0.5x STR and applying Reduce Defense",
-    "cooldown": 4,
+    "description": "Break enemy armor dealing {baseDamage} + attack + {strScaling}x STR and applying Reduce Defense for {debuffDuration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
     "effects": ["damage", "physical", "debuff", "debuff_reduce_defense"],
     "scaling": {
-        "str": 0.5
+        "base": [30, 60, 120, 240, 400],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.5, 0.65, 0.8, 1.0, 1.25]
     },
-    "debuffDuration": 3,
+    "debuffDuration": [3, 3, 3, 4, 4],
     "target": "enemy",
     "logicKey": "armorBreakLogic"
 },
 "crystal_shard": {
     "id": "crystal_shard",
     "name": "Crystal Shard",
-    "description": "Hurl a magical crystal dealing attack + 0.8x INT",
-    "cooldown": 0,
+    "description": "Hurl a magical crystal dealing {baseDamage} + attack + {intScaling}x INT",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "magical"],
     "scaling": {
-        "int": 0.8
+        "base": [40, 80, 160, 300, 450],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.8, 1.0, 1.2, 1.5, 1.8]
     },
     "target": "enemy",
     "logicKey": "crystalShardLogic"
@@ -126,21 +137,23 @@
 "protective_barrier": {
     "id": "protective_barrier",
     "name": "Protective Barrier",
-    "description": "Grant lowest HP ally a 50 HP Shield",
-    "cooldown": 5,
+    "description": "Grant lowest HP ally a {shieldAmount} HP Shield",
+    "cooldown": [5, 5, 4, 4, 3],
     "effects": ["buff", "shield", "buff_shield"],
-    "shieldAmount": 50,
+    "shieldAmount": [50, 100, 200, 350, 500],
     "target": "ally",
     "logicKey": "protectiveBarrierLogic"
 },
 "staff_whack": {
     "id": "staff_whack",
     "name": "Staff Whack",
-    "description": "Basic staff attack dealing attack + 0.2x STR",
-    "cooldown": 0,
+    "description": "Basic staff attack dealing {baseDamage} + attack + {strScaling}x STR",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
-        "str": 0.2
+        "base": [10, 20, 40, 80, 150],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.2, 0.25, 0.3, 0.35, 0.4]
     },
     "target": "enemy",
     "logicKey": "staffWhackLogic"
@@ -148,131 +161,141 @@
 "ancient_protection": {
     "id": "ancient_protection",
     "name": "Ancient Protection",
-    "description": "50% chance to dodge physical attacks",
-    "cooldown": 0,
+    "description": "{dodgeChance} chance to dodge physical attacks",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive", "evasion"],
     "passive": true,
-    "dodgeChance": 0.5,
+    "dodgeChance": [0.5, 0.55, 0.6, 0.65, 0.7],
     "target": "self",
     "logicKey": "ancientProtectionLogic"
 },
 "ancestral_taunt": {
     "id": "ancestral_taunt",
     "name": "Ancestral Taunt",
-    "description": "Force all enemies to attack this unit for 1 turns",
-    "cooldown": 5,
+    "description": "Force all enemies to attack this unit for {tauntDuration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
     "effects": ["debuff", "control", "debuff_taunt"],
-    "tauntDuration": 1,
+    "tauntDuration": [1, 1, 2, 2, 3],
     "target": "all_enemies",
     "logicKey": "ancestralTauntLogic"
 },
 "chieftains_hammer": {
     "id": "chieftains_hammer",
     "name": "Chieftain's Hammer",
-    "description": "Mighty hammer blow dealing attack + 1x STR with 15% chance to Stun",
-    "cooldown": 0,
+    "description": "Mighty hammer blow dealing {baseDamage} + attack + {strScaling}x STR with {stunChance} chance to Stun for {stunDuration} turn",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical", "debuff", "stun", "debuff_stun"],
     "scaling": {
-        "str": 1.0
+        "base": [75, 150, 300, 500, 750],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [1.0, 1.25, 1.5, 1.75, 2.0]
     },
-    "stunChance": 0.15,
-    "stunDuration": 1,
+    "stunChance": [0.15, 0.18, 0.21, 0.24, 0.27],
+    "stunDuration": [1, 1, 1, 1, 2],
     "target": "enemy",
     "logicKey": "chieftainsHammerLogic"
 },
 "war_cry": {
     "id": "war_cry",
     "name": "War Cry",
-    "description": "Rally allies with Increase Attack for 3 turns and gain Increase Speed for 1 turn",
-    "cooldown": 5,
+    "description": "Rally allies with Increase Attack for {allyBuffDuration} turns and gain Increase Speed for {selfSpeedDuration} turn",
+    "cooldown": [5, 5, 4, 4, 3],
     "effects": ["buff", "aoe", "buff_increase_attack", "buff_increase_speed"],
-    "allyBuffDuration": 3,
-    "selfSpeedDuration": 1,
+    "allyBuffDuration": [3, 3, 3, 4, 4],
+    "selfSpeedDuration": [1, 1, 2, 2, 2],
     "target": "all_allies",
     "logicKey": "warCryLogic"
 },
 "axe_throw": {
     "id": "axe_throw",
     "name": "Axe Throw",
-    "description": "Throw an axe dealing attack + 0.6x AGI with 40% chance to cause Bleed",
-    "cooldown": 0,
+    "description": "Throw an axe dealing {baseDamage} + attack + {agiScaling}x AGI with {bleedChance} chance to cause Bleed for {bleedDuration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical", "debuff", "bleed", "debuff_bleed"],
     "scaling": {
-        "agi": 0.6
+        "base": [35, 70, 140, 250, 400],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.6, 0.8, 1.0, 1.2, 1.5]
     },
-    "bleedChance": 0.4,
-    "bleedDuration": 3,
+    "bleedChance": [0.4, 0.45, 0.5, 0.55, 0.6],
+    "bleedDuration": [3, 3, 3, 4, 4],
     "target": "enemy",
     "logicKey": "axeThrowLogic"
 },
 "berserker_rage": {
     "id": "berserker_rage",
     "name": "Berserker Rage",
-    "description": "Enter a rage, gaining Increase Speed for 2 turns",
-    "cooldown": 4,
+    "description": "Enter a rage, gaining Increase Speed for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
     "effects": ["buff", "speed", "buff_increase_speed"],
-    "duration": 2,
+    "duration": [2, 2, 3, 3, 4],
     "target": "self",
     "logicKey": "berserkerRageLogic"
 },
 "dual_axes": {
     "id": "dual_axes",
     "name": "Dual Axes",
-    "description": "Strike twice with axes dealing attack + 0.8x AGI each, 50% bleed chance per hit",
-    "cooldown": 3,
+    "description": "Strike {hitCount} times with axes dealing {baseDamage} + attack + {agiScaling}x AGI each, {bleedChance} bleed chance per hit for {bleedDuration} turns",
+    "cooldown": [3, 3, 3, 2, 2],
     "effects": ["damage", "physical", "debuff", "bleed", "debuff_bleed"],
     "scaling": {
-        "agi": 0.8
+        "base": [50, 100, 200, 350, 500],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.8, 1.0, 1.2, 1.4, 1.6]
     },
-    "bleedChance": 0.5,
-    "bleedDuration": 3,
-    "hitCount": 2,
+    "bleedChance": [0.5, 0.55, 0.6, 0.65, 0.7],
+    "bleedDuration": [3, 3, 3, 4, 4],
+    "hitCount": [2, 2, 2, 2, 3],
     "target": "enemy",
     "logicKey": "dualAxesLogic"
 },
 "rallying_cry": {
     "id": "rallying_cry",
     "name": "Rallying Cry",
-    "description": "Rally all allies with Increase Speed for 3 turns",
-    "cooldown": 5,
+    "description": "Rally all allies with Increase Speed for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
     "effects": ["buff", "aoe", "speed", "buff_increase_speed"],
-    "duration": 3,
+    "duration": [3, 3, 3, 4, 4],
     "target": "all_allies",
     "logicKey": "rallyingCryLogic"
 },
 "frost_bolt": {
     "id": "frost_bolt",
     "name": "Frost Bolt",
-    "description": "Icy bolt dealing attack + 1.0x INT and draining 15% action bar",
-    "cooldown": 0,
+    "description": "Icy bolt dealing {baseDamage} + attack + {intScaling}x INT and draining {actionBarDrain} action bar",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "magical", "frost", "debuff_action_drain"],
     "scaling": {
-        "int": 1.0
+        "base": [60, 120, 240, 400, 600],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [1.0, 1.25, 1.5, 1.75, 2.0]
     },
-    "actionBarDrain": 0.15,
+    "actionBarDrain": [0.15, 0.18, 0.21, 0.24, 0.27],
     "target": "enemy",
     "logicKey": "frostBoltLogic"
 },
 "chilling_touch": {
     "id": "chilling_touch",
     "name": "Chilling Touch",
-    "description": "30% chance to apply Reduce Speed on basic attacks",
-    "cooldown": 0,
+    "description": "{slowChance} chance to apply Reduce Speed for {slowDuration} turns on basic attacks",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive", "debuff", "slow"],
     "passive": true,
-    "slowChance": 0.3,
-    "slowDuration": 2,
+    "slowChance": [0.3, 0.35, 0.4, 0.45, 0.5],
+    "slowDuration": [2, 2, 2, 3, 3],
     "target": "self",
     "logicKey": "chillingTouchLogic"
 },
 "savage_bite": {
     "id": "savage_bite",
     "name": "Savage Bite",
-    "description": "Vicious bite dealing attack + 0.7x STR",
-    "cooldown": 0,
+    "description": "Vicious bite dealing {baseDamage} + attack + {strScaling}x STR",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
-        "str": 0.7
+        "base": [45, 90, 180, 320, 480],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.7, 0.9, 1.1, 1.3, 1.5]
     },
     "target": "enemy",
     "logicKey": "savageBiteLogic"
@@ -280,32 +303,34 @@
 "pack_fury": {
     "id": "pack_fury",
     "name": "Pack Fury",
-    "description": "Gain Increase Attack buff for 2 turns when taking damage",
-    "cooldown": 0,
+    "description": "Gain Increase Attack buff for {buffDuration} turns when taking damage",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive", "buff", "buff_increase_attack"],
     "passive": true,
-    "buffDuration": 2,
+    "buffDuration": [2, 2, 3, 3, 4],
     "target": "self",
     "logicKey": "packFuryLogic"
 },
 "chilling_howl": {
     "id": "chilling_howl",
     "name": "Chilling Howl",
-    "description": "Howl that applies Reduce Attack and Reduce Speed to all enemies",
-    "cooldown": 5,
+    "description": "Howl that applies Reduce Attack and Reduce Speed to all enemies for {debuffDuration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
     "effects": ["debuff", "aoe", "frost", "debuff_reduce_attack", "debuff_reduce_speed"],
-    "debuffDuration": 3,
+    "debuffDuration": [3, 3, 3, 4, 4],
     "target": "all_enemies",
     "logicKey": "chillingHowlLogic"
 },
 "crushing_blow": {
     "id": "crushing_blow",
     "name": "Crushing Blow",
-    "description": "Massive strike dealing attack + 1.2x STR",
-    "cooldown": 0,
+    "description": "Massive strike dealing {baseDamage} + attack + {strScaling}x STR",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
-        "str": 1.2
+        "base": [80, 160, 320, 550, 800],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [1.2, 1.5, 1.8, 2.1, 2.5]
     },
     "target": "enemy",
     "logicKey": "crushingBlowLogic"
@@ -313,222 +338,238 @@
 "thick_hide": {
     "id": "thick_hide",
     "name": "Thick Hide",
-    "description": "Take 20% less damage from all sources",
-    "cooldown": 0,
+    "description": "Take {damageReduction} less damage from all sources",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive", "defense"],
     "passive": true,
-    "damageReduction": 0.2,
+    "damageReduction": [0.2, 0.25, 0.3, 0.35, 0.4],
     "target": "self",
     "logicKey": "thickHideLogic"
 },
 "maul": {
     "id": "maul",
     "name": "Maul",
-    "description": "Brutal maul dealing attack + 1.0x STR and causing Bleed",
-    "cooldown": 0,
+    "description": "Brutal maul dealing {baseDamage} + attack + {strScaling}x STR and causing Bleed for {bleedDuration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical", "debuff", "bleed", "debuff_bleed"],
     "scaling": {
-        "str": 1.0
+        "base": [70, 140, 280, 480, 700],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [1.0, 1.25, 1.5, 1.75, 2.0]
     },
-    "bleedDuration": 3,
+    "bleedDuration": [3, 3, 4, 4, 5],
     "target": "enemy",
     "logicKey": "maulLogic"
 },
 "rampage": {
     "id": "rampage",
     "name": "Rampage",
-    "description": "Go on a rampage, causing all enemies to Bleed for 4 turns",
-    "cooldown": 6,
+    "description": "Go on a rampage, causing all enemies to Bleed for {bleedDuration} turns",
+    "cooldown": [6, 6, 5, 5, 4],
     "effects": ["debuff", "aoe", "bleed", "debuff_bleed"],
-    "bleedDuration": 4,
+    "bleedDuration": [4, 4, 5, 5, 6],
     "target": "all_enemies",
     "logicKey": "rampageLogic"
 },
-  "frost_breath": {
+"frost_breath": {
     "id": "frost_breath",
     "name": "Frost Breath",
-    "description": "Breathe frost on all enemies, applying Reduce Speed",
-    "cooldown": 5,
+    "description": "Breathe frost on all enemies dealing {strScaling}x STR damage and applying Reduce Speed for {slowDuration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
     "effects": ["damage", "magical", "debuff", "slow", "aoe", "debuff_reduce_speed"],
     "scaling": {
-      "str": 2.0
+        "str": [2.0, 2.5, 3.0, 3.5, 4.0]
     },
+    "slowDuration": [2, 2, 3, 3, 4],
     "target": "all_enemies",
     "logicKey": "frostBreathLogic"
-  },
-  "gold_toss": {
+},
+"gold_toss": {
     "id": "gold_toss",
     "name": "Gold Toss",
-    "description": "Throw gold coins dealing random damage",
-    "cooldown": 3,
+    "description": "Throw gold coins dealing random damage (0 to {randomMultiplier}x STR)",
+    "cooldown": [3, 3, 3, 2, 2],
     "effects": ["damage", "random"],
     "scaling": {
-      "str": 1.0,
-      "randomMultiplier": 3.0
+        "str": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "randomMultiplier": [3.0, 3.5, 4.0, 4.5, 5.0]
     },
     "target": "enemy",
     "logicKey": "goldTossLogic"
-  },
-  "summon_goblins": {
-    "id": "summon_goblines",
+},
+"summon_goblins": {
+    "id": "summon_goblins",
     "name": "Summon Goblins",
-    "description": "Summon goblin minions to fight",
-    "cooldown": 10,
+    "description": "Summon {summonCount} goblin minions to fight",
+    "cooldown": [10, 9, 8, 7, 6],
     "effects": ["summon"],
-    "summonCount": 2,
+    "summonCount": [2, 2, 3, 3, 4],
     "target": "self",
     "logicKey": "summonGoblinsLogic"
-  },
+},
 "win": {
-  "id": "win",
-  "name": "Win",
-  "description": "Instantly defeat all enemies and gain Increase Speed",
-  "cooldown": 0,
-  "effects": ["damage", "pure", "aoe", "buff", "speed", "buff_increase_speed"],
-  "scaling": {
-    "base": 100000000
-  },
-  "target": "all_enemies",
-  "logicKey": "winLogic"
+    "id": "win",
+    "name": "Win",
+    "description": "Instantly defeat all enemies and gain Increase Speed for {duration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["damage", "pure", "aoe", "buff", "speed", "buff_increase_speed"],
+    "scaling": {
+        "base": [100000000, 100000000, 100000000, 100000000, 100000000]
+    },
+    "duration": [5, 5, 5, 5, 5],
+    "target": "all_enemies",
+    "logicKey": "winLogic"
 },
 "lose": {
-  "id": "lose",
-  "name": "Lose",
-  "description": "Lose intentionally",
-  "cooldown": 0,
-  "effects": ["damage", "pure", "aoe", "debuff", "stun", "slow"],
-  "scaling": {
-    "base": 100000000
-  },
-  "target": "all_allies",
-  "logicKey": "loseLogic"
+    "id": "lose",
+    "name": "Lose",
+    "description": "Lose intentionally",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["damage", "pure", "aoe", "debuff", "stun", "slow"],
+    "scaling": {
+        "base": [100000000, 100000000, 100000000, 100000000, 100000000]
+    },
+    "target": "all_allies",
+    "logicKey": "loseLogic"
 },
 "increase_attack_test": {
-  "id": "increase_attack_test",
-  "name": "Increase Attack Test",
-  "description": "Grants Increase Attack buff for 2 turns",
-  "cooldown": 1,
-  "effects": ["buff", "buff_increase_attack"],
-  "target": "ally",
-  "logicKey": "increaseAttackTestLogic"
+    "id": "increase_attack_test",
+    "name": "Increase Attack Test",
+    "description": "Grants Increase Attack buff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["buff", "buff_increase_attack"],
+    "target": "ally",
+    "logicKey": "increaseAttackTestLogic"
 },
 "increase_speed_test": {
-  "id": "increase_speed_test",
-  "name": "Increase Speed Test",
-  "description": "Grants Increase Speed buff for 2 turns",
-  "cooldown": 1,
-  "duration": 2,
-  "effects": ["buff", "speed", "buff_increase_speed"],
-  "target": "ally",
-  "logicKey": "increaseSpeedTestLogic"
+    "id": "increase_speed_test",
+    "name": "Increase Speed Test",
+    "description": "Grants Increase Speed buff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["buff", "speed", "buff_increase_speed"],
+    "target": "ally",
+    "logicKey": "increaseSpeedTestLogic"
 },
 "increase_defense_test": {
-  "id": "increase_defense_test",
-  "name": "Increase Defense Test",
-  "description": "Grants Increase Defense buff for 2 turns",
-  "cooldown": 1,
-  "effects": ["buff", "defense", "buff_increase_defense"],
-  "target": "ally",
-  "logicKey": "increaseDefenseTestLogic"
+    "id": "increase_defense_test",
+    "name": "Increase Defense Test",
+    "description": "Grants Increase Defense buff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["buff", "defense", "buff_increase_defense"],
+    "target": "ally",
+    "logicKey": "increaseDefenseTestLogic"
 },
 "immune_test": {
-  "id": "immune_test",
-  "name": "Immune Test",
-  "description": "Grants Immune buff for 2 turns",
-  "cooldown": 1,
-  "effects": ["buff", "immunity", "buff_immune"],
-  "target": "ally",
-  "logicKey": "immuneTestLogic"
+    "id": "immune_test",
+    "name": "Immune Test",
+    "description": "Grants Immune buff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["buff", "immunity", "buff_immune"],
+    "target": "ally",
+    "logicKey": "immuneTestLogic"
 },
 "shield_test": {
-  "id": "shield_test",
-  "name": "Shield Test",
-  "description": "Grants Shield buff that absorbs 200 damage",
-  "cooldown": 1,
-  "effects": ["buff", "shield", "buff_shield"],
-  "target": "ally",
-  "logicKey": "shieldTestLogic"
+    "id": "shield_test",
+    "name": "Shield Test",
+    "description": "Grants Shield buff that absorbs {shieldAmount} damage",
+    "cooldown": [1, 1, 1, 1, 1],
+    "shieldAmount": [200, 400, 600, 800, 1000],
+    "effects": ["buff", "shield", "buff_shield"],
+    "target": "ally",
+    "logicKey": "shieldTestLogic"
 },
 "reduce_attack_test": {
-  "id": "reduce_attack_test",
-  "name": "Reduce Attack Test",
-  "description": "Inflicts Reduce Attack debuff for 2 turns",
-  "cooldown": 1,
-  "effects": ["debuff", "debuff_reduce_attack"],
-  "target": "enemy",
-  "logicKey": "reduceAttackTestLogic"
+    "id": "reduce_attack_test",
+    "name": "Reduce Attack Test",
+    "description": "Inflicts Reduce Attack debuff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["debuff", "debuff_reduce_attack"],
+    "target": "enemy",
+    "logicKey": "reduceAttackTestLogic"
 },
 "reduce_speed_test": {
-  "id": "reduce_speed_test",
-  "name": "Reduce Speed Test",
-  "description": "Inflicts Reduce Speed debuff for 2 turns",
-  "cooldown": 1,
-  "duration": 2,
-  "effects": ["debuff", "slow", "debuff_reduce_speed"],
-  "target": "enemy",
-  "logicKey": "reduceSpeedTestLogic"
+    "id": "reduce_speed_test",
+    "name": "Reduce Speed Test",
+    "description": "Inflicts Reduce Speed debuff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["debuff", "slow", "debuff_reduce_speed"],
+    "target": "enemy",
+    "logicKey": "reduceSpeedTestLogic"
 },
 "reduce_defense_test": {
-  "id": "reduce_defense_test",
-  "name": "Reduce Defense Test",
-  "description": "Inflicts Reduce Defense debuff for 2 turns",
-  "cooldown": 1,
-  "effects": ["debuff", "debuff_reduce_defense"],
-  "target": "enemy",
-  "logicKey": "reduceDefenseTestLogic"
+    "id": "reduce_defense_test",
+    "name": "Reduce Defense Test",
+    "description": "Inflicts Reduce Defense debuff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["debuff", "debuff_reduce_defense"],
+    "target": "enemy",
+    "logicKey": "reduceDefenseTestLogic"
 },
 "blight_test": {
-  "id": "blight_test",
-  "name": "Blight Test",
-  "description": "Inflicts Blight debuff for 2 turns",
-  "cooldown": 1,
-  "effects": ["debuff", "debuff_blight"],
-  "target": "enemy",
-  "logicKey": "blightTestLogic"
+    "id": "blight_test",
+    "name": "Blight Test",
+    "description": "Inflicts Blight debuff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["debuff", "debuff_blight"],
+    "target": "enemy",
+    "logicKey": "blightTestLogic"
 },
 "bleed_test": {
-  "id": "bleed_test",
-  "name": "Bleed Test",
-  "description": "Inflicts Bleed debuff for 2 turns",
-  "cooldown": 1,
-  "effects": ["debuff", "dot", "debuff_bleed"],
-  "target": "enemy",
-  "logicKey": "bleedTestLogic"
+    "id": "bleed_test",
+    "name": "Bleed Test",
+    "description": "Inflicts Bleed debuff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["debuff", "dot", "debuff_bleed"],
+    "target": "enemy",
+    "logicKey": "bleedTestLogic"
 },
 "stun_test": {
-  "id": "stun_test",
-  "name": "Stun Test",
-  "description": "Inflicts Stun debuff for 2 turns",
-  "cooldown": 1,
-  "effects": ["debuff", "stun", "debuff_stun"],
-  "target": "enemy",
-  "logicKey": "stunTestLogic"
+    "id": "stun_test",
+    "name": "Stun Test",
+    "description": "Inflicts Stun debuff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [1, 1, 2, 2, 2],
+    "effects": ["debuff", "stun", "debuff_stun"],
+    "target": "enemy",
+    "logicKey": "stunTestLogic"
 },
 "taunt_test": {
-  "id": "taunt_test",
-  "name": "Taunt Test",
-  "description": "Forces enemies to attack this unit for 2 turns",
-  "cooldown": 1,
-  "effects": ["debuff", "debuff_taunt"],
-  "target": "enemy",
-  "logicKey": "tauntTestLogic"
+    "id": "taunt_test",
+    "name": "Taunt Test",
+    "description": "Forces enemy to attack this unit for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["debuff", "debuff_taunt"],
+    "target": "enemy",
+    "logicKey": "tauntTestLogic"
 },
 "silence_test": {
-  "id": "silence_test",
-  "name": "Silence Test",
-  "description": "Inflicts Silence debuff for 2 turns",
-  "cooldown": 1,
-  "effects": ["debuff", "debuff_silence"],
-  "target": "enemy",
-  "logicKey": "silenceTestLogic"
+    "id": "silence_test",
+    "name": "Silence Test",
+    "description": "Inflicts Silence debuff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["debuff", "debuff_silence"],
+    "target": "enemy",
+    "logicKey": "silenceTestLogic"
 },
 "marked_test": {
-  "id": "marked_test",
-  "name": "Marked Test",
-  "description": "Inflicts Marked debuff for 2 turns",
-  "cooldown": 1,
-  "effects": ["debuff", "debuff_marked"],
-  "target": "enemy",
-  "logicKey": "markedTestLogic"
+    "id": "marked_test",
+    "name": "Marked Test",
+    "description": "Inflicts Marked debuff for {duration} turns",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["debuff", "debuff_marked"],
+    "target": "enemy",
+    "logicKey": "markedTestLogic"
 }
 }
