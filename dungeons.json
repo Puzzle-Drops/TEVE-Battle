@@ -49,6 +49,11 @@
       "tier": 9,
       "color": "ascended",
       "position": { "x": 85, "y": 40 }
+    },
+    "Transcendent": {
+      "tier": 10,
+      "color": "transcendent",
+      "position": { "x": 50, "y": 50 }
     }
   },
   "dungeons": {
@@ -109,73 +114,73 @@
       }
     },
     "murkin_wetlands": {
-    "id": "murkin_wetlands",
-    "name": "Murkin Wetlands",
-    "boss": "Murkin Chieftain",
-    "tier": "Easy",
-    "subtitle": "Easy 2",
-    "level": 25,
-    "waves": [
+      "id": "murkin_wetlands",
+      "name": "Murkin Wetlands",
+      "boss": "Murkin Chieftain",
+      "tier": "Easy",
+      "subtitle": "Easy 2",
+      "level": 25,
+      "waves": [
         {
-            "enemies": [
-                { "id": "murkin_warrior", "level": 10 },
-                { "id": "murkin_warrior", "level": 10 },
-                { "id": "murkin_warrior", "level": 10 }
-            ]
+          "enemies": [
+            { "id": "murkin_warrior", "level": 10 },
+            { "id": "murkin_warrior", "level": 10 },
+            { "id": "murkin_warrior", "level": 10 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "murkin_warrior", "level": 11 },
-                { "id": "murkin_warrior", "level": 11 },
-                { "id": "murkin_brawler", "level": 14 },
-                { "id": "murkin_brawler", "level": 14 }
-            ]
+          "enemies": [
+            { "id": "murkin_warrior", "level": 11 },
+            { "id": "murkin_warrior", "level": 11 },
+            { "id": "murkin_brawler", "level": 14 },
+            { "id": "murkin_brawler", "level": 14 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "murkin_elder", "level": 15 },
-                { "id": "murkin_warrior", "level": 12 },
-                { "id": "murkin_warrior", "level": 12 },
-                { "id": "murkin_initiate", "level": 12 }
-            ]
+          "enemies": [
+            { "id": "murkin_elder", "level": 15 },
+            { "id": "murkin_warrior", "level": 12 },
+            { "id": "murkin_warrior", "level": 12 },
+            { "id": "murkin_initiate", "level": 12 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "murkin_brawler", "level": 15 },
-                { "id": "murkin_brawler", "level": 15 },
-                { "id": "murkin_initiate", "level": 13 },
-                { "id": "murkin_initiate", "level": 13 },
-                { "id": "murkin_warrior", "level": 13 }
-            ]
+          "enemies": [
+            { "id": "murkin_brawler", "level": 15 },
+            { "id": "murkin_brawler", "level": 15 },
+            { "id": "murkin_initiate", "level": 13 },
+            { "id": "murkin_initiate", "level": 13 },
+            { "id": "murkin_warrior", "level": 13 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "murkin_elder", "level": 16 },
-                { "id": "murkin_elder", "level": 16 },
-                { "id": "murkin_initiate", "level": 14 },
-                { "id": "murkin_warrior", "level": 14 },
-                { "id": "murkin_warrior", "level": 14 }
-            ]
+          "enemies": [
+            { "id": "murkin_elder", "level": 16 },
+            { "id": "murkin_elder", "level": 16 },
+            { "id": "murkin_initiate", "level": 14 },
+            { "id": "murkin_warrior", "level": 14 },
+            { "id": "murkin_warrior", "level": 14 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "murkin_brawler", "level": 17 },
-                { "id": "murkin_brawler", "level": 17 },
-                { "id": "murkin_brawler", "level": 17 },
-                { "id": "murkin_initiate", "level": 16 },
-                { "id": "murkin_initiate", "level": 16 }
-            ]
+          "enemies": [
+            { "id": "murkin_brawler", "level": 17 },
+            { "id": "murkin_brawler", "level": 17 },
+            { "id": "murkin_brawler", "level": 17 },
+            { "id": "murkin_initiate", "level": 16 },
+            { "id": "murkin_initiate", "level": 16 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "murkin_chieftain", "level": 25 },
-                { "id": "murkin_elder", "level": 20 },
-                { "id": "murkin_elder", "level": 20 },
-                { "id": "murkin_initiate", "level": 17 },
-                { "id": "murkin_warrior", "level": 17 }
-            ]
+          "enemies": [
+            { "id": "murkin_chieftain", "level": 25 },
+            { "id": "murkin_elder", "level": 20 },
+            { "id": "murkin_elder", "level": 20 },
+            { "id": "murkin_initiate", "level": 17 },
+            { "id": "murkin_warrior", "level": 17 }
+          ]
         }
-    ],
+      ],
       "rewards": {
         "gold": 800,
         "exp": 1800,
@@ -183,124 +188,244 @@
       }
     },
     "icy_highland": {
-    "id": "icy_highland",
-    "name": "Icy Highland",
-    "boss": "Grizzly Ice Bear",
-    "tier": "Easy",
-    "subtitle": "Easy 3",
-    "level": 50,
-    "waves": [
+      "id": "icy_highland",
+      "name": "Icy Highland",
+      "boss": "Grizzly Ice Bear",
+      "tier": "Easy",
+      "subtitle": "Easy 3",
+      "level": 50,
+      "waves": [
         {
-            "enemies": [
-                { "id": "frost_wolf", "level": 35 },
-                { "id": "ice_troll", "level": 35 },
-                { "id": "ice_troll", "level": 35 }
-            ]
+          "enemies": [
+            { "id": "frost_wolf", "level": 35 },
+            { "id": "ice_troll", "level": 35 },
+            { "id": "ice_troll", "level": 35 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "ice_troll", "level": 35 },
-                { "id": "ice_troll", "level": 35 },
-                { "id": "frost_wolf", "level": 36 },
-                { "id": "frost_wolf", "level": 36 }
-            ]
+          "enemies": [
+            { "id": "ice_troll", "level": 35 },
+            { "id": "ice_troll", "level": 35 },
+            { "id": "frost_wolf", "level": 36 },
+            { "id": "frost_wolf", "level": 36 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "water_elemental", "level": 38 },
-                { "id": "water_elemental", "level": 38 },
-                { "id": "ice_troll", "level": 36 }
-            ]
+          "enemies": [
+            { "id": "water_elemental", "level": 38 },
+            { "id": "water_elemental", "level": 38 },
+            { "id": "ice_troll", "level": 36 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "ice_bear", "level": 40 },
-                { "id": "frost_wolf", "level": 38 },
-                { "id": "frost_wolf", "level": 38 },
-                { "id": "ice_troll", "level": 36 }
-            ]
+          "enemies": [
+            { "id": "ice_bear", "level": 40 },
+            { "id": "frost_wolf", "level": 38 },
+            { "id": "frost_wolf", "level": 38 },
+            { "id": "ice_troll", "level": 36 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "ice_troll_king", "level": 40 },
-                { "id": "ice_troll", "level": 38 },
-                { "id": "ice_troll", "level": 38 }
-            ]
+          "enemies": [
+            { "id": "ice_troll_king", "level": 40 },
+            { "id": "ice_troll", "level": 38 },
+            { "id": "ice_troll", "level": 38 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "water_elemental", "level": 40 },
-                { "id": "water_elemental", "level": 40 },
-                { "id": "water_elemental", "level": 40 },
-                { "id": "ice_bear", "level": 42 }
-            ]
+          "enemies": [
+            { "id": "water_elemental", "level": 40 },
+            { "id": "water_elemental", "level": 40 },
+            { "id": "water_elemental", "level": 40 },
+            { "id": "ice_bear", "level": 42 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "frostfang", "level": 45 },
-                { "id": "frost_wolf", "level": 40 },
-                { "id": "frost_wolf", "level": 40 }
-            ]
+          "enemies": [
+            { "id": "frostfang", "level": 45 },
+            { "id": "frost_wolf", "level": 40 },
+            { "id": "frost_wolf", "level": 40 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "ice_bear", "level": 43 },
-                { "id": "ice_bear", "level": 43 },
-                { "id": "water_elemental", "level": 42 },
-                { "id": "ice_troll", "level": 41 }
-            ]
+          "enemies": [
+            { "id": "ice_bear", "level": 43 },
+            { "id": "ice_bear", "level": 43 },
+            { "id": "water_elemental", "level": 42 },
+            { "id": "ice_troll", "level": 41 }
+          ]
         },
         {
-            "enemies": [
-                { "id": "grizzly_ice_bear", "level": 50 },
-                { "id": "ice_bear", "level": 45 },
-                { "id": "ice_bear", "level": 45 }
-            ]
+          "enemies": [
+            { "id": "grizzly_ice_bear", "level": 50 },
+            { "id": "ice_bear", "level": 45 },
+            { "id": "ice_bear", "level": 45 }
+          ]
         }
-    ],
-    "rewards": {
+      ],
+      "rewards": {
         "gold": 2400,
         "exp": 5750,
         "items": ["icy_wolfhood", "icy_mauler_plate", "icy_tundrastride", "icy_howler", "icy_fangguard", "icy_shardcore", "icy_frostfang"]
-    }
-},
+      }
+    },
+    "sorrowshade_hollow": {
+      "id": "sorrowshade_hollow",
+      "name": "Sorrowshade Hollow",
+      "boss": "Banshee Queen",
+      "tier": "Medium",
+      "subtitle": "Medium 1",
+      "level": 75,
+      "waves": [
+        {
+          "enemies": [
+            { "id": "banshee_queen", "level": 75 }
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 4800,
+        "exp": 11500,
+        "items": []
+      }
+    },
+    "forgotten_crypt": {
+      "id": "forgotten_crypt",
+      "name": "Forgotten Crypt",
+      "boss": "Stitch",
+      "tier": "Medium",
+      "subtitle": "Medium 2",
+      "level": 100,
+      "waves": [
+        {
+          "enemies": [
+            { "id": "stitch", "level": 100 }
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 9600,
+        "exp": 23000,
+        "items": []
+      }
+    },
+    "bandit_den": {
+      "id": "bandit_den",
+      "name": "Bandit Den",
+      "boss": "Bandit Lord",
+      "tier": "Medium",
+      "subtitle": "Medium 3",
+      "level": 125,
+      "waves": [
+        {
+          "enemies": [
+            { "id": "bandit_lord", "level": 125 }
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 19200,
+        "exp": 46000,
+        "items": []
+      }
+    },
     "gold_mine": {
       "id": "gold_mine",
       "name": "Gold Mine",
       "boss": "Goblin King",
       "tier": "Hard",
       "subtitle": "Hard 1",
-      "level": 75,
+      "level": 150,
       "waves": [
         {
           "enemies": [
-            { "id": "goblin_king", "level": 75 }
+            { "id": "goblin_king", "level": 150 }
           ]
         }
       ],
       "rewards": {
-        "gold": 1000,
-        "exp": 500,
+        "gold": 38400,
+        "exp": 92000,
         "items": []
       }
     },
-    "centaur_mountain": {
-      "id": "centaur_mountain",
-      "name": "Centaur Mountain",
+    "centaur_cliffs": {
+      "id": "centaur_cliffs",
+      "name": "Centaur Cliffs",
       "boss": "Centaur Bloodhorn",
       "tier": "Hard",
       "subtitle": "Hard 2",
-      "level": 100,
+      "level": 175,
       "waves": [
         {
           "enemies": [
-            { "id": "centaur_bloodhorn", "level": 100 }
+            { "id": "centaur_bloodhorn", "level": 175 }
           ]
         }
       ],
       "rewards": {
-        "gold": 2000,
-        "exp": 1000,
+        "gold": 76800,
+        "exp": 184000,
+        "items": []
+      }
+    },
+    "orc_warlands": {
+      "id": "orc_warlands",
+      "name": "Orc Warlands",
+      "boss": "Orc Shaman",
+      "tier": "Hard",
+      "subtitle": "Hard 3",
+      "level": 200,
+      "waves": [
+        {
+          "enemies": [
+            { "id": "orc_shaman", "level": 200 }
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 153600,
+        "exp": 368000,
+        "items": []
+      }
+    },
+    "snapdragon_swamp": {
+      "id": "snapdragon_swamp",
+      "name": "Snapdragon Swamp",
+      "boss": "Owlkin King",
+      "tier": "Forsaken",
+      "subtitle": "Forsaken 1",
+      "level": 225,
+      "waves": [
+        {
+          "enemies": [
+            { "id": "owlkin_king", "level": 225 }
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 307200,
+        "exp": 736000,
+        "items": []
+      }
+    },
+    "lizardman_volcano": {
+      "id": "lizardman_volcano",
+      "name": "Lizardman Volcano",
+      "boss": "Lizardman Trickster",
+      "tier": "Forsaken",
+      "subtitle": "Forsaken 2",
+      "level": 250,
+      "waves": [
+        {
+          "enemies": [
+            { "id": "lizardman_trickster", "level": 250 }
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 614400,
+        "exp": 1472000,
         "items": []
       }
     },
@@ -308,19 +433,39 @@
       "id": "puzzle_sanctuary",
       "name": "Puzzle Sanctuary",
       "boss": "Lich Queen",
-      "tier": "Hard",
-      "subtitle": "Hard 3",
-      "level": 125,
+      "tier": "Forsaken",
+      "subtitle": "Forsaken 3",
+      "level": 275,
       "waves": [
         {
           "enemies": [
-            { "id": "lich_queen", "level": 125 }
+            { "id": "lich_queen", "level": 275 }
           ]
         }
       ],
       "rewards": {
-        "gold": 4000,
-        "exp": 2000,
+        "gold": 1228800,
+        "exp": 2944000,
+        "items": []
+      }
+    },
+    "bloodleaf_depths": {
+      "id": "bloodleaf_depths",
+      "name": "Bloodleaf Depths",
+      "boss": "Elven Wolfrider",
+      "tier": "Nightmare",
+      "subtitle": "Nightmare 1",
+      "level": 300,
+      "waves": [
+        {
+          "enemies": [
+            { "id": "elven_wolfrider", "level": 300 }
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 2457600,
+        "exp": 5888000,
         "items": []
       }
     },
@@ -329,18 +474,18 @@
       "name": "Naga Ruins",
       "boss": "Naga Ranger",
       "tier": "Nightmare",
-      "subtitle": "Nightmare 1",
-      "level": 150,
+      "subtitle": "Nightmare 2",
+      "level": 325,
       "waves": [
         {
           "enemies": [
-            { "id": "naga_ranger", "level": 150 }
+            { "id": "naga_ranger", "level": 325 }
           ]
         }
       ],
       "rewards": {
-        "gold": 8000,
-        "exp": 4000,
+        "gold": 4915200,
+        "exp": 11776000,
         "items": []
       }
     },
@@ -349,38 +494,18 @@
       "name": "Forgotten Sewers",
       "boss": "Devourer",
       "tier": "Nightmare",
-      "subtitle": "Nightmare 2",
-      "level": 175,
-      "waves": [
-        {
-          "enemies": [
-            { "id": "devourer", "level": 175 }
-          ]
-        }
-      ],
-      "rewards": {
-        "gold": 16000,
-        "exp": 8000,
-        "items": []
-      }
-    },
-    "blighted_vale": {
-      "id": "blighted_vale",
-      "name": "Blighted Vale",
-      "boss": "Rotwood Horror",
-      "tier": "Nightmare",
       "subtitle": "Nightmare 3",
-      "level": 200,
+      "level": 350,
       "waves": [
         {
           "enemies": [
-            { "id": "rotwood_horror", "level": 200 }
+            { "id": "devourer", "level": 350 }
           ]
         }
       ],
       "rewards": {
-        "gold": 32000,
-        "exp": 16000,
+        "gold": 9830400,
+        "exp": 23552000,
         "items": []
       }
     },
@@ -390,17 +515,17 @@
       "boss": "Hades",
       "tier": "Hell",
       "subtitle": "Hell 1",
-      "level": 225,
+      "level": 375,
       "waves": [
         {
           "enemies": [
-            { "id": "hades", "level": 225 }
+            { "id": "hades", "level": 375 }
           ]
         }
       ],
       "rewards": {
-        "gold": 64000,
-        "exp": 32000,
+        "gold": 19660800,
+        "exp": 47104000,
         "items": []
       }
     },
@@ -410,17 +535,17 @@
       "boss": "Mindreaver",
       "tier": "Hell",
       "subtitle": "Hell 2",
-      "level": 250,
+      "level": 400,
       "waves": [
         {
           "enemies": [
-            { "id": "mindreaver", "level": 250 }
+            { "id": "mindreaver", "level": 400 }
           ]
         }
       ],
       "rewards": {
-        "gold": 128000,
-        "exp": 64000,
+        "gold": 39321600,
+        "exp": 94208000,
         "items": []
       }
     },
@@ -430,37 +555,37 @@
       "boss": "Flame Revenant",
       "tier": "Hell",
       "subtitle": "Hell 3",
-      "level": 275,
+      "level": 425,
       "waves": [
         {
           "enemies": [
-            { "id": "flame_revenant", "level": 275 }
+            { "id": "flame_revenant", "level": 425 }
           ]
         }
       ],
       "rewards": {
-        "gold": 256000,
-        "exp": 128000,
+        "gold": 78643200,
+        "exp": 188416000,
         "items": []
       }
     },
-    "tristam": {
-      "id": "tristam",
-      "name": "Tristam",
-      "boss": "Infernal",
+    "tristam_plague": {
+      "id": "tristam_plague",
+      "name": "Tristam Plague",
+      "boss": "Plaguebound Archbishop",
       "tier": "Impossible",
       "subtitle": "Impossible 1",
-      "level": 300,
+      "level": 450,
       "waves": [
         {
           "enemies": [
-            { "id": "unknown_entity", "level": 300 }
+            { "id": "plaguebound_archbishop", "level": 450 }
           ]
         }
       ],
       "rewards": {
-        "gold": 512000,
-        "exp": 256000,
+        "gold": 157286400,
+        "exp": 376832000,
         "items": []
       }
     },
@@ -470,17 +595,17 @@
       "boss": "Mirage",
       "tier": "Impossible",
       "subtitle": "Impossible 2",
-      "level": 325,
+      "level": 475,
       "waves": [
         {
           "enemies": [
-            { "id": "mirage", "level": 325 }
+            { "id": "mirage", "level": 475 }
           ]
         }
       ],
       "rewards": {
-        "gold": 1024000,
-        "exp": 512000,
+        "gold": 314572800,
+        "exp": 753664000,
         "items": []
       }
     },
@@ -490,17 +615,17 @@
       "boss": "Ancient Hydra",
       "tier": "Impossible",
       "subtitle": "Impossible 3",
-      "level": 350,
+      "level": 500,
       "waves": [
         {
           "enemies": [
-            { "id": "ancient_hydra", "level": 350 }
+            { "id": "ancient_hydra", "level": 500 }
           ]
         }
       ],
       "rewards": {
-        "gold": 2048000,
-        "exp": 1024000,
+        "gold": 629145600,
+        "exp": 1507328000,
         "items": []
       }
     },
@@ -510,57 +635,57 @@
       "boss": "Pugs",
       "tier": "Mythical",
       "subtitle": "Mythical 1",
-      "level": 375,
+      "level": 500,
       "waves": [
         {
           "enemies": [
-            { "id": "pugs", "level": 375 }
+            { "id": "pugs", "level": 500 }
           ]
         }
       ],
       "rewards": {
-        "gold": 4096000,
-        "exp": 2048000,
+        "gold": 1258291200,
+        "exp": 3014656000,
         "items": []
       }
     },
     "astral_nexus": {
       "id": "astral_nexus",
       "name": "Astral Nexus",
-      "boss": "Starweaver",
+      "boss": "Voidcaller Seraphim",
       "tier": "Mythical",
       "subtitle": "Mythical 2",
-      "level": 400,
+      "level": 500,
       "waves": [
         {
           "enemies": [
-            { "id": "starweaver", "level": 400 }
+            { "id": "voidcaller_seraphim", "level": 500 }
           ]
         }
       ],
       "rewards": {
-        "gold": 8192000,
-        "exp": 4096000,
+        "gold": 2516582400,
+        "exp": 6029312000,
         "items": []
       }
     },
     "temple_of_time": {
       "id": "temple_of_time",
       "name": "Temple of Time",
-      "boss": "Chronarch",
+      "boss": "Chronomancer Veyra",
       "tier": "Mythical",
       "subtitle": "Mythical 3",
-      "level": 425,
+      "level": 500,
       "waves": [
         {
           "enemies": [
-            { "id": "chronarch", "level": 425 }
+            { "id": "chronomancer_veyra", "level": 500 }
           ]
         }
       ],
       "rewards": {
-        "gold": 16384000,
-        "exp": 8192000,
+        "gold": 5033164800,
+        "exp": 12058624000,
         "items": []
       }
     },
@@ -570,17 +695,17 @@
       "boss": "Elysian Watcher",
       "tier": "Divine",
       "subtitle": "Divine 1",
-      "level": 450,
+      "level": 500,
       "waves": [
         {
           "enemies": [
-            { "id": "elysian_watcher", "level": 450 }
+            { "id": "elysian_watcher", "level": 500 }
           ]
         }
       ],
       "rewards": {
-        "gold": 32768000,
-        "exp": 16384000,
+        "gold": 10066329600,
+        "exp": 24117248000,
         "items": []
       }
     },
@@ -590,17 +715,17 @@
       "boss": "Sovereign",
       "tier": "Divine",
       "subtitle": "Divine 2",
-      "level": 475,
+      "level": 500,
       "waves": [
         {
           "enemies": [
-            { "id": "sovereign", "level": 475 }
+            { "id": "sovereign", "level": 500 }
           ]
         }
       ],
       "rewards": {
-        "gold": 65536000,
-        "exp": 32768000,
+        "gold": 20132659200,
+        "exp": 48234496000,
         "items": []
       }
     },
@@ -619,8 +744,8 @@
         }
       ],
       "rewards": {
-        "gold": 131072000,
-        "exp": 65536000,
+        "gold": 40265318400,
+        "exp": 96468992000,
         "items": []
       }
     },
@@ -639,8 +764,8 @@
         }
       ],
       "rewards": {
-        "gold": 262144000,
-        "exp": 131072000,
+        "gold": 80530636800,
+        "exp": 192937984000,
         "items": []
       }
     },
@@ -659,8 +784,8 @@
         }
       ],
       "rewards": {
-        "gold": 524288000,
-        "exp": 262144000,
+        "gold": 161061273600,
+        "exp": 385875968000,
         "items": []
       }
     },
@@ -679,8 +804,8 @@
         }
       ],
       "rewards": {
-        "gold": 1048576000,
-        "exp": 524288000,
+        "gold": 322122547200,
+        "exp": 771751936000,
         "items": []
       }
     },
@@ -690,7 +815,7 @@
       "boss": "All Bosses",
       "tier": "Transcendent",
       "subtitle": "All dungeons in a row",
-      "level": 500,
+      "level": 1000,
       "special": "gauntlet",
       "waves": [],
       "rewards": {
