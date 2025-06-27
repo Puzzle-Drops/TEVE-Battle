@@ -93,6 +93,10 @@ class BattleUnit {
         return this.source.abilities || [];
     }
     
+get spellLevel() {
+    return this.source.spellLevel || 1;
+}
+
     get currentShield() {
         const shieldBuff = this.buffs.find(b => b.name === 'Shield');
         return shieldBuff ? shieldBuff.shieldAmount : 0;
@@ -1155,25 +1159,26 @@ if (unit.isEnemy) {
     }
     
     executeAbility(caster, abilityIndex, target) {
-        const ability = caster.abilities[abilityIndex];
-        if (!ability || !caster.useAbility(abilityIndex)) return;
-        
-        const spell = spellManager.getSpell(ability.id);
-        if (!spell) return;
-        
-        // Show spell animation
-        this.showSpellAnimation(caster, ability.name, spell.effects);
-        
-        // Execute spell logic
-        if (spellLogic[spell.logicKey]) {
-            try {
-                spellLogic[spell.logicKey](this, caster, target, spell);
-            } catch (error) {
-                console.error(`Error executing ${ability.name}:`, error);
-                this.log(`${caster.name} failed to use ${ability.name}!`);
-            }
+    const ability = caster.abilities[abilityIndex];
+    if (!ability || !caster.useAbility(abilityIndex)) return;
+    
+    const spell = spellManager.getSpell(ability.id);
+    if (!spell) return;
+    
+    // Show spell animation
+    this.showSpellAnimation(caster, ability.name, spell.effects);
+    
+    // Execute spell logic
+    if (spellLogic[spell.logicKey]) {
+        try {
+            const spellLevel = ability.level || caster.spellLevel || 1;
+            spellLogic[spell.logicKey](this, caster, target, spell, spellLevel);
+        } catch (error) {
+            console.error(`Error executing ${ability.name}:`, error);
+            this.log(`${caster.name} failed to use ${ability.name}!`);
         }
     }
+}
     
     showSpellAnimation(caster, spellName, effects) {
         // Clear any existing spell animations first
