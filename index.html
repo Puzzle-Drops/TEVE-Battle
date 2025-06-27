@@ -4894,21 +4894,64 @@ formatAbilityTooltip(ability, level) {
     let effectTags = '';
     const effects = spell.effects || [];
     
-    // Define the order of effects
-    const effectOrder = ['damage', 'physical', 'magical', 'pure', 'heal', 'buff', 'speed', 'debuff', 'aoe', 
-                        'dot', 'stun', 'immunity', 'crit', 'execute', 'summon', 'transform', 'shield', 
-                        'defense', 'aura', 'resurrect', 'cleanse', 'poison', 'mark', 'accuracy', 
-                        'fire', 'frost', 'holy', 'shadow', 'arcane', 'void', 'psionic', 'manaburn', 
-                        'spellpower', 'manaregen', 'cdr', 'control', 'ultimate', 'multihit', 
-                        'dispel', 'random', 'mutation', 'teleport', 'stealth', 'evasion', 'survival', 
-                        'movement', 'reflect', 'blind', 'mental'];
+    // Define the order of effects and their display names
+const effectOrder = [
+    // Damage types
+    { key: 'damage', display: 'Damage' },
+    { key: 'physical', display: 'Physical' },
+    { key: 'magical', display: 'Magical' },
+    { key: 'pure', display: 'Pure' },
     
-    // Add effect tags in the specified order
-    effectOrder.forEach(effectType => {
-        if (effects.includes(effectType)) {
-            effectTags += `<span class="abilityEffectTag ${effectType}">${effectType.charAt(0).toUpperCase() + effectType.slice(1)}</span>`;
-        }
-    });
+    // Core effects
+    { key: 'heal', display: 'Heal' },
+    { key: 'aoe', display: 'AOE' },
+    { key: 'passive', display: 'Passive' },
+    
+    // Special effects
+    { key: 'dot', display: 'DOT' },
+    { key: 'speed', display: 'Speed' },
+    { key: 'defense', display: 'Defense' },
+    { key: 'shield', display: 'Shield' },
+    { key: 'control', display: 'Control' },
+    { key: 'evasion', display: 'Evasion' },
+    { key: 'frost', display: 'Frost' },
+    { key: 'bleed', display: 'Bleed' },
+    { key: 'slow', display: 'Slow' },
+    { key: 'stun', display: 'Stun' },
+    { key: 'immunity', display: 'Immunity' },
+    { key: 'summon', display: 'Summon' },
+    { key: 'random', display: 'Random' },
+
+    // Buffs
+    { key: 'buff', display: 'Buff' },
+    { key: 'buff_increase_attack', display: 'Increase Attack' },
+    { key: 'buff_increase_speed', display: 'Increase Speed' },
+    { key: 'buff_increase_defense', display: 'Increase Defense' },
+    { key: 'buff_immune', display: 'Immune' },
+    { key: 'buff_shield', display: 'Shield' },
+    
+    // Debuffs
+    { key: 'debuff', display: 'Debuff' },
+    { key: 'debuff_reduce_attack', display: 'Reduce Attack' },
+    { key: 'debuff_reduce_speed', display: 'Reduce Speed' },
+    { key: 'debuff_reduce_defense', display: 'Reduce Defense' },
+    { key: 'debuff_blight', display: 'Blight' },
+    { key: 'debuff_bleed', display: 'Bleed' },
+    { key: 'debuff_stun', display: 'Stun' },
+    { key: 'debuff_taunt', display: 'Taunt' },
+    { key: 'debuff_silence', display: 'Silence' },
+    { key: 'debuff_marked', display: 'Marked' },
+    { key: 'debuff_action_drain', display: 'Action Drain' }
+    
+];
+
+// Add effect tags in the specified order
+effectOrder.forEach(effect => {
+    if (effects.includes(effect.key)) {
+        effectTags += `<span class="abilityEffectTag ${effect.key}">${effect.display}</span>`;
+    }
+});
+    
     
     // Format cooldown with level scaling
     let cooldownText = 'Cooldown: ';
