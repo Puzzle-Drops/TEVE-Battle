@@ -1233,12 +1233,24 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
         spellText.className = 'spellText';
         spellText.textContent = spellName;
         
-        // Add appropriate color class based on spell type
-        if (hasDamage) spellText.classList.add('damage');
-        else if (effects.includes('heal')) spellText.classList.add('heal');
-        else if (hasBuff) spellText.classList.add('buff');
-        else if (hasDebuff) spellText.classList.add('debuff');
-        else spellText.classList.add('damage'); // default
+        // Add appropriate color class based on spell type with priority
+if (effects.includes('physical')) {
+    spellText.classList.add('damage-physical');
+} else if (effects.includes('magical')) {
+    spellText.classList.add('damage-magical');
+} else if (effects.includes('pure')) {
+    spellText.classList.add('damage-pure');
+} else if (effects.includes('heal')) {
+    spellText.classList.add('heal');
+} else if (effects.includes('buff_shield')) {
+    spellText.classList.add('shield');
+} else if (hasBuff) {
+    spellText.classList.add('buff');
+} else if (hasDebuff) {
+    spellText.classList.add('debuff');
+} else {
+    spellText.classList.add('damage-physical'); // default
+}
         
         animContainer.appendChild(spellText);
         
