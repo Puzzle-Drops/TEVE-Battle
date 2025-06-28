@@ -1155,7 +1155,7 @@ if (unit.isEnemy) {
             'debuff_stun': 'Stun',
             'debuff_taunt': 'Taunt',
             'debuff_silence': 'Silence',
-            'debuff_marked': 'Marked'
+            'debuff_mark': 'Mark'
         };
         return mapping[effect] || '';
     }
@@ -1316,7 +1316,7 @@ if (unit.isEnemy) {
         let damage = Math.round(amount);
 
         // Check if target can dodge (Marked prevents all dodging)
-        const isMarked = target.debuffs.some(d => d.name === 'Marked');
+        const isMarked = target.debuffs.some(d => d.name === 'Mark');
         if (damageType === 'physical' && target.physicalDodgeChance && !isMarked) {
             if (Math.random() < target.physicalDodgeChance) {
                 this.log(`${target.name} dodges the attack!`);
@@ -1406,8 +1406,8 @@ if (damageType !== 'pure') {
             }
         });
 
-        // Apply Marked damage increase (25% more damage)
-        if (target.debuffs.some(d => d.name === 'Marked')) {
+        // Apply Mark damage increase (25% more damage)
+        if (target.debuffs.some(d => d.name === 'Mark')) {
             damage *= 1.25;
         }
         
@@ -1695,7 +1695,7 @@ showDodgeAnimation(target) {
         if (!target.isAlive) return;
         
         // Check if target is marked (prevents gaining buffs)
-        if (target.debuffs.some(d => d.name === 'Marked')) {
+        if (target.debuffs.some(d => d.name === 'Mark')) {
             this.log(`${target.name} is marked and cannot gain buffs!`);
             return;
         }
@@ -2584,7 +2584,7 @@ this.party.forEach((unit, index) => {
             'Stun': 'stun',
             'Taunt': 'taunt',
             'Silence': 'silence',
-            'Marked': 'marked'
+            'Mark': 'mark'
         };
         return iconMap[debuffName] || 'debuff';
     }
@@ -2631,7 +2631,7 @@ this.party.forEach((unit, index) => {
             'Stun': 'Cannot act on next turn',
             'Taunt': 'Must attack the unit that taunted',
             'Silence': 'Forces skill 1 attack on random enemy',
-            'Marked': '+25% damage taken, cannot gain buffs or evade'
+            'Mark': '+25% damage taken, cannot gain buffs or evade'
         };
         
         tooltip.className = isBuff ? 'buff' : 'debuff';
