@@ -414,7 +414,7 @@
     "name": "Increase Attack Test",
     "description": "Grants Increase Attack buff for {duration} turns",
     "cooldown": [1, 1, 1, 1, 1],
-    "duration": [2, 2, 3, 3, 4],
+    "duration": [1, 2, 3, 3, 4],
     "effects": ["buff_increase_attack"],
     "target": "ally",
     "logicKey": "increaseAttackTestLogic"
