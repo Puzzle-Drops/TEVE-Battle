@@ -265,7 +265,7 @@ Bleed: deals 5% max hp damage on turn start
 Stun: turn ends on turn start
 Taunt: forces skill 1 attack on unit that cast taunt
 Silence: forces skill 1 attack on random enemy
-Marked: +25% damage from all sources, cannot gain buffs, and cannot evade.
+Mark: +25% damage from all sources, cannot gain buffs, and cannot evade.
 
 Dungeons:
 -Easy
@@ -478,7 +478,7 @@ Patriarch/Matriarch → Prophet/Prophetess
 ARCHER FAMILY (Physical Ranged DPS)
 Base Spells (Archer/Ranger)
 1. Aimed Shot: High damage + ignore 25% armor and break shields.
-2. Hunter's Mark: Apply Marked and blight debuff (5 turn CD)
+2. Hunter's Mark: Apply Mark and blight debuff (5 turn CD)
 
 Marksman → Sniper
 3. Double Shot: Fire twice, first shot applies Reduce Defense debuff for 1 turn, second shot hits random enemy and applies bleed debuff for 1 turn. (6 turn CD)
@@ -508,7 +508,7 @@ Shaman → Summoner
 TEMPLAR FAMILY (Hybrid DPS/Support)
 Base Spells (Templar/Arch Templar)
 1. Psi Strike: If enemy is at or above 30% action bar, deal physical damage and drain 5% action bar. If enemy is below 30% action bar, deal pure damage.
-2. Psychic Mark: Apply Marked and Reduce Speed debuff on target (5 turn CD)
+2. Psychic Mark: Apply Mark and Reduce Speed debuff on target (5 turn CD)
 
 Dark Templar → Dark Arch Templar
 3. Void Strike: Hit enemy with Psi Strike per the number of debuffs on target. (6 turn CD)
@@ -531,7 +531,7 @@ Assassin → Phantom Assassin
 4. Female Passive: Cheap Shot will deal pure damage if enemy is below 50% HP
 
 Stalker → Master Stalker
-3. Shadowstep: Apply Taunt, Marked, and one bleed debuff to target.
+3. Shadowstep: Apply Taunt, Mark, and one bleed debuff to target.
 4. Male Passive: 10% chance to dodge pure damage, 20% magical, 30% physical. Cheap Shot now adds bleed.
 4. Female Passive: 10% chance to dodge pure damage, 20% physical, 30% magical. Cheap Shot now adds bleed.
 
