@@ -4,7 +4,7 @@
     "name": "Punch",
     "description": "Basic attack dealing [{base} + {attack}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical"],
+    "effects": ["physical"],
     "scaling": {
         "base": [1, 10, 25, 40, 80],
         "attack": [0.5, 0.6, 0.7, 0.8, 1.0]
@@ -27,7 +27,7 @@
     "name": "Throw Rock",
     "description": "Throw a rock dealing [{base} + {attack} + {int}] physical damage and stunning for {stunDuration} turn",
     "cooldown": [7, 7, 6, 6, 5],
-    "effects": ["damage", "physical", "debuff_stun"],
+    "effects": ["physical", "debuff_stun"],
     "scaling": {
         "base": [5, 10, 20, 35, 50],
         "attack": [0.1, 0.2, 0.3, 0.4, 0.5],
@@ -42,7 +42,7 @@
     "name": "Slash",
     "description": "Deals {percent} of target's max HP or {cap} damage, whichever is lower",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical"],
+    "effects": ["physical"],
     "target": "enemy",
     "logicKey": "slashLogic",
     "scaling": {
@@ -56,7 +56,7 @@
     "name": "Bite",
     "description": "Deals {percent} of target's max HP or {floor} damage, whichever is higher",
     "cooldown": [3, 3, 3, 2, 2],
-    "effects": ["damage", "physical"],
+    "effects": ["physical"],
     "target": "enemy",
     "logicKey": "biteLogic",
     "scaling": {
@@ -70,7 +70,7 @@
     "name": "Spear Thrust",
     "description": "Thrust spear dealing [{base} + {attack} + {str}] physical damage with {bleedChance}% chance to cause Bleed for {bleedDuration} turns",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical", "debuff_bleed"],
+    "effects": ["physical", "debuff_bleed"],
     "scaling": {
         "base": [25, 50, 100, 200, 350],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -96,7 +96,7 @@
     "name": "Crushing Strike",
     "description": "Heavy hammer strike dealing [{base} + {attack} + {str}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical"],
+    "effects": ["physical"],
     "scaling": {
         "base": [50, 100, 200, 350, 500],
         "attack": [0.5, 0.55, 0.6, 0.65, 0.75],
@@ -110,7 +110,7 @@
     "name": "Armor Break",
     "description": "Break enemy armor dealing [{base} + {attack} + {str}] physical damage and applying Reduce Defense for {debuffDuration} turns",
     "cooldown": [4, 4, 3, 3, 2],
-    "effects": ["damage", "physical", "debuff_reduce_defense"],
+    "effects": ["physical", "debuff_reduce_defense"],
     "scaling": {
         "base": [30, 60, 120, 240, 400],
         "attack": [0.5, 0.5, 0.6, 0.65, 0.75],
@@ -125,7 +125,7 @@
     "name": "Crystal Shard",
     "description": "Hurl a magical crystal dealing [{base} + {attack} + {int}] magical damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "magical"],
+    "effects": ["magical"],
     "scaling": {
         "base": [40, 80, 160, 300, 600],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -149,7 +149,7 @@
     "name": "Staff Whack",
     "description": "Basic staff attack dealing [{base} + {attack} + {str}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical"],
+    "effects": ["physical"],
     "scaling": {
         "base": [10, 20, 40, 80, 150],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -184,7 +184,7 @@
     "name": "Chieftain's Hammer",
     "description": "Mighty hammer blow dealing [{base} + {attack} + {str}] physical damage with {stunChance}% chance to Stun for {stunDuration} turn",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical", "debuff_stun"],
+    "effects": ["physical", "debuff_stun"],
     "scaling": {
         "base": [75, 150, 300, 500, 750],
         "attack": [0.3, 0.35, 0.4, 0.45, 0.5],
@@ -211,7 +211,7 @@
     "name": "Axe Throw",
     "description": "Throw an axe dealing [{base} + {attack} + {agi}] physical damage with {bleedChance}% chance to cause Bleed for {bleedDuration} turns",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical", "debuff_bleed"],
+    "effects": ["physical", "debuff_bleed"],
     "scaling": {
         "base": [35, 70, 140, 250, 400],
         "attack": [0.5, 0.5, 0.55, 0.55, 0.6],
@@ -237,7 +237,7 @@
     "name": "Dual Axes",
     "description": "Strike {hitCount} times with axes dealing [{base} + {attack} + {agi}] physical damage each, {bleedChance}% bleed chance per hit for {bleedDuration} turns",
     "cooldown": [3, 3, 3, 2, 2],
-    "effects": ["damage", "physical", "debuff_bleed"],
+    "effects": ["physical", "debuff_bleed"],
     "scaling": {
         "base": [50, 100, 200, 350, 500],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -264,7 +264,7 @@
     "name": "Frost Bolt",
     "description": "Icy bolt dealing [{base} + {attack} + {int}] magical damage and draining {actionBarDrain}% action bar",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "magical", "debuff_action_drain"],
+    "effects": ["magical", "debuff_action_drain"],
     "scaling": {
         "base": [60, 120, 240, 400, 600],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -291,7 +291,7 @@
     "name": "Savage Bite",
     "description": "Vicious bite dealing [{base} + {attack} + {str}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical"],
+    "effects": ["physical"],
     "scaling": {
         "base": [45, 90, 180, 320, 480],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -326,7 +326,7 @@
     "name": "Crushing Blow",
     "description": "Massive strike dealing [{base} + {attack} + {str}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical"],
+    "effects": ["physical"],
     "scaling": {
         "base": [80, 160, 320, 550, 800],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -351,7 +351,7 @@
     "name": "Maul",
     "description": "Brutal maul dealing [{base} + {attack} + {str}] physical damage and causing Bleed for {bleedDuration} turns",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical", "debuff_bleed"],
+    "effects": ["physical", "debuff_bleed"],
     "scaling": {
         "base": [70, 140, 280, 480, 700],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -376,7 +376,7 @@
     "name": "Frost Breath",
     "description": "Breathe frost on all enemies dealing [{str}] magical damage and applying Reduce Speed for {slowDuration} turns",
     "cooldown": [5, 5, 4, 4, 3],
-    "effects": ["aoe", "damage", "magical", "debuff_reduce_speed"],
+    "effects": ["aoe", "magical", "debuff_reduce_speed"],
     "scaling": {
         "str": [2.0, 2.5, 3.0, 3.5, 4.0]
     },
@@ -389,7 +389,7 @@
     "name": "Win",
     "description": "[{base}] Pure Damage and gain Increase Speed for {duration} turns",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["aoe", "damage", "pure", "buff_increase_speed"],
+    "effects": ["aoe", "pure", "buff_increase_speed"],
     "scaling": {
         "base": [100000000, 200000000, 300000000, 400000000, 500000000]
     },
@@ -402,7 +402,7 @@
     "name": "Lose",
     "description": "Lose intentionally",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "pure", "aoe"],
+    "effects": ["pure", "aoe"],
     "scaling": {
         "base": [100000000, 200000000, 300000000, 400000000, 500000000]
     },
