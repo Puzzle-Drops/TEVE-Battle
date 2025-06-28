@@ -1348,11 +1348,17 @@ if (effects.includes('physical')) {
             damage = Math.round(damage * 1.25);
         }
         
-        // Apply Increase Defense damage reduction (25% less base damage)
-        const hasIncreaseDefense = target.buffs.some(b => b.name === 'Increase Defense');
-        if (hasIncreaseDefense) {
-            damage = Math.round(damage * 0.75);
-        }
+// Apply Increase Defense damage reduction (25% less base damage)
+const hasIncreaseDefense = target.buffs.some(b => b.name === 'Increase Defense');
+if (hasIncreaseDefense) {
+    damage = Math.round(damage * 0.75);
+}
+
+// Apply Frost Armor damage reduction (25% less damage, calculated separately)
+const hasFrostArmor = target.buffs.some(b => b.name === 'Frost Armor');
+if (hasFrostArmor) {
+    damage = Math.round(damage * 0.75);
+}
         
         // Apply damage reduction based on type (skip for pure damage)
 if (damageType !== 'pure') {
@@ -1368,7 +1374,7 @@ if (damageType !== 'pure') {
         if (hasIncreaseDefense) {
             physicalDR = Math.min(0.9, physicalDR + 0.25);
         }
-        
+
         damage = damage * (1 - physicalDR);
     } else if (damageType === 'magical') {
         // All non-physical, non-pure damage is considered magical
@@ -1459,6 +1465,20 @@ if (target.onDamageTaken && target.isAlive && damage > 0) {
     });
 }
 
+        // Check for Frost Armor retaliation
+if (target.isAlive && damage > 0 && hasFrostArmor) {
+    // Apply or stack reduce speed on the attacker
+    const existingSlowDebuff = attacker.debuffs.find(d => d.name === 'Reduce Speed');
+    if (existingSlowDebuff) {
+        // Stack the duration
+        existingSlowDebuff.duration += 1;
+        this.log(`${target.name}'s Frost Armor adds Reduce Speed to ${attacker.name} (${existingSlowDebuff.duration} turns)!`);
+    } else {
+        // Apply new reduce speed
+        this.applyDebuff(attacker, 'Reduce Speed', 1, {});
+        this.log(`${target.name}'s Frost Armor slows ${attacker.name}!`);
+    }
+}
         
         this.log(`${attacker.name} deals ${damage} ${damageType} damage to ${target.name}!`);
         
@@ -2574,15 +2594,16 @@ abilityDiv.onmouseout = () => {
     }
 
     getBuffIconName(buffName) {
-        const iconMap = {
-            'Increase Attack': 'increase_attack',
-            'Increase Speed': 'increase_speed',
-            'Increase Defense': 'increase_defense',
-            'Immune': 'immune',
-            'Shield': 'shield'
-        };
-        return iconMap[buffName] || 'buff';
-    }
+    const iconMap = {
+        'Increase Attack': 'increase_attack',
+        'Increase Speed': 'increase_speed',
+        'Increase Defense': 'increase_defense',
+        'Immune': 'immune',
+        'Shield': 'shield',
+        'Frost Armor': 'frost_armor'
+    };
+    return iconMap[buffName] || 'buff';
+}
 
     getDebuffIconName(debuffName) {
         const iconMap = {
@@ -2625,12 +2646,13 @@ abilityDiv.onmouseout = () => {
         }
         
         const descriptions = {
-            // Buffs
-            'Increase Attack': '+50% attack damage',
-            'Increase Speed': '+33% action bar progress',
-            'Increase Defense': '+25% damage reduction, and -25% damage taken',
-            'Immune': 'Cannot gain debuffs',
-            'Shield': `Absorbs ${Math.round(buffDebuff.shieldAmount || 0)} damage`,
+    // Buffs
+    'Increase Attack': '+50% attack damage',
+    'Increase Speed': '+33% action bar progress',
+    'Increase Defense': '+25% damage reduction, and -25% damage taken',
+    'Immune': 'Cannot gain debuffs',
+    'Shield': `Absorbs ${Math.round(buffDebuff.shieldAmount || 0)} damage`,
+    'Frost Armor': '+25% damage reduction, attackers are slowed',
             
             // Debuffs
             'Reduce Attack': '-50% attack damage',
