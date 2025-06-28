@@ -226,7 +226,7 @@ body {
     position: absolute;
     width: 110%;
     height: 110%;
-    left: 5%;
+    left: -5%;
     top: -8%;
     background-image: url('https://puzzle-drops.github.io/TEVE/img/fields/satyrs.png');
     background-size: cover;
