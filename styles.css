@@ -2443,52 +2443,159 @@ body {
     text-align: center;
     font-size: 36px;
     font-weight: bold;
-    text-shadow: 
-        0 0 10px rgba(0, 0, 0, 0.9),
-        0 0 20px rgba(0, 0, 0, 0.7),
-        0 0 30px currentColor,
-        0 2px 4px rgba(0, 0, 0, 1);
+    text-transform: uppercase;
     white-space: nowrap;
     letter-spacing: 1px;
     animation: spellCast 1.5s ease-out forwards;
     z-index: 15;
     pointer-events: none;
+    -webkit-text-stroke: 2px rgba(0, 0, 0, 0.9);
+    text-stroke: 2px rgba(0, 0, 0, 0.9);
 }
 
-/* Spell text colors */
+/* Enhanced spell text colors with multi-layer glows */
 .spellText.damage-physical {
-    color: #ff8800;  /* Orange */
-    text-shadow: 0 0 10px rgba(255, 136, 0, 0.8);
+    color: #ff8800;
+    text-shadow: 
+        /* Inner glow */
+        0 0 10px rgba(255, 136, 0, 1),
+        0 0 20px rgba(255, 136, 0, 0.9),
+        0 0 30px rgba(255, 136, 0, 0.8),
+        0 0 40px rgba(255, 136, 0, 0.7),
+        0 0 50px rgba(255, 136, 0, 0.6),
+        /* Outer dramatic glow */
+        0 0 60px rgba(255, 100, 0, 0.5),
+        0 0 80px rgba(255, 100, 0, 0.4),
+        /* Black shadow for depth */
+        0 2px 4px rgba(0, 0, 0, 1),
+        0 4px 8px rgba(0, 0, 0, 0.8);
 }
 
 .spellText.damage-magical {
-    color: #d896ff;  /* Purple */
-    text-shadow: 0 0 10px rgba(216, 150, 255, 0.8);
+    color: #d896ff;
+    text-shadow: 
+        0 0 10px rgba(216, 150, 255, 1),
+        0 0 20px rgba(216, 150, 255, 0.9),
+        0 0 30px rgba(216, 150, 255, 0.8),
+        0 0 40px rgba(216, 150, 255, 0.7),
+        0 0 50px rgba(216, 150, 255, 0.6),
+        0 0 60px rgba(180, 100, 255, 0.5),
+        0 0 80px rgba(180, 100, 255, 0.4),
+        0 2px 4px rgba(0, 0, 0, 1),
+        0 4px 8px rgba(0, 0, 0, 0.8);
 }
 
 .spellText.damage-pure {
-    color: #ffffff;  /* White */
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    color: #ffffff;
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 1),
+        0 0 20px rgba(255, 255, 255, 0.9),
+        0 0 30px rgba(255, 255, 255, 0.8),
+        0 0 40px rgba(220, 220, 255, 0.7),
+        0 0 50px rgba(220, 220, 255, 0.6),
+        0 0 60px rgba(200, 200, 255, 0.5),
+        0 0 80px rgba(200, 200, 255, 0.4),
+        0 2px 4px rgba(0, 0, 0, 1),
+        0 4px 8px rgba(0, 0, 0, 0.8);
 }
 
 .spellText.heal {
-    color: #00ff88;  /* Green */
-    text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+    color: #00ff88;
+    text-shadow: 
+        0 0 10px rgba(0, 255, 136, 1),
+        0 0 20px rgba(0, 255, 136, 0.9),
+        0 0 30px rgba(0, 255, 136, 0.8),
+        0 0 40px rgba(0, 255, 136, 0.7),
+        0 0 50px rgba(0, 255, 136, 0.6),
+        0 0 60px rgba(0, 255, 100, 0.5),
+        0 0 80px rgba(0, 255, 100, 0.4),
+        0 2px 4px rgba(0, 0, 0, 1),
+        0 4px 8px rgba(0, 0, 0, 0.8);
 }
 
 .spellText.shield {
-    color: #ffd700;  /* Yellow/Gold */
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    color: #ffd700;
+    text-shadow: 
+        0 0 10px rgba(255, 215, 0, 1),
+        0 0 20px rgba(255, 215, 0, 0.9),
+        0 0 30px rgba(255, 215, 0, 0.8),
+        0 0 40px rgba(255, 215, 0, 0.7),
+        0 0 50px rgba(255, 215, 0, 0.6),
+        0 0 60px rgba(255, 200, 0, 0.5),
+        0 0 80px rgba(255, 200, 0, 0.4),
+        0 2px 4px rgba(0, 0, 0, 1),
+        0 4px 8px rgba(0, 0, 0, 0.8);
 }
 
 .spellText.buff {
-    color: #00c3ff;  /* Blue */
-    text-shadow: 0 0 10px rgba(0, 195, 255, 0.8);
+    color: #00c3ff;
+    text-shadow: 
+        0 0 10px rgba(0, 195, 255, 1),
+        0 0 20px rgba(0, 195, 255, 0.9),
+        0 0 30px rgba(0, 195, 255, 0.8),
+        0 0 40px rgba(0, 195, 255, 0.7),
+        0 0 50px rgba(0, 195, 255, 0.6),
+        0 0 60px rgba(0, 150, 255, 0.5),
+        0 0 80px rgba(0, 150, 255, 0.4),
+        0 2px 4px rgba(0, 0, 0, 1),
+        0 4px 8px rgba(0, 0, 0, 0.8);
 }
 
 .spellText.debuff {
-    color: #ff4444;  /* Red */
-    text-shadow: 0 0 10px rgba(255, 68, 68, 0.8);
+    color: #ff4444;
+    text-shadow: 
+        0 0 10px rgba(255, 68, 68, 1),
+        0 0 20px rgba(255, 68, 68, 0.9),
+        0 0 30px rgba(255, 68, 68, 0.8),
+        0 0 40px rgba(255, 68, 68, 0.7),
+        0 0 50px rgba(255, 68, 68, 0.6),
+        0 0 60px rgba(255, 0, 0, 0.5),
+        0 0 80px rgba(255, 0, 0, 0.4),
+        0 2px 4px rgba(0, 0, 0, 1),
+        0 4px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Enhanced animation with more dramatic entrance */
+@keyframes spellCast {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.7);
+        filter: blur(2px);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(-15px) scale(1.2);
+        filter: blur(0);
+    }
+    30% {
+        transform: translateY(-20px) scale(1.15);
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(-25px) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-45px) scale(0.9);
+        filter: blur(1px);
+    }
+}
+
+/* Optional: Add a subtle background glow effect */
+.spellText::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 200%;
+    background: radial-gradient(ellipse at center, 
+        currentColor 0%, 
+        transparent 70%);
+    opacity: 0.15;
+    z-index: -1;
+    filter: blur(20px);
 }
 
 /* Add styles for ability effect tags in tooltips */
