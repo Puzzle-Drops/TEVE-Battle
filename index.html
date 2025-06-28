@@ -5156,6 +5156,7 @@ calculateSpellValue(spell, unit, valueType = 'damage') {
                         padding: 16px;
                         border-radius: 4px;
                         z-index: 1002;
+			min-width: 300px;
                         max-width: 400px;
                         box-shadow: 0 0 20px rgba(0,0,0,0.8);
                         pointer-events: none;
@@ -5560,83 +5561,43 @@ if (collectionPopup && collectionPopup.style.display === 'block') {
                 }
             });
             
-// Add global handler for alt key to update item tooltips
+// Global Alt key handler for both item and ability tooltips
 let altKeyPressed = false;
+let currentHoveredAbility = null;
+let currentHoveredUnit = null;
+
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Alt' && !altKeyPressed) {
         e.preventDefault(); // Prevent default Alt key behavior
         altKeyPressed = true;
-        // Update any visible item tooltip
-        const tooltip = document.getElementById('itemTooltipDiv');
-        if (tooltip && tooltip.style.display === 'block' && tooltip._currentItem) {
-            if (tooltip._isComparison && tooltip._equippedItem) {
+        
+        // Update item tooltip if visible
+        const itemTooltip = document.getElementById('itemTooltipDiv');
+        if (itemTooltip && itemTooltip.style.display === 'block' && itemTooltip._currentItem) {
+            if (itemTooltip._isComparison && itemTooltip._equippedItem) {
                 // Rebuild comparison tooltip with max values
                 let tooltipHTML = '<div style="display: flex; gap: 20px;">';
                 tooltipHTML += '<div style="flex: 1;">';
                 tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
-                tooltipHTML += tooltip._currentItem.getTooltip(true);
+                tooltipHTML += itemTooltip._currentItem.getTooltip(true);
                 tooltipHTML += '</div>';
                 tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
                 tooltipHTML += '<div style="flex: 1;">';
                 tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
-                tooltipHTML += tooltip._equippedItem.getTooltip(true);
+                tooltipHTML += itemTooltip._equippedItem.getTooltip(true);
                 tooltipHTML += '</div>';
                 tooltipHTML += '</div>';
-                tooltip.innerHTML = tooltipHTML;
+                itemTooltip.innerHTML = tooltipHTML;
             } else {
-                tooltip.innerHTML = tooltip._currentItem.getTooltip(true);
+                itemTooltip.innerHTML = itemTooltip._currentItem.getTooltip(true);
             }
         }
-    }
-});
-
-document.addEventListener('keyup', (e) => {
-    if (e.key === 'Alt' && altKeyPressed) {
-        altKeyPressed = false;
-        // Update tooltip without max values
-        const tooltip = document.getElementById('itemTooltipDiv');
-        if (tooltip && tooltip.style.display === 'block' && tooltip._currentItem) {
-            if (tooltip._isComparison && tooltip._equippedItem) {
-                // Rebuild comparison tooltip without max values
-                let tooltipHTML = '<div style="display: flex; gap: 20px;">';
-                tooltipHTML += '<div style="flex: 1;">';
-                tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
-                tooltipHTML += tooltip._currentItem.getTooltip(false);
-                tooltipHTML += '</div>';
-                tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
-                tooltipHTML += '<div style="flex: 1;">';
-                tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
-                tooltipHTML += tooltip._equippedItem.getTooltip(false);
-                tooltipHTML += '</div>';
-                tooltipHTML += '</div>';
-                tooltip.innerHTML = tooltipHTML;
-            } else {
-                tooltip.innerHTML = tooltip._currentItem.getTooltip(false);
-            }
-        }
-    }
-});
-
-// Add alt key handler for ability tooltips
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Alt') {
-        e.preventDefault();
         
         // Update ability tooltip if visible
         const abilityTooltip = document.getElementById('abilityTooltip');
-        if (abilityTooltip && abilityTooltip.style.display === 'block') {
-            // Find which ability icon is being hovered (including battle panel abilities)
-            const hoveredIcon = document.querySelector('.abilityIconSmall:hover, .ability:hover, #abilityPanel .ability:hover');
-            if (hoveredIcon) {
-                // Trigger a synthetic mouse event to update the tooltip
-                const event = new MouseEvent('mouseenter', {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                    altKey: true
-                });
-                hoveredIcon.dispatchEvent(event);
-            }
+        if (abilityTooltip && abilityTooltip.style.display === 'block' && currentHoveredAbility && currentHoveredUnit) {
+            const tooltipHtml = game.formatAbilityTooltip(currentHoveredAbility, currentHoveredAbility.level, currentHoveredUnit, true);
+            abilityTooltip.innerHTML = tooltipHtml;
         }
         
         // Update skill description if on skills tab
@@ -5652,22 +5613,36 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('keyup', (e) => {
-    if (e.key === 'Alt') {
-        // Update ability tooltip if visible
-        const abilityTooltip = document.getElementById('abilityTooltip');
-        if (abilityTooltip && abilityTooltip.style.display === 'block') {
-            // Find which ability icon is being hovered (including battle panel abilities)
-            const hoveredIcon = document.querySelector('.abilityIconSmall:hover, .ability:hover, #abilityPanel .ability:hover');
-            if (hoveredIcon) {
-                // Trigger a synthetic mouse event to update the tooltip
-                const event = new MouseEvent('mouseenter', {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                    altKey: false
-                });
-                hoveredIcon.dispatchEvent(event);
+    if (e.key === 'Alt' && altKeyPressed) {
+        altKeyPressed = false;
+        
+        // Update item tooltip without max values
+        const itemTooltip = document.getElementById('itemTooltipDiv');
+        if (itemTooltip && itemTooltip.style.display === 'block' && itemTooltip._currentItem) {
+            if (itemTooltip._isComparison && itemTooltip._equippedItem) {
+                // Rebuild comparison tooltip without max values
+                let tooltipHTML = '<div style="display: flex; gap: 20px;">';
+                tooltipHTML += '<div style="flex: 1;">';
+                tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
+                tooltipHTML += itemTooltip._currentItem.getTooltip(false);
+                tooltipHTML += '</div>';
+                tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
+                tooltipHTML += '<div style="flex: 1;">';
+                tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
+                tooltipHTML += itemTooltip._equippedItem.getTooltip(false);
+                tooltipHTML += '</div>';
+                tooltipHTML += '</div>';
+                itemTooltip.innerHTML = tooltipHTML;
+            } else {
+                itemTooltip.innerHTML = itemTooltip._currentItem.getTooltip(false);
             }
+        }
+        
+        // Update ability tooltip without formula
+        const abilityTooltip = document.getElementById('abilityTooltip');
+        if (abilityTooltip && abilityTooltip.style.display === 'block' && currentHoveredAbility && currentHoveredUnit) {
+            const tooltipHtml = game.formatAbilityTooltip(currentHoveredAbility, currentHoveredAbility.level, currentHoveredUnit, false);
+            abilityTooltip.innerHTML = tooltipHtml;
         }
         
         // Update skill description if on skills tab
@@ -5682,6 +5657,29 @@ document.addEventListener('keyup', (e) => {
     }
 });
 
+// Store references when hovering abilities for Alt key updates
+document.addEventListener('mouseover', (e) => {
+    // Check if hovering over an ability in battle panel
+    const abilityDiv = e.target.closest('#abilityPanel .ability');
+    if (abilityDiv && game.currentBattle && game.currentBattle.currentUnit) {
+        const unit = game.currentBattle.currentUnit;
+        const abilityIndex = Array.from(abilityDiv.parentNode.children).indexOf(abilityDiv);
+        const ability = unit.abilities.filter(a => !a.passive)[abilityIndex];
+        if (ability) {
+            currentHoveredAbility = ability;
+            currentHoveredUnit = unit;
+        }
+    }
+});
+
+// Clear references when not hovering
+document.addEventListener('mouseout', (e) => {
+    const abilityDiv = e.target.closest('#abilityPanel .ability');
+    if (abilityDiv && !abilityDiv.contains(e.relatedTarget)) {
+        currentHoveredAbility = null;
+        currentHoveredUnit = null;
+    }
+});
 
 	
 // Add this after the existing event listeners (around line 3290)
