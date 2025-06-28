@@ -40,7 +40,7 @@
 "slash": {
     "id": "slash",
     "name": "Slash",
-    "description": "Deals {percent}% of target's max HP or {cap} damage, whichever is lower",
+    "description": "Deals {percent} of target's max HP or {cap} damage, whichever is lower",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "target": "enemy",
