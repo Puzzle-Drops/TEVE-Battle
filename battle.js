@@ -586,11 +586,28 @@ if (unit.isEnemy) {
 }
     
     start() {
-        this.log("Battle started!");
-        this.log(`Your party: ${this.party.map(u => u.name).join(', ')}`);
+    this.log("Battle started!");
+    this.log(`Your party: ${this.party.map(u => u.name).join(', ')}`);
+    
+    // Animate battlefield background pan
+    const battleFieldBg = document.querySelector('.battleFieldBackground');
+    if (battleFieldBg) {
+        // Set to top position first (without transition)
+        battleFieldBg.style.transition = 'none';
+        battleFieldBg.style.top = '8%';
         
-        // Ensure all party members start alive and visible
-        this.party.forEach(unit => {
+        // Force reflow to ensure the position is set before transition
+        battleFieldBg.offsetHeight;
+        
+        // Re-enable transition and animate to final position
+        setTimeout(() => {
+            battleFieldBg.style.transition = 'top 30s ease-out';
+            battleFieldBg.style.top = '0%';
+        }, 100);
+    }
+    
+    // Ensure all party members start alive and visible
+    this.party.forEach(unit => {
             if (unit) {
                 unit.currentHp = unit.maxHp;
                 unit.isDead = false;
