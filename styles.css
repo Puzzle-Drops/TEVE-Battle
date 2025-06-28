@@ -227,13 +227,14 @@ body {
     width: 110%;
     height: 110%;
     left: -5%;
-    top: -8%;
+    top: 0%; /* Changed from -8% to 0% as failsafe */
     background-image: url('https://puzzle-drops.github.io/TEVE/img/fields/satyrs.png');
     background-size: cover;
     background-position: bottom center;
     background-repeat: no-repeat;
     background-color: #0a0f1a; /* Fallback color */
     z-index: 0;
+    transition: top 30s ease-out; /* Slow pan down animation */
 }
 
 .battleField {
