@@ -2449,8 +2449,8 @@ body {
     animation: spellCast 1.5s ease-out forwards;
     z-index: 15;
     pointer-events: none;
-    -webkit-text-stroke: 2px rgba(0, 0, 0, 0.9);
-    text-stroke: 2px rgba(0, 0, 0, 0.9);
+    -webkit-text-stroke: 2px rgba(0, 0, 0, 0.7);
+    text-stroke: 2px rgba(0, 0, 0, 0.7);
 }
 
 /* Enhanced spell text colors with multi-layer glows */
