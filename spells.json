@@ -184,7 +184,7 @@
     "name": "Chieftain's Hammer",
     "description": "Mighty hammer blow dealing {base} + {attack}x ATK + {str}x STR with {stunChance}% chance to Stun for {stunDuration} turn",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "physical", "debuff", "stun", "debuff_stun"],
+    "effects": ["damage", "physical", "debuff", "debuff_stun"],
     "scaling": {
         "base": [75, 150, 300, 500, 750],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -237,7 +237,7 @@
     "name": "Dual Axes",
     "description": "Strike {hitCount} times with axes dealing {base} + {attack}x ATK + {agi}x AGI each, {bleedChance}% bleed chance per hit for {bleedDuration} turns",
     "cooldown": [3, 3, 3, 2, 2],
-    "effects": ["damage", "physical", "debuff", "bleed", "debuff_bleed"],
+    "effects": ["damage", "physical", "debuff", "debuff_bleed"],
     "scaling": {
         "base": [50, 100, 200, 350, 500],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -264,7 +264,7 @@
     "name": "Frost Bolt",
     "description": "Icy bolt dealing {base} + {attack}x ATK + {int}x INT and draining {actionBarDrain}% action bar",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["damage", "magical", "frost", "debuff_action_drain"],
+    "effects": ["damage", "magical", "debuff_action_drain"],
     "scaling": {
         "base": [60, 120, 240, 400, 600],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -279,7 +279,7 @@
     "name": "Chilling Touch",
     "description": "{slowChance}% chance to apply Reduce Speed for {slowDuration} turns on basic attacks",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["passive", "debuff", "slow"],
+    "effects": ["passive", "debuff", "debuff_reduce_speed"],
     "passive": true,
     "slowChance": [0.3, 0.35, 0.4, 0.45, 0.5],
     "slowDuration": [2, 2, 2, 3, 3],
@@ -316,7 +316,7 @@
     "name": "Chilling Howl",
     "description": "Howl that applies Reduce Attack and Reduce Speed to all enemies for {debuffDuration} turns",
     "cooldown": [5, 5, 4, 4, 3],
-    "effects": ["debuff", "aoe", "debuff_reduce_attack", "debuff_reduce_speed"],
+    "effects": ["aoe", "debuff", "debuff_reduce_attack", "debuff_reduce_speed"],
     "debuffDuration": [3, 3, 3, 4, 4],
     "target": "all_enemies",
     "logicKey": "chillingHowlLogic"
@@ -475,7 +475,7 @@
     "description": "Inflicts Reduce Speed debuff for {duration} turns",
     "cooldown": [1, 1, 1, 1, 1],
     "duration": [2, 2, 3, 3, 4],
-    "effects": ["debuff", "slow", "debuff_reduce_speed"],
+    "effects": ["debuff", "debuff_reduce_speed"],
     "target": "enemy",
     "logicKey": "reduceSpeedTestLogic"
 },
@@ -505,7 +505,7 @@
     "description": "Inflicts Bleed debuff for {duration} turns",
     "cooldown": [1, 1, 1, 1, 1],
     "duration": [2, 2, 3, 3, 4],
-    "effects": ["debuff", "dot", "debuff_bleed"],
+    "effects": ["debuff", "debuff_bleed"],
     "target": "enemy",
     "logicKey": "bleedTestLogic"
 },
@@ -515,7 +515,7 @@
     "description": "Inflicts Stun debuff for {duration} turns",
     "cooldown": [1, 1, 1, 1, 1],
     "duration": [1, 1, 2, 2, 2],
-    "effects": ["debuff", "stun", "debuff_stun"],
+    "effects": ["debuff", "debuff_stun"],
     "target": "enemy",
     "logicKey": "stunTestLogic"
 },
