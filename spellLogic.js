@@ -512,7 +512,12 @@ const spellLogic = {
         
         battle.applyDebuff(target, 'Mark', duration, {});
     },
-
+frostArmorTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spell.duration[levelIndex] || spell.duration[0];
+    
+    battle.applyBuff(target, 'Frost Armor', duration, {});
+},
     frostBreathLogic: function(battle, caster, targets, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0];
