@@ -2455,16 +2455,41 @@ body {
     pointer-events: none;
 }
 
-/* Spell type colors */
-.spellText.passive { color: #ffd700; }
-.spellText.aoe { color: #b8a5ff; }
-.spellText.heal { color: #00ff88; }
-.spellText.damage { color: #ff4444; }
-.spellText.physical { color: #f3b03a; }
-.spellText.magical { color: #aa3af3; }
-.spellText.pure { color: #fdffc4; }
-.spellText.buff { color: #f3f33a; }
-.spellText.debuff { color: #ff8800; }
+/* Spell text colors */
+.spellText.damage-physical {
+    color: #ff8800;  /* Orange */
+    text-shadow: 0 0 10px rgba(255, 136, 0, 0.8);
+}
+
+.spellText.damage-magical {
+    color: #d896ff;  /* Purple */
+    text-shadow: 0 0 10px rgba(216, 150, 255, 0.8);
+}
+
+.spellText.damage-pure {
+    color: #ffffff;  /* White */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.spellText.heal {
+    color: #00ff88;  /* Green */
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+}
+
+.spellText.shield {
+    color: #ffd700;  /* Yellow/Gold */
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+.spellText.buff {
+    color: #00c3ff;  /* Blue */
+    text-shadow: 0 0 10px rgba(0, 195, 255, 0.8);
+}
+
+.spellText.debuff {
+    color: #ff4444;  /* Red */
+    text-shadow: 0 0 10px rgba(255, 68, 68, 0.8);
+}
 
 /* Add styles for ability effect tags in tooltips */
 .abilityEffectTag {
