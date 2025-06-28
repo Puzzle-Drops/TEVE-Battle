@@ -1201,21 +1201,17 @@ if (unit.isEnemy) {
             }
             
             // Determine animation type based on spell effects
-            let animationClass = 'casting-damage'; // default
-            
-            if (effects.includes('speed') || effects.includes('buff')) {
-                animationClass = 'casting-speed';
-            } else if (effects.includes('heal')) {
-                animationClass = 'casting-heal';
-            } else if (effects.includes('holy')) {
-                animationClass = 'casting-holy';
-            } else if (effects.includes('shadow') || effects.includes('debuff')) {
-                animationClass = 'casting-shadow';
-            } else if (effects.includes('shield') || effects.includes('defense')) {
-                animationClass = 'casting-shield';
-            } else if (effects.includes('summon') || effects.includes('transform')) {
-                animationClass = 'casting-summon';
-            }
+let animationClass = 'casting-damage'; // default
+
+// Check if effects contains any buff_* or debuff_* effects
+const hasBuff = effects.some(effect => effect.startsWith('buff_'));
+const hasDebuff = effects.some(effect => effect.startsWith('debuff_'));
+
+if (effects.includes('heal')) {
+    animationClass = 'casting-heal';
+} else if (effects.includes('shield') || effects.includes('defense')) {
+    animationClass = 'casting-shield';
+}
             
             // Remove any existing animation classes
             animContainer.classList.remove('casting-damage', 'casting-speed', 'casting-heal', 
@@ -1232,11 +1228,14 @@ if (unit.isEnemy) {
             spellText.textContent = spellName;
             
             // Add appropriate color class based on spell type
-            if (effects.includes('damage')) spellText.classList.add('damage');
-            else if (effects.includes('heal')) spellText.classList.add('heal');
-            else if (effects.includes('buff')) spellText.classList.add('buff');
-            else if (effects.includes('debuff')) spellText.classList.add('debuff');
-            else spellText.classList.add('damage'); // default
+const hasBuff = effects.some(effect => effect.startsWith('buff_'));
+const hasDebuff = effects.some(effect => effect.startsWith('debuff_'));
+
+if (effects.includes('damage')) spellText.classList.add('damage');
+else if (effects.includes('heal')) spellText.classList.add('heal');
+else if (hasBuff) spellText.classList.add('buff');
+else if (hasDebuff) spellText.classList.add('debuff');
+else spellText.classList.add('damage'); // default
             
             animContainer.appendChild(spellText);
             
