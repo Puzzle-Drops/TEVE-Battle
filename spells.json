@@ -40,7 +40,7 @@
 "holy_smite": {
     "id": "holy_smite",
     "name": "Holy Smite",
-    "description": "Deal [{base} + {attack} + {int}] magic damage to enemy and heal lowest HP ally for {healPercent}% of damage dealt",
+    "description": "Deal [{base} + {attack} + {int}] magic damage to enemy and heal lowest HP ally for {healPercent} of damage dealt",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["magical", "heal"],
     "scaling": {
@@ -817,7 +817,7 @@
 "spear_thrust": {
     "id": "spear_thrust",
     "name": "Spear Thrust",
-    "description": "Thrust spear dealing [{base} + {attack} + {str}] physical damage with {bleedChance}% chance to cause Bleed for {bleedDuration} turns",
+    "description": "Thrust spear dealing [{base} + {attack} + {str}] physical damage with {bleedChance} chance to cause Bleed for {bleedDuration} turns",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical", "debuff_bleed"],
     "scaling": {
@@ -910,7 +910,7 @@
 "ancient_protection": {
     "id": "ancient_protection",
     "name": "Ancient Protection",
-    "description": "{dodgeChance}% chance to dodge physical attacks",
+    "description": "{dodgeChance} chance to dodge physical attacks",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive", "evasion"],
     "passive": true,
@@ -931,7 +931,7 @@
 "chieftains_hammer": {
     "id": "chieftains_hammer",
     "name": "Chieftain's Hammer",
-    "description": "Mighty hammer blow dealing [{base} + {attack} + {str}] physical damage with {stunChance}% chance to Stun for {stunDuration} turn",
+    "description": "Mighty hammer blow dealing [{base} + {attack} + {str}] physical damage with {stunChance} chance to Stun for {stunDuration} turn",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical", "debuff_stun"],
     "scaling": {
@@ -958,7 +958,7 @@
 "axe_throw": {
     "id": "axe_throw",
     "name": "Axe Throw",
-    "description": "Throw an axe dealing [{base} + {attack} + {agi}] physical damage with {bleedChance}% chance to cause Bleed for {bleedDuration} turns",
+    "description": "Throw an axe dealing [{base} + {attack} + {agi}] physical damage with {bleedChance} chance to cause Bleed for {bleedDuration} turns",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical", "debuff_bleed"],
     "scaling": {
@@ -984,7 +984,7 @@
 "dual_axes": {
     "id": "dual_axes",
     "name": "Dual Axes",
-    "description": "Strike {hitCount} times with axes dealing [{base} + {attack} + {agi}] physical damage each, {bleedChance}% bleed chance per hit for {bleedDuration} turns",
+    "description": "Strike {hitCount} times with axes dealing [{base} + {attack} + {agi}] physical damage each, {bleedChance} bleed chance per hit for {bleedDuration} turns",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical", "debuff_bleed"],
     "scaling": {
@@ -1011,7 +1011,7 @@
 "frost_bolt": {
     "id": "frost_bolt",
     "name": "Frost Bolt",
-    "description": "Icy bolt dealing [{base} + {attack} + {int}] magical damage and draining {actionBarDrain}% action bar",
+    "description": "Icy bolt dealing [{base} + {attack} + {int}] magical damage and draining {actionBarDrain} action bar",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["magical", "debuff_action_drain"],
     "scaling": {
@@ -1026,7 +1026,7 @@
 "chilling_touch": {
     "id": "chilling_touch",
     "name": "Chilling Touch",
-    "description": "{slowChance}% chance to apply Reduce Speed for {slowDuration} turns on basic attacks",
+    "description": "{slowChance} chance to apply Reduce Speed for {slowDuration} turns on basic attacks",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive", "debuff_reduce_speed"],
     "passive": true,
@@ -1087,7 +1087,7 @@
 "thick_hide": {
     "id": "thick_hide",
     "name": "Thick Hide",
-    "description": "Take {damageReduction}% less damage from all sources",
+    "description": "Take {damageReduction} less damage from all sources",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
