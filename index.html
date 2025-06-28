@@ -5565,6 +5565,7 @@ if (collectionPopup && collectionPopup.style.display === 'block') {
 let altKeyPressed = false;
 let currentHoveredAbility = null;
 let currentHoveredUnit = null;
+let currentHoveredSource = null; // 'battle' or 'popup'
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Alt' && !altKeyPressed) {
@@ -5596,7 +5597,12 @@ document.addEventListener('keydown', (e) => {
         // Update ability tooltip if visible
         const abilityTooltip = document.getElementById('abilityTooltip');
         if (abilityTooltip && abilityTooltip.style.display === 'block' && currentHoveredAbility && currentHoveredUnit) {
-            const tooltipHtml = game.formatAbilityTooltip(currentHoveredAbility, currentHoveredAbility.level, currentHoveredUnit, true);
+            let unit = currentHoveredUnit;
+            // If it's from battle, get the source unit for proper calculations
+            if (currentHoveredSource === 'battle' && currentHoveredUnit.source) {
+                unit = currentHoveredUnit.source;
+            }
+            const tooltipHtml = game.formatAbilityTooltip(currentHoveredAbility, currentHoveredAbility.level, unit, true);
             abilityTooltip.innerHTML = tooltipHtml;
         }
         
@@ -5641,7 +5647,12 @@ document.addEventListener('keyup', (e) => {
         // Update ability tooltip without formula
         const abilityTooltip = document.getElementById('abilityTooltip');
         if (abilityTooltip && abilityTooltip.style.display === 'block' && currentHoveredAbility && currentHoveredUnit) {
-            const tooltipHtml = game.formatAbilityTooltip(currentHoveredAbility, currentHoveredAbility.level, currentHoveredUnit, false);
+            let unit = currentHoveredUnit;
+            // If it's from battle, get the source unit for proper calculations
+            if (currentHoveredSource === 'battle' && currentHoveredUnit.source) {
+                unit = currentHoveredUnit.source;
+            }
+            const tooltipHtml = game.formatAbilityTooltip(currentHoveredAbility, currentHoveredAbility.level, unit, false);
             abilityTooltip.innerHTML = tooltipHtml;
         }
         
@@ -5660,24 +5671,59 @@ document.addEventListener('keyup', (e) => {
 // Store references when hovering abilities for Alt key updates
 document.addEventListener('mouseover', (e) => {
     // Check if hovering over an ability in battle panel
-    const abilityDiv = e.target.closest('#abilityPanel .ability');
-    if (abilityDiv && game.currentBattle && game.currentBattle.currentUnit) {
+    const battleAbility = e.target.closest('#abilityPanel .ability');
+    if (battleAbility && game.currentBattle && game.currentBattle.currentUnit) {
         const unit = game.currentBattle.currentUnit;
-        const abilityIndex = Array.from(abilityDiv.parentNode.children).indexOf(abilityDiv);
+        const abilityIndex = Array.from(battleAbility.parentNode.children).indexOf(battleAbility);
         const ability = unit.abilities.filter(a => !a.passive)[abilityIndex];
         if (ability) {
             currentHoveredAbility = ability;
             currentHoveredUnit = unit;
+            currentHoveredSource = 'battle';
+        }
+        return;
+    }
+    
+    // Check if hovering over ability in unit popup
+    const popupAbility = e.target.closest('.abilityIconSmall');
+    if (popupAbility) {
+        const abilityIndex = parseInt(popupAbility.getAttribute('data-ability-index'));
+        const heroType = popupAbility.getAttribute('data-hero-type');
+        
+        // Get the hero/enemy from the popup
+        const popupTitle = document.getElementById('popupHeroName').textContent;
+        let unit = null;
+        
+        if (heroType === 'hero') {
+            // Find hero by matching name
+            unit = game.heroes.find(h => popupTitle.includes(h.name));
+        } else if (heroType === 'enemy' && game.currentBattle) {
+            // Find enemy in current battle
+            const allUnits = [...game.currentBattle.party, ...game.currentBattle.enemies];
+            const battleUnit = allUnits.find(u => popupTitle.includes(u.name));
+            if (battleUnit && battleUnit.source) {
+                unit = battleUnit.source;
+            }
+        }
+        
+        if (unit && unit.abilities[abilityIndex]) {
+            currentHoveredAbility = unit.abilities[abilityIndex];
+            currentHoveredUnit = unit;
+            currentHoveredSource = 'popup';
         }
     }
 });
 
 // Clear references when not hovering
 document.addEventListener('mouseout', (e) => {
-    const abilityDiv = e.target.closest('#abilityPanel .ability');
-    if (abilityDiv && !abilityDiv.contains(e.relatedTarget)) {
+    const battleAbility = e.target.closest('#abilityPanel .ability');
+    const popupAbility = e.target.closest('.abilityIconSmall');
+    
+    if ((battleAbility && !battleAbility.contains(e.relatedTarget)) ||
+        (popupAbility && !popupAbility.contains(e.relatedTarget))) {
         currentHoveredAbility = null;
         currentHoveredUnit = null;
+        currentHoveredSource = null;
     }
 });
 
