@@ -3225,11 +3225,11 @@ toggleAutoReplay(enabled) {
 		
             exitBattle() {
     if (this.currentBattle) {
-        // Reset battlefield background position
-        const battleFieldBg = document.querySelector('.battleFieldBackground');
-        if (battleFieldBg) {
-            battleFieldBg.style.transition = 'none';
-            battleFieldBg.style.top = '0%';
+        // Reset battlefield position
+        const battleField = document.querySelector('.battleField');
+        if (battleField) {
+            battleField.style.transition = 'none';
+            battleField.style.top = '0%';
         }
         
         // Clear any active targeting
