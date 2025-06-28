@@ -548,5 +548,15 @@
     "effects": ["debuff_mark"],
     "target": "enemy",
     "logicKey": "markTestLogic"
+},
+"frost_armor_test": {
+    "id": "frost_armor_test",
+    "name": "Frost Armor Test",
+    "description": "Grants Frost Armor buff for {duration} turns (25% damage reduction, attackers are slowed)",
+    "cooldown": [1, 1, 1, 1, 1],
+    "duration": [2, 2, 3, 3, 4],
+    "effects": ["buff_frost_armor"],
+    "target": "ally",
+    "logicKey": "frostArmorTestLogic"
 }
 }
