@@ -1008,7 +1008,12 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
             // Check if this target is missing any buff this ability provides
             return buffEffects.some(buffEffect => {
                 const buffName = this.getBuffNameFromEffect(buffEffect);
-                return !target.buffs.some(b => b.name === buffName);
+                // If target is the current unit, ignore buffs with duration 1
+                if (target === unit) {
+                    return !target.buffs.some(b => b.name === buffName && b.duration > 1);
+                } else {
+                    return !target.buffs.some(b => b.name === buffName);
+                }
             });
         });
         
@@ -1047,7 +1052,12 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
             // Check if this target is missing any buff this ability provides
             return buffEffects.some(buffEffect => {
                 const buffName = this.getBuffNameFromEffect(buffEffect);
-                return !target.buffs.some(b => b.name === buffName);
+                // If target is the current unit, ignore buffs with duration 1
+                if (target === unit) {
+                    return !target.buffs.some(b => b.name === buffName && b.duration > 1);
+                } else {
+                    return !target.buffs.some(b => b.name === buffName);
+                }
             });
         });
         
@@ -1112,13 +1122,23 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
                 // Check if this target is missing any buff this ability provides
                 return buffEffects.some(buffEffect => {
                     const buffName = this.getBuffNameFromEffect(buffEffect);
-                    return !t.buffs.some(b => b.name === buffName);
+                    // If target is the current unit, ignore buffs with duration 1
+                    if (t === unit) {
+                        return !t.buffs.some(b => b.name === buffName && b.duration > 1);
+                    } else {
+                        return !t.buffs.some(b => b.name === buffName);
+                    }
                 });
             });
             
             // If some targets would benefit, choose from them
             if (benefitTargets.length > 0) {
-                target = benefitTargets[0];
+                // Prioritize current unit if they would benefit (to refresh expiring buffs)
+                if (benefitTargets.includes(unit)) {
+                    target = unit;
+                } else {
+                    target = benefitTargets[0];
+                }
             } else if (doesDamage) {
                 // If ability also deals damage, still use it on someone
                 target = targets[0];
@@ -1139,7 +1159,8 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
         const isMarked = unit.debuffs.some(d => d.name === 'Mark');
         const hasAllBuffs = buffEffects.every(buffEffect => {
             const buffName = this.getBuffNameFromEffect(buffEffect);
-            return unit.buffs.some(b => b.name === buffName);
+            // For self-casting, ignore buffs with only 1 duration left since they'll expire
+            return unit.buffs.some(b => b.name === buffName && b.duration > 1);
         });
         
         if (isMarked || hasAllBuffs) {
@@ -1164,7 +1185,47 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
             }
         }
         
-        // If no abilities were used, log and end turn
+        // If no abilities were used, try to use ANY available ability as a last resort
+        for (let i = 0; i < unit.abilities.length; i++) {
+            const ability = unit.abilities[i];
+            if (!ability || ability.passive || !unit.canUseAbility(i)) continue;
+            
+            const spell = spellManager.getSpell(ability.id);
+            if (!spell) continue;
+            
+            // Try to find ANY valid target for this ability
+            let target = null;
+            switch (spell.target) {
+                case 'enemy':
+                    const enemies = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
+                    if (enemies.length > 0) {
+                        target = enemies[Math.floor(Math.random() * enemies.length)];
+                    }
+                    break;
+                case 'ally':
+                    const allies = unit.isEnemy ? this.enemies.filter(e => e && e.isAlive) : this.party.filter(p => p && p.isAlive);
+                    if (allies.length > 0) {
+                        target = allies[Math.floor(Math.random() * allies.length)];
+                    }
+                    break;
+                case 'self':
+                    target = unit;
+                    break;
+                case 'all_enemies':
+                case 'all_allies':
+                    target = 'all';
+                    break;
+            }
+            
+            if (target) {
+                this.log(`${unit.name} uses ${ability.name} as a last resort!`);
+                this.executeAbility(unit, i, target);
+                this.endTurn();
+                return;
+            }
+        }
+        
+        // If still no abilities were used, log and end turn
         this.log(`${unit.name} has no abilities available!`);
         this.endTurn();
     }
