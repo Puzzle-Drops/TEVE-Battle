@@ -29,7 +29,752 @@ const spellLogic = {
         battle.applyDebuff(target, 'Stun', stunDuration, { stunned: true });
     },
 
-    // Boss Spells
+    // Acolyte Family Spells
+    holySmiteLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0];
+        const healPercent = spell.healPercent[levelIndex] || spell.healPercent[0];
+        
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.int * intScaling);
+        battle.dealDamage(caster, target, damage, 'magical');
+        
+        // Find lowest HP ally
+        const allies = battle.getParty(caster);
+        const aliveAllies = allies.filter(a => a && a.isAlive);
+        
+        if (aliveAllies.length > 0) {
+            aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+            const lowestHpAlly = aliveAllies[0];
+            const healAmount = damage * healPercent;
+            battle.healUnit(lowestHpAlly, healAmount);
+        }
+    },
+
+    divineLightLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseHeal = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0];
+        
+        const healAmount = baseHeal + (caster.stats.int * intScaling);
+        battle.healUnit(target, healAmount);
+        
+        // Remove one debuff
+        if (target.debuffs && target.debuffs.length > 0) {
+            target.debuffs.shift(); // Remove first debuff
+            battle.log(`Removed a debuff from ${target.name}!`);
+        }
+    },
+
+    sanctuaryLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        const allies = battle.getParty(caster);
+        allies.forEach(ally => {
+            if (ally.isAlive) {
+                // Apply Increase Defense
+                battle.applyBuff(ally, 'Increase Defense', duration, {});
+                
+                // Convert debuffs to Increase Attack
+                if (ally.debuffs && ally.debuffs.length > 0) {
+                    const debuffCount = ally.debuffs.length;
+                    ally.debuffs = [];
+                    for (let i = 0; i < debuffCount; i++) {
+                        battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
+                    }
+                    battle.log(`${ally.name}'s debuffs converted to Increase Attack!`);
+                }
+            }
+        });
+    },
+
+    massHealLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseHeal = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0];
+        
+        const healAmount = baseHeal + (caster.stats.int * intScaling);
+        
+        const allies = battle.getParty(caster);
+        allies.forEach(ally => {
+            if (ally.isAlive) {
+                battle.healUnit(ally, healAmount);
+            }
+        });
+    },
+
+    hierophantMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled when buffs are applied
+        caster.hierophantMalePassive = true;
+    },
+
+    hierophantFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled during turn processing
+        caster.hierophantFemalePassive = true;
+    },
+
+    prophetMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled during healing
+        caster.prophetMalePassive = true;
+    },
+
+    prophetessFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled during healing
+        caster.prophetessFemalePassive = true;
+    },
+
+    // Archer Family Spells
+    aimedShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0];
+        
+        // Break shield first
+        if (target.buffs) {
+            const shieldIndex = target.buffs.findIndex(b => b.name === 'Shield');
+            if (shieldIndex !== -1) {
+                target.buffs.splice(shieldIndex, 1);
+                battle.log(`${target.name}'s shield was broken!`);
+            }
+        }
+        
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.agi * agiScaling);
+        // Deal damage with armor pierce (handled in battle.dealDamage)
+        battle.dealDamage(caster, target, damage, 'physical', { armorPierce: spell.armorPierce });
+    },
+
+    huntersMarkLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        battle.applyDebuff(target, 'Mark', duration, {});
+        battle.applyDebuff(target, 'Blight', duration, { noHeal: true });
+    },
+
+    doubleShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0];
+        const debuffDuration = spell.debuffDuration[levelIndex] || spell.debuffDuration[0];
+        
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.agi * agiScaling);
+        
+        // First shot to target with Reduce Defense
+        battle.dealDamage(caster, target, damage, 'physical');
+        battle.applyDebuff(target, 'Reduce Defense', debuffDuration, {});
+        
+        // Second shot to random enemy with Bleed
+        const enemies = battle.getEnemies(caster);
+        const aliveEnemies = enemies.filter(e => e && e.isAlive);
+        if (aliveEnemies.length > 0) {
+            const randomTarget = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+            battle.dealDamage(caster, randomTarget, damage, 'physical');
+            battle.applyDebuff(randomTarget, 'Bleed', debuffDuration, { bleedDamage: true });
+        }
+    },
+
+    rainOfArrowsLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0];
+        const debuffBonus = spell.debuffBonus[levelIndex] || spell.debuffBonus[0];
+        
+        const enemies = battle.getEnemies(caster);
+        enemies.forEach(enemy => {
+            if (enemy.isAlive) {
+                const debuffCount = (enemy.debuffs ? enemy.debuffs.length : 0);
+                const damage = baseDamage + (caster.source.attack * attackScaling) + 
+                              (caster.stats.agi * agiScaling) + (debuffBonus * debuffCount);
+                battle.dealDamage(caster, enemy, damage, 'physical');
+            }
+        });
+    },
+
+    sniperMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled during damage calculation
+        caster.sniperMalePassive = true;
+    },
+
+    sniperFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled on kill
+        caster.sniperFemalePassive = true;
+    },
+
+    monsterHunterMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Aimed Shot
+        caster.monsterHunterMalePassive = true;
+    },
+
+    monsterHunterFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Aimed Shot
+        caster.monsterHunterFemalePassive = true;
+    },
+
+    // Druid Family Spells
+    naturesBlessingLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0];
+        
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.int * intScaling);
+        battle.dealDamage(caster, target, damage, 'magical');
+        
+        // Grant 10% action bar to lowest HP ally
+        const allies = battle.getParty(caster);
+        const aliveAllies = allies.filter(a => a && a.isAlive);
+        
+        if (aliveAllies.length > 0) {
+            aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+            const lowestHpAlly = aliveAllies[0];
+            lowestHpAlly.actionBar += 1000; // 10% of 10000
+            battle.log(`${lowestHpAlly.name} gained 10% action bar!`);
+        }
+    },
+
+    barkskinLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        // Apply Increase Defense
+        battle.applyBuff(target, 'Increase Defense', duration, {});
+        
+        // Heal 5% HP
+        const healAmount = target.maxHp * spell.healPercent;
+        battle.healUnit(target, healAmount);
+        
+        // Grant 5% max HP shield
+        const shieldAmount = target.maxHp * spell.shieldPercent;
+        battle.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
+    },
+
+    primalRoarLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0];
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.str * strScaling);
+        
+        const enemies = battle.getEnemies(caster);
+        enemies.forEach(enemy => {
+            if (enemy.isAlive) {
+                battle.dealDamage(caster, enemy, damage, 'physical');
+                battle.applyDebuff(enemy, 'Reduce Attack', duration, {});
+            }
+        });
+    },
+
+    naturesBalanceLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const healAmount = spell.healAmount[levelIndex] || spell.healAmount[0];
+        const damageAmount = spell.damageAmount[levelIndex] || spell.damageAmount[0];
+        
+        // This spell can target allies or enemies
+        // If targeting allies, remove debuffs and heal
+        // If targeting enemies, remove buffs and damage
+        // For simplicity, we'll implement it as affecting both teams
+        
+        // Cleanse allies
+        const allies = battle.getParty(caster);
+        allies.forEach(ally => {
+            if (ally.isAlive) {
+                ally.debuffs = [];
+                battle.healUnit(ally, healAmount);
+                battle.log(`${ally.name} cleansed and healed!`);
+            }
+        });
+        
+        // Dispel enemies
+        const enemies = battle.getEnemies(caster);
+        enemies.forEach(enemy => {
+            if (enemy.isAlive) {
+                enemy.buffs = [];
+                battle.dealDamage(caster, enemy, damageAmount, 'magical');
+                battle.log(`${enemy.name} dispelled and damaged!`);
+            }
+        });
+    },
+
+    runemasterMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Primal Roar
+        caster.runemasterMalePassive = true;
+    },
+
+    runemasterFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled when taking magical damage
+        caster.runemasterFemalePassive = true;
+    },
+
+    summonerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Nature's Blessing
+        caster.summonerMalePassive = true;
+    },
+
+    summonerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Nature's Blessing
+        caster.summonerFemalePassive = true;
+    },
+
+    // Initiate Family Spells
+    arcaneMissilesLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0];
+        
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.int * intScaling);
+        
+        // Hit primary target
+        battle.dealDamage(caster, target, damage, 'magical');
+        
+        // Hit each debuffed enemy once
+        const enemies = battle.getEnemies(caster);
+        enemies.forEach(enemy => {
+            if (enemy.isAlive && enemy !== target && enemy.debuffs && enemy.debuffs.length > 0) {
+                battle.dealDamage(caster, enemy, damage, 'magical');
+            }
+        });
+    },
+
+    frostArmorLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        battle.applyBuff(caster, 'Frost Armor', duration, {});
+    },
+
+    helpingHandLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // Remove all debuffs
+        target.debuffs = [];
+        battle.log(`All debuffs removed from ${target.name}!`);
+        
+        // Fill action bar to 100%
+        target.actionBar = 10000;
+        battle.log(`${target.name}'s action bar filled to 100%!`);
+    },
+
+    twilightsPromiseLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // Consume 10% action bar from all allies
+        const allies = battle.getParty(caster);
+        allies.forEach(ally => {
+            if (ally.isAlive) {
+                ally.actionBar = Math.max(0, ally.actionBar - 1000);
+            }
+        });
+        
+        // Set up Twilight's End for next turn
+        caster.twilightsEndPending = true;
+        battle.log(`${caster.name} prepares Twilight's End!`);
+    },
+
+    twilightsEndLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = 2000 + (levelIndex * 1000); // Massive damage scaling
+        const attackScaling = 1.0;
+        const intScaling = 1.0;
+        
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.int * intScaling);
+        
+        const enemies = battle.getEnemies(caster);
+        enemies.forEach(enemy => {
+            if (enemy.isAlive) {
+                battle.dealDamage(caster, enemy, damage, 'magical');
+                // Reduce action bar by 50%
+                enemy.actionBar = Math.floor(enemy.actionBar * 0.5);
+            }
+        });
+    },
+
+    whiteWizardMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled when cleansing
+        caster.whiteWizardMalePassive = true;
+    },
+
+    whiteWitchFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled when cleansing
+        caster.whiteWitchFemalePassive = true;
+    },
+
+    archSageMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled when receiving debuffs
+        caster.archSageMalePassive = true;
+    },
+
+    archSageFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled when receiving debuffs
+        caster.archSageFemalePassive = true;
+    },
+
+    // Swordsman Family Spells
+    bladeStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0];
+        
+        let damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.str * strScaling);
+        
+        // 150% damage if target is bleeding
+        if (target.debuffs && target.debuffs.some(d => d.name === 'Bleed')) {
+            damage *= spell.bleedBonus;
+            battle.log(`Critical strike on bleeding target!`);
+        }
+        
+        battle.dealDamage(caster, target, damage, 'physical');
+    },
+
+    shieldBashLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const tauntDuration = spell.tauntDuration[levelIndex] || spell.tauntDuration[0];
+        const shieldAmount = spell.shieldAmount[levelIndex] || spell.shieldAmount[0];
+        
+        // Taunt target
+        battle.applyDebuff(target, 'Taunt', tauntDuration, { 
+            tauntTarget: caster,
+            forcedTarget: caster.position,
+            forcedTargetIsEnemy: caster.isEnemy
+        });
+        
+        // Gain shield
+        battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
+    },
+
+    rallyBannerLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        // Taunt all enemies
+        const enemies = battle.getEnemies(caster);
+        enemies.forEach(enemy => {
+            if (enemy.isAlive) {
+                battle.applyDebuff(enemy, 'Taunt', duration, { 
+                    tauntTarget: caster,
+                    forcedTarget: caster.position,
+                    forcedTargetIsEnemy: caster.isEnemy
+                });
+            }
+        });
+        
+        // Allies gain Increase Attack and action bar
+        const allies = battle.getParty(caster);
+        allies.forEach(ally => {
+            if (ally.isAlive) {
+                battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
+                ally.actionBar += 3000; // 30%
+            }
+        });
+    },
+
+    bloodPactLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const bleedDuration = spell.bleedDuration[levelIndex] || spell.bleedDuration[0];
+        
+        // Apply 2 bleed stacks to self
+        for (let i = 0; i < spell.bleedStacks; i++) {
+            battle.applyDebuff(caster, 'Bleed', bleedDuration, { bleedDamage: true });
+        }
+        
+        // Taunt all enemies
+        const enemies = battle.getEnemies(caster);
+        enemies.forEach(enemy => {
+            if (enemy.isAlive) {
+                battle.applyDebuff(enemy, 'Taunt', bleedDuration, { 
+                    tauntTarget: caster,
+                    forcedTarget: caster.position,
+                    forcedTargetIsEnemy: caster.isEnemy
+                });
+                
+                // Apply 2 bleed stacks to taunted enemies
+                for (let i = 0; i < spell.bleedStacks; i++) {
+                    battle.applyDebuff(enemy, 'Bleed', bleedDuration, { bleedDamage: true });
+                }
+            }
+        });
+    },
+
+    championMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled when taking damage
+        caster.championMalePassive = true;
+        caster.championStunChance = spell.stunChance;
+    },
+
+    championFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled at battle start and periodically
+        caster.championFemalePassive = true;
+        caster.championShieldPercent = spell.shieldPercent;
+        caster.championShieldTimer = 0;
+    },
+
+    avengerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled when attacked by taunted enemies
+        caster.avengerMalePassive = true;
+    },
+
+    avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled when taking damage
+        caster.avengerFemalePassive = true;
+        caster.actionBarGainOnDamage = spell.actionBarGain;
+    },
+
+    // Templar Family Spells
+    psiStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0];
+        
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.int * intScaling);
+        
+        if (target.actionBar >= 3000) { // 30% action bar
+            // Physical damage and drain action bar
+            battle.dealDamage(caster, target, damage, 'physical');
+            target.actionBar = Math.max(0, target.actionBar - 500); // Drain 5%
+        } else {
+            // Pure damage
+            battle.dealDamage(caster, target, damage, 'pure');
+        }
+    },
+
+    psychicMarkLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        battle.applyDebuff(target, 'Mark', duration, {});
+        battle.applyDebuff(target, 'Reduce Speed', duration, {});
+    },
+
+    voidStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const debuffCount = target.debuffs ? target.debuffs.length : 0;
+        
+        if (debuffCount > 0) {
+            for (let i = 0; i < debuffCount; i++) {
+                // Call psiStrike for each debuff
+                const psiStrike = caster.spellManager.getSpell('psi_strike');
+                if (psiStrike) {
+                    spellLogic.psiStrikeLogic(battle, caster, target, psiStrike, spellLevel);
+                }
+            }
+        } else {
+            battle.log(`${target.name} has no debuffs, Void Strike fizzles!`);
+        }
+    },
+
+    psiShiftLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0];
+        
+        // Steal action bar
+        const stolenActionBar = target.actionBar;
+        caster.actionBar = Math.min(10000, caster.actionBar + stolenActionBar);
+        
+        // Deal damage
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.int * intScaling);
+        battle.dealDamage(caster, target, damage, 'magical');
+        
+        // Set target to 25% action bar (or 0% if female passive)
+        target.actionBar = 2500;
+    },
+
+    darkArchTemplarMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled on kill
+        caster.darkArchTemplarMalePassive = true;
+    },
+
+    darkArchTemplarFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Psychic Mark
+        caster.darkArchTemplarFemalePassive = true;
+    },
+
+    grandTemplarMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive adds stun chance to all abilities
+        caster.grandTemplarMalePassive = true;
+        caster.globalStunChance = spell.stunChance;
+    },
+
+    grandTemplarFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Psi Shift
+        caster.grandTemplarFemalePassive = true;
+    },
+
+    // Thief Family Spells
+    cheapShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0];
+        
+        // Transfer random debuff
+        if (caster.debuffs && caster.debuffs.length > 0) {
+            const randomIndex = Math.floor(Math.random() * caster.debuffs.length);
+            const debuff = caster.debuffs.splice(randomIndex, 1)[0];
+            target.debuffs = target.debuffs || [];
+            target.debuffs.push(debuff);
+            battle.log(`${caster.name} transfers ${debuff.name} to ${target.name}!`);
+        }
+        
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.agi * agiScaling);
+        battle.dealDamage(caster, target, damage, 'physical');
+    },
+
+    crippleLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        battle.applyDebuff(target, 'Reduce Speed', duration, {});
+        battle.applyDebuff(target, 'Reduce Attack', duration, {});
+        battle.applyDebuff(target, 'Bleed', duration, { bleedDamage: true });
+    },
+
+    assassinateLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0];
+        
+        if ((target.currentHp / target.maxHp) < spell.hpThreshold && target.debuffs && target.debuffs.length > 0) {
+            const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.agi * agiScaling);
+            battle.dealDamage(caster, target, damage, 'pure');
+        } else {
+            battle.log(`Assassinate conditions not met!`);
+        }
+    },
+
+    shadowstepLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        battle.applyDebuff(target, 'Taunt', duration, { 
+            tauntTarget: caster,
+            forcedTarget: caster.position,
+            forcedTargetIsEnemy: caster.isEnemy
+        });
+        battle.applyDebuff(target, 'Mark', duration, {});
+        battle.applyDebuff(target, 'Bleed', duration, { bleedDamage: true });
+    },
+
+    phantomAssassinMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive is handled on Assassinate kill
+        caster.phantomAssassinMalePassive = true;
+        caster.actionBarRefillOnKill = spell.actionBarRefill;
+    },
+
+    phantomAssassinFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Cheap Shot
+        caster.phantomAssassinFemalePassive = true;
+        caster.cheapShotPureThreshold = spell.hpThreshold;
+    },
+
+    masterStalkerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive adds dodge and modifies Cheap Shot
+        caster.masterStalkerMalePassive = true;
+        caster.dodgePure = spell.dodgePure;
+        caster.dodgeMagical = spell.dodgeMagical;
+        caster.dodgePhysical = spell.dodgePhysical;
+    },
+
+    masterStalkerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive adds dodge and modifies Cheap Shot
+        caster.masterStalkerFemalePassive = true;
+        caster.dodgePure = spell.dodgePure;
+        caster.dodgePhysical = spell.dodgePhysical;
+        caster.dodgeMagical = spell.dodgeMagical;
+    },
+
+    // Witch Hunter Family Spells
+    silverBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0];
+        
+        // Remove 1 buff (or 2 if female passive)
+        if (target.buffs && target.buffs.length > 0) {
+            target.buffs.shift();
+            battle.log(`Removed a buff from ${target.name}!`);
+        }
+        
+        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.str * strScaling);
+        battle.dealDamage(caster, target, damage, 'physical');
+    },
+
+    purifyingFlameLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+        const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0];
+        const buffBonus = spell.buffBonus[levelIndex] || spell.buffBonus[0];
+        
+        const enemies = battle.getEnemies(caster);
+        enemies.forEach(enemy => {
+            if (enemy.isAlive) {
+                const buffCount = enemy.buffs ? enemy.buffs.length : 0;
+                const damage = baseDamage + (caster.source.attack * attackScaling) + 
+                              (caster.stats.int * intScaling) + (buffBonus * buffCount);
+                battle.dealDamage(caster, enemy, damage, 'magical');
+            }
+        });
+    },
+
+    stealMagicLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        // Transfer all buffs from target to random allies
+        if (target.buffs && target.buffs.length > 0) {
+            const allies = battle.getParty(caster);
+            const aliveAllies = allies.filter(a => a && a.isAlive);
+            
+            while (target.buffs.length > 0 && aliveAllies.length > 0) {
+                const buff = target.buffs.shift();
+                const randomAlly = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
+                randomAlly.buffs = randomAlly.buffs || [];
+                randomAlly.buffs.push(buff);
+                battle.log(`${buff.name} stolen and given to ${randomAlly.name}!`);
+            }
+        } else {
+            // No buffs to steal, apply Reduce Defense
+            battle.applyDebuff(target, 'Reduce Defense', duration, {});
+        }
+    },
+
+    hexLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        battle.applyDebuff(target, 'Silence', duration, {});
+    },
+
+    grandInquisitorMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Silver Bolt
+        caster.grandInquisitorMalePassive = true;
+    },
+
+    grandInquisitorFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Silver Bolt
+        caster.grandInquisitorFemalePassive = true;
+        caster.silverBoltBuffRemoveCount = spell.buffRemoveCount;
+    },
+
+    professionalWitcherMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Silver Bolt vs silenced
+        caster.professionalWitcherMalePassive = true;
+    },
+
+    professionalWitcherFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        // This passive modifies Silver Bolt vs silenced
+        caster.professionalWitcherFemalePassive = true;
+    },
+
+    // Boss/Enemy Spells
     slashLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const percent = spell.scaling.percent[levelIndex] || spell.scaling.percent[0];
@@ -48,7 +793,6 @@ const spellLogic = {
         battle.dealDamage(caster, target, damage, 'physical');
     },
 
-    // Murkin Spells
     spearThrustLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
@@ -193,7 +937,6 @@ const spellLogic = {
         battle.applyBuff(caster, 'Increase Speed', selfSpeedDuration, {});
     },
 
-    // Icy Highland Enemy Spells
     axeThrowLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
@@ -375,7 +1118,22 @@ const spellLogic = {
         battle.log(`${caster.name} goes on a rampage, causing all enemies to bleed!`);
     },
 
-    // Tester Spells
+    frostBreathLogic: function(battle, caster, targets, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0];
+        const slowDuration = spell.slowDuration[levelIndex] || spell.slowDuration[0];
+        
+        const enemies = battle.getEnemies(caster);
+        enemies.forEach(enemy => {
+            if (enemy.currentHp > 0) {
+                const damage = caster.stats.str * strScaling;
+                battle.dealDamage(caster, enemy, damage, 'magical');
+                battle.applyDebuff(enemy, 'Reduce Speed', slowDuration, {});
+            }
+        });
+    },
+
+    // Test Spells
     winLogic: function(battle, caster, targets, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
@@ -408,7 +1166,6 @@ const spellLogic = {
         battle.dealDamage(caster, caster, baseDamage, 'pure');
     },
 
-    // Test Buff Spells
     increaseAttackTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spell.duration[levelIndex] || spell.duration[0];
@@ -444,7 +1201,13 @@ const spellLogic = {
         battle.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
     },
 
-    // Test Debuff Spells
+    frostArmorTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const duration = spell.duration[levelIndex] || spell.duration[0];
+        
+        battle.applyBuff(target, 'Frost Armor', duration, {});
+    },
+
     reduceAttackTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spell.duration[levelIndex] || spell.duration[0];
@@ -511,28 +1274,7 @@ const spellLogic = {
         const duration = spell.duration[levelIndex] || spell.duration[0];
         
         battle.applyDebuff(target, 'Mark', duration, {});
-    },
-frostArmorTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const levelIndex = spellLevel - 1;
-    const duration = spell.duration[levelIndex] || spell.duration[0];
-    
-    battle.applyBuff(target, 'Frost Armor', duration, {});
-},
-    frostBreathLogic: function(battle, caster, targets, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0];
-        const slowDuration = spell.slowDuration[levelIndex] || spell.slowDuration[0];
-        
-        const enemies = battle.getEnemies(caster);
-        enemies.forEach(enemy => {
-            if (enemy.currentHp > 0) {
-                const damage = caster.stats.str * strScaling;
-                battle.dealDamage(caster, enemy, damage, 'magical');
-                battle.applyDebuff(enemy, 'Reduce Speed', slowDuration, {});
-            }
-        });
     }
-
 };
 
 // Spell Manager Class
