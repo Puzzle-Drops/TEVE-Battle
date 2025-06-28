@@ -774,7 +774,7 @@ Press \` to toggle console</span>`;
     }
     
     // Validate buff name
-    const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield'];
+    const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield', 'Frost Armor'];
     if (!validBuffs.includes(buffName)) {
         this.addLog('error', `Invalid buff name. Valid buffs: ${validBuffs.join(', ')}`);
         return;
