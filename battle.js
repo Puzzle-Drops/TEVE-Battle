@@ -967,8 +967,8 @@ if (unit.isEnemy) {
             if (!spell) continue;
             
             // Check if this ability would be redundant
-            const effects = spell.effects || [];
-            const doesDamage = effects.includes('damage');
+const effects = spell.effects || [];
+const doesDamage = effects.includes('physical') || effects.includes('magical') || effects.includes('pure');
             
             // Get buff/debuff effects
             const buffEffects = effects.filter(e => e.startsWith('buff_'));
@@ -1183,70 +1183,73 @@ if (unit.isEnemy) {
 }
     
     showSpellAnimation(caster, spellName, effects) {
-        // Clear any existing spell animations first
-        document.querySelectorAll('.spellText').forEach(text => text.remove());
+    // Clear any existing spell animations first
+    document.querySelectorAll('.spellText').forEach(text => text.remove());
+    
+    const elementId = caster.isEnemy ? `enemy${caster.position + 1}` : `party${caster.position + 1}`;
+    const unitSlot = document.getElementById(elementId);
+    
+    if (unitSlot) {
+        // Get animation container
+        const animContainer = unitSlot.querySelector('.unitAnimationContainer');
+        if (!animContainer) return;
         
-        const elementId = caster.isEnemy ? `enemy${caster.position + 1}` : `party${caster.position + 1}`;
-        const unitSlot = document.getElementById(elementId);
-        
-        if (unitSlot) {
-            // Get animation container
-            const animContainer = unitSlot.querySelector('.unitAnimationContainer');
-            if (!animContainer) return;
-            
-            // Clear any existing spell text in this container
-            const existingSpellText = animContainer.querySelector('.spellText');
-            if (existingSpellText) {
-                existingSpellText.remove();
-            }
-            
-            // Determine animation type based on spell effects
-let animationClass = 'casting-damage'; // default
-
-// Check if effects contains any buff_* or debuff_* effects
-const hasBuff = effects.some(effect => effect.startsWith('buff_'));
-const hasDebuff = effects.some(effect => effect.startsWith('debuff_'));
-
-if (effects.includes('heal')) {
-    animationClass = 'casting-heal';
-} else if (effects.includes('shield') || effects.includes('defense')) {
-    animationClass = 'casting-shield';
-}
-            
-            // Remove any existing animation classes
-            animContainer.classList.remove('casting-damage', 'casting-speed', 'casting-heal', 
-                                        'casting-holy', 'casting-shadow', 'casting-shield', 
-                                        'casting-summon');
-            
-            // Add animation
-            animContainer.classList.add(animationClass);
-            setTimeout(() => animContainer.classList.remove(animationClass), 800);
-            
-            // Create spell text inside animation container
-            const spellText = document.createElement('div');
-            spellText.className = 'spellText';
-            spellText.textContent = spellName;
-            
-            // Add appropriate color class based on spell type
-const hasBuff = effects.some(effect => effect.startsWith('buff_'));
-const hasDebuff = effects.some(effect => effect.startsWith('debuff_'));
-
-if (effects.includes('damage')) spellText.classList.add('damage');
-else if (effects.includes('heal')) spellText.classList.add('heal');
-else if (hasBuff) spellText.classList.add('buff');
-else if (hasDebuff) spellText.classList.add('debuff');
-else spellText.classList.add('damage'); // default
-            
-            animContainer.appendChild(spellText);
-            
-            // Remove spell text after animation
-            setTimeout(() => {
-                if (spellText.parentNode) {
-                    spellText.remove();
-                }
-            }, 3000);
+        // Clear any existing spell text in this container
+        const existingSpellText = animContainer.querySelector('.spellText');
+        if (existingSpellText) {
+            existingSpellText.remove();
         }
+        
+        // Check if effects contains any buff_* or debuff_* effects
+        const hasBuff = effects.some(effect => effect.startsWith('buff_'));
+        const hasDebuff = effects.some(effect => effect.startsWith('debuff_'));
+        const hasDamage = effects.includes('physical') || effects.includes('magical') || effects.includes('pure');
+        
+        // Determine animation type based on spell effects with priority
+        let animationClass = 'casting-damage'; // default
+        
+        // Priority order: damage > heal > shield > buff > debuff
+        if (hasDamage) {
+            animationClass = 'casting-damage';
+        } else if (effects.includes('heal')) {
+            animationClass = 'casting-heal';
+        } else if (effects.includes('buff_shield')) {
+            animationClass = 'casting-shield';
+        } else if (hasBuff) {
+            animationClass = 'casting-buff';
+        } else if (hasDebuff) {
+            animationClass = 'casting-debuff';
+        }
+        
+        // Remove any existing animation classes
+        animContainer.classList.remove('casting-damage', 'casting-heal', 'casting-shield', 'casting-buff', 'casting-debuff');
+        
+        // Add animation
+        animContainer.classList.add(animationClass);
+        setTimeout(() => animContainer.classList.remove(animationClass), 800);
+        
+        // Create spell text inside animation container
+        const spellText = document.createElement('div');
+        spellText.className = 'spellText';
+        spellText.textContent = spellName;
+        
+        // Add appropriate color class based on spell type
+        if (hasDamage) spellText.classList.add('damage');
+        else if (effects.includes('heal')) spellText.classList.add('heal');
+        else if (hasBuff) spellText.classList.add('buff');
+        else if (hasDebuff) spellText.classList.add('debuff');
+        else spellText.classList.add('damage'); // default
+        
+        animContainer.appendChild(spellText);
+        
+        // Remove spell text after animation
+        setTimeout(() => {
+            if (spellText.parentNode) {
+                spellText.remove();
+            }
+        }, 3000);
     }
+}
     
     endTurn() {
         if (this.currentUnit) {
