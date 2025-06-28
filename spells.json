@@ -54,7 +54,7 @@
 "bite": {
     "id": "bite",
     "name": "Bite",
-    "description": "Deals {percent}% of target's max HP or {floor} damage, whichever is higher",
+    "description": "Deals {percent} of target's max HP or {floor} damage, whichever is higher",
     "cooldown": [3, 3, 3, 2, 2],
     "effects": ["damage", "physical"],
     "target": "enemy",
@@ -68,7 +68,7 @@
 "spear_thrust": {
     "id": "spear_thrust",
     "name": "Spear Thrust",
-    "description": "Thrust spear dealing {base} + {attack}x ATK + {str}x STR with {bleedChance}% chance to cause Bleed for {bleedDuration} turns",
+    "description": "Thrust spear dealing [{base} + {attack} + {str}] physical damage with {bleedChance}% chance to cause Bleed for {bleedDuration} turns",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical", "debuff", "debuff_bleed"],
     "scaling": {
@@ -94,7 +94,7 @@
 "crushing_strike": {
     "id": "crushing_strike",
     "name": "Crushing Strike",
-    "description": "Heavy hammer strike dealing {base} + {attack}x ATK + {str}x STR",
+    "description": "Heavy hammer strike dealing [{base} + {attack} + {str}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
@@ -108,7 +108,7 @@
 "armor_break": {
     "id": "armor_break",
     "name": "Armor Break",
-    "description": "Break enemy armor dealing {base} + {attack}x ATK + {str}x STR and applying Reduce Defense for {debuffDuration} turns",
+    "description": "Break enemy armor dealing [{base} + {attack} + {str}] physical damage and applying Reduce Defense for {debuffDuration} turns",
     "cooldown": [4, 4, 3, 3, 2],
     "effects": ["damage", "physical", "debuff", "debuff_reduce_defense"],
     "scaling": {
@@ -123,7 +123,7 @@
 "crystal_shard": {
     "id": "crystal_shard",
     "name": "Crystal Shard",
-    "description": "Hurl a magical crystal dealing {base} + {attack}x ATK + {int}x INT",
+    "description": "Hurl a magical crystal dealing [{base} + {attack} + {int}] magical damage",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "magical"],
     "scaling": {
@@ -147,7 +147,7 @@
 "staff_whack": {
     "id": "staff_whack",
     "name": "Staff Whack",
-    "description": "Basic staff attack dealing {base} + {attack}x ATK + {str}x STR",
+    "description": "Basic staff attack dealing [{base} + {attack} + {str}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
@@ -182,7 +182,7 @@
 "chieftains_hammer": {
     "id": "chieftains_hammer",
     "name": "Chieftain's Hammer",
-    "description": "Mighty hammer blow dealing {base} + {attack}x ATK + {str}x STR with {stunChance}% chance to Stun for {stunDuration} turn",
+    "description": "Mighty hammer blow dealing [{base} + {attack} + {str}] physical damage with {stunChance}% chance to Stun for {stunDuration} turn",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical", "debuff", "debuff_stun"],
     "scaling": {
@@ -209,7 +209,7 @@
 "axe_throw": {
     "id": "axe_throw",
     "name": "Axe Throw",
-    "description": "Throw an axe dealing {base} + {attack}x ATK + {agi}x AGI with {bleedChance}% chance to cause Bleed for {bleedDuration} turns",
+    "description": "Throw an axe dealing [{base} + {attack} + {agi}] physical damage with {bleedChance}% chance to cause Bleed for {bleedDuration} turns",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical", "debuff", "debuff_bleed"],
     "scaling": {
@@ -235,7 +235,7 @@
 "dual_axes": {
     "id": "dual_axes",
     "name": "Dual Axes",
-    "description": "Strike {hitCount} times with axes dealing {base} + {attack}x ATK + {agi}x AGI each, {bleedChance}% bleed chance per hit for {bleedDuration} turns",
+    "description": "Strike {hitCount} times with axes dealing [{base} + {attack} + {agi}] physical damage each, {bleedChance}% bleed chance per hit for {bleedDuration} turns",
     "cooldown": [3, 3, 3, 2, 2],
     "effects": ["damage", "physical", "debuff", "debuff_bleed"],
     "scaling": {
@@ -262,7 +262,7 @@
 "frost_bolt": {
     "id": "frost_bolt",
     "name": "Frost Bolt",
-    "description": "Icy bolt dealing {base} + {attack}x ATK + {int}x INT and draining {actionBarDrain}% action bar",
+    "description": "Icy bolt dealing [{base} + {attack} + {int}] magical damage and draining {actionBarDrain}% action bar",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "magical", "debuff_action_drain"],
     "scaling": {
@@ -289,7 +289,7 @@
 "savage_bite": {
     "id": "savage_bite",
     "name": "Savage Bite",
-    "description": "Vicious bite dealing {base} + {attack}x ATK + {str}x STR",
+    "description": "Vicious bite dealing [{base} + {attack} + {str}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
@@ -324,7 +324,7 @@
 "crushing_blow": {
     "id": "crushing_blow",
     "name": "Crushing Blow",
-    "description": "Massive strike dealing {base} + {attack}x ATK + {str}x STR",
+    "description": "Massive strike dealing [{base} + {attack} + {str}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
@@ -349,7 +349,7 @@
 "maul": {
     "id": "maul",
     "name": "Maul",
-    "description": "Brutal maul dealing {base} + {attack}x ATK + {str}x STR and causing Bleed for {bleedDuration} turns",
+    "description": "Brutal maul dealing [{base} + {attack} + {str}] physical damage and causing Bleed for {bleedDuration} turns",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical", "debuff", "debuff_bleed"],
     "scaling": {
@@ -374,7 +374,7 @@
 "frost_breath": {
     "id": "frost_breath",
     "name": "Frost Breath",
-    "description": "Breathe frost on all enemies dealing {str}x STR damage and applying Reduce Speed for {slowDuration} turns",
+    "description": "Breathe frost on all enemies dealing [{str}] magical damage and applying Reduce Speed for {slowDuration} turns",
     "cooldown": [5, 5, 4, 4, 3],
     "effects": ["aoe", "damage", "magical", "debuff", "debuff_reduce_speed"],
     "scaling": {
@@ -387,7 +387,7 @@
 "win": {
     "id": "win",
     "name": "Win",
-    "description": "{base} Pure Damage and gain Increase Speed for {duration} turns",
+    "description": "[{base}] Pure Damage and gain Increase Speed for {duration} turns",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["aoe", "damage", "pure", "buff", "buff_increase_speed"],
     "scaling": {
