@@ -2,7 +2,7 @@
 "punch": {
     "id": "punch",
     "name": "Punch",
-    "description": "Basic attack dealing {base} + {attack}x ATK damage",
+    "description": "Basic attack dealing [{base} + {attack}x ATK] damage",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
