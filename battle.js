@@ -2246,14 +2246,15 @@ this.party.forEach((unit, index) => {
             `;
             
             // Add tooltip on hover using the new format
-            abilityDiv.onmouseover = (e) => {
-                const tooltipHtml = game.formatAbilityTooltip(ability, ability.level);
-                game.showAbilityTooltipFromHTML(e, tooltipHtml);
-            };
-            
-            abilityDiv.onmouseout = () => {
-                game.hideAbilityTooltip();
-            };
+abilityDiv.onmouseover = (e) => {
+    const showFormula = e.altKey;
+    const tooltipHtml = game.formatAbilityTooltip(ability, ability.level, unit.source, showFormula);
+    game.showAbilityTooltipFromHTML(e, tooltipHtml);
+};
+
+abilityDiv.onmouseout = () => {
+    game.hideAbilityTooltip();
+};
             
             // Add click handler only to non-passive abilities
             if (!ability.passive) {
