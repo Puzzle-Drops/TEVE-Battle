@@ -589,20 +589,20 @@ if (unit.isEnemy) {
     this.log("Battle started!");
     this.log(`Your party: ${this.party.map(u => u.name).join(', ')}`);
     
-    // Animate battlefield background pan
-    const battleFieldBg = document.querySelector('.battleFieldBackground');
-    if (battleFieldBg) {
+    // Animate entire battlefield pan down
+    const battleField = document.querySelector('.battleField');
+    if (battleField) {
         // Set to top position first (without transition)
-        battleFieldBg.style.transition = 'none';
-        battleFieldBg.style.top = '8%';
+        battleField.style.transition = 'none';
+        battleField.style.top = '8%';
         
         // Force reflow to ensure the position is set before transition
-        battleFieldBg.offsetHeight;
+        battleField.offsetHeight;
         
         // Re-enable transition and animate to final position
         setTimeout(() => {
-            battleFieldBg.style.transition = 'top 30s ease-out';
-            battleFieldBg.style.top = '0%';
+            battleField.style.transition = 'top 3s cubic-bezier(0.4, 0, 0.2, 1)';
+            battleField.style.top = '0%';
         }, 100);
     }
     
