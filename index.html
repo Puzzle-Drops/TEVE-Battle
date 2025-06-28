@@ -3062,7 +3062,6 @@ sortItems(items) {
     }
 });
                 
-                // Don't show enemies here - they'll be shown when battle starts
             }
 
 startBattle() {
@@ -4913,18 +4912,23 @@ formatAbilityTooltip(ability, level, unit = null, showFormula = false) {
                 }
                 
                 // Format the value
-                if (value !== null && value !== undefined) {
-                    // Format percentages
-                    if (typeof value === 'number' && value < 1 && value > 0 && property.includes('percent')) {
-                        value = Math.round(value * 100) + '%';
-                    } else if (typeof value === 'number' && property === 'attack' || property === 'str' || 
-                               property === 'agi' || property === 'int') {
-                        // For scaling values, add 'x' suffix
-                        value = value + 'x';
-                    }
-                    
-                    return `${value} (${property})`;
-                }
+if (value !== null && value !== undefined) {
+    // Format percentages
+    if (typeof value === 'number' && value < 1 && value > 0 && property.includes('percent')) {
+        value = Math.round(value * 100) + '%';
+    } else if (typeof value === 'number' && (property === 'attack' || property === 'str' || 
+               property === 'agi' || property === 'int')) {
+        // For scaling values, add 'x' suffix
+        value = value + 'x';
+    }
+    
+    // Special case for base - don't show the property name
+    if (property === 'base') {
+        return value.toString();
+    }
+    
+    return `${value} (${property})`;
+}
                 
                 return match;
             });
