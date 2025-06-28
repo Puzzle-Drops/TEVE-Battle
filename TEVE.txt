@@ -159,7 +159,7 @@ min 2.5    tier 4
 
 These stats are further increased by items.
 
-HP is equal to Str * 25.
+HP is equal to Str * 10.
 HP Regen per action bar reset = Str * 0.05
 Action bar units gained per cycle = 100 + 100 * (AGI / (AGI + 1000))
 
