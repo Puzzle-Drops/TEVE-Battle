@@ -1236,11 +1236,6 @@ if (unit.isEnemy) {
             else if (effects.includes('heal')) spellText.classList.add('heal');
             else if (effects.includes('buff')) spellText.classList.add('buff');
             else if (effects.includes('debuff')) spellText.classList.add('debuff');
-            else if (effects.includes('holy')) spellText.classList.add('holy');
-            else if (effects.includes('shadow')) spellText.classList.add('shadow');
-            else if (effects.includes('fire')) spellText.classList.add('fire');
-            else if (effects.includes('frost')) spellText.classList.add('frost');
-            else if (effects.includes('arcane')) spellText.classList.add('arcane');
             else spellText.classList.add('damage'); // default
             
             animContainer.appendChild(spellText);
