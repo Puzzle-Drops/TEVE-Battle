@@ -4546,6 +4546,7 @@ slot.addEventListener('contextmenu', (e) => {
 
 showHeroInfoPopup(hero) {
     const popup = document.getElementById('heroInfoPopup');
+    popup._currentHero = hero;
     document.getElementById('popupHeroName').innerHTML = `Lv.${hero.level} ${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span> | ${hero.name}`;
     
     // Show stats in double column format
@@ -4749,6 +4750,7 @@ document.getElementById('popupGear').innerHTML = gearHtml;
 
 showEnemyInfoPopup(enemy) {
     const popup = document.getElementById('heroInfoPopup');
+    popup._currentHero = enemy;
     document.getElementById('popupHeroName').textContent = `Lv.${enemy.level} ${enemy.name}`;
     
     // Show stats in double column format
@@ -5156,8 +5158,8 @@ calculateSpellValue(spell, unit, valueType = 'damage') {
                         padding: 16px;
                         border-radius: 4px;
                         z-index: 1002;
-			min-width: 300px;
-                        max-width: 400px;
+			min-width: 440px;
+                        max-width: 600px;
                         box-shadow: 0 0 20px rgba(0,0,0,0.8);
                         pointer-events: none;
                     `;
@@ -5695,18 +5697,42 @@ document.addEventListener('mouseover', (e) => {
         let unit = null;
         
         if (heroType === 'hero') {
-            // Find hero by matching name
-            unit = game.heroes.find(h => popupTitle.includes(h.name));
-        } else if (heroType === 'enemy' && game.currentBattle) {
-            // Find enemy in current battle
-            const allUnits = [...game.currentBattle.party, ...game.currentBattle.enemies];
-            const battleUnit = allUnits.find(u => popupTitle.includes(u.name));
-            if (battleUnit && battleUnit.source) {
-                unit = battleUnit.source;
+            // Extract hero name from popup title (format: "Lv.X ClassName ♂/♀ | HeroName")
+            const namePart = popupTitle.split('|')[1];
+            if (namePart) {
+                const heroName = namePart.trim();
+                unit = game.heroes.find(h => h.name === heroName);
+            }
+            
+            // If not found by name, try to find by the context of which screen we're on
+            if (!unit && (game.currentScreen === 'heroesScreen' || game.currentScreen === 'partySelectScreen')) {
+                // Check if the popup is showing for a specific hero we just clicked
+                const popup = document.getElementById('heroInfoPopup');
+                if (popup && popup._currentHero) {
+                    unit = popup._currentHero;
+                }
+            }
+        } else if (heroType === 'enemy') {
+            // For enemies, check if we're in battle or party select
+            if (game.currentBattle) {
+                // Find enemy in current battle
+                const allUnits = [...game.currentBattle.party, ...game.currentBattle.enemies];
+                const battleUnit = allUnits.find(u => popupTitle.includes(u.name));
+                if (battleUnit && battleUnit.source) {
+                    unit = battleUnit.source;
+                }
+            } else if (game.dungeonWaves) {
+                // In party select, find enemy in preview waves
+                const enemyName = popupTitle.split('Lv.')[1]?.split(' ').slice(1).join(' ').trim();
+                if (enemyName) {
+                    // Find enemy in current preview wave
+                    const currentWaveEnemies = game.dungeonWaves[game.currentPreviewWave];
+                    unit = currentWaveEnemies.find(e => e.name === enemyName);
+                }
             }
         }
         
-        if (unit && unit.abilities[abilityIndex]) {
+        if (unit && unit.abilities && unit.abilities[abilityIndex]) {
             currentHoveredAbility = unit.abilities[abilityIndex];
             currentHoveredUnit = unit;
             currentHoveredSource = 'popup';
