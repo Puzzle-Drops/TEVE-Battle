@@ -1416,18 +1416,15 @@ get mainstat() {
 
 // Sort settings for items
 this.sortSettings = {
-    order: ['level', 'rarity', 'quality', 'name'],
+    order: ['rarity', 'level', 'quality', 'name'],
     direction: {
-        level: 'desc',
         rarity: 'desc', 
+        level: 'desc',
         quality: 'desc',
         name: 'asc'
     }
 };
 this.loadSortSettings(); // Load saved settings
-
-
-
 		    
                 // Initialize stashes for all class families including villager
                 this.stashes = {
