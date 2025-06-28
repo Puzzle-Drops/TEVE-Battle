@@ -539,14 +539,14 @@
     "target": "enemy",
     "logicKey": "silenceTestLogic"
 },
-"marked_test": {
-    "id": "marked_test",
-    "name": "Marked Test",
-    "description": "Inflicts Marked debuff for {duration} turns",
+"mark_test": {
+    "id": "mark_test",
+    "name": "Mark Test",
+    "description": "Inflicts Mark debuff for {duration} turns",
     "cooldown": [1, 1, 1, 1, 1],
     "duration": [2, 2, 3, 3, 4],
-    "effects": ["debuff", "debuff_marked"],
+    "effects": ["debuff", "debuff_mark"],
     "target": "enemy",
-    "logicKey": "markedTestLogic"
+    "logicKey": "markTestLogic"
 }
 }
