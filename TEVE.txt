@@ -255,6 +255,8 @@ Increase Speed: +33% action bar progress
 Increase Defense: +25% damage reduction, and -25% damage taken
 Immune: cannot gain debuffs
 Shield: attacks reduce shield hp before unit hp
+Frost Armor: +25% damage reduction, and any attackers get +1 reduce speed debuff
+
 --Debuffs (#ff3333)
 Reduce Attack: -50% attack damage
 Reduce Speed: -33% action bar progress
