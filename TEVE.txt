@@ -429,37 +429,6 @@ Spell Concepts
 
 Base spells are obtained by class 1 and 2 (swordsman/knight). 3rd spell is gained after class split, so imperial knight and crusader have same 2 base spells + a different 3rd spell. 4th spell is a passive gained from awakening and is unique based on class + gender.
 
-SWORDSMAN FAMILY (Physical Tank/DPS)
-Base Spells (Swordsman/Knight)
-1. Blade Strike: Physical attack + 150% damage if target is bleeding
-2. Shield Bash: Taunt target for 1 turn + gain shield (4 turn CD)
-
-Imperial Knight → Champion
-3. Rally Banner: Taunt all enemies + all allies gain Increase Attack for 1 turn and increase attack bar instantly 30% (7 turn CD)
-4. Male Passive: When hit by physical or magical attack, 20% chance to stun attacker.
-4. Female Passive: Start battle with Shield equal to 20% max HP, regenerates every 4 turns.
-
-Crusader → Avenger
-3. Blood Pact: Taunt all enemies + apply 2 bleed stacks to self, apply 2 bleed stacks to all taunted enemies. (5 turn CD)
-4. Male Passive: When attacked by a taunted unit, that unit receives blight debuff.
-4. Female Passive: Gain 15% action bar when taking damage.
-
-INITIATE FAMILY (Magical DPS)
-Base Spells (Initiate/Mage)
-1. Arcane Missiles: 1 hit to target + 1 hit to each enemy with a debuff.
-2. Frost Armor: Applies Frost Armor buff for 2 turns that reduces damage by 25%, and any attackers get reduce speed (4 turn CD)
-
-Wizard/Witch → White Wizard/White Witch
-3. Helping Hand: Remove all debuffs from target + fill target action bar to 100% (5 turn CD)
-4. Male Passive: Allies cleansed of debuffs gain Increase Attack buff for 1 turn
-4. Female Passive: When cleansing debuffs, ally gains Increase Speed buff for 1 turn
-
-Sage → Arch Sage
-3. Twilights Promise: Consumes 10% action bar from all allies and this turn. Next turn unleashes Twilights End. (8 turn CD)
-3. Twilights End: (tooltip for twilights promise should explain both parts of the spell, this spell doesn't need to be displayed on the action bar). The second part of Twilights Promise, casts the turn after Twilights Promise if not stunned, taunted, silence, or dead. Massive AOE magical damage + reduce all enemies action bar by 50%.
-4. Male Passive: When receiving a debuff, also grants Increase Attack buff.
-4. Female Passive: When receiving a debuff, also grants Increase Speed buff.
-
 ACOLYTE FAMILY (Healer/Support)
 Base Spells (Acolyte/Cleric)
 1. Holy Smite: Magic damage + heal lowest hp ally.
@@ -504,6 +473,37 @@ Shaman → Summoner
 3. Nature's Balance: If targeting allies, remove all debuffs, healing a small amount. If targeting enemies, remove all buffs, dealing a small amount of damage. Full team aoe.
 4. Male Passive: Natures Blessing lowers action bar of lowest hp enemy by 5%.
 4. Female Passive: Natures blessing heals lowest hp ally for 5% hp.
+
+INITIATE FAMILY (Magical DPS)
+Base Spells (Initiate/Mage)
+1. Arcane Missiles: 1 hit to target + 1 hit to each enemy with a debuff.
+2. Frost Armor: Applies Frost Armor buff for 2 turns that reduces damage by 25%, and any attackers get reduce speed (4 turn CD)
+
+Wizard/Witch → White Wizard/White Witch
+3. Helping Hand: Remove all debuffs from target + fill target action bar to 100% (5 turn CD)
+4. Male Passive: Allies cleansed of debuffs gain Increase Attack buff for 1 turn
+4. Female Passive: When cleansing debuffs, ally gains Increase Speed buff for 1 turn
+
+Sage → Arch Sage
+3. Twilights Promise: Consumes 10% action bar from all allies and this turn. Next turn unleashes Twilights End. (8 turn CD)
+3. Twilights End: (tooltip for twilights promise should explain both parts of the spell, this spell doesn't need to be displayed on the action bar). The second part of Twilights Promise, casts the turn after Twilights Promise if not stunned, taunted, silence, or dead. Massive AOE magical damage + reduce all enemies action bar by 50%.
+4. Male Passive: When receiving a debuff, also grants Increase Attack buff.
+4. Female Passive: When receiving a debuff, also grants Increase Speed buff.
+
+SWORDSMAN FAMILY (Physical Tank/DPS)
+Base Spells (Swordsman/Knight)
+1. Blade Strike: Physical attack + 150% damage if target is bleeding
+2. Shield Bash: Taunt target for 1 turn + gain shield (4 turn CD)
+
+Imperial Knight → Champion
+3. Rally Banner: Taunt all enemies + all allies gain Increase Attack for 1 turn and increase attack bar instantly 30% (7 turn CD)
+4. Male Passive: When hit by physical or magical attack, 20% chance to stun attacker.
+4. Female Passive: Start battle with Shield equal to 20% max HP, regenerates every 4 turns.
+
+Crusader → Avenger
+3. Blood Pact: Taunt all enemies + apply 2 bleed stacks to self, apply 2 bleed stacks to all taunted enemies. (5 turn CD)
+4. Male Passive: When attacked by a taunted unit, that unit receives blight debuff.
+4. Female Passive: Gain 15% action bar when taking damage.
 
 TEMPLAR FAMILY (Hybrid DPS/Support)
 Base Spells (Templar/Arch Templar)
