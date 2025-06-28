@@ -29,7 +29,7 @@
       "tier": 1,
       "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["cleric_male"]
     },
     "acolyte_female": {
@@ -37,7 +37,7 @@
       "tier": 1,
       "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["cleric_female"]
     },
     "cleric_male": {
@@ -45,7 +45,7 @@
       "tier": 2,
       "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["priest_male", "patriarch_male"]
     },
     "cleric_female": {
@@ -53,7 +53,7 @@
       "tier": 2,
       "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["priestess_female", "matriarch_female"]
     },
     "priest_male": {
@@ -61,7 +61,7 @@
       "tier": 3,
       "modifiers": { "str": 2.15, "agi": 2.95, "int": 3.9 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["hierophant_male"]
     },
     "priestess_female": {
@@ -69,7 +69,7 @@
       "tier": 3,
       "modifiers": { "str": 2.15, "agi": 2.95, "int": 3.9 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["hierophant_female"]
     },
     "hierophant_male": {
@@ -77,7 +77,7 @@
       "tier": 4,
       "modifiers": { "str": 2.5, "agi": 3.95, "int": 5.55 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "hierophant_female": {
@@ -85,7 +85,7 @@
       "tier": 4,
       "modifiers": { "str": 2.5, "agi": 3.95, "int": 5.55 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "patriarch_male": {
@@ -93,7 +93,7 @@
       "tier": 3,
       "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["prophet_male"]
     },
     "matriarch_female": {
@@ -101,7 +101,7 @@
       "tier": 3,
       "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["prophetess_female"]
     },
     "prophet_male": {
@@ -109,7 +109,7 @@
       "tier": 4,
       "modifiers": { "str": 3.55, "agi": 2.85, "int": 5.6 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "prophetess_female": {
@@ -117,7 +117,7 @@
       "tier": 4,
       "modifiers": { "str": 3.55, "agi": 2.85, "int": 5.6 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "archer_male": {
@@ -125,7 +125,7 @@
       "tier": 1,
       "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["ranger_male"]
     },
     "archer_female": {
@@ -133,7 +133,7 @@
       "tier": 1,
       "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
       "mainstat": "agi",
-      "spells": ["poison_strike"],
+      "spells": [],
       "promotesTo": ["ranger_female"]
     },
     "ranger_male": {
@@ -141,7 +141,7 @@
       "tier": 2,
       "modifiers": { "str": 1.5, "agi": 2.9, "int": 1.6 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["marksman_male", "tracker_male"]
     },
     "ranger_female": {
@@ -149,7 +149,7 @@
       "tier": 2,
       "modifiers": { "str": 1.5, "agi": 2.9, "int": 1.6 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["marksman_female", "tracker_female"]
     },
     "marksman_male": {
@@ -157,7 +157,7 @@
       "tier": 3,
       "modifiers": { "str": 2.05, "agi": 4.6, "int": 2.35 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["sniper_male"]
     },
     "marksman_female": {
@@ -165,7 +165,7 @@
       "tier": 3,
       "modifiers": { "str": 2.05, "agi": 4.6, "int": 2.35 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["sniper_female"]
     },
     "sniper_male": {
@@ -173,7 +173,7 @@
       "tier": 4,
       "modifiers": { "str": 2.55, "agi": 6.7, "int": 2.75 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "sniper_female": {
@@ -181,7 +181,7 @@
       "tier": 4,
       "modifiers": { "str": 2.55, "agi": 6.7, "int": 2.75 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "tracker_male": {
@@ -189,7 +189,7 @@
       "tier": 3,
       "modifiers": { "str": 2.5, "agi": 4.25, "int": 2.25 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["monster_hunter_male"]
     },
     "tracker_female": {
@@ -197,7 +197,7 @@
       "tier": 3,
       "modifiers": { "str": 2.5, "agi": 4.25, "int": 2.25 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["monster_hunter_female"]
     },
     "monster_hunter_male": {
@@ -205,7 +205,7 @@
       "tier": 4,
       "modifiers": { "str": 3.35, "agi": 6.1, "int": 2.55 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "monster_hunter_female": {
@@ -213,7 +213,7 @@
       "tier": 4,
       "modifiers": { "str": 3.35, "agi": 6.1, "int": 2.55 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "druid_male": {
@@ -221,7 +221,7 @@
       "tier": 1,
       "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["arch_druid_male"]
     },
     "druid_female": {
@@ -229,7 +229,7 @@
       "tier": 1,
       "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["arch_druid_female"]
     },
     "arch_druid_male": {
@@ -237,7 +237,7 @@
       "tier": 2,
       "modifiers": { "str": 2.0, "agi": 1.5, "int": 2.5 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["shapeshifter_male", "shaman_male"]
     },
     "arch_druid_female": {
@@ -245,7 +245,7 @@
       "tier": 2,
       "modifiers": { "str": 2.0, "agi": 1.5, "int": 2.5 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["shapeshifter_female", "shaman_female"]
     },
     "shapeshifter_male": {
@@ -253,7 +253,7 @@
       "tier": 3,
       "modifiers": { "str": 4.0, "agi": 2.0, "int": 3.0 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": ["runemaster_male"]
     },
     "shapeshifter_female": {
@@ -261,7 +261,7 @@
       "tier": 3,
       "modifiers": { "str": 4.0, "agi": 2.0, "int": 3.0 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": ["runemaster_female"]
     },
     "runemaster_male": {
@@ -269,7 +269,7 @@
       "tier": 4,
       "modifiers": { "str": 5.0, "agi": 3.0, "int": 4.0 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "runemaster_female": {
@@ -277,7 +277,7 @@
       "tier": 4,
       "modifiers": { "str": 5.0, "agi": 3.0, "int": 4.0 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "shaman_male": {
@@ -285,7 +285,7 @@
       "tier": 3,
       "modifiers": { "str": 2.5, "agi": 2.0, "int": 4.5 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["summoner_male"]
     },
     "shaman_female": {
@@ -293,7 +293,7 @@
       "tier": 3,
       "modifiers": { "str": 2.5, "agi": 2.0, "int": 4.5 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["summoner_female"]
     },
     "summoner_male": {
@@ -301,7 +301,7 @@
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 2.5, "int": 6.5 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "summoner_female": {
@@ -309,7 +309,7 @@
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 2.5, "int": 6.5 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "initiate_male": {
@@ -317,7 +317,7 @@
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["mage_male"]
     },
     "initiate_female": {
@@ -325,7 +325,7 @@
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["mage_female"]
     },
     "mage_male": {
@@ -333,7 +333,7 @@
       "tier": 2,
       "modifiers": { "str": 1.6, "agi": 1.8, "int": 2.6 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["wizard_male", "sage_male"]
     },
     "mage_female": {
@@ -341,7 +341,7 @@
       "tier": 2,
       "modifiers": { "str": 1.6, "agi": 1.8, "int": 2.6 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["witch_female", "sage_female"]
     },
     "wizard_male": {
@@ -349,7 +349,7 @@
       "tier": 3,
       "modifiers": { "str": 2.3, "agi": 2.6, "int": 4.1 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["white_wizard_male"]
     },
     "witch_female": {
@@ -357,7 +357,7 @@
       "tier": 3,
       "modifiers": { "str": 2.3, "agi": 2.6, "int": 4.1 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["white_witch_female"]
     },
     "white_wizard_male": {
@@ -365,7 +365,7 @@
       "tier": 4,
       "modifiers": { "str": 3.5, "agi": 3.0, "int": 5.5 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "white_witch_female": {
@@ -373,7 +373,7 @@
       "tier": 4,
       "modifiers": { "str": 3.5, "agi": 3.0, "int": 5.5 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "sage_male": {
@@ -381,7 +381,7 @@
       "tier": 3,
       "modifiers": { "str": 2.0, "agi": 2.8, "int": 4.2 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["arch_sage_male"]
     },
     "sage_female": {
@@ -389,7 +389,7 @@
       "tier": 3,
       "modifiers": { "str": 2.0, "agi": 2.8, "int": 4.2 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["arch_sage_female"]
     },
     "arch_sage_male": {
@@ -397,7 +397,7 @@
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 3.5, "int": 5.5 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "arch_sage_female": {
@@ -405,7 +405,7 @@
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 3.5, "int": 5.5 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "swordsman_male": {
@@ -413,7 +413,7 @@
       "tier": 1,
       "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": ["knight_male"]
     },
     "swordsman_female": {
@@ -421,7 +421,7 @@
       "tier": 1,
       "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": ["knight_female"]
     },
     "knight_male": {
@@ -429,7 +429,7 @@
       "tier": 2,
       "modifiers": { "str": 2.75, "agi": 1.75, "int": 1.5 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": ["imperial_knight_male", "crusader_male"]
     },
     "knight_female": {
@@ -437,7 +437,7 @@
       "tier": 2,
       "modifiers": { "str": 2.75, "agi": 1.75, "int": 1.5 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": ["imperial_knight_female", "crusader_female"]
     },
     "imperial_knight_male": {
@@ -445,7 +445,7 @@
       "tier": 3,
       "modifiers": { "str": 4.0, "agi": 3.0, "int": 2.0 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": ["champion_male"]
     },
     "imperial_knight_female": {
@@ -453,7 +453,7 @@
       "tier": 3,
       "modifiers": { "str": 4.0, "agi": 3.0, "int": 2.0 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": ["champion_female"]
     },
     "champion_male": {
@@ -461,7 +461,7 @@
       "tier": 4,
       "modifiers": { "str": 6.0, "agi": 3.5, "int": 2.5 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "champion_female": {
@@ -469,7 +469,7 @@
       "tier": 4,
       "modifiers": { "str": 6.0, "agi": 3.5, "int": 2.5 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "crusader_male": {
@@ -477,7 +477,7 @@
       "tier": 3,
       "modifiers": { "str": 4.85, "agi": 2.0, "int": 2.15 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": ["avenger_male"]
     },
     "crusader_female": {
@@ -485,7 +485,7 @@
       "tier": 3,
       "modifiers": { "str": 4.85, "agi": 2.0, "int": 2.15 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": ["avenger_female"]
     },
     "avenger_male": {
@@ -493,7 +493,7 @@
       "tier": 4,
       "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "avenger_female": {
@@ -501,7 +501,7 @@
       "tier": 4,
       "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
       "mainstat": "str",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "templar_male": {
@@ -509,7 +509,7 @@
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.35, "int": 1.35 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["arch_templar_male"]
     },
     "templar_female": {
@@ -517,7 +517,7 @@
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.35, "int": 1.35 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["arch_templar_female"]
     },
     "arch_templar_male": {
@@ -525,7 +525,7 @@
       "tier": 2,
       "modifiers": { "str": 1.6, "agi": 2.2, "int": 2.2 },
       "mainstat": "int",
-      "spells": ["shield_slam", "consecrate"],
+      "spells": [],
       "promotesTo": ["dark_templar_male", "high_templar_male"]
     },
     "arch_templar_female": {
@@ -533,7 +533,7 @@
       "tier": 2,
       "modifiers": { "str": 1.6, "agi": 2.2, "int": 2.2 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["dark_templar_female", "high_templar_female"]
     },
     "dark_templar_male": {
@@ -541,7 +541,7 @@
       "tier": 3,
       "modifiers": { "str": 2.35, "agi": 4.4, "int": 2.25 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["dark_arch_templar_male"]
     },
     "dark_templar_female": {
@@ -549,7 +549,7 @@
       "tier": 3,
       "modifiers": { "str": 2.35, "agi": 4.4, "int": 2.25 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["dark_arch_templar_female"]
     },
     "dark_arch_templar_male": {
@@ -557,7 +557,7 @@
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 6.25, "int": 2.75 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "dark_arch_templar_female": {
@@ -565,7 +565,7 @@
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 6.25, "int": 2.75 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "high_templar_male": {
@@ -573,7 +573,7 @@
       "tier": 3,
       "modifiers": { "str": 2.35, "agi": 2.25, "int": 4.4 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["grand_templar_male"]
     },
     "high_templar_female": {
@@ -581,7 +581,7 @@
       "tier": 3,
       "modifiers": { "str": 2.35, "agi": 2.25, "int": 4.4 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": ["grand_templar_female"]
     },
     "grand_templar_male": {
@@ -589,7 +589,7 @@
       "tier": 4,
       "modifiers": { "str": 2.75, "agi": 3.0, "int": 6.25 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "grand_templar_female": {
@@ -597,7 +597,7 @@
       "tier": 4,
       "modifiers": { "str": 2.75, "agi": 3.0, "int": 6.25 },
       "mainstat": "int",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "thief_male": {
@@ -605,7 +605,7 @@
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["rogue_male"]
     },
     "thief_female": {
@@ -613,7 +613,7 @@
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["rogue_female"]
     },
     "rogue_male": {
@@ -621,7 +621,7 @@
       "tier": 2,
       "modifiers": { "str": 1.65, "agi": 2.75, "int": 1.6 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["assassin_male", "stalker_male"]
     },
     "rogue_female": {
@@ -629,7 +629,7 @@
       "tier": 2,
       "modifiers": { "str": 1.65, "agi": 2.75, "int": 1.6 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["assassin_female", "stalker_female"]
     },
     "assassin_male": {
@@ -637,7 +637,7 @@
       "tier": 3,
       "modifiers": { "str": 2.25, "agi": 4.55, "int": 2.2 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["phantom_assassin_male"]
     },
     "assassin_female": {
@@ -645,7 +645,7 @@
       "tier": 3,
       "modifiers": { "str": 2.25, "agi": 4.55, "int": 2.2 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["phantom_assassin_female"]
     },
     "phantom_assassin_male": {
@@ -653,7 +653,7 @@
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 6.2, "int": 2.8 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "phantom_assassin_female": {
@@ -661,7 +661,7 @@
       "tier": 4,
       "modifiers": { "str": 3.0, "agi": 6.2, "int": 2.8 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "stalker_male": {
@@ -669,7 +669,7 @@
       "tier": 3,
       "modifiers": { "str": 2.35, "agi": 3.8, "int": 2.85 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["master_stalker_male"]
     },
     "stalker_female": {
@@ -677,7 +677,7 @@
       "tier": 3,
       "modifiers": { "str": 2.35, "agi": 3.8, "int": 2.85 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["master_stalker_female"]
     },
     "master_stalker_male": {
@@ -685,7 +685,7 @@
       "tier": 4,
       "modifiers": { "str": 3.2, "agi": 5.8, "int": 3.0 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "master_stalker_female": {
@@ -693,7 +693,7 @@
       "tier": 4,
       "modifiers": { "str": 3.2, "agi": 5.8, "int": 3.0 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "witch_hunter_male": {
@@ -701,7 +701,7 @@
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["slayer_male"]
     },
     "witch_hunter_female": {
@@ -709,7 +709,7 @@
       "tier": 1,
       "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["slayer_female"]
     },
     "slayer_male": {
@@ -717,7 +717,7 @@
       "tier": 2,
       "modifiers": { "str": 1.65, "agi": 2.7, "int": 1.65 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["inquisitor_male", "witcher_male"]
     },
     "slayer_female": {
@@ -725,7 +725,7 @@
       "tier": 2,
       "modifiers": { "str": 1.65, "agi": 2.7, "int": 1.65 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["inquisitor_female", "witcher_female"]
     },
     "inquisitor_male": {
@@ -733,7 +733,7 @@
       "tier": 3,
       "modifiers": { "str": 2.7, "agi": 2.8, "int": 3.5 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["grand_inquisitor_male"]
     },
     "inquisitor_female": {
@@ -741,7 +741,7 @@
       "tier": 3,
       "modifiers": { "str": 2.7, "agi": 2.8, "int": 3.5 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["grand_inquisitor_female"]
     },
     "grand_inquisitor_male": {
@@ -749,7 +749,7 @@
       "tier": 4,
       "modifiers": { "str": 3.45, "agi": 3.65, "int": 4.9 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "grand_inquisitor_female": {
@@ -757,7 +757,7 @@
       "tier": 4,
       "modifiers": { "str": 3.45, "agi": 3.65, "int": 4.9 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "witcher_male": {
@@ -765,7 +765,7 @@
       "tier": 3,
       "modifiers": { "str": 2.6, "agi": 4.0, "int": 2.4 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["professional_witcher_male"]
     },
     "witcher_female": {
@@ -773,7 +773,7 @@
       "tier": 3,
       "modifiers": { "str": 2.6, "agi": 4.0, "int": 2.4 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": ["professional_witcher_female"]
     },
     "professional_witcher_male": {
@@ -781,7 +781,7 @@
       "tier": 4,
       "modifiers": { "str": 3.25, "agi": 5.8, "int": 2.95 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     },
     "professional_witcher_female": {
@@ -789,7 +789,7 @@
       "tier": 4,
       "modifiers": { "str": 3.25, "agi": 5.8, "int": 2.95 },
       "mainstat": "agi",
-      "spells": []
+      "spells": [],
       "promotesTo": []
     }
   },
@@ -800,13 +800,6 @@
       "modifiers": { "str": 1.5, "agi": 1.3, "int": 1.2 },
       "mainstat": "str",
       "spells": ["slash", "bite", "fury"]
-    },
-    "goblin_king": {
-      "name": "Goblin King",
-      "boss": true,
-      "modifiers": { "str": 1.8, "agi": 1.8, "int": 4.2 },
-      "mainstat": "int",
-      "spells": ["slash", "gold_toss", "summon_goblins"]
     },
     "satyr_youth": {
       "name": "Satyr Youth",
@@ -913,6 +906,13 @@
       "mainstat": "str",
       "spells": []
     },
+      "goblin_king": {
+      "name": "Goblin King",
+      "boss": true,
+      "modifiers": { "str": 1.8, "agi": 1.8, "int": 4.2 },
+      "mainstat": "int",
+      "spells": []
+    },
     "centaur_bloodhorn": {
       "name": "Centaur Bloodhorn",
       "boss": true,
@@ -995,7 +995,7 @@
       "boss": true,
       "modifiers": { "str": 3.5, "agi": 3.5, "int": 3.0 },
       "mainstat": "str",
-      "spells": ["blade_strike", "shield_bash", "royal_charge"]
+      "spells": []
     },
     "starweaver": {
       "name": "Starweaver",
