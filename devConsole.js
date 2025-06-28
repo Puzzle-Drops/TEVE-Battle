@@ -811,7 +811,7 @@ applyDebuffToUnit(unitIndex, debuffName, duration) {
     }
     
     // Validate debuff name
-    const validDebuffs = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Stun', 'Taunt', 'Silence', 'Marked'];
+    const validDebuffs = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Stun', 'Taunt', 'Silence', 'Mark'];
     if (!validDebuffs.includes(debuffName)) {
         this.addLog('error', `Invalid debuff name. Valid debuffs: ${validDebuffs.join(', ')}`);
         return;
