@@ -47,15 +47,6 @@ const spellLogic = {
         const damage = Math.max(target.maxHp * percent, floor);
         battle.dealDamage(caster, target, damage, 'physical');
     },
-    
-    slashkillLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const percent = spell.scaling.percent[levelIndex] || spell.scaling.percent[0];
-        const cap = spell.scaling.cap[levelIndex] || spell.scaling.cap[0];
-        
-        const damage = Math.min(target.maxHp * percent, cap);
-        battle.dealDamage(caster, target, damage, 'physical');
-    },
 
     // Murkin Spells
     spearThrustLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -515,11 +506,11 @@ const spellLogic = {
         battle.applyDebuff(target, 'Silence', duration, {});
     },
 
-    markedTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    markTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spell.duration[levelIndex] || spell.duration[0];
         
-        battle.applyDebuff(target, 'Marked', duration, {});
+        battle.applyDebuff(target, 'Mark', duration, {});
     },
 
     frostBreathLogic: function(battle, caster, targets, spell, spellLevel = 1) {
@@ -535,32 +526,8 @@ const spellLogic = {
                 battle.applyDebuff(enemy, 'Reduce Speed', slowDuration, {});
             }
         });
-    },
-
-    goldTossLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0];
-        const randomMultiplier = spell.scaling.randomMultiplier[levelIndex] || spell.scaling.randomMultiplier[0];
-        
-        const actualMultiplier = Math.random() * randomMultiplier;
-        const damage = caster.stats.str * strScaling * actualMultiplier;
-        battle.dealDamage(caster, target, damage, 'physical');
-    },
-
-    summonGoblinsLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const summonCount = spell.summonCount[levelIndex] || spell.summonCount[0];
-        
-        for (let i = 0; i < summonCount; i++) {
-            battle.summonUnit(caster, {
-                name: 'Goblin Minion',
-                hp: caster.hp * 0.3,
-                str: caster.baseStats.str * 0.5,
-                agi: caster.baseStats.agi * 0.5,
-                int: caster.baseStats.int * 0.5
-            });
-        }
     }
+
 };
 
 // Spell Manager Class
