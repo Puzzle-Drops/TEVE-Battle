@@ -998,17 +998,21 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
                 case 'ally':
     targets = unit.isEnemy ? this.enemies.filter(e => e && e.isAlive) : this.party.filter(p => p && p.isAlive);
     
-    // Check if all allies already have all buffs this ability applies or are marked
+    // Skip if no ally would benefit from the buffs (all have buffs or are marked)
     if (!doesDamage && buffEffects.length > 0 && targets.length > 0) {
-        const allHaveBuffs = buffEffects.every(buffEffect => {
-            const buffName = this.getBuffNameFromEffect(buffEffect);
-            return targets.every(target => 
-                target.buffs.some(b => b.name === buffName) || 
-                target.debuffs.some(d => d.name === 'Mark')
-            );
+        const anyValidTarget = targets.some(target => {
+            // Marked units can't receive buffs
+            if (target.debuffs.some(d => d.name === 'Mark')) {
+                return false;
+            }
+            // Check if this target is missing any buff this ability provides
+            return buffEffects.some(buffEffect => {
+                const buffName = this.getBuffNameFromEffect(buffEffect);
+                return !target.buffs.some(b => b.name === buffName);
+            });
         });
         
-        if (allHaveBuffs) {
+        if (!anyValidTarget) {
             skipAbility = true;
         }
     }
@@ -1033,17 +1037,21 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
                 case 'all_allies':
     targets = unit.isEnemy ? this.enemies.filter(e => e && e.isAlive) : this.party.filter(p => p && p.isAlive);
     
-    // Check if all allies already have all buffs this ability applies or are marked
+    // Skip if no ally would benefit from the buffs (all have buffs or are marked)
     if (!doesDamage && buffEffects.length > 0 && targets.length > 0) {
-        const allHaveBuffs = buffEffects.every(buffEffect => {
-            const buffName = this.getBuffNameFromEffect(buffEffect);
-            return targets.every(target => 
-                target.buffs.some(b => b.name === buffName) || 
-                target.debuffs.some(d => d.name === 'Mark')
-            );
+        const anyValidTarget = targets.some(target => {
+            // Marked units can't receive buffs
+            if (target.debuffs.some(d => d.name === 'Mark')) {
+                return false;
+            }
+            // Check if this target is missing any buff this ability provides
+            return buffEffects.some(buffEffect => {
+                const buffName = this.getBuffNameFromEffect(buffEffect);
+                return !target.buffs.some(b => b.name === buffName);
+            });
         });
         
-        if (allHaveBuffs) {
+        if (!anyValidTarget) {
             skipAbility = true;
         }
     }
@@ -1093,27 +1101,29 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
                     break;
                 case 'ally':
     if (targets.length > 0) {
-        // For abilities that apply buffs, prioritize targets without those buffs and not marked
+        // For abilities that apply buffs, prioritize targets that would benefit
         if (buffEffects.length > 0 && !spell.effects.includes('heal')) {
-            // Find targets that don't have all the buffs this ability applies and aren't marked
-            const unaffectedTargets = targets.filter(t => {
+            // Find targets that would gain at least one new buff
+            const benefitTargets = targets.filter(t => {
                 // Marked units can't receive buffs
                 if (t.debuffs.some(d => d.name === 'Mark')) {
                     return false;
                 }
-                return !buffEffects.every(buffEffect => {
+                // Check if this target is missing any buff this ability provides
+                return buffEffects.some(buffEffect => {
                     const buffName = this.getBuffNameFromEffect(buffEffect);
-                    return t.buffs.some(b => b.name === buffName);
+                    return !t.buffs.some(b => b.name === buffName);
                 });
             });
             
-            // If some targets don't have the buffs and aren't marked, choose from them
-            if (unaffectedTargets.length > 0) {
-                target = unaffectedTargets[0];
-            } else {
-                // All targets have the buffs or are marked, still use if it does something else
+            // If some targets would benefit, choose from them
+            if (benefitTargets.length > 0) {
+                target = benefitTargets[0];
+            } else if (doesDamage) {
+                // If ability also deals damage, still use it on someone
                 target = targets[0];
             }
+            // else target remains null and ability won't be used
         } else if (spell.effects.includes('heal')) {
             // Prioritize low HP allies for heals
             targets.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
@@ -1124,9 +1134,19 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
     }
     break;
                 case 'self':
-    // Skip self buffs if marked (unless ability also deals damage)
-    if (!doesDamage && buffEffects.length > 0 && unit.debuffs.some(d => d.name === 'Mark')) {
-        skipAbility = true;
+    // Skip self buffs if marked or already has all buffs (unless ability also deals damage)
+    if (!doesDamage && buffEffects.length > 0) {
+        const isMarked = unit.debuffs.some(d => d.name === 'Mark');
+        const hasAllBuffs = buffEffects.every(buffEffect => {
+            const buffName = this.getBuffNameFromEffect(buffEffect);
+            return unit.buffs.some(b => b.name === buffName);
+        });
+        
+        if (isMarked || hasAllBuffs) {
+            skipAbility = true;
+        } else {
+            target = unit;
+        }
     } else {
         target = unit;
     }
