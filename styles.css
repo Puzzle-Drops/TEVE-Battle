@@ -2456,14 +2456,15 @@ body {
 }
 
 /* Spell type colors */
+.spellText.passive { color: #ffd700; }
+.spellText.aoe { color: #b8a5ff; }
+.spellText.heal { color: #00ff88; }
 .spellText.damage { color: #ff4444; }
 .spellText.physical { color: #f3b03a; }
 .spellText.magical { color: #aa3af3; }
 .spellText.pure { color: #fdffc4; }
-.spellText.heal { color: #00ff88; }
 .spellText.buff { color: #f3f33a; }
 .spellText.debuff { color: #ff8800; }
-.spellText.aoe { color: #b8a5ff; }
 
 /* Add styles for ability effect tags in tooltips */
 .abilityEffectTag {
