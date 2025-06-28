@@ -5625,8 +5625,8 @@ document.addEventListener('keydown', (e) => {
         // Update ability tooltip if visible
         const abilityTooltip = document.getElementById('abilityTooltip');
         if (abilityTooltip && abilityTooltip.style.display === 'block') {
-            // Find which ability icon is being hovered
-            const hoveredIcon = document.querySelector('.abilityIconSmall:hover, .ability:hover');
+            // Find which ability icon is being hovered (including battle panel abilities)
+            const hoveredIcon = document.querySelector('.abilityIconSmall:hover, .ability:hover, #abilityPanel .ability:hover');
             if (hoveredIcon) {
                 // Trigger a synthetic mouse event to update the tooltip
                 const event = new MouseEvent('mouseenter', {
@@ -5656,8 +5656,8 @@ document.addEventListener('keyup', (e) => {
         // Update ability tooltip if visible
         const abilityTooltip = document.getElementById('abilityTooltip');
         if (abilityTooltip && abilityTooltip.style.display === 'block') {
-            // Find which ability icon is being hovered
-            const hoveredIcon = document.querySelector('.abilityIconSmall:hover, .ability:hover');
+            // Find which ability icon is being hovered (including battle panel abilities)
+            const hoveredIcon = document.querySelector('.abilityIconSmall:hover, .ability:hover, #abilityPanel .ability:hover');
             if (hoveredIcon) {
                 // Trigger a synthetic mouse event to update the tooltip
                 const event = new MouseEvent('mouseenter', {
