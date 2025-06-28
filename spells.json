@@ -2,7 +2,7 @@
 "punch": {
     "id": "punch",
     "name": "Punch",
-    "description": "Basic attack dealing [{base} + {attack}x ATK] damage",
+    "description": "Basic attack dealing [{base} + {attack}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["damage", "physical"],
     "scaling": {
@@ -25,7 +25,7 @@
 "throw_rock": {
     "id": "throw_rock",
     "name": "Throw Rock",
-    "description": "Throw a rock dealing {base} + {attack}x ATK + {int}x INT damage and stunning for {stunDuration} turn",
+    "description": "Throw a rock dealing [{base} + {attack} + {int}] physical damage and stunning for {stunDuration} turn",
     "cooldown": [7, 7, 6, 6, 5],
     "effects": ["damage", "physical", "debuff", "debuff_stun"],
     "scaling": {
