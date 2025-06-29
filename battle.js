@@ -67,7 +67,8 @@ class BattleUnit {
     
     get actionBarSpeed() {
         const agi = this.stats.agi;
-        let speed = this.isEnemy ? 100 + 100 * (agi / (agi + 1000)) : this.source.actionBarSpeed;
+        // DOUBLED action bar speed
+        let speed = this.isEnemy ? 200 + 200 * (agi / (agi + 1000)) : this.source.actionBarSpeed * 2;
         
         // Apply buffs/debuffs
         this.buffs.forEach(buff => {
@@ -566,6 +567,15 @@ if (unit.isEnemy) {
     applyInitialPassives() {
     // Apply passive abilities at battle start
     this.allUnits.forEach(unit => {
+        // Apply Champion Female passive shield
+        if (unit.championFemalePassive || unit.shieldRegenAmount) {
+            const shieldAmount = Math.floor(unit.maxHp * 0.2);
+            this.applyBuff(unit, 'Shield', -1, { shieldAmount: shieldAmount });
+            unit.shieldRegenTimer = 0;
+            unit.shieldRegenTurns = 4;
+            unit.shieldRegenAmount = shieldAmount;
+        }
+        
         unit.abilities.forEach((ability, index) => {
             if (ability.passive) {
                 // Get spell data
@@ -885,6 +895,35 @@ if (unit.isEnemy) {
     
     processTurn() {
         const unit = this.currentUnit;
+        
+        // Check for Twilight's End
+        if (unit.twilightsEndPending) {
+            // Check if stunned, taunted, silenced, or dead
+            const canCast = !unit.isDead && !unit.debuffs.some(d => 
+                d.name === 'Stun' || d.stunned || 
+                d.name === 'Taunt' || 
+                d.name === 'Silence'
+            );
+            
+            if (canCast) {
+                // Execute Twilight's End
+                unit.twilightsEndPending = false;
+                this.log(`${unit.name} unleashes Twilight's End!`);
+                
+                // Find the twilights_promise ability to get its level
+                const twilightAbility = unit.abilities.find(a => a.id === 'twilights_promise');
+                const spellLevel = twilightAbility ? twilightAbility.level : 1;
+                
+                // Execute the logic
+                spellLogic.twilightsEndLogic(this, unit, 'all', spellManager.getSpell('twilights_promise'), spellLevel);
+                
+                // Continue with rest of turn
+            } else {
+                // Cannot cast, remove pending status
+                unit.twilightsEndPending = false;
+                this.log(`${unit.name}'s Twilight's End was interrupted!`);
+            }
+        }
         
         // Show active circle for current unit
         if (unit) {
@@ -1280,6 +1319,14 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
     const spell = spellManager.getSpell(ability.id);
     if (!spell) return;
     
+    // Check for Grand Templar Male passive stun chance
+    if (caster.grandTemplarMalePassive && caster.globalStunChance && target && target !== 'all' && target.isAlive) {
+        if (Math.random() < caster.globalStunChance) {
+            this.applyDebuff(target, 'Stun', 1, { stunned: true });
+            this.log(`${caster.name}'s mastery stuns ${target.name}!`);
+        }
+    }
+    
     // Show spell animation
     this.showSpellAnimation(caster, ability.name, spell.effects);
     
@@ -1391,6 +1438,35 @@ if (effects.includes('physical')) {
                 }
             }
             
+            // Hierophant Female passive regeneration
+            if (this.currentUnit.hierophantFemalePassive) {
+                const allies = this.getParty(this.currentUnit);
+                allies.forEach(ally => {
+                    if (ally.isAlive && ally.buffs.length > 0 && !ally.debuffs.some(d => d.name === 'Blight')) {
+                        const regen = Math.floor(ally.maxHp * 0.05);
+                        const actualRegen = Math.min(regen, ally.maxHp - ally.currentHp);
+                        if (actualRegen > 0) {
+                            ally.currentHp += actualRegen;
+                            this.log(`${ally.name} regenerates ${actualRegen} HP from blessed regeneration.`);
+                        }
+                    }
+                });
+            }
+            
+            // Champion Female passive shield regeneration
+            if (this.currentUnit.shieldRegenTimer !== undefined) {
+                this.currentUnit.shieldRegenTimer++;
+                if (this.currentUnit.shieldRegenTimer >= this.currentUnit.shieldRegenTurns) {
+                    this.currentUnit.shieldRegenTimer = 0;
+                    // Check if shield is already present
+                    const existingShield = this.currentUnit.buffs.find(b => b.name === 'Shield');
+                    if (!existingShield) {
+                        this.applyBuff(this.currentUnit, 'Shield', -1, { shieldAmount: this.currentUnit.shieldRegenAmount });
+                        this.log(`${this.currentUnit.name}'s shield regenerates!`);
+                    }
+                }
+            }
+            
             // Apply HP regen after turn
             if (this.currentUnit.isAlive && !this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
                 const regen = Math.floor(this.currentUnit.isEnemy ? 
@@ -1437,12 +1513,31 @@ if (effects.includes('physical')) {
         
         let damage = Math.round(amount);
 
+        // Check for executioner passive (Sniper Male)
+        if (attacker.onDamageCalculation) {
+            attacker.onDamageCalculation.forEach(calc => {
+                if (calc.type === 'executioner' && (target.currentHp / target.maxHp) < calc.hpThreshold) {
+                    damage *= calc.damageBonus;
+                }
+            });
+        }
+
         // Check if target can dodge (Marked prevents all dodging)
         const isMarked = target.debuffs.some(d => d.name === 'Mark');
-        if (damageType === 'physical' && target.physicalDodgeChance && !isMarked) {
-            if (Math.random() < target.physicalDodgeChance) {
+        
+        // Check for dodge chances from Master Stalker passives
+        let dodgeChance = 0;
+        if (!isMarked) {
+            if (damageType === 'physical') {
+                dodgeChance = target.physicalDodgeChance || target.dodgePhysical || 0;
+            } else if (damageType === 'magical') {
+                dodgeChance = target.magicalDodgeChance || target.dodgeMagical || 0;
+            } else if (damageType === 'pure') {
+                dodgeChance = target.dodgePure || 0;
+            }
+            
+            if (dodgeChance > 0 && Math.random() < dodgeChance) {
                 this.log(`${target.name} dodges the attack!`);
-                // Show dodge animation
                 this.showDodgeAnimation(target);
                 return 0;
             }
@@ -1574,8 +1669,28 @@ if (target.onDamageTaken && target.isAlive && damage > 0) {
                 this.log(`${target.name}'s Pack Fury activates!`);
             }
             this.applyBuff(target, effect.buffName, effect.duration, effect.buffEffects || {});
+        } else if (effect.type === 'stun_counter' && Math.random() < effect.chance) {
+            // Champion Male passive
+            this.applyDebuff(attacker, 'Stun', effect.duration, { stunned: true });
+            this.log(`${target.name} stuns ${attacker.name} with a counter!`);
         }
     });
+}
+
+// Avenger Female passive - gain action bar when damaged
+if (target.actionBarGainOnDamage && target.isAlive && damage > 0) {
+    const actionBarGain = target.actionBarGainOnDamage * 10000;
+    target.actionBar += actionBarGain;
+    this.log(`${target.name} gains ${Math.floor(actionBarGain / 100)}% action bar!`);
+}
+
+// Avenger Male passive - apply blight when attacked by taunted unit
+if (target.avengerBlightOnTauntedAttack && target.isAlive && damage > 0) {
+    const attackerTaunt = attacker.debuffs.find(d => d.name === 'Taunt' && d.tauntTarget === target);
+    if (attackerTaunt) {
+        this.applyDebuff(attacker, 'Blight', 2, { noHeal: true });
+        this.log(`${attacker.name} is blighted by ${target.name}'s vengeance!`);
+    }
 }
 
         // Check for Frost Armor retaliation
@@ -1603,7 +1718,7 @@ if (target.isAlive && damage > 0 && hasFrostArmor) {
 
         // Check if target died
         if (previousHp > 0 && target.currentHp <= 0) {
-            this.handleUnitDeath(target);
+            this.handleUnitDeath(target, attacker);
         }
         
         return damage;
@@ -1731,7 +1846,7 @@ showDodgeAnimation(target) {
 
 
 
-    handleUnitDeath(unit) {
+    handleUnitDeath(unit, killer = null) {
     unit.isDead = true;
     
     // Hide active circle on death
@@ -1743,6 +1858,42 @@ showDodgeAnimation(target) {
             const activeCircle = animContainer.querySelector('.unitActiveCircle');
             if (activeCircle) {
                 activeCircle.style.display = 'none';
+            }
+        }
+    }
+    
+    // Check for kill effects from killer
+    if (killer && killer.isAlive) {
+        // Sniper Female passive - speed buff on kill
+        if (killer.onKillEffects) {
+            killer.onKillEffects.forEach(effect => {
+                if (effect.type === 'buff') {
+                    this.applyBuff(killer, effect.buffName, effect.duration, {});
+                    this.log(`${killer.name} gains ${effect.buffName} from the kill!`);
+                }
+            });
+        }
+        
+        // Phantom Assassin Male passive - refill action bar on assassinate kill
+        if (killer.phantomAssassinMalePassive && killer.actionBarRefillOnKill) {
+            // Check if the last ability used was Assassinate
+            const lastAbility = killer.abilities.find(a => a.id === 'assassinate');
+            if (lastAbility && killer.cooldowns[killer.abilities.indexOf(lastAbility)] === lastAbility.cooldown) {
+                killer.actionBar = Math.floor(10000 * killer.actionBarRefillOnKill);
+                this.log(`${killer.name}'s action bar refills to 75%!`);
+            }
+        }
+        
+        // Dark Arch Templar Male passive - spread debuffs on kill
+        if (killer.darkArchTemplarMalePassive && unit.debuffs.length > 0) {
+            const enemies = killer.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
+            if (enemies.length > 0) {
+                const debuffsToSpread = [...unit.debuffs];
+                debuffsToSpread.forEach(debuff => {
+                    const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+                    this.applyDebuff(randomEnemy, debuff.name, debuff.duration, { ...debuff });
+                });
+                this.log(`${unit.name}'s debuffs spread to the enemy team!`);
             }
         }
     }
@@ -1826,7 +1977,38 @@ showDodgeAnimation(target) {
         
         heal = Math.floor(heal);
         const actualHeal = Math.min(heal, target.maxHp - target.currentHp);
+        const overheal = heal - actualHeal;
+        
         target.currentHp += actualHeal;
+        
+        // Handle overhealing for Prophet/Prophetess passives
+        if (overheal > 0) {
+            // Check if healer has Prophet/Prophetess passive
+            const healer = this.currentUnit;
+            if (healer) {
+                // Prophet Male - create shield from overheal
+                if (healer.prophetMalePassive && target.isAlive) {
+                    const maxShield = Math.floor(target.maxHp * 0.25);
+                    const shieldAmount = Math.min(overheal, maxShield);
+                    
+                    const existingShield = target.buffs.find(b => b.name === 'Shield');
+                    if (existingShield) {
+                        const newTotal = Math.min(existingShield.shieldAmount + shieldAmount, maxShield);
+                        existingShield.shieldAmount = newTotal;
+                        this.log(`${target.name}'s shield increased by overhealing!`);
+                    } else {
+                        this.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
+                        this.log(`${target.name} gains shield from overhealing!`);
+                    }
+                }
+                
+                // Prophetess Female - apply immune on overheal
+                if (healer.prophetessFemalePassive && target.isAlive) {
+                    this.applyBuff(target, 'Immune', 1, { immunity: true });
+                    this.log(`${target.name} gains immunity from overhealing!`);
+                }
+            }
+        }
         
         this.log(`${target.name} is healed for ${actualHeal} HP!`);
         
@@ -1905,6 +2087,23 @@ showDodgeAnimation(target) {
             target.buffs.push(buff);
             this.log(`${target.name} gains ${buffName}!`);
         }
+        
+        // Hierophant Male passive - 20% shield when buffed
+        if (buffName !== 'Shield') { // Prevent infinite loop
+            // Find all Hierophant Male units
+            const allies = this.getParty(target);
+            allies.forEach(ally => {
+                if (ally.isAlive && ally.hierophantMalePassive && ally === this.currentUnit) {
+                    const shieldAmount = Math.floor(target.maxHp * 0.2);
+                    const existingShield = target.buffs.find(b => b.name === 'Shield');
+                    
+                    if (!existingShield) {
+                        this.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
+                        this.log(`${target.name} gains divine protection shield!`);
+                    }
+                }
+            });
+        }
     }
     
     applyDebuff(target, debuffName, duration, effects) {
@@ -1961,6 +2160,16 @@ showDodgeAnimation(target) {
                 this.updateStunVisuals(target);
             }
         }
+        
+        // Arch Sage passives - gain buff when receiving debuff
+        if (target.archSageMalePassive || target.archSageFemalePassive) {
+            if (target.archSageMalePassive) {
+                this.applyBuff(target, 'Increase Attack', adjustedDuration, { damageMultiplier: 1.5 });
+            }
+            if (target.archSageFemalePassive) {
+                this.applyBuff(target, 'Increase Speed', adjustedDuration, {});
+            }
+        }
     }
     
     applyShield(target, amount) {
@@ -1983,6 +2192,16 @@ showDodgeAnimation(target) {
         // Update stun visuals if needed
         if (wasStunned) {
             this.updateStunVisuals(target);
+        }
+        
+        // White Wizard/Witch passives
+        if (this.currentUnit) {
+            if (this.currentUnit.whiteWizardMalePassive && target.isAlive) {
+                this.applyBuff(target, 'Increase Attack', 1, { damageMultiplier: 1.5 });
+            }
+            if (this.currentUnit.whiteWitchFemalePassive && target.isAlive) {
+                this.applyBuff(target, 'Increase Speed', 1, {});
+            }
         }
     }
     
