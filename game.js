@@ -1187,17 +1187,130 @@ showCurrentItemInRefinement() {
     const item = this.refinementContext.item;
     const display = document.getElementById('currentItemDisplay');
     
-    // Use the item's tooltip HTML but modify for left-aligned display
-    let tooltipHTML = item.getTooltip(false);
+    // Build custom HTML with quality percentages
+    let html = `
+        <div class="itemName">${item.name}${item.refined ? '<span style="float: right; font-size: 16px;">*</span>' : ''}</div>
+        <div class="itemLevelText">Level ${item.level}</div>
+        <div class="itemQualityText">Quality: ${item.getQualityPercent()}%</div>
+    `;
     
-    // Remove the outer wrapper div and apply styling directly
-    tooltipHTML = tooltipHTML.replace(/<div class="itemTooltip[^"]*">/, '');
-    tooltipHTML = tooltipHTML.replace(/<\/div>$/, '');
+    // Add stars if any
+    const starData = item.getStars();
+    if (starData.html) {
+        html += `<div class="itemStarsInline ${item.getRarity()}">${starData.html}</div>`;
+    }
     
-    display.innerHTML = tooltipHTML;
+    html += `<div class="itemDivider"></div>`;
+    html += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" alt="${item.name}" onerror="this.style.display='none'"></div>`;
+    
+    // Add stats with quality percentages
+    if (item.quality1 > 0) {
+        const value = Math.floor(item.value1 * (item.quality1 / 5));
+        const qualityPercent = Math.round((item.quality1 / 5) * 100);
+        html += this.getRefinementStatLine(item.roll1, value, qualityPercent, item.getRarity());
+    }
+    if (item.quality2 > 0) {
+        const value = Math.floor(item.value2 * (item.quality2 / 5));
+        const qualityPercent = Math.round((item.quality2 / 5) * 100);
+        html += this.getRefinementStatLine(item.roll2, value, qualityPercent, item.getRarity());
+    }
+    if (item.quality3 > 0) {
+        const value = Math.floor(item.value3 * (item.quality3 / 5));
+        const qualityPercent = Math.round((item.quality3 / 5) * 100);
+        html += this.getRefinementStatLine(item.roll3, value, qualityPercent, item.getRarity());
+    }
+    if (item.quality4 > 0) {
+        const value = Math.floor(item.value4 * (item.quality4 / 5));
+        const qualityPercent = Math.round((item.quality4 / 5) * 100);
+        html += this.getRefinementStatLine(item.roll4, value, qualityPercent, item.getRarity());
+    }
+    if (item.quality5 > 0) {
+        html += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between;">
+            <span>+5 All Stats</span>
+            <span style="color: #ffd700;">100%</span>
+        </div>`;
+    }
+    
+    html += `<div class="itemSellValue">Sell Value: <span class="goldText">${item.sellcost}g</span></div>`;
+    
+    display.innerHTML = html;
     display.className = `refinementItemDisplay ${item.getRarity()}`;
 }
 
+	getRefinementStatLine(rollType, value, qualityPercent, rarity = 'green', isBold = false) {
+    let statText = '';
+    let statName = '';
+    
+    // Determine base text and name
+    switch(rollType) {
+        case 'str':
+            statText = `+${value}`;
+            statName = 'STR';
+            break;
+        case 'agi':
+            statText = `+${value}`;
+            statName = 'AGI';
+            break;
+        case 'int':
+            statText = `+${value}`;
+            statName = 'INT';
+            break;
+        case 'allstats':
+            statText = `+${value}`;
+            statName = 'All Stats';
+            break;
+        case 'hp':
+            statText = `+${value}`;
+            statName = 'HP';
+            break;
+        case 'armor':
+            statText = `+${value}`;
+            statName = 'Armor';
+            break;
+        case 'resist':
+            statText = `+${value}`;
+            statName = 'Resist';
+            break;
+        case 'hpRegen':
+            statText = `+${(value * 0.1).toFixed(1)}`;
+            statName = 'HP Regen';
+            break;
+        case 'attack':
+            statText = `+${value}`;
+            statName = 'Attack';
+            break;
+        case 'attackSpeed':
+            statText = `+${value}%`;
+            statName = 'Attack Speed';
+            break;
+        default:
+            return '';
+    }
+    
+    const boldStyle = isBold ? 'font-weight: bold;' : '';
+    
+    return `<div class="itemStat ${rarity}" style="display: flex; justify-content: space-between; ${boldStyle}">
+        <span>${statText} ${statName}</span>
+        <span style="color: #6a9aaa;">${qualityPercent}%</span>
+    </div>`;
+}	
+
+getStatDisplayName(rollType) {
+    const names = {
+        'str': 'STR',
+        'agi': 'AGI',
+        'int': 'INT',
+        'allstats': 'All Stats',
+        'hp': 'HP',
+        'armor': 'Armor',
+        'resist': 'Resist',
+        'hpRegen': 'HP Regen',
+        'attack': 'Attack',
+        'attackSpeed': 'Attack Speed'
+    };
+    return names[rollType] || rollType.toUpperCase();
+}
+		
 showRefinementPreview() {
     const context = this.refinementContext;
     const item = context.item;
@@ -1220,29 +1333,33 @@ showRefinementPreview() {
                           item.quality3 === 5 && 
                           item.quality4 === 5;
     
+    let boldRoll = null;
+    
     if (isPerfect4Roll) {
         // Will add divine roll
         previewItem.roll5 = 'allstats';
         previewItem.quality5 = 5;
         explanation = 'Divine enhancement unlocked! +5 All Stats';
         context.refinementType = 'divine';
+        boldRoll = 5;
     } else if (rollCount < 4) {
         // Will add new roll
         if (item.quality2 === 0) {
-            previewItem.quality2 = 3; // Preview with average roll
+            // Don't set a preview quality, we'll show range
             explanation = `New stat roll will be added: ${previewItem.roll2.toUpperCase()}`;
             context.refinementType = 'newroll';
             context.newRollSlot = 2;
+            boldRoll = 2;
         } else if (item.quality3 === 0) {
-            previewItem.quality3 = 3;
             explanation = `New stat roll will be added: ${previewItem.roll3.toUpperCase()}`;
             context.refinementType = 'newroll';
             context.newRollSlot = 3;
+            boldRoll = 3;
         } else if (item.quality4 === 0) {
-            previewItem.quality4 = 3;
             explanation = `New stat roll will be added: ${previewItem.roll4.toUpperCase()}`;
             context.refinementType = 'newroll';
             context.newRollSlot = 4;
+            boldRoll = 4;
         }
     } else {
         // Will upgrade lowest roll
@@ -1271,29 +1388,95 @@ showRefinementPreview() {
             lowestStat = item.roll4;
         }
         
+        // Calculate stat values for explanation
+        const oldValue = Math.floor(item[`value${lowestRoll}`] * (lowestValue / 5));
+        const newValue = item[`value${lowestRoll}`];
+        
+        // Format the stat display
+        let statDisplay = oldValue.toString();
+        if (lowestStat === 'hpRegen') {
+            statDisplay = `${(oldValue * 0.1).toFixed(1)} → ${(newValue * 0.1).toFixed(1)}`;
+        } else if (lowestStat === 'attackSpeed') {
+            statDisplay = `${oldValue}% → ${newValue}%`;
+        } else {
+            statDisplay = `${oldValue} → ${newValue}`;
+        }
+        
+        explanation = `Lowest quality roll upgraded to perfect! ${lowestStat.toUpperCase()} ${statDisplay}`;
+        
         // Set preview
         if (lowestRoll === 1) previewItem.quality1 = 5;
         else if (lowestRoll === 2) previewItem.quality2 = 5;
         else if (lowestRoll === 3) previewItem.quality3 = 5;
         else if (lowestRoll === 4) previewItem.quality4 = 5;
         
-        explanation = `Lowest quality roll upgraded to perfect! ${lowestStat.toUpperCase()} ${lowestValue}/5 → 5/5`;
         context.refinementType = 'upgrade';
         context.upgradedRoll = lowestRoll;
         context.upgradedStat = lowestStat;
+        boldRoll = lowestRoll;
     }
     
-    // Show preview
+    // Build preview HTML with quality percentages
     const display = document.getElementById('previewItemDisplay');
-    let tooltipHTML = previewItem.getTooltip(false);
-    tooltipHTML = tooltipHTML.replace(/<div class="itemTooltip[^"]*">/, '');
-    tooltipHTML = tooltipHTML.replace(/<\/div>$/, '');
+    let html = `
+        <div class="itemName">${previewItem.name}${previewItem.refined ? '<span style="float: right; font-size: 16px;">*</span>' : ''}</div>
+        <div class="itemLevelText">Level ${previewItem.level}</div>
+        <div class="itemQualityText">Quality: ${previewItem.getQualityPercent()}%</div>
+    `;
     
-    display.innerHTML = tooltipHTML;
+    // Add stars if any
+    const starData = previewItem.getStars();
+    if (starData.html) {
+        html += `<div class="itemStarsInline ${previewItem.getRarity()}">${starData.html}</div>`;
+    }
+    
+    html += `<div class="itemDivider"></div>`;
+    html += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${previewItem.id}.png" alt="${previewItem.name}" onerror="this.style.display='none'"></div>`;
+    
+    // Add stats with appropriate formatting
+    for (let i = 1; i <= 5; i++) {
+        const quality = previewItem[`quality${i}`];
+        const roll = previewItem[`roll${i}`];
+        const value = previewItem[`value${i}`];
+        
+        if (i === 5 && boldRoll === 5) {
+            // Divine roll
+            html += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between; font-weight: bold;">
+                <span>+5 All Stats</span>
+                <span style="color: #ffd700;">100%</span>
+            </div>`;
+        } else if (boldRoll === i && context.refinementType === 'newroll') {
+            // New roll - show range
+            const minValue = Math.floor(value * 0.2);
+            const maxValue = value;
+            let rangeText = `(${minValue}-${maxValue})`;
+            
+            if (roll === 'hpRegen') {
+                rangeText = `(${(minValue * 0.1).toFixed(1)}-${(maxValue * 0.1).toFixed(1)})`;
+            } else if (roll === 'attackSpeed') {
+                rangeText = `(${minValue}%-${maxValue}%)`;
+            }
+            
+            const statName = this.getStatDisplayName(roll);
+            html += `<div class="itemStat ${previewItem.getRarity()}" style="display: flex; justify-content: space-between; font-weight: bold;">
+                <span>${rangeText} ${statName}</span>
+                <span style="color: #6a9aaa;">20-100%</span>
+            </div>`;
+        } else if (quality > 0) {
+            // Existing roll
+            const actualValue = Math.floor(value * (quality / 5));
+            const qualityPercent = boldRoll === i ? 100 : Math.round((quality / 5) * 100);
+            html += this.getRefinementStatLine(roll, actualValue, qualityPercent, previewItem.getRarity(), boldRoll === i);
+        }
+    }
+    
+    html += `<div class="itemSellValue">Sell Value: <span class="goldText">${previewItem.sellcost}g</span></div>`;
+    
+    display.innerHTML = html;
     display.className = `refinementItemDisplay ${previewItem.getRarity()}`;
     
     // Show explanation
-    document.getElementById('refinementExplanation').textContent = explanation;
+    document.getElementById('refinementExplanation').innerHTML = explanation;
 }
 
 confirmRefinement() {
