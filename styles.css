@@ -4467,6 +4467,19 @@ body {
     z-index: 10003 !important;
 }
 
+/* Refinement Overlay */
+.refinementOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 10001;
+}
 
 /* Damage type colors */
 .damageNumber.physical { color: #ff4444; }
