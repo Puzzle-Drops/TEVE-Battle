@@ -234,7 +234,7 @@ spells.forEach((spell, index) => {
     return this.level >= (promoteLevels[this.classTier] || 999);
 }
 
-            getPromotionOptions() {
+getPromotionOptions() {
     const classInfo = this.classData;
     
     // Special case for Awakening at Class 4
@@ -244,7 +244,7 @@ spells.forEach((spell, index) => {
     
     return classInfo.promotesTo || [];
 }
-
+		
             promote(newClass) {
                 // Special case for Awakening
                 if (newClass === 'Awaken' && this.classTier === 4 && this.level >= 400) {
