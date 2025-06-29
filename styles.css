@@ -4090,6 +4090,45 @@ body {
     justify-content: flex-start;
 }
 
+/* Gear Stats Preview */
+.gearStatsPreview {
+    margin-top: 20px;
+    background: rgba(10, 25, 41, 0.8);
+    border: 1px solid #2a6a8a;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.gearStatsPreview h4 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #4dd0e1;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
+}
+
+.gearStatsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 15px;
+}
+
+.gearStatLine {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 2px 0;
+}
+
+.gearStatLabel {
+    color: #6a9aaa;
+    font-weight: bold;
+}
+
+.gearStatValue {
+    color: #b0e0f0;
+}
+
 /* Damage Number Animation */
 .damageNumber {
     position: absolute;
