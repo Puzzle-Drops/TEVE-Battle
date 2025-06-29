@@ -2439,8 +2439,8 @@ body {
 .spellText {
     position: absolute;
     top: 40%;
-    left: 0;
-    right: 0;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
     font-size: 36px;
     font-weight: bold;
@@ -2453,6 +2453,7 @@ body {
     -webkit-text-stroke: 2px rgba(0, 0, 0, 0.7);
     text-stroke: 2px rgba(0, 0, 0, 0.7);
 }
+
 
 /* Enhanced spell text colors with multi-layer glows */
 .spellText.damage-physical {
@@ -4401,6 +4402,8 @@ body {
     animation: floatUp 1.5s ease-out forwards;
     pointer-events: none;
     z-index: 10003;
+    transform: translateX(-50%);
+    white-space: nowrap;
 }
 
 @keyframes floatUp {
