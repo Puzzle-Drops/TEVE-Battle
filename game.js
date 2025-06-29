@@ -1335,6 +1335,9 @@ showRefinementPreview() {
     
     let boldRoll = null;
     
+    // Determine the preview rarity FIRST
+    let previewRarity = item.getRarity();
+    
     if (isPerfect4Roll) {
         // Will add divine roll
         previewItem.roll5 = 'allstats';
@@ -1342,24 +1345,27 @@ showRefinementPreview() {
         explanation = 'Divine enhancement unlocked! +5 All Stats';
         context.refinementType = 'divine';
         boldRoll = 5;
+        previewRarity = 'gold';
     } else if (rollCount < 4) {
         // Will add new roll
         if (item.quality2 === 0) {
-            // Don't set a preview quality, we'll show range
             explanation = `New stat roll will be added: ${previewItem.roll2.toUpperCase()}`;
             context.refinementType = 'newroll';
             context.newRollSlot = 2;
             boldRoll = 2;
+            previewRarity = 'blue';
         } else if (item.quality3 === 0) {
             explanation = `New stat roll will be added: ${previewItem.roll3.toUpperCase()}`;
             context.refinementType = 'newroll';
             context.newRollSlot = 3;
             boldRoll = 3;
+            previewRarity = 'purple';
         } else if (item.quality4 === 0) {
             explanation = `New stat roll will be added: ${previewItem.roll4.toUpperCase()}`;
             context.refinementType = 'newroll';
             context.newRollSlot = 4;
             boldRoll = 4;
+            previewRarity = 'red';
         }
     } else {
         // Will upgrade lowest roll
@@ -1389,22 +1395,22 @@ showRefinementPreview() {
         }
         
         // Calculate stat values for explanation
-const oldValue = Math.floor(item[`value${lowestRoll}`] * (lowestValue / 5));
-const newValue = item[`value${lowestRoll}`];
-
-// Format the stat display
-let statDisplay = '';
-const statName = this.getStatDisplayName(lowestStat);
-
-if (lowestStat === 'hpRegen') {
-    statDisplay = `+${(oldValue * 0.1).toFixed(1)} → +${(newValue * 0.1).toFixed(1)} ${statName}`;
-} else if (lowestStat === 'attackSpeed') {
-    statDisplay = `+${oldValue}% → +${newValue}% ${statName}`;
-} else {
-    statDisplay = `+${oldValue} → +${newValue} ${statName}`;
-}
-
-explanation = `Lowest quality roll upgraded to perfect! ${statDisplay}`;
+        const oldValue = Math.floor(item[`value${lowestRoll}`] * (lowestValue / 5));
+        const newValue = item[`value${lowestRoll}`];
+        
+        // Format the stat display
+        let statDisplay = '';
+        const statName = this.getStatDisplayName(lowestStat);
+        
+        if (lowestStat === 'hpRegen') {
+            statDisplay = `+${(oldValue * 0.1).toFixed(1)} → +${(newValue * 0.1).toFixed(1)} ${statName}`;
+        } else if (lowestStat === 'attackSpeed') {
+            statDisplay = `+${oldValue}% → +${newValue}% ${statName}`;
+        } else {
+            statDisplay = `+${oldValue} → +${newValue} ${statName}`;
+        }
+        
+        explanation = `Lowest quality roll upgraded to perfect! ${statDisplay}`;
         
         // Set preview
         if (lowestRoll === 1) previewItem.quality1 = 5;
@@ -1416,6 +1422,19 @@ explanation = `Lowest quality roll upgraded to perfect! ${statDisplay}`;
         context.upgradedRoll = lowestRoll;
         context.upgradedStat = lowestStat;
         boldRoll = lowestRoll;
+        
+        // Check if this upgrade will result in all perfect rolls
+        let willBeAllPerfect = true;
+        for (let i = 1; i <= 4; i++) {
+            const quality = i === lowestRoll ? 5 : item[`quality${i}`];
+            if (quality > 0 && quality < 5) {
+                willBeAllPerfect = false;
+                break;
+            }
+        }
+        if (willBeAllPerfect && rollCount === 4) {
+            previewRarity = 'red';
+        }
     }
     
     // Build preview HTML with quality percentages
@@ -1429,7 +1448,7 @@ explanation = `Lowest quality roll upgraded to perfect! ${statDisplay}`;
     // Add stars if any
     const starData = previewItem.getStars();
     if (starData.html) {
-        html += `<div class="itemStarsInline ${previewItem.getRarity()}">${starData.html}</div>`;
+        html += `<div class="itemStarsInline ${previewRarity}">${starData.html}</div>`;
     }
     
     html += `<div class="itemDivider"></div>`;
@@ -1460,51 +1479,22 @@ explanation = `Lowest quality roll upgraded to perfect! ${statDisplay}`;
             }
             
             const statName = this.getStatDisplayName(roll);
-html += `<div class="itemStat ${previewRarity}" style="display: flex; justify-content: space-between; font-weight: bold;">
-    <span>+${rangeText} ${statName}</span>
-    <span style="color: #6a9aaa;">20-100%</span>
-</div>`;
+            html += `<div class="itemStat ${previewRarity}" style="display: flex; justify-content: space-between; font-weight: bold;">
+                <span>+${rangeText} ${statName}</span>
+                <span style="color: #6a9aaa;">20-100%</span>
+            </div>`;
         } else if (quality > 0) {
             // Existing roll
             const actualValue = Math.floor(value * (quality / 5));
             const qualityPercent = boldRoll === i ? 100 : Math.round((quality / 5) * 100);
-            html += this.getRefinementStatLine(roll, actualValue, qualityPercent, previewItem.getRarity(), boldRoll === i);
+            html += this.getRefinementStatLine(roll, actualValue, qualityPercent, previewRarity, boldRoll === i);
         }
     }
     
     html += `<div class="itemSellValue">Sell Value: <span class="goldText">${previewItem.sellcost}g</span></div>`;
     
     display.innerHTML = html;
-
-// Determine the preview rarity based on what will happen
-let previewRarity = item.getRarity();
-if (context.refinementType === 'divine') {
-    previewRarity = 'gold';
-} else if (context.refinementType === 'newroll') {
-    // Determine new rarity based on number of rolls
-    if (boldRoll === 2) previewRarity = 'blue';
-    else if (boldRoll === 3) previewRarity = 'purple';
-    else if (boldRoll === 4) previewRarity = 'red';
-} else if (context.refinementType === 'upgrade') {
-    // Check if all rolls will be perfect after upgrade
-    let willBeAllPerfect = true;
-    for (let i = 1; i <= 4; i++) {
-        const quality = i === boldRoll ? 5 : item[`quality${i}`];
-        if (quality > 0 && quality < 5) {
-            willBeAllPerfect = false;
-            break;
-        }
-    }
-    if (willBeAllPerfect && rollCount === 4) {
-        previewRarity = 'red';
-    }
-}
-
-display.className = `refinementItemDisplay ${previewRarity}`;
-
-// Update all rarity-dependent elements in the preview to use previewRarity
-html = html.replace(new RegExp(item.getRarity(), 'g'), previewRarity);
-display.innerHTML = html;
+    display.className = `refinementItemDisplay ${previewRarity}`;
     
     // Show explanation
     document.getElementById('refinementExplanation').innerHTML = explanation;
@@ -1523,6 +1513,9 @@ confirmRefinement() {
         return;
     }
     
+    // Immediately hide buttons to prevent spam
+    document.getElementById('refinementButtons').style.display = 'none';
+    
     // Deduct gold
     stash.gold -= context.cost;
     
@@ -1538,6 +1531,14 @@ confirmRefinement() {
     setTimeout(() => {
         this.performRefinementAnimation();
     }, 800);
+}
+
+cancelRefinement() {
+    // Hide buttons immediately
+    document.getElementById('refinementButtons').style.display = 'none';
+    
+    // Close the popup
+    this.closeRefinementPopup();
 }
 
 performRefinementAnimation() {
