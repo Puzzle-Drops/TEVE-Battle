@@ -4235,6 +4235,7 @@ body {
     flex: 0 0 280px;
     text-align: center;
     position: relative;
+    margin-bottom: 40px;
     transition: transform 0.8s ease-out;
 }
 
