@@ -1389,20 +1389,22 @@ showRefinementPreview() {
         }
         
         // Calculate stat values for explanation
-        const oldValue = Math.floor(item[`value${lowestRoll}`] * (lowestValue / 5));
-        const newValue = item[`value${lowestRoll}`];
-        
-        // Format the stat display
-        let statDisplay = oldValue.toString();
-        if (lowestStat === 'hpRegen') {
-            statDisplay = `${(oldValue * 0.1).toFixed(1)} → ${(newValue * 0.1).toFixed(1)}`;
-        } else if (lowestStat === 'attackSpeed') {
-            statDisplay = `${oldValue}% → ${newValue}%`;
-        } else {
-            statDisplay = `${oldValue} → ${newValue}`;
-        }
-        
-        explanation = `Lowest quality roll upgraded to perfect! ${lowestStat.toUpperCase()} ${statDisplay}`;
+const oldValue = Math.floor(item[`value${lowestRoll}`] * (lowestValue / 5));
+const newValue = item[`value${lowestRoll}`];
+
+// Format the stat display
+let statDisplay = '';
+const statName = this.getStatDisplayName(lowestStat);
+
+if (lowestStat === 'hpRegen') {
+    statDisplay = `+${(oldValue * 0.1).toFixed(1)} → +${(newValue * 0.1).toFixed(1)} ${statName}`;
+} else if (lowestStat === 'attackSpeed') {
+    statDisplay = `+${oldValue}% → +${newValue}% ${statName}`;
+} else {
+    statDisplay = `+${oldValue} → +${newValue} ${statName}`;
+}
+
+explanation = `Lowest quality roll upgraded to perfect! ${statDisplay}`;
         
         // Set preview
         if (lowestRoll === 1) previewItem.quality1 = 5;
@@ -1458,10 +1460,10 @@ showRefinementPreview() {
             }
             
             const statName = this.getStatDisplayName(roll);
-            html += `<div class="itemStat ${previewItem.getRarity()}" style="display: flex; justify-content: space-between; font-weight: bold;">
-                <span>${rangeText} ${statName}</span>
-                <span style="color: #6a9aaa;">20-100%</span>
-            </div>`;
+html += `<div class="itemStat ${previewRarity}" style="display: flex; justify-content: space-between; font-weight: bold;">
+    <span>+${rangeText} ${statName}</span>
+    <span style="color: #6a9aaa;">20-100%</span>
+</div>`;
         } else if (quality > 0) {
             // Existing roll
             const actualValue = Math.floor(value * (quality / 5));
@@ -1473,7 +1475,36 @@ showRefinementPreview() {
     html += `<div class="itemSellValue">Sell Value: <span class="goldText">${previewItem.sellcost}g</span></div>`;
     
     display.innerHTML = html;
-    display.className = `refinementItemDisplay ${previewItem.getRarity()}`;
+
+// Determine the preview rarity based on what will happen
+let previewRarity = item.getRarity();
+if (context.refinementType === 'divine') {
+    previewRarity = 'gold';
+} else if (context.refinementType === 'newroll') {
+    // Determine new rarity based on number of rolls
+    if (boldRoll === 2) previewRarity = 'blue';
+    else if (boldRoll === 3) previewRarity = 'purple';
+    else if (boldRoll === 4) previewRarity = 'red';
+} else if (context.refinementType === 'upgrade') {
+    // Check if all rolls will be perfect after upgrade
+    let willBeAllPerfect = true;
+    for (let i = 1; i <= 4; i++) {
+        const quality = i === boldRoll ? 5 : item[`quality${i}`];
+        if (quality > 0 && quality < 5) {
+            willBeAllPerfect = false;
+            break;
+        }
+    }
+    if (willBeAllPerfect && rollCount === 4) {
+        previewRarity = 'red';
+    }
+}
+
+display.className = `refinementItemDisplay ${previewRarity}`;
+
+// Update all rarity-dependent elements in the preview to use previewRarity
+html = html.replace(new RegExp(item.getRarity(), 'g'), previewRarity);
+display.innerHTML = html;
     
     // Show explanation
     document.getElementById('refinementExplanation').innerHTML = explanation;
@@ -1522,19 +1553,21 @@ performRefinementAnimation() {
         rollText = '+5 All Stats!';
     } else if (context.refinementType === 'newroll') {
         const rollSlot = context.newRollSlot;
-        const statName = item[`roll${rollSlot}`].toUpperCase();
+        const statName = this.getStatDisplayName(item[`roll${rollSlot}`]);
         
         // Actually perform the roll
         item[`quality${rollSlot}`] = Math.floor(Math.random() * 5) + 1;
         const quality = item[`quality${rollSlot}`];
+        const qualityPercent = Math.round((quality / 5) * 100);
         
         if (quality === 5) {
-            rollText = `Perfect ${statName}!`;
+            rollText = `Perfect ${statName}! 100%`;
         } else {
-            rollText = `${statName} ${quality}/5`;
+            rollText = `${statName} ${qualityPercent}%`;
         }
     } else if (context.refinementType === 'upgrade') {
-        rollText = `Perfect ${context.upgradedStat.toUpperCase()}!`;
+        const statName = this.getStatDisplayName(context.upgradedStat);
+        rollText = `Perfect ${statName}! 100%`;
         // Upgrade the roll
         const rollSlot = context.upgradedRoll;
         item[`quality${rollSlot}`] = 5;
@@ -1561,13 +1594,48 @@ performRefinementAnimation() {
         document.getElementById('refinementResult').style.display = 'block';
         document.getElementById('refinementResultLabel').textContent = 'Refined Item';
         
-        // Update item display with new stats
+        // Build refined item display with bolded changed roll
         const display = document.getElementById('refinedItemDisplay');
-        let tooltipHTML = item.getTooltip(false);
-        tooltipHTML = tooltipHTML.replace(/<div class="itemTooltip[^"]*">/, '');
-        tooltipHTML = tooltipHTML.replace(/<\/div>$/, '');
+        let html = `
+            <div class="itemName">${item.name}${item.refined ? '<span style="float: right; font-size: 16px;">*</span>' : ''}</div>
+            <div class="itemLevelText">Level ${item.level}</div>
+            <div class="itemQualityText">Quality: ${item.getQualityPercent()}%</div>
+        `;
         
-        display.innerHTML = tooltipHTML;
+        // Add stars if any
+        const starData = item.getStars();
+        if (starData.html) {
+            html += `<div class="itemStarsInline ${item.getRarity()}">${starData.html}</div>`;
+        }
+        
+        html += `<div class="itemDivider"></div>`;
+        html += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" alt="${item.name}" onerror="this.style.display='none'"></div>`;
+        
+        // Add stats with quality percentages, bolding the changed one
+        const boldRoll = context.refinementType === 'divine' ? 5 : 
+                        context.refinementType === 'newroll' ? context.newRollSlot : 
+                        context.upgradedRoll;
+        
+        for (let i = 1; i <= 5; i++) {
+            const quality = item[`quality${i}`];
+            if (quality > 0) {
+                const value = Math.floor(item[`value${i}`] * (quality / 5));
+                const qualityPercent = Math.round((quality / 5) * 100);
+                
+                if (i === 5) {
+                    html += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between; ${boldRoll === 5 ? 'font-weight: bold;' : ''}">
+                        <span>+5 All Stats</span>
+                        <span style="color: #ffd700;">100%</span>
+                    </div>`;
+                } else {
+                    html += this.getRefinementStatLine(item[`roll${i}`], value, qualityPercent, item.getRarity(), boldRoll === i);
+                }
+            }
+        }
+        
+        html += `<div class="itemSellValue">Sell Value: <span class="goldText">${item.sellcost}g</span></div>`;
+        
+        display.innerHTML = html;
         
         // Animate border color change if rarity changed
         if (oldRarity !== newRarity) {
@@ -1626,7 +1694,8 @@ showRefinedItemInSlot() {
         </div>
     `;
     
-    slot.className = `refinedItemSlot ${rarity} show`;
+    slot.className = `refinedItemSlot show`;
+    slot.classList.add(rarity);
     
     // Add hover and right-click handlers
     slot.onmouseover = (e) => this.showItemTooltip(e, item);
@@ -1764,6 +1833,17 @@ closeRefinementPopup() {
     const popup = document.getElementById('itemRefinementPopup');
     popup.style.display = 'none';
     
+    // Update UI based on current screen
+    if (this.refinementContext) {
+        if (this.currentScreen === 'heroesScreen') {
+            // Refresh gear tab to show updated gold
+            this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+        } else if (this.currentScreen === 'individualStashScreen') {
+            // Refresh stash to show updated gold
+            this.showIndividualStash(this.refinementContext.family);
+        }
+    }
+    
     // Clean up context
     this.refinementContext = null;
     
@@ -1772,6 +1852,15 @@ closeRefinementPopup() {
     if (currentColumn) {
         currentColumn.classList.remove('animating');
     }
+    
+    // Reset popup to initial state for next use
+    document.getElementById('refinementColumns').style.display = 'flex';
+    document.getElementById('refinementResult').style.display = 'none';
+    document.getElementById('refinementButtons').style.display = 'flex';
+    document.getElementById('refinementCloseButton').style.display = 'none';
+    document.getElementById('refinementArrow').style.display = 'block';
+    document.getElementById('previewColumn').style.display = 'block';
+    document.getElementById('refinementResultLabel').textContent = 'Current Item';
 }
 
 
