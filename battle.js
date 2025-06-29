@@ -835,7 +835,7 @@ if (unit.isEnemy) {
         let highestActionBar = 0;
         this.allUnits.forEach(unit => {
             if (unit.isAlive) {
-                let speed = unit.actionBarSpeed * 2; // Double base speed
+                let speed = unit.actionBarSpeed;
                 
                 // Apply speed buffs (hardcoded +33%)
                 unit.buffs.forEach(buff => {
@@ -991,12 +991,11 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
             const buffEffects = effects.filter(e => e.startsWith('buff_'));
             const debuffEffects = effects.filter(e => e.startsWith('debuff_'));
             
-// Determine potential targets
-let targets = [];
-let skipAbility = false;
-let target = null; // Add this line to declare target
-
-switch (spell.target) {
+            // Determine potential targets
+            let targets = [];
+            let skipAbility = false;
+            
+            switch (spell.target) {
                 case 'enemy':
                     targets = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
                     
@@ -1036,15 +1035,6 @@ switch (spell.target) {
         });
         
         if (!anyValidTarget) {
-            skipAbility = true;
-        }
-    }
-    
-    // Additional check for heal-only abilities
-    if (!doesDamage && !buffEffects.length && spell.effects.includes('heal') && targets.length > 0) {
-        // Check if any ally needs healing
-        const anyNeedHealing = targets.some(t => t.currentHp < t.maxHp && !t.debuffs.some(d => d.name === 'Blight'));
-        if (!anyNeedHealing) {
             skipAbility = true;
         }
     }
@@ -1091,25 +1081,6 @@ switch (spell.target) {
         if (!anyValidTarget) {
             skipAbility = true;
         }
-    }
-    break;
-                case 'self':
-    // Skip self buffs if marked or already has all buffs (unless ability also deals damage)
-    if (!doesDamage && buffEffects.length > 0) {
-        const isMarked = unit.debuffs.some(d => d.name === 'Mark');
-        const hasAllBuffs = buffEffects.every(buffEffect => {
-            const buffName = this.getBuffNameFromEffect(buffEffect);
-            // For self-casting, ignore buffs with only 1 duration left since they'll expire
-            return unit.buffs.some(b => b.name === buffName && b.duration > 1);
-        });
-        
-        if (isMarked || hasAllBuffs) {
-            skipAbility = true;
-        } else {
-            target = unit;
-        }
-    } else {
-        target = unit;
     }
     break;
             }
@@ -1197,6 +1168,25 @@ switch (spell.target) {
         } else {
             target = targets[0];
         }
+    }
+    break;
+                case 'self':
+    // Skip self buffs if marked or already has all buffs (unless ability also deals damage)
+    if (!doesDamage && buffEffects.length > 0) {
+        const isMarked = unit.debuffs.some(d => d.name === 'Mark');
+        const hasAllBuffs = buffEffects.every(buffEffect => {
+            const buffName = this.getBuffNameFromEffect(buffEffect);
+            // For self-casting, ignore buffs with only 1 duration left since they'll expire
+            return unit.buffs.some(b => b.name === buffName && b.duration > 1);
+        });
+        
+        if (isMarked || hasAllBuffs) {
+            skipAbility = true;
+        } else {
+            target = unit;
+        }
+    } else {
+        target = unit;
     }
     break;
                 case 'all_enemies':
@@ -1411,22 +1401,6 @@ if (effects.includes('physical')) {
                     if (actualRegen > 0) {
                         this.currentUnit.currentHp += actualRegen;
                         this.log(`${this.currentUnit.name} regenerates ${actualRegen} HP.`);
-                    }
-                }
-            }
-
-            // Hierophant Female Passive - buffed allies regenerate 5% HP
-            if (this.currentUnit.isAlive && this.currentUnit.buffs.length > 0) {
-                // Check if any ally has the hierophant female passive
-                const party = this.getParty(this.currentUnit);
-                const hasHierophantFemale = party.some(ally => ally && ally.isAlive && ally.hierophantFemalePassive);
-                
-                if (hasHierophantFemale && !this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
-                    const passiveRegen = Math.floor(this.currentUnit.maxHp * 0.05);
-                    const actualRegen = Math.min(passiveRegen, this.currentUnit.maxHp - this.currentUnit.currentHp);
-                    if (actualRegen > 0) {
-                        this.currentUnit.currentHp += actualRegen;
-                        this.log(`${this.currentUnit.name} regenerates ${actualRegen} HP from blessed regeneration.`);
                     }
                 }
             }
@@ -1852,30 +1826,7 @@ showDodgeAnimation(target) {
         
         heal = Math.floor(heal);
         const actualHeal = Math.min(heal, target.maxHp - target.currentHp);
-        const overheal = heal - actualHeal;
-        
         target.currentHp += actualHeal;
-        
-        // Check for overhealing passives
-        if (overheal > 0) {
-            const party = this.getParty(target);
-            
-            // Prophet Male Passive - overhealing creates shield
-            const prophetMale = party.find(ally => ally && ally.isAlive && ally.prophetMalePassive);
-            if (prophetMale) {
-                const maxShield = Math.floor(target.maxHp * 0.25);
-                const shieldAmount = Math.min(overheal, maxShield);
-                this.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
-                this.log(`Overhealing creates ${shieldAmount} shield on ${target.name}!`);
-            }
-            
-            // Prophetess Female Passive - overhealing applies immune
-            const prophetessFemale = party.find(ally => ally && ally.isAlive && ally.prophetessFemalePassive);
-            if (prophetessFemale) {
-                this.applyBuff(target, 'Immune', 1, { immunity: true });
-                this.log(`Overhealing grants immunity to ${target.name}!`);
-            }
-        }
         
         this.log(`${target.name} is healed for ${actualHeal} HP!`);
         
@@ -1954,34 +1905,6 @@ showDodgeAnimation(target) {
             target.buffs.push(buff);
             this.log(`${target.name} gains ${buffName}!`);
         }
-        
-        // Check for Hierophant Male Passive - 20% shield when ally receives buff
-        this.allUnits.forEach(unit => {
-            if (!unit.isAlive || unit === target) return;
-            
-            if (unit.hierophantMalePassive && this.getParty(unit).includes(target)) {
-                const shieldAmount = Math.floor(target.maxHp * 0.2);
-                this.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
-                this.log(`${unit.name}'s divine protection grants a shield to ${target.name}!`);
-            }
-        });
-    }
-    
-    // Add this new method to handle buff application with passive triggers
-    applyBuffWithPassiveTriggers(target, buffName, duration, effects) {
-        // First apply the buff normally
-        this.applyBuff(target, buffName, duration, effects);
-        
-        // Then check for passive triggers
-        this.allUnits.forEach(unit => {
-            if (!unit.isAlive) return;
-            
-            // Hierophant Male Passive - 20% shield when ally receives buff
-            if (unit.hierophantMalePassive && this.getParty(unit).includes(target)) {
-                const shieldAmount = Math.floor(target.maxHp * 0.2);
-                this.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
-            }
-        });
     }
     
     applyDebuff(target, debuffName, duration, effects) {
