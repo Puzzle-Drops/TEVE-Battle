@@ -196,24 +196,36 @@ const spellLogic = {
     },
 
     sniperMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This passive is handled during damage calculation
-        caster.sniperMalePassive = true;
-    },
+    // Applies extra damage to low HP enemies
+    caster.onDamageCalculation = caster.onDamageCalculation || [];
+    caster.onDamageCalculation.push({
+        type: 'executioner',
+        damageBonus: 1.5,
+        hpThreshold: 0.3
+    });
+},
 
-    sniperFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This passive is handled on kill
-        caster.sniperFemalePassive = true;
-    },
+sniperFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // Grants speed buff on kill
+    caster.onKillEffects = caster.onKillEffects || [];
+    caster.onKillEffects.push({
+        type: 'buff',
+        buffName: 'Increase Speed',
+        duration: 2
+    });
+},
 
-    monsterHunterMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This passive modifies Aimed Shot
-        caster.monsterHunterMalePassive = true;
-    },
+monsterHunterMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // Aimed Shot applies bleed
+    caster.aimedShotAppliesBleed = true;
+    caster.aimedShotBleedDuration = 1;
+},
 
-    monsterHunterFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This passive modifies Aimed Shot
-        caster.monsterHunterFemalePassive = true;
-    },
+monsterHunterFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // Gain action bar per debuff on aimed shot target
+    caster.aimedShotActionBarPerDebuff = 0.05;
+},
+
 
     // Druid Family Spells
     naturesBlessingLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -500,28 +512,33 @@ const spellLogic = {
     },
 
     championMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This passive is handled when taking damage
-        caster.championMalePassive = true;
-        caster.championStunChance = spell.stunChance;
-    },
+    // Add stun counter effect
+    caster.onDamageTaken = caster.onDamageTaken || [];
+    caster.onDamageTaken.push({
+        type: 'stun_counter',
+        chance: 0.2,
+        duration: 1
+    });
+},
 
-    championFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This passive is handled at battle start and periodically
-        caster.championFemalePassive = true;
-        caster.championShieldPercent = spell.shieldPercent;
-        caster.championShieldTimer = 0;
-    },
+championFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // Start with shield and regenerate it
+    const shieldAmount = Math.floor(caster.maxHp * 0.2);
+    battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
+    caster.shieldRegenTimer = 0;
+    caster.shieldRegenTurns = 4;
+    caster.shieldRegenAmount = shieldAmount;
+},
 
-    avengerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This passive is handled when attacked by taunted enemies
-        caster.avengerMalePassive = true;
-    },
+avengerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // When attacked by taunted enemy, apply blight
+    caster.avengerBlightOnTauntedAttack = true;
+},
 
-    avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This passive is handled when taking damage
-        caster.avengerFemalePassive = true;
-        caster.actionBarGainOnDamage = spell.actionBarGain;
-    },
+avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // Already properly implemented in dealDamage
+    caster.actionBarGainOnDamage = 0.15;
+},
 
     // Templar Family Spells
     psiStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
