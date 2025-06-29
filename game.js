@@ -1658,8 +1658,9 @@ performRefinementAnimation() {
 }
 
 showRefinementRollText(text) {
-    const popup = document.getElementById('itemRefinementPopup');
-    const rect = popup.getBoundingClientRect();
+    // Center on the refined item display, not the entire popup
+    const itemDisplay = document.getElementById('refinedItemDisplay');
+    const rect = itemDisplay.getBoundingClientRect();
     
     const floatText = document.createElement('div');
     floatText.className = 'refinementRollText';
