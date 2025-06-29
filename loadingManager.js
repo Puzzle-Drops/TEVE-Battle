@@ -1,0 +1,114 @@
+// Loading manager
+class LoadingManager {
+    constructor() {
+        this.totalAssets = 4; // spells.json, units.json, dungeons.json, items.json
+        this.loadedAssets = 0;
+        this.failedAssets = []; // Track which assets failed
+        this.loadingScreen = document.getElementById('loadingScreen');
+        this.loadingFill = document.querySelector('.loadingFill');
+        this.loadingText = document.querySelector('.loadingText');
+        this.loadingError = document.querySelector('.loadingError');
+        this.gameContainer = document.getElementById('gameContainer');
+    }
+
+    updateProgress(assetName) {
+        this.loadedAssets++;
+        const progress = (this.loadedAssets / this.totalAssets) * 100;
+        this.loadingFill.style.width = progress + '%';
+        this.loadingText.textContent = `Loading ${assetName}... (${this.loadedAssets}/${this.totalAssets})`;
+        
+        if (this.loadedAssets === this.totalAssets) {
+            this.loadingText.textContent = 'Starting game...';
+            setTimeout(() => this.hideLoadingScreen(), 500);
+        }
+    }
+
+    showError(error) {
+        console.error('Loading error:', error);
+        this.loadingText.style.display = 'none';
+        
+        // Build detailed error message
+        let errorMessage = '<p>Failed to load game resources:</p><ul style="text-align: left; margin: 10px 20px;">';
+        this.failedAssets.forEach(asset => {
+            errorMessage += `<li>${asset}</li>`;
+        });
+        errorMessage += '</ul><p>Please refresh the page to try again.</p>';
+        
+        this.loadingError.innerHTML = errorMessage;
+        this.loadingError.style.display = 'block';
+    }
+
+    hideLoadingScreen() {
+        this.loadingScreen.style.display = 'none';
+        this.gameContainer.style.display = 'flex';
+    }
+}
+
+const loadingManager = new LoadingManager();
+
+// Initialize data loading
+async function loadGameData() {
+    const assetLoaders = [
+        {
+            name: 'spells.json',
+            load: async () => {
+                loadingManager.loadingText.textContent = 'Loading spells...';
+                spellManager = new SpellManager();
+                await spellManager.loadSpells();
+                loadingManager.updateProgress('spells');
+            }
+        },
+        {
+            name: 'units.json',
+            load: async () => {
+                loadingManager.loadingText.textContent = 'Loading units...';
+                const unitsResponse = await fetch('units.json');
+                if (!unitsResponse.ok) throw new Error('Failed to load units.json');
+                unitData = await unitsResponse.json();
+                console.log('Unit data loaded');
+                loadingManager.updateProgress('units');
+            }
+        },
+        {
+            name: 'dungeons.json',
+            load: async () => {
+                loadingManager.loadingText.textContent = 'Loading dungeons...';
+                const dungeonsResponse = await fetch('dungeons.json');
+                if (!dungeonsResponse.ok) throw new Error('Failed to load dungeons.json');
+                dungeonData = await dungeonsResponse.json();
+                console.log('Dungeon data loaded');
+                loadingManager.updateProgress('dungeons');
+            }
+        },
+        {
+            name: 'items.json',
+            load: async () => {
+                loadingManager.loadingText.textContent = 'Loading items...';
+                const itemsResponse = await fetch('items.json');
+                if (!itemsResponse.ok) throw new Error('Failed to load items.json');
+                itemData = await itemsResponse.json();
+                console.log('Item data loaded');
+                loadingManager.updateProgress('items');
+            }
+        }
+    ];
+    
+    let hasErrors = false;
+    
+    for (const asset of assetLoaders) {
+        try {
+            await asset.load();
+        } catch (error) {
+            console.error(`Failed to load ${asset.name}:`, error);
+            loadingManager.failedAssets.push(asset.name);
+            hasErrors = true;
+        }
+    }
+    
+    if (hasErrors) {
+        loadingManager.showError(new Error('Some assets failed to load'));
+        return false;
+    }
+    
+    return true;
+}
