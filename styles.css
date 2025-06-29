@@ -4287,6 +4287,32 @@ body {
     padding: 2px;
 }
 
+/* Refined item slot rarity colors */
+.refinedItemSlot.green {
+    border-color: #00ff88;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+.refinedItemSlot.blue {
+    border-color: #00c3ff;
+    box-shadow: 0 0 20px rgba(0, 195, 255, 0.5);
+}
+
+.refinedItemSlot.purple {
+    border-color: #d896ff;
+    box-shadow: 0 0 20px rgba(216, 150, 255, 0.5);
+}
+
+.refinedItemSlot.red {
+    border-color: #ff4444;
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+}
+
+.refinedItemSlot.gold {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
 .refinedItemSlot .itemContainer {
     position: relative;
     width: 100%;
