@@ -4395,13 +4395,13 @@ body {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(25px);
+        transform: translateX(20px);
     }
 }
 
 .refinementColumn.animating {
     animation: none;
-    transform: translateX(25px);
+    transform: translateX(20px);
 }
 
 /* Floating roll text */
