@@ -2723,7 +2723,7 @@ if (!this.autoReplay) {
             <div style="font-size: 32px; color: #4dd0e1; margin-top: 40px;">Level ${hero.level}</div>
         </div>
         <div class="expBar" style="position: relative; height: 40px; border: 1px solid #2a6a8a;">
-            <div class="expFill" style="width: ${hero.level >= 500 ? '100' : Math.max(0, Math.min((hero.exp / hero.expToNext) * 100, 100))}%; height: 100%; background: ${hero.level >= 500 ? 'linear-gradient(90deg, #d896ff 0%, #a855f7 100%)' : 'linear-gradient(90deg, #0066cc 0%, #0099ff 100%)'}; box-shadow: 0 0 10px ${hero.level >= 500 ? 'rgba(216, 150, 255, 0.5)' : 'rgba(0, 153, 255, 0.5)'};"></div>
+    <div class="expFill" style="width: ${hero.level >= 500 ? '100' : Math.max(0, Math.min((hero.exp / hero.expToNext) * 100, 100))}%; height: 100%; background: ${hero.level >= 500 && hero.awakened ? 'linear-gradient(90deg, #d896ff 0%, #a855f7 100%)' : 'linear-gradient(90deg, #0066cc 0%, #0099ff 100%)'}; box-shadow: 0 0 10px ${hero.level >= 500 && hero.awakened ? 'rgba(216, 150, 255, 0.5)' : 'rgba(0, 153, 255, 0.5)'};"></div>
             <div class="expText" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: ${hero.level >= 500 ? '#fff' : '#6a9aaa'};">
                 ${hero.level >= 500 ? 'Max Level' : `${hero.exp} / ${hero.expToNext} (${((hero.exp / hero.expToNext) * 100).toFixed(1)}%)`}
             </div>
@@ -3005,25 +3005,25 @@ hideStatTooltip() {
     const promotions = hero.getPromotionOptions();
     
     // Special case for Awakening
-    if (promotions.includes('Awaken')) {
-        content.innerHTML = `
-            <div class="promoteContent">
-                <div class="classCard">
-                    <h2>Awaken</h2>
-                    <div style="font-size: 24px; font-weight: bold; color: #d896ff; text-shadow: 0 0 12px rgba(216, 150, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">★★★★★★</div>
-                    <button class="promoteButton ${canPromote ? '' : 'disabled'}" 
-                        style="${canPromote ? 'background: linear-gradient(135deg, #d896ff 0%, #a855f7 100%); box-shadow: 0 0 20px rgba(216, 150, 255, 0.5); color: #0a1929;' : ''}" 
-                        onclick="${canPromote ? 'game.showPromotionConfirm(\'Awaken\')' : ''}" 
-                        onmouseover="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #e6b0ff 0%, #d896ff 100%)\'; this.style.boxShadow=\'0 0 30px rgba(230, 176, 255, 0.7)\'' : ''}"
-                        onmouseout="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #d896ff 0%, #a855f7 100%)\'; this.style.boxShadow=\'0 0 20px rgba(216, 150, 255, 0.5)\'' : ''}"
-                        ${canPromote ? '' : 'disabled'}>
-                        ${canPromote ? 'Awaken<br><span style="font-size: 14px;">💰 -10000000</span>' : `Promotion requires:<br><span style="font-size: 14px;">Level 400</span>`}
-                    </button>
-                </div>
+if (promotions.includes('Awaken')) {
+    content.innerHTML = `
+        <div class="promoteContent">
+            <div class="classCard">
+                <h2>Awaken</h2>
+                <div style="font-size: 24px; font-weight: bold; color: #d896ff; text-shadow: 0 0 12px rgba(216, 150, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">★★★★★★</div>
+                <button class="promoteButton ${canPromote ? '' : 'disabled'}" 
+                    style="${canPromote ? 'background: linear-gradient(135deg, #d896ff 0%, #a855f7 100%); box-shadow: 0 0 20px rgba(216, 150, 255, 0.5); color: #0a1929;' : ''}" 
+                    onclick="${canPromote ? 'game.showPromotionConfirm(\'Awaken\')' : ''}" 
+                    onmouseover="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #e6b0ff 0%, #d896ff 100%)\'; this.style.boxShadow=\'0 0 30px rgba(230, 176, 255, 0.7)\'' : ''}"
+                    onmouseout="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #d896ff 0%, #a855f7 100%)\'; this.style.boxShadow=\'0 0 20px rgba(216, 150, 255, 0.5)\'' : ''}"
+                    ${canPromote ? '' : 'disabled'}>
+                    ${canPromote ? 'Awaken<br><span style="font-size: 14px;">💰 -10000000</span>' : `Requires:<br><span style="font-size: 14px;">Level 400</span>`}
+                </button>
             </div>
-        `;
-        return;
-    }
+        </div>
+    `;
+    return;
+}
     
     // Already awakened
     if (hero.awakened) {
@@ -3074,9 +3074,9 @@ hideStatTooltip() {
                                 onclick="${canPromote ? `game.showPromotionConfirm('${promo}')` : ''}"
                                 ${canPromote ? '' : 'disabled'}>
                                 ${canPromote ? 
-                                    `Promote<br><span style="font-size: 14px;">💰 -${cost}</span>` : 
-                                    `Promotion requires:<br><span style="font-size: 14px;">Level ${requiredLevel}</span>`
-                                }
+    `Promote<br><span style="font-size: 14px;">💰 -${cost}</span>` : 
+    `Requires:<br><span style="font-size: 14px;">Level ${requiredLevel}</span>`
+}
                             </button>
                         </div>
                     `;
