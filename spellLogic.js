@@ -127,24 +127,38 @@ const spellLogic = {
 
     // Archer Family Spells
     aimedShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
-        const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
-        const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0];
-        
-        // Break shield first
-        if (target.buffs) {
-            const shieldIndex = target.buffs.findIndex(b => b.name === 'Shield');
-            if (shieldIndex !== -1) {
-                target.buffs.splice(shieldIndex, 1);
-                battle.log(`${target.name}'s shield was broken!`);
-            }
+    const levelIndex = spellLevel - 1;
+    const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+    const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+    const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0];
+    
+    // Break shield first
+    if (target.buffs) {
+        const shieldIndex = target.buffs.findIndex(b => b.name === 'Shield');
+        if (shieldIndex !== -1) {
+            target.buffs.splice(shieldIndex, 1);
+            battle.log(`${target.name}'s shield was broken!`);
         }
-        
-        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.agi * agiScaling);
-        // Deal damage with armor pierce (handled in battle.dealDamage)
-        battle.dealDamage(caster, target, damage, 'physical', { armorPierce: spell.armorPierce });
-    },
+    }
+    
+    const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.agi * agiScaling);
+    // Deal damage with armor pierce (handled in battle.dealDamage)
+    battle.dealDamage(caster, target, damage, 'physical', { armorPierce: spell.armorPierce });
+    
+    // Monster Hunter Male Passive - Apply bleed
+    if (caster.aimedShotAppliesBleed && target.isAlive) {
+        battle.applyDebuff(target, 'Bleed', caster.aimedShotBleedDuration || 1, { bleedDamage: true });
+    }
+    
+    // Monster Hunter Female Passive - Gain action bar per debuff
+    if (caster.aimedShotActionBarPerDebuff && target.debuffs) {
+        const actionBarGain = target.debuffs.length * caster.aimedShotActionBarPerDebuff * 10000;
+        caster.actionBar += actionBarGain;
+        if (actionBarGain > 0) {
+            battle.log(`${caster.name} gains ${Math.floor(actionBarGain / 100)}% action bar!`);
+        }
+    }
+},
 
     huntersMarkLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
@@ -568,20 +582,24 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
     },
 
     voidStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const debuffCount = target.debuffs ? target.debuffs.length : 0;
-        
-        if (debuffCount > 0) {
-            for (let i = 0; i < debuffCount; i++) {
-                // Call psiStrike for each debuff
-                const psiStrike = caster.spellManager.getSpell('psi_strike');
-                if (psiStrike) {
-                    spellLogic.psiStrikeLogic(battle, caster, target, psiStrike, spellLevel);
-                }
-            }
-        } else {
-            battle.log(`${target.name} has no debuffs, Void Strike fizzles!`);
+    const debuffCount = target.debuffs ? target.debuffs.length : 0;
+    
+    if (debuffCount > 0) {
+        for (let i = 0; i < debuffCount; i++) {
+            // Use psiStrikeLogic directly
+            spellLogic.psiStrikeLogic(battle, caster, target, {
+                scaling: {
+                    base: spell.scaling?.base || [14, 55, 110, 220, 385],
+                    attack: spell.scaling?.attack || [1.0, 1.0, 1.0, 1.0, 1.0],
+                    int: spell.scaling?.int || [0.5, 0.52, 0.54, 0.56, 0.58]
+                },
+                actionBarDrain: 0.05
+            }, spellLevel);
         }
-    },
+    } else {
+        battle.log(`${target.name} has no debuffs, Void Strike fizzles!`);
+    }
+},
 
     psiShiftLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
