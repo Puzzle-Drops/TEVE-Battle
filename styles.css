@@ -4218,6 +4218,8 @@ body {
 .refinementContent {
     margin-bottom: 30px;
     min-height: 300px;
+    position: relative;
+    overflow: hidden;
 }
 
 .refinementColumns {
@@ -4225,11 +4227,13 @@ body {
     align-items: flex-start;
     justify-content: center;
     gap: 40px;
+    width: 100%;
 }
 
 .refinementColumn {
-    flex: 1;
+    flex: 0 0 300px;
     text-align: center;
+    position: relative;
 }
 
 .refinementColumnLabel {
@@ -4252,6 +4256,7 @@ body {
     color: #ffd700;
     align-self: center;
     text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    flex: 0 0 auto;
 }
 
 .refinementExplanation {
@@ -4266,6 +4271,7 @@ body {
 
 .refinementResult {
     text-align: center;
+    width: 100%;
 }
 
 .refinedItemSlot {
@@ -4278,6 +4284,20 @@ body {
     position: relative;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     opacity: 0;
+    padding: 2px;
+}
+
+.refinedItemSlot .itemContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.refinedItemSlot img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
 }
 
 .refinedItemSlot.show {
@@ -4343,7 +4363,7 @@ body {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(50%);
+        transform: translateX(calc(50% + 20px));
     }
 }
 
@@ -4363,7 +4383,7 @@ body {
         0 2px 4px rgba(0, 0, 0, 1);
     animation: floatUp 1.5s ease-out forwards;
     pointer-events: none;
-    z-index: 1000;
+    z-index: 10003;
 }
 
 @keyframes floatUp {
@@ -4411,6 +4431,10 @@ body {
     box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
 }
 
+/* Ensure item tooltip appears above refinement popup */
+#itemTooltipDiv {
+    z-index: 10003 !important;
+}
 
 
 /* Damage type colors */
