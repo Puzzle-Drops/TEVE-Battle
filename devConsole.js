@@ -25,6 +25,7 @@ class DevConsole {
             setLevel: (heroIndex, level) => this.setHeroLevel(heroIndex, level),
             setAllLevels: (level) => this.setAllHeroLevels(level),
             addGold: (family, amount) => this.addGold(family, amount),
+            addAllGold: (amount) => this.addAllGold(amount),
             addItem: (itemId, heroIndex) => this.addItem(itemId, heroIndex),
             promoteHero: (heroIndex, className) => this.promoteHero(heroIndex, className),
             maxHero: (heroIndex) => this.maxOutHero(heroIndex),
