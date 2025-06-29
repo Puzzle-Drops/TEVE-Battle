@@ -384,6 +384,51 @@
     </div>
     <button class="backButton" onclick="game.showStash()">Back</button>
 </div>
+
+<!-- Item Refinement Popup -->
+<div id="itemRefinementPopup" class="itemRefinementPopup">
+    <div class="refinementHeader">
+        <div class="refinementTitle">Refine Item</div>
+        <div class="refinementCost">
+            <span class="goldIcon">💰</span>
+            <span id="refinementGoldCost">0</span>
+        </div>
+    </div>
+    
+    <div class="refinementContent">
+        <div class="refinementColumns" id="refinementColumns">
+            <div class="refinementColumn">
+                <div class="refinementColumnLabel">Current Item</div>
+                <div class="refinementItemDisplay" id="currentItemDisplay"></div>
+            </div>
+            
+            <div class="refinementArrow" id="refinementArrow">→</div>
+            
+            <div class="refinementColumn" id="previewColumn">
+                <div class="refinementColumnLabel">After Refinement</div>
+                <div class="refinementItemDisplay" id="previewItemDisplay"></div>
+                <div class="refinementExplanation" id="refinementExplanation"></div>
+            </div>
+        </div>
+        
+        <div class="refinementResult" id="refinementResult" style="display: none;">
+            <div class="refinementColumnLabel" id="refinementResultLabel">Current Item</div>
+            <div class="refinementItemDisplay" id="refinedItemDisplay"></div>
+            <div class="refinedItemSlot" id="refinedItemSlot"></div>
+        </div>
+    </div>
+    
+    <div class="refinementButtons" id="refinementButtons">
+        <button class="refinementButton refineBtn" onclick="game.confirmRefinement()">Refine Item</button>
+        <button class="refinementButton cancelBtn" onclick="game.closeRefinementPopup()">Cancel</button>
+    </div>
+    
+    <div class="refinementButtons" id="refinementCloseButton" style="display: none;">
+        <button class="refinementButton closeBtn" onclick="game.closeRefinementPopup()">Close</button>
+    </div>
+</div>
+
+
 </div>
 	
 <!-- Collection Complete Popup -->
