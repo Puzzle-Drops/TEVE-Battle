@@ -2452,7 +2452,7 @@ this.party.forEach((unit, index) => {
                     });
                 } else if (unit.isAlive) {
                     // 50% chance for item in easy dungeons
-                    if (Math.random() < 1.5) {
+                    if (Math.random() < 0.5) {
                         // Get item from dungeon rewards
                         if (rewards.items && rewards.items.length > 0) {
                             const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
@@ -2490,7 +2490,7 @@ this.party.forEach((unit, index) => {
                 // Non-villager heroes - original logic
                 if (unit.isAlive) {
                     // 50% chance for item
-                    if (Math.random() < 1.5) {
+                    if (Math.random() < 0.5) {
                         // Get item from dungeon rewards
                         if (rewards.items && rewards.items.length > 0) {
                             const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
