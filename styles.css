@@ -4189,6 +4189,8 @@ body {
     box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
     width: 840px; /* Fixed width instead of min-width */
     max-width: 900px;
+    height: 760px;
+    max-height: 800px;
 }
 
 .refinementHeader {
