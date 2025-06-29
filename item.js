@@ -265,52 +265,55 @@ if (starData.html) {
     // Show item image if available
     tooltip += `<div class="itemImage"><img src="https://puzzle-drops.github.io/TEVE/img/items/${this.id}.png" alt="${this.name}" onerror="this.style.display='none'"></div>`;
     
-// Show stats with range and quality% if alt is held
+// Always show quality%, but only show range if alt is held
 if (this.quality1 > 0) {
     const value = Math.floor(this.value1 * (this.quality1 / 5));
+    const qualityPercent = Math.round((this.quality1 / 5) * 100);
     const rangeInfo = showMax ? {
         min: Math.floor(this.value1 * 0.2), // 1/5 = 20%
-        max: this.value1,
-        qualityPercent: Math.round((this.quality1 / 5) * 100)
+        max: this.value1
     } : null;
-    tooltip += this.getStatLine(this.roll1, value, rangeInfo, rarity);
+    tooltip += this.getStatLine(this.roll1, value, qualityPercent, rangeInfo, rarity);
 }
 if (this.quality2 > 0) {
     const value = Math.floor(this.value2 * (this.quality2 / 5));
+    const qualityPercent = Math.round((this.quality2 / 5) * 100);
     const rangeInfo = showMax ? {
-        min: Math.floor(this.value2 * 0.2),
-        max: this.value2,
-        qualityPercent: Math.round((this.quality2 / 5) * 100)
+        min: Math.floor(this.value2 * 0.2), // 1/5 = 20%
+        max: this.value2
     } : null;
-    tooltip += this.getStatLine(this.roll2, value, rangeInfo, rarity);
+    tooltip += this.getStatLine(this.roll2, value, qualityPercent, rangeInfo, rarity);
 }
 if (this.quality3 > 0) {
     const value = Math.floor(this.value3 * (this.quality3 / 5));
+    const qualityPercent = Math.round((this.quality3 / 5) * 100);
     const rangeInfo = showMax ? {
         min: Math.floor(this.value3 * 0.2),
-        max: this.value3,
-        qualityPercent: Math.round((this.quality3 / 5) * 100)
+        max: this.value3
     } : null;
-    tooltip += this.getStatLine(this.roll3, value, rangeInfo, rarity);
+    tooltip += this.getStatLine(this.roll3, value, qualityPercent, rangeInfo, rarity);
 }
 if (this.quality4 > 0) {
     const value = Math.floor(this.value4 * (this.quality4 / 5));
+    const qualityPercent = Math.round((this.quality4 / 5) * 100);
     const rangeInfo = showMax ? {
         min: Math.floor(this.value4 * 0.2),
-        max: this.value4,
-        qualityPercent: Math.round((this.quality4 / 5) * 100)
+        max: this.value4
     } : null;
-    tooltip += this.getStatLine(this.roll4, value, rangeInfo, rarity);
+    tooltip += this.getStatLine(this.roll4, value, qualityPercent, rangeInfo, rarity);
 }
 if (this.quality5 > 0) {
-    tooltip += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);">+5 All Stats</div>`;
+    tooltip += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between;">
+        <span>+5 All Stats</span>
+        <span style="color: #ffd700;">100%</span>
+    </div>`;
 }
     
     tooltip += `<div class="itemSellValue">Sell Value: <span class="goldText">${this.sellcost}g</span></div>`;
     tooltip += `</div>`;
     
     return tooltip;
-}	
+}
 
 	canRefine() {
     return !this.refined;
@@ -391,7 +394,7 @@ refine() {
     return true;
 }
 	
-getStatLine(rollType, value, rangeInfo, rarity = 'green') {
+getStatLine(rollType, value, qualityPercent, rangeInfo, rarity = 'green') {
     let statText = '';
     let statName = '';
     
@@ -442,28 +445,30 @@ getStatLine(rollType, value, rangeInfo, rarity = 'green') {
     }
     
     // If showing range info (Alt key held)
-    if (rangeInfo) {
-        // Calculate min display value based on stat type
-        let minDisplay = rangeInfo.min;
-        let maxDisplay = rangeInfo.max;
-        
-        if (rollType === 'hpRegen') {
-            minDisplay = (rangeInfo.min * 0.1).toFixed(1);
-            maxDisplay = (rangeInfo.max * 0.1).toFixed(1);
-        }
-        
-        const range = `(${minDisplay}-${maxDisplay})`;
-        const percentage = `${rangeInfo.qualityPercent}%`;
-        
-        // Create a formatted line with proper spacing
-        return `<div class="itemStat ${rarity}" style="display: flex; justify-content: space-between;">
-            <span>${statText} ${range} ${statName}</span>
-            <span style="color: #6a9aaa;">${percentage}</span>
-        </div>`;
-    } else {
-        // Normal display without range
-        return `<div class="itemStat ${rarity}">${statText} ${statName}</div>`;
+if (rangeInfo) {
+    // Calculate min display value based on stat type
+    let minDisplay = rangeInfo.min;
+    let maxDisplay = rangeInfo.max;
+    
+    if (rollType === 'hpRegen') {
+        minDisplay = (rangeInfo.min * 0.1).toFixed(1);
+        maxDisplay = (rangeInfo.max * 0.1).toFixed(1);
     }
+    
+    const range = `(${minDisplay}-${maxDisplay})`;
+    
+    // Create a formatted line with range and percentage
+    return `<div class="itemStat ${rarity}" style="display: flex; justify-content: space-between;">
+        <span>${statText} ${range} ${statName}</span>
+        <span style="color: #6a9aaa;">${qualityPercent}%</span>
+    </div>`;
+} else {
+    // Normal display with just percentage
+    return `<div class="itemStat ${rarity}" style="display: flex; justify-content: space-between;">
+        <span>${statText} ${statName}</span>
+        <span style="color: #6a9aaa;">${qualityPercent}%</span>
+    </div>`;
+}
 }
 
 
