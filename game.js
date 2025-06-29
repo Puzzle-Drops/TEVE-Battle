@@ -2510,6 +2510,55 @@ showGearTab(hero, content) {
                             : ''}
                     </div>
                 </div>
+                <div class="gearStatsPreview">
+                    <h4>Total Stats</h4>
+                    <div class="gearStatsGrid">
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">HP:</span>
+                            <span class="gearStatValue">${hero.hp}</span>
+                        </div>
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">REG:</span>
+                            <span class="gearStatValue">${hero.hpRegen.toFixed(1)}</span>
+                        </div>
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">ATK:</span>
+                            <span class="gearStatValue">${hero.attack}</span>
+                        </div>
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">SPD:</span>
+                            <span class="gearStatValue">${hero.actionBarSpeed.toFixed(1)}</span>
+                        </div>
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">STR:</span>
+                            <span class="gearStatValue">${hero.totalStats.str}</span>
+                        </div>
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">AGI:</span>
+                            <span class="gearStatValue">${hero.totalStats.agi}</span>
+                        </div>
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">INT:</span>
+                            <span class="gearStatValue">${hero.totalStats.int}</span>
+                        </div>
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">ARM:</span>
+                            <span class="gearStatValue">${Math.floor(hero.armor)}</span>
+                        </div>
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">RED:</span>
+                            <span class="gearStatValue">${(hero.physicalDamageReduction * 100).toFixed(1)}%</span>
+                        </div>
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">RES:</span>
+                            <span class="gearStatValue">${Math.floor(hero.resist)}</span>
+                        </div>
+                        <div class="gearStatLine">
+                            <span class="gearStatLabel">RED:</span>
+                            <span class="gearStatValue">${(hero.magicDamageReduction * 100).toFixed(1)}%</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div style="flex: 1; display: flex; flex-direction: column;">
                 <h3 style="text-align: center; margin-bottom: 20px;">
@@ -2561,7 +2610,7 @@ showGearTab(hero, content) {
         </div>
     `;
 
-	 // Hide any lingering tooltips after DOM update
+    // Hide any lingering tooltips after DOM update
     this.hideItemTooltip();
     this.hideAbilityTooltip();
 }
