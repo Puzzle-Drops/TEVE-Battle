@@ -1150,6 +1150,9 @@ closeItemContextMenu() {
 
 // Item Refinement Popup Functions
 showRefinementPopup(item, itemIndex, family, isEquipped = false, slot = null) {
+    // Show overlay
+    document.getElementById('refinementOverlay').style.display = 'block';
+    
     const popup = document.getElementById('itemRefinementPopup');
     const cost = item.getRefineCost();
     
@@ -1832,6 +1835,9 @@ sellRefinedItem() {
 }
 
 closeRefinementPopup() {
+    // Hide overlay
+    document.getElementById('refinementOverlay').style.display = 'none';
+    
     const popup = document.getElementById('itemRefinementPopup');
     popup.style.display = 'none';
     
@@ -2087,11 +2093,26 @@ hideGoldTooltip() {
 }
 
 loadSortSettings() {
+    // Always start with default settings
+    this.sortSettings = {
+        order: ['rarity', 'stars', 'quality', 'level', 'name'],
+        direction: {
+            rarity: 'desc',
+            stars: 'desc',
+            quality: 'desc',
+            level: 'desc',
+            name: 'asc'
+        }
+    };
+    
+    // Then override with saved settings if they exist
     const saved = localStorage.getItem('teveSortSettings');
     if (saved) {
         try {
             const settings = JSON.parse(saved);
-            this.sortSettings = settings;
+            // Merge saved settings with defaults to ensure all properties exist
+            this.sortSettings.order = settings.order || this.sortSettings.order;
+            this.sortSettings.direction = {...this.sortSettings.direction, ...settings.direction};
         } catch (e) {
             console.error('Failed to load sort settings:', e);
         }
