@@ -4453,14 +4453,14 @@ body {
     z-index: 10003 !important;
 }
 
-/* White flash animation for refinement */
+/* Gold flash animation for refinement */
 @keyframes refinementFlash {
     0% {
         background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     }
     50% {
-        background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-        box-shadow: 0 0 100px rgba(255, 255, 255, 1);
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        box-shadow: 0 0 100px rgba(255, 215, 0, 1);
     }
     100% {
         background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
