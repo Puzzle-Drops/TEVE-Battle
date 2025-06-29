@@ -1038,26 +1038,11 @@ options.push({
     disabled: item.refined || !canAfford,
     action: () => {
         if (stash.gold >= refineCost && item.canRefine()) {
-            // Deduct gold
-            stash.gold -= refineCost;
-            
-            // Refine the item
-            item.refine();
-            
-            // Update displays based on current screen
-            if (isEquipped || this.currentScreen === 'heroesScreen') {
-                // Stay on hero screen and refresh gear tab
-                const hero = this.heroes[this.selectedHero];
-                if (isEquipped) {
-                    hero.updateGearStats();
-                }
-                this.showGearTab(hero, document.getElementById('heroContent'));
-            } else {
-                // Only go to stash screen if we're already on individual stash screen
-                this.showIndividualStash(family);
-            }
+            this.closeItemContextMenu();
+            this.showRefinementPopup(item, itemIndex, family, isEquipped, slot);
+        } else {
+            this.closeItemContextMenu();
         }
-        this.closeItemContextMenu();
     }
 });
     
@@ -1162,6 +1147,450 @@ closeItemContextMenu() {
     }
     this.contextMenuItem = null;
 }
+
+// Item Refinement Popup Functions
+showRefinementPopup(item, itemIndex, family, isEquipped = false, slot = null) {
+    const popup = document.getElementById('itemRefinementPopup');
+    const cost = item.getRefineCost();
+    
+    // Store refinement context
+    this.refinementContext = {
+        item: item,
+        itemIndex: itemIndex,
+        family: family,
+        isEquipped: isEquipped,
+        slot: slot,
+        cost: cost,
+        originalStats: JSON.parse(JSON.stringify(item)) // Deep copy for preview
+    };
+    
+    // Update header
+    document.getElementById('refinementGoldCost').textContent = cost.toLocaleString();
+    
+    // Show current item
+    this.showCurrentItemInRefinement();
+    
+    // Show preview
+    this.showRefinementPreview();
+    
+    // Reset to initial state
+    document.getElementById('refinementColumns').style.display = 'flex';
+    document.getElementById('refinementResult').style.display = 'none';
+    document.getElementById('refinementButtons').style.display = 'flex';
+    document.getElementById('refinementCloseButton').style.display = 'none';
+    document.getElementById('refinementResultLabel').textContent = 'Current Item';
+    
+    popup.style.display = 'block';
+}
+
+showCurrentItemInRefinement() {
+    const item = this.refinementContext.item;
+    const display = document.getElementById('currentItemDisplay');
+    
+    // Use the item's tooltip HTML but modify for left-aligned display
+    let tooltipHTML = item.getTooltip(false);
+    
+    // Remove the outer wrapper div and apply styling directly
+    tooltipHTML = tooltipHTML.replace(/<div class="itemTooltip[^"]*">/, '');
+    tooltipHTML = tooltipHTML.replace(/<\/div>$/, '');
+    
+    display.innerHTML = tooltipHTML;
+    display.className = `refinementItemDisplay ${item.getRarity()}`;
+}
+
+showRefinementPreview() {
+    const context = this.refinementContext;
+    const item = context.item;
+    
+    // Create a preview item
+    const previewItem = new Item(item.id);
+    Object.assign(previewItem, JSON.parse(JSON.stringify(item))); // Deep copy
+    
+    // Determine what will happen
+    let explanation = '';
+    let rollCount = 0;
+    if (item.quality1 > 0) rollCount++;
+    if (item.quality2 > 0) rollCount++;
+    if (item.quality3 > 0) rollCount++;
+    if (item.quality4 > 0) rollCount++;
+    
+    const isPerfect4Roll = rollCount === 4 && 
+                          item.quality1 === 5 && 
+                          item.quality2 === 5 && 
+                          item.quality3 === 5 && 
+                          item.quality4 === 5;
+    
+    if (isPerfect4Roll) {
+        // Will add divine roll
+        previewItem.roll5 = 'allstats';
+        previewItem.quality5 = 5;
+        explanation = 'Divine enhancement unlocked! +5 All Stats';
+        context.refinementType = 'divine';
+    } else if (rollCount < 4) {
+        // Will add new roll
+        if (item.quality2 === 0) {
+            previewItem.quality2 = 3; // Preview with average roll
+            explanation = `New stat roll will be added: ${previewItem.roll2.toUpperCase()}`;
+            context.refinementType = 'newroll';
+            context.newRollSlot = 2;
+        } else if (item.quality3 === 0) {
+            previewItem.quality3 = 3;
+            explanation = `New stat roll will be added: ${previewItem.roll3.toUpperCase()}`;
+            context.refinementType = 'newroll';
+            context.newRollSlot = 3;
+        } else if (item.quality4 === 0) {
+            previewItem.quality4 = 3;
+            explanation = `New stat roll will be added: ${previewItem.roll4.toUpperCase()}`;
+            context.refinementType = 'newroll';
+            context.newRollSlot = 4;
+        }
+    } else {
+        // Will upgrade lowest roll
+        let lowestValue = 5;
+        let lowestRoll = null;
+        let lowestStat = '';
+        
+        if (item.quality1 < lowestValue) {
+            lowestValue = item.quality1;
+            lowestRoll = 1;
+            lowestStat = item.roll1;
+        }
+        if (item.quality2 < lowestValue) {
+            lowestValue = item.quality2;
+            lowestRoll = 2;
+            lowestStat = item.roll2;
+        }
+        if (item.quality3 < lowestValue) {
+            lowestValue = item.quality3;
+            lowestRoll = 3;
+            lowestStat = item.roll3;
+        }
+        if (item.quality4 < lowestValue) {
+            lowestValue = item.quality4;
+            lowestRoll = 4;
+            lowestStat = item.roll4;
+        }
+        
+        // Set preview
+        if (lowestRoll === 1) previewItem.quality1 = 5;
+        else if (lowestRoll === 2) previewItem.quality2 = 5;
+        else if (lowestRoll === 3) previewItem.quality3 = 5;
+        else if (lowestRoll === 4) previewItem.quality4 = 5;
+        
+        explanation = `Lowest quality roll upgraded to perfect! ${lowestStat.toUpperCase()} ${lowestValue}/5 → 5/5`;
+        context.refinementType = 'upgrade';
+        context.upgradedRoll = lowestRoll;
+        context.upgradedStat = lowestStat;
+    }
+    
+    // Show preview
+    const display = document.getElementById('previewItemDisplay');
+    let tooltipHTML = previewItem.getTooltip(false);
+    tooltipHTML = tooltipHTML.replace(/<div class="itemTooltip[^"]*">/, '');
+    tooltipHTML = tooltipHTML.replace(/<\/div>$/, '');
+    
+    display.innerHTML = tooltipHTML;
+    display.className = `refinementItemDisplay ${previewItem.getRarity()}`;
+    
+    // Show explanation
+    document.getElementById('refinementExplanation').textContent = explanation;
+}
+
+confirmRefinement() {
+    const context = this.refinementContext;
+    const familyName = context.isEquipped ? 
+        this.getClassFamily(this.heroes[this.selectedHero].className, this.heroes[this.selectedHero].classTier) : 
+        context.family.name;
+    const stash = this.stashes[familyName];
+    
+    // Check gold
+    if (stash.gold < context.cost) {
+        alert('Not enough gold!');
+        return;
+    }
+    
+    // Deduct gold
+    stash.gold -= context.cost;
+    
+    // Hide preview elements
+    document.getElementById('refinementArrow').style.display = 'none';
+    document.getElementById('previewColumn').style.display = 'none';
+    
+    // Animate current item to center
+    const currentColumn = document.querySelector('.refinementColumn');
+    currentColumn.classList.add('animating');
+    
+    // After animation, perform refinement
+    setTimeout(() => {
+        this.performRefinementAnimation();
+    }, 800);
+}
+
+performRefinementAnimation() {
+    const context = this.refinementContext;
+    const item = context.item;
+    
+    // Perform the actual refinement
+    const oldRarity = item.getRarity();
+    
+    // Get the roll text before refinement
+    let rollText = '';
+    if (context.refinementType === 'divine') {
+        rollText = '+5 All Stats!';
+    } else if (context.refinementType === 'newroll') {
+        const rollSlot = context.newRollSlot;
+        const statName = item[`roll${rollSlot}`].toUpperCase();
+        
+        // Actually perform the roll
+        item[`quality${rollSlot}`] = Math.floor(Math.random() * 5) + 1;
+        const quality = item[`quality${rollSlot}`];
+        
+        if (quality === 5) {
+            rollText = `Perfect ${statName}!`;
+        } else {
+            rollText = `${statName} ${quality}/5`;
+        }
+    } else if (context.refinementType === 'upgrade') {
+        rollText = `Perfect ${context.upgradedStat.toUpperCase()}!`;
+        // Upgrade the roll
+        const rollSlot = context.upgradedRoll;
+        item[`quality${rollSlot}`] = 5;
+    }
+    
+    // Mark as refined
+    item.refined = true;
+    
+    // Apply divine roll if needed
+    if (context.refinementType === 'divine') {
+        item.roll5 = 'allstats';
+        item.quality5 = 5;
+    }
+    
+    const newRarity = item.getRarity();
+    
+    // Show floating text
+    this.showRefinementRollText(rollText);
+    
+    // Update display after a delay
+    setTimeout(() => {
+        // Hide columns and show result
+        document.getElementById('refinementColumns').style.display = 'none';
+        document.getElementById('refinementResult').style.display = 'block';
+        document.getElementById('refinementResultLabel').textContent = 'Refined Item';
+        
+        // Update item display with new stats
+        const display = document.getElementById('refinedItemDisplay');
+        let tooltipHTML = item.getTooltip(false);
+        tooltipHTML = tooltipHTML.replace(/<div class="itemTooltip[^"]*">/, '');
+        tooltipHTML = tooltipHTML.replace(/<\/div>$/, '');
+        
+        display.innerHTML = tooltipHTML;
+        
+        // Animate border color change if rarity changed
+        if (oldRarity !== newRarity) {
+            display.className = `refinementItemDisplay ${oldRarity}`;
+            setTimeout(() => {
+                display.className = `refinementItemDisplay ${newRarity}`;
+            }, 100);
+        } else {
+            display.className = `refinementItemDisplay ${newRarity}`;
+        }
+        
+        // Show refined item in slot
+        this.showRefinedItemInSlot();
+        
+        // Update buttons
+        document.getElementById('refinementButtons').style.display = 'none';
+        document.getElementById('refinementCloseButton').style.display = 'flex';
+    }, 1000);
+}
+
+showRefinementRollText(text) {
+    const popup = document.getElementById('itemRefinementPopup');
+    const rect = popup.getBoundingClientRect();
+    
+    const floatText = document.createElement('div');
+    floatText.className = 'refinementRollText';
+    floatText.textContent = text;
+    floatText.style.left = (rect.left + rect.width / 2) + 'px';
+    floatText.style.top = (rect.top + rect.height / 2) + 'px';
+    
+    document.body.appendChild(floatText);
+    
+    // Remove after animation
+    setTimeout(() => {
+        floatText.remove();
+    }, 1500);
+}
+
+showRefinedItemInSlot() {
+    const context = this.refinementContext;
+    const item = context.item;
+    const slot = document.getElementById('refinedItemSlot');
+    
+    const starData = item.getStars();
+    const rarity = item.getRarity();
+    
+    slot.innerHTML = `
+        <div class="itemContainer">
+            <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
+                 alt="${item.name}"
+                 onerror="this.style.display='none'">
+            ${item.refined ? '<div class="itemRefined">*</div>' : ''}
+            ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
+            <div class="itemLevel">${item.level}</div>
+            <div class="itemQuality">${item.getQualityPercent()}%</div>
+        </div>
+    `;
+    
+    slot.className = `refinedItemSlot ${rarity} show`;
+    
+    // Add hover and right-click handlers
+    slot.onmouseover = (e) => this.showItemTooltip(e, item);
+    slot.onmouseout = () => this.hideItemTooltip();
+    slot.oncontextmenu = (e) => {
+        e.preventDefault();
+        this.showRefinedItemContextMenu(e);
+    };
+}
+
+showRefinedItemContextMenu(e) {
+    const context = this.refinementContext;
+    const item = context.item;
+    
+    // Close any existing menu
+    this.closeItemContextMenu();
+    
+    // Create context menu
+    const menu = document.createElement('div');
+    menu.className = 'itemContextMenu';
+    menu.id = 'itemContextMenu';
+    
+    const options = [];
+    
+    // If in hero screen and not equipped
+    if (this.currentScreen === 'heroesScreen' && !context.isEquipped) {
+        options.push({
+            text: 'Equip',
+            action: () => {
+                this.equipRefinedItem();
+                this.closeItemContextMenu();
+            }
+        });
+    }
+    
+    // Sell option
+    options.push({
+        text: 'Sell',
+        cost: -item.sellcost,
+        action: () => {
+            this.sellRefinedItem();
+            this.closeItemContextMenu();
+        }
+    });
+    
+    // Create menu HTML
+    let menuHTML = '';
+    options.forEach(option => {
+        let costText = '';
+        if (option.cost !== undefined) {
+            costText = `<span class="costText">+${Math.abs(option.cost)}g</span>`;
+        }
+        
+        menuHTML += `<div class="itemContextOption">${option.text}${costText}</div>`;
+    });
+    
+    menu.innerHTML = menuHTML;
+    
+    // Add click handlers
+    const menuOptions = menu.querySelectorAll('.itemContextOption');
+    menuOptions.forEach((elem, index) => {
+        elem.onclick = options[index].action;
+    });
+    
+    // Position menu
+    document.body.appendChild(menu);
+    const rect = e.target.getBoundingClientRect();
+    menu.style.left = rect.right + 'px';
+    menu.style.top = rect.top + 'px';
+    
+    // Adjust if menu goes off screen
+    const menuRect = menu.getBoundingClientRect();
+    if (menuRect.right > window.innerWidth) {
+        menu.style.left = (rect.left - menuRect.width) + 'px';
+    }
+    
+    // Close when clicking elsewhere
+    setTimeout(() => {
+        document.addEventListener('click', this.closeItemContextMenu.bind(this), { once: true });
+    }, 10);
+}
+
+equipRefinedItem() {
+    const context = this.refinementContext;
+    const item = context.item;
+    const hero = this.heroes[this.selectedHero];
+    const slot = item.slot;
+    
+    // Remove from stash if it was there
+    if (!context.isEquipped && context.itemIndex !== null) {
+        this.stashes[context.family.name].items.splice(context.itemIndex, 1);
+    }
+    
+    // Unequip current item if any
+    const currentItem = hero.gear[slot];
+    if (currentItem) {
+        this.stashes[context.family.name].items.push(currentItem);
+    }
+    
+    // Equip the refined item
+    hero.equipItem(item, slot);
+    
+    // Close popup and refresh
+    this.closeRefinementPopup();
+    this.showGearTab(hero, document.getElementById('heroContent'));
+}
+
+sellRefinedItem() {
+    const context = this.refinementContext;
+    const item = context.item;
+    
+    // Add gold
+    const familyName = context.isEquipped ? 
+        this.getClassFamily(this.heroes[this.selectedHero].className, this.heroes[this.selectedHero].classTier) : 
+        context.family.name;
+    this.stashes[familyName].gold += item.sellcost;
+    
+    // Remove item
+    if (context.isEquipped) {
+        this.heroes[this.selectedHero].unequipItem(context.slot);
+    } else if (context.itemIndex !== null) {
+        this.stashes[familyName].items.splice(context.itemIndex, 1);
+    }
+    
+    // Close popup and refresh
+    this.closeRefinementPopup();
+    if (this.currentScreen === 'heroesScreen') {
+        this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+    } else {
+        this.showIndividualStash(context.family);
+    }
+}
+
+closeRefinementPopup() {
+    const popup = document.getElementById('itemRefinementPopup');
+    popup.style.display = 'none';
+    
+    // Clean up context
+    this.refinementContext = null;
+    
+    // Reset any animations
+    const currentColumn = document.querySelector('.refinementColumn.animating');
+    if (currentColumn) {
+        currentColumn.classList.remove('animating');
+    }
+}
+
 
 equipFromContextMenu() {
     if (!this.contextMenuItem) return;
