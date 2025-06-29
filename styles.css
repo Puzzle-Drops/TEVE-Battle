@@ -4094,9 +4094,10 @@ body {
 .gearStatsPreview {
     margin-top: 20px;
     background: rgba(10, 25, 41, 0.8);
-    border: 1px solid #2a6a8a;
-    padding: 15px;
+    padding: 4px;
     border-radius: 4px;
+    max-height: 400px;
+    max-width: 138px;
 }
 
 .gearStatsPreview h4 {
