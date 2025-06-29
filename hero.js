@@ -226,20 +226,24 @@ spells.forEach((spell, index) => {
             }
 
             canPromote() {
-                const promoteLevels = { 0: 50, 1: 100, 2: 200, 3: 300, 4: 400 };
-                return this.level >= (promoteLevels[this.classTier] || 999);
-            }
+    const promoteLevels = { 0: 50, 1: 100, 2: 200, 3: 300, 4: 400 };
+    // For tier 4, check if trying to awaken
+    if (this.classTier === 4 && !this.awakened) {
+        return this.level >= 400;
+    }
+    return this.level >= (promoteLevels[this.classTier] || 999);
+}
 
             getPromotionOptions() {
-                const classInfo = this.classData;
-                
-                // Special case for Awakening at Class 4 Level 400
-                if (this.classTier === 4 && this.level >= 400 && !this.awakened) {
-                    return ['Awaken'];
-                }
-                
-                return classInfo.promotesTo || [];
-            }
+    const classInfo = this.classData;
+    
+    // Special case for Awakening at Class 4
+    if (this.classTier === 4 && !this.awakened) {
+        return ['Awaken'];
+    }
+    
+    return classInfo.promotesTo || [];
+}
 
             promote(newClass) {
                 // Special case for Awakening
