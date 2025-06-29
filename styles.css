@@ -4119,6 +4119,7 @@ body {
     justify-content: space-between;
     font-size: 14px;
     padding: 2px 0;
+    cursor: pointer;
 }
 
 .gearStatLabel {
@@ -4126,8 +4127,21 @@ body {
     font-weight: bold;
 }
 
+.gearStatLabel.mainstat {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
 .gearStatValue {
     color: #b0e0f0;
+}
+
+.gearStatLine:hover .gearStatLabel {
+    color: #4dd0e1;
+}
+
+.gearStatLine:hover .gearStatLabel.mainstat {
+    color: #ffed4e;
 }
 
 /* Damage Number Animation */
