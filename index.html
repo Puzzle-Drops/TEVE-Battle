@@ -529,6 +529,14 @@
                     return;
                 }
 
+// Close refinement popup if open
+const refinementPopup = document.getElementById('itemRefinementPopup');
+if (refinementPopup && refinementPopup.style.display === 'block') {
+    game.closeRefinementPopup();
+    e.preventDefault();
+    return;
+}
+
                 // Close collection complete popup if open
                 const collectionPopup = document.getElementById('collectionCompletePopup');
                 if (collectionPopup && collectionPopup.style.display === 'block') {
