@@ -930,8 +930,8 @@ body {
     justify-content: flex-start;
 }
 .ability {
-    width: 100px;
-    height: 100px;
+    width: 114px;
+    height: 114px;
     background: radial-gradient(circle, #1a4a6a 0%, #0a2a4a 100%);
     border: 2px solid #2a6a8a;
     display: flex;
