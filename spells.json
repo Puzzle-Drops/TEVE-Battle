@@ -175,7 +175,7 @@
 "rain_of_arrows": {
     "id": "rain_of_arrows",
     "name": "Rain of Arrows",
-    "description": "AOE damage dealing [{base} + {attack} + {agi}] + [{debuffBonus}] per debuff on enemies",
+    "description": "AOE damage dealing [{base} + {attack} + {agi}] + {debuffBonus} per debuff on enemies",
     "cooldown": [5, 5, 4, 4, 3],
     "effects": ["aoe", "physical"],
     "scaling": {
