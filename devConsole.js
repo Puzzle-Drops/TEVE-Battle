@@ -337,6 +337,7 @@ class DevConsole {
 
 <span style="color: #ffd700;">Item/Gold Commands:</span>
 - addGold(family, amount) - Add gold to a stash (e.g., "Villager", 1000000)
+-addAllGold(amount) - Add gold to all stashes
 - addItem(itemId, heroIndex) - Give item to hero
 - givePerfectItem(itemId, heroIndex) - Give perfect 4-roll item
 - generateItems(family, dungeon, count) - Generate dungeon items (e.g., "Villager", "satyrs_glade", 100)
@@ -459,6 +460,22 @@ Press \` to toggle console</span>`;
         game.stashes[family].gold += amount;
         this.addLog('info', `Added ${amount} gold to ${family} stash (total: ${game.stashes[family].gold})`);
     }
+
+addAllGold(amount) {
+    if (!window.game || !game.stashes) {
+        this.addLog('error', 'Game or stashes not found');
+        return;
+    }
+
+    amount = parseInt(amount);
+    const families = Object.keys(game.stashes);
+    
+    families.forEach(family => {
+        game.stashes[family].gold += amount;
+    });
+
+    this.addLog('info', `Added ${amount} gold to all stash families: ${families.join(', ')}`);
+}
     
     addItem(itemId, heroIndex) {
         if (!window.game || !game.heroes[heroIndex]) {
