@@ -4187,7 +4187,7 @@ body {
     padding: 30px;
     z-index: 10002;
     box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
-    width: 700px; /* Fixed width instead of min-width */
+    width: 900px; /* Fixed width instead of min-width */
     max-width: 900px;
 }
 
