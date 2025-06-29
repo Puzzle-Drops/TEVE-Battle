@@ -260,6 +260,26 @@ monsterHunterFemalePassiveLogic: function(battle, caster, target, spell, spellLe
             const lowestHpAlly = aliveAllies[0];
             lowestHpAlly.actionBar += 1000; // 10% of 10000
             battle.log(`${lowestHpAlly.name} gained 10% action bar!`);
+            
+            // Summoner Female passive - heal lowest HP ally
+            if (caster.summonerFemalePassive) {
+                const healAmount = Math.floor(lowestHpAlly.maxHp * 0.05);
+                battle.healUnit(lowestHpAlly, healAmount);
+            }
+        }
+        
+        // Summoner Male passive - drain action bar from lowest HP enemy
+        if (caster.summonerMalePassive) {
+            const enemies = battle.getEnemies(caster);
+            const aliveEnemies = enemies.filter(e => e && e.isAlive);
+            
+            if (aliveEnemies.length > 0) {
+                aliveEnemies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+                const lowestHpEnemy = aliveEnemies[0];
+                const drain = lowestHpEnemy.actionBar * 0.05;
+                lowestHpEnemy.actionBar = Math.max(0, lowestHpEnemy.actionBar - drain);
+                battle.log(`${lowestHpEnemy.name}'s action bar drained by 5%!`);
+            }
         }
     },
 
@@ -293,6 +313,15 @@ monsterHunterFemalePassiveLogic: function(battle, caster, target, spell, spellLe
             if (enemy.isAlive) {
                 battle.dealDamage(caster, enemy, damage, 'physical');
                 battle.applyDebuff(enemy, 'Reduce Attack', duration, {});
+                
+                // Runemaster Male passive - also taunt
+                if (caster.runemasterMalePassive) {
+                    battle.applyDebuff(enemy, 'Taunt', 1, { 
+                        tauntTarget: caster,
+                        forcedTarget: caster.position,
+                        forcedTargetIsEnemy: caster.isEnemy
+                    });
+                }
             }
         });
     },
@@ -334,8 +363,9 @@ monsterHunterFemalePassiveLogic: function(battle, caster, target, spell, spellLe
     },
 
     runemasterFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This passive is handled when taking magical damage
+        // This passive triggers Nature's Blessing when taking magical damage
         caster.runemasterFemalePassive = true;
+        caster.retaliateWithNaturesBlessing = true;
     },
 
     summonerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -542,6 +572,7 @@ championFemalePassiveLogic: function(battle, caster, target, spell, spellLevel =
     caster.shieldRegenTimer = 0;
     caster.shieldRegenTurns = 4;
     caster.shieldRegenAmount = shieldAmount;
+    caster.championFemalePassive = true;
 },
 
 avengerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -579,6 +610,11 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
         
         battle.applyDebuff(target, 'Mark', duration, {});
         battle.applyDebuff(target, 'Reduce Speed', duration, {});
+        
+        // Dark Arch Templar Female passive - also apply Blight
+        if (caster.darkArchTemplarFemalePassive) {
+            battle.applyDebuff(target, 'Blight', duration, { noHeal: true });
+        }
     },
 
     voidStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -616,7 +652,11 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
         battle.dealDamage(caster, target, damage, 'magical');
         
         // Set target to 25% action bar (or 0% if female passive)
-        target.actionBar = 2500;
+        if (caster.grandTemplarFemalePassive) {
+            target.actionBar = 0;
+        } else {
+            target.actionBar = 2500;
+        }
     },
 
     darkArchTemplarMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -656,8 +696,22 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
             battle.log(`${caster.name} transfers ${debuff.name} to ${target.name}!`);
         }
         
-        const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.agi * agiScaling);
-        battle.dealDamage(caster, target, damage, 'physical');
+        let damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.agi * agiScaling);
+        let damageType = 'physical';
+        
+        // Phantom Assassin Female passive - pure damage if below 50% HP
+        if (caster.phantomAssassinFemalePassive && caster.cheapShotPureThreshold) {
+            if ((target.currentHp / target.maxHp) < caster.cheapShotPureThreshold) {
+                damageType = 'pure';
+            }
+        }
+        
+        battle.dealDamage(caster, target, damage, damageType);
+        
+        // Master Stalker passive - add bleed
+        if (caster.cheapShotAddsBleed && target.isAlive) {
+            battle.applyDebuff(target, 'Bleed', 2, { bleedDamage: true });
+        }
     },
 
     crippleLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -714,6 +768,7 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
         caster.dodgePure = spell.dodgePure;
         caster.dodgeMagical = spell.dodgeMagical;
         caster.dodgePhysical = spell.dodgePhysical;
+        caster.cheapShotAddsBleed = true;
     },
 
     masterStalkerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -722,6 +777,7 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
         caster.dodgePure = spell.dodgePure;
         caster.dodgePhysical = spell.dodgePhysical;
         caster.dodgeMagical = spell.dodgeMagical;
+        caster.cheapShotAddsBleed = true;
     },
 
     // Witch Hunter Family Spells
@@ -731,14 +787,37 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
         const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
         const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0];
         
-        // Remove 1 buff (or 2 if female passive)
+        let buffsRemoved = 0;
+        let damageType = 'physical';
+        
+        // Grand Inquisitor Female passive - remove 2 buffs
+        const buffsToRemove = caster.grandInquisitorFemalePassive && caster.silverBoltBuffRemoveCount ? 
+            caster.silverBoltBuffRemoveCount : 1;
+        
+        // Remove buffs
         if (target.buffs && target.buffs.length > 0) {
-            target.buffs.shift();
-            battle.log(`Removed a buff from ${target.name}!`);
+            for (let i = 0; i < buffsToRemove && target.buffs.length > 0; i++) {
+                target.buffs.shift();
+                buffsRemoved++;
+            }
+            battle.log(`Removed ${buffsRemoved} buff${buffsRemoved > 1 ? 's' : ''} from ${target.name}!`);
+        }
+        
+        // Grand Inquisitor Male passive - pure damage if no buffs
+        if (caster.grandInquisitorMalePassive && buffsRemoved === 0) {
+            damageType = 'pure';
+        }
+        
+        // Professional Witcher passives - check for silenced target
+        if (target.debuffs && target.debuffs.some(d => d.name === 'Silence')) {
+            if (caster.professionalWitcherMalePassive) {
+                damageType = 'pure';
+            }
+            // Female passive makes it unavoidable (handled in dealDamage via dodge mechanics)
         }
         
         const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.str * strScaling);
-        battle.dealDamage(caster, target, damage, 'physical');
+        battle.dealDamage(caster, target, damage, damageType);
     },
 
     purifyingFlameLogic: function(battle, caster, target, spell, spellLevel = 1) {
