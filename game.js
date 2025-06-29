@@ -1526,14 +1526,15 @@ confirmRefinement() {
     document.getElementById('refinementArrow').style.display = 'none';
     document.getElementById('previewColumn').style.display = 'none';
     
-    // Animate current item to center
-    const currentColumn = document.querySelector('.refinementColumn');
-    currentColumn.classList.add('animating');
-    
-    // After animation, perform refinement
-    setTimeout(() => {
-        this.performRefinementAnimation();
-    }, 800);
+    // Flash white and fade
+const popup = document.getElementById('itemRefinementPopup');
+popup.classList.add('refinement-flash');
+
+// After flash animation, perform refinement
+setTimeout(() => {
+    popup.classList.remove('refinement-flash');
+    this.performRefinementAnimation();
+}, 600);
 }
 
 cancelRefinement() {
@@ -1661,9 +1662,13 @@ performRefinementAnimation() {
 }
 
 showRefinementRollText(text) {
-    // Center on the refined item display, not the entire popup
-    const itemDisplay = document.getElementById('refinedItemDisplay');
-    const rect = itemDisplay.getBoundingClientRect();
+    // Get the refinement popup and result display
+    const popup = document.getElementById('itemRefinementPopup');
+    const resultDisplay = document.getElementById('refinementResult');
+    
+    // Use the result display if visible, otherwise use the popup
+    const targetElement = resultDisplay.style.display !== 'none' ? resultDisplay : popup;
+    const rect = targetElement.getBoundingClientRect();
     
     const floatText = document.createElement('div');
     floatText.className = 'refinementRollText';
@@ -1854,12 +1859,6 @@ closeRefinementPopup() {
     
     // Clean up context
     this.refinementContext = null;
-    
-    // Reset any animations
-    const currentColumn = document.querySelector('.refinementColumn.animating');
-    if (currentColumn) {
-        currentColumn.classList.remove('animating');
-    }
     
     // Reset popup to initial state for next use
     document.getElementById('refinementColumns').style.display = 'flex';
