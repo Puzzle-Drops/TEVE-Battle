@@ -991,11 +991,12 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
             const buffEffects = effects.filter(e => e.startsWith('buff_'));
             const debuffEffects = effects.filter(e => e.startsWith('debuff_'));
             
-            // Determine potential targets
-            let targets = [];
-            let skipAbility = false;
-            
-            switch (spell.target) {
+// Determine potential targets
+let targets = [];
+let skipAbility = false;
+let target = null; // Add this line to declare target
+
+switch (spell.target) {
                 case 'enemy':
                     targets = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
                     
