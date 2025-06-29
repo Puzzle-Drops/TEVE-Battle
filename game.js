@@ -2513,47 +2513,47 @@ showGearTab(hero, content) {
                 <div class="gearStatsPreview">
                     <h4>Total Stats</h4>
                     <div class="gearStatsGrid">
-                        <div class="gearStatLine">
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Health Points')" onmouseout="game.hideStatTooltip()">
                             <span class="gearStatLabel">HP:</span>
                             <span class="gearStatValue">${hero.hp}</span>
                         </div>
-                        <div class="gearStatLine">
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'HP Regeneration')" onmouseout="game.hideStatTooltip()">
                             <span class="gearStatLabel">REG:</span>
                             <span class="gearStatValue">${hero.hpRegen.toFixed(1)}</span>
                         </div>
-                        <div class="gearStatLine">
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Attack')" onmouseout="game.hideStatTooltip()">
                             <span class="gearStatLabel">ATK:</span>
                             <span class="gearStatValue">${hero.attack}</span>
                         </div>
-                        <div class="gearStatLine">
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
                             <span class="gearStatLabel">SPD:</span>
                             <span class="gearStatValue">${hero.actionBarSpeed.toFixed(1)}</span>
                         </div>
-                        <div class="gearStatLine">
-                            <span class="gearStatLabel">STR:</span>
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Strength')" onmouseout="game.hideStatTooltip()">
+                            <span class="gearStatLabel ${hero.mainstat === 'str' ? 'mainstat' : ''}">STR:</span>
                             <span class="gearStatValue">${hero.totalStats.str}</span>
                         </div>
-                        <div class="gearStatLine">
-                            <span class="gearStatLabel">AGI:</span>
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Agility')" onmouseout="game.hideStatTooltip()">
+                            <span class="gearStatLabel ${hero.mainstat === 'agi' ? 'mainstat' : ''}">AGI:</span>
                             <span class="gearStatValue">${hero.totalStats.agi}</span>
                         </div>
-                        <div class="gearStatLine">
-                            <span class="gearStatLabel">INT:</span>
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Intelligence')" onmouseout="game.hideStatTooltip()">
+                            <span class="gearStatLabel ${hero.mainstat === 'int' ? 'mainstat' : ''}">INT:</span>
                             <span class="gearStatValue">${hero.totalStats.int}</span>
                         </div>
-                        <div class="gearStatLine">
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
                             <span class="gearStatLabel">ARM:</span>
                             <span class="gearStatValue">${Math.floor(hero.armor)}</span>
                         </div>
-                        <div class="gearStatLine">
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
                             <span class="gearStatLabel">RED:</span>
                             <span class="gearStatValue">${(hero.physicalDamageReduction * 100).toFixed(1)}%</span>
                         </div>
-                        <div class="gearStatLine">
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
                             <span class="gearStatLabel">RES:</span>
                             <span class="gearStatValue">${Math.floor(hero.resist)}</span>
                         </div>
-                        <div class="gearStatLine">
+                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
                             <span class="gearStatLabel">RED:</span>
                             <span class="gearStatValue">${(hero.magicDamageReduction * 100).toFixed(1)}%</span>
                         </div>
