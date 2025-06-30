@@ -3,18 +3,18 @@
     "tester_male": {
       "name": "Tester",
       "tier": 0,
-      "modifiers": { "str": 10000.0, "agi": 10000.0, "int": 10000.0 },
+      "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
       "mainstat": "str",
       "initial": {
-        "hp": 1000,
-        "hpRegen": 1000,
-        "attack": 1000,
-        "attackSpeed": 1000,
-        "str": 1000,
-        "agi": 1000,
-        "int": 1000,
-        "armor": 1000,
-        "resist": 1000
+        "hp": 100000000,
+        "hpRegen": 100000000,
+        "attack": 100000000,
+        "attackSpeed": 100000000,
+        "str": 100000000,
+        "agi": 100000000,
+        "int": 100000000,
+        "armor": 100000000,
+        "resist": 100000000
   },
       "spells": ["increase_attack_test", "increase_speed_test", "increase_defense_test", "immune_test", "shield_test", "reduce_attack_test", "reduce_speed_test", "reduce_defense_test", "blight_test", "bleed_test", "stun_test", "taunt_test", "silence_test", "mark_test", "lose", "win"],
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
@@ -25,15 +25,15 @@
       "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
       "mainstat": "str",
       "initial": {
-        "hp": 25,
-        "hpRegen": 3,
-        "attack": 4,
-        "attackSpeed": 6,
-        "str": 2.5,
-        "agi": 4.67,
-        "int": 6.2,
-        "armor": 10,
-        "resist": 10
+        "hp": 0,
+        "hpRegen": 0,
+        "attack": 0,
+        "attackSpeed": 0,
+        "str": 1.0,
+        "agi": 1.0,
+        "int": 1.0,
+        "armor": 0,
+        "resist": 0
   },
       "spells": ["punch", "fury"],
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
