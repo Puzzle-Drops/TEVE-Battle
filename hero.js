@@ -183,35 +183,40 @@ get mainstat() {
     const abilityLevel = this.spellLevel;
     
     // Add abilities from spell list
-spells.forEach((spell, index) => {
-    if (spell) {
-        // Get the correct cooldown for this spell level
-        let cooldownValue = 0;
-        if (Array.isArray(spell.cooldown)) {
-            const cooldownIndex = Math.max(0, Math.min(4, abilityLevel - 1));
-            cooldownValue = spell.cooldown[cooldownIndex] || spell.cooldown[0];
-        } else {
-            cooldownValue = spell.cooldown || 0;
-        }
-        
-        const ability = {
-            id: spell.id,
-            name: spell.name,
-            cooldown: cooldownValue,
-            currentCooldown: 0,
-            level: abilityLevel,
-            description: spell.description,
-            icon: `${spell.id}.png`,
-            effects: spell.effects,
-            passive: spell.passive || false
-        };
-        
-        abilities.push(ability);
-    }
-});
-                
-                return abilities;
+    spells.forEach((spell, index) => {
+        if (spell) {
+            // Skip the 4th spell (index 3) if not awakened
+            if (index === 3 && !this.awakened) {
+                return; // Skip the 4th ability
             }
+            
+            // Get the correct cooldown for this spell level
+            let cooldownValue = 0;
+            if (Array.isArray(spell.cooldown)) {
+                const cooldownIndex = Math.max(0, Math.min(4, abilityLevel - 1));
+                cooldownValue = spell.cooldown[cooldownIndex] || spell.cooldown[0];
+            } else {
+                cooldownValue = spell.cooldown || 0;
+            }
+            
+            const ability = {
+                id: spell.id,
+                name: spell.name,
+                cooldown: cooldownValue,
+                currentCooldown: 0,
+                level: abilityLevel,
+                description: spell.description,
+                icon: `${spell.id}.png`,
+                effects: spell.effects,
+                passive: spell.passive || false
+            };
+            
+            abilities.push(ability);
+        }
+    });
+                
+    return abilities;
+}
 
             calculateExpToNext() {
                 // Scaling should be a mix of linear and parabolic
