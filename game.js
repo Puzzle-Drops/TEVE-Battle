@@ -1530,27 +1530,6 @@ confirmRefinement() {
 const popup = document.getElementById('itemRefinementPopup');
 popup.classList.add('refinement-flash');
 
-// Create a flash overlay div
-const flashOverlay = document.createElement('div');
-flashOverlay.className = 'refinement-flash-overlay';
-flashOverlay.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.9) 0%, rgba(255, 237, 78, 0.7) 50%, transparent 70%);
-    z-index: 99999;
-    pointer-events: none;
-    animation: refinementFlashOverlay 0.8s ease-out;
-`;
-popup.appendChild(flashOverlay);
-
-// Remove the overlay after animation
-setTimeout(() => {
-    flashOverlay.remove();
-}, 800);
-
 // After flash animation, perform refinement
 setTimeout(() => {
     popup.classList.remove('refinement-flash');
