@@ -4412,6 +4412,22 @@ body {
     white-space: nowrap;
 }
 
+/* Different styles for stat vs quality text */
+.refinementRollText:nth-of-type(odd) {
+    /* First text (stat name) */
+    font-size: 32px;
+}
+
+.refinementRollText:nth-of-type(even) {
+    /* Second text (quality) */
+    font-size: 40px;
+    color: #ffed4e;
+    text-shadow: 
+        0 0 25px rgba(255, 237, 78, 1),
+        0 0 50px rgba(255, 237, 78, 0.8),
+        0 2px 4px rgba(0, 0, 0, 1);
+}
+
 @keyframes floatUp {
     0% {
         opacity: 0;
