@@ -2722,24 +2722,10 @@ if (!this.autoReplay) {
             }
 
 			showInfoTab(hero, content) {
-    const stats = hero.totalStats;
-    const baseStats = hero.baseStats;
-    
+
     // Generate stars using consolidated function
     const starData = hero.getStars();
-    
-    // Calculate derived stats - separate base and gear
-    const baseArmor = Math.floor((0.25 * baseStats.str) + (0.05 * baseStats.agi));
-    const baseResist = Math.floor(0.25 * baseStats.int);
-    const baseHpRegen = baseStats.str * 0.05;
-    const baseAgi = baseStats.agi;
-    const baseAttackSpeed = 100 + 100 * (baseAgi / (baseAgi + 1000));
-    
-    const armor = hero.armor;
-    const resist = hero.resist;
-    const physicalDR = hero.physicalDamageReduction;
-    const magicalDR = hero.magicDamageReduction;
-    
+        
     content.innerHTML = `
         <div style="margin-bottom: 20px;">
             ${starData.html ? `<div style="font-size: 48px; font-weight: bold; ${starData.colorClass === 'awakened' ? 'color: #d896ff;' : 'color: #ffd700;'} text-shadow: 0 0 12px ${starData.colorClass === 'awakened' ? 'rgba(216, 150, 255, 0.9)' : 'rgba(255, 215, 0, 0.9)'}, 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${starData.html}</div>` : ''}
@@ -2879,43 +2865,43 @@ if (!this.autoReplay) {
             <div style="flex: 1; min-width: 200px;">
                 <div class="statLine" onmouseover="game.showStatTooltip(event, 'Health Points', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
     <span class="statName">Health</span>
-    <span class="statValue">${baseStats.str * 5} ${hero.gearStats.hp > 0 ? `<span class="statBonus">+${hero.gearStats.hp}</span>` : ''}</span>
+    <span class="statValue">${hero.baseStats.hp} ${hero.gearStats.hp > 0 ? `<span class="statBonus">+${hero.gearStats.hp}</span>` : ''}</span>
 </div>
 <div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
     <span class="statName">Attack</span>
-    <span class="statValue">${stats[hero.mainstat || 'str']} ${hero.gearStats.attack > 0 ? `<span class="statBonus">+${hero.gearStats.attack}</span>` : ''}</span>
+    <span class="statValue">${hero.stats[hero.mainstat || 'str']} ${hero.gearStats.attack > 0 ? `<span class="statBonus">+${hero.gearStats.attack}</span>` : ''}</span>
 </div>
 <div class="statLine" onmouseover="game.showStatTooltip(event, 'Strength', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
     <span class="statName ${hero.mainstat === 'str' ? 'mainstat' : ''}">Strength</span>
-    <span class="statValue">${baseStats.str} ${hero.gearStats.str > 0 ? `<span class="statBonus">+${hero.gearStats.str}</span>` : ''}</span>
+    <span class="statValue">${hero.baseStats.str} ${hero.gearStats.str > 0 ? `<span class="statBonus">+${hero.gearStats.str}</span>` : ''}</span>
 </div>
 <div class="statLine" onmouseover="game.showStatTooltip(event, 'Agility', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
     <span class="statName ${hero.mainstat === 'agi' ? 'mainstat' : ''}">Agility</span>
-    <span class="statValue">${baseStats.agi} ${hero.gearStats.agi > 0 ? `<span class="statBonus">+${hero.gearStats.agi}</span>` : ''}</span>
+    <span class="statValue">${hero.baseStats.agi} ${hero.gearStats.agi > 0 ? `<span class="statBonus">+${hero.gearStats.agi}</span>` : ''}</span>
 </div>
 <div class="statLine" onmouseover="game.showStatTooltip(event, 'Intelligence', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
     <span class="statName ${hero.mainstat === 'int' ? 'mainstat' : ''}">Intelligence</span>
-    <span class="statValue">${baseStats.int} ${hero.gearStats.int > 0 ? `<span class="statBonus">+${hero.gearStats.int}</span>` : ''}</span>
+    <span class="statValue">${hero.baseStats.int} ${hero.gearStats.int > 0 ? `<span class="statBonus">+${hero.gearStats.int}</span>` : ''}</span>
 </div>
             </div>
             
             <div style="flex: 1; min-width: 200px;">
                 <div class="statLine" onmouseover="game.showStatTooltip(event, 'HP Regeneration')" onmouseout="game.hideStatTooltip()">
-                    <span class="statName">HP Regen</span>
-                    <span class="statValue">${baseHpRegen.toFixed(1)} ${hero.gearStats.hpRegen > 0 ? `<span class="statBonus">+${hero.gearStats.hpRegen.toFixed(1)}</span>` : ''}</span>
-                </div>
-                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
-                    <span class="statName">Atk Spd</span>
-                    <span class="statValue">${baseAttackSpeed.toFixed(1)}% ${hero.gearStats.attackSpeed > 0 ? `<span class="statBonus">+${hero.gearStats.attackSpeed.toFixed(1)}%</span>` : ''}</span>
-                </div>
-                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
-                    <span class="statName">Armor</span>
-                    <span class="statValue">${baseArmor} ${hero.gearStats.armor > 0 ? `<span class="statBonus">+${hero.gearStats.armor}</span>` : ''} <span style="color: #6a9aaa;">(${(physicalDR * 100).toFixed(1)}%)</span></span>
-                </div>
-                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
-                    <span class="statName">Resistance</span>
-                    <span class="statValue">${baseResist} ${hero.gearStats.resist > 0 ? `<span class="statBonus">+${hero.gearStats.resist}</span>` : ''} <span style="color: #6a9aaa;">(${(magicalDR * 100).toFixed(1)}%)</span></span>
-                </div>
+    <span class="statName">HP Regen</span>
+    <span class="statValue">${hero.baseStats.hpRegen.toFixed(1)} ${hero.gearStats.hpRegen > 0 ? `<span class="statBonus">+${hero.gearStats.hpRegen.toFixed(1)}</span>` : ''}</span>
+</div>
+<div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
+    <span class="statName">Atk Spd</span>
+    <span class="statValue">${hero.baseStats.attackSpeed.toFixed(1)}% ${hero.gearStats.attackSpeed > 0 ? `<span class="statBonus">+${hero.gearStats.attackSpeed.toFixed(1)}%</span>` : ''}</span>
+</div>
+<div class="statLine" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
+    <span class="statName">Armor</span>
+    <span class="statValue">${Math.floor(hero.baseStats.armor)} ${hero.gearStats.armor > 0 ? `<span class="statBonus">+${hero.gearStats.armor}</span>` : ''} <span style="color: #6a9aaa;">(${(physicalDR * 100).toFixed(1)}%)</span></span>
+</div>
+<div class="statLine" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
+    <span class="statName">Resistance</span>
+    <span class="statValue">${Math.floor(hero.baseStats.resist)} ${hero.gearStats.resist > 0 ? `<span class="statBonus">+${hero.gearStats.resist}</span>` : ''} <span style="color: #6a9aaa;">(${(magicalDR * 100).toFixed(1)}%)</span></span>
+</div>
             </div>
         </div>
     `;
@@ -4224,11 +4210,11 @@ showEnemyInfoPopup(enemy) {
             <div style="flex: 1;">
                 <div class="statRow" onmouseover="game.showStatTooltip(event, 'HP Regeneration')" onmouseout="game.hideStatTooltip()">
                     <span class="statLabel">Regen</span>
-                    <span class="statValue">${(stats.str * 0.05).toFixed(1)}</span>
+                    <span class="statValue">${enemy.hpRegen.toFixed(1)}</span>
                 </div>
                 <div class="statRow" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
                     <span class="statLabel">Atk Spd</span>
-                    <span class="statValue">${(100 + 100 * (stats.agi / (stats.agi + 1000))).toFixed(1)}%</span>
+                    <span class="statValue">${enemy.actionBarSpeed.toFixed(1)}%</span>
                 </div>
                 <div class="statRow" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
                     <span class="statLabel">Armor</span>
