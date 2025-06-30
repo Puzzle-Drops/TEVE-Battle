@@ -1526,7 +1526,7 @@ confirmRefinement() {
     document.getElementById('refinementArrow').style.display = 'none';
     document.getElementById('previewColumn').style.display = 'none';
     
-    // Flash white and fade
+// Flash white and fade
 const popup = document.getElementById('itemRefinementPopup');
 popup.classList.add('refinement-flash');
 
@@ -1594,15 +1594,17 @@ if (context.refinementType === 'divine') {
     
     const newRarity = item.getRarity();
     
-    // Show floating text
+    // Show floating text with delayed timing
+setTimeout(() => {
     this.showRefinementRollText(statText, qualityText);
-    
-    // Update display after a delay
-    setTimeout(() => {
-        // Hide columns and show result
-        document.getElementById('refinementColumns').style.display = 'none';
-        document.getElementById('refinementResult').style.display = 'block';
-        document.getElementById('refinementResultLabel').textContent = 'Refined Item';
+}, 400);
+
+// Update display after floating texts are done
+setTimeout(() => {
+    // Hide columns and show result
+    document.getElementById('refinementColumns').style.display = 'none';
+    document.getElementById('refinementResult').style.display = 'block';
+    document.getElementById('refinementResultLabel').textContent = 'Refined Item';
         
         // Build refined item display with bolded changed roll
         const display = document.getElementById('refinedItemDisplay');
@@ -1657,13 +1659,15 @@ if (context.refinementType === 'divine') {
             display.className = `refinementItemDisplay ${newRarity}`;
         }
         
-        // Show refined item in slot
-        this.showRefinedItemInSlot();
+        // Show refined item in slot after delay
+setTimeout(() => {
+    this.showRefinedItemInSlot();
+}, 400); // 400ms after the display updates (1200 + 400 = 1600ms total)
         
         // Update buttons
         document.getElementById('refinementButtons').style.display = 'none';
         document.getElementById('refinementCloseButton').style.display = 'flex';
-    }, 1000);
+    }, 1200);
 }
 
 showRefinementRollText(statText, qualityText) {
@@ -1673,7 +1677,7 @@ showRefinementRollText(statText, qualityText) {
     // Show quality text after 300ms delay
     setTimeout(() => {
         this.showSingleRefinementText(qualityText, 20); // 20px offset for second text
-    }, 300);
+    }, 400);
 }
 
 showSingleRefinementText(text, verticalOffset = 0) {
