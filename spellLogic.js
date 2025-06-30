@@ -781,7 +781,7 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
     },
 
     // Witch Hunter Family Spells
-    silverBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    purgeSlashLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
         const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
@@ -791,8 +791,8 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
         let damageType = 'physical';
         
         // Grand Inquisitor Female passive - remove 2 buffs
-        const buffsToRemove = caster.grandInquisitorFemalePassive && caster.silverBoltBuffRemoveCount ? 
-            caster.silverBoltBuffRemoveCount : 1;
+        const buffsToRemove = caster.grandInquisitorFemalePassive && caster.purgeSlashBuffRemoveCount ? 
+            caster.purgeSlashBuffRemoveCount : 1;
         
         // Remove buffs
         if (target.buffs && target.buffs.length > 0) {
@@ -820,7 +820,7 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
         battle.dealDamage(caster, target, damage, damageType);
     },
 
-    purifyingFlameLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    nullbladeCleaveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
         const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
@@ -833,7 +833,7 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
                 const buffCount = enemy.buffs ? enemy.buffs.length : 0;
                 const damage = baseDamage + (caster.source.attack * attackScaling) + 
                               (caster.stats.int * intScaling) + (buffBonus * buffCount);
-                battle.dealDamage(caster, enemy, damage, 'magical');
+                battle.dealDamage(caster, enemy, damage, 'physical');
             }
         });
     },
@@ -875,7 +875,7 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
     grandInquisitorFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         // This passive modifies Silver Bolt
         caster.grandInquisitorFemalePassive = true;
-        caster.silverBoltBuffRemoveCount = spell.buffRemoveCount;
+        caster.purgeSlashBuffRemoveCount = spell.buffRemoveCount;
     },
 
     professionalWitcherMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
