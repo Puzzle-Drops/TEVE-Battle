@@ -2869,7 +2869,7 @@ if (!this.autoReplay) {
 </div>
 <div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
     <span class="statName">Attack</span>
-    <span class="statValue">${hero.stats[hero.mainstat || 'str']} ${hero.gearStats.attack > 0 ? `<span class="statBonus">+${hero.gearStats.attack}</span>` : ''}</span>
+    <span class="statValue">${hero.baseStats.attack} ${hero.gearStats.attack > 0 ? `<span class="statBonus">+${hero.gearStats.attack}</span>` : ''}</span>
 </div>
 <div class="statLine" onmouseover="game.showStatTooltip(event, 'Strength', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
     <span class="statName ${hero.mainstat === 'str' ? 'mainstat' : ''}">Strength</span>
