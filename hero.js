@@ -64,6 +64,12 @@
     
     this.abilities = this.getClassAbilities();
     this.pendingExp = 0;
+
+
+console.log('Hero class:', this.className);
+console.log('Class data:', this.classData);
+console.log('Initial values:', this.initial);
+		    
 }
 
             generateName() {
@@ -81,6 +87,7 @@
                     name: this.className,
                     tier: 0,
                     modifiers: { str: 1, agi: 1, int: 1 },
+		    initial: {},
                     spells: []
                 };
             }
