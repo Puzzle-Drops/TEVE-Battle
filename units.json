@@ -20,20 +20,20 @@
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
     "villager_male": {
-      "name": "Villager",
-      "tier": 0,
-      "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
-      "mainstat": "str",
-      "initial": {
-        "hp": 0,
-        "hpRegen": 0,
-        "attack": 0,
-        "attackSpeed": 0,
-        "str": 1.0,
-        "agi": 1.0,
-        "int": 1.0,
-        "armor": 0,
-        "resist": 0
+  "name": "Villager",
+  "tier": 0,
+  "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
+  "mainstat": "str",
+  "initial": {
+    "hp": 25,
+    "hpRegen": 0.5,
+    "attack": 2,
+    "attackSpeed": 0,
+    "str": 5,
+    "agi": 4,
+    "int": 3,
+    "armor": 6,
+    "resist": 4
   },
       "spells": ["punch", "fury"],
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
@@ -43,6 +43,17 @@
       "tier": 0,
       "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
       "mainstat": "str",
+      "initial": {
+        "hp": 25,
+        "hpRegen": 0.5,
+        "attack": 2,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 4,
+        "int": 3,
+        "armor": 6,
+        "resist": 4
+  },
       "spells": ["punch", "throw_rock"],
       "promotesTo": ["acolyte_female", "archer_female", "druid_female", "initiate_female", "swordsman_female", "templar_female", "thief_female", "witch_hunter_female"]
     },
