@@ -1553,30 +1553,35 @@ performRefinementAnimation() {
     const oldRarity = item.getRarity();
     
     // Get the roll text before refinement
-    let rollText = '';
-    if (context.refinementType === 'divine') {
-        rollText = '+5 All Stats!';
-    } else if (context.refinementType === 'newroll') {
-        const rollSlot = context.newRollSlot;
-        const statName = this.getStatDisplayName(item[`roll${rollSlot}`]);
-        
-        // Actually perform the roll
-        item[`quality${rollSlot}`] = Math.floor(Math.random() * 5) + 1;
-        const quality = item[`quality${rollSlot}`];
-        const qualityPercent = Math.round((quality / 5) * 100);
-        
-        if (quality === 5) {
-            rollText = `Perfect ${statName}! 100%`;
-        } else {
-            rollText = `${statName} ${qualityPercent}%`;
-        }
-    } else if (context.refinementType === 'upgrade') {
-        const statName = this.getStatDisplayName(context.upgradedStat);
-        rollText = `Perfect ${statName}! 100%`;
-        // Upgrade the roll
-        const rollSlot = context.upgradedRoll;
-        item[`quality${rollSlot}`] = 5;
+let statText = '';
+let qualityText = '';
+
+if (context.refinementType === 'divine') {
+    statText = '+5 All Stats!';
+    qualityText = 'Divine!';
+} else if (context.refinementType === 'newroll') {
+    const rollSlot = context.newRollSlot;
+    const statName = this.getStatDisplayName(item[`roll${rollSlot}`]);
+    
+    // Actually perform the roll
+    item[`quality${rollSlot}`] = Math.floor(Math.random() * 5) + 1;
+    const quality = item[`quality${rollSlot}`];
+    const qualityPercent = Math.round((quality / 5) * 100);
+    
+    statText = statName;
+    if (quality === 5) {
+        qualityText = `Perfect! 100%`;
+    } else {
+        qualityText = `${qualityPercent}%`;
     }
+} else if (context.refinementType === 'upgrade') {
+    const statName = this.getStatDisplayName(context.upgradedStat);
+    statText = statName;
+    qualityText = 'Perfect! 100%';
+    // Upgrade the roll
+    const rollSlot = context.upgradedRoll;
+    item[`quality${rollSlot}`] = 5;
+}
     
     // Mark as refined
     item.refined = true;
@@ -1590,7 +1595,7 @@ performRefinementAnimation() {
     const newRarity = item.getRarity();
     
     // Show floating text
-    this.showRefinementRollText(rollText);
+    this.showRefinementRollText(statText, qualityText);
     
     // Update display after a delay
     setTimeout(() => {
@@ -1661,7 +1666,17 @@ performRefinementAnimation() {
     }, 1000);
 }
 
-showRefinementRollText(text) {
+showRefinementRollText(statText, qualityText) {
+    // Show stat text first
+    this.showSingleRefinementText(statText, 0);
+    
+    // Show quality text after 300ms delay
+    setTimeout(() => {
+        this.showSingleRefinementText(qualityText, 20); // 20px offset for second text
+    }, 300);
+}
+
+showSingleRefinementText(text, verticalOffset = 0) {
     // Get the refinement popup and result display
     const popup = document.getElementById('itemRefinementPopup');
     const resultDisplay = document.getElementById('refinementResult');
@@ -1674,7 +1689,7 @@ showRefinementRollText(text) {
     floatText.className = 'refinementRollText';
     floatText.textContent = text;
     floatText.style.left = (rect.left + rect.width / 2) + 'px';
-    floatText.style.top = (rect.top + rect.height / 2) + 'px';
+    floatText.style.top = (rect.top + rect.height / 2 + verticalOffset) + 'px';
     
     document.body.appendChild(floatText);
     
