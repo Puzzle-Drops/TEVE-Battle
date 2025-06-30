@@ -43,6 +43,25 @@
         attackSpeed: 0
     };
     this.awakened = false;
+    
+    // Add default initial values
+    this.initial = {
+        hp: 0,
+        hpRegen: 0,
+        attack: 0,
+        attackSpeed: 0,
+        str: 0,
+        agi: 0,
+        int: 0,
+        armor: 0,
+        resist: 0
+    };
+
+    // Override with class-specific initial values if they exist
+    if (this.classData.initial) {
+        Object.assign(this.initial, this.classData.initial);
+    }
+    
     this.abilities = this.getClassAbilities();
     this.pendingExp = 0;
 }
@@ -97,9 +116,9 @@ set spellLevel(value) {
             get baseStats() {
                 const mods = this.classData.modifiers;
                 return {
-                    str: Math.floor(this.level * mods.str),
-                    agi: Math.floor(this.level * mods.agi),
-                    int: Math.floor(this.level * mods.int)
+                    str: Math.floor(this.initial.str + (this.level * mods.str)),
+                    agi: Math.floor(this.initial.agi + (this.level * mods.agi)),
+                    int: Math.floor(this.initial.int + (this.level * mods.int))
                 };
             }
             
@@ -122,12 +141,12 @@ set spellLevel(value) {
 
             get hp() {
                 const baseHp = this.totalStats.str * 5;
-                return baseHp + this.gearStats.hp;
+                return baseHp + this.gearStats.hp + this.initial.hp;
             }
 
 		get attack() {
     const mainstatValue = this.totalStats[this.classData.mainstat || 'str'];
-    return mainstatValue + (this.gearStats.attack || 0);
+    return mainstatValue + (this.gearStats.attack || 0) + this.initial.attack;
 }
 
 get mainstat() {
@@ -136,25 +155,25 @@ get mainstat() {
 		
             get hpRegen() {
                 const baseRegen = this.totalStats.str * 0.05;
-                return baseRegen + this.gearStats.hpRegen;
+                return baseRegen + this.gearStats.hpRegen + this.initial.hpRegen;
             }
 
             get actionBarSpeed() {
                 const agi = this.totalStats.agi;
                 const baseSpeed = 100 + 100 * (agi / (agi + 1000));
-                return baseSpeed + this.gearStats.attackSpeed;
+                return baseSpeed + this.gearStats.attackSpeed + this.initial.attackSpeed;
             }
 			
 			get armor() {
 				const stats = this.totalStats;
 				const baseArmor = (0.25 * stats.str) + (0.05 * stats.agi);
-				return baseArmor + this.gearStats.armor;
+				return baseArmor + this.gearStats.armor + this.initial.armor;
 			}
 
 			get resist() {
 				const stats = this.totalStats;
 				const baseResist = (0.25 * stats.int);
-				return baseResist + this.gearStats.resist;
+				return baseResist + this.gearStats.resist + this.initial.resist;
 			}
 
 			get physicalDamageReduction() {
