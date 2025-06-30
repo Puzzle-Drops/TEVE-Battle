@@ -2420,19 +2420,25 @@ body {
 @keyframes spellCast {
     0% {
         opacity: 0;
-        transform: translateY(20px) scale(0.8);
+        transform: translateX(-50%) translateY(30px) scale(0.7);
+        filter: blur(2px);
     }
     20% {
         opacity: 1;
-        transform: translateY(-10px) scale(1.1);
+        transform: translateX(-50%) translateY(-15px) scale(1.2);
+        filter: blur(0);
+    }
+    30% {
+        transform: translateX(-50%) translateY(-20px) scale(1.15);
     }
     80% {
         opacity: 1;
-        transform: translateY(-20px) scale(1);
+        transform: translateX(-50%) translateY(-25px) scale(1);
     }
     100% {
         opacity: 0;
-        transform: translateY(-40px) scale(0.9);
+        transform: translateX(-50%) translateY(-45px) scale(0.9);
+        filter: blur(1px);
     }
 }
 
