@@ -696,9 +696,9 @@
     "target": "self",
     "logicKey": "masterStalkerFemalePassiveLogic"
 },
-"silver_bolt": {
-    "id": "silver_bolt",
-    "name": "Silver Bolt",
+"purge_slash": {
+    "id": "purge_slash",
+    "name": "Purge Slash",
     "description": "Deal [{base} + {attack} + {str}] physical damage and remove 1 buff from enemy",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical", "dispel"],
@@ -708,14 +708,14 @@
         "str": [0.15, 0.17, 0.19, 0.21, 0.23]
     },
     "target": "enemy",
-    "logicKey": "silverBoltLogic"
+    "logicKey": "purgeSlashLogic"
 },
-"purifying_flame": {
-    "id": "purifying_flame",
-    "name": "Purifying Flame",
+"nullblade_cleave": {
+    "id": "nullblade_cleave",
+    "name": "Nullblade Cleave",
     "description": "AOE damage dealing [{base} + {attack} + {int}] + [{buffBonus}] per buff on enemies",
     "cooldown": [4, 4, 3, 3, 2],
-    "effects": ["aoe", "magical"],
+    "effects": ["aoe", "physical"],
     "scaling": {
         "base": [8, 50, 100, 200, 350],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -748,7 +748,7 @@
 "grand_inquisitor_male_passive": {
     "id": "grand_inquisitor_male_passive",
     "name": "Purifying Strike",
-    "description": "Silver Bolt deals pure damage if there is no buff to remove",
+    "description": "Purge Slash deals pure damage if there is no buff to remove",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
@@ -758,7 +758,7 @@
 "grand_inquisitor_female_passive": {
     "id": "grand_inquisitor_female_passive",
     "name": "Double Purge",
-    "description": "Silver Bolt removes 2 buffs on attack instead of 1",
+    "description": "Purge Slash removes 2 buffs on attack instead of 1",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
@@ -769,7 +769,7 @@
 "professional_witcher_male_passive": {
     "id": "professional_witcher_male_passive",
     "name": "Anti-Magic Strike",
-    "description": "Silver Bolt deals pure damage to enemies that are silenced",
+    "description": "Purge Slash deals pure damage to enemies that are silenced",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
@@ -779,7 +779,7 @@
 "professional_witcher_female_passive": {
     "id": "professional_witcher_female_passive",
     "name": "Unavoidable Strike",
-    "description": "Silver Bolt against silenced enemies cannot be evaded",
+    "description": "Purge Slash against silenced enemies cannot be evaded",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
