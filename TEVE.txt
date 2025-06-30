@@ -158,7 +158,7 @@ min 2.5    tier 4
 
 These stats are further increased by items.
 
-HP is equal to Str * 10.
+HP is equal to Str * 5.
 HP Regen per action bar reset = Str * 0.05
 Action bar units gained per cycle = 100 + 100 * (AGI / (AGI + 1000))
 
@@ -170,15 +170,6 @@ MagicDamageReduction = 0.3 * TotalResist / (TotalResist + 1000)
 
 -Action bar
 Each unit begins combat with an action bar value of 0. During every cycle, each unit gains a certain amount of action bar units based on their Agility stat. When a unit's action bar reaches or exceeds 10,000 units, it becomes eligible to act. If multiple units cross this threshold within the same cycle, the one with the highest total action bar value goes first. After a unit acts, 10,000 units are subtracted from its action bar, and if it still has more than 10,000 remaining, it may act again within the same cycle if no other units have a higher value. This continues until no units have at least 10,000 units remaining. At that point, the next cycle begins and all units gain additional action bar units according to their Agi. This system ensures that faster units act more frequently, but in a dynamic, fair order that reflects their accumulated speed.
-
--Combat class
-16 final Class 4 classes.
-(1-50) Class 0: Start as a villager. At level 50 you upgrade to pick any starter class.
-(1-100) Class 1: Archer, Swordsman, etc. Only your first combat spell and you're weak.
-(1-200) Class 2: More specialized version of your first class. Can be a passive.
-(1-300) Class 3: Class split. Should make it obvious the differences.
-(1-500 ) Class 4: Final class. Gain aura that defines your class and makes every level count for the full team.
-Consume all exp upon going to next class and start again at 0 exp, level 1. All classes of a type share the first two Classes. Acolytes upgrade to clerics who then have a class split at 3. They all do this. You must choose which path to take.
 
 Class paths:
 Acolyte -> Cleric -> Priest (Male) / Priestess (Female) -> Hierophant
