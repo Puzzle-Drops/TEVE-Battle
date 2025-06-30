@@ -29,9 +29,9 @@
         "hpRegen": 3,
         "attack": 4,
         "attackSpeed": 6,
-        "str": 2,
-        "agi": 4,
-        "int": 6,
+        "str": 2.5,
+        "agi": 4.67,
+        "int": 6.2,
         "armor": 10,
         "resist": 10
   },
