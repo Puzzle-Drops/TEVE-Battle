@@ -2723,6 +2723,11 @@ if (!this.autoReplay) {
 
 			showInfoTab(hero, content) {
 
+console.log('BaseStats:', hero.baseStats);
+console.log('Hero level:', hero.level);
+console.log('Initial values from hero:', hero.initial);
+
+				
     // Generate stars using consolidated function
     const starData = hero.getStars();
         
