@@ -66,10 +66,6 @@
     this.pendingExp = 0;
 
 
-console.log('Hero class:', this.className);
-console.log('Class data:', this.classData);
-console.log('Initial values:', this.initial);
-		    
 }
 
             generateName() {
