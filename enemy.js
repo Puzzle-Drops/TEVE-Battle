@@ -72,7 +72,7 @@ class Enemy {
                 });
             }
 
-            get baseStats() {
+get baseStats() {
     const str = Math.floor(this.initial.str + (this.level * this.modifiers.str));
     const agi = Math.floor(this.initial.agi + (this.level * this.modifiers.agi));
     const int = Math.floor(this.initial.int + (this.level * this.modifiers.int));
@@ -90,9 +90,9 @@ class Enemy {
     };
 }
 
-            get hp() {
-                return (this.baseStats.str * 5) + this.initial.hp;
-            }
+get hp() {
+    return this.baseStats.hp;
+}
 
 get attack() {
     const enemyData = unitData?.enemies[this.enemyId];
@@ -105,25 +105,31 @@ get mainstat() {
     return enemyData?.mainstat || 'str';
 }
 		
-			get armor() {
-				const stats = this.baseStats;
-				return (0.25 * stats.str) + (0.05 * stats.agi);
-			}
+get armor() {
+    return this.baseStats.armor;
+}
 
-			get resist() {
-				const stats = this.baseStats;
-				return (0.25 * stats.int);
-			}
+get resist() {
+    return this.baseStats.resist;
+}
 
-			get physicalDamageReduction() {
-				const totalArmor = this.armor;
-				return (0.9 * totalArmor) / (totalArmor + 500);
-			}
+get hpRegen() {
+    return this.baseStats.hpRegen;
+}
 
-			get magicDamageReduction() {
-				const totalResist = this.resist;
-				return (0.3 * totalResist) / (totalResist + 1000);
-			}
+get actionBarSpeed() {
+    return this.baseStats.attackSpeed;
+}
+
+get physicalDamageReduction() {
+    const totalArmor = this.armor;
+    return (0.9 * totalArmor) / (totalArmor + 500);
+}
+
+get magicDamageReduction() {
+    const totalResist = this.resist;
+    return (0.3 * totalResist) / (totalResist + 1000);
+}
 
             getAbilities(spellIds) {
     if (!spellIds || !spellManager) return [];
