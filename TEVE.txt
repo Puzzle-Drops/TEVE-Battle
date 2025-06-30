@@ -157,6 +157,16 @@ min 5      tier 2
 min 6      tier 3
 min 8      tier 4
 
+Non attribute initials:
+same cost here as in initial stats at the top, max 50% of value into a stat. Cost ratios below:
+
+HP: .1
+Regen 1.5
+Attack 1
+Speed 1.5
+Armor .75
+Resist .5
+
 --Modifier Values
 Every class has different stat modifiers. Each base stat for a class is equal to the Level of the hero multiplied by their class modifier for that stat.
 
