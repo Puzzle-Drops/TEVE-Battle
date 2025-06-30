@@ -1392,6 +1392,7 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
         const spellText = document.createElement('div');
         spellText.className = 'spellText';
         spellText.textContent = spellName;
+        spellText.style.transform = 'translateX(-50%)';
         
         // Add appropriate color class based on spell type with priority
 if (effects.includes('physical')) {
