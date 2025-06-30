@@ -13,12 +13,43 @@ class Enemy {
                     this.isBoss = enemyData.boss;
                     this.modifiers = enemyData.modifiers;
                     this.abilities = this.getAbilities(enemyData.spells);
+                    
+                    // Add default initial values
+                    this.initial = {
+                        hp: 0,
+                        hpRegen: 0,
+                        attack: 0,
+                        attackSpeed: 0,
+                        str: 0,
+                        agi: 0,
+                        int: 0,
+                        armor: 0,
+                        resist: 0
+                    };
+
+                    // Override with enemy-specific initial values if they exist
+                    if (enemyData && enemyData.initial) {
+                        Object.assign(this.initial, enemyData.initial);
+                    }
                 } else {
                     // Fallback values
                     this.name = enemyId;
                     this.isBoss = false;
                     this.modifiers = { str: 1.0, agi: 1.0, int: 1.0 };
                     this.abilities = [];
+                    
+                    // Default initial values
+                    this.initial = {
+                        hp: 0,
+                        hpRegen: 0,
+                        attack: 0,
+                        attackSpeed: 0,
+                        str: 0,
+                        agi: 0,
+                        int: 0,
+                        armor: 0,
+                        resist: 0
+                    };
                 }
             }
 
@@ -43,20 +74,20 @@ class Enemy {
 
             get baseStats() {
                 return {
-                    str: Math.floor(this.level * this.modifiers.str),
-                    agi: Math.floor(this.level * this.modifiers.agi),
-                    int: Math.floor(this.level * this.modifiers.int)
+                    str: Math.floor(this.initial.str + (this.level * this.modifiers.str)),
+                    agi: Math.floor(this.initial.agi + (this.level * this.modifiers.agi)),
+                    int: Math.floor(this.initial.int + (this.level * this.modifiers.int))
                 };
             }
 
             get hp() {
-                return this.baseStats.str * 5;
+                return (this.baseStats.str * 5) + this.initial.hp;
             }
 
 get attack() {
     const enemyData = unitData?.enemies[this.enemyId];
     const mainstat = enemyData?.mainstat || 'str';
-    return this.baseStats[mainstat];
+    return this.baseStats[mainstat] + this.initial.attack;
 }
 
 get mainstat() {
