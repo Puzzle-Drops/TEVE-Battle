@@ -32,7 +32,7 @@
         "str": 5,
         "agi": 4,
         "int": 3,
-        "armor": 6,
+        "armor": 6.5,
         "resist": 4
       },
       "spells": ["punch", "fury"],
@@ -51,7 +51,7 @@
         "str": 5,
         "agi": 4,
         "int": 3,
-        "armor": 6,
+        "armor": 6.5,
         "resist": 4
       },
       "spells": ["punch", "throw_rock"],
