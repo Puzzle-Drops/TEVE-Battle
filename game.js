@@ -3967,15 +3967,15 @@ showHeroInfoPopup(hero) {
         <span class="statLabel">Attack</span>
         <span class="statValue">${hero.attack}</span>
     </div>
-    <div class="statRow" onmouseover="game.showStatTooltip(event, 'Strength', popup._currentHero)" onmouseout="game.hideStatTooltip()">
+    <div class="statRow" onmouseover="game.showStatTooltip(event, 'Strength', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
     <span class="statLabel ${hero.mainstat === 'str' ? 'mainstat' : ''}">STR</span>
     <span class="statValue">${stats.str}</span>
 </div>
-<div class="statRow" onmouseover="game.showStatTooltip(event, 'Agility', popup._currentHero)" onmouseout="game.hideStatTooltip()">
+<div class="statRow" onmouseover="game.showStatTooltip(event, 'Agility', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
     <span class="statLabel ${hero.mainstat === 'agi' ? 'mainstat' : ''}">AGI</span>
     <span class="statValue">${stats.agi}</span>
 </div>
-<div class="statRow" onmouseover="game.showStatTooltip(event, 'Intelligence', popup._currentHero)" onmouseout="game.hideStatTooltip()">
+<div class="statRow" onmouseover="game.showStatTooltip(event, 'Intelligence', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
     <span class="statLabel ${hero.mainstat === 'int' ? 'mainstat' : ''}">INT</span>
     <span class="statValue">${stats.int}</span>
 </div>
@@ -4171,15 +4171,15 @@ showEnemyInfoPopup(enemy) {
         <span class="statLabel">Attack</span>
         <span class="statValue">${enemy.attack}</span>
     </div>
-    <div class="statRow" onmouseover="game.showStatTooltip(event, 'Strength', popup._currentHero)" onmouseout="game.hideStatTooltip()">
+    <div class="statRow" onmouseover="game.showStatTooltip(event, 'Strength', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
     <span class="statLabel ${enemy.mainstat === 'str' ? 'mainstat' : ''}">STR</span>
     <span class="statValue">${stats.str}</span>
 </div>
-<div class="statRow" onmouseover="game.showStatTooltip(event, 'Agility', popup._currentHero)" onmouseout="game.hideStatTooltip()">
+<div class="statRow" onmouseover="game.showStatTooltip(event, 'Agility', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
     <span class="statLabel ${enemy.mainstat === 'agi' ? 'mainstat' : ''}">AGI</span>
     <span class="statValue">${stats.agi}</span>
 </div>
-<div class="statRow" onmouseover="game.showStatTooltip(event, 'Intelligence', popup._currentHero)" onmouseout="game.hideStatTooltip()">
+<div class="statRow" onmouseover="game.showStatTooltip(event, 'Intelligence', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
     <span class="statLabel ${enemy.mainstat === 'int' ? 'mainstat' : ''}">INT</span>
     <span class="statValue">${stats.int}</span>
 </div>
