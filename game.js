@@ -2670,19 +2670,27 @@ if (!this.autoReplay) {
             }
 
             selectHero(index) {
-                this.selectedHero = index;
-                const hero = this.heroes[index];
-                
-                // Update portrait
-                const portrait = document.getElementById('heroPortrait');
-                portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
-                
-                // Update hero list selection
-                this.updateHeroList();
-                
-                // Refresh current tab
-                this.showHeroTab(this.currentTab);
-            }
+    this.selectedHero = index;
+    const hero = this.heroes[index];
+    
+    // Update portrait with backdrop
+    const portrait = document.getElementById('heroPortrait');
+    
+    // Get class family and format for backdrop filename
+    const familyName = this.getClassFamily(hero.className, hero.classTier);
+    const backdropName = familyName.toLowerCase().replace(/ /g, '_');
+    
+    portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
+    
+    // Set backdrop as background image
+    portrait.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_backdrop.png')`;
+    
+    // Update hero list selection
+    this.updateHeroList();
+    
+    // Refresh current tab
+    this.showHeroTab(this.currentTab);
+}
 
             showHeroTab(tab) {
                 this.currentTab = tab;
@@ -3480,13 +3488,18 @@ equipFromStash(itemIndex, slot) {
                     if (stash.gold >= cost) {
                         stash.gold -= cost;
                         if (hero.promote(newClass)) {
-                            // Update portrait remains the same
-                            const portrait = document.getElementById('heroPortrait');
-                            portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
-                            
-                            this.showHeroTab('info');
-                            this.updateHeroList();
-                        }
+    // Update portrait remains the same
+    const portrait = document.getElementById('heroPortrait');
+    portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
+    
+    // Update backdrop (should remain the same for awakening)
+    const familyName = this.getClassFamily(hero.className, hero.classTier);
+    const backdropName = familyName.toLowerCase().replace(/ /g, '_');
+    portrait.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_backdrop.png')`;
+    
+    this.showHeroTab('info');
+    this.updateHeroList();
+}
                     } else {
                         alert('Not enough gold!');
                     }
@@ -3498,13 +3511,18 @@ equipFromStash(itemIndex, slot) {
                     if (stash.gold >= cost) {
                         stash.gold -= cost;
                         if (hero.promote(newClass)) {
-                            // Update portrait immediately after promotion
-                            const portrait = document.getElementById('heroPortrait');
-                            portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
-                            
-                            this.showHeroTab('info');
-                            this.updateHeroList();
-                        }
+    // Update portrait immediately after promotion
+    const portrait = document.getElementById('heroPortrait');
+    portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
+    
+    // Update backdrop for new class
+    const familyName = this.getClassFamily(hero.className, hero.classTier);
+    const backdropName = familyName.toLowerCase().replace(/ /g, '_');
+    portrait.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_backdrop.png')`;
+    
+    this.showHeroTab('info');
+    this.updateHeroList();
+}
                     } else {
                         alert('Not enough gold!');
                     }
