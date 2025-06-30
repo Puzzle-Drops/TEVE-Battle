@@ -5,6 +5,17 @@
       "tier": 0,
       "modifiers": { "str": 10000.0, "agi": 10000.0, "int": 10000.0 },
       "mainstat": "str",
+      "initial": {
+        "hp": 1000,
+        "hpRegen": 1000,
+        "attack": 1000,
+        "attackSpeed": 1000,
+        "str": 1000,
+        "agi": 1000,
+        "int": 1000,
+        "armor": 1000,
+        "resist": 1000
+  },
       "spells": ["increase_attack_test", "increase_speed_test", "increase_defense_test", "immune_test", "shield_test", "reduce_attack_test", "reduce_speed_test", "reduce_defense_test", "blight_test", "bleed_test", "stun_test", "taunt_test", "silence_test", "mark_test", "lose", "win"],
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
@@ -13,6 +24,17 @@
       "tier": 0,
       "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
       "mainstat": "str",
+      "initial": {
+        "hp": 10,
+        "hpRegen": 10,
+        "attack": 10,
+        "attackSpeed": 10,
+        "str": 10,
+        "agi": 10,
+        "int": 10,
+        "armor": 10,
+        "resist": 10
+  },
       "spells": ["punch", "fury"],
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
