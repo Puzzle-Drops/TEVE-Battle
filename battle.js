@@ -1413,13 +1413,13 @@ if (effects.includes('physical')) {
 }
         
         animContainer.appendChild(spellText);
-        
+        /*
         // Remove spell text after animation
         setTimeout(() => {
             if (spellText.parentNode) {
                 spellText.remove();
             }
-        }, 3000);
+        }, 3000);*/
     }
 }
     
