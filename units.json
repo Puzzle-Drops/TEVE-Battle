@@ -15,26 +15,26 @@
         "int": 100000000,
         "armor": 100000000,
         "resist": 100000000
-  },
+      },
       "spells": ["increase_attack_test", "increase_speed_test", "increase_defense_test", "immune_test", "shield_test", "reduce_attack_test", "reduce_speed_test", "reduce_defense_test", "blight_test", "bleed_test", "stun_test", "taunt_test", "silence_test", "mark_test", "lose", "win"],
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
     "villager_male": {
-  "name": "Villager",
-  "tier": 0,
-  "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
-  "mainstat": "str",
-  "initial": {
-    "hp": 25,
-    "hpRegen": 0.5,
-    "attack": 2,
-    "attackSpeed": 0,
-    "str": 5,
-    "agi": 4,
-    "int": 3,
-    "armor": 6,
-    "resist": 4
-  },
+      "name": "Villager",
+      "tier": 0,
+      "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 25,
+        "hpRegen": 0.5,
+        "attack": 2,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 4,
+        "int": 3,
+        "armor": 6,
+        "resist": 4
+      },
       "spells": ["punch", "fury"],
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
@@ -53,778 +53,1834 @@
         "int": 3,
         "armor": 6,
         "resist": 4
-  },
+      },
       "spells": ["punch", "throw_rock"],
       "promotesTo": ["acolyte_female", "archer_female", "druid_female", "initiate_female", "swordsman_female", "templar_female", "thief_female", "witch_hunter_female"]
     },
     "acolyte_male": {
-  "name": "Acolyte",
-  "tier": 1,
-  "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light"],
-  "promotesTo": ["cleric_male"]
-},
-"acolyte_female": {
-  "name": "Acolyte",
-  "tier": 1,
-  "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light"],
-  "promotesTo": ["cleric_female"]
-},
-"cleric_male": {
-  "name": "Cleric",
-  "tier": 2,
-  "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light"],
-  "promotesTo": ["priest_male", "patriarch_male"]
-},
-"cleric_female": {
-  "name": "Cleric",
-  "tier": 2,
-  "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light"],
-  "promotesTo": ["priestess_female", "matriarch_female"]
-},
-"priest_male": {
-  "name": "Priest",
-  "tier": 3,
-  "modifiers": { "str": 2.15, "agi": 2.95, "int": 3.9 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light", "sanctuary"],
-  "promotesTo": ["hierophant_male"]
-},
-"priestess_female": {
-  "name": "Priestess",
-  "tier": 3,
-  "modifiers": { "str": 2.15, "agi": 2.95, "int": 3.9 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light", "sanctuary"],
-  "promotesTo": ["hierophant_female"]
-},
-"hierophant_male": {
-  "name": "Hierophant",
-  "tier": 4,
-  "modifiers": { "str": 2.5, "agi": 3.95, "int": 5.55 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light", "sanctuary", "hierophant_male_passive"],
-  "promotesTo": []
-},
-"hierophant_female": {
-  "name": "Hierophant",
-  "tier": 4,
-  "modifiers": { "str": 2.5, "agi": 3.95, "int": 5.55 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light", "sanctuary", "hierophant_female_passive"],
-  "promotesTo": []
-},
-"patriarch_male": {
-  "name": "Patriarch",
-  "tier": 3,
-  "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light", "mass_heal"],
-  "promotesTo": ["prophet_male"]
-},
-"matriarch_female": {
-  "name": "Matriarch",
-  "tier": 3,
-  "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light", "mass_heal"],
-  "promotesTo": ["prophetess_female"]
-},
-"prophet_male": {
-  "name": "Prophet",
-  "tier": 4,
-  "modifiers": { "str": 3.55, "agi": 2.85, "int": 5.6 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light", "mass_heal", "prophet_male_passive"],
-  "promotesTo": []
-},
-"prophetess_female": {
-  "name": "Prophetess",
-  "tier": 4,
-  "modifiers": { "str": 3.55, "agi": 2.85, "int": 5.6 },
-  "mainstat": "int",
-  "spells": ["holy_smite", "divine_light", "mass_heal", "prophetess_female_passive"],
-  "promotesTo": []
-},
-"archer_male": {
-  "name": "Archer",
-  "tier": 1,
-  "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark"],
-  "promotesTo": ["ranger_male"]
-},
-"archer_female": {
-  "name": "Archer",
-  "tier": 1,
-  "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark"],
-  "promotesTo": ["ranger_female"]
-},
-"ranger_male": {
-  "name": "Ranger",
-  "tier": 2,
-  "modifiers": { "str": 1.5, "agi": 2.9, "int": 1.6 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark"],
-  "promotesTo": ["marksman_male", "tracker_male"]
-},
-"ranger_female": {
-  "name": "Ranger",
-  "tier": 2,
-  "modifiers": { "str": 1.5, "agi": 2.9, "int": 1.6 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark"],
-  "promotesTo": ["marksman_female", "tracker_female"]
-},
-"marksman_male": {
-  "name": "Marksman",
-  "tier": 3,
-  "modifiers": { "str": 2.05, "agi": 4.6, "int": 2.35 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark", "double_shot"],
-  "promotesTo": ["sniper_male"]
-},
-"marksman_female": {
-  "name": "Marksman",
-  "tier": 3,
-  "modifiers": { "str": 2.05, "agi": 4.6, "int": 2.35 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark", "double_shot"],
-  "promotesTo": ["sniper_female"]
-},
-"sniper_male": {
-  "name": "Sniper",
-  "tier": 4,
-  "modifiers": { "str": 2.55, "agi": 6.7, "int": 2.75 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark", "double_shot", "sniper_male_passive"],
-  "promotesTo": []
-},
-"sniper_female": {
-  "name": "Sniper",
-  "tier": 4,
-  "modifiers": { "str": 2.55, "agi": 6.7, "int": 2.75 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark", "double_shot", "sniper_female_passive"],
-  "promotesTo": []
-},
-"tracker_male": {
-  "name": "Tracker",
-  "tier": 3,
-  "modifiers": { "str": 2.5, "agi": 4.25, "int": 2.25 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark", "rain_of_arrows"],
-  "promotesTo": ["monster_hunter_male"]
-},
-"tracker_female": {
-  "name": "Tracker",
-  "tier": 3,
-  "modifiers": { "str": 2.5, "agi": 4.25, "int": 2.25 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark", "rain_of_arrows"],
-  "promotesTo": ["monster_hunter_female"]
-},
-"monster_hunter_male": {
-  "name": "Monster Hunter",
-  "tier": 4,
-  "modifiers": { "str": 3.35, "agi": 6.1, "int": 2.55 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark", "rain_of_arrows", "monster_hunter_male_passive"],
-  "promotesTo": []
-},
-"monster_hunter_female": {
-  "name": "Monster Hunter",
-  "tier": 4,
-  "modifiers": { "str": 3.35, "agi": 6.1, "int": 2.55 },
-  "mainstat": "agi",
-  "spells": ["aimed_shot", "hunters_mark", "rain_of_arrows", "monster_hunter_female_passive"],
-  "promotesTo": []
-},
-"druid_male": {
-  "name": "Druid",
-  "tier": 1,
-  "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
-  "mainstat": "int",
-  "spells": ["natures_blessing", "barkskin"],
-  "promotesTo": ["arch_druid_male"]
-},
-"druid_female": {
-  "name": "Druid",
-  "tier": 1,
-  "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
-  "mainstat": "int",
-  "spells": ["natures_blessing", "barkskin"],
-  "promotesTo": ["arch_druid_female"]
-},
-"arch_druid_male": {
-  "name": "Arch Druid",
-  "tier": 2,
-  "modifiers": { "str": 2.0, "agi": 1.5, "int": 2.5 },
-  "mainstat": "int",
-  "spells": ["natures_blessing", "barkskin"],
-  "promotesTo": ["shapeshifter_male", "shaman_male"]
-},
-"arch_druid_female": {
-  "name": "Arch Druid",
-  "tier": 2,
-  "modifiers": { "str": 2.0, "agi": 1.5, "int": 2.5 },
-  "mainstat": "int",
-  "spells": ["natures_blessing", "barkskin"],
-  "promotesTo": ["shapeshifter_female", "shaman_female"]
-},
-"shapeshifter_male": {
-  "name": "Shapeshifter",
-  "tier": 3,
-  "modifiers": { "str": 4.0, "agi": 2.0, "int": 3.0 },
-  "mainstat": "str",
-  "spells": ["natures_blessing", "barkskin", "primal_roar"],
-  "promotesTo": ["runemaster_male"]
-},
-"shapeshifter_female": {
-  "name": "Shapeshifter",
-  "tier": 3,
-  "modifiers": { "str": 4.0, "agi": 2.0, "int": 3.0 },
-  "mainstat": "str",
-  "spells": ["natures_blessing", "barkskin", "primal_roar"],
-  "promotesTo": ["runemaster_female"]
-},
-"runemaster_male": {
-  "name": "Runemaster",
-  "tier": 4,
-  "modifiers": { "str": 5.0, "agi": 3.0, "int": 4.0 },
-  "mainstat": "str",
-  "spells": ["natures_blessing", "barkskin", "primal_roar", "runemaster_male_passive"],
-  "promotesTo": []
-},
-"runemaster_female": {
-  "name": "Runemaster",
-  "tier": 4,
-  "modifiers": { "str": 5.0, "agi": 3.0, "int": 4.0 },
-  "mainstat": "str",
-  "spells": ["natures_blessing", "barkskin", "primal_roar", "runemaster_female_passive"],
-  "promotesTo": []
-},
-"shaman_male": {
-  "name": "Shaman",
-  "tier": 3,
-  "modifiers": { "str": 2.5, "agi": 2.0, "int": 4.5 },
-  "mainstat": "int",
-  "spells": ["natures_blessing", "barkskin", "natures_balance"],
-  "promotesTo": ["summoner_male"]
-},
-"shaman_female": {
-  "name": "Shaman",
-  "tier": 3,
-  "modifiers": { "str": 2.5, "agi": 2.0, "int": 4.5 },
-  "mainstat": "int",
-  "spells": ["natures_blessing", "barkskin", "natures_balance"],
-  "promotesTo": ["summoner_female"]
-},
-"summoner_male": {
-  "name": "Summoner",
-  "tier": 4,
-  "modifiers": { "str": 3.0, "agi": 2.5, "int": 6.5 },
-  "mainstat": "int",
-  "spells": ["natures_blessing", "barkskin", "natures_balance", "summoner_male_passive"],
-  "promotesTo": []
-},
-"summoner_female": {
-  "name": "Summoner",
-  "tier": 4,
-  "modifiers": { "str": 3.0, "agi": 2.5, "int": 6.5 },
-  "mainstat": "int",
-  "spells": ["natures_blessing", "barkskin", "natures_balance", "summoner_female_passive"],
-  "promotesTo": []
-},
-"initiate_male": {
-  "name": "Initiate",
-  "tier": 1,
-  "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor"],
-  "promotesTo": ["mage_male"]
-},
-"initiate_female": {
-  "name": "Initiate",
-  "tier": 1,
-  "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor"],
-  "promotesTo": ["mage_female"]
-},
-"mage_male": {
-  "name": "Mage",
-  "tier": 2,
-  "modifiers": { "str": 1.6, "agi": 1.8, "int": 2.6 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor"],
-  "promotesTo": ["wizard_male", "sage_male"]
-},
-"mage_female": {
-  "name": "Mage",
-  "tier": 2,
-  "modifiers": { "str": 1.6, "agi": 1.8, "int": 2.6 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor"],
-  "promotesTo": ["witch_female", "sage_female"]
-},
-"wizard_male": {
-  "name": "Wizard",
-  "tier": 3,
-  "modifiers": { "str": 2.3, "agi": 2.6, "int": 4.1 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor", "helping_hand"],
-  "promotesTo": ["white_wizard_male"]
-},
-"witch_female": {
-  "name": "Witch",
-  "tier": 3,
-  "modifiers": { "str": 2.3, "agi": 2.6, "int": 4.1 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor", "helping_hand"],
-  "promotesTo": ["white_witch_female"]
-},
-"white_wizard_male": {
-  "name": "White Wizard",
-  "tier": 4,
-  "modifiers": { "str": 3.5, "agi": 3.0, "int": 5.5 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor", "helping_hand", "white_wizard_male_passive"],
-  "promotesTo": []
-},
-"white_witch_female": {
-  "name": "White Witch",
-  "tier": 4,
-  "modifiers": { "str": 3.5, "agi": 3.0, "int": 5.5 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor", "helping_hand", "white_witch_female_passive"],
-  "promotesTo": []
-},
-"sage_male": {
-  "name": "Sage",
-  "tier": 3,
-  "modifiers": { "str": 2.0, "agi": 2.8, "int": 4.2 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor", "twilights_promise"],
-  "promotesTo": ["arch_sage_male"]
-},
-"sage_female": {
-  "name": "Sage",
-  "tier": 3,
-  "modifiers": { "str": 2.0, "agi": 2.8, "int": 4.2 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor", "twilights_promise"],
-  "promotesTo": ["arch_sage_female"]
-},
-"arch_sage_male": {
-  "name": "Arch Sage",
-  "tier": 4,
-  "modifiers": { "str": 3.0, "agi": 3.5, "int": 5.5 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor", "twilights_promise", "arch_sage_male_passive"],
-  "promotesTo": []
-},
-"arch_sage_female": {
-  "name": "Arch Sage",
-  "tier": 4,
-  "modifiers": { "str": 3.0, "agi": 3.5, "int": 5.5 },
-  "mainstat": "int",
-  "spells": ["arcane_missiles", "frost_armor", "twilights_promise", "arch_sage_female_passive"],
-  "promotesTo": []
-},
-"swordsman_male": {
-  "name": "Swordsman",
-  "tier": 1,
-  "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash"],
-  "promotesTo": ["knight_male"]
-},
-"swordsman_female": {
-  "name": "Swordsman",
-  "tier": 1,
-  "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash"],
-  "promotesTo": ["knight_female"]
-},
-"knight_male": {
-  "name": "Knight",
-  "tier": 2,
-  "modifiers": { "str": 2.75, "agi": 1.75, "int": 1.5 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash"],
-  "promotesTo": ["imperial_knight_male", "crusader_male"]
-},
-"knight_female": {
-  "name": "Knight",
-  "tier": 2,
-  "modifiers": { "str": 2.75, "agi": 1.75, "int": 1.5 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash"],
-  "promotesTo": ["imperial_knight_female", "crusader_female"]
-},
-"imperial_knight_male": {
-  "name": "Imperial Knight",
-  "tier": 3,
-  "modifiers": { "str": 4.0, "agi": 3.0, "int": 2.0 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash", "rally_banner"],
-  "promotesTo": ["champion_male"]
-},
-"imperial_knight_female": {
-  "name": "Imperial Knight",
-  "tier": 3,
-  "modifiers": { "str": 4.0, "agi": 3.0, "int": 2.0 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash", "rally_banner"],
-  "promotesTo": ["champion_female"]
-},
-"champion_male": {
-  "name": "Champion",
-  "tier": 4,
-  "modifiers": { "str": 6.0, "agi": 3.5, "int": 2.5 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash", "rally_banner", "champion_male_passive"],
-  "promotesTo": []
-},
-"champion_female": {
-  "name": "Champion",
-  "tier": 4,
-  "modifiers": { "str": 6.0, "agi": 3.5, "int": 2.5 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash", "rally_banner", "champion_female_passive"],
-  "promotesTo": []
-},
-"crusader_male": {
-  "name": "Crusader",
-  "tier": 3,
-  "modifiers": { "str": 4.85, "agi": 2.0, "int": 2.15 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash", "blood_pact"],
-  "promotesTo": ["avenger_male"]
-},
-"crusader_female": {
-  "name": "Crusader",
-  "tier": 3,
-  "modifiers": { "str": 4.85, "agi": 2.0, "int": 2.15 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash", "blood_pact"],
-  "promotesTo": ["avenger_female"]
-},
-"avenger_male": {
-  "name": "Avenger",
-  "tier": 4,
-  "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash", "blood_pact", "avenger_male_passive"],
-  "promotesTo": []
-},
-"avenger_female": {
-  "name": "Avenger",
-  "tier": 4,
-  "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
-  "mainstat": "str",
-  "spells": ["blade_strike", "shield_bash", "blood_pact", "avenger_female_passive"],
-  "promotesTo": []
-},
-"templar_male": {
-  "name": "Templar",
-  "tier": 1,
-  "modifiers": { "str": 1.3, "agi": 1.35, "int": 1.35 },
-  "mainstat": "int",
-  "spells": ["psi_strike", "psychic_mark"],
-  "promotesTo": ["arch_templar_male"]
-},
-"templar_female": {
-  "name": "Templar",
-  "tier": 1,
-  "modifiers": { "str": 1.3, "agi": 1.35, "int": 1.35 },
-  "mainstat": "int",
-  "spells": ["psi_strike", "psychic_mark"],
-  "promotesTo": ["arch_templar_female"]
-},
-"arch_templar_male": {
-  "name": "Arch Templar",
-  "tier": 2,
-  "modifiers": { "str": 1.6, "agi": 2.2, "int": 2.2 },
-  "mainstat": "int",
-  "spells": ["psi_strike", "psychic_mark"],
-  "promotesTo": ["dark_templar_male", "high_templar_male"]
-},
-"arch_templar_female": {
-  "name": "Arch Templar",
-  "tier": 2,
-  "modifiers": { "str": 1.6, "agi": 2.2, "int": 2.2 },
-  "mainstat": "int",
-  "spells": ["psi_strike", "psychic_mark"],
-  "promotesTo": ["dark_templar_female", "high_templar_female"]
-},
-"dark_templar_male": {
-  "name": "Dark Templar",
-  "tier": 3,
-  "modifiers": { "str": 2.35, "agi": 4.4, "int": 2.25 },
-  "mainstat": "agi",
-  "spells": ["psi_strike", "psychic_mark", "void_strike"],
-  "promotesTo": ["dark_arch_templar_male"]
-},
-"dark_templar_female": {
-  "name": "Dark Templar",
-  "tier": 3,
-  "modifiers": { "str": 2.35, "agi": 4.4, "int": 2.25 },
-  "mainstat": "agi",
-  "spells": ["psi_strike", "psychic_mark", "void_strike"],
-  "promotesTo": ["dark_arch_templar_female"]
-},
-"dark_arch_templar_male": {
-  "name": "Dark Arch Templar",
-  "tier": 4,
-  "modifiers": { "str": 3.0, "agi": 6.25, "int": 2.75 },
-  "mainstat": "agi",
-  "spells": ["psi_strike", "psychic_mark", "void_strike", "dark_arch_templar_male_passive"],
-  "promotesTo": []
-},
-"dark_arch_templar_female": {
-  "name": "Dark Arch Templar",
-  "tier": 4,
-  "modifiers": { "str": 3.0, "agi": 6.25, "int": 2.75 },
-  "mainstat": "agi",
-  "spells": ["psi_strike", "psychic_mark", "void_strike", "dark_arch_templar_female_passive"],
-  "promotesTo": []
-},
-"high_templar_male": {
-  "name": "High Templar",
-  "tier": 3,
-  "modifiers": { "str": 2.35, "agi": 2.25, "int": 4.4 },
-  "mainstat": "int",
-  "spells": ["psi_strike", "psychic_mark", "psi_shift"],
-  "promotesTo": ["grand_templar_male"]
-},
-"high_templar_female": {
-  "name": "High Templar",
-  "tier": 3,
-  "modifiers": { "str": 2.35, "agi": 2.25, "int": 4.4 },
-  "mainstat": "int",
-  "spells": ["psi_strike", "psychic_mark", "psi_shift"],
-  "promotesTo": ["grand_templar_female"]
-},
-"grand_templar_male": {
-  "name": "Grand Templar",
-  "tier": 4,
-  "modifiers": { "str": 2.75, "agi": 3.0, "int": 6.25 },
-  "mainstat": "int",
-  "spells": ["psi_strike", "psychic_mark", "psi_shift", "grand_templar_male_passive"],
-  "promotesTo": []
-},
-"grand_templar_female": {
-  "name": "Grand Templar",
-  "tier": 4,
-  "modifiers": { "str": 2.75, "agi": 3.0, "int": 6.25 },
-  "mainstat": "int",
-  "spells": ["psi_strike", "psychic_mark", "psi_shift", "grand_templar_female_passive"],
-  "promotesTo": []
-},
-"thief_male": {
-  "name": "Thief",
-  "tier": 1,
-  "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple"],
-  "promotesTo": ["rogue_male"]
-},
-"thief_female": {
-  "name": "Thief",
-  "tier": 1,
-  "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple"],
-  "promotesTo": ["rogue_female"]
-},
-"rogue_male": {
-  "name": "Rogue",
-  "tier": 2,
-  "modifiers": { "str": 1.65, "agi": 2.75, "int": 1.6 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple"],
-  "promotesTo": ["assassin_male", "stalker_male"]
-},
-"rogue_female": {
-  "name": "Rogue",
-  "tier": 2,
-  "modifiers": { "str": 1.65, "agi": 2.75, "int": 1.6 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple"],
-  "promotesTo": ["assassin_female", "stalker_female"]
-},
-"assassin_male": {
-  "name": "Assassin",
-  "tier": 3,
-  "modifiers": { "str": 2.25, "agi": 4.55, "int": 2.2 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple", "assassinate"],
-  "promotesTo": ["phantom_assassin_male"]
-},
-"assassin_female": {
-  "name": "Assassin",
-  "tier": 3,
-  "modifiers": { "str": 2.25, "agi": 4.55, "int": 2.2 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple", "assassinate"],
-  "promotesTo": ["phantom_assassin_female"]
-},
-"phantom_assassin_male": {
-  "name": "Phantom Assassin",
-  "tier": 4,
-  "modifiers": { "str": 3.0, "agi": 6.2, "int": 2.8 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple", "assassinate", "phantom_assassin_male_passive"],
-  "promotesTo": []
-},
-"phantom_assassin_female": {
-  "name": "Phantom Assassin",
-  "tier": 4,
-  "modifiers": { "str": 3.0, "agi": 6.2, "int": 2.8 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple", "assassinate", "phantom_assassin_female_passive"],
-  "promotesTo": []
-},
-"stalker_male": {
-  "name": "Stalker",
-  "tier": 3,
-  "modifiers": { "str": 2.35, "agi": 3.8, "int": 2.85 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple", "shadowstep"],
-  "promotesTo": ["master_stalker_male"]
-},
-"stalker_female": {
-  "name": "Stalker",
-  "tier": 3,
-  "modifiers": { "str": 2.35, "agi": 3.8, "int": 2.85 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple", "shadowstep"],
-  "promotesTo": ["master_stalker_female"]
-},
-"master_stalker_male": {
-  "name": "Master Stalker",
-  "tier": 4,
-  "modifiers": { "str": 3.2, "agi": 5.8, "int": 3.0 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple", "shadowstep", "master_stalker_male_passive"],
-  "promotesTo": []
-},
-"master_stalker_female": {
-  "name": "Master Stalker",
-  "tier": 4,
-  "modifiers": { "str": 3.2, "agi": 5.8, "int": 3.0 },
-  "mainstat": "agi",
-  "spells": ["cheap_shot", "cripple", "shadowstep", "master_stalker_female_passive"],
-  "promotesTo": []
-},
-"witch_hunter_male": {
-  "name": "Witch Hunter",
-  "tier": 1,
-  "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame"],
-  "promotesTo": ["slayer_male"]
-},
-"witch_hunter_female": {
-  "name": "Witch Hunter",
-  "tier": 1,
-  "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame"],
-  "promotesTo": ["slayer_female"]
-},
-"slayer_male": {
-  "name": "Slayer",
-  "tier": 2,
-  "modifiers": { "str": 1.65, "agi": 2.7, "int": 1.65 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame"],
-  "promotesTo": ["inquisitor_male", "witcher_male"]
-},
-"slayer_female": {
-  "name": "Slayer",
-  "tier": 2,
-  "modifiers": { "str": 1.65, "agi": 2.7, "int": 1.65 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame"],
-  "promotesTo": ["inquisitor_female", "witcher_female"]
-},
-"inquisitor_male": {
-  "name": "Inquisitor",
-  "tier": 3,
-  "modifiers": { "str": 2.7, "agi": 2.8, "int": 3.5 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame", "steal_magic"],
-  "promotesTo": ["grand_inquisitor_male"]
-},
-"inquisitor_female": {
-  "name": "Inquisitor",
-  "tier": 3,
-  "modifiers": { "str": 2.7, "agi": 2.8, "int": 3.5 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame", "steal_magic"],
-  "promotesTo": ["grand_inquisitor_female"]
-},
-"grand_inquisitor_male": {
-  "name": "Grand Inquisitor",
-  "tier": 4,
-  "modifiers": { "str": 3.45, "agi": 3.65, "int": 4.9 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame", "steal_magic", "grand_inquisitor_male_passive"],
-  "promotesTo": []
-},
-"grand_inquisitor_female": {
-  "name": "Grand Inquisitor",
-  "tier": 4,
-  "modifiers": { "str": 3.45, "agi": 3.65, "int": 4.9 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame", "steal_magic", "grand_inquisitor_female_passive"],
-  "promotesTo": []
-},
-"witcher_male": {
-  "name": "Witcher",
-  "tier": 3,
-  "modifiers": { "str": 2.6, "agi": 4.0, "int": 2.4 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame", "hex"],
-  "promotesTo": ["professional_witcher_male"]
-},
-"witcher_female": {
-  "name": "Witcher",
-  "tier": 3,
-  "modifiers": { "str": 2.6, "agi": 4.0, "int": 2.4 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame", "hex"],
-  "promotesTo": ["professional_witcher_female"]
-},
-"professional_witcher_male": {
-  "name": "Professional Witcher",
-  "tier": 4,
-  "modifiers": { "str": 3.25, "agi": 5.8, "int": 2.95 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame", "hex", "professional_witcher_male_passive"],
-  "promotesTo": []
-},
-"professional_witcher_female": {
-  "name": "Professional Witcher",
-  "tier": 4,
-  "modifiers": { "str": 3.25, "agi": 5.8, "int": 2.95 },
-  "mainstat": "agi",
-  "spells": ["silver_bolt", "purifying_flame", "hex", "professional_witcher_female_passive"],
-  "promotesTo": []
-}
+      "name": "Acolyte",
+      "tier": 1,
+      "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 40,
+        "hpRegen": 1,
+        "attack": 3,
+        "attackSpeed": 0,
+        "str": 4,
+        "agi": 5,
+        "int": 7,
+        "armor": 6,
+        "resist": 6
+      },
+      "spells": ["holy_smite", "divine_light"],
+      "promotesTo": ["cleric_male"]
+    },
+    "acolyte_female": {
+      "name": "Acolyte",
+      "tier": 1,
+      "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 40,
+        "hpRegen": 1,
+        "attack": 3,
+        "attackSpeed": 0,
+        "str": 4,
+        "agi": 5,
+        "int": 7,
+        "armor": 6,
+        "resist": 6
+      },
+      "spells": ["holy_smite", "divine_light"],
+      "promotesTo": ["cleric_female"]
+    },
+    "cleric_male": {
+      "name": "Cleric",
+      "tier": 2,
+      "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 60,
+        "hpRegen": 1.5,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 7,
+        "int": 12,
+        "armor": 10,
+        "resist": 10
+      },
+      "spells": ["holy_smite", "divine_light"],
+      "promotesTo": ["priest_male", "patriarch_male"]
+    },
+    "cleric_female": {
+      "name": "Cleric",
+      "tier": 2,
+      "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 60,
+        "hpRegen": 1.5,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 7,
+        "int": 12,
+        "armor": 10,
+        "resist": 10
+      },
+      "spells": ["holy_smite", "divine_light"],
+      "promotesTo": ["priestess_female", "matriarch_female"]
+    },
+    "priest_male": {
+      "name": "Priest",
+      "tier": 3,
+      "modifiers": { "str": 2.15, "agi": 2.95, "int": 3.9 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 90,
+        "hpRegen": 2.5,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 6,
+        "agi": 10,
+        "int": 20,
+        "armor": 15,
+        "resist": 18
+      },
+      "spells": ["holy_smite", "divine_light", "sanctuary"],
+      "promotesTo": ["hierophant_male"]
+    },
+    "priestess_female": {
+      "name": "Priestess",
+      "tier": 3,
+      "modifiers": { "str": 2.15, "agi": 2.95, "int": 3.9 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 90,
+        "hpRegen": 2.5,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 6,
+        "agi": 10,
+        "int": 20,
+        "armor": 15,
+        "resist": 18
+      },
+      "spells": ["holy_smite", "divine_light", "sanctuary"],
+      "promotesTo": ["hierophant_female"]
+    },
+    "hierophant_male": {
+      "name": "Hierophant",
+      "tier": 4,
+      "modifiers": { "str": 2.5, "agi": 3.95, "int": 5.55 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 120,
+        "hpRegen": 3.5,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 13,
+        "int": 27,
+        "armor": 20,
+        "resist": 28
+      },
+      "spells": ["holy_smite", "divine_light", "sanctuary", "hierophant_male_passive"],
+      "promotesTo": []
+    },
+    "hierophant_female": {
+      "name": "Hierophant",
+      "tier": 4,
+      "modifiers": { "str": 2.5, "agi": 3.95, "int": 5.55 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 120,
+        "hpRegen": 3.5,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 13,
+        "int": 27,
+        "armor": 20,
+        "resist": 28
+      },
+      "spells": ["holy_smite", "divine_light", "sanctuary", "hierophant_female_passive"],
+      "promotesTo": []
+    },
+    "patriarch_male": {
+      "name": "Patriarch",
+      "tier": 3,
+      "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 100,
+        "hpRegen": 3,
+        "attack": 5,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 6,
+        "int": 22,
+        "armor": 18,
+        "resist": 16
+      },
+      "spells": ["holy_smite", "divine_light", "mass_heal"],
+      "promotesTo": ["prophet_male"]
+    },
+    "matriarch_female": {
+      "name": "Matriarch",
+      "tier": 3,
+      "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 100,
+        "hpRegen": 3,
+        "attack": 5,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 6,
+        "int": 22,
+        "armor": 18,
+        "resist": 16
+      },
+      "spells": ["holy_smite", "divine_light", "mass_heal"],
+      "promotesTo": ["prophetess_female"]
+    },
+    "prophet_male": {
+      "name": "Prophet",
+      "tier": 4,
+      "modifiers": { "str": 3.55, "agi": 2.85, "int": 5.6 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 140,
+        "hpRegen": 4,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 8,
+        "int": 30,
+        "armor": 24,
+        "resist": 24
+      },
+      "spells": ["holy_smite", "divine_light", "mass_heal", "prophet_male_passive"],
+      "promotesTo": []
+    },
+    "prophetess_female": {
+      "name": "Prophetess",
+      "tier": 4,
+      "modifiers": { "str": 3.55, "agi": 2.85, "int": 5.6 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 140,
+        "hpRegen": 4,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 8,
+        "int": 30,
+        "armor": 24,
+        "resist": 24
+      },
+      "spells": ["holy_smite", "divine_light", "mass_heal", "prophetess_female_passive"],
+      "promotesTo": []
+    },
+    "archer_male": {
+      "name": "Archer",
+      "tier": 1,
+      "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 35,
+        "hpRegen": 0.5,
+        "attack": 5,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 7,
+        "int": 4,
+        "armor": 8,
+        "resist": 4
+      },
+      "spells": ["aimed_shot", "hunters_mark"],
+      "promotesTo": ["ranger_male"]
+    },
+    "archer_female": {
+      "name": "Archer",
+      "tier": 1,
+      "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 35,
+        "hpRegen": 0.5,
+        "attack": 5,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 7,
+        "int": 4,
+        "armor": 8,
+        "resist": 4
+      },
+      "spells": ["aimed_shot", "hunters_mark"],
+      "promotesTo": ["ranger_female"]
+    },
+    "ranger_male": {
+      "name": "Ranger",
+      "tier": 2,
+      "modifiers": { "str": 1.5, "agi": 2.9, "int": 1.6 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 50,
+        "hpRegen": 1,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 7,
+        "agi": 12,
+        "int": 5,
+        "armor": 12,
+        "resist": 6
+      },
+      "spells": ["aimed_shot", "hunters_mark"],
+      "promotesTo": ["marksman_male", "tracker_male"]
+    },
+    "ranger_female": {
+      "name": "Ranger",
+      "tier": 2,
+      "modifiers": { "str": 1.5, "agi": 2.9, "int": 1.6 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 50,
+        "hpRegen": 1,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 7,
+        "agi": 12,
+        "int": 5,
+        "armor": 12,
+        "resist": 6
+      },
+      "spells": ["aimed_shot", "hunters_mark"],
+      "promotesTo": ["marksman_female", "tracker_female"]
+    },
+    "marksman_male": {
+      "name": "Marksman",
+      "tier": 3,
+      "modifiers": { "str": 2.05, "agi": 4.6, "int": 2.35 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 80,
+        "hpRegen": 1.5,
+        "attack": 12,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 20,
+        "int": 6,
+        "armor": 18,
+        "resist": 10
+      },
+      "spells": ["aimed_shot", "hunters_mark", "double_shot"],
+      "promotesTo": ["sniper_male"]
+    },
+    "marksman_female": {
+      "name": "Marksman",
+      "tier": 3,
+      "modifiers": { "str": 2.05, "agi": 4.6, "int": 2.35 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 80,
+        "hpRegen": 1.5,
+        "attack": 12,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 20,
+        "int": 6,
+        "armor": 18,
+        "resist": 10
+      },
+      "spells": ["aimed_shot", "hunters_mark", "double_shot"],
+      "promotesTo": ["sniper_female"]
+    },
+    "sniper_male": {
+      "name": "Sniper",
+      "tier": 4,
+      "modifiers": { "str": 2.55, "agi": 6.7, "int": 2.75 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 100,
+        "hpRegen": 2,
+        "attack": 16,
+        "attackSpeed": 0,
+        "str": 13,
+        "agi": 27,
+        "int": 8,
+        "armor": 24,
+        "resist": 14
+      },
+      "spells": ["aimed_shot", "hunters_mark", "double_shot", "sniper_male_passive"],
+      "promotesTo": []
+    },
+    "sniper_female": {
+      "name": "Sniper",
+      "tier": 4,
+      "modifiers": { "str": 2.55, "agi": 6.7, "int": 2.75 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 100,
+        "hpRegen": 2,
+        "attack": 16,
+        "attackSpeed": 0,
+        "str": 13,
+        "agi": 27,
+        "int": 8,
+        "armor": 24,
+        "resist": 14
+      },
+      "spells": ["aimed_shot", "hunters_mark", "double_shot", "sniper_female_passive"],
+      "promotesTo": []
+    },
+    "tracker_male": {
+      "name": "Tracker",
+      "tier": 3,
+      "modifiers": { "str": 2.5, "agi": 4.25, "int": 2.25 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 90,
+        "hpRegen": 2,
+        "attack": 10,
+        "attackSpeed": 0,
+        "str": 12,
+        "agi": 18,
+        "int": 6,
+        "armor": 20,
+        "resist": 8
+      },
+      "spells": ["aimed_shot", "hunters_mark", "rain_of_arrows"],
+      "promotesTo": ["monster_hunter_male"]
+    },
+    "tracker_female": {
+      "name": "Tracker",
+      "tier": 3,
+      "modifiers": { "str": 2.5, "agi": 4.25, "int": 2.25 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 90,
+        "hpRegen": 2,
+        "attack": 10,
+        "attackSpeed": 0,
+        "str": 12,
+        "agi": 18,
+        "int": 6,
+        "armor": 20,
+        "resist": 8
+      },
+      "spells": ["aimed_shot", "hunters_mark", "rain_of_arrows"],
+      "promotesTo": ["monster_hunter_female"]
+    },
+    "monster_hunter_male": {
+      "name": "Monster Hunter",
+      "tier": 4,
+      "modifiers": { "str": 3.35, "agi": 6.1, "int": 2.55 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 120,
+        "hpRegen": 2.5,
+        "attack": 14,
+        "attackSpeed": 0,
+        "str": 16,
+        "agi": 24,
+        "int": 8,
+        "armor": 28,
+        "resist": 12
+      },
+      "spells": ["aimed_shot", "hunters_mark", "rain_of_arrows", "monster_hunter_male_passive"],
+      "promotesTo": []
+    },
+    "monster_hunter_female": {
+      "name": "Monster Hunter",
+      "tier": 4,
+      "modifiers": { "str": 3.35, "agi": 6.1, "int": 2.55 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 120,
+        "hpRegen": 2.5,
+        "attack": 14,
+        "attackSpeed": 0,
+        "str": 16,
+        "agi": 24,
+        "int": 8,
+        "armor": 28,
+        "resist": 12
+      },
+      "spells": ["aimed_shot", "hunters_mark", "rain_of_arrows", "monster_hunter_female_passive"],
+      "promotesTo": []
+    },
+    "druid_male": {
+      "name": "Druid",
+      "tier": 1,
+      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 45,
+        "hpRegen": 0.5,
+        "attack": 3,
+        "attackSpeed": 0,
+        "str": 6,
+        "agi": 4,
+        "int": 6,
+        "armor": 10,
+        "resist": 4
+      },
+      "spells": ["natures_blessing", "barkskin"],
+      "promotesTo": ["arch_druid_male"]
+    },
+    "druid_female": {
+      "name": "Druid",
+      "tier": 1,
+      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 45,
+        "hpRegen": 0.5,
+        "attack": 3,
+        "attackSpeed": 0,
+        "str": 6,
+        "agi": 4,
+        "int": 6,
+        "armor": 10,
+        "resist": 4
+      },
+      "spells": ["natures_blessing", "barkskin"],
+      "promotesTo": ["arch_druid_female"]
+    },
+    "arch_druid_male": {
+      "name": "Arch Druid",
+      "tier": 2,
+      "modifiers": { "str": 2.0, "agi": 1.5, "int": 2.5 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 70,
+        "hpRegen": 1,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 9,
+        "agi": 5,
+        "int": 10,
+        "armor": 16,
+        "resist": 8
+      },
+      "spells": ["natures_blessing", "barkskin"],
+      "promotesTo": ["shapeshifter_male", "shaman_male"]
+    },
+    "arch_druid_female": {
+      "name": "Arch Druid",
+      "tier": 2,
+      "modifiers": { "str": 2.0, "agi": 1.5, "int": 2.5 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 70,
+        "hpRegen": 1,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 9,
+        "agi": 5,
+        "int": 10,
+        "armor": 16,
+        "resist": 8
+      },
+      "spells": ["natures_blessing", "barkskin"],
+      "promotesTo": ["shapeshifter_female", "shaman_female"]
+    },
+    "shapeshifter_male": {
+      "name": "Shapeshifter",
+      "tier": 3,
+      "modifiers": { "str": 4.0, "agi": 2.0, "int": 3.0 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 120,
+        "hpRegen": 1.5,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 18,
+        "agi": 6,
+        "int": 12,
+        "armor": 28,
+        "resist": 10
+      },
+      "spells": ["natures_blessing", "barkskin", "primal_roar"],
+      "promotesTo": ["runemaster_male"]
+    },
+    "shapeshifter_female": {
+      "name": "Shapeshifter",
+      "tier": 3,
+      "modifiers": { "str": 4.0, "agi": 2.0, "int": 3.0 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 120,
+        "hpRegen": 1.5,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 18,
+        "agi": 6,
+        "int": 12,
+        "armor": 28,
+        "resist": 10
+      },
+      "spells": ["natures_blessing", "barkskin", "primal_roar"],
+      "promotesTo": ["runemaster_female"]
+    },
+    "runemaster_male": {
+      "name": "Runemaster",
+      "tier": 4,
+      "modifiers": { "str": 5.0, "agi": 3.0, "int": 4.0 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 160,
+        "hpRegen": 2,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 24,
+        "agi": 8,
+        "int": 16,
+        "armor": 38,
+        "resist": 16
+      },
+      "spells": ["natures_blessing", "barkskin", "primal_roar", "runemaster_male_passive"],
+      "promotesTo": []
+    },
+    "runemaster_female": {
+      "name": "Runemaster",
+      "tier": 4,
+      "modifiers": { "str": 5.0, "agi": 3.0, "int": 4.0 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 160,
+        "hpRegen": 2,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 24,
+        "agi": 8,
+        "int": 16,
+        "armor": 38,
+        "resist": 16
+      },
+      "spells": ["natures_blessing", "barkskin", "primal_roar", "runemaster_female_passive"],
+      "promotesTo": []
+    },
+    "shaman_male": {
+      "name": "Shaman",
+      "tier": 3,
+      "modifiers": { "str": 2.5, "agi": 2.0, "int": 4.5 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 80,
+        "hpRegen": 2.5,
+        "attack": 5,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 8,
+        "int": 18,
+        "armor": 16,
+        "resist": 16
+      },
+      "spells": ["natures_blessing", "barkskin", "natures_balance"],
+      "promotesTo": ["summoner_male"]
+    },
+    "shaman_female": {
+      "name": "Shaman",
+      "tier": 3,
+      "modifiers": { "str": 2.5, "agi": 2.0, "int": 4.5 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 80,
+        "hpRegen": 2.5,
+        "attack": 5,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 8,
+        "int": 18,
+        "armor": 16,
+        "resist": 16
+      },
+      "spells": ["natures_blessing", "barkskin", "natures_balance"],
+      "promotesTo": ["summoner_female"]
+    },
+    "summoner_male": {
+      "name": "Summoner",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 2.5, "int": 6.5 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 110,
+        "hpRegen": 3.5,
+        "attack": 7,
+        "attackSpeed": 0,
+        "str": 13,
+        "agi": 10,
+        "int": 25,
+        "armor": 22,
+        "resist": 24
+      },
+      "spells": ["natures_blessing", "barkskin", "natures_balance", "summoner_male_passive"],
+      "promotesTo": []
+    },
+    "summoner_female": {
+      "name": "Summoner",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 2.5, "int": 6.5 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 110,
+        "hpRegen": 3.5,
+        "attack": 7,
+        "attackSpeed": 0,
+        "str": 13,
+        "agi": 10,
+        "int": 25,
+        "armor": 22,
+        "resist": 24
+      },
+      "spells": ["natures_blessing", "barkskin", "natures_balance", "summoner_female_passive"],
+      "promotesTo": []
+    },
+    "initiate_male": {
+      "name": "Initiate",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 30,
+        "hpRegen": 0.5,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 4,
+        "agi": 6,
+        "int": 6,
+        "armor": 6,
+        "resist": 8
+      },
+      "spells": ["arcane_missiles", "frost_armor"],
+      "promotesTo": ["mage_male"]
+    },
+    "initiate_female": {
+      "name": "Initiate",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 30,
+        "hpRegen": 0.5,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 4,
+        "agi": 6,
+        "int": 6,
+        "armor": 6,
+        "resist": 8
+      },
+      "spells": ["arcane_missiles", "frost_armor"],
+      "promotesTo": ["mage_female"]
+    },
+    "mage_male": {
+      "name": "Mage",
+      "tier": 2,
+      "modifiers": { "str": 1.6, "agi": 1.8, "int": 2.6 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 45,
+        "hpRegen": 1,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 8,
+        "int": 11,
+        "armor": 9,
+        "resist": 14
+      },
+      "spells": ["arcane_missiles", "frost_armor"],
+      "promotesTo": ["wizard_male", "sage_male"]
+    },
+    "mage_female": {
+      "name": "Mage",
+      "tier": 2,
+      "modifiers": { "str": 1.6, "agi": 1.8, "int": 2.6 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 45,
+        "hpRegen": 1,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 8,
+        "int": 11,
+        "armor": 9,
+        "resist": 14
+      },
+      "spells": ["arcane_missiles", "frost_armor"],
+      "promotesTo": ["witch_female", "sage_female"]
+    },
+    "wizard_male": {
+      "name": "Wizard",
+      "tier": 3,
+      "modifiers": { "str": 2.3, "agi": 2.6, "int": 4.1 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 70,
+        "hpRegen": 1.5,
+        "attack": 9,
+        "attackSpeed": 0,
+        "str": 7,
+        "agi": 11,
+        "int": 18,
+        "armor": 13,
+        "resist": 22
+      },
+      "spells": ["arcane_missiles", "frost_armor", "helping_hand"],
+      "promotesTo": ["white_wizard_male"]
+    },
+    "witch_female": {
+      "name": "Witch",
+      "tier": 3,
+      "modifiers": { "str": 2.3, "agi": 2.6, "int": 4.1 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 70,
+        "hpRegen": 1.5,
+        "attack": 9,
+        "attackSpeed": 0,
+        "str": 7,
+        "agi": 11,
+        "int": 18,
+        "armor": 13,
+        "resist": 22
+      },
+      "spells": ["arcane_missiles", "frost_armor", "helping_hand"],
+      "promotesTo": ["white_witch_female"]
+    },
+    "white_wizard_male": {
+      "name": "White Wizard",
+      "tier": 4,
+      "modifiers": { "str": 3.5, "agi": 3.0, "int": 5.5 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 90,
+        "hpRegen": 2,
+        "attack": 12,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 14,
+        "int": 24,
+        "armor": 18,
+        "resist": 32
+      },
+      "spells": ["arcane_missiles", "frost_armor", "helping_hand", "white_wizard_male_passive"],
+      "promotesTo": []
+    },
+    "white_witch_female": {
+      "name": "White Witch",
+      "tier": 4,
+      "modifiers": { "str": 3.5, "agi": 3.0, "int": 5.5 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 90,
+        "hpRegen": 2,
+        "attack": 12,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 14,
+        "int": 24,
+        "armor": 18,
+        "resist": 32
+      },
+      "spells": ["arcane_missiles", "frost_armor", "helping_hand", "white_witch_female_passive"],
+      "promotesTo": []
+    },
+    "sage_male": {
+      "name": "Sage",
+      "tier": 3,
+      "modifiers": { "str": 2.0, "agi": 2.8, "int": 4.2 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 60,
+        "hpRegen": 2,
+        "attack": 10,
+        "attackSpeed": 0,
+        "str": 6,
+        "agi": 12,
+        "int": 18,
+        "armor": 12,
+        "resist": 20
+      },
+      "spells": ["arcane_missiles", "frost_armor", "twilights_promise"],
+      "promotesTo": ["arch_sage_male"]
+    },
+    "sage_female": {
+      "name": "Sage",
+      "tier": 3,
+      "modifiers": { "str": 2.0, "agi": 2.8, "int": 4.2 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 60,
+        "hpRegen": 2,
+        "attack": 10,
+        "attackSpeed": 0,
+        "str": 6,
+        "agi": 12,
+        "int": 18,
+        "armor": 12,
+        "resist": 20
+      },
+      "spells": ["arcane_missiles", "frost_armor", "twilights_promise"],
+      "promotesTo": ["arch_sage_female"]
+    },
+    "arch_sage_male": {
+      "name": "Arch Sage",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 3.5, "int": 5.5 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 80,
+        "hpRegen": 3,
+        "attack": 13,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 16,
+        "int": 24,
+        "armor": 16,
+        "resist": 30
+      },
+      "spells": ["arcane_missiles", "frost_armor", "twilights_promise", "arch_sage_male_passive"],
+      "promotesTo": []
+    },
+    "arch_sage_female": {
+      "name": "Arch Sage",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 3.5, "int": 5.5 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 80,
+        "hpRegen": 3,
+        "attack": 13,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 16,
+        "int": 24,
+        "armor": 16,
+        "resist": 30
+      },
+      "spells": ["arcane_missiles", "frost_armor", "twilights_promise", "arch_sage_female_passive"],
+      "promotesTo": []
+    },
+    "swordsman_male": {
+      "name": "Swordsman",
+      "tier": 1,
+      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 50,
+        "hpRegen": 0.5,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 7,
+        "agi": 5,
+        "int": 4,
+        "armor": 10,
+        "resist": 2
+      },
+      "spells": ["blade_strike", "shield_bash"],
+      "promotesTo": ["knight_male"]
+    },
+    "swordsman_female": {
+      "name": "Swordsman",
+      "tier": 1,
+      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 50,
+        "hpRegen": 0.5,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 7,
+        "agi": 5,
+        "int": 4,
+        "armor": 10,
+        "resist": 2
+      },
+      "spells": ["blade_strike", "shield_bash"],
+      "promotesTo": ["knight_female"]
+    },
+    "knight_male": {
+      "name": "Knight",
+      "tier": 2,
+      "modifiers": { "str": 2.75, "agi": 1.75, "int": 1.5 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 80,
+        "hpRegen": 1,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 11,
+        "agi": 8,
+        "int": 5,
+        "armor": 16,
+        "resist": 4
+      },
+      "spells": ["blade_strike", "shield_bash"],
+      "promotesTo": ["imperial_knight_male", "crusader_male"]
+    },
+    "knight_female": {
+      "name": "Knight",
+      "tier": 2,
+      "modifiers": { "str": 2.75, "agi": 1.75, "int": 1.5 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 80,
+        "hpRegen": 1,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 11,
+        "agi": 8,
+        "int": 5,
+        "armor": 16,
+        "resist": 4
+      },
+      "spells": ["blade_strike", "shield_bash"],
+      "promotesTo": ["imperial_knight_female", "crusader_female"]
+    },
+    "imperial_knight_male": {
+      "name": "Imperial Knight",
+      "tier": 3,
+      "modifiers": { "str": 4.0, "agi": 3.0, "int": 2.0 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 130,
+        "hpRegen": 1.5,
+        "attack": 9,
+        "attackSpeed": 0,
+        "str": 16,
+        "agi": 14,
+        "int": 6,
+        "armor": 26,
+        "resist": 6
+      },
+      "spells": ["blade_strike", "shield_bash", "rally_banner"],
+      "promotesTo": ["champion_male"]
+    },
+    "imperial_knight_female": {
+      "name": "Imperial Knight",
+      "tier": 3,
+      "modifiers": { "str": 4.0, "agi": 3.0, "int": 2.0 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 130,
+        "hpRegen": 1.5,
+        "attack": 9,
+        "attackSpeed": 0,
+        "str": 16,
+        "agi": 14,
+        "int": 6,
+        "armor": 26,
+        "resist": 6
+      },
+      "spells": ["blade_strike", "shield_bash", "rally_banner"],
+      "promotesTo": ["champion_female"]
+    },
+    "champion_male": {
+      "name": "Champion",
+      "tier": 4,
+      "modifiers": { "str": 6.0, "agi": 3.5, "int": 2.5 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 180,
+        "hpRegen": 2,
+        "attack": 12,
+        "attackSpeed": 0,
+        "str": 22,
+        "agi": 18,
+        "int": 8,
+        "armor": 36,
+        "resist": 10
+      },
+      "spells": ["blade_strike", "shield_bash", "rally_banner", "champion_male_passive"],
+      "promotesTo": []
+    },
+    "champion_female": {
+      "name": "Champion",
+      "tier": 4,
+      "modifiers": { "str": 6.0, "agi": 3.5, "int": 2.5 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 180,
+        "hpRegen": 2,
+        "attack": 12,
+        "attackSpeed": 0,
+        "str": 22,
+        "agi": 18,
+        "int": 8,
+        "armor": 36,
+        "resist": 10
+      },
+      "spells": ["blade_strike", "shield_bash", "rally_banner", "champion_female_passive"],
+      "promotesTo": []
+    },
+    "crusader_male": {
+      "name": "Crusader",
+      "tier": 3,
+      "modifiers": { "str": 4.85, "agi": 2.0, "int": 2.15 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 140,
+        "hpRegen": 2,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 20,
+        "agi": 10,
+        "int": 6,
+        "armor": 30,
+        "resist": 4
+      },
+      "spells": ["blade_strike", "shield_bash", "blood_pact"],
+      "promotesTo": ["avenger_male"]
+    },
+    "crusader_female": {
+      "name": "Crusader",
+      "tier": 3,
+      "modifiers": { "str": 4.85, "agi": 2.0, "int": 2.15 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 140,
+        "hpRegen": 2,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 20,
+        "agi": 10,
+        "int": 6,
+        "armor": 30,
+        "resist": 4
+      },
+      "spells": ["blade_strike", "shield_bash", "blood_pact"],
+      "promotesTo": ["avenger_female"]
+    },
+    "avenger_male": {
+      "name": "Avenger",
+      "tier": 4,
+      "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 200,
+        "hpRegen": 2.5,
+        "attack": 10,
+        "attackSpeed": 0,
+        "str": 28,
+        "agi": 12,
+        "int": 8,
+        "armor": 42,
+        "resist": 6
+      },
+      "spells": ["blade_strike", "shield_bash", "blood_pact", "avenger_male_passive"],
+      "promotesTo": []
+    },
+    "avenger_female": {
+      "name": "Avenger",
+      "tier": 4,
+      "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 200,
+        "hpRegen": 2.5,
+        "attack": 10,
+        "attackSpeed": 0,
+        "str": 28,
+        "agi": 12,
+        "int": 8,
+        "armor": 42,
+        "resist": 6
+      },
+      "spells": ["blade_strike", "shield_bash", "blood_pact", "avenger_female_passive"],
+      "promotesTo": []
+    },
+    "templar_male": {
+      "name": "Templar",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.35, "int": 1.35 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 35,
+        "hpRegen": 0.5,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 5,
+        "int": 6,
+        "armor": 7,
+        "resist": 6
+      },
+      "spells": ["psi_strike", "psychic_mark"],
+      "promotesTo": ["arch_templar_male"]
+    },
+    "templar_female": {
+      "name": "Templar",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.35, "int": 1.35 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 35,
+        "hpRegen": 0.5,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 5,
+        "int": 6,
+        "armor": 7,
+        "resist": 6
+      },
+      "spells": ["psi_strike", "psychic_mark"],
+      "promotesTo": ["arch_templar_female"]
+    },
+    "arch_templar_male": {
+      "name": "Arch Templar",
+      "tier": 2,
+      "modifiers": { "str": 1.6, "agi": 2.2, "int": 2.2 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 55,
+        "hpRegen": 1,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 7,
+        "agi": 8,
+        "int": 9,
+        "armor": 11,
+        "resist": 10
+      },
+      "spells": ["psi_strike", "psychic_mark"],
+      "promotesTo": ["dark_templar_male", "high_templar_male"]
+    },
+    "arch_templar_female": {
+      "name": "Arch Templar",
+      "tier": 2,
+      "modifiers": { "str": 1.6, "agi": 2.2, "int": 2.2 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 55,
+        "hpRegen": 1,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 7,
+        "agi": 8,
+        "int": 9,
+        "armor": 11,
+        "resist": 10
+      },
+      "spells": ["psi_strike", "psychic_mark"],
+      "promotesTo": ["dark_templar_female", "high_templar_female"]
+    },
+    "dark_templar_male": {
+      "name": "Dark Templar",
+      "tier": 3,
+      "modifiers": { "str": 2.35, "agi": 4.4, "int": 2.25 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 75,
+        "hpRegen": 2,
+        "attack": 11,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 18,
+        "int": 10,
+        "armor": 17,
+        "resist": 12
+      },
+      "spells": ["psi_strike", "psychic_mark", "void_strike"],
+      "promotesTo": ["dark_arch_templar_male"]
+    },
+    "dark_templar_female": {
+      "name": "Dark Templar",
+      "tier": 3,
+      "modifiers": { "str": 2.35, "agi": 4.4, "int": 2.25 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 75,
+        "hpRegen": 2,
+        "attack": 11,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 18,
+        "int": 10,
+        "armor": 17,
+        "resist": 12
+      },
+      "spells": ["psi_strike", "psychic_mark", "void_strike"],
+      "promotesTo": ["dark_arch_templar_female"]
+    },
+    "dark_arch_templar_male": {
+      "name": "Dark Arch Templar",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 6.25, "int": 2.75 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 105,
+        "hpRegen": 2.5,
+        "attack": 15,
+        "attackSpeed": 0,
+        "str": 11,
+        "agi": 25,
+        "int": 12,
+        "armor": 23,
+        "resist": 18
+      },
+      "spells": ["psi_strike", "psychic_mark", "void_strike", "dark_arch_templar_male_passive"],
+      "promotesTo": []
+    },
+    "dark_arch_templar_female": {
+      "name": "Dark Arch Templar",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 6.25, "int": 2.75 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 105,
+        "hpRegen": 2.5,
+        "attack": 15,
+        "attackSpeed": 0,
+        "str": 11,
+        "agi": 25,
+        "int": 12,
+        "armor": 23,
+        "resist": 18
+      },
+      "spells": ["psi_strike", "psychic_mark", "void_strike", "dark_arch_templar_female_passive"],
+      "promotesTo": []
+    },
+    "high_templar_male": {
+      "name": "High Templar",
+      "tier": 3,
+      "modifiers": { "str": 2.35, "agi": 2.25, "int": 4.4 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 75,
+        "hpRegen": 2,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 10,
+        "int": 18,
+        "armor": 14,
+        "resist": 18
+      },
+      "spells": ["psi_strike", "psychic_mark", "psi_shift"],
+      "promotesTo": ["grand_templar_male"]
+    },
+    "high_templar_female": {
+      "name": "High Templar",
+      "tier": 3,
+      "modifiers": { "str": 2.35, "agi": 2.25, "int": 4.4 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 75,
+        "hpRegen": 2,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 10,
+        "int": 18,
+        "armor": 14,
+        "resist": 18
+      },
+      "spells": ["psi_strike", "psychic_mark", "psi_shift"],
+      "promotesTo": ["grand_templar_female"]
+    },
+    "grand_templar_male": {
+      "name": "Grand Templar",
+      "tier": 4,
+      "modifiers": { "str": 2.75, "agi": 3.0, "int": 6.25 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 105,
+        "hpRegen": 2.5,
+        "attack": 11,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 13,
+        "int": 25,
+        "armor": 19,
+        "resist": 26
+      },
+      "spells": ["psi_strike", "psychic_mark", "psi_shift", "grand_templar_male_passive"],
+      "promotesTo": []
+    },
+    "grand_templar_female": {
+      "name": "Grand Templar",
+      "tier": 4,
+      "modifiers": { "str": 2.75, "agi": 3.0, "int": 6.25 },
+      "mainstat": "int",
+      "initial": {
+        "hp": 105,
+        "hpRegen": 2.5,
+        "attack": 11,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 13,
+        "int": 25,
+        "armor": 19,
+        "resist": 26
+      },
+      "spells": ["psi_strike", "psychic_mark", "psi_shift", "grand_templar_female_passive"],
+      "promotesTo": []
+    },
+    "thief_male": {
+      "name": "Thief",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 30,
+        "hpRegen": 0.5,
+        "attack": 5,
+        "attackSpeed": 0,
+        "str": 4,
+        "agi": 7,
+        "int": 5,
+        "armor": 7,
+        "resist": 6
+      },
+      "spells": ["cheap_shot", "cripple"],
+      "promotesTo": ["rogue_male"]
+    },
+    "thief_female": {
+      "name": "Thief",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 30,
+        "hpRegen": 0.5,
+        "attack": 5,
+        "attackSpeed": 0,
+        "str": 4,
+        "agi": 7,
+        "int": 5,
+        "armor": 7,
+        "resist": 6
+      },
+      "spells": ["cheap_shot", "cripple"],
+      "promotesTo": ["rogue_female"]
+    },
+    "rogue_male": {
+      "name": "Rogue",
+      "tier": 2,
+      "modifiers": { "str": 1.65, "agi": 2.75, "int": 1.6 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 45,
+        "hpRegen": 1,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 6,
+        "agi": 12,
+        "int": 6,
+        "armor": 11,
+        "resist": 10
+      },
+      "spells": ["cheap_shot", "cripple"],
+      "promotesTo": ["assassin_male", "stalker_male"]
+    },
+    "rogue_female": {
+      "name": "Rogue",
+      "tier": 2,
+      "modifiers": { "str": 1.65, "agi": 2.75, "int": 1.6 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 45,
+        "hpRegen": 1,
+        "attack": 8,
+        "attackSpeed": 0,
+        "str": 6,
+        "agi": 12,
+        "int": 6,
+        "armor": 11,
+        "resist": 10
+      },
+      "spells": ["cheap_shot", "cripple"],
+      "promotesTo": ["assassin_female", "stalker_female"]
+    },
+    "assassin_male": {
+      "name": "Assassin",
+      "tier": 3,
+      "modifiers": { "str": 2.25, "agi": 4.55, "int": 2.2 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 70,
+        "hpRegen": 1.5,
+        "attack": 13,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 20,
+        "int": 8,
+        "armor": 16,
+        "resist": 14
+      },
+      "spells": ["cheap_shot", "cripple", "assassinate"],
+      "promotesTo": ["phantom_assassin_male"]
+    },
+    "assassin_female": {
+      "name": "Assassin",
+      "tier": 3,
+      "modifiers": { "str": 2.25, "agi": 4.55, "int": 2.2 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 70,
+        "hpRegen": 1.5,
+        "attack": 13,
+        "attackSpeed": 0,
+        "str": 8,
+        "agi": 20,
+        "int": 8,
+        "armor": 16,
+        "resist": 14
+      },
+      "spells": ["cheap_shot", "cripple", "assassinate"],
+      "promotesTo": ["phantom_assassin_female"]
+    },
+    "phantom_assassin_male": {
+      "name": "Phantom Assassin",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 6.2, "int": 2.8 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 95,
+        "hpRegen": 2,
+        "attack": 17,
+        "attackSpeed": 0,
+        "str": 11,
+        "agi": 27,
+        "int": 10,
+        "armor": 22,
+        "resist": 20
+      },
+      "spells": ["cheap_shot", "cripple", "assassinate", "phantom_assassin_male_passive"],
+      "promotesTo": []
+    },
+    "phantom_assassin_female": {
+      "name": "Phantom Assassin",
+      "tier": 4,
+      "modifiers": { "str": 3.0, "agi": 6.2, "int": 2.8 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 95,
+        "hpRegen": 2,
+        "attack": 17,
+        "attackSpeed": 0,
+        "str": 11,
+        "agi": 27,
+        "int": 10,
+        "armor": 22,
+        "resist": 20
+      },
+      "spells": ["cheap_shot", "cripple", "assassinate", "phantom_assassin_female_passive"],
+      "promotesTo": []
+    },
+    "stalker_male": {
+      "name": "Stalker",
+      "tier": 3,
+      "modifiers": { "str": 2.35, "agi": 3.8, "int": 2.85 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 85,
+        "hpRegen": 2,
+        "attack": 10,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 16,
+        "int": 10,
+        "armor": 19,
+        "resist": 12
+      },
+      "spells": ["cheap_shot", "cripple", "shadowstep"],
+      "promotesTo": ["master_stalker_male"]
+    },
+    "stalker_female": {
+      "name": "Stalker",
+      "tier": 3,
+      "modifiers": { "str": 2.35, "agi": 3.8, "int": 2.85 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 85,
+        "hpRegen": 2,
+        "attack": 10,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 16,
+        "int": 10,
+        "armor": 19,
+        "resist": 12
+      },
+      "spells": ["cheap_shot", "cripple", "shadowstep"],
+      "promotesTo": ["master_stalker_female"]
+    },
+    "master_stalker_male": {
+      "name": "Master Stalker",
+      "tier": 4,
+      "modifiers": { "str": 3.2, "agi": 5.8, "int": 3.0 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 115,
+        "hpRegen": 3,
+        "attack": 13,
+        "attackSpeed": 0,
+        "str": 14,
+        "agi": 22,
+        "int": 12,
+        "armor": 26,
+        "resist": 16
+      },
+      "spells": ["cheap_shot", "cripple", "shadowstep", "master_stalker_male_passive"],
+      "promotesTo": []
+    },
+    "master_stalker_female": {
+      "name": "Master Stalker",
+      "tier": 4,
+      "modifiers": { "str": 3.2, "agi": 5.8, "int": 3.0 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 115,
+        "hpRegen": 3,
+        "attack": 13,
+        "attackSpeed": 0,
+        "str": 14,
+        "agi": 22,
+        "int": 12,
+        "armor": 26,
+        "resist": 16
+      },
+      "spells": ["cheap_shot", "cripple", "shadowstep", "master_stalker_female_passive"],
+      "promotesTo": []
+    },
+    "witch_hunter_male": {
+      "name": "Witch Hunter",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 35,
+        "hpRegen": 0.5,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 6,
+        "int": 5,
+        "armor": 8,
+        "resist": 6
+      },
+      "spells": ["silver_bolt", "purifying_flame"],
+      "promotesTo": ["slayer_male"]
+    },
+    "witch_hunter_female": {
+      "name": "Witch Hunter",
+      "tier": 1,
+      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 35,
+        "hpRegen": 0.5,
+        "attack": 4,
+        "attackSpeed": 0,
+        "str": 5,
+        "agi": 6,
+        "int": 5,
+        "armor": 8,
+        "resist": 6
+      },
+      "spells": ["silver_bolt", "purifying_flame"],
+      "promotesTo": ["slayer_female"]
+    },
+    "slayer_male": {
+      "name": "Slayer",
+      "tier": 2,
+      "modifiers": { "str": 1.65, "agi": 2.7, "int": 1.65 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 55,
+        "hpRegen": 1,
+        "attack": 7,
+        "attackSpeed": 0,
+        "str": 7,
+        "agi": 11,
+        "int": 6,
+        "armor": 13,
+        "resist": 8
+      },
+      "spells": ["silver_bolt", "purifying_flame"],
+      "promotesTo": ["inquisitor_male", "witcher_male"]
+    },
+    "slayer_female": {
+      "name": "Slayer",
+      "tier": 2,
+      "modifiers": { "str": 1.65, "agi": 2.7, "int": 1.65 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 55,
+        "hpRegen": 1,
+        "attack": 7,
+        "attackSpeed": 0,
+        "str": 7,
+        "agi": 11,
+        "int": 6,
+        "armor": 13,
+        "resist": 8
+      },
+      "spells": ["silver_bolt", "purifying_flame"],
+      "promotesTo": ["inquisitor_female", "witcher_female"]
+    },
+    "inquisitor_male": {
+      "name": "Inquisitor",
+      "tier": 3,
+      "modifiers": { "str": 2.7, "agi": 2.8, "int": 3.5 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 95,
+        "hpRegen": 2,
+        "attack": 9,
+        "attackSpeed": 0,
+        "str": 11,
+        "agi": 12,
+        "int": 13,
+        "armor": 20,
+        "resist": 14
+      },
+      "spells": ["silver_bolt", "purifying_flame", "steal_magic"],
+      "promotesTo": ["grand_inquisitor_male"]
+    },
+    "inquisitor_female": {
+      "name": "Inquisitor",
+      "tier": 3,
+      "modifiers": { "str": 2.7, "agi": 2.8, "int": 3.5 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 95,
+        "hpRegen": 2,
+        "attack": 9,
+        "attackSpeed": 0,
+        "str": 11,
+        "agi": 12,
+        "int": 13,
+        "armor": 20,
+        "resist": 14
+      },
+      "spells": ["silver_bolt", "purifying_flame", "steal_magic"],
+      "promotesTo": ["grand_inquisitor_female"]
+    },
+    "grand_inquisitor_male": {
+      "name": "Grand Inquisitor",
+      "tier": 4,
+      "modifiers": { "str": 3.45, "agi": 3.65, "int": 4.9 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 130,
+        "hpRegen": 3,
+        "attack": 12,
+        "attackSpeed": 0,
+        "str": 15,
+        "agi": 16,
+        "int": 17,
+        "armor": 28,
+        "resist": 20
+      },
+      "spells": ["silver_bolt", "purifying_flame", "steal_magic", "grand_inquisitor_male_passive"],
+      "promotesTo": []
+    },
+    "grand_inquisitor_female": {
+      "name": "Grand Inquisitor",
+      "tier": 4,
+      "modifiers": { "str": 3.45, "agi": 3.65, "int": 4.9 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 130,
+        "hpRegen": 3,
+        "attack": 12,
+        "attackSpeed": 0,
+        "str": 15,
+        "agi": 16,
+        "int": 17,
+        "armor": 28,
+        "resist": 20
+      },
+      "spells": ["silver_bolt", "purifying_flame", "steal_magic", "grand_inquisitor_female_passive"],
+      "promotesTo": []
+    },
+    "witcher_male": {
+      "name": "Witcher",
+      "tier": 3,
+      "modifiers": { "str": 2.6, "agi": 4.0, "int": 2.4 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 85,
+        "hpRegen": 1.5,
+        "attack": 11,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 17,
+        "int": 9,
+        "armor": 18,
+        "resist": 12
+      },
+      "spells": ["silver_bolt", "purifying_flame", "hex"],
+      "promotesTo": ["professional_witcher_male"]
+    },
+    "witcher_female": {
+      "name": "Witcher",
+      "tier": 3,
+      "modifiers": { "str": 2.6, "agi": 4.0, "int": 2.4 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 85,
+        "hpRegen": 1.5,
+        "attack": 11,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 17,
+        "int": 9,
+        "armor": 18,
+        "resist": 12
+      },
+      "spells": ["silver_bolt", "purifying_flame", "hex"],
+      "promotesTo": ["professional_witcher_female"]
+    },
+    "professional_witcher_male": {
+      "name": "Professional Witcher",
+      "tier": 4,
+      "modifiers": { "str": 3.25, "agi": 5.8, "int": 2.95 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 115,
+        "hpRegen": 2,
+        "attack": 15,
+        "attackSpeed": 0,
+        "str": 13,
+        "agi": 23,
+        "int": 12,
+        "armor": 25,
+        "resist": 18
+      },
+      "spells": ["silver_bolt", "purifying_flame", "hex", "professional_witcher_male_passive"],
+      "promotesTo": []
+    },
+    "professional_witcher_female": {
+      "name": "Professional Witcher",
+      "tier": 4,
+      "modifiers": { "str": 3.25, "agi": 5.8, "int": 2.95 },
+      "mainstat": "agi",
+      "initial": {
+        "hp": 115,
+        "hpRegen": 2,
+        "attack": 15,
+        "attackSpeed": 0,
+        "str": 13,
+        "agi": 23,
+        "int": 12,
+        "armor": 25,
+        "resist": 18
+      },
+      "spells": ["silver_bolt", "purifying_flame", "hex", "professional_witcher_female_passive"],
+      "promotesTo": []
+    }
   },
   "enemies": {
     "satyr_instigator": {
@@ -848,90 +1904,90 @@
       "mainstat": "str",
       "spells": ["slash", "bite"]
     },
-"murkin_warrior": {
-    "name": "Murkin Warrior",
-    "boss": false,
-    "modifiers": { "str": 1.4, "agi": 1.2, "int": 0.8 },
-    "mainstat": "str",
-    "spells": ["spear_thrust", "defensive_formation"]
-},
-"murkin_brawler": {
-    "name": "Murkin Brawler",
-    "boss": false,
-    "modifiers": { "str": 1.6, "agi": 1.0, "int": 0.8 },
-    "mainstat": "str",
-    "spells": ["crushing_strike", "armor_break"]
-},
-"murkin_initiate": {
-    "name": "Murkin Initiate",
-    "boss": false,
-    "modifiers": { "str": 0.8, "agi": 1.0, "int": 1.4 },
-    "mainstat": "int",
-    "spells": ["crystal_shard", "protective_barrier"]
-},
-"murkin_elder": {
-    "name": "Murkin Elder",
-    "boss": false,
-    "modifiers": { "str": 1.2, "agi": 1.5, "int": 1.0 },
-    "mainstat": "agi",
-    "spells": ["staff_whack", "ancient_protection", "ancestral_taunt"]
-},
-"murkin_chieftain": {
-    "name": "Murkin Chieftain",
-    "boss": true,
-    "modifiers": { "str": 2.0, "agi": 1.5, "int": 1.5 },
-    "mainstat": "str",
-    "spells": ["chieftains_hammer", "war_cry"]
-},
-"ice_troll": {
-    "name": "Ice Troll",
-    "boss": false,
-    "modifiers": { "str": 1.2, "agi": 1.8, "int": 1.0 },
-    "mainstat": "agi",
-    "spells": ["axe_throw", "berserker_rage"]
-},
-"ice_troll_king": {
-    "name": "Ice Troll King",
-    "boss": true,
-    "modifiers": { "str": 1.5, "agi": 2.2, "int": 1.3 },
-    "mainstat": "agi",
-    "spells": ["dual_axes", "rallying_cry"]
-},
-"water_elemental": {
-    "name": "Water Elemental",
-    "boss": false,
-    "modifiers": { "str": 0.8, "agi": 1.2, "int": 2.0 },
-    "mainstat": "int",
-    "spells": ["frost_bolt", "chilling_touch"]
-},
-"frost_wolf": {
-    "name": "Frost Wolf",
-    "boss": false,
-    "modifiers": { "str": 1.4, "agi": 1.7, "int": 0.9 },
-    "mainstat": "agi",
-    "spells": ["savage_bite", "pack_fury"]
-},
-"frostfang": {
-    "name": "Frostfang",
-    "boss": true,
-    "modifiers": { "str": 2.0, "agi": 3.5, "int": 0.8 },
-    "mainstat": "agi",
-    "spells": ["savage_bite", "frost_breath", "chilling_howl"]
-},
-"ice_bear": {
-    "name": "Ice Bear",
-    "boss": false,
-    "modifiers": { "str": 2.0, "agi": 1.0, "int": 1.0 },
-    "mainstat": "str",
-    "spells": ["crushing_blow", "thick_hide"]
-},
-"grizzly_ice_bear": {
-    "name": "Grizzly Ice Bear",
-    "boss": true,
-    "modifiers": { "str": 2.5, "agi": 1.3, "int": 1.2 },
-    "mainstat": "str",
-    "spells": ["maul", "rampage"]
-},
+    "murkin_warrior": {
+      "name": "Murkin Warrior",
+      "boss": false,
+      "modifiers": { "str": 1.4, "agi": 1.2, "int": 0.8 },
+      "mainstat": "str",
+      "spells": ["spear_thrust", "defensive_formation"]
+    },
+    "murkin_brawler": {
+      "name": "Murkin Brawler",
+      "boss": false,
+      "modifiers": { "str": 1.6, "agi": 1.0, "int": 0.8 },
+      "mainstat": "str",
+      "spells": ["crushing_strike", "armor_break"]
+    },
+    "murkin_initiate": {
+      "name": "Murkin Initiate",
+      "boss": false,
+      "modifiers": { "str": 0.8, "agi": 1.0, "int": 1.4 },
+      "mainstat": "int",
+      "spells": ["crystal_shard", "protective_barrier"]
+    },
+    "murkin_elder": {
+      "name": "Murkin Elder",
+      "boss": false,
+      "modifiers": { "str": 1.2, "agi": 1.5, "int": 1.0 },
+      "mainstat": "agi",
+      "spells": ["staff_whack", "ancient_protection", "ancestral_taunt"]
+    },
+    "murkin_chieftain": {
+      "name": "Murkin Chieftain",
+      "boss": true,
+      "modifiers": { "str": 2.0, "agi": 1.5, "int": 1.5 },
+      "mainstat": "str",
+      "spells": ["chieftains_hammer", "war_cry"]
+    },
+    "ice_troll": {
+      "name": "Ice Troll",
+      "boss": false,
+      "modifiers": { "str": 1.2, "agi": 1.8, "int": 1.0 },
+      "mainstat": "agi",
+      "spells": ["axe_throw", "berserker_rage"]
+    },
+    "ice_troll_king": {
+      "name": "Ice Troll King",
+      "boss": true,
+      "modifiers": { "str": 1.5, "agi": 2.2, "int": 1.3 },
+      "mainstat": "agi",
+      "spells": ["dual_axes", "rallying_cry"]
+    },
+    "water_elemental": {
+      "name": "Water Elemental",
+      "boss": false,
+      "modifiers": { "str": 0.8, "agi": 1.2, "int": 2.0 },
+      "mainstat": "int",
+      "spells": ["frost_bolt", "chilling_touch"]
+    },
+    "frost_wolf": {
+      "name": "Frost Wolf",
+      "boss": false,
+      "modifiers": { "str": 1.4, "agi": 1.7, "int": 0.9 },
+      "mainstat": "agi",
+      "spells": ["savage_bite", "pack_fury"]
+    },
+    "frostfang": {
+      "name": "Frostfang",
+      "boss": true,
+      "modifiers": { "str": 2.0, "agi": 3.5, "int": 0.8 },
+      "mainstat": "agi",
+      "spells": ["savage_bite", "frost_breath", "chilling_howl"]
+    },
+    "ice_bear": {
+      "name": "Ice Bear",
+      "boss": false,
+      "modifiers": { "str": 2.0, "agi": 1.0, "int": 1.0 },
+      "mainstat": "str",
+      "spells": ["crushing_blow", "thick_hide"]
+    },
+    "grizzly_ice_bear": {
+      "name": "Grizzly Ice Bear",
+      "boss": true,
+      "modifiers": { "str": 2.5, "agi": 1.3, "int": 1.2 },
+      "mainstat": "str",
+      "spells": ["maul", "rampage"]
+    },
     "stitch": {
       "name": "Stitch",
       "boss": true,
@@ -939,7 +1995,7 @@
       "mainstat": "str",
       "spells": []
     },
-      "goblin_king": {
+    "goblin_king": {
       "name": "Goblin King",
       "boss": true,
       "modifiers": { "str": 1.8, "agi": 1.8, "int": 4.2 },
@@ -1087,7 +2143,7 @@
       "spells": []
     }
   },
-"classFamilies": [
+  "classFamilies": [
     { "name": "Acolyte", "icon": "✚", "classes": ["Acolyte", "Cleric", "Priest", "Priestess", "Hierophant", "Patriarch", "Matriarch", "Prophet", "Prophetess"] },
     { "name": "Archer", "icon": "🏹", "classes": ["Archer", "Ranger", "Marksman", "Sniper", "Tracker", "Monster Hunter"] },
     { "name": "Druid", "icon": "🌿", "classes": ["Druid", "Arch Druid", "Shapeshifter", "Runemaster", "Shaman", "Summoner"] },
