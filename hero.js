@@ -149,12 +149,11 @@ set spellLevel(value) {
                 };
             }
 
-            get hp() {
-                const baseHp = this.totalStats.str * 5;
-                return baseHp + this.gearStats.hp + this.initial.hp;
-            }
+get hp() {
+    return this.baseStats.hp + this.gearStats.hp;
+}
 
-		get attack() {
+get attack() {
     const mainstatValue = this.totalStats[this.classData.mainstat || 'str'];
     return mainstatValue + (this.gearStats.attack || 0) + this.initial.attack;
 }
@@ -163,38 +162,31 @@ get mainstat() {
     return this.classData.mainstat || 'str';
 }
 		
-            get hpRegen() {
-                const baseRegen = this.totalStats.str * 0.05;
-                return baseRegen + this.gearStats.hpRegen + this.initial.hpRegen;
-            }
+get hpRegen() {
+    return this.baseStats.hpRegen + this.gearStats.hpRegen;
+}
 
-            get actionBarSpeed() {
-                const agi = this.totalStats.agi;
-                const baseSpeed = 100 + 100 * (agi / (agi + 1000));
-                return baseSpeed + this.gearStats.attackSpeed + this.initial.attackSpeed;
-            }
+get actionBarSpeed() {
+    return this.baseStats.attackSpeed + this.gearStats.attackSpeed;
+}
 			
-			get armor() {
-				const stats = this.totalStats;
-				const baseArmor = (0.25 * stats.str) + (0.05 * stats.agi);
-				return baseArmor + this.gearStats.armor + this.initial.armor;
-			}
+get armor() {
+    return this.baseStats.armor + this.gearStats.armor;
+}
 
-			get resist() {
-				const stats = this.totalStats;
-				const baseResist = (0.25 * stats.int);
-				return baseResist + this.gearStats.resist + this.initial.resist;
-			}
+get resist() {
+    return this.baseStats.resist + this.gearStats.resist;
+}
 
-			get physicalDamageReduction() {
-				const totalArmor = this.armor;
-				return (0.9 * totalArmor) / (totalArmor + 500);
-			}
+get physicalDamageReduction() {
+    const totalArmor = this.armor;
+    return (0.9 * totalArmor) / (totalArmor + 500);
+}
 
-			get magicDamageReduction() {
-				const totalResist = this.resist;
-				return (0.3 * totalResist) / (totalResist + 1000);
-			}
+get magicDamageReduction() {
+    const totalResist = this.resist;
+    return (0.3 * totalResist) / (totalResist + 1000);
+}
 
             getClassAbilities() {
     const classInfo = this.classData;
