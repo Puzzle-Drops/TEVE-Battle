@@ -4192,7 +4192,7 @@ body {
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     border: 3px solid #ffd700;
     padding: 30px;
-    z-index: 10002;
+    z-index: 10004;
     box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
     width: 840px; /* Fixed width instead of min-width */
     max-width: 900px;
@@ -4407,7 +4407,7 @@ body {
         0 2px 4px rgba(0, 0, 0, 1);
     animation: floatUp 1.5s ease-out forwards;
     pointer-events: none;
-    z-index: 10003;
+    z-index: 10006;
     transform: translateX(-50%);
     white-space: nowrap;
 }
@@ -4494,6 +4494,7 @@ body {
 
 .itemRefinementPopup.refinement-flash {
     animation: refinementFlash 0.6s ease-out;
+    z-index: 10005 !important; /* Ensure flash is above everything */
 }
 
 /* Refinement Overlay */
