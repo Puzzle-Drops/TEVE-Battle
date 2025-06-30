@@ -1597,7 +1597,7 @@ if (context.refinementType === 'divine') {
     // Show floating text with delayed timing
 setTimeout(() => {
     this.showRefinementRollText(statText, qualityText);
-}, 400);
+}, 600);
 
 // Update display after floating texts are done
 setTimeout(() => {
@@ -1662,12 +1662,12 @@ setTimeout(() => {
         // Show refined item in slot after delay
 setTimeout(() => {
     this.showRefinedItemInSlot();
-}, 400); // 400ms after the display updates (1200 + 400 = 1600ms total)
+}, 600); // 400ms after the display updates (1200 + 400 = 1600ms total)
         
         // Update buttons
         document.getElementById('refinementButtons').style.display = 'none';
         document.getElementById('refinementCloseButton').style.display = 'flex';
-    }, 1200);
+    }, 1600);
 }
 
 showRefinementRollText(statText, qualityText) {
@@ -1677,7 +1677,7 @@ showRefinementRollText(statText, qualityText) {
     // Show quality text after 300ms delay
     setTimeout(() => {
         this.showSingleRefinementText(qualityText, 20); // 20px offset for second text
-    }, 400);
+    }, 600);
 }
 
 showSingleRefinementText(text, verticalOffset = 0) {
