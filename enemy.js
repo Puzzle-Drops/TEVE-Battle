@@ -73,12 +73,22 @@ class Enemy {
             }
 
             get baseStats() {
-                return {
-                    str: Math.floor(this.initial.str + (this.level * this.modifiers.str)),
-                    agi: Math.floor(this.initial.agi + (this.level * this.modifiers.agi)),
-                    int: Math.floor(this.initial.int + (this.level * this.modifiers.int))
-                };
-            }
+    const str = Math.floor(this.initial.str + (this.level * this.modifiers.str));
+    const agi = Math.floor(this.initial.agi + (this.level * this.modifiers.agi));
+    const int = Math.floor(this.initial.int + (this.level * this.modifiers.int));
+    
+    return {
+        str: str,
+        agi: agi,
+        int: int,
+        hp: (str * 5) + this.initial.hp,
+        hpRegen: (str * 0.05) + this.initial.hpRegen,
+        attack: str + this.initial.attack, // Will be overridden by mainstat in getter
+        attackSpeed: (100 + 100 * (agi / (agi + 1000))) + this.initial.attackSpeed,
+        armor: (0.25 * str) + (0.05 * agi) + this.initial.armor,
+        resist: (0.25 * int) + this.initial.resist
+    };
+}
 
             get hp() {
                 return (this.baseStats.str * 5) + this.initial.hp;
