@@ -1020,7 +1020,9 @@ executeAITurn(unit) {
         const possibleActions = this.getAllPossibleActions(unit);
         
         if (possibleActions.length === 0) {
-            this.log(`${unit.name} has no abilities available!`);
+            // This should NEVER happen - skill 1 has no cooldown
+            console.error(`CRITICAL: ${unit.name} has NO available abilities! This is a bug!`);
+            this.log(`ERROR: ${unit.name} cannot act - no abilities available!`);
             this.endTurn();
             return;
         }
@@ -1033,13 +1035,32 @@ executeAITurn(unit) {
         // Sort by score (highest first)
         possibleActions.sort((a, b) => b.score - a.score);
         
+        // If best score is still negative, force use skill 1 on random target
+        if (possibleActions[0].score < 0) {
+            console.warn(`${unit.name} has only negative scoring options. Forcing skill 1.`);
+            
+            // Find skill 1 actions (first non-passive ability)
+            const skill1Actions = possibleActions.filter(a => {
+                const ability = unit.abilities[a.abilityIndex];
+                return ability && !ability.passive && a.abilityIndex === 0;
+            });
+            
+            if (skill1Actions.length > 0) {
+                // Pick random target from skill 1 options
+                const randomAction = skill1Actions[Math.floor(Math.random() * skill1Actions.length)];
+                this.executeAbility(unit, randomAction.abilityIndex, randomAction.target);
+                this.endTurn();
+                return;
+            }
+        }
+        
         // Execute the best action
         const bestAction = possibleActions[0];
         
         // Debug logging for AI decisions (optional)
         if (this.debugAI) {
             console.log(`AI Decision for ${unit.name}:`);
-            console.log(`Chosen: ${bestAction.ability.name} on ${bestAction.target.name || 'all'} (score: ${bestAction.score})`);
+            console.log(`Chosen: ${bestAction.ability.name} on ${bestAction.target.name || 'all'} (score: ${bestAction.score.toFixed(1)})`);
             console.log('Top 3 options:', possibleActions.slice(0, 3).map(a => 
                 `${a.ability.name} → ${a.target.name || 'all'} (${a.score.toFixed(1)})`
             ));
@@ -1085,7 +1106,7 @@ executeAITurn(unit) {
         score += 10;
         
         // Prefer abilities with longer cooldowns when scores are close (tiebreaker)
-        score += ability.cooldown;
+        score += ability.cooldown * 0.1;
         
         // Check if it's an AOE ability
         const isAOE = effects.includes('aoe') || 
@@ -1114,6 +1135,20 @@ executeAITurn(unit) {
         // Function to calculate effect scores for a single target
         const calculateEffectScoreForTarget = (currentTarget) => {
             let targetScore = 0;
+            
+            // CRITICAL: Check if target has Twilight's End pending
+            if (currentTarget && currentTarget !== 'all' && currentTarget.twilightsEndPending) {
+                targetScore += 10;
+                // Huge bonus for any disruptive action
+                if (effects.includes('debuff_stun') || 
+                    effects.includes('debuff_silence') || 
+                    effects.includes('debuff_taunt') ||
+                    effects.includes('physical') || 
+                    effects.includes('magical') || 
+                    effects.includes('pure')) {
+                    targetScore += 50; // Massive priority to stop Twilight's End
+                }
+            }
             
             // Calculate damage multiplier based on buffs/debuffs
             let damageMultiplier = 1.0;
@@ -1145,6 +1180,15 @@ executeAITurn(unit) {
                         const hpPercent = currentTarget.currentHp / currentTarget.maxHp;
                         effectScore += (1 - hpPercent) * 30; // Up to +30 for nearly dead enemies
                         
+                        const actionBarPercent = currentTarget.actionBar / 10000;
+                        
+                        // Bonus for killing high action bar enemies
+                        if (actionBarPercent >= 0.9) {
+                            effectScore += 20; // Significant bonus for preventing imminent turn
+                        } else if (actionBarPercent >= 0.7) {
+                            effectScore += actionBarPercent * 10; // Smaller scaling bonus
+                        }
+                        
                         // Bonus for targeting squishier enemies
                         const avgMaxHp = this.getEnemies(caster)
                             .filter(e => e.isAlive)
@@ -1164,21 +1208,14 @@ executeAITurn(unit) {
                             effectScore -= 5; // Minor penalty for shield absorption
                         }
                         
-                        // Overkill protection - estimate damage and penalize massive overkill
-                        // This is approximate since we don't calculate exact damage here
                         // Overkill protection - but not if enemy is about to act!
-                        const actionBarPercent = currentTarget.actionBar / 10000;
                         const estimatedDamage = 100 * damageMultiplier; // Rough estimate
-
                         if (estimatedDamage > currentTarget.currentHp * 2) {
                             // If enemy is at 80%+ action bar, no overkill penalty
                             if (actionBarPercent < 0.8) {
                                 const overkillRatio = estimatedDamage / currentTarget.currentHp;
                                 effectScore *= Math.max(0.3, 1 - (overkillRatio - 2) * 0.2);
                             }
-                        } else if (actionBarPercent > 0.7) {
-                            // Bonus for targeting high action bar enemies
-                            effectScore += actionBarPercent * 10; // Up to +10 for 100% action bar
                         }
                     }
                 }
@@ -1257,6 +1294,10 @@ executeAITurn(unit) {
                             // Special high-value debuffs
                             if (effect === 'debuff_stun') {
                                 effectScore += 30; // Stuns are very valuable
+                                // Extra bonus for stunning high action bar enemies
+                                if (currentTarget.actionBar >= 9000) {
+                                    effectScore += 15;
+                                }
                             } else if (effect === 'debuff_mark') {
                                 effectScore += 25; // Mark is valuable (prevents buffs + damage increase)
                             } else if (effect === 'debuff_reduce_defense') {
@@ -1403,6 +1444,11 @@ executeAITurn(unit) {
                 if (caster.phantomAssassinFemalePassive && (target.currentHp / target.maxHp) < 0.5) {
                     score += 25; // Will deal pure damage
                 }
+            }
+            
+            // Psychic Mark with Dark Arch Templar Female passive
+            if (spell.id === 'psychic_mark' && caster.darkArchTemplarFemalePassive) {
+                score += 10; // Extra value for applying 3 debuffs at once
             }
         }
         
