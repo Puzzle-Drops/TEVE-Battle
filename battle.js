@@ -1164,11 +1164,16 @@ if (unit.isEnemy) {
         }
         
         // Function to calculate effect scores for a single target
-        const calculateEffectScoreForTarget = (currentTarget) => {
-            let targetScore = 0;
-            
-            // Rank bonuses for tiebreaking (small values)
-            const rankBonus = [2.5, 2.0, 1.5, 1.0, 0.5];
+const calculateEffectScoreForTarget = (currentTarget) => {
+    let targetScore = 0;
+    
+    // Rank bonuses for tiebreaking (small values)
+    const rankBonus = [2.5, 2.0, 1.5, 1.0, 0.5];
+    
+    // Get spell duration for buff/debuff scoring
+    const spellLevel = ability.level || caster.spellLevel || 1;
+    const levelIndex = spellLevel - 1;
+    const spellDuration = spell.duration ? (spell.duration[levelIndex] || spell.duration[0] || 1) : 1;
             
             // Check if target has Twilight's End pending
             if (currentTarget && currentTarget !== 'all' && currentTarget.twilightsEndPending) {
@@ -1207,7 +1212,7 @@ if (unit.isEnemy) {
                 
                 // Damage effects
                 if (effect === 'physical' || effect === 'magical' || effect === 'pure') {
-                    effectScore += 32 * damageMultiplier;
+                    effectScore += 50 * damageMultiplier;
                     
                     if (currentTarget && currentTarget !== 'all' && currentTarget.isAlive) {
                         // Bonus for low HP enemies
@@ -1304,37 +1309,60 @@ if (unit.isEnemy) {
                 }
                 
                 // Buff effects - score EACH buff
-                if (effect.startsWith('buff_')) {
-                    if (currentTarget && currentTarget !== 'all') {
-                        // Check if target is marked (can't receive buffs)
-                        if (currentTarget.debuffs.some(d => d.name === 'Mark')) {
-                            effectScore -= 100; // Negative score for trying to buff marked target
-                            totalEffectScore += effectScore;
-                            return;
-                        }
-                        
-                        const buffName = this.getBuffNameFromEffect(effect);
-                        const hasBuff = currentTarget.buffs.some(b => b.name === buffName);
-                        
-                        if (!hasBuff) {
-                            effectScore += 40; // Good to apply new buff
+if (effect.startsWith('buff_')) {
+    if (currentTarget && currentTarget !== 'all') {
+        // Check if target is marked (can't receive buffs)
+        if (currentTarget.debuffs.some(d => d.name === 'Mark')) {
+            effectScore -= 100; // Negative score for trying to buff marked target
+            totalEffectScore += effectScore;
+            return;
+        }
+        
+        const buffName = this.getBuffNameFromEffect(effect);
+        const hasBuff = currentTarget.buffs.some(b => b.name === buffName);
+        
+        if (!hasBuff) {
+            effectScore += 40 * spellDuration; // Good to apply new buff, scaled by duration
+            
+            // Special cases for high-value buffs
+            if (effect === 'buff_increase_attack') {
+                effectScore += 20 * spellDuration; // Attack buffs are high value
+            } else if (effect === 'buff_increase_speed') {
+                effectScore += 20 * spellDuration; // Speed buffs are valuable
+            } else if (effect === 'buff_shield') {
+                const shieldDeficit = this.calculateHealthDeficit(caster, currentTarget);
+                effectScore += shieldDeficit * 50; // Shield value doesn't scale with duration
+            } else if (effect === 'buff_immune') {
+                effectScore += 25 * spellDuration; // Immunity is very valuable
+            }
+        } else {
+            // Check if we should refresh expiring buffs
+            const existingBuff = currentTarget.buffs.find(b => b.name === buffName);
+            if (existingBuff && existingBuff.duration > 0 && existingBuff.duration <= 2) {
+                effectScore += 15 * spellDuration; // Moderate value for refreshing
+            } else {
+                effectScore -= 10; // Small penalty for redundant buff
+            }
+        }
+    }
+}
                             
                             // Special cases for high-value buffs
                             if (effect === 'buff_increase_attack') {
-                                effectScore += 20; // Attack buffs are high value
+                                effectScore += 15; // Attack buffs are high value
                             } else if (effect === 'buff_increase_speed') {
-                                effectScore += 20; // Speed buffs are valuable
+                                effectScore += 15; // Speed buffs are valuable
                             } else if (effect === 'buff_shield') {
                                 const shieldDeficit = this.calculateHealthDeficit(caster, currentTarget);
                                 effectScore += shieldDeficit * 50;
                             } else if (effect === 'buff_immune') {
-                                effectScore += 25; // Immunity is very valuable
+                                effectScore += 20; // Immunity is very valuable
                             }
                         } else {
                             // Check if we should refresh expiring buffs
                             const existingBuff = currentTarget.buffs.find(b => b.name === buffName);
                             if (existingBuff && existingBuff.duration > 0 && existingBuff.duration <= 2) {
-                                effectScore += 15; // Moderate value for refreshing
+                                effectScore += 10; // Moderate value for refreshing
                             } else {
                                 effectScore -= 10; // Small penalty for redundant buff
                             }
@@ -1343,20 +1371,74 @@ if (unit.isEnemy) {
                 }
                 
                 // Debuff effects - score EACH debuff
-                if (effect.startsWith('debuff_')) {
-                    if (currentTarget && currentTarget !== 'all') {
-                        // Check if target is immune
-                        if (currentTarget.buffs.some(b => b.name === 'Immune')) {
-                            effectScore -= 50; // Can't debuff immune targets
-                            totalEffectScore += effectScore;
-                            return;
-                        }
-                        
-                        const debuffName = this.getDebuffNameFromEffect(effect);
-                        const hasDebuff = currentTarget.debuffs.some(d => d.name === debuffName);
-                        
-                        if (!hasDebuff) {
-                            effectScore += 35; // Good to apply new debuff
+if (effect.startsWith('debuff_')) {
+    if (currentTarget && currentTarget !== 'all') {
+        // Check if target is immune
+        if (currentTarget.buffs.some(b => b.name === 'Immune')) {
+            effectScore -= 50; // Can't debuff immune targets
+            totalEffectScore += effectScore;
+            return;
+        }
+        
+        const debuffName = this.getDebuffNameFromEffect(effect);
+        const hasDebuff = currentTarget.debuffs.some(d => d.name === debuffName);
+        
+        if (!hasDebuff) {
+            effectScore += 35 * spellDuration; // Good to apply new debuff, scaled by duration
+            
+            // Bonus for debuffing buffed enemies
+            if (currentTarget.buffs.length > 0) {
+                effectScore += currentTarget.buffs.length * 3 * spellDuration; // +3 per buff they have, scaled by duration
+            }
+            
+            // Special high-value debuffs
+            if (effect === 'debuff_stun') {
+                effectScore += 30 * spellDuration; // Stuns are very valuable
+                // Extra bonus for stunning high action bar enemies
+                if (currentTarget.actionBar >= 9000) {
+                    effectScore += 15;
+                }
+            } else if (effect === 'debuff_mark') {
+                effectScore += 25 * spellDuration; // Mark is valuable (prevents buffs + damage increase)
+            } else if (effect === 'debuff_reduce_defense') {
+                effectScore += 20 * spellDuration; // Defense reduction helps entire team
+                // Slight preference for high defense targets
+                if (sortedLists.aliveEnemiesCount > 1) {
+                    const defenseRank = sortedLists.enemiesByTotalDefense.indexOf(currentTarget);
+                    if (defenseRank !== -1) {
+                        const reversedRank = sortedLists.aliveEnemiesCount - 1 - defenseRank;
+                        effectScore += rankBonus[reversedRank] || 0;
+                    }
+                }
+            } else if (effect === 'debuff_reduce_attack') {
+                effectScore += 15 * spellDuration; // Attack reduction is defensive
+                // Slight preference for high attack targets
+                if (sortedLists.aliveEnemiesCount > 1) {
+                    const attackRank = sortedLists.enemiesByAttack.indexOf(currentTarget);
+                    if (attackRank !== -1) {
+                        effectScore += rankBonus[attackRank] || 0;
+                    }
+                }
+            } else if (effect === 'debuff_silence') {
+                effectScore += 20 * spellDuration; // Silence prevents abilities
+            } else if (effect === 'debuff_reduce_speed') {
+                effectScore += 15 * spellDuration; // Speed reduction is useful
+            }
+        } else {
+            // Small penalty for redundant debuff unless it stacks (like bleed)
+            if (effect === 'debuff_bleed') {
+                effectScore += 15 * spellDuration; // Bleeds stack duration
+            } else {
+                const existingDebuff = currentTarget.debuffs.find(d => d.name === debuffName);
+                if (existingDebuff && existingDebuff.duration > 0 && existingDebuff.duration <= 2) {
+                    effectScore += 10 * spellDuration; // Some value for refreshing expiring debuff
+                } else {
+                    effectScore -= 5; // Small penalty for redundant
+                }
+            }
+        }
+    }
+}
                             
                             // Bonus for debuffing buffed enemies
                             if (currentTarget.buffs.length > 0) {
@@ -1537,16 +1619,16 @@ if (unit.isEnemy) {
             }
             
             // Cheap Shot synergies
-            if (spell.id === 'cheap_shot') {
-                // Bonus if caster has debuffs to transfer
-                if (caster.debuffs && caster.debuffs.length > 0) {
-                    score += 20;
-                }
-                // Phantom Assassin Female - bonus if target is below 50% HP
-                if (caster.phantomAssassinFemalePassive && (target.currentHp / target.maxHp) < 0.5) {
-                    score += 25; // Will deal pure damage
-                }
-            }
+if (spell.id === 'cheap_shot') {
+    // MAJOR bonus if caster has debuffs to transfer
+    if (caster.debuffs && caster.debuffs.length > 0) {
+        score += 30 * caster.debuffs.length; // +30 per debuff we can transfer
+    }
+    // Phantom Assassin Female - bonus if target is below 50% HP
+    if (caster.phantomAssassinFemalePassive && (target.currentHp / target.maxHp) < 0.5) {
+        score += 25; // Will deal pure damage
+    }
+}
             
             // Psychic Mark with Dark Arch Templar Female passive
             if (spell.id === 'psychic_mark' && caster.darkArchTemplarFemalePassive) {
@@ -1562,7 +1644,7 @@ if (unit.isEnemy) {
                 }
             }
             
-            // NEW: Helping Hand - extremely powerful action bar fill
+            // Helping Hand - extremely powerful action bar fill
             if (spell.id === 'helping_hand' && target !== 'all') {
                 // Huge value if target has low action bar
                 const actionBarPercent = target.actionBar / 10000;
@@ -1572,14 +1654,14 @@ if (unit.isEnemy) {
                 if (attackRank === 0) score += 10; // Best attacker
             }
             
-            // NEW: Steal Magic - buff transfer is very powerful
+            // Steal Magic - buff transfer is very powerful
             if (spell.id === 'steal_magic' && target !== 'all') {
                 // Extra points for quality buffs to steal
                 if (target.buffs.some(b => b.name === 'Increase Attack')) score += 10;
                 if (target.buffs.some(b => b.name === 'Increase Speed')) score += 8;
             }
             
-            // NEW: Shadowstep - triple debuff application
+            // Shadowstep - triple debuff application
             if (spell.id === 'shadowstep' && target !== 'all') {
                 // Bonus for applying 3 debuffs at once
                 if (!target.debuffs.some(d => ['Taunt', 'Mark', 'Bleed'].includes(d.name))) {
@@ -1609,7 +1691,7 @@ if (unit.isEnemy) {
             score += Math.max(debuffedAllies.length * 15, buffedEnemies.length * 15);
         }
         
-        // NEW: Sanctuary - debuff conversion is unique
+        // Sanctuary - debuff conversion is unique
         if (spell.id === 'sanctuary') {
             const debuffedAllies = sortedLists.alliesByDebuffCount.filter(a => a.debuffs.length > 0);
             score += debuffedAllies.length * 20; // High value per ally that will get converted buffs
