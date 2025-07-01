@@ -137,7 +137,7 @@
     "name": "Aimed Shot",
     "description": "High damage shot dealing [{base} + {attack} + {agi}] physical damage, ignores 25% armor and breaks shields",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["physical", "armor_pierce", "shield_break"],
+    "effects": ["physical", "shield_break"],
     "scaling": {
         "base": [20, 75, 150, 300, 525],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
