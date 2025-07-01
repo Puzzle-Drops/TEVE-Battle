@@ -1648,8 +1648,8 @@ if (unit.isEnemy) {
 
     debugLogAllPossibleActions(unit) {
         if (!this.debugAI) return;
-        
-        console.log(`\n========== AI Debug for ${unit.className} - ${unit.name}==========`);
+        console.log(`\n=========================================================================`);
+        console.log(`\n========== AI Debug for ${unit.source.className} - ${unit.name}==========`);
         
         // Pre-calculate sorted lists once
         const aliveEnemies = this.getEnemies(unit).filter(e => e.isAlive);
