@@ -347,7 +347,7 @@
     "name": "Frost Armor",
     "description": "Apply Frost Armor buff for {duration} turns (25% damage reduction, attackers are slowed)",
     "cooldown": [4, 4, 3, 3, 2],
-    "effects": ["buff_frost_armor"],
+    "effects": ["buff_frost_armor", "support"],
     "duration": [2, 2, 2, 3, 3],
     "target": "self",
     "logicKey": "frostArmorLogic"
@@ -366,7 +366,7 @@
     "name": "Twilight's Promise",
     "description": "Consume 10% action bar from all allies. Next turn unleash Twilight's End for massive AOE damage",
     "cooldown": [8, 8, 7, 7, 6],
-    "effects": ["support", "setup"],
+    "effects": ["aoe", "support", "magical"],
     "actionBarDrain": 0.1,
     "target": "self",
     "logicKey": "twilightsPromiseLogic"
@@ -512,7 +512,7 @@
     "name": "Psi Strike",
     "description": "If enemy ≥30% action bar: [{base} + {attack} + {int}] physical damage and drain 5% action bar. If <30%: pure damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["physical", "pure", "action_drain"],
+    "effects": ["physical", "physical", "support"],
     "scaling": {
         "base": [14, 55, 110, 220, 385],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -537,7 +537,7 @@
     "name": "Void Strike",
     "description": "Hit enemy with Psi Strike once per debuff on target",
     "cooldown": [6, 6, 5, 5, 4],
-    "effects": ["physical", "pure", "multi_hit"],
+    "effects": ["physical"],
     "target": "enemy",
     "logicKey": "voidStrikeLogic"
 },
@@ -546,7 +546,7 @@
     "name": "Psi Shift",
     "description": "Steal all action bar from target dealing [{base} + {attack} + {int}] magic damage, set target to 25% action bar",
     "cooldown": [7, 7, 6, 6, 5],
-    "effects": ["magical", "action_drain"],
+    "effects": ["magical", "support"],
     "scaling": {
         "base": [8, 100, 200, 400, 700],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -602,7 +602,7 @@
     "name": "Cheap Shot",
     "description": "Transfer 1 random debuff from self to target, deal [{base} + {attack} + {agi}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["physical", "debuff_transfer"],
+    "effects": ["physical", "cleanse"],
     "scaling": {
         "base": [12, 45, 90, 180, 315],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -626,7 +626,7 @@
     "name": "Assassinate",
     "description": "Deal [{base} + {attack} + {agi}] pure damage if enemy is below 30% HP and has a debuff",
     "cooldown": [7, 7, 6, 6, 5],
-    "effects": ["pure", "execute"],
+    "effects": ["pure"],
     "scaling": {
         "base": [50, 500, 1000, 2000, 3500],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -730,7 +730,7 @@
     "name": "Steal Magic",
     "description": "Transfer all buffs from enemy to random allies. Unbuffed enemies receive Reduce Defense for {duration} turns",
     "cooldown": [7, 7, 6, 6, 5],
-    "effects": ["dispel", "buff_steal", "debuff_reduce_defense"],
+    "effects": ["dispel", "debuff_reduce_defense"],
     "duration": [2, 2, 2, 3, 3],
     "target": "enemy",
     "logicKey": "stealMagicLogic"
@@ -1013,7 +1013,7 @@
     "name": "Frost Bolt",
     "description": "Icy bolt dealing [{base} + {attack} + {int}] magical damage and draining {actionBarDrain} action bar",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["magical", "debuff_action_drain"],
+    "effects": ["magical", "support"],
     "scaling": {
         "base": [55, 110, 220, 385, 550],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -1214,7 +1214,7 @@
     "description": "Grants Frost Armor buff for {duration} turns (25% damage reduction, attackers are slowed)",
     "cooldown": [1, 1, 1, 1, 1],
     "duration": [2, 2, 3, 3, 4],
-    "effects": ["buff_frost_armor"],
+    "effects": ["buff_frost_armor", "support"],
     "target": "ally",
     "logicKey": "frostArmorTestLogic"
 },
