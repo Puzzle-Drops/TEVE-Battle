@@ -1669,7 +1669,7 @@
         "armor": 8,
         "resist": 6
       },
-      "spells": ["silver_bolt", "purifying_flame"],
+      "spells": ["purge_slash", "nullblade_cleave"],
       "promotesTo": ["slayer_male"]
     },
     "witch_hunter_female": {
@@ -1688,7 +1688,7 @@
         "armor": 8,
         "resist": 6
       },
-      "spells": ["silver_bolt", "purifying_flame"],
+      "spells": ["purge_slash", "nullblade_cleave"],
       "promotesTo": ["slayer_female"]
     },
     "slayer_male": {
@@ -1707,7 +1707,7 @@
         "armor": 13,
         "resist": 8
       },
-      "spells": ["silver_bolt", "purifying_flame"],
+      "spells": ["purge_slash", "nullblade_cleave"],
       "promotesTo": ["inquisitor_male", "witcher_male"]
     },
     "slayer_female": {
@@ -1726,7 +1726,7 @@
         "armor": 13,
         "resist": 8
       },
-      "spells": ["silver_bolt", "purifying_flame"],
+      "spells": ["purge_slash", "nullblade_cleave"],
       "promotesTo": ["inquisitor_female", "witcher_female"]
     },
     "inquisitor_male": {
@@ -1745,7 +1745,7 @@
         "armor": 20,
         "resist": 14
       },
-      "spells": ["silver_bolt", "purifying_flame", "steal_magic"],
+      "spells": ["purge_slash", "nullblade_cleave", "steal_magic"],
       "promotesTo": ["grand_inquisitor_male"]
     },
     "inquisitor_female": {
@@ -1764,7 +1764,7 @@
         "armor": 20,
         "resist": 14
       },
-      "spells": ["silver_bolt", "purifying_flame", "steal_magic"],
+      "spells": ["purge_slash", "nullblade_cleave", "steal_magic"],
       "promotesTo": ["grand_inquisitor_female"]
     },
     "grand_inquisitor_male": {
@@ -1783,7 +1783,7 @@
         "armor": 28,
         "resist": 20
       },
-      "spells": ["silver_bolt", "purifying_flame", "steal_magic", "grand_inquisitor_male_passive"],
+      "spells": ["purge_slash", "nullblade_cleave", "steal_magic", "grand_inquisitor_male_passive"],
       "promotesTo": []
     },
     "grand_inquisitor_female": {
@@ -1802,7 +1802,7 @@
         "armor": 28,
         "resist": 20
       },
-      "spells": ["silver_bolt", "purifying_flame", "steal_magic", "grand_inquisitor_female_passive"],
+      "spells": ["purge_slash", "nullblade_cleave", "steal_magic", "grand_inquisitor_female_passive"],
       "promotesTo": []
     },
     "witcher_male": {
@@ -1821,7 +1821,7 @@
         "armor": 18,
         "resist": 12
       },
-      "spells": ["silver_bolt", "purifying_flame", "hex"],
+      "spells": ["purge_slash", "nullblade_cleave", "hex"],
       "promotesTo": ["professional_witcher_male"]
     },
     "witcher_female": {
@@ -1840,7 +1840,7 @@
         "armor": 18,
         "resist": 12
       },
-      "spells": ["silver_bolt", "purifying_flame", "hex"],
+      "spells": ["purge_slash", "nullblade_cleave", "hex"],
       "promotesTo": ["professional_witcher_female"]
     },
     "professional_witcher_male": {
@@ -1859,7 +1859,7 @@
         "armor": 25,
         "resist": 18
       },
-      "spells": ["silver_bolt", "purifying_flame", "hex", "professional_witcher_male_passive"],
+      "spells": ["purge_slash", "nullblade_cleave", "hex", "professional_witcher_male_passive"],
       "promotesTo": []
     },
     "professional_witcher_female": {
@@ -1878,7 +1878,7 @@
         "armor": 25,
         "resist": 18
       },
-      "spells": ["silver_bolt", "purifying_flame", "hex", "professional_witcher_female_passive"],
+      "spells": ["purge_slash", "nullblade_cleave", "hex", "professional_witcher_female_passive"],
       "promotesTo": []
     }
   },
