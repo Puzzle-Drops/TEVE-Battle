@@ -4079,6 +4079,18 @@ body {
     }
 }
 
+/* Make passive abilities in battle non-clickable */
+.ability.passive {
+    cursor: default;
+    opacity: 1;
+}
+
+.ability.passive:hover {
+    border-color: #2a6a8a;
+    box-shadow: 0 0 20px rgba(42, 106, 138, 0.5);
+    transform: none;
+}
+
 /* Adjust blob size for smaller ability icons */
 .abilityIconSmall .waterbrush-blob-1,
 .abilityIconSmall .waterbrush-blob-2 {
