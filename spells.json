@@ -602,7 +602,7 @@
     "name": "Cheap Shot",
     "description": "Transfer 1 random debuff from self to target, deal [{base} + {attack} + {agi}] physical damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["physical", "cleanse"],
+    "effects": ["physical", "dispel"],
     "scaling": {
         "base": [12, 45, 90, 180, 315],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
