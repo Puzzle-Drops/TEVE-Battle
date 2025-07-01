@@ -512,7 +512,7 @@
     "name": "Psi Strike",
     "description": "If enemy ≥30% action bar: [{base} + {attack} + {int}] physical damage and drain 5% action bar. If <30%: pure damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["physical", "physical", "support"],
+    "effects": ["physical", "support"],
     "scaling": {
         "base": [14, 55, 110, 220, 385],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
@@ -713,7 +713,7 @@
 "nullblade_cleave": {
     "id": "nullblade_cleave",
     "name": "Nullblade Cleave",
-    "description": "AOE damage dealing [{base} + {attack} + {int}] + [{buffBonus}] per buff on enemies",
+    "description": "AOE damage dealing [{base} + {attack} + {int}] + {buffBonus} per buff on enemies",
     "cooldown": [4, 4, 3, 3, 2],
     "effects": ["aoe", "physical"],
     "scaling": {
