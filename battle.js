@@ -899,6 +899,9 @@ if (unit.isEnemy) {
     
     processTurn() {
         const unit = this.currentUnit;
+
+        // Debug log all possible actions if debugging is enabled
+        this.debugLogAllPossibleActions(unit);
         
         // Check for Twilight's End
         if (unit.twilightsEndPending) {
@@ -1084,6 +1087,7 @@ if (unit.isEnemy) {
         const bestAction = possibleActions[0];
         
         // Debug logging for AI decisions (optional)
+        /*
         if (this.debugAI) {
             console.log(`AI Decision for ${unit.name}:`);
             console.log(`Chosen: ${bestAction.ability.name} on ${bestAction.target.name || 'all'} (score: ${bestAction.score.toFixed(1)})`);
@@ -1091,7 +1095,7 @@ if (unit.isEnemy) {
                 `${a.ability.name} → ${a.target.name || 'all'} (${a.score.toFixed(1)})`
             ));
         }
-        
+        */
         this.executeAbility(unit, bestAction.abilityIndex, bestAction.target);
         this.endTurn();
     }
@@ -1640,6 +1644,59 @@ if (unit.isEnemy) {
         }
         
         return score;
+    }
+
+    debugLogAllPossibleActions(unit) {
+        if (!this.debugAI) return;
+        
+        console.log(`\n========== AI Debug for ${unit.className} - ${unit.name}==========`);
+        
+        // Pre-calculate sorted lists once
+        const aliveEnemies = this.getEnemies(unit).filter(e => e.isAlive);
+        const aliveAllies = this.getParty(unit).filter(a => a.isAlive);
+        
+        const sortedLists = {
+            enemiesByArmor: [...aliveEnemies].sort((a, b) => a.armor - b.armor),
+            enemiesByResist: [...aliveEnemies].sort((a, b) => a.resist - b.resist),
+            enemiesByTotalDefense: [...aliveEnemies].sort((a, b) => (a.armor + a.resist) - (b.armor + b.resist)),
+            enemiesByAttack: [...aliveEnemies].sort((a, b) => b.source.attack - a.source.attack),
+            enemiesByHealth: [...aliveEnemies].sort((a, b) => a.currentHp - b.currentHp),
+            enemiesByActionBar: [...aliveEnemies].sort((a, b) => b.actionBar - a.actionBar),
+            enemiesByBuffCount: [...aliveEnemies].sort((a, b) => b.buffs.length - a.buffs.length),
+            
+            alliesByTotalDefense: [...aliveAllies].sort((a, b) => (a.armor + a.resist) - (b.armor + b.resist)),
+            alliesByDebuffCount: [...aliveAllies].sort((a, b) => b.debuffs.length - a.debuffs.length),
+            alliesByHealth: [...aliveAllies].sort((a, b) => a.currentHp - b.currentHp),
+            alliesByAttack: [...aliveAllies].sort((a, b) => b.source.attack - a.source.attack),
+            alliesByActionBar: [...aliveAllies].sort((a, b) => a.actionBar - b.actionBar),
+            
+            aliveEnemiesCount: aliveEnemies.length,
+            aliveAlliesCount: aliveAllies.length
+        };
+        
+        // Get all possible actions
+        const possibleActions = this.getAllPossibleActions(unit);
+        
+        // Calculate score for each action
+        possibleActions.forEach(action => {
+            action.score = this.calculateAbilityScore(unit, action.abilityIndex, action.target, action.spell, sortedLists);
+        });
+        
+        // Sort by score (highest first)
+        possibleActions.sort((a, b) => b.score - a.score);
+        
+        // Log top 10 actions
+        const actionsToLog = possibleActions.slice(0, 10);
+        
+        actionsToLog.forEach((action, index) => {
+            const targetInfo = action.target === 'all' ? 'ALL' : 
+                `${action.target.name} (Lv${action.target.source.level}, ${Math.floor(action.target.currentHp)}hp)`;
+            
+            console.log(`${action.score.toFixed(1)}: ${action.ability.name} -> ${targetInfo}`);
+        });
+        
+        console.log(`Total possible actions: ${possibleActions.length}`);
+        console.log(`=======================================\n`);
     }
     
     calculateHealthDeficit(caster, target) {
