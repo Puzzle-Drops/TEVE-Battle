@@ -512,7 +512,7 @@
     "name": "Psi Strike",
     "description": "If enemy ≥30% action bar: [{base} + {attack} + {int}] physical damage and drain 5% action bar. If <30%: pure damage",
     "cooldown": [0, 0, 0, 0, 0],
-    "effects": ["physical", "support"],
+    "effects": ["physical"],
     "scaling": {
         "base": [14, 55, 110, 220, 385],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
