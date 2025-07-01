@@ -4451,7 +4451,6 @@ if (value !== null && value !== undefined) {
         // Core effects
         { key: 'passive', display: 'Passive' },
         { key: 'aoe', display: 'AOE' },
-        { key: 'heal', display: 'Heal' },
         
         // Damage types
         { key: 'physical', display: 'Physical' },
@@ -4459,6 +4458,7 @@ if (value !== null && value !== undefined) {
         { key: 'pure', display: 'Pure' },
         
         // Special effects
+        { key: 'heal', display: 'Heal' },
         { key: 'evasion', display: 'Evasion' },
         { key: 'cleanse', display: 'Cleanse' },
         { key: 'dispel', display: 'Dispel' },
