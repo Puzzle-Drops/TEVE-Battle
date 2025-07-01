@@ -169,6 +169,7 @@ toggleAutoBattleInBattle(enabled) {
                 };
             }
 
+		
 init() {
     // Create 8 starting villagers
     this.heroes = [];
@@ -2995,24 +2996,33 @@ hideStatTooltip() {
 	}
 }
             showSkillsTab(hero, content) {
-                content.innerHTML = `
-                    <div class="skillsContainer">
-                        ${hero.abilities.map((ability, index) => `
-                            <div class="skillBox" onclick="game.selectSkill(${index})">
-                                <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" alt="${ability.name}" onerror="this.style.display='none'">
+    content.innerHTML = `
+        <div class="skillsContainer">
+            ${hero.abilities.map((ability, index) => {
+                const isPassive = ability.passive === true;
+                return `
+                    <div class="skillBox ${isPassive ? 'passive' : ''}" onclick="game.selectSkill(${index})">
+                        ${isPassive ? `
+                            <div class="waterbrush-overlay-1">
+                                <div class="waterbrush-blob-1"></div>
+                                <div class="waterbrush-blob-2"></div>
                             </div>
-                        `).join('')}
-                    </div>
-                    <div class="skillDescription" id="skillDescription">
-                        Click on a skill to see its description
+                        ` : ''}
+                        <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" alt="${ability.name}" onerror="this.style.display='none'">
                     </div>
                 `;
-                
-                // Automatically select the first skill
-                if (hero.abilities.length > 0) {
-                    this.selectSkill(0);
-                }
-            }
+            }).join('')}
+        </div>
+        <div class="skillDescription" id="skillDescription">
+            Click on a skill to see its description
+        </div>
+    `;
+    
+    // Automatically select the first skill
+    if (hero.abilities.length > 0) {
+        this.selectSkill(0);
+    }
+}
 
             showPromoteTab(hero, content) {
     const canPromote = hero.canPromote();
@@ -4027,22 +4037,29 @@ showHeroInfoPopup(hero) {
     document.getElementById('popupStats').innerHTML = statsHtml;
                 
                 // Show ability icons with tooltips
-                const abilityIconsHtml = `
-                    <div style="display: flex; gap: 8px; margin-top: 10px;">
-                        ${hero.abilities.map((ability, index) => {
-                            return `
-                                <div class="abilityIconSmall" 
-                                     data-ability-index="${index}"
-                                     data-hero-type="hero">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" 
-                                         style="width: 64px; height: 64px;" 
-                                         alt="${ability.name}" 
-                                         onerror="this.style.display='none'">
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                `;
+const abilityIconsHtml = `
+    <div style="display: flex; gap: 8px; margin-top: 10px;">
+        ${hero.abilities.map((ability, index) => {
+            const isPassive = ability.passive === true;
+            return `
+                <div class="abilityIconSmall ${isPassive ? 'passive' : ''}" 
+                     data-ability-index="${index}"
+                     data-hero-type="hero">
+                    ${isPassive ? `
+                        <div class="waterbrush-overlay-1">
+                            <div class="waterbrush-blob-1"></div>
+                            <div class="waterbrush-blob-2"></div>
+                        </div>
+                    ` : ''}
+                    <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" 
+                         style="width: 64px; height: 64px;" 
+                         alt="${ability.name}" 
+                         onerror="this.style.display='none'">
+                </div>
+            `;
+        }).join('')}
+    </div>
+`;
                 document.getElementById('popupAbilities').innerHTML = abilityIconsHtml;
                 
                 // Add event listeners for tooltips
@@ -4231,22 +4248,29 @@ showEnemyInfoPopup(enemy) {
     document.getElementById('popupStats').innerHTML = statsHtml;
     
     // Show ability icons with tooltips
-    const abilityIconsHtml = `
-        <div style="display: flex; gap: 8px; margin-top: 10px;">
-            ${enemy.abilities.map((ability, index) => {
-                return `
-                    <div class="abilityIconSmall" 
-                         data-ability-index="${index}"
-                         data-hero-type="enemy">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" 
-                             style="width: 64px; height: 64px;" 
-                             alt="${ability.name}" 
-                             onerror="this.style.display='none'">
-                    </div>
-                `;
-            }).join('')}
-        </div>
-    `;
+const abilityIconsHtml = `
+    <div style="display: flex; gap: 8px; margin-top: 10px;">
+        ${enemy.abilities.map((ability, index) => {
+            const isPassive = ability.passive === true;
+            return `
+                <div class="abilityIconSmall ${isPassive ? 'passive' : ''}" 
+                     data-ability-index="${index}"
+                     data-hero-type="enemy">
+                    ${isPassive ? `
+                        <div class="waterbrush-overlay-1">
+                            <div class="waterbrush-blob-1"></div>
+                            <div class="waterbrush-blob-2"></div>
+                        </div>
+                    ` : ''}
+                    <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" 
+                         style="width: 64px; height: 64px;" 
+                         alt="${ability.name}" 
+                         onerror="this.style.display='none'">
+                </div>
+            `;
+        }).join('')}
+    </div>
+`;
     document.getElementById('popupAbilities').innerHTML = abilityIconsHtml;
     
     // Add event listeners for tooltips
