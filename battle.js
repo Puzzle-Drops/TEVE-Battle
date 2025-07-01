@@ -255,6 +255,10 @@ class Battle {
                 element.style.visibility = 'visible';
             }
         });
+
+this.debugAI = true; // AI decision making shown in console
+
+        
     }
     
     loadWave(waveIndex) {
@@ -989,9 +993,7 @@ if (unit.isEnemy) {
         }
     }
 
-    executeAITurn(unit) {
-        //console.log(`AI Turn: ${unit.name}, abilities: ${unit.abilities.length}`);
-        
+executeAITurn(unit) {
         // Check if unit has taunt debuff and must attack specific target
         const tauntDebuff = unit.debuffs.find(d => d.name === 'Taunt' && d.tauntTarget);
         
@@ -1014,278 +1016,39 @@ if (unit.isEnemy) {
             return;
         }
         
-        // Normal AI behavior - check abilities from highest to lowest
-        for (let i = unit.abilities.length - 1; i >= 0; i--) {
-            const ability = unit.abilities[i];
-            if (!ability || ability.passive || !unit.canUseAbility(i)) continue;
-            
-            const spell = spellManager.getSpell(ability.id);
-            if (!spell) continue;
-            
-            // Check if this ability would be redundant
-const effects = spell.effects || [];
-const doesDamage = effects.includes('physical') || effects.includes('magical') || effects.includes('pure');
-            
-            // Get buff/debuff effects
-            const buffEffects = effects.filter(e => e.startsWith('buff_'));
-            const debuffEffects = effects.filter(e => e.startsWith('debuff_'));
-            
-            // Determine potential targets
-            let targets = [];
-            let skipAbility = false;
-            
-            switch (spell.target) {
-                case 'enemy':
-                    targets = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
-                    
-                    // Check if all enemies already have all debuffs this ability applies
-                    if (!doesDamage && debuffEffects.length > 0 && targets.length > 0) {
-                        const allHaveDebuffs = debuffEffects.every(debuffEffect => {
-                            const debuffName = this.getDebuffNameFromEffect(debuffEffect);
-                            return targets.every(target => target.debuffs.some(d => d.name === debuffName));
-                        });
-                        
-                        if (allHaveDebuffs) {
-                            skipAbility = true;
-                        }
-                    }
-                    break;
-                    
-                case 'ally':
-    targets = unit.isEnemy ? this.enemies.filter(e => e && e.isAlive) : this.party.filter(p => p && p.isAlive);
-    
-    // Skip if no ally would benefit from the buffs (all have buffs or are marked)
-    if (!doesDamage && buffEffects.length > 0 && targets.length > 0) {
-        const anyValidTarget = targets.some(target => {
-            // Marked units can't receive buffs
-            if (target.debuffs.some(d => d.name === 'Mark')) {
-                return false;
-            }
-            // Check if this target is missing any buff this ability provides
-            return buffEffects.some(buffEffect => {
-                const buffName = this.getBuffNameFromEffect(buffEffect);
-                // If target is the current unit, ignore buffs with duration 1
-                if (target === unit) {
-                    return !target.buffs.some(b => b.name === buffName && b.duration > 1);
-                } else {
-                    return !target.buffs.some(b => b.name === buffName);
-                }
-            });
+        // Get all possible actions
+        const possibleActions = this.getAllPossibleActions(unit);
+        
+        if (possibleActions.length === 0) {
+            this.log(`${unit.name} has no abilities available!`);
+            this.endTurn();
+            return;
+        }
+        
+        // Calculate score for each action
+        possibleActions.forEach(action => {
+            action.score = this.calculateAbilityScore(unit, action.abilityIndex, action.target, action.spell);
         });
         
-        if (!anyValidTarget) {
-            skipAbility = true;
-        }
-    }
-    break;
-                    
-                case 'all_enemies':
-                    targets = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
-                    
-                    // Check if all enemies already have all debuffs this ability applies
-                    if (!doesDamage && debuffEffects.length > 0 && targets.length > 0) {
-                        const allHaveDebuffs = debuffEffects.every(debuffEffect => {
-                            const debuffName = this.getDebuffNameFromEffect(debuffEffect);
-                            return targets.every(target => target.debuffs.some(d => d.name === debuffName));
-                        });
-                        
-                        if (allHaveDebuffs) {
-                            skipAbility = true;
-                        }
-                    }
-                    break;
-                    
-                case 'all_allies':
-    targets = unit.isEnemy ? this.enemies.filter(e => e && e.isAlive) : this.party.filter(p => p && p.isAlive);
-    
-    // Skip if no ally would benefit from the buffs (all have buffs or are marked)
-    if (!doesDamage && buffEffects.length > 0 && targets.length > 0) {
-        const anyValidTarget = targets.some(target => {
-            // Marked units can't receive buffs
-            if (target.debuffs.some(d => d.name === 'Mark')) {
-                return false;
-            }
-            // Check if this target is missing any buff this ability provides
-            return buffEffects.some(buffEffect => {
-                const buffName = this.getBuffNameFromEffect(buffEffect);
-                // If target is the current unit, ignore buffs with duration 1
-                if (target === unit) {
-                    return !target.buffs.some(b => b.name === buffName && b.duration > 1);
-                } else {
-                    return !target.buffs.some(b => b.name === buffName);
-                }
-            });
-        });
+        // Sort by score (highest first)
+        possibleActions.sort((a, b) => b.score - a.score);
         
-        if (!anyValidTarget) {
-            skipAbility = true;
-        }
-    }
-    break;
-            }
-            
-            // Skip this ability if it would be redundant
-            if (skipAbility) {
-                continue;
-            }
-            
-            // Execute the ability
-            let target = null;
-            switch (spell.target) {
-                case 'enemy':
-                    if (targets.length > 0) {
-                        // For abilities that apply debuffs, prioritize targets without those debuffs
-                        if (debuffEffects.length > 0) {
-                            // Find targets that don't have all the debuffs this ability applies
-                            const unaffectedTargets = targets.filter(t => {
-                                return !debuffEffects.every(debuffEffect => {
-                                    const debuffName = this.getDebuffNameFromEffect(debuffEffect);
-                                    return t.debuffs.some(d => d.name === debuffName);
-                                });
-                            });
-                            
-                            // Debug logging
-                            /*
-                            console.log(`${unit.name} using ${ability.name}:`);
-                            console.log(`- Total targets: ${targets.length}`);
-                            console.log(`- Unaffected targets: ${unaffectedTargets.length}`);
-                            console.log(`- Unaffected: ${unaffectedTargets.map(t => t.name).join(', ')}`);
-                            */
-                            
-                            // If some targets don't have the debuffs, choose from them
-                            if (unaffectedTargets.length > 0) {
-                                target = unaffectedTargets[Math.floor(Math.random() * unaffectedTargets.length)];
-                            } else {
-                                // All targets have the debuffs, but if ability deals damage, still use it
-                                target = targets[Math.floor(Math.random() * targets.length)];
-                            }
-                        } else {
-                            // No debuffs to apply, random target
-                            target = targets[Math.floor(Math.random() * targets.length)];
-                        }
-                    }
-                    break;
-                case 'ally':
-    if (targets.length > 0) {
-        // For abilities that apply buffs, prioritize targets that would benefit
-        if (buffEffects.length > 0 && !spell.effects.includes('heal')) {
-            // Find targets that would gain at least one new buff
-            const benefitTargets = targets.filter(t => {
-                // Marked units can't receive buffs
-                if (t.debuffs.some(d => d.name === 'Mark')) {
-                    return false;
-                }
-                // Check if this target is missing any buff this ability provides
-                return buffEffects.some(buffEffect => {
-                    const buffName = this.getBuffNameFromEffect(buffEffect);
-                    // If target is the current unit, ignore buffs with duration 1
-                    if (t === unit) {
-                        return !t.buffs.some(b => b.name === buffName && b.duration > 1);
-                    } else {
-                        return !t.buffs.some(b => b.name === buffName);
-                    }
-                });
-            });
-            
-            // If some targets would benefit, choose from them
-            if (benefitTargets.length > 0) {
-                // Prioritize current unit if they would benefit (to refresh expiring buffs)
-                if (benefitTargets.includes(unit)) {
-                    target = unit;
-                } else {
-                    target = benefitTargets[0];
-                }
-            } else if (doesDamage) {
-                // If ability also deals damage, still use it on someone
-                target = targets[0];
-            }
-            // else target remains null and ability won't be used
-        } else if (spell.effects.includes('heal')) {
-            // Prioritize low HP allies for heals
-            targets.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
-            target = targets[0];
-        } else {
-            target = targets[0];
-        }
-    }
-    break;
-                case 'self':
-    // Skip self buffs if marked or already has all buffs (unless ability also deals damage)
-    if (!doesDamage && buffEffects.length > 0) {
-        const isMarked = unit.debuffs.some(d => d.name === 'Mark');
-        const hasAllBuffs = buffEffects.every(buffEffect => {
-            const buffName = this.getBuffNameFromEffect(buffEffect);
-            // For self-casting, ignore buffs with only 1 duration left since they'll expire
-            return unit.buffs.some(b => b.name === buffName && b.duration > 1);
-        });
+        // Execute the best action
+        const bestAction = possibleActions[0];
         
-        if (isMarked || hasAllBuffs) {
-            skipAbility = true;
-        } else {
-            target = unit;
-        }
-    } else {
-        target = unit;
-    }
-    break;
-                case 'all_enemies':
-                case 'all_allies':
-                    target = 'all';
-                    break;
-            }
-            
-            if (target || spell.target === 'passive') {
-                this.executeAbility(unit, i, target);
-                this.endTurn();
-                return;
-            }
+        // Debug logging for AI decisions (optional)
+        if (this.debugAI) {
+            console.log(`AI Decision for ${unit.name}:`);
+            console.log(`Chosen: ${bestAction.ability.name} on ${bestAction.target.name || 'all'} (score: ${bestAction.score})`);
+            console.log('Top 3 options:', possibleActions.slice(0, 3).map(a => 
+                `${a.ability.name} → ${a.target.name || 'all'} (${a.score.toFixed(1)})`
+            ));
         }
         
-        // If no abilities were used, try to use ANY available ability as a last resort
-        for (let i = 0; i < unit.abilities.length; i++) {
-            const ability = unit.abilities[i];
-            if (!ability || ability.passive || !unit.canUseAbility(i)) continue;
-            
-            const spell = spellManager.getSpell(ability.id);
-            if (!spell) continue;
-            
-            // Try to find ANY valid target for this ability
-            let target = null;
-            switch (spell.target) {
-                case 'enemy':
-                    const enemies = unit.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
-                    if (enemies.length > 0) {
-                        target = enemies[Math.floor(Math.random() * enemies.length)];
-                    }
-                    break;
-                case 'ally':
-                    const allies = unit.isEnemy ? this.enemies.filter(e => e && e.isAlive) : this.party.filter(p => p && p.isAlive);
-                    if (allies.length > 0) {
-                        target = allies[Math.floor(Math.random() * allies.length)];
-                    }
-                    break;
-                case 'self':
-                    target = unit;
-                    break;
-                case 'all_enemies':
-                case 'all_allies':
-                    target = 'all';
-                    break;
-            }
-            
-            if (target) {
-                this.log(`${unit.name} uses ${ability.name} as a last resort!`);
-                this.executeAbility(unit, i, target);
-                this.endTurn();
-                return;
-            }
-        }
-        
-        // If still no abilities were used, log and end turn
-        this.log(`${unit.name} has no abilities available!`);
+        this.executeAbility(unit, bestAction.abilityIndex, bestAction.target);
         this.endTurn();
     }
-
+    
     getBuffNameFromEffect(effect) {
         const mapping = {
             'buff_increase_attack': 'Increase Attack',
@@ -1310,6 +1073,265 @@ const doesDamage = effects.includes('physical') || effects.includes('magical') |
             'debuff_mark': 'Mark'
         };
         return mapping[effect] || '';
+    }
+
+// AI Scoring System
+    calculateAbilityScore(caster, abilityIndex, target, spell) {
+        let score = 0;
+        const ability = caster.abilities[abilityIndex];
+        const effects = spell.effects || [];
+        
+        // Base score for using any ability
+        score += 10;
+        
+        // Prefer abilities with longer cooldowns when scores are close (tiebreaker)
+        score += ability.cooldown * 0.1;
+        
+        // Check if it's an AOE ability
+        const isAOE = effects.includes('aoe') || 
+                      spell.target === 'all_enemies' || 
+                      spell.target === 'all_allies' || 
+                      spell.target === 'all';
+        
+        // Count valid targets for AOE multiplier
+        let validTargetCount = 1;
+        if (isAOE) {
+            if (spell.target === 'all_enemies') {
+                validTargetCount = this.getEnemies(caster).filter(e => e.isAlive).length;
+            } else if (spell.target === 'all_allies') {
+                validTargetCount = this.getParty(caster).filter(a => a.isAlive).length;
+            } else if (spell.target === 'all') {
+                // Special case for abilities that can target either team
+                validTargetCount = Math.max(
+                    this.getEnemies(caster).filter(e => e.isAlive).length,
+                    this.getParty(caster).filter(a => a.isAlive).length
+                );
+            }
+        }
+        
+        // Process each effect
+        effects.forEach(effect => {
+            let effectScore = 0;
+            
+            // Damage effects
+            if (effect === 'physical' || effect === 'magical' || effect === 'pure') {
+                effectScore += 50;
+                // Bonus for low HP enemies
+                if (target && target !== 'all' && target.isAlive) {
+                    const hpPercent = target.currentHp / target.maxHp;
+                    effectScore += (1 - hpPercent) * 30; // Up to +30 for nearly dead enemies
+                }
+            }
+            
+            // Healing effects
+            if (effect === 'heal') {
+                if (target && target !== 'all') {
+                    // Check if target is blighted (can't be healed)
+                    if (target.debuffs.some(d => d.name === 'Blight')) {
+                        return; // Skip this effect, can't heal blighted targets
+                    }
+                    
+                    // Calculate health deficit including potential shields
+                    const healthDeficit = this.calculateHealthDeficit(caster, target);
+                    effectScore += healthDeficit * 100; // Higher score for more injured/shieldless allies
+                }
+            }
+            
+            // Buff effects
+            if (effect.startsWith('buff_')) {
+                if (target && target !== 'all') {
+                    // Check if target is marked (can't receive buffs)
+                    if (target.debuffs.some(d => d.name === 'Mark')) {
+                        effectScore -= 100; // Negative score for trying to buff marked target
+                        return;
+                    }
+                    
+                    const buffName = this.getBuffNameFromEffect(effect);
+                    const hasBuff = target.buffs.some(b => b.name === buffName);
+                    
+                    if (!hasBuff) {
+                        effectScore += 40; // Good to apply new buff
+                        
+                        // Special cases
+                        if (effect === 'buff_increase_attack') {
+                            effectScore += 20; // Attack buffs are high value
+                        } else if (effect === 'buff_shield') {
+                            const shieldDeficit = this.calculateHealthDeficit(caster, target);
+                            effectScore += shieldDeficit * 50;
+                        }
+                    } else {
+                        // Check if we should refresh expiring buffs
+                        const existingBuff = target.buffs.find(b => b.name === buffName);
+                        if (existingBuff && existingBuff.duration > 0 && existingBuff.duration <= 2) {
+                            effectScore += 15; // Moderate value for refreshing
+                        } else {
+                            effectScore -= 10; // Small penalty for redundant buff
+                        }
+                    }
+                }
+            }
+            
+            // Debuff effects
+            if (effect.startsWith('debuff_')) {
+                if (target && target !== 'all') {
+                    // Check if target is immune
+                    if (target.buffs.some(b => b.name === 'Immune')) {
+                        effectScore -= 50; // Can't debuff immune targets
+                        return;
+                    }
+                    
+                    const debuffName = this.getDebuffNameFromEffect(effect);
+                    const hasDebuff = target.debuffs.some(d => d.name === debuffName);
+                    
+                    if (!hasDebuff) {
+                        effectScore += 35; // Good to apply new debuff
+                        
+                        // Special high-value debuffs
+                        if (effect === 'debuff_stun') {
+                            effectScore += 30; // Stuns are very valuable
+                        } else if (effect === 'debuff_mark') {
+                            effectScore += 25; // Mark is valuable
+                        } else if (effect === 'debuff_reduce_defense') {
+                            effectScore += 20; // Defense reduction helps team
+                        }
+                    } else {
+                        // Small penalty for redundant debuff unless it stacks (like bleed)
+                        if (effect === 'debuff_bleed') {
+                            effectScore += 15; // Bleeds stack
+                        } else {
+                            effectScore -= 5;
+                        }
+                    }
+                }
+            }
+            
+            // Cleanse effects
+            if (effect === 'cleanse') {
+                if (target && target !== 'all') {
+                    effectScore += target.debuffs.length * 20; // Value per debuff removed
+                }
+            }
+            
+            // Dispel/Strip effects
+            if (effect === 'dispel' || effect === 'debuff_strip') {
+                if (target && target !== 'all') {
+                    effectScore += target.buffs.length * 20; // Value per buff removed
+                }
+            }
+            
+            // Support effects
+            if (effect === 'support') {
+                effectScore += 15; // General support value
+            }
+            
+            // Apply AOE multiplier if applicable
+            if (isAOE && validTargetCount > 1) {
+                effectScore *= (0.7 + (0.3 * validTargetCount)); // Scaling multiplier
+            }
+            
+            score += effectScore;
+        });
+        
+        // Special ability considerations
+        if (spell.id === 'assassinate') {
+            // Only valuable if target meets conditions
+            if (target && target !== 'all' && target.isAlive) {
+                if ((target.currentHp / target.maxHp) < 0.3 && target.debuffs.length > 0) {
+                    score += 200; // Huge bonus for executable targets
+                } else {
+                    score -= 100; // Penalty for wasting assassinate
+                }
+            }
+        }
+        
+        return score;
+    }
+    
+    calculateHealthDeficit(caster, target) {
+        // Calculate how much health is "missing" including shield considerations
+        const maxHp = target.maxHp;
+        const currentHp = target.currentHp;
+        const currentShield = target.currentShield;
+        
+        // Base health deficit
+        let deficit = (maxHp - currentHp) / maxHp;
+        
+        // Check for overheal passive abilities on the caster
+        if (caster.prophetMalePassive) {
+            // Prophet Male can create shields up to 25% max HP from overhealing
+            const potentialShield = maxHp * 0.25;
+            const shieldDeficit = Math.max(0, potentialShield - currentShield);
+            deficit += shieldDeficit / maxHp;
+        }
+        
+        // Consider Champion Female passive shield regeneration
+        if (target.championFemalePassive && !currentShield) {
+            // They can regenerate a 20% shield
+            deficit += 0.2;
+        }
+        
+        return Math.min(deficit, 1.0); // Cap at 100% deficit
+    }
+    
+    getAllPossibleActions(unit) {
+        const actions = [];
+        
+        // Check all abilities
+        unit.abilities.forEach((ability, index) => {
+            // Skip passives and abilities on cooldown
+            if (ability.passive || !unit.canUseAbility(index)) return;
+            
+            const spell = spellManager.getSpell(ability.id);
+            if (!spell) return;
+            
+            // Get all possible targets for this ability
+            const targets = this.getPossibleTargets(unit, spell);
+            
+            // Create an action for each valid target
+            targets.forEach(target => {
+                actions.push({
+                    abilityIndex: index,
+                    ability: ability,
+                    spell: spell,
+                    target: target,
+                    score: 0 // Will be calculated
+                });
+            });
+        });
+        
+        return actions;
+    }
+    
+    getPossibleTargets(unit, spell) {
+        const targets = [];
+        
+        switch (spell.target) {
+            case 'enemy':
+                const enemies = unit.isEnemy ? 
+                    this.party.filter(p => p && p.isAlive) : 
+                    this.enemies.filter(e => e && e.isAlive);
+                targets.push(...enemies);
+                break;
+                
+            case 'ally':
+                const allies = unit.isEnemy ? 
+                    this.enemies.filter(e => e && e.isAlive) : 
+                    this.party.filter(p => p && p.isAlive);
+                targets.push(...allies);
+                break;
+                
+            case 'self':
+                targets.push(unit);
+                break;
+                
+            case 'all_enemies':
+            case 'all_allies':
+            case 'all':
+                targets.push('all'); // Special marker for AOE
+                break;
+        }
+        
+        return targets;
     }
     
     executeAbility(caster, abilityIndex, target) {
