@@ -4452,6 +4452,8 @@ if (value !== null && value !== undefined) {
         { key: 'passive', display: 'Passive' },
         { key: 'aoe', display: 'AOE' },
         { key: 'heal', display: 'Heal' },
+        { key: 'cleanse', display: 'Cleanse' },
+        { key: 'dispel', display: 'Dispel' },
         
         // Damage types
         { key: 'physical', display: 'Physical' },
