@@ -1238,7 +1238,19 @@ executeAITurn(unit) {
                     }
                 }
             }
-            
+
+            // Shield break effects
+            if (effect === 'shield_break') {
+                if (target && target !== 'all' && target.isAlive) {
+                    const hasShield = target.buffs.some(b => b.name === 'Shield');
+                    if (hasShield) {
+                        effectScore += 40; // High value for breaking shields
+                    } else {
+                        effectScore += 5; // Small value even without shield (preventative)
+                    }
+                }
+            }
+
             // Cleanse effects (remove debuffs from allies)
             if (effect === 'cleanse') {
                 if (target && target !== 'all') {
