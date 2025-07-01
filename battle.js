@@ -2581,94 +2581,95 @@ this.party.forEach((unit, index) => {
     }
     
     showPlayerAbilities(unit) {
-        const abilityPanel = document.getElementById('abilityPanel');
-        abilityPanel.innerHTML = '';
+    const abilityPanel = document.getElementById('abilityPanel');
+    abilityPanel.innerHTML = '';
+    
+    // Show all abilities including passives
+    unit.abilities.forEach((ability, index) => {
+        const abilityDiv = document.createElement('div');
+        abilityDiv.className = 'ability';
         
-        // Count abilities (excluding passives for display purposes)
-        const activeAbilities = unit.abilities.filter(ability => !ability.passive);
+        if (!unit.canUseAbility(index)) {
+            abilityDiv.classList.add('onCooldown');
+        }
         
-        activeAbilities.forEach((ability, index) => {
-            const actualIndex = unit.abilities.indexOf(ability);
-            const abilityDiv = document.createElement('div');
-            abilityDiv.className = 'ability';
-            
-            if (!unit.canUseAbility(actualIndex)) {
-                abilityDiv.classList.add('onCooldown');
-            }
-            
-            // Add passive class if it's a passive ability
-            if (ability.passive) {
-                abilityDiv.classList.add('passive');
-                abilityDiv.style.opacity = '0.5';
-                abilityDiv.style.cursor = 'default';
-            }
-            
-            const spell = spellManager.getSpell(ability.id);
-            const iconUrl = `https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png`;
-            
-            abilityDiv.innerHTML = `
-                <img src="${iconUrl}" alt="${ability.name}" style="width: 100px; height: 100px;" onerror="this.style.display='none'">
-                ${unit.cooldowns[actualIndex] > 0 ? `<span class="cooldownText">${unit.cooldowns[actualIndex]}</span>` : ''}
-            `;
-            
-            // Add tooltip on hover using the new format
-abilityDiv.onmouseover = (e) => {
-    const showFormula = e.altKey;
-    const tooltipHtml = game.formatAbilityTooltip(ability, ability.level, unit.source, showFormula);
-    game.showAbilityTooltipFromHTML(e, tooltipHtml);
-};
-
-abilityDiv.onmouseout = () => {
-    game.hideAbilityTooltip();
-};
-            
-            // Add click handler only to non-passive abilities
-            if (!ability.passive) {
-                abilityDiv.onclick = () => {
-                    // Hide tooltip when clicked
-                    game.hideAbilityTooltip();
-                    
-                    // If we're already targeting, clear it first
-                    if (this.targetingState) {
-                        this.clearTargeting();
-                    }
-                    
-                    // Re-enable all abilities first
-                    const allAbilities = abilityPanel.querySelectorAll('.ability');
-                    allAbilities.forEach(ab => {
-                        ab.style.opacity = '';
-                    });
-                    
-                    // If this ability can't be used, just return after clearing
-                    if (!unit.canUseAbility(actualIndex)) {
-                        return;
-                    }
-                    
-                    // Visually disable all other abilities (but keep them clickable)
-                    allAbilities.forEach(ab => {
-                        if (ab !== abilityDiv) {
-                            ab.style.opacity = '0.5';
-                        }
-                    });
-                    
-                    if (spell) {
-                        // For targeted abilities, highlight valid targets
-                        if (spell.target === 'enemy' || spell.target === 'ally') {
-                            this.selectTarget(unit, actualIndex, spell.target);
-                        } else {
-                            this.executeAbility(unit, actualIndex, spell.target === 'self' ? unit : 'all');
-                            this.endTurn();
-                        }
-                    }
-                };
-            }
-            
-            abilityPanel.appendChild(abilityDiv);
-        });
+        // Add passive class if it's a passive ability
+        const isPassive = ability.passive === true;
+        if (isPassive) {
+            abilityDiv.classList.add('passive');
+        }
         
-        // Apply centering based on ability count
-        abilityPanel.style.width = '100%';
-    }
+        const spell = spellManager.getSpell(ability.id);
+        const iconUrl = `https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png`;
+        
+        abilityDiv.innerHTML = `
+            ${isPassive ? `
+                <div class="waterbrush-overlay-1">
+                    <div class="waterbrush-blob-1"></div>
+                    <div class="waterbrush-blob-2"></div>
+                </div>
+            ` : ''}
+            <img src="${iconUrl}" alt="${ability.name}" style="width: 100px; height: 100px;" onerror="this.style.display='none'">
+            ${unit.cooldowns[index] > 0 && !isPassive ? `<span class="cooldownText">${unit.cooldowns[index]}</span>` : ''}
+        `;
+        
+        // Add tooltip on hover using the new format
+        abilityDiv.onmouseover = (e) => {
+            const showFormula = e.altKey;
+            const tooltipHtml = game.formatAbilityTooltip(ability, ability.level, unit.source, showFormula);
+            game.showAbilityTooltipFromHTML(e, tooltipHtml);
+        };
+        abilityDiv.onmouseout = () => {
+            game.hideAbilityTooltip();
+        };
+        
+        // Add click handler only to non-passive abilities
+        if (!isPassive) {
+            abilityDiv.onclick = () => {
+                // Hide tooltip when clicked
+                game.hideAbilityTooltip();
+                
+                // If we're already targeting, clear it first
+                if (this.targetingState) {
+                    this.clearTargeting();
+                }
+                
+                // Re-enable all abilities first
+                const allAbilities = abilityPanel.querySelectorAll('.ability');
+                allAbilities.forEach(ab => {
+                    ab.style.opacity = '';
+                });
+                
+                // If this ability can't be used, just return after clearing
+                if (!unit.canUseAbility(index)) {
+                    return;
+                }
+                
+                // Visually disable all other abilities (but keep them clickable)
+                allAbilities.forEach(ab => {
+                    if (ab !== abilityDiv) {
+                        ab.style.opacity = '0.5';
+                    }
+                });
+                
+                if (spell) {
+                    // For targeted abilities, highlight valid targets
+                    if (spell.target === 'enemy' || spell.target === 'ally') {
+                        this.selectTarget(unit, index, spell.target);
+                    } else {
+                        this.executeAbility(unit, index, spell.target === 'self' ? unit : 'all');
+                        this.endTurn();
+                    }
+                }
+            };
+        }
+        
+        abilityPanel.appendChild(abilityDiv);
+    });
+    
+    // Apply centering based on ability count
+    abilityPanel.style.width = '100%';
+}
 
     hidePlayerAbilities() {
         const abilityPanel = document.getElementById('abilityPanel');
