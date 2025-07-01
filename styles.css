@@ -3971,6 +3971,167 @@ body {
     text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
 }
 
+/* Passive Ability Waterbrush Animations */
+.skillBox.passive,
+.abilityIconSmall.passive,
+.ability.passive {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ensure ability images are above the animation */
+.skillBox.passive img,
+.abilityIconSmall.passive img,
+.ability.passive img {
+    position: relative;
+    z-index: 2;
+}
+
+/* Waterbrush overlay container */
+.waterbrush-overlay-1 {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 1;
+}
+
+/* Waterbrush blobs */
+.waterbrush-blob-1 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 40%, transparent 70%);
+    border-radius: 100%;
+    filter: blur(2px);
+    animation: borderTravel1 4s linear infinite;
+}
+
+.waterbrush-blob-2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: calc(100% - 50px);
+    left: calc(100% - 50px);
+    background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 40%, transparent 70%);
+    border-radius: 100%;
+    filter: blur(2px);
+    animation: borderTravel2 4s linear infinite;
+}
+
+/* Animation keyframes for blob 1 - starts at top-left */
+@keyframes borderTravel1 {
+    0% {
+        top: -50px;
+        left: -50px;
+    }
+    25% {
+        top: -50px;
+        left: calc(100% - 50px);
+    }
+    50% {
+        top: calc(100% - 50px);
+        left: calc(100% - 50px);
+    }
+    75% {
+        top: calc(100% - 50px);
+        left: -50px;
+    }
+    100% {
+        top: -50px;
+        left: -50px;
+    }
+}
+
+/* Animation keyframes for blob 2 - starts at bottom-right */
+@keyframes borderTravel2 {
+    0% {
+        top: calc(100% - 50px);
+        left: calc(100% - 50px);
+    }
+    25% {
+        top: calc(100% - 50px);
+        left: -50px;
+    }
+    50% {
+        top: -50px;
+        left: -50px;
+    }
+    75% {
+        top: -50px;
+        left: calc(100% - 50px);
+    }
+    100% {
+        top: calc(100% - 50px);
+        left: calc(100% - 50px);
+    }
+}
+
+/* Adjust blob size for smaller ability icons */
+.abilityIconSmall .waterbrush-blob-1,
+.abilityIconSmall .waterbrush-blob-2 {
+    width: 80%;
+    height: 80%;
+}
+
+.abilityIconSmall .waterbrush-blob-1 {
+    animation: borderTravel1Small 4s linear infinite;
+}
+
+.abilityIconSmall .waterbrush-blob-2 {
+    animation: borderTravel2Small 4s linear infinite;
+}
+
+/* Smaller animations for ability icons */
+@keyframes borderTravel1Small {
+    0% {
+        top: -30px;
+        left: -30px;
+    }
+    25% {
+        top: -30px;
+        left: calc(100% - 30px);
+    }
+    50% {
+        top: calc(100% - 30px);
+        left: calc(100% - 30px);
+    }
+    75% {
+        top: calc(100% - 30px);
+        left: -30px;
+    }
+    100% {
+        top: -30px;
+        left: -30px;
+    }
+}
+
+@keyframes borderTravel2Small {
+    0% {
+        top: calc(100% - 30px);
+        left: calc(100% - 30px);
+    }
+    25% {
+        top: calc(100% - 30px);
+        left: -30px;
+    }
+    50% {
+        top: -30px;
+        left: -30px;
+    }
+    75% {
+        top: -30px;
+        left: calc(100% - 30px);
+    }
+    100% {
+        top: calc(100% - 30px);
+        left: calc(100% - 30px);
+    }
+}
+
 /* Sort Settings Panel */
 .sortSettingsButton {
     background: rgba(10, 25, 41, 0.8);
