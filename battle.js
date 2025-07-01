@@ -1207,7 +1207,7 @@ if (unit.isEnemy) {
                 
                 // Damage effects
                 if (effect === 'physical' || effect === 'magical' || effect === 'pure') {
-                    effectScore += 50 * damageMultiplier;
+                    effectScore += 32 * damageMultiplier;
                     
                     if (currentTarget && currentTarget !== 'all' && currentTarget.isAlive) {
                         // Bonus for low HP enemies
@@ -1323,7 +1323,7 @@ if (unit.isEnemy) {
                             if (effect === 'buff_increase_attack') {
                                 effectScore += 20; // Attack buffs are high value
                             } else if (effect === 'buff_increase_speed') {
-                                effectScore += 15; // Speed buffs are valuable
+                                effectScore += 20; // Speed buffs are valuable
                             } else if (effect === 'buff_shield') {
                                 const shieldDeficit = this.calculateHealthDeficit(caster, currentTarget);
                                 effectScore += shieldDeficit * 50;
