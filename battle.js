@@ -1411,7 +1411,7 @@ if (unit.isEnemy) {
                 // Cleanse effects (remove debuffs from allies)
                 if (effect === 'cleanse') {
                     if (currentTarget && currentTarget !== 'all') {
-                        effectScore += currentTarget.debuffs.length * 25; // High value per debuff removed
+                        effectScore += currentTarget.debuffs.length * 20; // High value per debuff removed
                         // Extra value for removing dangerous debuffs
                         if (currentTarget.debuffs.some(d => d.name === 'Stun')) effectScore += 20;
                         if (currentTarget.debuffs.some(d => d.name === 'Mark')) effectScore += 15;
@@ -1430,7 +1430,7 @@ if (unit.isEnemy) {
                 // Dispel effects (remove buffs from enemies)
                 if (effect === 'dispel') {
                     if (currentTarget && currentTarget !== 'all') {
-                        effectScore += currentTarget.buffs.length * 25; // High value per buff removed
+                        effectScore += currentTarget.buffs.length * 20; // High value per buff removed
                         // Extra value for removing powerful buffs
                         if (currentTarget.buffs.some(b => b.name === 'Immune')) effectScore += 30;
                         if (currentTarget.buffs.some(b => b.name === 'Shield')) effectScore += 20;
@@ -1559,7 +1559,7 @@ if (unit.isEnemy) {
             }
             
             // NEW: Helping Hand - extremely powerful action bar fill
-            if (spell.id === 'helping_hand') {
+            if (spell.id === 'helping_hand' && target !== 'all') {
                 // Huge value if target has low action bar
                 const actionBarPercent = target.actionBar / 10000;
                 score += (1 - actionBarPercent) * 40; // Up to +40 for empty action bar
@@ -1569,14 +1569,14 @@ if (unit.isEnemy) {
             }
             
             // NEW: Steal Magic - buff transfer is very powerful
-            if (spell.id === 'steal_magic') {
+            if (spell.id === 'steal_magic' && target !== 'all') {
                 // Extra points for quality buffs to steal
                 if (target.buffs.some(b => b.name === 'Increase Attack')) score += 10;
                 if (target.buffs.some(b => b.name === 'Increase Speed')) score += 8;
             }
             
             // NEW: Shadowstep - triple debuff application
-            if (spell.id === 'shadowstep') {
+            if (spell.id === 'shadowstep' && target !== 'all') {
                 // Bonus for applying 3 debuffs at once
                 if (!target.debuffs.some(d => ['Taunt', 'Mark', 'Bleed'].includes(d.name))) {
                     score += 15; // Extra value for fresh target
