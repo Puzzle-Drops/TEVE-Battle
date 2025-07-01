@@ -16,7 +16,7 @@
         "armor": 100000000,
         "resist": 100000000
       },
-      "spells": ["prophetessFemalePassiveLogic", "lose", "win"],
+      "spells": ["grand_inquisitor_male_passive", "lose", "win"],
       "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
     "villager_male": {
