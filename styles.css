@@ -2190,6 +2190,15 @@ body {
     border-radius: 3px;
     cursor: pointer;
     transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.abilityIconSmall img {
+    position: relative !important;
+    z-index: 2;
 }
 
 .abilityIconSmall:hover {
@@ -4073,8 +4082,8 @@ body {
 /* Adjust blob size for smaller ability icons */
 .abilityIconSmall .waterbrush-blob-1,
 .abilityIconSmall .waterbrush-blob-2 {
-    width: 80%;
-    height: 80%;
+    width: 64px;
+    height: 64px;
 }
 
 .abilityIconSmall .waterbrush-blob-1 {
@@ -4085,50 +4094,50 @@ body {
     animation: borderTravel2Small 4s linear infinite;
 }
 
-/* Smaller animations for ability icons */
+/* Smaller animations for ability icons (73x73 container needs 32px offset) */
 @keyframes borderTravel1Small {
     0% {
-        top: -30px;
-        left: -30px;
+        top: -32px;
+        left: -32px;
     }
     25% {
-        top: -30px;
-        left: calc(100% - 30px);
+        top: -32px;
+        left: calc(100% - 32px);
     }
     50% {
-        top: calc(100% - 30px);
-        left: calc(100% - 30px);
+        top: calc(100% - 32px);
+        left: calc(100% - 32px);
     }
     75% {
-        top: calc(100% - 30px);
-        left: -30px;
+        top: calc(100% - 32px);
+        left: -32px;
     }
     100% {
-        top: -30px;
-        left: -30px;
+        top: -32px;
+        left: -32px;
     }
 }
 
 @keyframes borderTravel2Small {
     0% {
-        top: calc(100% - 30px);
-        left: calc(100% - 30px);
+        top: calc(100% - 32px);
+        left: calc(100% - 32px);
     }
     25% {
-        top: calc(100% - 30px);
-        left: -30px;
+        top: calc(100% - 32px);
+        left: -32px;
     }
     50% {
-        top: -30px;
-        left: -30px;
+        top: -32px;
+        left: -32px;
     }
     75% {
-        top: -30px;
-        left: calc(100% - 30px);
+        top: -32px;
+        left: calc(100% - 32px);
     }
     100% {
-        top: calc(100% - 30px);
-        left: calc(100% - 30px);
+        top: calc(100% - 32px);
+        left: calc(100% - 32px);
     }
 }
 
