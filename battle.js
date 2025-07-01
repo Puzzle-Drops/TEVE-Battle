@@ -993,7 +993,7 @@ if (unit.isEnemy) {
         }
     }
 
-executeAITurn(unit) {
+    executeAITurn(unit) {
         // Check if unit has taunt debuff and must attack specific target
         const tauntDebuff = unit.debuffs.find(d => d.name === 'Taunt' && d.tauntTarget);
         
@@ -1016,6 +1016,32 @@ executeAITurn(unit) {
             return;
         }
         
+        // Pre-calculate sorted lists once for this turn
+        const aliveEnemies = this.getEnemies(unit).filter(e => e.isAlive);
+        const aliveAllies = this.getParty(unit).filter(a => a.isAlive);
+        
+        const sortedLists = {
+            // Enemy sorted lists
+            enemiesByArmor: [...aliveEnemies].sort((a, b) => a.armor - b.armor),
+            enemiesByResist: [...aliveEnemies].sort((a, b) => a.resist - b.resist),
+            enemiesByTotalDefense: [...aliveEnemies].sort((a, b) => (a.armor + a.resist) - (b.armor + b.resist)),
+            enemiesByAttack: [...aliveEnemies].sort((a, b) => b.source.attack - a.source.attack),
+            enemiesByHealth: [...aliveEnemies].sort((a, b) => a.currentHp - b.currentHp),
+            enemiesByActionBar: [...aliveEnemies].sort((a, b) => b.actionBar - a.actionBar),
+            enemiesByBuffCount: [...aliveEnemies].sort((a, b) => b.buffs.length - a.buffs.length),
+            
+            // Ally sorted lists
+            alliesByTotalDefense: [...aliveAllies].sort((a, b) => (a.armor + a.resist) - (b.armor + b.resist)),
+            alliesByDebuffCount: [...aliveAllies].sort((a, b) => b.debuffs.length - a.debuffs.length),
+            alliesByHealth: [...aliveAllies].sort((a, b) => a.currentHp - b.currentHp),
+            alliesByAttack: [...aliveAllies].sort((a, b) => b.source.attack - a.source.attack),
+            alliesByActionBar: [...aliveAllies].sort((a, b) => a.actionBar - b.actionBar),
+            
+            // Counts for quick access
+            aliveEnemiesCount: aliveEnemies.length,
+            aliveAlliesCount: aliveAllies.length
+        };
+        
         // Get all possible actions
         const possibleActions = this.getAllPossibleActions(unit);
         
@@ -1029,7 +1055,7 @@ executeAITurn(unit) {
         
         // Calculate score for each action
         possibleActions.forEach(action => {
-            action.score = this.calculateAbilityScore(unit, action.abilityIndex, action.target, action.spell);
+            action.score = this.calculateAbilityScore(unit, action.abilityIndex, action.target, action.spell, sortedLists);
         });
         
         // Sort by score (highest first)
@@ -1097,7 +1123,7 @@ executeAITurn(unit) {
     }
 
     // AI Scoring System
-    calculateAbilityScore(caster, abilityIndex, target, spell) {
+    calculateAbilityScore(caster, abilityIndex, target, spell, sortedLists) {
         let score = 0;
         const ability = caster.abilities[abilityIndex];
         const effects = spell.effects || [];
@@ -1136,9 +1162,12 @@ executeAITurn(unit) {
         const calculateEffectScoreForTarget = (currentTarget) => {
             let targetScore = 0;
             
-            // CRITICAL: Check if target has Twilight's End pending
+            // Rank bonuses for tiebreaking (small values)
+            const rankBonus = [2.5, 2.0, 1.5, 1.0, 0.5];
+            
+            // Check if target has Twilight's End pending
             if (currentTarget && currentTarget !== 'all' && currentTarget.twilightsEndPending) {
-                targetScore += 10;
+                targetScore += 20; // Base bonus for targeting Twilight's caster
                 // Huge bonus for any disruptive action
                 if (effects.includes('debuff_stun') || 
                     effects.includes('debuff_silence') || 
@@ -1146,7 +1175,7 @@ executeAITurn(unit) {
                     effects.includes('physical') || 
                     effects.includes('magical') || 
                     effects.includes('pure')) {
-                    targetScore += 50; // Massive priority to stop Twilight's End
+                    targetScore += 50; // Priority to stop Twilight's End
                 }
             }
             
@@ -1190,11 +1219,29 @@ executeAITurn(unit) {
                         }
                         
                         // Bonus for targeting squishier enemies
-                        const avgMaxHp = this.getEnemies(caster)
-                            .filter(e => e.isAlive)
-                            .reduce((sum, e) => sum + e.maxHp, 0) / this.getEnemies(caster).filter(e => e.isAlive).length;
+                        const avgMaxHp = sortedLists.aliveEnemiesCount > 0 ?
+                            sortedLists.enemiesByHealth.reduce((sum, e) => sum + e.maxHp, 0) / sortedLists.aliveEnemiesCount : 1;
                         if (currentTarget.maxHp < avgMaxHp * 0.8) {
                             effectScore += 8; // Bonus for low max HP targets
+                        }
+                        
+                        // Defense-based targeting
+                        if (sortedLists.aliveEnemiesCount > 1) {
+                            // Find target's position in sorted lists
+                            const armorRank = sortedLists.enemiesByArmor.indexOf(currentTarget);
+                            const resistRank = sortedLists.enemiesByResist.indexOf(currentTarget);
+                            const totalRank = sortedLists.enemiesByTotalDefense.indexOf(currentTarget);
+                            
+                            // Apply small bonuses based on damage type and defense weakness
+                            if (effect === 'physical' && armorRank !== -1) {
+                                effectScore += rankBonus[armorRank] || 0;
+                            } else if (effect === 'magical' && resistRank !== -1) {
+                                effectScore += rankBonus[resistRank] || 0;
+                            } else if (effect === 'pure' && totalRank !== -1) {
+                                // Pure damage prefers highest total defenses (reverse order)
+                                const reversedRank = sortedLists.aliveEnemiesCount - 1 - totalRank;
+                                effectScore += rankBonus[reversedRank] || 0;
+                            }
                         }
                         
                         // Penalties for defensive buffs
@@ -1209,7 +1256,14 @@ executeAITurn(unit) {
                         }
                         
                         // Overkill protection - but not if enemy is about to act!
-                        const estimatedDamage = 100 * damageMultiplier; // Rough estimate
+                        const estimatedDamageMultiplier = {
+                            'physical': 80,
+                            'magical': 70,
+                            'pure': 100
+                        };
+                        const dmgType = effect; // Current effect is the damage type
+                        const estimatedDamage = (estimatedDamageMultiplier[dmgType] || 50) * damageMultiplier;
+                        
                         if (estimatedDamage > currentTarget.currentHp * 2) {
                             // If enemy is at 80%+ action bar, no overkill penalty
                             if (actionBarPercent < 0.8) {
@@ -1233,6 +1287,14 @@ executeAITurn(unit) {
                         // Calculate health deficit including potential shields
                         const healthDeficit = this.calculateHealthDeficit(caster, currentTarget);
                         effectScore += healthDeficit * 100; // Higher score for more injured/shieldless allies
+                        
+                        // Slight preference for healing squishier allies
+                        if (sortedLists.aliveAlliesCount > 1) {
+                            const defenseRank = sortedLists.alliesByTotalDefense.indexOf(currentTarget);
+                            if (defenseRank !== -1) {
+                                effectScore += rankBonus[defenseRank] || 0;
+                            }
+                        }
                     }
                 }
                 
@@ -1291,6 +1353,11 @@ executeAITurn(unit) {
                         if (!hasDebuff) {
                             effectScore += 35; // Good to apply new debuff
                             
+                            // Bonus for debuffing buffed enemies
+                            if (currentTarget.buffs.length > 0) {
+                                effectScore += currentTarget.buffs.length * 3; // +3 per buff they have
+                            }
+                            
                             // Special high-value debuffs
                             if (effect === 'debuff_stun') {
                                 effectScore += 30; // Stuns are very valuable
@@ -1302,6 +1369,23 @@ executeAITurn(unit) {
                                 effectScore += 25; // Mark is valuable (prevents buffs + damage increase)
                             } else if (effect === 'debuff_reduce_defense') {
                                 effectScore += 20; // Defense reduction helps entire team
+                                // Slight preference for high defense targets
+                                if (sortedLists.aliveEnemiesCount > 1) {
+                                    const defenseRank = sortedLists.enemiesByTotalDefense.indexOf(currentTarget);
+                                    if (defenseRank !== -1) {
+                                        const reversedRank = sortedLists.aliveEnemiesCount - 1 - defenseRank;
+                                        effectScore += rankBonus[reversedRank] || 0;
+                                    }
+                                }
+                            } else if (effect === 'debuff_reduce_attack') {
+                                effectScore += 15; // Attack reduction is defensive
+                                // Slight preference for high attack targets
+                                if (sortedLists.aliveEnemiesCount > 1) {
+                                    const attackRank = sortedLists.enemiesByAttack.indexOf(currentTarget);
+                                    if (attackRank !== -1) {
+                                        effectScore += rankBonus[attackRank] || 0;
+                                    }
+                                }
                             } else if (effect === 'debuff_silence') {
                                 effectScore += 20; // Silence prevents abilities
                             } else if (effect === 'debuff_reduce_speed') {
@@ -1331,6 +1415,14 @@ executeAITurn(unit) {
                         if (currentTarget.debuffs.some(d => d.name === 'Stun')) effectScore += 20;
                         if (currentTarget.debuffs.some(d => d.name === 'Mark')) effectScore += 15;
                         if (currentTarget.debuffs.some(d => d.name === 'Blight')) effectScore += 15;
+                        
+                        // Slight preference for allies with more debuffs
+                        if (sortedLists.aliveAlliesCount > 1) {
+                            const debuffRank = sortedLists.alliesByDebuffCount.indexOf(currentTarget);
+                            if (debuffRank !== -1) {
+                                effectScore += rankBonus[debuffRank] || 0;
+                            }
+                        }
                     }
                 }
                 
@@ -1342,6 +1434,14 @@ executeAITurn(unit) {
                         if (currentTarget.buffs.some(b => b.name === 'Immune')) effectScore += 30;
                         if (currentTarget.buffs.some(b => b.name === 'Shield')) effectScore += 20;
                         if (currentTarget.buffs.some(b => b.name === 'Increase Attack')) effectScore += 15;
+                        
+                        // Slight preference for enemies with more buffs
+                        if (sortedLists.aliveEnemiesCount > 1) {
+                            const buffRank = sortedLists.enemiesByBuffCount.indexOf(currentTarget);
+                            if (buffRank !== -1) {
+                                effectScore += rankBonus[buffRank] || 0;
+                            }
+                        }
                     }
                 }
                 
@@ -1382,8 +1482,10 @@ executeAITurn(unit) {
                 aoeScores.push(calculateEffectScoreForTarget(t));
             });
             
-            // Average the scores
-            const avgScore = aoeScores.reduce((sum, s) => sum + s, 0) / aoeScores.length;
+            // Average the scores (with divide by zero protection)
+            const avgScore = aoeScores.length > 0 ? 
+                aoeScores.reduce((sum, s) => sum + s, 0) / aoeScores.length : 
+                0;
             
             // Apply AOE multiplier (1.3x for hitting multiple targets)
             score += avgScore * 1.3;
@@ -1419,11 +1521,6 @@ executeAITurn(unit) {
                 score += 15; // Bonus for applying new debuff
             }
             
-            // Rain of Arrows bonus based on debuff count
-            if (spell.id === 'rain_of_arrows' && isAOE) {
-                // Already handled in AOE calculation, but could add extra here if needed
-            }
-            
             // Divine Light bonus for debuffed allies
             if (spell.id === 'divine_light' && target.debuffs.length > 0) {
                 score += 20; // Bonus for using on debuffed ally
@@ -1450,6 +1547,64 @@ executeAITurn(unit) {
             if (spell.id === 'psychic_mark' && caster.darkArchTemplarFemalePassive) {
                 score += 10; // Extra value for applying 3 debuffs at once
             }
+            
+            // Protective Barrier - prefer low HP allies (uses sorted list)
+            if (spell.id === 'protective_barrier') {
+                const lowestHpAlly = sortedLists.alliesByHealth[0];
+                if (lowestHpAlly) {
+                    const hpPercent = lowestHpAlly.currentHp / lowestHpAlly.maxHp;
+                    score += (1 - hpPercent) * 30; // Higher value for lower HP allies
+                }
+            }
+        }
+        
+        // Multi-effect ability synergies
+        if (spell.id === 'rally_banner') {
+            const lowActionAllies = sortedLists.alliesByActionBar.filter(a => 
+                a.actionBar < 5000
+            );
+            score += lowActionAllies.length * 15;
+        }
+        
+        if (spell.id === 'mass_heal') {
+            const injuredAllies = sortedLists.alliesByHealth.filter(a => 
+                a.currentHp < a.maxHp * 0.7
+            );
+            score += injuredAllies.length * 10;
+        }
+        
+        if (spell.id === 'natures_balance') {
+            const debuffedAllies = sortedLists.alliesByDebuffCount.filter(a => a.debuffs.length > 0);
+            const buffedEnemies = sortedLists.enemiesByBuffCount.filter(e => e.buffs.length > 0);
+            score += Math.max(debuffedAllies.length * 15, buffedEnemies.length * 15);
+        }
+        
+        // Self-harm abilities
+        if (spell.id === 'blood_pact') {
+            score -= 20; // Penalty for self-bleed
+            const tauntedEnemies = this.getEnemies(caster).filter(e => 
+                e.isAlive && e.debuffs.some(d => d.name === 'Taunt' && d.tauntTarget === caster)
+            );
+            score += tauntedEnemies.length * 10;
+        }
+        
+        // Passive synergies
+        if (caster.archSageMalePassive || caster.archSageFemalePassive) {
+            if (spell.effects.some(e => e.startsWith('debuff_')) && target === caster) {
+                score += 30; // Bonus for self-debuffing with Arch Sage passive
+            }
+        }
+        
+        if (spell.id === 'natures_blessing' && (caster.summonerMalePassive || caster.summonerFemalePassive)) {
+            score += 15; // Extra value for enhanced version
+        }
+        
+        if (spell.id === 'psi_shift' && caster.grandTemplarFemalePassive) {
+            score += 20; // Sets to 0% instead of 25%
+        }
+        
+        if (effects.includes('cleanse') && (caster.whiteWizardMalePassive || caster.whiteWitchFemalePassive)) {
+            score += 10; // Their cleanses apply buffs
         }
         
         return score;
