@@ -1109,13 +1109,30 @@ executeAITurn(unit) {
             }
         }
         
+        // Calculate damage multiplier based on buffs/debuffs
+        let damageMultiplier = 1.0;
+        if (caster.buffs.some(b => b.name === 'Increase Attack')) {
+            damageMultiplier *= 1.3; // 30% bonus for having attack buff
+        }
+        if (target && target !== 'all' && target.isAlive) {
+            if (target.debuffs.some(d => d.name === 'Reduce Defense')) {
+                damageMultiplier *= 1.25; // 25% bonus for defense debuff
+            }
+            if (target.debuffs.some(d => d.name === 'Mark')) {
+                damageMultiplier *= 1.2; // 20% bonus for marked target
+            }
+        }
+        
+        // Track total effect scores for multi-effect abilities
+        let totalEffectScore = 0;
+        
         // Process each effect
         effects.forEach(effect => {
             let effectScore = 0;
             
             // Damage effects
             if (effect === 'physical' || effect === 'magical' || effect === 'pure') {
-                effectScore += 50;
+                effectScore += 50 * damageMultiplier;
                 // Bonus for low HP enemies
                 if (target && target !== 'all' && target.isAlive) {
                     const hpPercent = target.currentHp / target.maxHp;
@@ -1128,7 +1145,9 @@ executeAITurn(unit) {
                 if (target && target !== 'all') {
                     // Check if target is blighted (can't be healed)
                     if (target.debuffs.some(d => d.name === 'Blight')) {
-                        return; // Skip this effect, can't heal blighted targets
+                        effectScore -= 100; // Strong negative for impossible heal
+                        totalEffectScore += effectScore;
+                        return;
                     }
                     
                     // Calculate health deficit including potential shields
@@ -1137,12 +1156,13 @@ executeAITurn(unit) {
                 }
             }
             
-            // Buff effects
+            // Buff effects - score EACH buff
             if (effect.startsWith('buff_')) {
                 if (target && target !== 'all') {
                     // Check if target is marked (can't receive buffs)
                     if (target.debuffs.some(d => d.name === 'Mark')) {
                         effectScore -= 100; // Negative score for trying to buff marked target
+                        totalEffectScore += effectScore;
                         return;
                     }
                     
@@ -1152,12 +1172,16 @@ executeAITurn(unit) {
                     if (!hasBuff) {
                         effectScore += 40; // Good to apply new buff
                         
-                        // Special cases
+                        // Special cases for high-value buffs
                         if (effect === 'buff_increase_attack') {
                             effectScore += 20; // Attack buffs are high value
+                        } else if (effect === 'buff_increase_speed') {
+                            effectScore += 15; // Speed buffs are valuable
                         } else if (effect === 'buff_shield') {
                             const shieldDeficit = this.calculateHealthDeficit(caster, target);
                             effectScore += shieldDeficit * 50;
+                        } else if (effect === 'buff_immune') {
+                            effectScore += 25; // Immunity is very valuable
                         }
                     } else {
                         // Check if we should refresh expiring buffs
@@ -1171,12 +1195,13 @@ executeAITurn(unit) {
                 }
             }
             
-            // Debuff effects
+            // Debuff effects - score EACH debuff
             if (effect.startsWith('debuff_')) {
                 if (target && target !== 'all') {
                     // Check if target is immune
                     if (target.buffs.some(b => b.name === 'Immune')) {
                         effectScore -= 50; // Can't debuff immune targets
+                        totalEffectScore += effectScore;
                         return;
                     }
                     
@@ -1190,38 +1215,64 @@ executeAITurn(unit) {
                         if (effect === 'debuff_stun') {
                             effectScore += 30; // Stuns are very valuable
                         } else if (effect === 'debuff_mark') {
-                            effectScore += 25; // Mark is valuable
+                            effectScore += 25; // Mark is valuable (prevents buffs + damage increase)
                         } else if (effect === 'debuff_reduce_defense') {
-                            effectScore += 20; // Defense reduction helps team
+                            effectScore += 20; // Defense reduction helps entire team
+                        } else if (effect === 'debuff_silence') {
+                            effectScore += 20; // Silence prevents abilities
+                        } else if (effect === 'debuff_reduce_speed') {
+                            effectScore += 15; // Speed reduction is useful
                         }
                     } else {
                         // Small penalty for redundant debuff unless it stacks (like bleed)
                         if (effect === 'debuff_bleed') {
-                            effectScore += 15; // Bleeds stack
+                            effectScore += 15; // Bleeds stack duration
                         } else {
-                            effectScore -= 5;
+                            const existingDebuff = target.debuffs.find(d => d.name === debuffName);
+                            if (existingDebuff && existingDebuff.duration > 0 && existingDebuff.duration <= 2) {
+                                effectScore += 10; // Some value for refreshing expiring debuff
+                            } else {
+                                effectScore -= 5; // Small penalty for redundant
+                            }
                         }
                     }
                 }
             }
             
-            // Cleanse effects
+            // Cleanse effects (remove debuffs from allies)
             if (effect === 'cleanse') {
                 if (target && target !== 'all') {
-                    effectScore += target.debuffs.length * 20; // Value per debuff removed
+                    effectScore += target.debuffs.length * 25; // High value per debuff removed
+                    // Extra value for removing dangerous debuffs
+                    if (target.debuffs.some(d => d.name === 'Stun')) effectScore += 20;
+                    if (target.debuffs.some(d => d.name === 'Mark')) effectScore += 15;
+                    if (target.debuffs.some(d => d.name === 'Blight')) effectScore += 15;
                 }
             }
             
-            // Dispel/Strip effects
-            if (effect === 'dispel' || effect === 'debuff_strip') {
+            // Dispel effects (remove buffs from enemies)
+            if (effect === 'dispel') {
                 if (target && target !== 'all') {
-                    effectScore += target.buffs.length * 20; // Value per buff removed
+                    effectScore += target.buffs.length * 25; // High value per buff removed
+                    // Extra value for removing powerful buffs
+                    if (target.buffs.some(b => b.name === 'Immune')) effectScore += 30;
+                    if (target.buffs.some(b => b.name === 'Shield')) effectScore += 20;
+                    if (target.buffs.some(b => b.name === 'Increase Attack')) effectScore += 15;
                 }
             }
             
-            // Support effects
+            // Support effects (action bar manipulation, etc)
             if (effect === 'support') {
                 effectScore += 15; // General support value
+            }
+            
+            // Action bar manipulation
+            if (effect === 'action_drain') {
+                if (target && target !== 'all' && target.isAlive) {
+                    // More valuable on enemies with high action bar
+                    const actionBarPercent = target.actionBar / 10000;
+                    effectScore += actionBarPercent * 30;
+                }
             }
             
             // Apply AOE multiplier if applicable
@@ -1229,8 +1280,10 @@ executeAITurn(unit) {
                 effectScore *= (0.7 + (0.3 * validTargetCount)); // Scaling multiplier
             }
             
-            score += effectScore;
+            totalEffectScore += effectScore;
         });
+        
+        score += totalEffectScore;
         
         // Special ability considerations
         if (spell.id === 'assassinate') {
@@ -1241,6 +1294,21 @@ executeAITurn(unit) {
                 } else {
                     score -= 100; // Penalty for wasting assassinate
                 }
+            }
+        }
+        
+        // Special scoring for multi-effect abilities
+        if (spell.id === 'divine_light') {
+            // Heal + cleanse, extra value if target has debuffs
+            if (target && target !== 'all' && target.debuffs.length > 0) {
+                score += 20; // Bonus for using on debuffed ally
+            }
+        }
+        
+        if (spell.id === 'hunters_mark') {
+            // Mark + Blight combo is very strong
+            if (target && target !== 'all' && !target.debuffs.some(d => d.name === 'Mark')) {
+                score += 15; // Extra value for this powerful combo
             }
         }
         
