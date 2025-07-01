@@ -1095,6 +1095,7 @@ if (unit.isEnemy) {
         this.executeAbility(unit, bestAction.abilityIndex, bestAction.target);
         this.endTurn();
     }
+
     
     getBuffNameFromEffect(effect) {
         const mapping = {
@@ -1167,7 +1168,7 @@ if (unit.isEnemy) {
             
             // Check if target has Twilight's End pending
             if (currentTarget && currentTarget !== 'all' && currentTarget.twilightsEndPending) {
-                targetScore += 20; // Base bonus for targeting Twilight's caster
+                targetScore += 10; // Base bonus for targeting Twilight's caster
                 // Huge bonus for any disruptive action
                 if (effects.includes('debuff_stun') || 
                     effects.includes('debuff_silence') || 
@@ -1507,12 +1508,12 @@ if (unit.isEnemy) {
                 score += debuffCount * 15; // Bonus per debuff since it hits multiple times
             }
             
-            // Assassinate conditions
+            // Assassinate conditions (REBALANCED)
             if (spell.id === 'assassinate') {
                 if ((target.currentHp / target.maxHp) < 0.3 && target.debuffs.length > 0) {
-                    score += 200; // Huge bonus for executable targets
+                    score += 100; // Reduced from 200
                 } else {
-                    score -= 100; // Heavy penalty for wasting assassinate
+                    score -= 50; // Reduced from 100
                 }
             }
             
@@ -1556,6 +1557,31 @@ if (unit.isEnemy) {
                     score += (1 - hpPercent) * 30; // Higher value for lower HP allies
                 }
             }
+            
+            // NEW: Helping Hand - extremely powerful action bar fill
+            if (spell.id === 'helping_hand') {
+                // Huge value if target has low action bar
+                const actionBarPercent = target.actionBar / 10000;
+                score += (1 - actionBarPercent) * 40; // Up to +40 for empty action bar
+                // Extra value if target is a high damage dealer
+                const attackRank = sortedLists.alliesByAttack.indexOf(target);
+                if (attackRank === 0) score += 10; // Best attacker
+            }
+            
+            // NEW: Steal Magic - buff transfer is very powerful
+            if (spell.id === 'steal_magic') {
+                // Extra points for quality buffs to steal
+                if (target.buffs.some(b => b.name === 'Increase Attack')) score += 10;
+                if (target.buffs.some(b => b.name === 'Increase Speed')) score += 8;
+            }
+            
+            // NEW: Shadowstep - triple debuff application
+            if (spell.id === 'shadowstep') {
+                // Bonus for applying 3 debuffs at once
+                if (!target.debuffs.some(d => ['Taunt', 'Mark', 'Bleed'].includes(d.name))) {
+                    score += 15; // Extra value for fresh target
+                }
+            }
         }
         
         // Multi-effect ability synergies
@@ -1577,6 +1603,12 @@ if (unit.isEnemy) {
             const debuffedAllies = sortedLists.alliesByDebuffCount.filter(a => a.debuffs.length > 0);
             const buffedEnemies = sortedLists.enemiesByBuffCount.filter(e => e.buffs.length > 0);
             score += Math.max(debuffedAllies.length * 15, buffedEnemies.length * 15);
+        }
+        
+        // NEW: Sanctuary - debuff conversion is unique
+        if (spell.id === 'sanctuary') {
+            const debuffedAllies = sortedLists.alliesByDebuffCount.filter(a => a.debuffs.length > 0);
+            score += debuffedAllies.length * 20; // High value per ally that will get converted buffs
         }
         
         // Self-harm abilities
