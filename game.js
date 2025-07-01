@@ -4452,8 +4452,6 @@ if (value !== null && value !== undefined) {
         { key: 'passive', display: 'Passive' },
         { key: 'aoe', display: 'AOE' },
         { key: 'heal', display: 'Heal' },
-        { key: 'cleanse', display: 'Cleanse' },
-        { key: 'dispel', display: 'Dispel' },
         
         // Damage types
         { key: 'physical', display: 'Physical' },
@@ -4462,14 +4460,18 @@ if (value !== null && value !== undefined) {
         
         // Special effects
         { key: 'evasion', display: 'Evasion' },
+        { key: 'cleanse', display: 'Cleanse' },
+        { key: 'dispel', display: 'Dispel' },
+        { key: 'shield_break', display: 'Shield Break' },
+        { key: 'support', display: 'Support' },
 
         // Buffs
-{ key: 'buff_increase_attack', display: 'Increase Attack' },
-{ key: 'buff_increase_speed', display: 'Increase Speed' },
-{ key: 'buff_increase_defense', display: 'Increase Defense' },
-{ key: 'buff_immune', display: 'Immune' },
-{ key: 'buff_shield', display: 'Shield' },
-{ key: 'buff_frost_armor', display: 'Frost Armor' },
+        { key: 'buff_increase_attack', display: 'Increase Attack' },
+        { key: 'buff_increase_speed', display: 'Increase Speed' },
+        { key: 'buff_increase_defense', display: 'Increase Defense' },
+        { key: 'buff_immune', display: 'Immune' },
+        { key: 'buff_shield', display: 'Shield' },
+        { key: 'buff_frost_armor', display: 'Frost Armor' },
         
         // Debuffs
         { key: 'debuff_reduce_attack', display: 'Reduce Attack' },
@@ -4481,7 +4483,6 @@ if (value !== null && value !== undefined) {
         { key: 'debuff_taunt', display: 'Taunt' },
         { key: 'debuff_silence', display: 'Silence' },
         { key: 'debuff_mark', display: 'Mark' },
-        { key: 'debuff_action_drain', display: 'Action Drain' }
     ];
 
     // Add effect tags in the specified order
