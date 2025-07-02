@@ -260,7 +260,7 @@ checkProgressionUnlocks(completedDungeonId) {
     
     // Unlock next tier if all dungeons in current tier are complete
     if (allTierComplete) {
-        const tierOrder = ['Easy', 'Medium', 'Hard', 'Forsaken', 'Nightmare', 'Hell', 'Impossible', 'Mythical', 'Divine', 'Ascended'];
+        const tierOrder = ['Easy', 'Medium', 'Hard', 'Forsaken', 'Nightmare', 'Hell', 'Impossible', 'Mythical', 'Divine', 'Ascended', 'Transcendent', 'Twilight'];
         const currentIndex = tierOrder.indexOf(dungeonInfo.tier);
         if (currentIndex < tierOrder.length - 1) {
             const nextTier = tierOrder[currentIndex + 1];
