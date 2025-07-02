@@ -2288,6 +2288,26 @@ body {
     filter: brightness(0.8) contrast(1.1);
 }
 
+.mapOrb {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, rgba(42, 106, 138, 0.9), rgba(26, 74, 106, 0.9));
+    border: 3px solid #4dd0e1;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #b0e0f0;
+    transition: all 0.3s;
+    box-shadow: 
+        0 0 30px rgba(77, 208, 225, 0.5),
+        inset 0 0 20px rgba(77, 208, 225, 0.3);
+    text-shadow: 0 0 10px rgba(176, 224, 240, 0.8);
+}
 
 .mapOrb:hover {
     transform: scale(1.1);
@@ -2303,6 +2323,17 @@ body {
         0 0 50px rgba(255, 215, 0, 0.7),
         inset 0 0 30px rgba(255, 215, 0, 0.4);
 }
+
+/* Dungeon tier colors */
+.mapOrb.easy { background: radial-gradient(circle, rgba(42, 138, 74, 0.9), rgba(26, 106, 42, 0.9)); }
+.mapOrb.hard { background: radial-gradient(circle, rgba(138, 138, 42, 0.9), rgba(106, 106, 26, 0.9)); }
+.mapOrb.nightmare { background: radial-gradient(circle, rgba(106, 42, 138, 0.9), rgba(74, 26, 106, 0.9)); }
+.mapOrb.hell { background: radial-gradient(circle, rgba(138, 42, 42, 0.9), rgba(106, 26, 26, 0.9)); }
+.mapOrb.impossible { background: radial-gradient(circle, rgba(138, 42, 138, 0.9), rgba(106, 26, 106, 0.9)); }
+.mapOrb.mythical { background: radial-gradient(circle, rgba(42, 106, 138, 0.9), rgba(26, 74, 106, 0.9)); }
+.mapOrb.divine { background: radial-gradient(circle, rgba(138, 138, 42, 0.9), rgba(106, 106, 26, 0.9)); }
+.mapOrb.ascended { background: radial-gradient(circle, rgba(170, 74, 170, 0.9), rgba(138, 42, 138, 0.9)); }
+.transcendent { background: radial-gradient(circle, rgba(170, 170, 170, 0.9), rgba(138, 138, 138, 0.9)); }
 
 .dungeonListPanel {
     position: absolute;
@@ -4768,76 +4799,63 @@ body {
     z-index: 10;
 }
 
-/* Menu Grid Layout */
-.menuGrid {
+/* Menu Navigation Buttons */
+.menuNavigation {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.menuGridRow {
-    display: flex;
-    justify-content: space-between;
     width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 .menuNavButton {
+    position: absolute;
     width: 390px;
     height: 260px;
-    position: relative;
+    pointer-events: auto;
     cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.menuNavButton:hover {
-    transform: translateY(-5px);
+/* Button positions */
+.stashesButton {
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-.menuNavButton:hover .menuNavImage {
-    filter: brightness(1.2);
-}
-
-/* Selected dungeon tier styling */
-.menuNavButton.selected .menuNavImage {
-    filter: brightness(1.3) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
-}
-
-/* Menu button text overlay */
-.menuButtonText {
-    position: absolute;
+.arenaButton {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 36px;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 
-        0 0 20px rgba(0, 0, 0, 0.9),
-        0 0 40px rgba(0, 0, 0, 0.7),
-        3px 3px 6px rgba(0, 0, 0, 1),
-        -1px -1px 2px rgba(0, 0, 0, 1);
-    pointer-events: none;
-    z-index: 2;
-    letter-spacing: 2px;
 }
 
-.menuNavImage {
-    position: absolute;
-    top: 0;
-    left: 0;
+.heroesButton {
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.menuNavPlaceholder {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    background: linear-gradient(135deg, #0a2e4a 0%, #0f3f5f 100%);
+    border: 2px solid #2a6a8a;
+    color: #b0e0f0;
+    font-size: 24px;
     cursor: pointer;
     transition: all 0.3s;
+    text-shadow: 0 0 10px rgba(176, 224, 240, 0.5);
+    box-shadow: 
+        0 0 20px rgba(42, 106, 138, 0.5),
+        inset 0 0 20px rgba(42, 106, 138, 0.2);
+}
+
+.menuNavPlaceholder:hover {
+    background: linear-gradient(135deg, #0f3f5f 0%, #1a5a7a 100%);
+    border-color: #4dd0e1;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 5px 30px rgba(77, 208, 225, 0.5),
+        inset 0 0 30px rgba(77, 208, 225, 0.3);
 }
 
 .menuNavImage {
@@ -4854,6 +4872,15 @@ body {
 .menuNavImage:hover {
     filter: brightness(1.2);
     transform: scale(1.02);
+}
+
+/* Update mapOrb to show tier names */
+.mapOrb {
+    font-size: 16px;
+    padding: 5px;
+    min-width: 80px;
+    width: auto;
+    height: 40px;
 }
 
 /* Dungeon Tier Buttons */
