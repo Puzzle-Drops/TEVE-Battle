@@ -1074,11 +1074,11 @@ body {
 
 .heroPortraitShadow {
     position: absolute;
-    bottom: 10%;
+    bottom: 15%;
     left: 50%;
     transform: translateX(-50%);
-    width: 60%;
-    height: 80px;
+    width: 40%;
+    height: 60px;
     background: rgba(0, 0, 0, 0.4);
     border-radius: 50%;
     filter: blur(8px);
