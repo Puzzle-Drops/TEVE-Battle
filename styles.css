@@ -4837,12 +4837,12 @@ body {
 /* Dungeon Orb Positions */
 .dungeonOrb0 {
     bottom: 1%;
-    right: 1%;
+    left: 1%;
     transform: translateX(-50%);
 }
 .dungeonOrb1 {
     bottom: 25%;
-    right: 1%;
+    left: 1%;
     transform: translateX(-50%);
 }
 .dungeonOrb2 {
