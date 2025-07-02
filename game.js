@@ -2681,8 +2681,11 @@ if (!this.autoReplay) {
     const familyName = this.getClassFamily(hero.className, hero.classTier);
     const backdropName = familyName.toLowerCase().replace(/ /g, '_');
     
-    portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
-    
+    portrait.innerHTML = `
+    <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">
+    <div class="heroPortraitShadow"></div>
+`;
+		    
     // Set backdrop as background image
     portrait.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_backdrop.png')`;
     
@@ -2995,13 +2998,18 @@ hideStatTooltip() {
 		tooltip.style.display = 'none';
 	}
 }
+		
             showSkillsTab(hero, content) {
+    // Check if we have a previously selected skill index
+    const selectedIndex = this.currentSkillIndex !== undefined ? this.currentSkillIndex : 0;
+    
     content.innerHTML = `
         <div class="skillsContainer">
             ${hero.abilities.map((ability, index) => {
                 const isPassive = ability.passive === true;
+                const isSelected = index === selectedIndex;
                 return `
-                    <div class="skillBox ${isPassive ? 'passive' : ''}" onclick="game.selectSkill(${index})">
+                    <div class="skillBox ${isPassive ? 'passive' : ''} ${isSelected ? 'selected' : ''}" onclick="game.selectSkill(${index})">
                         ${isPassive ? `
                             <div class="waterbrush-overlay-1">
                                 <div class="waterbrush-blob-1"></div>
@@ -3018,9 +3026,9 @@ hideStatTooltip() {
         </div>
     `;
     
-    // Automatically select the first skill
+    // Automatically select the stored skill or first skill
     if (hero.abilities.length > 0) {
-        this.selectSkill(0);
+        this.selectSkill(selectedIndex);
     }
 }
 
@@ -3468,6 +3476,16 @@ equipFromStash(itemIndex, slot) {
     
     // Store current skill index for alt key updates
     this.currentSkillIndex = index;
+    
+    // Update selected skill visual
+    const skillBoxes = document.querySelectorAll('.skillBox');
+    skillBoxes.forEach((box, i) => {
+        if (i === index) {
+            box.classList.add('selected');
+        } else {
+            box.classList.remove('selected');
+        }
+    });
     
     // Format ability tooltip with hero unit
     desc.innerHTML = this.formatAbilityTooltip(skill, skill.level, hero, false);
