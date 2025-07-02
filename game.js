@@ -209,7 +209,6 @@ showMainMenu() {
     this.closeHeroInfo(); // Close any open popups
     this.currentScreen = 'mainMenuScreen';
     document.getElementById('mainMenuScreen').style.display = 'block';
-    this.renderWorldMap();
     this.closeDungeonPanel();
 }
 
@@ -236,12 +235,6 @@ showArena() {
                     this.selectHero(this.heroes.indexOf(sortedHeroes[0]));
                 }
             }
-
-            renderWorldMap() {
-    const worldMap = document.getElementById('worldMap');
-    worldMap.innerHTML = '';
-    
-}
 
             selectDungeonTier(tierName) {
                 // Check if clicking the same tier that's already selected
