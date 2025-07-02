@@ -5280,12 +5280,6 @@ body {
         2px 2px 4px rgba(0,0,0,0.9);
 }
 
-/* Hide static stars and move them down on hover */
-.menuNavPlaceholder:hover .dungeonTierStarsStatic {
-    opacity: 0;
-    transform: translateX(-50%) translateY(20px);
-}
-
 /* Directional lunge animations */
 @keyframes unitLungeRight {
     0%   { transform: translateX(0); }
