@@ -26,7 +26,7 @@
             stash: false,
             arena: false
         },
-        unlockedTiers: [this.getTierOrder()[0] || 'Easy'],
+        unlockedTiers: ['Easy'],
         completedDungeons: {} // {dungeonId: {completions: 0, bestTime: null}}
     };
     this.loadProgression(); // Load saved progression
