@@ -38,15 +38,59 @@
 </div>
 
     <div id="gameContainer" style="display: none;">
-        <!-- Main Menu -->
-        <div id="mainMenu">
-            <div class="gameTitle">TEVE</div>
-            <div class="menuButtons">
-                <button class="menuButton" onclick="game.showHeroes()">Heroes</button>
-                <button class="menuButton" onclick="game.showDungeons()">Dungeons</button>
-                <button class="menuButton" onclick="game.showStash()">Stash</button>
-            </div>
+        <!-- Splash Screen -->
+<div id="splashScreen">
+    <div class="gameTitle">TEVE</div>
+    <div class="splashText">Press any button to continue</div>
+</div>
+
+<!-- Main Menu (formerly dungeons screen) -->
+<div id="mainMenuScreen">
+    <div class="gameTitleSmall">TEVE</div>
+    <div class="worldMap" id="worldMap">
+        <!-- Map orbs will be dynamically generated -->
+    </div>
+    
+    <!-- Menu Navigation Buttons -->
+    <div class="menuNavigation">
+        <!-- Stashes Button (top middle) -->
+        <div class="menuNavButton stashesButton">
+            <button class="menuNavPlaceholder" onclick="game.showStash()">Stashes</button>
+            <img src="https://puzzle-drops.github.io/TEVE/img/menu/stashes_button.png" 
+                 alt="Stashes" 
+                 class="menuNavImage"
+                 onclick="game.showStash()"
+                 onerror="this.style.display='none'">
         </div>
+        
+        <!-- Arena Button (center) -->
+        <div class="menuNavButton arenaButton">
+            <button class="menuNavPlaceholder" onclick="game.showArena()">Arena</button>
+            <img src="https://puzzle-drops.github.io/TEVE/img/menu/arena_button.png" 
+                 alt="Arena" 
+                 class="menuNavImage"
+                 onclick="game.showArena()"
+                 onerror="this.style.display='none'">
+        </div>
+        
+        <!-- Heroes Button (bottom middle) -->
+        <div class="menuNavButton heroesButton">
+            <button class="menuNavPlaceholder" onclick="game.showHeroes()">Heroes</button>
+            <img src="https://puzzle-drops.github.io/TEVE/img/menu/heroes_button.png" 
+                 alt="Heroes" 
+                 class="menuNavImage"
+                 onclick="game.showHeroes()"
+                 onerror="this.style.display='none'">
+        </div>
+    </div>
+    
+    <div class="dungeonListPanel" id="dungeonListPanel">
+        <h2 class="dungeonTierTitle" id="dungeonTierTitle">Select a Region</h2>
+        <div id="dungeonList">
+            <!-- Dungeon list will be dynamically generated -->
+        </div>
+    </div>
+</div>
 
         <!-- Battle Scene -->
 <div id="battleScene">
@@ -179,20 +223,6 @@
             </div>
             <div class="heroList" id="heroList">
                 <!-- Hero thumbnails will be dynamically generated -->
-            </div>
-            <button class="backButton" onclick="game.showMainMenu()">Back</button>
-        </div>
-
-        <!-- Dungeons Screen -->
-        <div id="dungeonsScreen">
-            <div class="worldMap" id="worldMap">
-                <!-- Map orbs will be dynamically generated -->
-            </div>
-            <div class="dungeonListPanel" id="dungeonListPanel">
-                <h2 class="dungeonTierTitle" id="dungeonTierTitle">Select a Region</h2>
-                <div id="dungeonList">
-                    <!-- Dungeon list will be dynamically generated -->
-                </div>
             </div>
             <button class="backButton" onclick="game.showMainMenu()">Back</button>
         </div>
