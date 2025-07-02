@@ -3505,8 +3505,11 @@ equipFromStash(itemIndex, slot) {
                         if (hero.promote(newClass)) {
     // Update portrait remains the same
     const portrait = document.getElementById('heroPortrait');
-    portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
-    
+    portrait.innerHTML = `
+        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">
+        <div class="heroPortraitShadow"></div>
+    `;
+				
     // Update backdrop (should remain the same for awakening)
     const familyName = this.getClassFamily(hero.className, hero.classTier);
     const backdropName = familyName.toLowerCase().replace(/ /g, '_');
@@ -3528,8 +3531,11 @@ equipFromStash(itemIndex, slot) {
                         if (hero.promote(newClass)) {
     // Update portrait immediately after promotion
     const portrait = document.getElementById('heroPortrait');
-    portrait.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">`;
-    
+    portrait.innerHTML = `
+        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_battle.png" alt="${hero.displayClassName}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 180 180\\'><rect fill=\\'%23555\\' width=\\'180\\' height=\\'180\\'/><text x=\\'90\\' y=\\'90\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${hero.displayClassName}</text></svg>'">
+        <div class="heroPortraitShadow"></div>
+    `;
+				
     // Update backdrop for new class
     const familyName = this.getClassFamily(hero.className, hero.classTier);
     const backdropName = familyName.toLowerCase().replace(/ /g, '_');
