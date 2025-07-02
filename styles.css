@@ -4834,6 +4834,52 @@ body {
     transform: translateX(-50%);
 }
 
+/* Dungeon Orb Positions */
+.dungeonOrb0 {
+    top: 20%;
+    left: 15%;
+}
+.dungeonOrb1 {
+    top: 25%;
+    left: 35%;
+}
+.dungeonOrb2 {
+    top: 15%;
+    right: 25%;
+}
+.dungeonOrb3 {
+    top: 40%;
+    left: 20%;
+}
+.dungeonOrb4 {
+    top: 45%;
+    left: 50%;
+}
+.dungeonOrb5 {
+    top: 40%;
+    right: 30%;
+}
+.dungeonOrb6 {
+    top: 35%;
+    right: 15%;
+}
+.dungeonOrb7 {
+    top: 60%;
+    left: 30%;
+}
+.dungeonOrb8 {
+    top: 55%;
+    right: 20%;
+}
+.dungeonOrb9 {
+    top: 65%;
+    left: 45%;
+}
+.dungeonOrb10 {
+    top: 70%;
+    right: 35%;
+}
+
 .menuNavPlaceholder {
     width: 100%;
     height: 100%;
