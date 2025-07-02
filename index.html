@@ -54,34 +54,52 @@
     <!-- Menu Navigation Buttons -->
     <div class="menuNavigation">
         <!-- Stashes Button (top middle) -->
-        <div class="menuNavButton stashesButton">
-            <button class="menuNavPlaceholder" onclick="game.showStash()">Stash</button>
-            <img src="https://puzzle-drops.github.io/TEVE/img/menu/stashes_button.png" 
-                 alt="Stashes" 
-                 class="menuNavImage"
-                 onclick="game.showStash()"
-                 onerror="this.style.display='none'">
+<div class="menuNavButton stashesButton">
+    <button class="menuNavPlaceholder" onclick="game.showStash()">
+        <div class="dungeonTierStarsStatic icon">📦</div>
+        <div class="dungeonTierContent">
+            <div class="dungeonTierName">Stash</div>
+            <div class="dungeonTierLevel">(City)</div>
         </div>
+    </button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/stashes_button.png" 
+         alt="Stashes" 
+         class="menuNavImage"
+         onclick="game.showStash()"
+         onerror="this.style.display='none'">
+</div>
         
         <!-- Arena Button (center) -->
-        <div class="menuNavButton arenaButton">
-            <button class="menuNavPlaceholder" onclick="game.showArena()">Arena</button>
-            <img src="https://puzzle-drops.github.io/TEVE/img/menu/arena_button.png" 
-                 alt="Arena" 
-                 class="menuNavImage"
-                 onclick="game.showArena()"
-                 onerror="this.style.display='none'">
+<div class="menuNavButton arenaButton">
+    <button class="menuNavPlaceholder" onclick="game.showArena()">
+        <div class="dungeonTierStarsStatic icon">⚔️</div>
+        <div class="dungeonTierContent">
+            <div class="dungeonTierName">Arena</div>
+            <div class="dungeonTierLevel">(Colo)</div>
         </div>
+    </button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/arena_button.png" 
+         alt="Arena" 
+         class="menuNavImage"
+         onclick="game.showArena()"
+         onerror="this.style.display='none'">
+</div>
         
         <!-- Heroes Button (bottom middle) -->
-        <div class="menuNavButton heroesButton">
-            <button class="menuNavPlaceholder" onclick="game.showHeroes()">Party</button>
-            <img src="https://puzzle-drops.github.io/TEVE/img/menu/heroes_button.png" 
-                 alt="Heroes" 
-                 class="menuNavImage"
-                 onclick="game.showHeroes()"
-                 onerror="this.style.display='none'">
+<div class="menuNavButton heroesButton">
+    <button class="menuNavPlaceholder" onclick="game.showHeroes()">
+        <div class="dungeonTierStarsStatic icon">👥</div>
+        <div class="dungeonTierContent">
+            <div class="dungeonTierName">Party</div>
+            <div class="dungeonTierLevel">(Village)</div>
         </div>
+    </button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/heroes_button.png" 
+         alt="Heroes" 
+         class="menuNavImage"
+         onclick="game.showHeroes()"
+         onerror="this.style.display='none'">
+</div>
 
 	<!-- Dungeon Map Orbs -->
 <!-- Easy -->
