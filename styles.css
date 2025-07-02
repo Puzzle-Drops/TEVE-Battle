@@ -4742,6 +4742,184 @@ body {
 .damageNumber.magical { color: #aa3af3; }
 .damageNumber.pure { color: #fdffc4; }
 
+/* Splash Screen */
+#splashScreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background: radial-gradient(ellipse at center, #0a1929 0%, #000511 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+#splashScreen::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(0, 150, 255, 0.1) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+}
+
+.splashText {
+    font-size: 24px;
+    color: #6a9aaa;
+    margin-top: 40px;
+    text-shadow: 0 0 10px rgba(106, 154, 170, 0.5);
+    animation: loadingPulse 2s ease-in-out infinite;
+    z-index: 1;
+}
+
+/* Main Menu Screen */
+#mainMenuScreen {
+    display: none;
+    height: 100vh;
+    background: #0a0f1a;
+    position: relative;
+    overflow: hidden;
+}
+
+.gameTitleSmall {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: #4dd0e1;
+    text-shadow: 
+        0 0 30px rgba(77, 208, 225, 0.8),
+        0 0 60px rgba(77, 208, 225, 0.5),
+        3px 3px 6px rgba(0,0,0,0.9);
+    letter-spacing: 6px;
+    z-index: 10;
+}
+
+/* Menu Navigation Buttons */
+.menuNavigation {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.menuNavButton {
+    position: absolute;
+    width: 324px;
+    height: 216px;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+/* Button positions */
+.stashesButton {
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.arenaButton {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.heroesButton {
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.menuNavPlaceholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a2e4a 0%, #0f3f5f 100%);
+    border: 2px solid #2a6a8a;
+    color: #b0e0f0;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-shadow: 0 0 10px rgba(176, 224, 240, 0.5);
+    box-shadow: 
+        0 0 20px rgba(42, 106, 138, 0.5),
+        inset 0 0 20px rgba(42, 106, 138, 0.2);
+}
+
+.menuNavPlaceholder:hover {
+    background: linear-gradient(135deg, #0f3f5f 0%, #1a5a7a 100%);
+    border-color: #4dd0e1;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 5px 30px rgba(77, 208, 225, 0.5),
+        inset 0 0 30px rgba(77, 208, 225, 0.3);
+}
+
+.menuNavImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.menuNavImage:hover {
+    filter: brightness(1.2);
+    transform: scale(1.02);
+}
+
+/* Update mapOrb to show tier names */
+.mapOrb {
+    font-size: 16px;
+    padding: 5px;
+    min-width: 80px;
+    width: auto;
+    height: 40px;
+}
+
+/* Dungeon Tier Buttons */
+.dungeonTierButton {
+    background: linear-gradient(135deg, #0a2e4a 0%, #0f3f5f 100%);
+    border: 2px solid #2a6a8a;
+    color: #b0e0f0;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-shadow: 0 0 10px rgba(176, 224, 240, 0.5);
+    box-shadow: 
+        0 0 20px rgba(42, 106, 138, 0.5),
+        inset 0 0 20px rgba(42, 106, 138, 0.2);
+}
+
+.dungeonTierButton:hover {
+    background: linear-gradient(135deg, #0f3f5f 0%, #1a5a7a 100%);
+    border-color: #4dd0e1;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 5px 30px rgba(77, 208, 225, 0.5),
+        inset 0 0 30px rgba(77, 208, 225, 0.3);
+}
+
+.dungeonTierImage {
+    object-fit: cover;
+    transition: all 0.3s;
+}
+
+.dungeonTierImage:hover {
+    filter: brightness(1.2);
+    transform: scale(1.02);
+}
+
+/* Update back button text for other screens */
+.backButton {
+    /* existing styles... */
+}
 
 /* Directional lunge animations */
 @keyframes unitLungeRight {
