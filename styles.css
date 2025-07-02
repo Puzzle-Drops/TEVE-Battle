@@ -4817,19 +4817,19 @@ body {
 
 /* Button positions */
 .stashesButton {
-    top: 15%;
+    bottom: 52%;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .arenaButton {
-    top: 50%;
+    bottom: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
 .heroesButton {
-    bottom: 10%;
+    bottom: 2%;
     left: 50%;
     transform: translateX(-50%);
 }
