@@ -347,6 +347,7 @@ Final Aetherium – Eternal Singularity (Ascended 3) (Lv 500)
 -Transcendent – Items Class 4 and level 500 required
 Rite of Passage – All dungeons in a row without stopping (Transcendent) (Lv 1000)
 
+-Twilight
 
 ===========================
 OFFENSIVE DPS & PUNISHERS
