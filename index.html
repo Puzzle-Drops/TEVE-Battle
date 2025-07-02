@@ -514,6 +514,23 @@
         
         if (loadSuccess) {
             window.game = new Game();
+
+		// Add splash screen handler
+    const splashHandler = (e) => {
+        if (game.currentScreen === 'splashScreen') {
+            e.preventDefault();
+            document.removeEventListener('keydown', splashHandler);
+            document.removeEventListener('click', splashHandler);
+            game.showMainMenu();
+        }
+    };
+    
+    // Show splash screen on start
+    setTimeout(() => {
+        game.showSplashScreen();
+        document.addEventListener('keydown', splashHandler);
+        document.addEventListener('click', splashHandler);
+    }, 100);
             
             // Generate items from first three dungeons after game is initialized
             if (window.devConsole && dungeonData && dungeonData.dungeons) {
@@ -593,32 +610,31 @@ if (refinementPopup && refinementPopup.style.display === 'block') {
                 }
                 
                 // Navigate between screens based on current screen
-                switch(game.currentScreen) {
-                    case 'individualStashScreen':
-                        game.showStash();
-                        e.preventDefault();
-                        break;
-                    case 'partySelectScreen':
-                        game.closeDungeonSelect();
-                        e.preventDefault();
-                        break;
-                    case 'dungeonsScreen':
-                        game.showMainMenu();
-                        e.preventDefault();
-                        break;
-                    case 'stashScreen':
-                        game.showMainMenu();
-                        e.preventDefault();
-                        break;
-                    case 'heroesScreen':
-                        game.showMainMenu();
-                        e.preventDefault();
-                        break;
-                    case 'collectionLogScreen':
-                        game.showStash();
-                        e.preventDefault();
-                        break;
-                }
+switch(game.currentScreen) {
+    case 'mainMenuScreen':
+        // Can't go back from main menu
+        break;
+    case 'individualStashScreen':
+        game.showStash();
+        e.preventDefault();
+        break;
+    case 'partySelectScreen':
+        game.closeDungeonSelect();
+        e.preventDefault();
+        break;
+    case 'stashScreen':
+        game.showMainMenu();
+        e.preventDefault();
+        break;
+    case 'heroesScreen':
+        game.showMainMenu();
+        e.preventDefault();
+        break;
+    case 'collectionLogScreen':
+        game.showStash();
+        e.preventDefault();
+        break;
+}
             }
         });
         
