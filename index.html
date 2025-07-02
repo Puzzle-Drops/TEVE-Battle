@@ -749,6 +749,10 @@ switch(game.currentScreen) {
     case 'mainMenuScreen':
         // Can't go back from main menu
         break;
+    case 'dungeonSelectScreen':
+        game.closeDungeonSelect();
+        e.preventDefault();
+        break;
     case 'individualStashScreen':
         game.showStash();
         e.preventDefault();
