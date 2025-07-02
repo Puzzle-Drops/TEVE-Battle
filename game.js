@@ -237,38 +237,50 @@ showArena() {
                 }
             }
 
-            function renderWorldMap() {
-    // Show world map UI
-    document.getElementById('worldMapScreen').style.display = 'block';
-    document.getElementById('mainMenu').style.display = 'none';
+            renderWorldMap() {
+    const worldMap = document.getElementById('worldMap');
+    worldMap.innerHTML = '';
     
-    // OLD CODE - Remove this:
-    // createDungeonOrbs();
-    // or
-    // generateOrbs();
-    
-    // NEW CODE - Just ensure the orbs are visible and clickable
-    const menuNav = document.querySelector('.menuNavigation');
-    if (menuNav) {
-        menuNav.style.display = 'block';
-    }
-    
-    // Set up click handlers if not already done
-    setupDungeonOrbHandlers();
-}
-
-// Add this helper function
-function setupDungeonOrbHandlers() {
-    const dungeonOrbs = document.querySelectorAll('[class^="dungeonOrb"]');
-    dungeonOrbs.forEach(orb => {
-        // Check if handler already exists to avoid duplicates
-        if (!orb.hasAttribute('data-handler-set')) {
-            orb.addEventListener('click', function() {
-                const tier = parseInt(this.getAttribute('data-tier'));
-                showDungeonList(tier);
-            });
-            orb.setAttribute('data-handler-set', 'true');
-        }
+    Object.entries(this.dungeonTiers).forEach(([tierName, tierData]) => {
+        const orb = document.createElement('div');
+        orb.className = `mapOrb ${tierData.color}`;
+        orb.style.left = `${tierData.position.x}%`;
+        orb.style.top = `${tierData.position.y}%`;
+        
+        // Create image button for tier
+        const orbWrapper = document.createElement('div');
+        orbWrapper.style.position = 'relative';
+        orbWrapper.style.width = '324px';
+        orbWrapper.style.height = '216px';
+        
+        // Placeholder button
+        const placeholderBtn = document.createElement('button');
+        placeholderBtn.className = 'dungeonTierButton';
+        placeholderBtn.textContent = tierName.charAt(0).toUpperCase() + tierName.slice(1);
+        placeholderBtn.style.width = '100%';
+        placeholderBtn.style.height = '100%';
+        placeholderBtn.onclick = () => this.selectDungeonTier(tierName);
+        
+        // Image overlay
+        const tierImage = document.createElement('img');
+        tierImage.src = `https://puzzle-drops.github.io/TEVE/img/menu/${tierName}_button.png`;
+        tierImage.className = 'dungeonTierImage';
+        tierImage.style.position = 'absolute';
+        tierImage.style.top = '0';
+        tierImage.style.left = '0';
+        tierImage.style.width = '100%';
+        tierImage.style.height = '100%';
+        tierImage.style.cursor = 'pointer';
+        tierImage.onclick = () => this.selectDungeonTier(tierName);
+        tierImage.onerror = function() { this.style.display = 'none'; };
+        
+        orbWrapper.appendChild(placeholderBtn);
+        orbWrapper.appendChild(tierImage);
+        
+        orb.innerHTML = '';
+        orb.appendChild(orbWrapper);
+        
+        worldMap.appendChild(orb);
     });
 }
 
