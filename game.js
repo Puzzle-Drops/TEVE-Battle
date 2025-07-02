@@ -237,75 +237,68 @@ showArena() {
             }
 
             selectDungeonTier(tierName) {
-                // Check if clicking the same tier that's already selected
-                if (this.selectedTier === tierName && document.getElementById('dungeonListPanel').classList.contains('show')) {
-                    this.closeDungeonPanel();
-                    return;
-                }
-                
-                // Update selected orb
-                document.querySelectorAll('.mapOrb').forEach(orb => {
-                    orb.classList.remove('selected');
-                });
-                event.target.classList.add('selected');
-                
-                this.selectedTier = tierName;
-                this.expandedDungeon = null;
-                this.showDungeonList(tierName);
-            }
+    this.selectedTier = tierName;
+    this.showDungeonBladeScreen(tierName);
+}
 
-showDungeonList(tierName) {
-                const panel = document.getElementById('dungeonListPanel');
-                const tierData = this.dungeonTiers[tierName];
-                
-                // Calculate level range for the tier
-                const levels = tierData.dungeons.map(d => d.level);
-                const minLevel = Math.min(...levels);
-                const maxLevel = Math.max(...levels);
-                
-                // Special handling for tiers where all dungeons are level 500
-                let levelText;
-                if (minLevel === maxLevel) {
-                    levelText = `Level ${minLevel}`;
-                } else {
-                    levelText = `Level ${minLevel}-${maxLevel}`;
-                }
-                
-                document.getElementById('dungeonTierTitle').innerHTML = `
-                    <div>${tierName}</div>
-                    <div style="font-size: 16px; color: #6a9aaa; margin-top: 5px;">${levelText}</div>
-                `;
-                
-                const dungeonList = document.getElementById('dungeonList');
-                dungeonList.innerHTML = '';
-                
-                tierData.dungeons.forEach((dungeon, index) => {
-                    const dungeonItem = document.createElement('div');
-                    dungeonItem.className = 'dungeonItem';
-                    dungeonItem.innerHTML = `
-                        <div class="dungeonHeader" style="width: 100%; cursor: pointer;">
-                            <div class="dungeonName" style="flex: 1;">${dungeon.name}</div>
-                            <div class="dungeonLevel" style="min-width: 100px; text-align: right;">Level ${dungeon.level}</div>
-                        </div>
-                    `;
-                    
-                    dungeonItem.onclick = () => this.enterDungeon(tierName, index);
-                    
-                    dungeonList.appendChild(dungeonItem);
-                });
-                
-                panel.classList.add('show');
-            }
-		
-            closeDungeonPanel() {
-                document.getElementById('dungeonListPanel').classList.remove('show');
-                this.selectedTier = null;
-                this.expandedDungeon = null;
-                document.querySelectorAll('.mapOrb').forEach(orb => {
-                    orb.classList.remove('selected');
-                });
-            }
-		
+showDungeonBladeScreen(tierName) {
+    this.hideAllScreens();
+    this.closeHeroInfo(); // Close any open popups
+    this.currentScreen = 'dungeonSelectScreen';
+    document.getElementById('dungeonSelectScreen').style.display = 'block';
+    
+    const tierData = this.dungeonTiers[tierName];
+    const dungeons = tierData.dungeons;
+    
+    // Update all three blades
+    for (let i = 0; i < 3; i++) {
+        const blade = document.getElementById(`dungeonBlade${i + 1}`);
+        const backdrop = blade.querySelector('.bladeBackdrop');
+        const nameElement = blade.querySelector('.bladeDungeonName');
+        const levelElement = blade.querySelector('.bladeDungeonLevel');
+        const starsElement = blade.querySelector('.bladeDungeonStars');
+        
+        if (i < dungeons.length) {
+            const dungeon = dungeons[i];
+            
+            // Set background image
+            const dungeonName = dungeon.name.toLowerCase().replace(/ /g, '_');
+            backdrop.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
+            
+            // Set content
+            nameElement.textContent = dungeon.name;
+            levelElement.textContent = `Level ${dungeon.level}`;
+            
+            // Generate stars
+            const starData = this.generateStars({
+                type: 'enemy',
+                level: dungeon.level,
+                isBoss: true
+            });
+            starsElement.textContent = starData.html;
+            starsElement.className = `bladeDungeonStars ${starData.colorClass}`;
+            
+            // Make blade clickable
+            blade.classList.remove('disabled');
+            blade.onclick = () => this.enterDungeon(tierName, i);
+        } else {
+            // Empty blade
+            backdrop.style.backgroundImage = '';
+            nameElement.textContent = 'Coming Soon';
+            levelElement.textContent = '';
+            starsElement.textContent = '';
+            blade.classList.add('disabled');
+            blade.onclick = null;
+        }
+    }
+}
+
+closeDungeonSelect() {
+    this.closeHeroInfo(); // Close any open popups
+    this.selectedTier = null;
+    this.showMainMenu();
+}
+
 enterDungeon(tierName, dungeonIndex) {
     const dungeon = this.dungeonTiers[tierName].dungeons[dungeonIndex];
     this.currentDungeon = dungeon;
@@ -2579,6 +2572,7 @@ hideAllScreens() {
     document.getElementById('partySelectScreen').style.display = 'none';
     document.getElementById('individualStashScreen').style.display = 'none';
     document.getElementById('collectionLogScreen').style.display = 'none';
+    document.getElementById('dungeonSelectScreen').style.display = 'none';
 }
 
             updateHeroList() {
