@@ -241,8 +241,6 @@ showArena() {
     const worldMap = document.getElementById('worldMap');
     worldMap.innerHTML = '';
     
-    
-    });
 }
 
             selectDungeonTier(tierName) {
