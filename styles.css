@@ -4900,25 +4900,37 @@ body {
 .menuNavPlaceholder {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #0a2e4a 0%, #0f3f5f 100%);
-    border: 2px solid #2a6a8a;
-    color: #b0e0f0;
-    font-size: 24px;
+    background: transparent;
+    border: none;
+    color: #4dd0e1;
+    font-size: 28px;
+    font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
-    text-shadow: 0 0 10px rgba(176, 224, 240, 0.5);
-    box-shadow: 
-        0 0 20px rgba(42, 106, 138, 0.5),
-        inset 0 0 20px rgba(42, 106, 138, 0.2);
+    text-shadow: 
+        0 0 20px rgba(77, 208, 225, 0.8),
+        0 0 40px rgba(77, 208, 225, 0.5),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 6px rgba(0,0,0,0.9);
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 2px;
+    padding: 0;
 }
 
 .menuNavPlaceholder:hover {
-    background: linear-gradient(135deg, #0f3f5f 0%, #1a5a7a 100%);
-    border-color: #4dd0e1;
+    background: transparent;
+    border: none;
     transform: translateY(-2px);
-    box-shadow: 
-        0 5px 30px rgba(77, 208, 225, 0.5),
-        inset 0 0 30px rgba(77, 208, 225, 0.3);
+    color: #6de0f1;
+    text-shadow: 
+        0 0 30px rgba(109, 224, 241, 1),
+        0 0 60px rgba(109, 224, 241, 0.7),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 6px rgba(0,0,0,0.9);
 }
 
 .menuNavImage {
