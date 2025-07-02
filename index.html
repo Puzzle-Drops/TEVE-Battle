@@ -840,10 +840,22 @@ if (refinementPopup && refinementPopup.style.display === 'block') {
                     return;
                 }
                 
-                // Navigate between screens based on current screen
+// Navigate between screens based on current screen
 switch(game.currentScreen) {
     case 'mainMenuScreen':
-        // Can't go back from main menu
+        game.showSplashScreen();
+        // Re-add the splash screen event handlers
+        const splashHandler = (e) => {
+            if (game.currentScreen === 'splashScreen') {
+                e.preventDefault();
+                document.removeEventListener('keydown', splashHandler);
+                document.removeEventListener('click', splashHandler);
+                game.showMainMenu();
+            }
+        };
+        document.addEventListener('keydown', splashHandler);
+        document.addEventListener('click', splashHandler);
+        e.preventDefault();
         break;
     case 'dungeonSelectScreen':
         game.closeDungeonSelect();
