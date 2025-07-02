@@ -263,69 +263,44 @@ showArena() {
             }
 
             renderWorldMap() {
-    const worldMap = document.getElementById('worldMap');
-    worldMap.innerHTML = '';
-    
-    Object.entries(this.dungeonTiers).forEach(([tierName, tierData]) => {
-        const orb = document.createElement('div');
-        orb.className = `mapOrb ${tierData.color}`;
-        orb.style.left = `${tierData.position.x}%`;
-        orb.style.top = `${tierData.position.y}%`;
-        
-        // Create image button for tier
-        const orbWrapper = document.createElement('div');
-        orbWrapper.style.position = 'relative';
-        orbWrapper.style.width = '324px';
-        orbWrapper.style.height = '216px';
-        
-        // Placeholder button
-        const placeholderBtn = document.createElement('button');
-        placeholderBtn.className = 'dungeonTierButton';
-        placeholderBtn.textContent = tierName.charAt(0).toUpperCase() + tierName.slice(1);
-        placeholderBtn.style.width = '100%';
-        placeholderBtn.style.height = '100%';
-        placeholderBtn.onclick = () => this.selectDungeonTier(tierName);
-        
-        // Image overlay
-        const tierImage = document.createElement('img');
-        tierImage.src = `https://puzzle-drops.github.io/TEVE/img/menu/${tierName}_button.png`;
-        tierImage.className = 'dungeonTierImage';
-        tierImage.style.position = 'absolute';
-        tierImage.style.top = '0';
-        tierImage.style.left = '0';
-        tierImage.style.width = '100%';
-        tierImage.style.height = '100%';
-        tierImage.style.cursor = 'pointer';
-        tierImage.onclick = () => this.selectDungeonTier(tierName);
-        tierImage.onerror = function() { this.style.display = 'none'; };
-        
-        orbWrapper.appendChild(placeholderBtn);
-        orbWrapper.appendChild(tierImage);
-        
-        orb.innerHTML = '';
-        orb.appendChild(orbWrapper);
-        
-        worldMap.appendChild(orb);
-    });
+    // Empty function since we're using static HTML grid now
+    // The menu buttons are already in the HTML
 }
 
-            selectDungeonTier(tierName) {
-                // Check if clicking the same tier that's already selected
-                if (this.selectedTier === tierName && document.getElementById('dungeonListPanel').classList.contains('show')) {
-                    this.closeDungeonPanel();
-                    return;
-                }
-                
-                // Update selected orb
-                document.querySelectorAll('.mapOrb').forEach(orb => {
-                    orb.classList.remove('selected');
-                });
-                event.target.classList.add('selected');
-                
-                this.selectedTier = tierName;
-                this.expandedDungeon = null;
-                this.showDungeonList(tierName);
-            }
+selectDungeonTier(tierName) {
+    // Handle placeholder tiers
+    if (tierName === '10' || tierName === '11' || tierName === '12') {
+        console.log(`Tier ${tierName} not implemented yet`);
+        return;
+    }
+    
+    // Check if tier exists in our data
+    if (!this.dungeonTiers[tierName]) {
+        console.log(`Tier ${tierName} not found in dungeon data`);
+        return;
+    }
+    
+    // Check if clicking the same tier that's already selected
+    if (this.selectedTier === tierName && document.getElementById('dungeonListPanel').classList.contains('show')) {
+        this.closeDungeonPanel();
+        return;
+    }
+    
+    // Update selected button
+    document.querySelectorAll('.menuNavButton').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Find and select the clicked button
+    const clickedButton = document.querySelector(`.menuNavButton[data-tier="${tierName}"]`);
+    if (clickedButton) {
+        clickedButton.classList.add('selected');
+    }
+    
+    this.selectedTier = tierName;
+    this.expandedDungeon = null;
+    this.showDungeonList(tierName);
+}
 
 showDungeonList(tierName) {
                 const panel = document.getElementById('dungeonListPanel');
@@ -370,14 +345,14 @@ showDungeonList(tierName) {
                 panel.classList.add('show');
             }
 		
-            closeDungeonPanel() {
-                document.getElementById('dungeonListPanel').classList.remove('show');
-                this.selectedTier = null;
-                this.expandedDungeon = null;
-                document.querySelectorAll('.mapOrb').forEach(orb => {
-                    orb.classList.remove('selected');
-                });
-            }
+closeDungeonPanel() {
+    document.getElementById('dungeonListPanel').classList.remove('show');
+    this.selectedTier = null;
+    this.expandedDungeon = null;
+    document.querySelectorAll('.menuNavButton').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+}
 		
 enterDungeon(tierName, dungeonIndex) {
     const dungeon = this.dungeonTiers[tierName].dungeons[dungeonIndex];
