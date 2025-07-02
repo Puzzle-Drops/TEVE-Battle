@@ -2635,55 +2635,66 @@ body {
     color: #ffd700;
     border: 1px solid #ffd700;
 }
-
 .abilityEffectTag.aoe {
     background: rgba(255, 192, 203, 0.2);
     color: #ff69b4;
     border: 1px solid #ff69b4;
 }
-
 .abilityEffectTag.heal {
     background: rgba(0, 255, 136, 0.2);
     color: #00ff88;
     border: 1px solid #00ff88;
 }
-
-.abilityEffectTag.damage {
-    background: rgba(255, 68, 68, 0.2);
-    color: #ff4444;
-    border: 1px solid #ff4444;
+.abilityEffectTag.evasion {
+    background: rgba(77, 208, 225, 0.2);
+    color: #4dd0e1;
+    border: 1px solid #4dd0e1;
 }
-
+.abilityEffectTag.cleanse {
+    background: rgba(240, 248, 255, 0.2);
+    color: #e0f0ff;
+    border: 1px solid #e0f0ff;
+}
+.abilityEffectTag.dispel {
+    background: rgba(186, 85, 211, 0.2);
+    color: #ba55d3;
+    border: 1px solid #ba55d3;
+}
+.abilityEffectTag.shield_break {
+    background: rgba(255, 140, 0, 0.2);
+    color: #ff8c00;
+    border: 1px solid #ff8c00;
+}
+.abilityEffectTag.support {
+    background: rgba(135, 206, 235, 0.2);
+    color: #87ceeb;
+    border: 1px solid #87ceeb;
+}
 .abilityEffectTag.physical {
     background: rgba(255, 165, 0, 0.2);
     color: #ffa500;
     border: 1px solid #ffa500;
 }
-
 .abilityEffectTag.magical {
     background: rgba(216, 150, 255, 0.2);
     color: #d896ff;
     border: 1px solid #d896ff;
 }
-
 .abilityEffectTag.pure {
     background: rgba(255, 255, 255, 0.2);
     color: #ffffff;
     border: 1px solid #ffffff;
 }
-
-.abilityEffectTag.buff,
 .abilityEffectTag.buff_increase_attack,
 .abilityEffectTag.buff_increase_speed,
 .abilityEffectTag.buff_increase_defense,
 .abilityEffectTag.buff_immune,
-.abilityEffectTag.buff_shield {
+.abilityEffectTag.buff_shield,
+.abilityEffectTag.buff_frost_armor {
     background: rgba(0, 153, 255, 0.2);
     color: #0099ff;
     border: 1px solid #0099ff;
 }
-
-.abilityEffectTag.debuff,
 .abilityEffectTag.debuff_reduce_attack,
 .abilityEffectTag.debuff_reduce_speed,
 .abilityEffectTag.debuff_reduce_defense,
@@ -2692,8 +2703,7 @@ body {
 .abilityEffectTag.debuff_stun,
 .abilityEffectTag.debuff_taunt,
 .abilityEffectTag.debuff_silence,
-.abilityEffectTag.debuff_mark,
-.abilityEffectTag.debuff_action_drain {
+.abilityEffectTag.debuff_mark {
     background: rgba(255, 51, 51, 0.2);
     color: #ff3333;
     border: 1px solid #ff3333;
