@@ -241,46 +241,7 @@ showArena() {
     const worldMap = document.getElementById('worldMap');
     worldMap.innerHTML = '';
     
-    Object.entries(this.dungeonTiers).forEach(([tierName, tierData]) => {
-        const orb = document.createElement('div');
-        orb.className = `mapOrb ${tierData.color}`;
-        orb.style.left = `${tierData.position.x}%`;
-        orb.style.top = `${tierData.position.y}%`;
-        
-        // Create image button for tier
-        const orbWrapper = document.createElement('div');
-        orbWrapper.style.position = 'relative';
-        orbWrapper.style.width = '324px';
-        orbWrapper.style.height = '216px';
-        
-        // Placeholder button
-        const placeholderBtn = document.createElement('button');
-        placeholderBtn.className = 'dungeonTierButton';
-        placeholderBtn.textContent = tierName.charAt(0).toUpperCase() + tierName.slice(1);
-        placeholderBtn.style.width = '100%';
-        placeholderBtn.style.height = '100%';
-        placeholderBtn.onclick = () => this.selectDungeonTier(tierName);
-        
-        // Image overlay
-        const tierImage = document.createElement('img');
-        tierImage.src = `https://puzzle-drops.github.io/TEVE/img/menu/${tierName}_button.png`;
-        tierImage.className = 'dungeonTierImage';
-        tierImage.style.position = 'absolute';
-        tierImage.style.top = '0';
-        tierImage.style.left = '0';
-        tierImage.style.width = '100%';
-        tierImage.style.height = '100%';
-        tierImage.style.cursor = 'pointer';
-        tierImage.onclick = () => this.selectDungeonTier(tierName);
-        tierImage.onerror = function() { this.style.display = 'none'; };
-        
-        orbWrapper.appendChild(placeholderBtn);
-        orbWrapper.appendChild(tierImage);
-        
-        orb.innerHTML = '';
-        orb.appendChild(orbWrapper);
-        
-        worldMap.appendChild(orb);
+    
     });
 }
 
