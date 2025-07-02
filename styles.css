@@ -5289,7 +5289,7 @@ body {
         0 0 40px rgba(77, 208, 225, 0.6),
         0 2px 4px rgba(0, 0, 0, 1),
         2px 2px 4px rgba(0,0,0,0.9);
-    transform: translateX(-50%) scale(0.8);  /* Added scale to shrink emoji */
+    transform: translateX(-50%) scale(0.7);  /* Added scale to shrink emoji */
 }
 
 /* Enhanced glow on hover for icons */
@@ -5303,7 +5303,7 @@ body {
 
 /* Locked Dungeon Blade Styling */
 .dungeonBlade.locked .bladeBackdrop {
-    filter: brightness(0.3) blur(3px);
+    filter: brightness(0.7) blur(3px);
 }
 
 .dungeonBlade.locked .bladeContent {
@@ -5351,7 +5351,7 @@ body {
 }
 
 .dungeonBlade.locked:hover .bladeBackdrop {
-    filter: brightness(0.3) blur(3px);
+    filter: brightness(0.85) blur(3px);
     transform: none;
 }
 
