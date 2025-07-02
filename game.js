@@ -235,11 +235,6 @@ showArena() {
                 }
             }
 
-            selectDungeonTier(tierName) {
-    this.selectedTier = tierName;
-    this.showDungeonBladeScreen(tierName);
-}
-
 showDungeonBladeScreen(tierName) {
     this.hideAllScreens();
     this.closeHeroInfo(); // Close any open popups
