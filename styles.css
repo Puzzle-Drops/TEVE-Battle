@@ -5105,6 +5105,116 @@ body {
     /* existing styles... */
 }
 
+/* Dungeon Tier Button Content */
+.dungeonTierContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    z-index: 2;
+}
+
+.dungeonTierName {
+    font-size: 32px;
+    font-weight: bold;
+    color: #4dd0e1;
+    text-shadow: 
+        0 0 25px rgba(77, 208, 225, 0.9),
+        0 0 50px rgba(77, 208, 225, 0.6),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 6px rgba(0,0,0,0.9);
+    letter-spacing: 3px;
+    line-height: 1;
+}
+
+.dungeonTierLevel {
+    font-size: 20px;
+    color: #b0e0f0;
+    text-shadow: 
+        0 0 15px rgba(176, 224, 240, 0.7),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.8);
+    line-height: 1;
+}
+
+.dungeonTierStars {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: -3px;
+    line-height: 1;
+}
+
+.dungeonTierStars.normal {
+    color: #ffd700;
+    text-shadow: 
+        0 0 15px rgba(255, 215, 0, 0.9),
+        0 0 30px rgba(255, 215, 0, 0.6),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.9);
+}
+
+.dungeonTierStars.purple {
+    color: #d896ff;
+    text-shadow: 
+        0 0 15px rgba(216, 150, 255, 0.9),
+        0 0 30px rgba(216, 150, 255, 0.6),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.9);
+}
+
+.dungeonTierStars.red {
+    color: #ff4444;
+    text-shadow: 
+        0 0 15px rgba(255, 68, 68, 0.9),
+        0 0 30px rgba(255, 68, 68, 0.6),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.9);
+}
+
+/* Hover effects for tier elements */
+.menuNavPlaceholder:hover .dungeonTierName {
+    color: #6de0f1;
+    text-shadow: 
+        0 0 35px rgba(109, 224, 241, 1),
+        0 0 70px rgba(109, 224, 241, 0.7),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 6px rgba(0,0,0,0.9);
+}
+
+.menuNavPlaceholder:hover .dungeonTierLevel {
+    color: #e0f4ff;
+    text-shadow: 
+        0 0 20px rgba(224, 244, 255, 0.8),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.menuNavPlaceholder:hover .dungeonTierStars.normal {
+    text-shadow: 
+        0 0 20px rgba(255, 215, 0, 1),
+        0 0 40px rgba(255, 215, 0, 0.8),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.9);
+}
+
+.menuNavPlaceholder:hover .dungeonTierStars.purple {
+    text-shadow: 
+        0 0 20px rgba(216, 150, 255, 1),
+        0 0 40px rgba(216, 150, 255, 0.8),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.9);
+}
+
+.menuNavPlaceholder:hover .dungeonTierStars.red {
+    text-shadow: 
+        0 0 20px rgba(255, 68, 68, 1),
+        0 0 40px rgba(255, 68, 68, 0.8),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.9);
+}
+
+
 /* Directional lunge animations */
 @keyframes unitLungeRight {
     0%   { transform: translateX(0); }
