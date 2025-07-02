@@ -2,58 +2,51 @@
   "tiers": {
     "Easy": {
       "tier": 0,
-      "color": "easy",
-      "position": { "x": 50, "y": 80 }
+      "id": "easy"
     },
     "Medium": {
       "tier": 1,
-      "color": "medium", 
-      "position": { "x": 70, "y": 75 }
+      "id": "medium"
     },
     "Hard": {
       "tier": 2,
-      "color": "hard",
-      "position": { "x": 85, "y": 60 }
+      "id": "hard"
     },
     "Forsaken": {
       "tier": 3,
-      "color": "forsaken",
-      "position": { "x": 80, "y": 40 }
+      "id": "forsaken"
     },
     "Nightmare": {
       "tier": 4,
-      "color": "nightmare",
-      "position": { "x": 65, "y": 25 }
+      "id": "nightmare"
     },
     "Hell": {
       "tier": 5,
-      "color": "hell",
-      "position": { "x": 35, "y": 25 }
+      "id": "hell"
     },
     "Impossible": {
       "tier": 6,
-      "color": "impossible",
-      "position": { "x": 20, "y": 40 }
+      "id": "impossible"
     },
     "Mythical": {
       "tier": 7,
-      "color": "mythical",
-      "position": { "x": 15, "y": 60 }
+      "id": "mythical"
     },
     "Divine": {
       "tier": 8,
-      "color": "divine",
-      "position": { "x": 29, "y": 75 }
+      "id": "divine"
     },
     "Ascended": {
       "tier": 9,
-      "color": "ascended",
-      "position": { "x": 50, "y": 50 }
+      "id": "ascended"
     },
     "Transcendent": {
       "tier": 10,
-      "color": "transcendent",
-      "position": { "x": 50, "y": 10 }
+      "id": "transcendent"
+    },
+    "Twilight": {
+      "tier": 11,
+      "id": "twilight"
     }
   },
   "dungeons": {
