@@ -5236,6 +5236,54 @@ body {
     transition-delay: 0.2s;
 }
 
+/* Static stars always visible at bottom */
+.dungeonTierStarsStatic {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: -3px;
+    line-height: 1;
+    z-index: 2;
+    opacity: 1;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.dungeonTierStarsStatic.normal {
+    color: #ffd700;
+    text-shadow: 
+        0 0 15px rgba(255, 215, 0, 0.9),
+        0 0 30px rgba(255, 215, 0, 0.6),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.9);
+}
+
+.dungeonTierStarsStatic.purple {
+    color: #d896ff;
+    text-shadow: 
+        0 0 15px rgba(216, 150, 255, 0.9),
+        0 0 30px rgba(216, 150, 255, 0.6),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.9);
+}
+
+.dungeonTierStarsStatic.red {
+    color: #ff4444;
+    text-shadow: 
+        0 0 15px rgba(255, 68, 68, 0.9),
+        0 0 30px rgba(255, 68, 68, 0.6),
+        0 2px 4px rgba(0, 0, 0, 1),
+        2px 2px 4px rgba(0,0,0,0.9);
+}
+
+/* Hide static stars and move them down on hover */
+.menuNavPlaceholder:hover .dungeonTierStarsStatic {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+}
+
 /* Directional lunge animations */
 @keyframes unitLungeRight {
     0%   { transform: translateX(0); }
