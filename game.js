@@ -4512,7 +4512,7 @@ if (value !== null && value !== undefined) {
     }
     
     // Add formula indicator if showing formula
-    const formulaIndicator = showFormula ? ' <span style="color: #ffd700;">[Formula View]</span>' : '';
+    const formulaIndicator = showFormula ? ' <span style="color: #ffd700;">[Formula]</span>' : '';
     
     return `
         <div style="font-size: 24px; color: #4dd0e1; margin-bottom: 8px;">${ability.name} (Level ${level})${formulaIndicator}</div>
