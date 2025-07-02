@@ -5301,7 +5301,59 @@ body {
         2px 2px 4px rgba(0,0,0,0.9);
 }
 
+/* Locked Dungeon Blade Styling */
+.dungeonBlade.locked .bladeBackdrop {
+    filter: brightness(0.3) blur(3px);
+}
 
+.dungeonBlade.locked .bladeContent {
+    filter: blur(2px);
+    opacity: 0.7;
+}
+
+.bladeLockOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10;
+}
+
+.bladeLockIcon {
+    font-size: 96px;
+    text-shadow: 
+        0 0 30px rgba(0, 0, 0, 1),
+        0 0 60px rgba(0, 0, 0, 0.8),
+        0 4px 8px rgba(0, 0, 0, 1);
+    animation: lockPulse 2s ease-in-out infinite;
+}
+
+@keyframes lockPulse {
+    0%, 100% { 
+        opacity: 0.9;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+.dungeonBlade.locked:hover {
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.dungeonBlade.locked:hover .bladeBackdrop {
+    filter: brightness(0.3) blur(3px);
+    transform: none;
+}
 
 
 /* END end EnD eNd ENd eND enD bottom document/*
