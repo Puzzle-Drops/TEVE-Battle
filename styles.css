@@ -4944,6 +4944,24 @@ body {
     transition: all 0.3s;
 }
 
+/* Add a subtle dark overlay for better text visibility */
+.menuNavButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    z-index: 1;
+    transition: background 0.3s;
+}
+
+.menuNavButton:hover::before {
+    background: rgba(0, 0, 0, 0.1);
+}
+
 .menuNavImage:hover {
     filter: brightness(1.2);
     transform: scale(1.02);
