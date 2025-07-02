@@ -5113,6 +5113,15 @@ body {
     gap: 4px;
     position: relative;
     z-index: 2;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Show content on hover */
+.menuNavPlaceholder:hover .dungeonTierContent {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .dungeonTierName {
@@ -5172,7 +5181,7 @@ body {
         2px 2px 4px rgba(0,0,0,0.9);
 }
 
-/* Hover effects for tier elements */
+/* Enhanced hover effects for tier elements */
 .menuNavPlaceholder:hover .dungeonTierName {
     color: #6de0f1;
     text-shadow: 
@@ -5214,6 +5223,18 @@ body {
         2px 2px 4px rgba(0,0,0,0.9);
 }
 
+/* Stagger the fade-in animation for each element */
+.menuNavPlaceholder:hover .dungeonTierName {
+    transition-delay: 0s;
+}
+
+.menuNavPlaceholder:hover .dungeonTierLevel {
+    transition-delay: 0.1s;
+}
+
+.menuNavPlaceholder:hover .dungeonTierStars {
+    transition-delay: 0.2s;
+}
 
 /* Directional lunge animations */
 @keyframes unitLungeRight {
