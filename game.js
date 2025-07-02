@@ -268,12 +268,6 @@ showArena() {
 }
 
 selectDungeonTier(tierName) {
-    // Handle placeholder tiers
-    if (tierName === '10' || tierName === '11' || tierName === '12') {
-        console.log(`Tier ${tierName} not implemented yet`);
-        return;
-    }
-    
     // Check if tier exists in our data
     if (!this.dungeonTiers[tierName]) {
         console.log(`Tier ${tierName} not found in dungeon data`);
