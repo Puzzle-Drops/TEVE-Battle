@@ -5107,21 +5107,23 @@ body {
 
 /* Dungeon Tier Button Content */
 .dungeonTierContent {
+    position: absolute;
+    bottom: 20px;  /* Match the static stars position */
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    position: relative;
     z-index: 2;
     opacity: 0;
-    transform: translateY(20px);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Show content on hover */
 .menuNavPlaceholder:hover .dungeonTierContent {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
 }
 
 .dungeonTierName {
