@@ -26,7 +26,7 @@
             stash: false,
             arena: false
         },
-        unlockedTiers: ['Easy'],
+        unlockedTiers: [this.getTierOrder()[0] || 'Easy'],
         completedDungeons: {} // {dungeonId: {completions: 0, bestTime: null}}
     };
     this.loadProgression(); // Load saved progression
@@ -88,6 +88,36 @@ this.loadSortSettings(); // Load saved settings
                 this.classFamilies = unitData?.classFamilies || [];                
                 this.init();
             }
+
+// Add these helper methods after the constructor in game.js
+
+getTierOrder() {
+    // Get tier order from loaded data, sorted by tier number
+    return Object.keys(this.dungeonTiers)
+        .sort((a, b) => this.dungeonTiers[a].tier - this.dungeonTiers[b].tier)
+        .map(tierName => tierName);
+}
+
+getTierByIndex(index) {
+    const tierOrder = this.getTierOrder();
+    return tierOrder[index] || null;
+}
+
+getTierInfo(tierName) {
+    return this.dungeonTiers[tierName] || null;
+}
+
+getDungeonLevelRange(tierName) {
+    const tierDungeons = this.dungeonTiers[tierName]?.dungeons || [];
+    if (tierDungeons.length === 0) return '';
+    
+    const levels = tierDungeons.map(d => d.level).sort((a, b) => a - b);
+    const minLevel = levels[0];
+    const maxLevel = levels[levels.length - 1];
+    
+    return minLevel === maxLevel ? `(${minLevel})` : `(${minLevel}-${maxLevel})`;
+}
+
 
 filterStashSlots(source) {
 
@@ -260,10 +290,10 @@ checkProgressionUnlocks(completedDungeonId) {
     
     // Unlock next tier if all dungeons in current tier are complete
     if (allTierComplete) {
-        const tierOrder = ['Easy', 'Medium', 'Hard', 'Forsaken', 'Nightmare', 'Hell', 'Impossible', 'Mythical', 'Divine', 'Ascended', 'Transcendent', 'Twilight'];
-        const currentIndex = tierOrder.indexOf(dungeonInfo.tier);
-        if (currentIndex < tierOrder.length - 1) {
-            const nextTier = tierOrder[currentIndex + 1];
+        const tierOrder = this.getTierOrder();
+const currentIndex = tierOrder.indexOf(dungeonInfo.tier);
+if (currentIndex < tierOrder.length - 1) {
+    const nextTier = tierOrder[currentIndex + 1];
             if (!this.progression.unlockedTiers.includes(nextTier)) {
                 this.progression.unlockedTiers.push(nextTier);
                 console.log(`Unlocked new tier: ${nextTier}`);
@@ -330,13 +360,13 @@ showMainMenu() {
     }
     
     // Dungeon tier orbs
-    const tiers = ['Easy', 'Medium', 'Hard', 'Forsaken', 'Nightmare', 'Hell', 'Impossible', 'Mythical', 'Divine', 'Ascended', 'Transcendent', 'Twilight'];
-    tiers.forEach((tier, index) => {
-        const orbElement = document.querySelector(`.dungeonOrb${index}`);
-        if (orbElement) {
-            orbElement.style.display = this.progression.unlockedTiers.includes(tier) ? '' : 'none';
-        }
-    });
+const tierOrder = this.getTierOrder();
+tierOrder.forEach((tier, index) => {
+    const orbElement = document.querySelector(`.dungeonOrb${index}`);
+    if (orbElement) {
+        orbElement.style.display = this.progression.unlockedTiers.includes(tier) ? '' : 'none';
+    }
+});
 }
 
 showArena() {
