@@ -1453,6 +1453,20 @@ body {
     transform: translateY(-2px);
 }
 
+/* Selected skill styling */
+.skillBox.selected {
+    border-color: #4dd0e1;
+    box-shadow: 0 0 25px rgba(77, 208, 225, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Ensure hover still works on non-selected skills */
+.skillBox:not(.selected):hover {
+    border-color: #4dd0e1;
+    box-shadow: 0 0 25px rgba(77, 208, 225, 0.5);
+    transform: translateY(-2px);
+}
+
 .skillBox img {
     width: 100px;
     height: 100px;
