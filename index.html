@@ -51,73 +51,105 @@
         <!-- Map orbs will be dynamically generated -->
     </div>
     
-    <!-- Menu Navigation Buttons -->
-    <div class="menuNavigation">
-        <!-- Stashes Button (top middle) -->
-        <div class="menuNavButton stashesButton">
-            <button class="menuNavPlaceholder" onclick="game.showStash()">Stashes</button>
-            <img src="https://puzzle-drops.github.io/TEVE/img/menu/stashes_button.png" 
-                 alt="Stashes" 
-                 class="menuNavImage"
-                 onclick="game.showStash()"
-                 onerror="this.style.display='none'">
-        </div>
-        
-        <!-- Arena Button (center) -->
-        <div class="menuNavButton arenaButton">
-            <button class="menuNavPlaceholder" onclick="game.showArena()">Arena</button>
-            <img src="https://puzzle-drops.github.io/TEVE/img/menu/arena_button.png" 
-                 alt="Arena" 
-                 class="menuNavImage"
-                 onclick="game.showArena()"
-                 onerror="this.style.display='none'">
-        </div>
-        
-        <!-- Heroes Button (bottom middle) -->
-        <div class="menuNavButton heroesButton">
-            <button class="menuNavPlaceholder" onclick="game.showHeroes()">Heroes</button>
-            <img src="https://puzzle-drops.github.io/TEVE/img/menu/heroes_button.png" 
-                 alt="Heroes" 
-                 class="menuNavImage"
-                 onclick="game.showHeroes()"
-                 onerror="this.style.display='none'">
-        </div>
+    <!-- Dungeon Map Orbs -->
+<div class="menuNavButton dungeonOrb0" data-tier="0">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(0)">Easy</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/easy_button.png" 
+         alt="Easy" 
+         class="menuNavImage"
+         onclick="showDungeonList(0)"
+         onerror="this.style.display='none'">
+</div>
 
-	    <!-- Dungeon Map Orbs -->
-    <div class="dungeonOrb0 menuNavButton" data-tier="0">
-        <img class="menuNavImage" src="https://puzzle-drops.github.io/TEVE/img/menu/easy_button.png" alt="Easy">
-    </div>
-    <div class="dungeonOrb1 menuNavButton" data-tier="1">
-        <img class="menuNavImage" src="https://puzzle-drops.github.io/TEVE/img/menu/medium_button.png" alt="Medium">
-    </div>
-    <div class="dungeonOrb2 menuNavButton" data-tier="2">
-        <img class="menuNavImage" src="https://puzzle-drops.github.io/TEVE/img/menu/hard_button.png" alt="Hard">
-    </div>
-    <div class="dungeonOrb3 menuNavButton" data-tier="3">
-        <img class="menuNavImage" src="images/orb3.png" alt="Forsaken">
-    </div>
-    <div class="dungeonOrb4 menuNavButton" data-tier="4">
-        <img class="menuNavImage" src="images/orb4.png" alt="Nightmare">
-    </div>
-    <div class="dungeonOrb5 menuNavButton" data-tier="5">
-        <img class="menuNavImage" src="images/orb5.png" alt="Hell">
-    </div>
-    <div class="dungeonOrb6 menuNavButton" data-tier="6">
-        <img class="menuNavImage" src="images/orb6.png" alt="Impossible">
-    </div>
-    <div class="dungeonOrb7 menuNavButton" data-tier="7">
-        <img class="menuNavImage" src="images/orb7.png" alt="Mythical">
-    </div>
-    <div class="dungeonOrb8 menuNavButton" data-tier="8">
-        <img class="menuNavImage" src="images/orb8.png" alt="Divine">
-    </div>
-    <div class="dungeonOrb9 menuNavButton" data-tier="9">
-        <img class="menuNavImage" src="images/orb9.png" alt="Ascended">
-    </div>
-    <div class="dungeonOrb10 menuNavButton" data-tier="10">
-        <img class="menuNavImage" src="images/orb10.png" alt="Transcendent">
-    </div>
+<div class="menuNavButton dungeonOrb1" data-tier="1">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(1)">Medium</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/medium_button.png" 
+         alt="Medium" 
+         class="menuNavImage"
+         onclick="showDungeonList(1)"
+         onerror="this.style.display='none'">
+</div>
 
+<div class="menuNavButton dungeonOrb2" data-tier="2">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(2)">Hard</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/hard_button.png" 
+         alt="Hard" 
+         class="menuNavImage"
+         onclick="showDungeonList(2)"
+         onerror="this.style.display='none'">
+</div>
+
+<div class="menuNavButton dungeonOrb3" data-tier="3">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(3)">Forsaken</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/forsaken_button.png" 
+         alt="Forsaken" 
+         class="menuNavImage"
+         onclick="showDungeonList(3)"
+         onerror="this.style.display='none'">
+</div>
+
+<div class="menuNavButton dungeonOrb4" data-tier="4">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(4)">Nightmare</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/nightmare_button.png" 
+         alt="Nightmare" 
+         class="menuNavImage"
+         onclick="showDungeonList(4)"
+         onerror="this.style.display='none'">
+</div>
+
+<div class="menuNavButton dungeonOrb5" data-tier="5">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(5)">Hell</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/hell_button.png" 
+         alt="Hell" 
+         class="menuNavImage"
+         onclick="showDungeonList(5)"
+         onerror="this.style.display='none'">
+</div>
+
+<div class="menuNavButton dungeonOrb6" data-tier="6">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(6)">Impossible</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/impossible_button.png" 
+         alt="Impossible" 
+         class="menuNavImage"
+         onclick="showDungeonList(6)"
+         onerror="this.style.display='none'">
+</div>
+
+<div class="menuNavButton dungeonOrb7" data-tier="7">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(7)">Mythical</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/mythical_button.png" 
+         alt="Mythical" 
+         class="menuNavImage"
+         onclick="showDungeonList(7)"
+         onerror="this.style.display='none'">
+</div>
+
+<div class="menuNavButton dungeonOrb8" data-tier="8">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(8)">Divine</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/divine_button.png" 
+         alt="Divine" 
+         class="menuNavImage"
+         onclick="showDungeonList(8)"
+         onerror="this.style.display='none'">
+</div>
+
+<div class="menuNavButton dungeonOrb9" data-tier="9">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(9)">Ascended</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/ascended_button.png" 
+         alt="Ascended" 
+         class="menuNavImage"
+         onclick="showDungeonList(9)"
+         onerror="this.style.display='none'">
+</div>
+
+<div class="menuNavButton dungeonOrb10" data-tier="10">
+    <button class="menuNavPlaceholder" onclick="showDungeonList(10)">Transcendent</button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/transcendent_button.png" 
+         alt="Transcendent" 
+         class="menuNavImage"
+         onclick="showDungeonList(10)"
+         onerror="this.style.display='none'">
+</div>
 
 	    
     </div>
