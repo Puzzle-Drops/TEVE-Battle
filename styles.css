@@ -5108,7 +5108,7 @@ body {
 /* Dungeon Tier Button Content */
 .dungeonTierContent {
     position: absolute;
-    bottom: 20px;  /* Match the static stars position */
+    bottom: 50px;  /* asdf */
     left: 50%;
     transform: translateX(-50%) translateY(20px);
     display: flex;
