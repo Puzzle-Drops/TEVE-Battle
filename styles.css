@@ -4799,39 +4799,43 @@ body {
     z-index: 10;
 }
 
-/* Menu Navigation Buttons */
-.menuNavigation {
+/* Menu Grid Layout */
+.menuGrid {
     position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.menuGridRow {
+    display: flex;
+    justify-content: space-between;
     width: 100%;
-    height: 100%;
-    pointer-events: none;
 }
 
 .menuNavButton {
-    position: absolute;
     width: 390px;
     height: 260px;
-    pointer-events: auto;
+    position: relative;
     cursor: pointer;
+    transition: all 0.3s;
 }
 
-/* Button positions */
-.stashesButton {
-    top: 15%;
-    left: 50%;
-    transform: translateX(-50%);
+.menuNavButton:hover {
+    transform: translateY(-5px);
+    filter: brightness(1.1);
 }
 
-.arenaButton {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.heroesButton {
-    bottom: 10%;
-    left: 50%;
-    transform: translateX(-50%);
+/* Selected dungeon tier styling */
+.menuNavButton.selected .menuNavPlaceholder {
+    border-color: #ffd700;
+    box-shadow: 
+        0 0 50px rgba(255, 215, 0, 0.7),
+        inset 0 0 30px rgba(255, 215, 0, 0.4);
 }
 
 .menuNavPlaceholder {
