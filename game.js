@@ -19,6 +19,18 @@
 		this.collectionPopupQueue = [];
 		this.collectionPopupActive = false;
 
+	// Progression tracking
+    this.progression = {
+        unlockedFeatures: {
+            party: true,
+            stash: false,
+            arena: false
+        },
+        unlockedTiers: ['Easy'],
+        completedDungeons: {} // {dungeonId: {completions: 0, bestTime: null}}
+    };
+    this.loadProgression(); // Load saved progression
+
 // Sort settings for items
 this.sortSettings = {
     order: ['rarity', 'stars', 'quality', 'level', 'name'],
@@ -197,6 +209,100 @@ init() {
 	
 }
 
+// Progression Methods
+loadProgression() {
+    // In a real implementation, load from localStorage
+    // For now, keep default values
+}
+
+saveProgression() {
+    // In a real implementation, save to localStorage
+    // localStorage.setItem('teveProgression', JSON.stringify(this.progression));
+}
+
+isDungeonCompleted(dungeonId) {
+    return this.progression.completedDungeons[dungeonId] && 
+           this.progression.completedDungeons[dungeonId].completions > 0;
+}
+
+markDungeonComplete(dungeonId, timeString) {
+    if (!this.progression.completedDungeons[dungeonId]) {
+        this.progression.completedDungeons[dungeonId] = {
+            completions: 0,
+            bestTime: null
+        };
+    }
+    
+    const dungeonData = this.progression.completedDungeons[dungeonId];
+    dungeonData.completions++;
+    
+    // Update best time if better
+    if (!dungeonData.bestTime || timeString < dungeonData.bestTime) {
+        dungeonData.bestTime = timeString;
+    }
+    
+    // Check for unlocks
+    this.checkProgressionUnlocks(dungeonId);
+    this.saveProgression();
+}
+
+checkProgressionUnlocks(completedDungeonId) {
+    // Get dungeon info
+    const dungeonInfo = dungeonData.dungeons[completedDungeonId];
+    if (!dungeonInfo) return;
+    
+    // Check if this completes a tier
+    const tierDungeons = Object.keys(dungeonData.dungeons).filter(id => 
+        dungeonData.dungeons[id].tier === dungeonInfo.tier
+    );
+    
+    const allTierComplete = tierDungeons.every(id => this.isDungeonCompleted(id));
+    
+    // Unlock next tier if all dungeons in current tier are complete
+    if (allTierComplete) {
+        const tierOrder = ['Easy', 'Medium', 'Hard', 'Forsaken', 'Nightmare', 'Hell', 'Impossible', 'Mythical', 'Divine', 'Ascended'];
+        const currentIndex = tierOrder.indexOf(dungeonInfo.tier);
+        if (currentIndex < tierOrder.length - 1) {
+            const nextTier = tierOrder[currentIndex + 1];
+            if (!this.progression.unlockedTiers.includes(nextTier)) {
+                this.progression.unlockedTiers.push(nextTier);
+                console.log(`Unlocked new tier: ${nextTier}`);
+            }
+        }
+    }
+    
+    // Unlock features based on specific dungeons
+    if (completedDungeonId === 'satyrs_glade') {
+        this.progression.unlockedFeatures.stash = true;
+    }
+    if (completedDungeonId === 'icy_highland') {
+        this.progression.unlockedFeatures.arena = true;
+    }
+}
+
+isDungeonAccessible(dungeonId) {
+    const dungeon = dungeonData.dungeons[dungeonId];
+    if (!dungeon) return false;
+    
+    // Get all dungeons in this tier
+    const tierDungeons = Object.keys(dungeonData.dungeons)
+        .filter(id => dungeonData.dungeons[id].tier === dungeon.tier)
+        .sort((a, b) => {
+            const levelA = dungeonData.dungeons[a].level;
+            const levelB = dungeonData.dungeons[b].level;
+            return levelA - levelB;
+        });
+    
+    const dungeonIndex = tierDungeons.indexOf(dungeonId);
+    
+    // First dungeon is always accessible
+    if (dungeonIndex === 0) return true;
+    
+    // Otherwise, check if previous dungeon is completed
+    const previousDungeonId = tierDungeons[dungeonIndex - 1];
+    return this.isDungeonCompleted(previousDungeonId);
+}
+		
 showSplashScreen() {
     this.hideAllScreens();
     this.closeHeroInfo(); // Close any open popups
@@ -209,6 +315,28 @@ showMainMenu() {
     this.closeHeroInfo(); // Close any open popups
     this.currentScreen = 'mainMenuScreen';
     document.getElementById('mainMenuScreen').style.display = 'block';
+    
+    // Update visibility based on progression
+    // Stash button
+    const stashButton = document.querySelector('.stashesButton');
+    if (stashButton) {
+        stashButton.style.display = this.progression.unlockedFeatures.stash ? '' : 'none';
+    }
+    
+    // Arena button
+    const arenaButton = document.querySelector('.arenaButton');
+    if (arenaButton) {
+        arenaButton.style.display = this.progression.unlockedFeatures.arena ? '' : 'none';
+    }
+    
+    // Dungeon tier orbs
+    const tiers = ['Easy', 'Medium', 'Hard', 'Forsaken', 'Nightmare', 'Hell', 'Impossible', 'Mythical', 'Divine', 'Ascended', 'Transcendent'];
+    tiers.forEach((tier, index) => {
+        const orbElement = document.querySelector(`.dungeonOrb${index}`);
+        if (orbElement) {
+            orbElement.style.display = this.progression.unlockedTiers.includes(tier) ? '' : 'none';
+        }
+    });
 }
 
 showArena() {
@@ -245,37 +373,57 @@ showDungeonBladeScreen(tierName) {
     const dungeons = tierData.dungeons;
     
     // Update all three blades
-    for (let i = 0; i < 3; i++) {
-        const blade = document.getElementById(`dungeonBlade${i + 1}`);
-        const backdrop = blade.querySelector('.bladeBackdrop');
-        const nameElement = blade.querySelector('.bladeDungeonName');
-        const levelElement = blade.querySelector('.bladeDungeonLevel');
-        const starsElement = blade.querySelector('.bladeDungeonStars');
+for (let i = 0; i < 3; i++) {
+    const blade = document.getElementById(`dungeonBlade${i + 1}`);
+    const backdrop = blade.querySelector('.bladeBackdrop');
+    const nameElement = blade.querySelector('.bladeDungeonName');
+    const levelElement = blade.querySelector('.bladeDungeonLevel');
+    const starsElement = blade.querySelector('.bladeDungeonStars');
+    
+    if (i < dungeons.length) {
+        const dungeon = dungeons[i];
+        const isAccessible = this.isDungeonAccessible(dungeon.id);
         
-        if (i < dungeons.length) {
-            const dungeon = dungeons[i];
-            
-            // Set background image
-            const dungeonName = dungeon.name.toLowerCase().replace(/ /g, '_');
-            backdrop.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
-            
-            // Set content
-            nameElement.textContent = dungeon.name;
-            levelElement.textContent = `Level ${dungeon.level}`;
-            
-            // Generate stars
-            const starData = this.generateStars({
-                type: 'enemy',
-                level: dungeon.level,
-                isBoss: true
-            });
-            starsElement.textContent = starData.html;
-            starsElement.className = `bladeDungeonStars ${starData.colorClass}`;
-            
-            // Make blade clickable
-            blade.classList.remove('disabled');
+        // Set background image
+        const dungeonName = dungeon.name.toLowerCase().replace(/ /g, '_');
+        backdrop.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
+        
+        // Set content
+        nameElement.textContent = dungeon.name;
+        levelElement.textContent = `Level ${dungeon.level}`;
+        
+        // Generate stars
+        const starData = this.generateStars({
+            type: 'enemy',
+            level: dungeon.level,
+            isBoss: true
+        });
+        starsElement.textContent = starData.html;
+        starsElement.className = `bladeDungeonStars ${starData.colorClass}`;
+        
+        // Handle accessibility
+        if (isAccessible) {
+            blade.classList.remove('disabled', 'locked');
             blade.onclick = () => this.enterDungeon(tierName, i);
+            
+            // Remove any lock overlay
+            const lockOverlay = blade.querySelector('.bladeLockOverlay');
+            if (lockOverlay) {
+                lockOverlay.remove();
+            }
         } else {
+            blade.classList.add('disabled', 'locked');
+            blade.onclick = null;
+            
+            // Add lock overlay if not present
+            if (!blade.querySelector('.bladeLockOverlay')) {
+                const lockOverlay = document.createElement('div');
+                lockOverlay.className = 'bladeLockOverlay';
+                lockOverlay.innerHTML = '<div class="bladeLockIcon">🔒</div>';
+                blade.appendChild(lockOverlay);
+            }
+        }
+    } else {
             // Empty blade
             backdrop.style.backgroundImage = '';
             nameElement.textContent = 'Coming Soon';
@@ -4849,6 +4997,12 @@ applyBattleResults() {
     results.heroResults.forEach(result => {
         result.hero.pendingExp = 0;
     });
+
+// Mark dungeon as completed if victory
+if (results.victory && this.currentDungeon) {
+    this.markDungeonComplete(this.currentDungeon.id, results.time);
+}
+
 }
 
         addExpToHero(hero, expAmount) {
