@@ -4817,13 +4817,13 @@ body {
 
 /* Button positions */
 .stashesButton {
-    bottom: 51%;
+    bottom: 49%;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .arenaButton {
-    bottom: 27%;
+    bottom: 25%;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -4837,57 +4837,63 @@ body {
 /* Dungeon Orb Positions */
 .dungeonOrb0 {
     bottom: 1%;
-    left: 1%;
+    left: 70%;
     transform: translateX(-50%);
 }
 .dungeonOrb1 {
     bottom: 25%;
-    left: 1%;
+    left: 70%;
     transform: translateX(-50%);
 }
 .dungeonOrb2 {
-    bottom: 70%;
-    left: 35%;
+    bottom: 49%;
+    left: 70%;
     transform: translateX(-50%);
 }
 .dungeonOrb3 {
-    bottom: 70%;
-    left: 35%;
+    bottom: 49%;
+    left: 30%;
     transform: translateX(-50%);
 }
 .dungeonOrb4 {
-    bottom: 70%;
-    left: 35%;
+    bottom: 25%;
+    left: 30%;
     transform: translateX(-50%);
 }
 .dungeonOrb5 {
-    bottom: 70%;
-    left: 35%;
+    bottom: 1%;
+    left: 30%;
     transform: translateX(-50%);
 }
 .dungeonOrb6 {
-    bottom: 70%;
-    left: 35%;
+    bottom: 1%;
+    left: 10%;
     transform: translateX(-50%);
 }
 .dungeonOrb7 {
-    bottom: 70%;
-    left: 35%;
+    bottom: 25%;
+    left: 10%;
     transform: translateX(-50%);
 }
 .dungeonOrb8 {
-    bottom: 70%;
-    left: 35%;
+    bottom: 49%;
+    left: 10%;
     transform: translateX(-50%);
 }
 .dungeonOrb9 {
-    bottom: 70%;
-    left: 35%;
+    bottom: 1%;
+    left: 90%;
     transform: translateX(-50%);
 }
 .dungeonOrb10 {
-    bottom: 70%;
-    left: 35%;
+    bottom: 25%;
+    left: 90%;
+    transform: translateX(-50%);
+}
+
+.dungeonOrb11 {
+    bottom: 49%;
+    left: 90%;
     transform: translateX(-50%);
 }
 
