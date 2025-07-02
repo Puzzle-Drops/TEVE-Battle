@@ -5289,6 +5289,7 @@ body {
         0 0 40px rgba(77, 208, 225, 0.6),
         0 2px 4px rgba(0, 0, 0, 1),
         2px 2px 4px rgba(0,0,0,0.9);
+    transform: translateX(-50%) scale(0.8);  /* Added scale to shrink emoji */
 }
 
 /* Enhanced glow on hover for icons */
