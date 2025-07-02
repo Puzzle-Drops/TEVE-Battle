@@ -4809,8 +4809,8 @@ body {
 
 .menuNavButton {
     position: absolute;
-    width: 390px;
-    height: 260px;
+    width: 360px;
+    height: 240px;
     pointer-events: auto;
     cursor: pointer;
 }
