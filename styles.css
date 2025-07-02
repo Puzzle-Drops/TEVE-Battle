@@ -1069,6 +1069,21 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    position: relative;
+}
+
+.heroPortraitShadow {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 80px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    filter: blur(8px);
+    z-index: 1; /* Above background but below image */
+    pointer-events: none;
 }
 
 .heroPortrait img {
@@ -1076,6 +1091,8 @@ body {
     height: 512px;
     image-rendering: pixelated;
     object-fit: contain;
+    position: relaive;
+    z-index: 2;
 }
 
 .heroStats {
