@@ -816,6 +816,21 @@
         "exp": 1073741824,
         "items": []
       }
+    },
+"twilights_eve": {
+      "id": "twilights_eve",
+      "name": "Twilights Eve",
+      "boss": "All Bosses",
+      "tier": "Twilight",
+      "subtitle": "All dungeons in a row",
+      "level": 1000,
+      "special": "gauntlet",
+      "waves": [],
+      "rewards": {
+        "gold": 2147483647,
+        "exp": 1073741824,
+        "items": []
+      }
     }
   }
 }
