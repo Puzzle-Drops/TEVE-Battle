@@ -330,7 +330,7 @@ showMainMenu() {
     }
     
     // Dungeon tier orbs
-    const tiers = ['Easy', 'Medium', 'Hard', 'Forsaken', 'Nightmare', 'Hell', 'Impossible', 'Mythical', 'Divine', 'Ascended', 'Transcendent'];
+    const tiers = ['Easy', 'Medium', 'Hard', 'Forsaken', 'Nightmare', 'Hell', 'Impossible', 'Mythical', 'Divine', 'Ascended', 'Transcendent', 'Twilight'];
     tiers.forEach((tier, index) => {
         const orbElement = document.querySelector(`.dungeonOrb${index}`);
         if (orbElement) {
