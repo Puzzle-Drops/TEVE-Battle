@@ -1410,7 +1410,7 @@ if (unit.isEnemy) {
                                 if (existingDebuff && existingDebuff.duration > 0 && existingDebuff.duration <= 2) {
                                     effectScore += 10 * spellDuration; // Some value for refreshing expiring debuff
                                 } else {
-                                    effectScore -= 5; // Small penalty for redundant
+                                    effectScore -= 20; // Small penalty for redundant
                                 }
                             }
                         }
