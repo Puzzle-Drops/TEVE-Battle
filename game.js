@@ -209,7 +209,6 @@ showMainMenu() {
     this.closeHeroInfo(); // Close any open popups
     this.currentScreen = 'mainMenuScreen';
     document.getElementById('mainMenuScreen').style.display = 'block';
-    this.closeDungeonPanel();
 }
 
 showArena() {
