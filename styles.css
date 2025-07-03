@@ -3499,6 +3499,10 @@ body {
     font-size: 24px;
 }
 
+.recordIcon {
+    font-size: 24px;
+}
+
 #dungeonGoldReward {
     color: #ffd700;
     font-weight: bold;
