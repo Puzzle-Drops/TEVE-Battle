@@ -525,9 +525,9 @@
     
     <div style="display: flex; flex-direction: column; align-items: center;">
         <div id="waveNavigation" class="waveNavigation">
-            <button class="waveArrow" onclick="game.navigateWave('prev')">←</button>
+            <button class="waveArrow" onclick="game.uiManager.navigateWave('prev')">←</button>
             <span class="waveText">Wave 1/1</span>
-            <button class="waveArrow" onclick="game.navigateWave('next')">→</button>
+            <button class="waveArrow" onclick="game.uiManager.navigateWave('next')">→</button>
         </div>
         <div class="enemyFormation" id="enemyFormation">
             <div class="enemySlot" data-slot="0">
