@@ -176,9 +176,11 @@ class Game {
             else if (level < 400) starCount = 5;
             else if (level < 500) starCount = 6;
             else if (level < 800) starCount = 7;
-            else starCount = 8;
+            else if (level < 900) starCount = 8;
+            else if (level < 1000) starCount = 9;
+            else starCount = 10;
             
-            // Boss units can have up to 10 stars and red color for 6+
+            // Boss units can have up to 10 stars
             if (config.isBoss) {
                 // Bosses can exceed normal star limits
                 if (level >= 1000) starCount = 10;
@@ -187,13 +189,15 @@ class Game {
                 // Use calculated starCount for levels below 700
                 
                 // Red stars for boss units at 6 stars and above
-                if (starCount >= 6) {
+                
+                if (starCount >= 5) {
+                    colorClass = 'purple';
+                } else if (starCount >= 7) {
                     colorClass = 'red';
                 }
             } else {
-                // Non-boss enemies cap at 6 stars with purple color
+                // Non-boss enemies cap at 6 stars
                 if (starCount > 6) starCount = 6;
-                if (starCount === 6) colorClass = 'purple';
             }
         }
         
@@ -1858,12 +1862,6 @@ class Game {
             this.promoteHero(this.pendingPromotion);
             this.pendingPromotion = null;
         }
-    }
-
-    cancelPromotion() {
-        const modal = document.getElementById('confirmModal');
-        modal.style.display = 'none';
-        this.pendingPromotion = null;
     }
 
     editHeroName() {
