@@ -1039,7 +1039,6 @@ body {
     gap: 20px;
     max-width: 800px;
     margin: 0 auto;
-    margin-top: 160px;
 }
 
 /* Heroes Screen */
@@ -2519,6 +2518,62 @@ body {
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     padding: 40px;
     overflow-y: auto;
+}
+
+/* Stash Container with NPCs */
+.stashContainer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+/* NPC Buttons */
+.npcButton {
+    width: 530px;
+    height: 795px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.npcButton img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s;
+}
+
+.npcButton:hover img {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+}
+
+.npcButton:active img {
+    transform: scale(0.98);
+}
+
+/* Add a subtle glow on hover */
+.npcButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, transparent 60%, rgba(77, 208, 225, 0.2) 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.npcButton:hover::before {
+    opacity: 1;
 }
 
 .stashTitle {
