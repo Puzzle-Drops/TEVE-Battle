@@ -783,65 +783,73 @@ Press \` to toggle console</span>`;
     }
     
     setupParty(targetLevel) {
-        if (!window.game) {
-            this.addLog('error', 'Game not initialized');
-            return;
-        }
+    if (!window.game) {
+        this.addLog('error', 'Game not initialized');
+        return;
+    }
+    
+    targetLevel = parseInt(targetLevel);
+    if (isNaN(targetLevel) || targetLevel < 1 || targetLevel > 500) {
+        this.addLog('error', 'Level must be between 1 and 500');
+        return;
+    }
+    
+    this.addLog('info', `<span style="color: #4dd0e1;">Setting up party at level ${targetLevel}...</span>`, true);
+    
+    const classFamilies = [
+        'Acolyte', 'Archer', 'Druid', 'Initiate', 'Swordsman', 'Templar', 'Thief', 'Witch Hunter'
+    ];
+    
+    const promotionCosts = { 0: 1000, 1: 10000, 2: 100000, 3: 1000000, 4: 10000000 };
+    
+    // Process first 8 heroes (one of each family)
+    for (let i = 0; i < 8 && i < game.heroes.length; i++) {
+        const hero = game.heroes[i];
+        const familyName = classFamilies[i];
         
-        targetLevel = parseInt(targetLevel);
-        if (isNaN(targetLevel) || targetLevel < 1 || targetLevel > 500) {
-            this.addLog('error', 'Level must be between 1 and 500');
-            return;
-        }
+        // Reset hero to villager state
+        hero.className = `villager_${hero.gender}`;
+        hero.level = 1;
+        hero.exp = 0;
+        hero.awakened = false;
+        hero.abilities = hero.getClassAbilities();
         
-        this.addLog('info', `<span style="color: #4dd0e1;">Setting up party at level ${targetLevel}...</span>`, true);
-        
-        const classFamilies = [
-            'Acolyte', 'Archer', 'Druid', 'Initiate', 'Swordsman', 'Templar', 'Thief', 'Witch Hunter'
-        ];
-        
-        const promotionLevels = { 0: 50, 1: 100, 2: 200, 3: 300, 4: 400 };
-        const promotionCosts = { 0: 1000, 1: 10000, 2: 100000, 3: 1000000, 4: 10000000 };
-        
-        // Process first 8 heroes (one of each family)
-        for (let i = 0; i < 8 && i < game.heroes.length; i++) {
-            const hero = game.heroes[i];
-            const familyName = classFamilies[i];
+        // Keep promoting until no more promotions are possible
+        let promoted = true;
+        while (promoted) {
+            promoted = false;
             
-            // Reset hero to villager state
-            hero.className = `villager_${hero.gender}`;
-            hero.level = 1;
+            // Set to target level
+            hero.level = targetLevel;
             hero.exp = 0;
-            hero.awakened = false;
-            hero.abilities = hero.getClassAbilities();
+            hero.expToNext = hero.calculateExpToNext();
             
-            // Process promotions based on target level
-            let currentLevel = 1;
-            
-            while (currentLevel < targetLevel) {
-                // Check if we can promote
-                const canPromoteAt = promotionLevels[hero.classTier];
+            // Check if we can promote
+            if (hero.canPromote()) {
+                const promotions = hero.getPromotionOptions();
                 
-                if (canPromoteAt && currentLevel < canPromoteAt && targetLevel >= canPromoteAt) {
-                    // Level up to promotion level
-                    hero.level = canPromoteAt;
-                    hero.exp = 0;
-                    hero.expToNext = hero.calculateExpToNext();
-                    currentLevel = canPromoteAt;
-                    
-                    // Get promotion options
-                    const promotions = hero.getPromotionOptions();
-                    if (promotions.length > 0) {
+                if (promotions.length > 0) {
+                    // Check for awakening
+                    if (promotions.includes('Awaken')) {
+                        // Add gold for awakening
+                        const family = game.getClassFamily(hero.className, hero.classTier);
+                        game.stashes[family].gold += 10000000;
+                        
+                        // Awaken
+                        hero.promote('Awaken');
+                        this.addLog('info', `  ${hero.name}: <span style="color: #d896ff;">Awakened!</span>`, true);
+                        promoted = true;
+                    } else {
                         // Add gold for promotion
                         const cost = promotionCosts[hero.classTier];
                         const currentFamily = game.getClassFamily(hero.className, hero.classTier);
                         game.stashes[currentFamily].gold += cost;
                         
-                        // Find the promotion that matches our target family
+                        // Find the promotion that matches our target family for tier 0
                         let targetPromotion = null;
                         
-                        // For tier 0, find the promotion that leads to our target family
                         if (hero.classTier === 0) {
+                            // For tier 0, find the promotion that leads to our target family
                             targetPromotion = promotions.find(p => {
                                 const classData = unitData.classes[p];
                                 return classData && game.classFamilies.some(f => 
@@ -856,57 +864,57 @@ Press \` to toggle console</span>`;
                         if (targetPromotion) {
                             hero.promote(targetPromotion);
                             this.addLog('info', `  ${hero.name}: Promoted to ${hero.displayClassName}`);
+                            promoted = true;
                         }
                     }
                 }
-                
-                // Check for awakening at 400+
-                if (hero.classTier === 4 && !hero.awakened && currentLevel < 400 && targetLevel >= 400) {
-                    hero.level = 400;
-                    currentLevel = 400;
-                    
-                    // Add gold for awakening
-                    const family = game.getClassFamily(hero.className, hero.classTier);
-                    game.stashes[family].gold += 10000000;
-                    
-                    // Awaken
-                    hero.promote('Awaken');
-                    this.addLog('info', `  ${hero.name}: <span style="color: #d896ff;">Awakened!</span>`, true);
-                }
-                
-                // Set to target level
-                hero.level = targetLevel;
-                hero.exp = 0;
-                hero.expToNext = hero.calculateExpToNext();
-                currentLevel = targetLevel;
             }
-            
-            // Update abilities after all promotions
-            hero.abilities = hero.getClassAbilities();
         }
         
-        // Process remaining heroes randomly
-        for (let i = 8; i < game.heroes.length; i++) {
-            const hero = game.heroes[i];
+        // Final level set
+        hero.level = targetLevel;
+        hero.exp = 0;
+        hero.expToNext = hero.calculateExpToNext();
+        hero.abilities = hero.getClassAbilities();
+    }
+    
+    // Process remaining heroes randomly
+    for (let i = 8; i < game.heroes.length; i++) {
+        const hero = game.heroes[i];
+        
+        // Reset hero
+        hero.className = `villager_${hero.gender}`;
+        hero.level = 1;
+        hero.exp = 0;
+        hero.awakened = false;
+        hero.abilities = hero.getClassAbilities();
+        
+        // Keep promoting until no more promotions are possible
+        let promoted = true;
+        while (promoted) {
+            promoted = false;
             
-            // Reset hero
-            hero.className = `villager_${hero.gender}`;
-            hero.level = 1;
+            // Set to target level
+            hero.level = targetLevel;
             hero.exp = 0;
-            hero.awakened = false;
-            hero.abilities = hero.getClassAbilities();
+            hero.expToNext = hero.calculateExpToNext();
             
-            let currentLevel = 1;
-            
-            while (currentLevel < targetLevel) {
-                const canPromoteAt = promotionLevels[hero.classTier];
+            // Check if we can promote
+            if (hero.canPromote()) {
+                const promotions = hero.getPromotionOptions();
                 
-                if (canPromoteAt && currentLevel < canPromoteAt && targetLevel >= canPromoteAt) {
-                    hero.level = canPromoteAt;
-                    currentLevel = canPromoteAt;
-                    
-                    const promotions = hero.getPromotionOptions();
-                    if (promotions.length > 0) {
+                if (promotions.length > 0) {
+                    // Check for awakening
+                    if (promotions.includes('Awaken')) {
+                        // Add gold for awakening
+                        const family = game.getClassFamily(hero.className, hero.classTier);
+                        game.stashes[family].gold += 10000000;
+                        
+                        // Awaken
+                        hero.promote('Awaken');
+                        promoted = true;
+                    } else {
+                        // Add gold for promotion
                         const cost = promotionCosts[hero.classTier];
                         const currentFamily = game.getClassFamily(hero.className, hero.classTier);
                         game.stashes[currentFamily].gold += cost;
@@ -914,37 +922,28 @@ Press \` to toggle console</span>`;
                         // Random promotion
                         const targetPromotion = promotions[Math.floor(Math.random() * promotions.length)];
                         hero.promote(targetPromotion);
+                        promoted = true;
                     }
                 }
-                
-                // Awakening
-                if (hero.classTier === 4 && !hero.awakened && currentLevel < 400 && targetLevel >= 400) {
-                    hero.level = 400;
-                    currentLevel = 400;
-                    
-                    const family = game.getClassFamily(hero.className, hero.classTier);
-                    game.stashes[family].gold += 10000000;
-                    hero.promote('Awaken');
-                }
-                
-                hero.level = targetLevel;
-                hero.exp = 0;
-                hero.expToNext = hero.calculateExpToNext();
-                currentLevel = targetLevel;
             }
-            
-            hero.abilities = hero.getClassAbilities();
         }
         
-        this.addLog('info', `<span style="color: #00ff88;">✓ Party setup complete!</span>`, true);
-        this.addLog('info', `All heroes are now level ${targetLevel} with appropriate promotions`);
-        
-        // Update UI if on heroes screen
-        if (game.currentScreen === 'heroesScreen') {
-            game.updateHeroList();
-            game.showHeroTab(game.currentTab);
-        }
+        // Final level set
+        hero.level = targetLevel;
+        hero.exp = 0;
+        hero.expToNext = hero.calculateExpToNext();
+        hero.abilities = hero.getClassAbilities();
     }
+    
+    this.addLog('info', `<span style="color: #00ff88;">✓ Party setup complete!</span>`, true);
+    this.addLog('info', `All heroes are now level ${targetLevel} with appropriate promotions`);
+    
+    // Update UI if on heroes screen
+    if (game.currentScreen === 'heroesScreen') {
+        game.updateHeroList();
+        game.showHeroTab(game.currentTab);
+    }
+}
     
     setCurrentUnitSpellLevel(level) {
         if (!window.game || !game.currentBattle) {
