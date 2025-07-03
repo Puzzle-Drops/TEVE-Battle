@@ -2595,7 +2595,8 @@ body {
     align-items: center;
     gap: 15px;
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    min-height: 140px;
+    height: 160px;
+    width: 254px;
     position: relative;
     overflow: hidden;
 }
