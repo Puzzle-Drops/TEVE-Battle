@@ -2725,4 +2725,53 @@ class UIManager {
         document.getElementById('previewColumn').style.display = 'block';
         document.getElementById('refinementResultLabel').textContent = 'Current Item';
     }
+
+
+// Context Menu Functions
+closeItemContextMenu() {
+    const menu = document.getElementById('itemContextMenu');
+    if (menu) {
+        menu.remove();
+    }
+    this.game.contextMenuItem = null;
+}
+
+// Dungeon Selection Functions  
+closeDungeonSelect() {
+    this.closeHeroInfo(); // Close any open popups
+    this.game.selectedTier = null;
+    this.showMainMenu();
+}
+
+// Promotion Modal Functions
+showPromotionConfirm(newClass) {
+    const hero = this.game.heroes[this.selectedHero];
+    const modal = document.getElementById('confirmModal');
+    const confirmText = document.getElementById('confirmText');
+    const confirmCost = document.getElementById('confirmCost');
+    
+    this.game.pendingPromotion = newClass;
+    
+    if (newClass === 'Awaken') {
+        confirmText.textContent = `Awaken ${hero.name} the ${hero.displayClassName}?`;
+        confirmCost.innerHTML = `💰 -10000000`;
+    } else {
+        const promoClass = unitData?.classes[newClass];
+        const displayName = promoClass ? promoClass.name : newClass;
+        confirmText.textContent = `Promote ${hero.name} the ${hero.displayClassName} to ${displayName}?`;
+        const cost = 1000 * Math.pow(10, hero.classTier);
+        confirmCost.innerHTML = `💰 -${cost}`;
+    }
+    
+    modal.style.display = 'flex';
+}
+
+cancelPromotion() {
+    const modal = document.getElementById('confirmModal');
+    modal.style.display = 'none';
+    this.game.pendingPromotion = null;
+}
+    
+    
+
 }
