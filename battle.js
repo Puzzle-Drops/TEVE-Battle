@@ -493,11 +493,11 @@ if (unit.isEnemy) {
         levelIndicator.style.cursor = 'pointer';
         const clickHandler = (e) => {
             e.stopPropagation();
-            this.game.closeHeroInfo();
+            this.game.uiManager.closeHeroInfo();
             if (unit.isEnemy) {
-                this.game.showEnemyInfoPopup(unit.source);
+                this.game.uiManager.showEnemyInfoPopup(unit.source);
             } else {
-                this.game.showHeroInfoPopup(unit.source);
+                this.game.uiManager.showHeroInfoPopup(unit.source);
             }
         };
         levelIndicator._unitInfoHandler = clickHandler;
@@ -516,11 +516,11 @@ if (unit.isEnemy) {
         const rightClickHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            this.game.closeHeroInfo();
+            this.game.uiManager.closeHeroInfo();
             if (unit.isEnemy) {
-                this.game.showEnemyInfoPopup(unit.source);
+                this.game.uiManager.showEnemyInfoPopup(unit.source);
             } else {
-                this.game.showHeroInfoPopup(unit.source);
+                this.game.uiManager.showHeroInfoPopup(unit.source);
             }
         };
         element._rightClickHandler = rightClickHandler;
@@ -2894,7 +2894,7 @@ this.party.forEach((unit, index) => {
     }
     
     // Close any open popup
-    this.game.closeHeroInfo();
+    this.game.uiManager.closeHeroInfo();
 
     // Calculate battle duration
     const duration = Math.floor((this.endTime - this.startTime) / 1000);
@@ -3046,7 +3046,7 @@ this.party.forEach((unit, index) => {
     
     // Show results popup
     setTimeout(() => {
-        this.game.showBattleResults();
+        this.game.uiManager.showBattleResults();
     }, 1000);
 }
     
@@ -3096,17 +3096,17 @@ this.party.forEach((unit, index) => {
         abilityDiv.onmouseover = (e) => {
             const showFormula = e.altKey;
             const tooltipHtml = game.formatAbilityTooltip(ability, ability.level, unit.source, showFormula);
-            game.showAbilityTooltipFromHTML(e, tooltipHtml);
+            game.uiManager.showAbilityTooltipFromHTML(e, tooltipHtml);
         };
         abilityDiv.onmouseout = () => {
-            game.hideAbilityTooltip();
+            game.uiManager.hideAbilityTooltip();
         };
         
         // Add click handler only to non-passive abilities
         if (!isPassive) {
             abilityDiv.onclick = () => {
                 // Hide tooltip when clicked
-                game.hideAbilityTooltip();
+                game.uiManager.hideAbilityTooltip();
                 
                 // If we're already targeting, clear it first
                 if (this.targetingState) {
