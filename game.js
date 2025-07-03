@@ -87,7 +87,7 @@ this.loadSortSettings(); // Load saved settings
                 
                 // Load class families from JSON data
                 this.classFamilies = unitData?.classFamilies || [];                
-                this.init();
+                //this.init();
             }
 
 // Add these helper methods after the constructor in game.js
