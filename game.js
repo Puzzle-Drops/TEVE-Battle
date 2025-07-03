@@ -977,27 +977,37 @@ switch(rarity) {
 }
 
             renderStashList() {
-                const stashList = document.getElementById('stashList');
-                stashList.innerHTML = '';
-                
-                // Include Villager stash
-                const allFamilies = [
-                    { name: 'Villager', icon: '👥', classes: ['Villager', 'Tester'] },
-                    ...this.classFamilies
-                ];
-                
-                allFamilies.forEach((family, index) => {
-                    const stashItem = document.createElement('div');
-                    stashItem.className = 'stashItem';
-                    stashItem.innerHTML = `
-                        <div class="stashIcon">${family.icon}</div>
-                        <div class="stashName">${family.name}</div>
-                    `;
-                    
-                    stashItem.onclick = () => this.openStash(family);
-                    stashList.appendChild(stashItem);
-                });
-            }
+    const stashList = document.getElementById('stashList');
+    stashList.innerHTML = '';
+    
+    // Include Villager stash
+    const allFamilies = [
+        { name: 'Villager', icon: '👥', classes: ['Villager', 'Tester'] },
+        ...this.classFamilies
+    ];
+    
+    allFamilies.forEach((family, index) => {
+        const stashItem = document.createElement('div');
+        stashItem.className = 'stashItem';
+        
+        // Format family name for backdrop image
+        const backdropName = family.name.toLowerCase().replace(/ /g, '_');
+        
+        // Set the background image
+        stashItem.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_stashback.png')`;
+        stashItem.style.backgroundSize = 'cover';
+        stashItem.style.backgroundPosition = 'center';
+        stashItem.style.backgroundRepeat = 'no-repeat';
+        
+        stashItem.innerHTML = `
+            <div class="stashIcon">${family.icon}</div>
+            <div class="stashName">${family.name}</div>
+        `;
+        
+        stashItem.onclick = () => this.openStash(family);
+        stashList.appendChild(stashItem);
+    });
+}
 
             openStash(family) {
                 console.log(`Opening ${family.name} stash`);
