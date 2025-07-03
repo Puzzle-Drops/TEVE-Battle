@@ -946,7 +946,7 @@ switch(game.currentScreen) {
                     if (currentHoveredSource === 'battle' && currentHoveredUnit.source) {
                         unit = currentHoveredUnit.source;
                     }
-                    const tooltipHtml = game.formatAbilityTooltip(currentHoveredAbility, currentHoveredAbility.level, unit, true);
+                    const tooltipHtml = game.uiManager.formatAbilityTooltip(currentHoveredAbility, currentHoveredAbility.level, unit, true);
                     abilityTooltip.innerHTML = tooltipHtml;
                 }
                 
@@ -956,7 +956,7 @@ switch(game.currentScreen) {
                     const skill = hero.abilities[game.uiManager.currentSkillIndex];
                     const desc = document.getElementById('skillDescription');
                     if (desc && skill) {
-                        desc.innerHTML = game.formatAbilityTooltip(skill, skill.level, hero, true);
+                        desc.innerHTML = game.uiManager.formatAbilityTooltip(skill, skill.level, hero, true);
                     }
                 }
             }
@@ -996,7 +996,7 @@ switch(game.currentScreen) {
                     if (currentHoveredSource === 'battle' && currentHoveredUnit.source) {
                         unit = currentHoveredUnit.source;
                     }
-                    const tooltipHtml = game.formatAbilityTooltip(currentHoveredAbility, currentHoveredAbility.level, unit, false);
+                    const tooltipHtml = game.uiManager.formatAbilityTooltip(currentHoveredAbility, currentHoveredAbility.level, unit, false);
                     abilityTooltip.innerHTML = tooltipHtml;
                 }
                 
@@ -1006,7 +1006,7 @@ switch(game.currentScreen) {
                     const skill = hero.abilities[game.uiManager.currentSkillIndex];
                     const desc = document.getElementById('skillDescription');
                     if (desc && skill) {
-                        desc.innerHTML = game.formatAbilityTooltip(skill, skill.level, hero, false);
+                        desc.innerHTML = game.uiManager.formatAbilityTooltip(skill, skill.level, hero, false);
                     }
                 }
             }
