@@ -55,7 +55,7 @@
     <div class="menuNavigation">
         <!-- Stashes Button (top middle) -->
 <div class="menuNavButton stashesButton">
-    <button class="menuNavPlaceholder" onclick="game.showStash()">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showStash()">
         <div class="dungeonTierStarsStatic icon">📦</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">New Lights</div>
@@ -65,13 +65,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/stashes_button.png" 
          alt="City of New Lights" 
          class="menuNavImage"
-         onclick="game.showStash()"
+         onclick="game.uiManager.showStash()"
          onerror="this.style.display='none'">
 </div>
         
         <!-- Arena Button (center) -->
 <div class="menuNavButton arenaButton">
-    <button class="menuNavPlaceholder" onclick="game.showArena()">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showArena()">
         <div class="dungeonTierStarsStatic icon">⚔️</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Arena</div>
@@ -81,13 +81,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/arena_button.png" 
          alt="Arena" 
          class="menuNavImage"
-         onclick="game.showArena()"
+         onclick="game.uiManager.showArena()"
          onerror="this.style.display='none'">
 </div>
         
         <!-- Heroes Button (bottom middle) -->
 <div class="menuNavButton heroesButton">
-    <button class="menuNavPlaceholder" onclick="game.showHeroes()">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showHeroes()">
         <div class="dungeonTierStarsStatic icon">👥</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Celestia</div>
@@ -97,14 +97,14 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/heroes_button.png" 
          alt="Heroes" 
          class="menuNavImage"
-         onclick="game.showHeroes()"
+         onclick="game.uiManager.showHeroes()"
          onerror="this.style.display='none'">
 </div>
 
 	<!-- Dungeon Map Orbs -->
 <!-- Easy -->
 <div class="menuNavButton dungeonOrb0" data-tier="0">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Easy')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Easy')">
         <div class="dungeonTierStarsStatic normal">★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Easy</div>
@@ -114,13 +114,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/easy_button.png" 
          alt="Easy" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Easy')"
+         onclick="game.uiManager.showDungeonBladeScreen('Easy')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Medium -->
 <div class="menuNavButton dungeonOrb1" data-tier="1">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Medium')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Medium')">
         <div class="dungeonTierStarsStatic normal">★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Medium</div>
@@ -130,13 +130,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/medium_button.png" 
          alt="Medium" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Medium')"
+         onclick="game.uiManager.showDungeonBladeScreen('Medium')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Hard -->
 <div class="menuNavButton dungeonOrb2" data-tier="2">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Hard')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Hard')">
         <div class="dungeonTierStarsStatic normal">★★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Hard</div>
@@ -146,13 +146,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/hard_button.png" 
          alt="Hard" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Hard')"
+         onclick="game.uiManager.showDungeonBladeScreen('Hard')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Forsaken -->
 <div class="menuNavButton dungeonOrb3" data-tier="3">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Forsaken')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Forsaken')">
         <div class="dungeonTierStarsStatic normal">★★★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Forsaken</div>
@@ -162,13 +162,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/forsaken_button.png" 
          alt="Forsaken" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Forsaken')"
+         onclick="game.uiManager.showDungeonBladeScreen('Forsaken')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Nightmare -->
 <div class="menuNavButton dungeonOrb4" data-tier="4">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Nightmare')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Nightmare')">
         <div class="dungeonTierStarsStatic purple">★★★★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Nightmare</div>
@@ -178,13 +178,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/nightmare_button.png" 
          alt="Nightmare" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Nightmare')"
+         onclick="game.uiManager.showDungeonBladeScreen('Nightmare')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Hell -->
 <div class="menuNavButton dungeonOrb5" data-tier="5">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Hell')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Hell')">
         <div class="dungeonTierStarsStatic purple">★★★★★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Hell</div>
@@ -194,13 +194,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/hell_button.png" 
          alt="Hell" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Hell')"
+         onclick="game.uiManager.showDungeonBladeScreen('Hell')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Impossible -->
 <div class="menuNavButton dungeonOrb6" data-tier="6">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Impossible')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Impossible')">
         <div class="dungeonTierStarsStatic purple">★★★★★★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Impossible</div>
@@ -210,13 +210,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/impossible_button.png" 
          alt="Impossible" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Impossible')"
+         onclick="game.uiManager.showDungeonBladeScreen('Impossible')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Mythical -->
 <div class="menuNavButton dungeonOrb7" data-tier="7">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Mythical')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Mythical')">
         <div class="dungeonTierStarsStatic red">★★★★★★★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Mythical</div>
@@ -226,13 +226,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/mythical_button.png" 
          alt="Mythical" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Mythical')"
+         onclick="game.uiManager.showDungeonBladeScreen('Mythical')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Divine -->
 <div class="menuNavButton dungeonOrb8" data-tier="8">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Divine')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Divine')">
         <div class="dungeonTierStarsStatic red">★★★★★★★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Divine</div>
@@ -242,13 +242,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/divine_button.png" 
          alt="Divine" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Divine')"
+         onclick="game.uiManager.showDungeonBladeScreen('Divine')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Ascended -->
 <div class="menuNavButton dungeonOrb9" data-tier="9">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Ascended')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Ascended')">
         <div class="dungeonTierStarsStatic red">★★★★★★★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Ascended</div>
@@ -258,13 +258,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/ascended_button.png" 
          alt="Ascended" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Ascended')"
+         onclick="game.uiManager.showDungeonBladeScreen('Ascended')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Transcendent -->
 <div class="menuNavButton dungeonOrb10" data-tier="10">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Transcendent')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Transcendent')">
         <div class="dungeonTierStarsStatic red">★★★★★★★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Transcendent</div>
@@ -274,13 +274,13 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/transcendent_button.png" 
          alt="Transcendent" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Transcendent')"
+         onclick="game.uiManager.showDungeonBladeScreen('Transcendent')"
          onerror="this.style.display='none'">
 </div>
 
 <!-- Twilight -->
 <div class="menuNavButton dungeonOrb11" data-tier="11">
-    <button class="menuNavPlaceholder" onclick="game.showDungeonBladeScreen('Twilight')">
+    <button class="menuNavPlaceholder" onclick="game.uiManager.showDungeonBladeScreen('Twilight')">
         <div class="dungeonTierStarsStatic red">★★★★★★★★★★</div>
         <div class="dungeonTierContent">
             <div class="dungeonTierName">Twilight</div>
@@ -290,7 +290,7 @@
     <img src="https://puzzle-drops.github.io/TEVE/img/menu/twilight_button.png" 
          alt="Twilight" 
          class="menuNavImage"
-         onclick="game.showDungeonBladeScreen('Twilight')"
+         onclick="game.uiManager.showDungeonBladeScreen('Twilight')"
          onerror="this.style.display='none'">
 </div>
 
@@ -461,7 +461,7 @@
             <div class="heroList" id="heroList">
                 <!-- Hero thumbnails will be dynamically generated -->
             </div>
-            <button class="backButton" onclick="game.showMainMenu()">Back</button>
+            <button class="backButton" onclick="game.uiManager.showMainMenu()">Back</button>
         </div>
 
         <!-- Stash Screen -->
@@ -483,11 +483,11 @@
             <img src="https://puzzle-drops.github.io/TEVE/img/npc/squeaky_city_1.png" alt="Squeaky" />
         </button>
     </div>
-    <button class="collectionLogButton" onclick="game.showCollectionLog()">
+    <button class="collectionLogButton" onclick="game.uiManager.showCollectionLog()">
         <span style="font-size: 24px; margin-right: 10px;">📖</span>
         Collection Log
     </button>
-    <button class="backButton" onclick="game.showMainMenu()">Back</button>
+    <button class="backButton" onclick="game.uiManager.showMainMenu()">Back</button>
 </div>
 
         <!-- Party Select Screen -->
@@ -643,7 +643,7 @@
             <div class="stashInventory" id="stashInventory">
                 <!-- Items will be displayed here -->
             </div>
-            <button class="backButton" onclick="game.showStash()">Back</button>
+            <button class="backButton" onclick="game.uiManager.showStash()">Back</button>
         </div>
     
 
@@ -662,7 +662,7 @@
     <div class="collectionContent" id="collectionContent">
         <!-- Dungeon collections will be generated here -->
     </div>
-    <button class="backButton" onclick="game.showStash()">Back</button>
+    <button class="backButton" onclick="game.uiManager.showStash()">Back</button>
 </div>
 
 <!-- Blur Overlay -->
@@ -745,6 +745,7 @@
 <script src="devConsole.js"></script>
 <script src="loadingManager.js"></script>
 <script src="item.js"></script>
+<script src="uiManager.js"></script>
 <script src="hero.js"></script>
 <script src="enemy.js"></script>
 <script src="game.js"></script>
@@ -771,13 +772,13 @@
             e.preventDefault();
             document.removeEventListener('keydown', splashHandler);
             document.removeEventListener('click', splashHandler);
-            game.showMainMenu();
+            game.uiManager.showMainMenu();
         }
     };
     
     // Show splash screen on start
     setTimeout(() => {
-        game.showSplashScreen();
+        game.uiManager.showSplashScreen();
         document.addEventListener('keydown', splashHandler);
         document.addEventListener('click', splashHandler);
     }, 100);
@@ -862,14 +863,14 @@ if (refinementPopup && refinementPopup.style.display === 'block') {
 // Navigate between screens based on current screen
 switch(game.currentScreen) {
     case 'mainMenuScreen':
-        game.showSplashScreen();
+        game.uiManager.showSplashScreen();
         // Re-add the splash screen event handlers
         const splashHandler = (e) => {
             if (game.currentScreen === 'splashScreen') {
                 e.preventDefault();
                 document.removeEventListener('keydown', splashHandler);
                 document.removeEventListener('click', splashHandler);
-                game.showMainMenu();
+                game.uiManager.showMainMenu();
             }
         };
         document.addEventListener('keydown', splashHandler);
@@ -881,7 +882,7 @@ switch(game.currentScreen) {
         e.preventDefault();
         break;
     case 'individualStashScreen':
-        game.showStash();
+        game.uiManager.showStash();
         e.preventDefault();
         break;
     case 'partySelectScreen':
@@ -889,15 +890,15 @@ switch(game.currentScreen) {
         e.preventDefault();
         break;
     case 'stashScreen':
-        game.showMainMenu();
+        game.uiManager.showMainMenu();
         e.preventDefault();
         break;
     case 'heroesScreen':
-        game.showMainMenu();
+        game.uiManager.showMainMenu();
         e.preventDefault();
         break;
     case 'collectionLogScreen':
-        game.showStash();
+        game.uiManager.showStash();
         e.preventDefault();
         break;
 }
