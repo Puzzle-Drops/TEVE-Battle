@@ -734,7 +734,7 @@
             <div class="confirmCost" id="confirmCost"></div>
             <div class="confirmButtons">
                 <button class="confirmBtn confirmYes" onclick="game.confirmPromotion()">Yes</button>
-                <button class="confirmBtn confirmNo" onclick="game.cancelPromotion()">No</button>
+                <button class="confirmBtn confirmNo" onclick="game.uiManager.cancelPromotion()">No</button>
             </div>
         </div>
     </div>
@@ -825,7 +825,7 @@
                 // Close confirmation modal if open
                 const confirmModal = document.getElementById('confirmModal');
                 if (confirmModal && confirmModal.style.display === 'flex') {
-                    game.cancelPromotion();
+                    game.uiManager.cancelPromotion();
                     e.preventDefault();
                     return;
                 }
