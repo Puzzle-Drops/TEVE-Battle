@@ -521,48 +521,6 @@ enterDungeon(tierName, dungeonIndex) {
     this.showPartySelect();
 }
 
-// Add unlock overlay method to game instance
-            showUnlockOverlay = function(dungeonName, unlockedNext) {
-                const overlay = document.getElementById('unlockOverlay');
-                const dungeonCompleteText = document.getElementById('dungeonCompleteText');
-                const unlockedSection = document.getElementById('unlockedSection');
-                const unlockedItem = document.getElementById('unlockedItem');
-                
-                // Set dungeon name
-                dungeonCompleteText.textContent = `${dungeonName} - First Clear!`;
-                
-                // Set unlocked content
-                if (unlockedNext) {
-                    unlockedSection.style.display = 'block';
-                    if (unlockedNext.type === 'dungeon') {
-                        unlockedItem.innerHTML = `<div class="unlockedDungeon">${unlockedNext.name}</div>`;
-                    } else if (unlockedNext.type === 'tier') {
-                        unlockedItem.innerHTML = `<div class="unlockedTier">New Tier: ${unlockedNext.name}</div>`;
-                    }
-                } else {
-                    unlockedSection.style.display = 'none';
-                }
-                
-                // Show overlay with animation
-                overlay.style.display = 'flex';
-                overlay.classList.add('show');
-                
-                // Click handler
-                const clickHandler = () => {
-                    overlay.classList.add('fadeOut');
-                    setTimeout(() => {
-                        overlay.style.display = 'none';
-                        overlay.classList.remove('show', 'fadeOut');
-                        overlay.removeEventListener('click', clickHandler);
-                        
-                        // Now show battle results
-                        this.showBattleResults();
-                    }, 500);
-                };
-                
-                overlay.addEventListener('click', clickHandler);
-            }
-
             navigateWave(direction) {
                 if (!this.dungeonWaves || this.dungeonWaves.length === 0) return;
                 
