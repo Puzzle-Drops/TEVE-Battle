@@ -2053,6 +2053,76 @@ class Game {
         }
     }
 
+replayBattle() {
+    const popup = document.getElementById('battleResultsPopup');
+    popup.style.display = 'none';
+
+    // Show exit button again
+    const exitButton = document.querySelector('.exitBattleButton');
+    if (exitButton) {
+        exitButton.style.display = '';
+    }
+    
+    // Check if this was a manual click during auto replay
+    const wasManualClick = this.autoReplayTimer !== null;
+    
+    // Clear any auto replay timer
+    if (this.autoReplayTimer) {
+        clearInterval(this.autoReplayTimer);
+        this.autoReplayTimer = null;
+        this.uiManager.updateAutoReplayText(null);
+    }
+    
+    if (this.pendingBattleResults) {
+        // Apply the results (gold and items)
+        this.applyBattleResults();
+
+        // Increment completions counter if victory and automatic mode
+        if (this.pendingBattleResults.victory && this.autoReplay) {
+            this.automaticModeCompletions = (this.automaticModeCompletions || 0) + 1;
+        }
+        
+        // Clear pending results
+        this.pendingBattleResults = null;
+        
+        // Always start next battle when clicking Replay
+        this.startBattle();
+    }
+}
+
+returnToMap() {
+    const popup = document.getElementById('battleResultsPopup');
+    popup.style.display = 'none';
+
+    // Show exit button again
+    const exitButton = document.querySelector('.exitBattleButton');
+    if (exitButton) {
+        exitButton.style.display = '';
+    }
+    
+    // Clear any auto replay timer
+    if (this.autoReplayTimer) {
+        clearInterval(this.autoReplayTimer);
+        this.autoReplayTimer = null;
+        this.uiManager.updateAutoReplayText(null);
+    }
+    
+    // Reset automatic mode
+    this.automaticModeStartTime = null;
+    this.automaticModeCompletions = 0;
+    
+    if (this.pendingBattleResults) {
+        // Apply the results (gold and items)
+        this.applyBattleResults();
+        
+        // Clear pending results
+        this.pendingBattleResults = null;
+    }
+    
+    // Return to main menu
+    this.uiManager.showMainMenu();
+}
+    
     applyBattleResults() {
         if (!this.pendingBattleResults) return;
         
