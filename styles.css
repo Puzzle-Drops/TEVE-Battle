@@ -4811,7 +4811,7 @@ body {
 
 /* Ensure item tooltip appears above refinement popup */
 #itemTooltipDiv {
-    z-index: 10003 !important;
+    z-index: 10005 !important;
 }
 
 /* Gold flash animation for refinement */
