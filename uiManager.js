@@ -74,25 +74,34 @@ class UIManager {
         });
     }
 
-    showHeroes() {
-        this.hideAllScreens();
-        this.closeHeroInfo();
-        this.game.currentScreen = 'heroesScreen';
-        document.getElementById('heroesScreen').style.display = 'block';
-        
-        this.updateHeroList();
-        
-        // Get the sorted heroes and select the first one
-        const sortedHeroes = [...this.game.heroes].sort((a, b) => {
-            if (a.awakened !== b.awakened) return b.awakened ? 1 : -1;
-            if (a.classTier !== b.classTier) return b.classTier - a.classTier;
-            return b.level - a.level;
-        });
-        
-        if (sortedHeroes.length > 0) {
-            this.game.selectHero(this.game.heroes.indexOf(sortedHeroes[0]));
-        }
+showHeroes() {
+    this.hideAllScreens();
+    this.closeHeroInfo();
+    this.game.currentScreen = 'heroesScreen';
+    document.getElementById('heroesScreen').style.display = 'block';
+    
+    // Save scroll position before updating
+    const heroList = document.getElementById('heroList');
+    const scrollPosition = heroList ? heroList.scrollLeft : 0;
+    
+    this.updateHeroList();
+    
+    // Restore scroll position
+    if (heroList) {
+        heroList.scrollLeft = scrollPosition;
     }
+    
+    // Get the sorted heroes and select the first one
+    const sortedHeroes = [...this.game.heroes].sort((a, b) => {
+        if (a.awakened !== b.awakened) return b.awakened ? 1 : -1;
+        if (a.classTier !== b.classTier) return b.classTier - a.classTier;
+        return b.level - a.level;
+    });
+    
+    if (sortedHeroes.length > 0) {
+        this.game.selectHero(this.game.heroes.indexOf(sortedHeroes[0]));
+    }
+}
 
     showDungeonBladeScreen(tierName) {
         this.hideAllScreens();
@@ -913,28 +922,46 @@ class UIManager {
             const canPromote = hero.canPromote() && !hero.awakened;
             const isAwakenable = hero.classTier === 4 && hero.level >= 400 && !hero.awakened;
 
-            thumb.innerHTML = `
-                <div style="position: relative; width: 100px; height: 100px;">
-                    <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_portrait.png" alt="${hero.displayClassName}" 
-                         style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
-                         onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 100 100\\'><rect fill=\\'%23666\\' width=\\'100\\' height=\\'100\\'/><text x=\\'50\\' y=\\'55\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'14\\'>${hero.displayClassName}</text></svg>'">
-                     
-                    ${starData.html ? `<div class="thumbStars ${starData.colorClass}">${starData.html}</div>` : ''}
+// Store the actual hero index as a data attribute
+thumb.dataset.heroIndex = this.game.heroes.indexOf(hero);
 
-                    <div class="thumbLevel">${hero.level}</div>
+thumb.innerHTML = `
+    <div style="position: relative; width: 100px; height: 100px;">
+        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_portrait.png" alt="${hero.displayClassName}" 
+             style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
+             onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 100 100\\'><rect fill=\\'%23666\\' width=\\'100\\' height=\\'100\\'/><text x=\\'50\\' y=\\'55\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'14\\'>${hero.displayClassName}</text></svg>'">
+     
+    ${starData.html ? `<div class="thumbStars ${starData.colorClass}">${starData.html}</div>` : ''}
 
-                    ${canPromote ? `<div class="promoteArrowThumb ${isAwakenable ? 'awaken' : 'normal'}">^</div>` : ''}
-                </div>
+    <div class="thumbLevel">${hero.level}</div>
 
-                <div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
-                <div class="thumbName">${hero.name}</div>
-            `;
-            
-            thumb.onclick = () => this.game.selectHero(this.game.heroes.indexOf(hero));
-            heroList.appendChild(thumb);
+    ${canPromote ? `<div class="promoteArrowThumb ${isAwakenable ? 'awaken' : 'normal'}">^</div>` : ''}
+</div>
+
+<div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
+<div class="thumbName">${hero.name}</div>
+`;
+
+thumb.onclick = () => this.game.selectHero(this.game.heroes.indexOf(hero));
+heroList.appendChild(thumb);
         });
     }
 
+updateHeroSelection() {
+    // Just update the selected state without rebuilding the entire list
+    const heroThumbs = document.querySelectorAll('.heroThumb');
+    heroThumbs.forEach((thumb, index) => {
+        const heroIndex = parseInt(thumb.dataset.heroIndex);
+        if (heroIndex === this.selectedHero) {
+            thumb.classList.add('selected');
+        } else {
+            thumb.classList.remove('selected');
+        }
+    });
+}
+
+
+    
     // Tab Content Rendering
     showHeroTab(tab) {
         this.currentTab = tab;
