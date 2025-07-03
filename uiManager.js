@@ -1781,16 +1781,16 @@ updateHeroSelection() {
         }
     }
 
-    updateAutoReplayText(countdown) {
-        const closeBtn = document.querySelector('.closeResultsBtn');
-        if (closeBtn) {
-            if (countdown !== null) {
-                closeBtn.textContent = `Auto Replay in ${countdown}...`;
-            } else {
-                closeBtn.textContent = 'Continue';
-            }
+updateAutoReplayText(countdown) {
+    const replayBtn = document.querySelector('.replayBtn');
+    if (replayBtn) {
+        if (countdown !== null) {
+            replayBtn.textContent = `Auto Replay in ${countdown}...`;
+        } else {
+            replayBtn.textContent = 'Replay';
         }
     }
+}
 
     showCollectionCompletePopup(item, qualityLevel, heroName, heroClass) {
         // Add to queue
