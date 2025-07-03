@@ -595,6 +595,9 @@ const isCompleted = dungeonCollected === dungeonTotal;
 
         // Update rewards display
         this.updateRewardsDisplay();
+
+        // Update records display
+        this.updateRecordsDisplay();
     }
 
     renderHeroSelectList() {
