@@ -1764,21 +1764,21 @@ updateHeroSelection() {
         popup.style.display = 'block';
         
         // Handle auto replay if enabled and victory
-        if (this.game.autoReplay && results.victory) {
-            let countdown = 6;
+if (this.game.autoReplay && results.victory) {
+    let countdown = 6;
+    this.updateAutoReplayText(countdown);
+    
+    this.game.autoReplayTimer = setInterval(() => {
+        countdown--;
+        if (countdown <= 0) {
+            clearInterval(this.game.autoReplayTimer);
+            this.game.autoReplayTimer = null;
+            this.game.replayBattle();
+        } else {
             this.updateAutoReplayText(countdown);
-            
-            this.game.autoReplayTimer = setInterval(() => {
-                countdown--;
-                if (countdown <= 0) {
-                    clearInterval(this.game.autoReplayTimer);
-                    this.game.autoReplayTimer = null;
-                    this.game.closeBattleResults();
-                } else {
-                    this.updateAutoReplayText(countdown);
-                }
-            }, 1000);
         }
+    }, 1000);
+}
     }
 
 updateAutoReplayText(countdown) {
