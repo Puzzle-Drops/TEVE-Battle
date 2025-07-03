@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+	
 <!-- Loading Screen -->
 <div id="loadingScreen">
     <div class="loadingContent">
@@ -24,6 +25,7 @@
         </div>
     </div>
 </div>
+	
 	<!-- Developer Console -->
 <div id="devConsole" style="display: none;">
     <div class="devConsoleHeader">
@@ -48,7 +50,6 @@
 <div id="mainMenuScreen">
     <div class="gameTitleSmall">TEVE</div>
     <div class="worldMap" id="worldMap">
-        <!-- Map orbs will be dynamically generated -->
     </div>
     
     <!-- Menu Navigation Buttons -->
@@ -627,8 +628,10 @@
         <!-- Hero results will be generated here -->
     </div>
 </div>
-            
-            <button class="closeResultsBtn" onclick="game.closeBattleResults()">Continue</button>
+            <div class="battleResultsButtons">
+    <button class="replayBtn" onclick="game.replayBattle()">Replay</button>
+    <button class="mapBtn" onclick="game.returnToMap()">Continue</button>
+</div>
         </div>
         
         <!-- Individual Stash Screen -->
