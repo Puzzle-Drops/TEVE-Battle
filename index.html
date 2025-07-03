@@ -817,7 +817,7 @@
                 // Close item context menu if open
                 const contextMenu = document.getElementById('itemContextMenu');
                 if (contextMenu) {
-                    game.closeItemContextMenu();
+                    game.uiManager.closeItemContextMenu();
                     e.preventDefault();
                     return;
                 }
@@ -833,7 +833,7 @@
 // Close refinement popup if open
 const refinementPopup = document.getElementById('itemRefinementPopup');
 if (refinementPopup && refinementPopup.style.display === 'block') {
-    game.closeRefinementPopup();
+    game.uiManager.closeRefinementPopup();
     e.preventDefault();
     return;
 }
