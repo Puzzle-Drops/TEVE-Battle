@@ -556,7 +556,7 @@ enterDungeon(tierName, dungeonIndex) {
                         overlay.removeEventListener('click', clickHandler);
                         
                         // Now show battle results
-                        game.showBattleResults();
+                        this.showBattleResults();
                     }, 500);
                 };
                 
