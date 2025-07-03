@@ -465,10 +465,23 @@
         </div>
 
         <!-- Stash Screen -->
-        <div id="stashScreen">
+<div id="stashScreen">
     <h1 class="stashTitle">City of New Lights</h1>
-    <div class="stashGrid" id="stashList">
-        <!-- Stash grid will be dynamically generated -->
+    <div class="stashContainer">
+        <!-- Left NPC Button -->
+        <button class="npcButton npcButtonLeft" onclick="game.handleNPCClick('arnold')">
+            <img src="https://puzzle-drops.github.io/TEVE/img/npc/arnold_city_1.png" alt="Arnold" />
+        </button>
+        
+        <!-- Stash Grid -->
+        <div class="stashGrid" id="stashList">
+            <!-- Stash grid will be dynamically generated -->
+        </div>
+        
+        <!-- Right NPC Button -->
+        <button class="npcButton npcButtonRight" onclick="game.handleNPCClick('squeaky')">
+            <img src="https://puzzle-drops.github.io/TEVE/img/npc/squeaky_city_1.png" alt="Squeaky" />
+        </button>
     </div>
     <button class="collectionLogButton" onclick="game.showCollectionLog()">
         <span style="font-size: 24px; margin-right: 10px;">📖</span>
