@@ -1068,7 +1068,7 @@ switch(game.currentScreen) {
                         const enemyName = popupTitle.split('Lv.')[1]?.split(' ').slice(1).join(' ').trim();
                         if (enemyName) {
                             // Find enemy in current preview wave
-                            const currentWaveEnemies = game.dungeonWaves[game.currentPreviewWave];
+                            const currentWaveEnemies = game.dungeonWaves[game.uiManager.currentPreviewWave];
                             unit = currentWaveEnemies.find(e => e.name === enemyName);
                         }
                     }
