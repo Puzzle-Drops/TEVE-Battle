@@ -999,7 +999,7 @@ class UIManager {
                 
                 <div style="flex: 1; min-width: 200px;">
                     ${this.renderStatLine('Health Points', 'Health', hero.baseStats.hp, hero.gearStats.hp, this.selectedHero)}
-                    ${this.renderStatLine('Attack', 'Attack', hero.baseStats.attack, hero.gearStats.attack, this.selectedHero)}
+                    ${this.renderStatLine('Attack', 'Attack', hero.attack - hero.gearStats.attack, hero.gearStats.attack, this.selectedHero)}
                     ${this.renderStatLine('Strength', 'Strength', hero.baseStats.str, hero.gearStats.str, this.selectedHero, hero.mainstat === 'str')}
                     ${this.renderStatLine('Agility', 'Agility', hero.baseStats.agi, hero.gearStats.agi, this.selectedHero, hero.mainstat === 'agi')}
                     ${this.renderStatLine('Intelligence', 'Intelligence', hero.baseStats.int, hero.gearStats.int, this.selectedHero, hero.mainstat === 'int')}
