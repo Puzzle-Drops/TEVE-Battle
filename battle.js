@@ -2841,12 +2841,17 @@ this.party.forEach((unit, index) => {
     this.running = false;
     this.endTime = Date.now();
 
+    // Calculate completion time
+    const duration = Math.floor((this.endTime - this.startTime) / 1000);
+    const minutes = Math.floor(duration / 60);
+    const seconds = duration % 60;
+    const completionTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
     // Clear timer interval
     if (this.timerInterval) {
         clearInterval(this.timerInterval);
         this.timerInterval = null;
     }
-
     // Clear all buffs and debuffs from all units
     this.allUnits.forEach(unit => {
         unit.buffs = [];
@@ -3021,7 +3026,8 @@ this.party.forEach((unit, index) => {
     this.game.pendingBattleResults = {
         victory: victory,
         dungeonName: this.game.currentDungeon.name,
-        time: timeString,
+        time: completionTime,
+        completionTime: completionTime, // Add this for unlock check
         goldChange: 0, // No longer used at this level
         dungeonBonusExp: victory ? rewards.exp : 0,
         // In endBattle method, when creating heroResults:
@@ -3044,7 +3050,19 @@ this.party.forEach((unit, index) => {
         }).filter(r => r !== null)
     };
     
-    // Show results popup
+    // Check for first completion and unlocks
+    if (victory) {
+        const unlockInfo = this.game.markDungeonComplete(this.game.currentDungeon.id, completionTime);
+        if (unlockInfo.isFirstCompletion) {
+            // Show unlock overlay first, then battle results
+            setTimeout(() => {
+                this.game.showUnlockOverlay(this.game.currentDungeon.name, unlockInfo.unlockedNext);
+            }, 1000);
+            return;
+        }
+    }
+
+    // Show results popup normally
     setTimeout(() => {
         this.game.showBattleResults();
     }, 1000);
