@@ -450,7 +450,7 @@ class Game {
         this.uiManager.hideItemTooltip();
         
         // Close any existing context menu
-        this.closeItemContextMenu();
+        this.uiManager.closeItemContextMenu();
         
         // Create context menu
         const menu = document.createElement('div');
@@ -475,7 +475,7 @@ class Game {
                 text: 'Unequip',
                 action: () => {
                     this.unequipGear(slot);
-                    this.closeItemContextMenu();
+                    this.uiManager.closeItemContextMenu();
                 }
             });
         } else if (this.currentScreen === 'heroesScreen' && this.uiManager.selectedHero !== undefined) {
@@ -483,7 +483,7 @@ class Game {
                 text: 'Equip',
                 action: () => {
                     this.equipFromContextMenu();
-                    this.closeItemContextMenu();
+                    this.uiManager.closeItemContextMenu();
                 }
             });
         }
@@ -497,10 +497,10 @@ class Game {
             disabled: item.refined || !canAfford,
             action: () => {
                 if (stash.gold >= refineCost && item.canRefine()) {
-                    this.closeItemContextMenu();
+                    this.uiManager.closeItemContextMenu();
                     this.showRefinementPopup(item, itemIndex, family, isEquipped, slot);
                 } else {
-                    this.closeItemContextMenu();
+                    this.uiManager.closeItemContextMenu();
                 }
             }
         });
@@ -529,7 +529,7 @@ class Game {
                     // Only go to stash screen if we're already there
                     this.uiManager.showIndividualStash(family);
                 }
-                this.closeItemContextMenu();
+                this.uiManager.closeItemContextMenu();
             }
         });
         
@@ -578,7 +578,7 @@ class Game {
         
         // Close menu when clicking elsewhere
         setTimeout(() => {
-            document.addEventListener('click', this.closeItemContextMenu.bind(this), { once: true });
+            document.addEventListener('click', this.uiManager.closeItemContextMenu.bind(this), { once: true });
         }, 10);
     }
 
@@ -1191,7 +1191,7 @@ class Game {
         const item = context.item;
         
         // Close any existing menu
-        this.closeItemContextMenu();
+        this.uiManager.closeItemContextMenu();
         
         // Create context menu
         const menu = document.createElement('div');
@@ -1206,7 +1206,7 @@ class Game {
                 text: 'Equip',
                 action: () => {
                     this.equipRefinedItem();
-                    this.closeItemContextMenu();
+                    this.uiManager.closeItemContextMenu();
                 }
             });
         }
@@ -1217,7 +1217,7 @@ class Game {
             cost: -item.sellcost,
             action: () => {
                 this.sellRefinedItem();
-                this.closeItemContextMenu();
+                this.uiManager.closeItemContextMenu();
             }
         });
         
@@ -1254,7 +1254,7 @@ class Game {
         
         // Close when clicking elsewhere
         setTimeout(() => {
-            document.addEventListener('click', this.closeItemContextMenu.bind(this), { once: true });
+            document.addEventListener('click', this.uiManager.closeItemContextMenu.bind(this), { once: true });
         }, 10);
     }
 
