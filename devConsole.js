@@ -20,25 +20,52 @@ class DevConsole {
         
         // Helper commands
         this.helpers = {
+            // Basic commands
+            help: () => this.showHelp(),
+            clear: () => this.clear(),
+            
+            // Hero commands
             heroes: () => this.showHeroes(),
             hero: (index) => this.showHero(index),
             setLevel: (heroIndex, level) => this.setHeroLevel(heroIndex, level),
             setAllLevels: (level) => this.setAllHeroLevels(level),
+            setAllHeroes: (className, level, awakened) => this.setAllHeroes(className, level, awakened),
+            promoteHero: (heroIndex, className) => this.promoteHero(heroIndex, className),
+            maxHero: (heroIndex) => this.maxOutHero(heroIndex),
+            healAllHeroes: () => this.healAllHeroes(),
+            
+            // Gold/Item commands
             addGold: (family, amount) => this.addGold(family, amount),
             addAllGold: (amount) => this.addAllGold(amount),
             addItem: (itemId, heroIndex) => this.addItem(itemId, heroIndex),
-            promoteHero: (heroIndex, className) => this.promoteHero(heroIndex, className),
-            maxHero: (heroIndex) => this.maxOutHero(heroIndex),
-            unlockAll: () => this.unlockAllContent(),
-            battle: () => this.showBattleInfo(),
-            stash: (family) => this.showStash(family),
             givePerfectItem: (itemId, heroIndex) => this.givePerfectItem(itemId, heroIndex),
             generateItems: (stashFamily, dungeonName, count) => this.generateItems(stashFamily, dungeonName, count),
+            fillStashes: (itemLevel) => this.fillStashes(itemLevel),
+            clearStashes: () => this.clearStashes(),
+            perfectGear: (heroIndex) => this.perfectGear(heroIndex),
+            stash: (family) => this.showStash(family),
+            
+            // Battle commands
+            battle: () => this.showBattleInfo(),
+            listUnits: () => this.listBattleUnits(),
             setSpellLevel: (level) => this.setCurrentUnitSpellLevel(level),
             buff: (unitIndex, buffName, duration) => this.applyBuffToUnit(unitIndex, buffName, duration),
             debuff: (unitIndex, debuffName, duration) => this.applyDebuffToUnit(unitIndex, debuffName, duration),
             shield: (unitIndex, amount) => this.applyShieldToUnit(unitIndex, amount),
-            listUnits: () => this.listBattleUnits()
+            winBattle: () => this.winCurrentBattle(),
+            
+            // Progression commands
+            unlockAll: () => this.unlockAllContent(),
+            completeAllDungeons: () => this.completeAllDungeons(),
+            unlockDungeon: (dungeonId) => this.unlockSpecificDungeon(dungeonId),
+            setProgression: (tierName) => this.setProgressionToTier(tierName),
+            resetProgression: () => this.resetProgression(),
+            
+            // Utility commands
+            resetGame: () => this.resetGame(),
+            testBattle: (dungeonId, heroIndices) => this.startTestBattle(dungeonId, heroIndices),
+            showDungeons: () => this.showAvailableDungeons(),
+            showClasses: () => this.showAvailableClasses()
         };
         
         this.init();
@@ -284,7 +311,7 @@ class DevConsole {
                 return;
             }
             
-            // Special commands
+            // Special commands handled internally
             if (command === 'clear') {
                 this.clear();
                 return;
@@ -313,44 +340,66 @@ class DevConsole {
     
     showHelp() {
         const helpText = `
-<span style="color: #4dd0e1; font-size: 16px;">═══ Developer Console Help ═══</span>
+<span style="color: #4dd0e1; font-size: 18px; font-weight: bold;">═══════════════════════════════════════════════════════════════</span>
+<span style="color: #4dd0e1; font-size: 16px; font-weight: bold;">                     DEVELOPER CONSOLE HELP</span>
+<span style="color: #4dd0e1; font-size: 18px; font-weight: bold;">═══════════════════════════════════════════════════════════════</span>
 
-<span style="color: #ffd700;">Basic Commands:</span>
-- clear - Clear the console
-- help - Show this help
-- Tab - Auto-complete commands
+<span style="color: #ffd700; font-size: 14px; font-weight: bold;">📋 BASIC COMMANDS</span>
+<span style="color: #b0e0f0;">help</span> ........................... Show this help menu
+<span style="color: #b0e0f0;">clear</span> .......................... Clear the console
+<span style="color: #b0e0f0;">Tab</span> ............................ Auto-complete commands
 
-<span style="color: #ffd700;">Hero Commands:</span>
-- heroes() - Show all heroes in a formatted table
-- hero(index) - Show detailed info for a specific hero
-- setLevel(heroIndex, level) - Set a hero's level
-- setAllLevels(level) - Set all heroes to same level
-- promoteHero(heroIndex, className) - Promote a hero
-- maxHero(heroIndex) - Max out a hero (level 500, awakened)
+<span style="color: #ffd700; font-size: 14px; font-weight: bold;">👥 HERO MANAGEMENT</span>
+<span style="color: #b0e0f0;">heroes()</span> ....................... List all heroes
+<span style="color: #b0e0f0;">hero(index)</span> .................... Show hero details
+<span style="color: #b0e0f0;">setLevel(heroIndex, level)</span> ..... Set hero's level
+<span style="color: #b0e0f0;">setAllLevels(level)</span> ............ Set all heroes to level
+<span style="color: #b0e0f0;">setAllHeroes(class, lvl, awaken)</span> Set all heroes to class/level
+<span style="color: #b0e0f0;">promoteHero(index, className)</span> .. Promote specific hero
+<span style="color: #b0e0f0;">maxHero(heroIndex)</span> ............. Max out a hero (500 awakened)
+<span style="color: #b0e0f0;">healAllHeroes()</span> ................ Restore all heroes to full HP
 
-<span style="color: #ffd700;">Battle Commands:</span>
-- battle() - Show current battle info
-- listUnits() - List all units with indices
-- setSpellLevel(level) - Set spell level for current unit's turn
-- buff(unitIndex, buffName, duration) - Apply buff to unit
-- debuff(unitIndex, debuffName, duration) - Apply debuff to unit
-- shield(unitIndex, amount) - Apply shield to unit
+<span style="color: #ffd700; font-size: 14px; font-weight: bold;">💰 GOLD & ITEMS</span>
+<span style="color: #b0e0f0;">addGold(family, amount)</span> ........ Add gold to stash
+<span style="color: #b0e0f0;">addAllGold(amount)</span> ............. Add gold to all stashes
+<span style="color: #b0e0f0;">stash(family)</span> .................. Show stash contents
+<span style="color: #b0e0f0;">addItem(itemId, heroIndex)</span> ..... Give item to hero's stash
+<span style="color: #b0e0f0;">givePerfectItem(id, heroIndex)</span> . Give perfect 4-roll item
+<span style="color: #b0e0f0;">generateItems(fam, dung, count)</span> Generate dungeon items
+<span style="color: #b0e0f0;">fillStashes(itemLevel)</span> ......... Fill all stashes with items
+<span style="color: #b0e0f0;">clearStashes()</span> ................. Remove all items from stashes
+<span style="color: #b0e0f0;">perfectGear(heroIndex)</span> ......... Equip hero with perfect gear
 
-<span style="color: #ffd700;">Item/Gold Commands:</span>
-- addGold(family, amount) - Add gold to a stash (e.g., "Villager", 1000000)
--addAllGold(amount) - Add gold to all stashes
-- addItem(itemId, heroIndex) - Give item to hero
-- givePerfectItem(itemId, heroIndex) - Give perfect 4-roll item
-- generateItems(family, dungeon, count) - Generate dungeon items (e.g., "Villager", "satyrs_glade", 100)
-- stash(family) - Show stash contents
+<span style="color: #ffd700; font-size: 14px; font-weight: bold;">⚔️ BATTLE COMMANDS</span>
+<span style="color: #b0e0f0;">battle()</span> ....................... Show current battle info
+<span style="color: #b0e0f0;">listUnits()</span> .................... List all battle units
+<span style="color: #b0e0f0;">setSpellLevel(level)</span> ........... Set current unit's spell level
+<span style="color: #b0e0f0;">buff(unit, name, duration)</span> ..... Apply buff to unit
+<span style="color: #b0e0f0;">debuff(unit, name, duration)</span> ... Apply debuff to unit
+<span style="color: #b0e0f0;">shield(unit, amount)</span> ........... Apply shield to unit
+<span style="color: #b0e0f0;">winBattle()</span> .................... Instantly win current battle
 
-<span style="color: #ffd700;">Game State:</span>
-- unlockAll() - Unlock all content
-- game - Access game instance
-- game.currentBattle - Current battle state
+<span style="color: #ffd700; font-size: 14px; font-weight: bold;">🏰 PROGRESSION</span>
+<span style="color: #b0e0f0;">unlockAll()</span> .................... Unlock everything + max gold
+<span style="color: #b0e0f0;">completeAllDungeons()</span> .......... Mark all dungeons complete
+<span style="color: #b0e0f0;">unlockDungeon(dungeonId)</span> ....... Unlock specific dungeon
+<span style="color: #b0e0f0;">setProgression(tierName)</span> ....... Unlock up to tier
+<span style="color: #b0e0f0;">resetProgression()</span> ............. Reset all progression
 
-<span style="color: #6a9aaa;">Use arrow up/down for command history
-Press \` to toggle console</span>`;
+<span style="color: #ffd700; font-size: 14px; font-weight: bold;">🛠️ UTILITIES</span>
+<span style="color: #b0e0f0;">showDungeons()</span> ................. List all dungeon IDs
+<span style="color: #b0e0f0;">showClasses()</span> .................. List all class names
+<span style="color: #b0e0f0;">testBattle(dungeonId, heroes)</span> .. Start test battle
+<span style="color: #b0e0f0;">resetGame()</span> .................... Reset to initial state
+<span style="color: #b0e0f0;">game</span> ........................... Access game instance
+
+<span style="color: #6a9aaa; font-size: 12px;">Examples:
+  setAllHeroes("grand_templar_male", 300, true)
+  generateItems("Villager", "satyrs_glade", 100)
+  testBattle("twilights_fortress", [0, 1, 2, 3, 4])
+  buff(0, "Increase Attack", 5)
+
+Use arrow up/down for command history. Press \` to toggle console.</span>`;
         
         this.addLog('info', helpText, true);
     }
@@ -450,6 +499,61 @@ Press \` to toggle console</span>`;
         }
     }
     
+    setAllHeroes(targetClassName, level, awakened = false) {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        // First give tons of gold to all stashes for promotions
+        Object.keys(game.stashes).forEach(family => {
+            game.stashes[family].gold = 999999999;
+        });
+        
+        level = Math.max(1, Math.min(500, parseInt(level)));
+        
+        // Find target class info
+        const targetClass = unitData?.classes[targetClassName];
+        if (!targetClass) {
+            this.addLog('error', `Class "${targetClassName}" not found. Use showClasses() to see available classes.`);
+            return;
+        }
+        
+        const targetTier = targetClass.tier;
+        let promotedCount = 0;
+        
+        game.heroes.forEach(hero => {
+            // Promote to target tier
+            while (hero.classTier < targetTier) {
+                const promotions = hero.getPromotionOptions();
+                if (promotions.length > 0) {
+                    // Pick random promotion
+                    const randomPromo = promotions[Math.floor(Math.random() * promotions.length)];
+                    hero.promote(randomPromo);
+                }
+            }
+            
+            // Set level
+            hero.level = level;
+            hero.exp = 0;
+            hero.expToNext = hero.calculateExpToNext();
+            
+            // Awaken if requested and eligible
+            if (awakened && hero.classTier === 4 && level >= 400 && !hero.awakened) {
+                hero.promote('Awaken');
+            }
+            
+            promotedCount++;
+        });
+        
+        this.addLog('info', `Set ${promotedCount} heroes to tier ${targetTier} (${targetClass.name}), level ${level}${awakened ? ', awakened' : ''}`);
+        
+        if (game.currentScreen === 'heroesScreen') {
+            game.updateHeroList();
+            game.showHeroTab(game.currentTab);
+        }
+    }
+    
     addGold(family, amount) {
         if (!window.game || !game.stashes[family]) {
             this.addLog('error', `Stash family "${family}" not found`);
@@ -462,21 +566,21 @@ Press \` to toggle console</span>`;
         this.addLog('info', `Added ${amount} gold to ${family} stash (total: ${game.stashes[family].gold})`);
     }
 
-addAllGold(amount) {
-    if (!window.game || !game.stashes) {
-        this.addLog('error', 'Game or stashes not found');
-        return;
+    addAllGold(amount) {
+        if (!window.game || !game.stashes) {
+            this.addLog('error', 'Game or stashes not found');
+            return;
+        }
+
+        amount = parseInt(amount);
+        const families = Object.keys(game.stashes);
+        
+        families.forEach(family => {
+            game.stashes[family].gold += amount;
+        });
+
+        this.addLog('info', `Added ${amount} gold to all stash families: ${families.join(', ')}`);
     }
-
-    amount = parseInt(amount);
-    const families = Object.keys(game.stashes);
-    
-    families.forEach(family => {
-        game.stashes[family].gold += amount;
-    });
-
-    this.addLog('info', `Added ${amount} gold to all stash families: ${families.join(', ')}`);
-}
     
     addItem(itemId, heroIndex) {
         if (!window.game || !game.heroes[heroIndex]) {
@@ -566,6 +670,21 @@ addAllGold(amount) {
             game.updateHeroList();
             game.showHeroTab(game.currentTab);
         }
+    }
+    
+    healAllHeroes() {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        let healed = 0;
+        game.heroes.forEach(hero => {
+            hero.currentHp = hero.hp;
+            healed++;
+        });
+        
+        this.addLog('info', `Healed ${healed} heroes to full HP`);
     }
     
     showBattleInfo() {
@@ -703,6 +822,106 @@ addAllGold(amount) {
         this.addLog('info', distribution, true);
     }
     
+    fillStashes(itemLevel = 100) {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        itemLevel = parseInt(itemLevel);
+        
+        // Find a dungeon with appropriate level items
+        let targetDungeon = null;
+        for (const dungeonId in dungeonData.dungeons) {
+            const dungeon = dungeonData.dungeons[dungeonId];
+            if (dungeon.level >= itemLevel - 50 && dungeon.level <= itemLevel + 50) {
+                targetDungeon = dungeon;
+                break;
+            }
+        }
+        
+        if (!targetDungeon) {
+            this.addLog('error', `No dungeon found with items around level ${itemLevel}`);
+            return;
+        }
+        
+        // Fill each stash with 100 items
+        Object.keys(game.stashes).forEach(family => {
+            this.generateItems(family, targetDungeon.id, 100);
+        });
+        
+        this.addLog('info', `Filled all stashes with items from ${targetDungeon.name} (level ${targetDungeon.level})`);
+    }
+    
+    clearStashes() {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        let totalItems = 0;
+        Object.keys(game.stashes).forEach(family => {
+            totalItems += game.stashes[family].items.length;
+            game.stashes[family].items = [];
+        });
+        
+        this.addLog('info', `Cleared ${totalItems} items from all stashes`);
+    }
+    
+    perfectGear(heroIndex) {
+        if (!window.game || !game.heroes[heroIndex]) {
+            this.addLog('error', `Hero ${heroIndex} not found`);
+            return;
+        }
+        
+        const hero = game.heroes[heroIndex];
+        const slots = ['weapon', 'offhand', 'head', 'chest', 'legs', 'trinket'];
+        
+        // Find appropriate items for hero's level
+        let targetDungeon = null;
+        for (const dungeonId in dungeonData.dungeons) {
+            const dungeon = dungeonData.dungeons[dungeonId];
+            if (dungeon.level <= hero.level && dungeon.level >= hero.level - 50) {
+                targetDungeon = dungeon;
+            }
+        }
+        
+        if (!targetDungeon || !targetDungeon.rewards?.items) {
+            this.addLog('error', 'No appropriate items found for hero level');
+            return;
+        }
+        
+        const itemPool = targetDungeon.rewards.items;
+        
+        slots.forEach(slot => {
+            // Find items for this slot
+            const slotItems = itemPool.filter(itemId => {
+                const template = itemData.items[itemId];
+                return template && template.slot === slot;
+            });
+            
+            if (slotItems.length > 0) {
+                const itemId = slotItems[Math.floor(Math.random() * slotItems.length)];
+                const item = new Item(itemId);
+                
+                // Make it perfect
+                if (item.roll1) item.quality1 = 5;
+                if (item.roll2) item.quality2 = 5;
+                if (item.roll3) item.quality3 = 5;
+                if (item.roll4) item.quality4 = 5;
+                
+                // Equip it
+                hero.equipItem(item, slot);
+            }
+        });
+        
+        this.addLog('info', `Equipped ${hero.name} with perfect gear from ${targetDungeon.name}`);
+        
+        if (game.currentScreen === 'heroesScreen') {
+            game.showHeroTab(game.currentTab);
+        }
+    }
+    
     getRarityColor(rarity) {
         const colors = {
             green: '#00ff88',
@@ -714,7 +933,7 @@ addAllGold(amount) {
         return colors[rarity] || '#ffffff';
     }
 
-    unlockAll() {
+    unlockAllContent() {
         if (!window.game) {
             this.addLog('error', 'Game not initialized');
             return;
@@ -725,6 +944,16 @@ addAllGold(amount) {
             game.stashes[family].gold = 999999999;
         });
         
+        // Unlock all features
+        game.progression.unlockedFeatures = {
+            party: true,
+            stash: true,
+            arena: true
+        };
+        
+        // Unlock all tiers
+        game.progression.unlockedTiers = Object.keys(game.dungeonTiers);
+        
         // Set all heroes to level 300
         game.heroes.forEach(hero => {
             hero.level = 300;
@@ -732,158 +961,374 @@ addAllGold(amount) {
             hero.expToNext = hero.calculateExpToNext();
         });
         
-        this.addLog('info', 'Unlocked all content! All stashes have max gold, all heroes level 300');
+        // Save progression
+        game.saveProgression();
+        
+        this.addLog('info', 'Unlocked all content! All features unlocked, all tiers available, all stashes have max gold, all heroes level 300');
+        
+        // Refresh UI if on main menu
+        if (game.currentScreen === 'mainMenuScreen') {
+            game.showMainMenu();
+        }
+    }
+    
+    completeAllDungeons() {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        let count = 0;
+        Object.keys(dungeonData.dungeons).forEach(dungeonId => {
+            game.markDungeonComplete(dungeonId, '00:00');
+            count++;
+        });
+        
+        this.addLog('info', `Marked ${count} dungeons as completed`);
+    }
+    
+    unlockSpecificDungeon(dungeonId) {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        if (!dungeonData.dungeons[dungeonId]) {
+            this.addLog('error', `Dungeon "${dungeonId}" not found`);
+            return;
+        }
+        
+        game.markDungeonComplete(dungeonId, '00:00');
+        this.addLog('info', `Unlocked dungeon: ${dungeonId}`);
+    }
+    
+    setProgressionToTier(tierName) {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        const tierOrder = game.getTierOrder();
+        const tierIndex = tierOrder.indexOf(tierName);
+        
+        if (tierIndex === -1) {
+            this.addLog('error', `Tier "${tierName}" not found`);
+            this.addLog('info', 'Available tiers: ' + tierOrder.join(', '));
+            return;
+        }
+        
+        // Unlock all tiers up to and including the specified one
+        game.progression.unlockedTiers = tierOrder.slice(0, tierIndex + 1);
+        
+        // Complete all dungeons in unlocked tiers
+        game.progression.unlockedTiers.forEach(tier => {
+            const tierDungeons = game.dungeonTiers[tier].dungeons;
+            tierDungeons.forEach(dungeon => {
+                game.markDungeonComplete(dungeon.id, '00:00');
+            });
+        });
+        
+        game.saveProgression();
+        this.addLog('info', `Set progression to ${tierName} tier`);
+        
+        if (game.currentScreen === 'mainMenuScreen') {
+            game.showMainMenu();
+        }
+    }
+    
+    resetProgression() {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        game.progression = {
+            unlockedFeatures: {
+                party: true,
+                stash: false,
+                arena: false
+            },
+            unlockedTiers: ['Easy'],
+            completedDungeons: {}
+        };
+        
+        game.saveProgression();
+        this.addLog('info', 'Reset all progression to initial state');
+        
+        if (game.currentScreen === 'mainMenuScreen') {
+            game.showMainMenu();
+        }
+    }
+    
+    resetGame() {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        // Confirm reset
+        if (!confirm('Are you sure you want to reset the entire game?')) {
+            return;
+        }
+        
+        // Create new game instance
+        window.game = new Game();
+        this.addLog('info', 'Game reset to initial state');
+        game.showSplashScreen();
+    }
+    
+    startTestBattle(dungeonId, heroIndices) {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        if (!dungeonData.dungeons[dungeonId]) {
+            this.addLog('error', `Dungeon "${dungeonId}" not found`);
+            this.showAvailableDungeons();
+            return;
+        }
+        
+        // Set up dungeon
+        const dungeon = dungeonData.dungeons[dungeonId];
+        game.currentDungeon = {
+            id: dungeonId,
+            name: dungeon.name,
+            boss: dungeon.boss,
+            level: dungeon.level
+        };
+        
+        // Set up waves
+        game.dungeonWaves = dungeon.waves.map(wave => {
+            return wave.enemies.map(enemyConfig => {
+                return new Enemy(enemyConfig.id, enemyConfig.level);
+            });
+        });
+        
+        // Set party
+        if (!heroIndices || !Array.isArray(heroIndices)) {
+            heroIndices = [0, 1, 2, 3, 4]; // Default first 5 heroes
+        }
+        
+        game.selectedParty = heroIndices.slice(0, 5);
+        
+        this.addLog('info', `Starting test battle in ${dungeon.name} with heroes: ${heroIndices.join(', ')}`);
+        game.startBattle();
+    }
+    
+    showAvailableDungeons() {
+        if (!dungeonData || !dungeonData.dungeons) {
+            this.addLog('error', 'Dungeon data not loaded');
+            return;
+        }
+        
+        let output = '<span style="color: #4dd0e1; font-size: 16px;">═══ Available Dungeons ═══</span>\n\n';
+        
+        Object.keys(dungeonData.dungeons).forEach(id => {
+            const dungeon = dungeonData.dungeons[id];
+            output += `<span style="color: #b0e0f0;">${id}</span> - ${dungeon.name} (Lv ${dungeon.level})\n`;
+        });
+        
+        this.addLog('info', output, true);
+    }
+    
+    showAvailableClasses() {
+        if (!unitData || !unitData.classes) {
+            this.addLog('error', 'Unit data not loaded');
+            return;
+        }
+        
+        let output = '<span style="color: #4dd0e1; font-size: 16px;">═══ Available Classes ═══</span>\n\n';
+        
+        const tiers = {};
+        Object.keys(unitData.classes).forEach(id => {
+            const cls = unitData.classes[id];
+            if (!tiers[cls.tier]) tiers[cls.tier] = [];
+            tiers[cls.tier].push({ id, name: cls.name });
+        });
+        
+        Object.keys(tiers).sort((a, b) => a - b).forEach(tier => {
+            output += `<span style="color: #ffd700;">Tier ${tier}:</span>\n`;
+            tiers[tier].forEach(cls => {
+                output += `  <span style="color: #b0e0f0;">${cls.id}</span> - ${cls.name}\n`;
+            });
+            output += '\n';
+        });
+        
+        this.addLog('info', output, true);
+    }
+    
+    winCurrentBattle() {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        
+        // Kill all enemies
+        battle.enemies.forEach(enemy => {
+            if (enemy && enemy.isAlive) {
+                enemy.currentHp = 0;
+                enemy.isDead = true;
+            }
+        });
+        
+        // Force battle end check
+        battle.checkBattleEnd();
+        
+        this.addLog('info', 'Victory! All enemies defeated');
     }
     
     setCurrentUnitSpellLevel(level) {
-    if (!window.game || !game.currentBattle) {
-        this.addLog('error', 'No battle in progress');
-        return;
-    }
-    
-    const battle = game.currentBattle;
-    if (!battle.currentUnit) {
-        this.addLog('error', "It's not anyone's turn yet");
-        return;
-    }
-    
-    const unit = battle.currentUnit;
-    const oldLevel = unit.spellLevel;
-    
-    // Clamp level between 1 and 5
-    level = Math.max(1, Math.min(5, parseInt(level)));
-    
-    // For both enemies and heroes, we can now use the setter
-    unit.source.spellLevel = level;
-    
-    // Update abilities to reflect new level
-    unit.abilities.forEach(ability => {
-        if (ability.level !== undefined) {
-            ability.level = level;
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
         }
-    });
-    
-    this.addLog('info', `Set ${unit.name}'s spell level from ${oldLevel} to ${level}`);
-    
-    // Update the battle UI to reflect changes if needed
-    if (battle.updateUI) {
-        battle.updateUI();
+        
+        const battle = game.currentBattle;
+        if (!battle.currentUnit) {
+            this.addLog('error', "It's not anyone's turn yet");
+            return;
+        }
+        
+        const unit = battle.currentUnit;
+        const oldLevel = unit.spellLevel;
+        
+        // Clamp level between 1 and 5
+        level = Math.max(1, Math.min(5, parseInt(level)));
+        
+        // For both enemies and heroes, we can now use the setter
+        unit.source.spellLevel = level;
+        
+        // Update abilities to reflect new level
+        unit.abilities.forEach(ability => {
+            if (ability.level !== undefined) {
+                ability.level = level;
+            }
+        });
+        
+        this.addLog('info', `Set ${unit.name}'s spell level from ${oldLevel} to ${level}`);
+        
+        // Update the battle UI to reflect changes if needed
+        if (battle.updateUI) {
+            battle.updateUI();
+        }
     }
-}
 
     applyBuffToUnit(unitIndex, buffName, duration) {
-    if (!window.game || !game.currentBattle) {
-        this.addLog('error', 'No battle in progress');
-        return;
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        const allUnits = [...battle.party, ...battle.enemies];
+        
+        if (unitIndex < 0 || unitIndex >= allUnits.length) {
+            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+            return;
+        }
+        
+        const unit = allUnits[unitIndex];
+        if (!unit || !unit.isAlive) {
+            this.addLog('error', 'Unit is dead or invalid');
+            return;
+        }
+        
+        // Validate buff name
+        const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield', 'Frost Armor'];
+        if (!validBuffs.includes(buffName)) {
+            this.addLog('error', `Invalid buff name. Valid buffs: ${validBuffs.join(', ')}`);
+            return;
+        }
+        
+        duration = parseInt(duration) || 3;
+        
+        // Apply the buff
+        battle.applyBuff(unit, buffName, duration, {});
+        this.addLog('info', `Applied ${buffName} to ${unit.name} for ${duration} turns`);
+        
+        // Update the battle UI to show the buff
+        battle.updateUI();
     }
-    
-    const battle = game.currentBattle;
-    const allUnits = [...battle.party, ...battle.enemies];
-    
-    if (unitIndex < 0 || unitIndex >= allUnits.length) {
-        this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
-        return;
-    }
-    
-    const unit = allUnits[unitIndex];
-    if (!unit || !unit.isAlive) {
-        this.addLog('error', 'Unit is dead or invalid');
-        return;
-    }
-    
-    // Validate buff name
-    const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield', 'Frost Armor'];
-    if (!validBuffs.includes(buffName)) {
-        this.addLog('error', `Invalid buff name. Valid buffs: ${validBuffs.join(', ')}`);
-        return;
-    }
-    
-    duration = parseInt(duration) || 3;
-    
-    // Apply the buff
-    battle.applyBuff(unit, buffName, duration, {});
-    this.addLog('info', `Applied ${buffName} to ${unit.name} for ${duration} turns`);
-    
-    // Update the battle UI to show the buff
-    battle.updateUI();
-}
 
-applyDebuffToUnit(unitIndex, debuffName, duration) {
-    if (!window.game || !game.currentBattle) {
-        this.addLog('error', 'No battle in progress');
-        return;
+    applyDebuffToUnit(unitIndex, debuffName, duration) {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        const allUnits = [...battle.party, ...battle.enemies];
+        
+        if (unitIndex < 0 || unitIndex >= allUnits.length) {
+            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+            return;
+        }
+        
+        const unit = allUnits[unitIndex];
+        if (!unit || !unit.isAlive) {
+            this.addLog('error', 'Unit is dead or invalid');
+            return;
+        }
+        
+        // Validate debuff name
+        const validDebuffs = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Stun', 'Taunt', 'Silence', 'Mark'];
+        if (!validDebuffs.includes(debuffName)) {
+            this.addLog('error', `Invalid debuff name. Valid debuffs: ${validDebuffs.join(', ')}`);
+            return;
+        }
+        
+        duration = parseInt(duration) || 3;
+        
+        // Apply the debuff with appropriate effects
+        const effects = {};
+        if (debuffName === 'Stun') effects.stunned = true;
+        if (debuffName === 'Bleed') effects.bleedDamage = true;
+        if (debuffName === 'Blight') effects.noHeal = true;
+        
+        battle.applyDebuff(unit, debuffName, duration, effects);
+        this.addLog('info', `Applied ${debuffName} to ${unit.name} for ${duration} turns`);
+        
+        // Update the battle UI to show the debuff
+        battle.updateUI();
+        
+        // If applying stun, also update stun visuals
+        if (debuffName === 'Stun') {
+            battle.updateStunVisuals(unit);
+        }
     }
-    
-    const battle = game.currentBattle;
-    const allUnits = [...battle.party, ...battle.enemies];
-    
-    if (unitIndex < 0 || unitIndex >= allUnits.length) {
-        this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
-        return;
-    }
-    
-    const unit = allUnits[unitIndex];
-    if (!unit || !unit.isAlive) {
-        this.addLog('error', 'Unit is dead or invalid');
-        return;
-    }
-    
-    // Validate debuff name
-    const validDebuffs = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Stun', 'Taunt', 'Silence', 'Mark'];
-    if (!validDebuffs.includes(debuffName)) {
-        this.addLog('error', `Invalid debuff name. Valid debuffs: ${validDebuffs.join(', ')}`);
-        return;
-    }
-    
-    duration = parseInt(duration) || 3;
-    
-    // Apply the debuff with appropriate effects
-    const effects = {};
-    if (debuffName === 'Stun') effects.stunned = true;
-    if (debuffName === 'Bleed') effects.bleedDamage = true;
-    if (debuffName === 'Blight') effects.noHeal = true;
-    
-    battle.applyDebuff(unit, debuffName, duration, effects);
-    this.addLog('info', `Applied ${debuffName} to ${unit.name} for ${duration} turns`);
-    
-    // Update the battle UI to show the debuff
-    battle.updateUI();
-    
-    // If applying stun, also update stun visuals
-    if (debuffName === 'Stun') {
-        battle.updateStunVisuals(unit);
-    }
-}
 
-applyShieldToUnit(unitIndex, amount) {
-    if (!window.game || !game.currentBattle) {
-        this.addLog('error', 'No battle in progress');
-        return;
+    applyShieldToUnit(unitIndex, amount) {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        const allUnits = [...battle.party, ...battle.enemies];
+        
+        if (unitIndex < 0 || unitIndex >= allUnits.length) {
+            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+            return;
+        }
+        
+        const unit = allUnits[unitIndex];
+        if (!unit || !unit.isAlive) {
+            this.addLog('error', 'Unit is dead or invalid');
+            return;
+        }
+        
+        amount = parseInt(amount) || 100;
+        
+        // Apply shield as a buff with -1 duration (permanent until depleted)
+        battle.applyBuff(unit, 'Shield', -1, { shieldAmount: amount });
+        this.addLog('info', `Applied ${amount} HP shield to ${unit.name}`);
+        
+        // Update the battle UI to show the shield
+        battle.updateUI();
     }
-    
-    const battle = game.currentBattle;
-    const allUnits = [...battle.party, ...battle.enemies];
-    
-    if (unitIndex < 0 || unitIndex >= allUnits.length) {
-        this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
-        return;
-    }
-    
-    const unit = allUnits[unitIndex];
-    if (!unit || !unit.isAlive) {
-        this.addLog('error', 'Unit is dead or invalid');
-        return;
-    }
-    
-    amount = parseInt(amount) || 100;
-    
-    // Apply shield as a buff with -1 duration (permanent until depleted)
-    battle.applyBuff(unit, 'Shield', -1, { shieldAmount: amount });
-    this.addLog('info', `Applied ${amount} HP shield to ${unit.name}`);
-    
-    // Update the battle UI to show the shield
-    battle.updateUI();
-}
 
     listBattleUnits() {
         if (!window.game || !game.currentBattle) {
