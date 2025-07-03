@@ -600,7 +600,7 @@
         <div id="heroInfoPopup" class="heroInfoPopup">
             <div class="heroInfoHeader">
                 <div class="heroInfoTitle" id="popupHeroName">Hero Name</div>
-                <button class="closeInfoBtn" onclick="game.closeHeroInfo()">×</button>
+                <button class="closeInfoBtn" onclick="game.uiManager.closeHeroInfo()">×</button>
             </div>
             <div class="heroInfoContent">
                 <div class="heroInfoStats">
@@ -809,7 +809,7 @@
                 // Close hero info popup if open
                 const heroInfoPopup = document.getElementById('heroInfoPopup');
                 if (heroInfoPopup && heroInfoPopup.style.display === 'block') {
-                    game.closeHeroInfo();
+                    game.uiManager.closeHeroInfo();
                     e.preventDefault();
                     return;
                 }
