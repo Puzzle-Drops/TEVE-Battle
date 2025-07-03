@@ -38,7 +38,9 @@ class DevConsole {
             buff: (unitIndex, buffName, duration) => this.applyBuffToUnit(unitIndex, buffName, duration),
             debuff: (unitIndex, debuffName, duration) => this.applyDebuffToUnit(unitIndex, debuffName, duration),
             shield: (unitIndex, amount) => this.applyShieldToUnit(unitIndex, amount),
-            listUnits: () => this.listBattleUnits()
+            listUnits: () => this.listBattleUnits(),
+            unlock: () => this.unlockEverything(),
+            party: (level) => this.setupParty(level)
         };
         
         this.init();
@@ -327,6 +329,7 @@ class DevConsole {
 - setAllLevels(level) - Set all heroes to same level
 - promoteHero(heroIndex, className) - Promote a hero
 - maxHero(heroIndex) - Max out a hero (level 500, awakened)
+- party(level) - Setup full party at specific level with promotions
 
 <span style="color: #ffd700;">Battle Commands:</span>
 - battle() - Show current battle info
@@ -338,14 +341,15 @@ class DevConsole {
 
 <span style="color: #ffd700;">Item/Gold Commands:</span>
 - addGold(family, amount) - Add gold to a stash (e.g., "Villager", 1000000)
--addAllGold(amount) - Add gold to all stashes
+- addAllGold(amount) - Add gold to all stashes
 - addItem(itemId, heroIndex) - Give item to hero
 - givePerfectItem(itemId, heroIndex) - Give perfect 4-roll item
-- generateItems(family, dungeon, count) - Generate dungeon items (e.g., "Villager", "satyrs_glade", 100)
+- generateItems(family, dungeon, count) - Generate dungeon items
 - stash(family) - Show stash contents
 
 <span style="color: #ffd700;">Game State:</span>
-- unlockAll() - Unlock all content
+- unlock() - Unlock ALL progression (dungeons, tiers, features)
+- unlockAll() - Unlock all content + max gold + level 300 heroes
 - game - Access game instance
 - game.currentBattle - Current battle state
 
@@ -462,21 +466,21 @@ Press \` to toggle console</span>`;
         this.addLog('info', `Added ${amount} gold to ${family} stash (total: ${game.stashes[family].gold})`);
     }
 
-addAllGold(amount) {
-    if (!window.game || !game.stashes) {
-        this.addLog('error', 'Game or stashes not found');
-        return;
+    addAllGold(amount) {
+        if (!window.game || !game.stashes) {
+            this.addLog('error', 'Game or stashes not found');
+            return;
+        }
+
+        amount = parseInt(amount);
+        const families = Object.keys(game.stashes);
+        
+        families.forEach(family => {
+            game.stashes[family].gold += amount;
+        });
+
+        this.addLog('info', `Added ${amount} gold to all stash families: ${families.join(', ')}`);
     }
-
-    amount = parseInt(amount);
-    const families = Object.keys(game.stashes);
-    
-    families.forEach(family => {
-        game.stashes[family].gold += amount;
-    });
-
-    this.addLog('info', `Added ${amount} gold to all stash families: ${families.join(', ')}`);
-}
     
     addItem(itemId, heroIndex) {
         if (!window.game || !game.heroes[heroIndex]) {
@@ -714,7 +718,7 @@ addAllGold(amount) {
         return colors[rarity] || '#ffffff';
     }
 
-    unlockAll() {
+    unlockAllContent() {
         if (!window.game) {
             this.addLog('error', 'Game not initialized');
             return;
@@ -735,155 +739,362 @@ addAllGold(amount) {
         this.addLog('info', 'Unlocked all content! All stashes have max gold, all heroes level 300');
     }
     
-    setCurrentUnitSpellLevel(level) {
-    if (!window.game || !game.currentBattle) {
-        this.addLog('error', 'No battle in progress');
-        return;
-    }
-    
-    const battle = game.currentBattle;
-    if (!battle.currentUnit) {
-        this.addLog('error', "It's not anyone's turn yet");
-        return;
-    }
-    
-    const unit = battle.currentUnit;
-    const oldLevel = unit.spellLevel;
-    
-    // Clamp level between 1 and 5
-    level = Math.max(1, Math.min(5, parseInt(level)));
-    
-    // For both enemies and heroes, we can now use the setter
-    unit.source.spellLevel = level;
-    
-    // Update abilities to reflect new level
-    unit.abilities.forEach(ability => {
-        if (ability.level !== undefined) {
-            ability.level = level;
+    unlockEverything() {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
         }
-    });
-    
-    this.addLog('info', `Set ${unit.name}'s spell level from ${oldLevel} to ${level}`);
-    
-    // Update the battle UI to reflect changes if needed
-    if (battle.updateUI) {
-        battle.updateUI();
+        
+        // Unlock all features
+        game.progression.unlockedFeatures = {
+            party: true,
+            stash: true,
+            arena: true
+        };
+        
+        // Unlock all tiers
+        const allTiers = Object.keys(game.dungeonTiers);
+        game.progression.unlockedTiers = [...allTiers];
+        
+        // Complete all dungeons (1 completion each)
+        Object.keys(dungeonData.dungeons).forEach(dungeonId => {
+            if (!game.progression.completedDungeons[dungeonId]) {
+                game.progression.completedDungeons[dungeonId] = {
+                    completions: 1,
+                    bestTime: '00:00'
+                };
+            } else {
+                game.progression.completedDungeons[dungeonId].completions++;
+            }
+        });
+        
+        // Save progression
+        game.saveProgression();
+        
+        this.addLog('info', `<span style="color: #ffd700;">✨ ALL PROGRESSION UNLOCKED! ✨</span>`, true);
+        this.addLog('info', `- All features unlocked`);
+        this.addLog('info', `- All ${allTiers.length} tiers unlocked`);
+        this.addLog('info', `- All ${Object.keys(dungeonData.dungeons).length} dungeons completed`);
+        
+        // Update UI if on main menu
+        if (game.currentScreen === 'mainMenuScreen') {
+            game.showMainMenu();
+        }
     }
-}
+    
+    setupParty(targetLevel) {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        targetLevel = parseInt(targetLevel);
+        if (isNaN(targetLevel) || targetLevel < 1 || targetLevel > 500) {
+            this.addLog('error', 'Level must be between 1 and 500');
+            return;
+        }
+        
+        this.addLog('info', `<span style="color: #4dd0e1;">Setting up party at level ${targetLevel}...</span>`, true);
+        
+        const classFamilies = [
+            'Acolyte', 'Archer', 'Druid', 'Initiate', 'Swordsman', 'Templar', 'Thief', 'Witch Hunter'
+        ];
+        
+        const promotionLevels = { 0: 50, 1: 100, 2: 200, 3: 300, 4: 400 };
+        const promotionCosts = { 0: 1000, 1: 10000, 2: 100000, 3: 1000000, 4: 10000000 };
+        
+        // Process first 8 heroes (one of each family)
+        for (let i = 0; i < 8 && i < game.heroes.length; i++) {
+            const hero = game.heroes[i];
+            const familyName = classFamilies[i];
+            
+            // Reset hero to villager state
+            hero.className = `villager_${hero.gender}`;
+            hero.level = 1;
+            hero.exp = 0;
+            hero.awakened = false;
+            hero.abilities = hero.getClassAbilities();
+            
+            // Process promotions based on target level
+            let currentLevel = 1;
+            
+            while (currentLevel < targetLevel) {
+                // Check if we can promote
+                const canPromoteAt = promotionLevels[hero.classTier];
+                
+                if (canPromoteAt && currentLevel < canPromoteAt && targetLevel >= canPromoteAt) {
+                    // Level up to promotion level
+                    hero.level = canPromoteAt;
+                    hero.exp = 0;
+                    hero.expToNext = hero.calculateExpToNext();
+                    currentLevel = canPromoteAt;
+                    
+                    // Get promotion options
+                    const promotions = hero.getPromotionOptions();
+                    if (promotions.length > 0) {
+                        // Add gold for promotion
+                        const cost = promotionCosts[hero.classTier];
+                        const currentFamily = game.getClassFamily(hero.className, hero.classTier);
+                        game.stashes[currentFamily].gold += cost;
+                        
+                        // Find the promotion that matches our target family
+                        let targetPromotion = null;
+                        
+                        // For tier 0, find the promotion that leads to our target family
+                        if (hero.classTier === 0) {
+                            targetPromotion = promotions.find(p => {
+                                const classData = unitData.classes[p];
+                                return classData && game.classFamilies.some(f => 
+                                    f.name === familyName && f.classes.some(c => c.toLowerCase() === classData.name.toLowerCase())
+                                );
+                            });
+                        } else {
+                            // For higher tiers, pick randomly
+                            targetPromotion = promotions[Math.floor(Math.random() * promotions.length)];
+                        }
+                        
+                        if (targetPromotion) {
+                            hero.promote(targetPromotion);
+                            this.addLog('info', `  ${hero.name}: Promoted to ${hero.displayClassName}`);
+                        }
+                    }
+                }
+                
+                // Check for awakening at 400+
+                if (hero.classTier === 4 && !hero.awakened && currentLevel < 400 && targetLevel >= 400) {
+                    hero.level = 400;
+                    currentLevel = 400;
+                    
+                    // Add gold for awakening
+                    const family = game.getClassFamily(hero.className, hero.classTier);
+                    game.stashes[family].gold += 10000000;
+                    
+                    // Awaken
+                    hero.promote('Awaken');
+                    this.addLog('info', `  ${hero.name}: <span style="color: #d896ff;">Awakened!</span>`, true);
+                }
+                
+                // Set to target level
+                hero.level = targetLevel;
+                hero.exp = 0;
+                hero.expToNext = hero.calculateExpToNext();
+                currentLevel = targetLevel;
+            }
+            
+            // Update abilities after all promotions
+            hero.abilities = hero.getClassAbilities();
+        }
+        
+        // Process remaining heroes randomly
+        for (let i = 8; i < game.heroes.length; i++) {
+            const hero = game.heroes[i];
+            
+            // Reset hero
+            hero.className = `villager_${hero.gender}`;
+            hero.level = 1;
+            hero.exp = 0;
+            hero.awakened = false;
+            hero.abilities = hero.getClassAbilities();
+            
+            let currentLevel = 1;
+            
+            while (currentLevel < targetLevel) {
+                const canPromoteAt = promotionLevels[hero.classTier];
+                
+                if (canPromoteAt && currentLevel < canPromoteAt && targetLevel >= canPromoteAt) {
+                    hero.level = canPromoteAt;
+                    currentLevel = canPromoteAt;
+                    
+                    const promotions = hero.getPromotionOptions();
+                    if (promotions.length > 0) {
+                        const cost = promotionCosts[hero.classTier];
+                        const currentFamily = game.getClassFamily(hero.className, hero.classTier);
+                        game.stashes[currentFamily].gold += cost;
+                        
+                        // Random promotion
+                        const targetPromotion = promotions[Math.floor(Math.random() * promotions.length)];
+                        hero.promote(targetPromotion);
+                    }
+                }
+                
+                // Awakening
+                if (hero.classTier === 4 && !hero.awakened && currentLevel < 400 && targetLevel >= 400) {
+                    hero.level = 400;
+                    currentLevel = 400;
+                    
+                    const family = game.getClassFamily(hero.className, hero.classTier);
+                    game.stashes[family].gold += 10000000;
+                    hero.promote('Awaken');
+                }
+                
+                hero.level = targetLevel;
+                hero.exp = 0;
+                hero.expToNext = hero.calculateExpToNext();
+                currentLevel = targetLevel;
+            }
+            
+            hero.abilities = hero.getClassAbilities();
+        }
+        
+        this.addLog('info', `<span style="color: #00ff88;">✓ Party setup complete!</span>`, true);
+        this.addLog('info', `All heroes are now level ${targetLevel} with appropriate promotions`);
+        
+        // Update UI if on heroes screen
+        if (game.currentScreen === 'heroesScreen') {
+            game.updateHeroList();
+            game.showHeroTab(game.currentTab);
+        }
+    }
+    
+    setCurrentUnitSpellLevel(level) {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        if (!battle.currentUnit) {
+            this.addLog('error', "It's not anyone's turn yet");
+            return;
+        }
+        
+        const unit = battle.currentUnit;
+        const oldLevel = unit.spellLevel;
+        
+        // Clamp level between 1 and 5
+        level = Math.max(1, Math.min(5, parseInt(level)));
+        
+        // For both enemies and heroes, we can now use the setter
+        unit.source.spellLevel = level;
+        
+        // Update abilities to reflect new level
+        unit.abilities.forEach(ability => {
+            if (ability.level !== undefined) {
+                ability.level = level;
+            }
+        });
+        
+        this.addLog('info', `Set ${unit.name}'s spell level from ${oldLevel} to ${level}`);
+        
+        // Update the battle UI to reflect changes if needed
+        if (battle.updateUI) {
+            battle.updateUI();
+        }
+    }
 
     applyBuffToUnit(unitIndex, buffName, duration) {
-    if (!window.game || !game.currentBattle) {
-        this.addLog('error', 'No battle in progress');
-        return;
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        const allUnits = [...battle.party, ...battle.enemies];
+        
+        if (unitIndex < 0 || unitIndex >= allUnits.length) {
+            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+            return;
+        }
+        
+        const unit = allUnits[unitIndex];
+        if (!unit || !unit.isAlive) {
+            this.addLog('error', 'Unit is dead or invalid');
+            return;
+        }
+        
+        // Validate buff name
+        const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield', 'Frost Armor'];
+        if (!validBuffs.includes(buffName)) {
+            this.addLog('error', `Invalid buff name. Valid buffs: ${validBuffs.join(', ')}`);
+            return;
+        }
+        
+        duration = parseInt(duration) || 3;
+        
+        // Apply the buff
+        battle.applyBuff(unit, buffName, duration, {});
+        this.addLog('info', `Applied ${buffName} to ${unit.name} for ${duration} turns`);
+        
+        // Update the battle UI to show the buff
+        battle.updateUI();
     }
-    
-    const battle = game.currentBattle;
-    const allUnits = [...battle.party, ...battle.enemies];
-    
-    if (unitIndex < 0 || unitIndex >= allUnits.length) {
-        this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
-        return;
-    }
-    
-    const unit = allUnits[unitIndex];
-    if (!unit || !unit.isAlive) {
-        this.addLog('error', 'Unit is dead or invalid');
-        return;
-    }
-    
-    // Validate buff name
-    const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield', 'Frost Armor'];
-    if (!validBuffs.includes(buffName)) {
-        this.addLog('error', `Invalid buff name. Valid buffs: ${validBuffs.join(', ')}`);
-        return;
-    }
-    
-    duration = parseInt(duration) || 3;
-    
-    // Apply the buff
-    battle.applyBuff(unit, buffName, duration, {});
-    this.addLog('info', `Applied ${buffName} to ${unit.name} for ${duration} turns`);
-    
-    // Update the battle UI to show the buff
-    battle.updateUI();
-}
 
-applyDebuffToUnit(unitIndex, debuffName, duration) {
-    if (!window.game || !game.currentBattle) {
-        this.addLog('error', 'No battle in progress');
-        return;
+    applyDebuffToUnit(unitIndex, debuffName, duration) {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        const allUnits = [...battle.party, ...battle.enemies];
+        
+        if (unitIndex < 0 || unitIndex >= allUnits.length) {
+            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+            return;
+        }
+        
+        const unit = allUnits[unitIndex];
+        if (!unit || !unit.isAlive) {
+            this.addLog('error', 'Unit is dead or invalid');
+            return;
+        }
+        
+        // Validate debuff name
+        const validDebuffs = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Stun', 'Taunt', 'Silence', 'Mark'];
+        if (!validDebuffs.includes(debuffName)) {
+            this.addLog('error', `Invalid debuff name. Valid debuffs: ${validDebuffs.join(', ')}`);
+            return;
+        }
+        
+        duration = parseInt(duration) || 3;
+        
+        // Apply the debuff with appropriate effects
+        const effects = {};
+        if (debuffName === 'Stun') effects.stunned = true;
+        if (debuffName === 'Bleed') effects.bleedDamage = true;
+        if (debuffName === 'Blight') effects.noHeal = true;
+        
+        battle.applyDebuff(unit, debuffName, duration, effects);
+        this.addLog('info', `Applied ${debuffName} to ${unit.name} for ${duration} turns`);
+        
+        // Update the battle UI to show the debuff
+        battle.updateUI();
+        
+        // If applying stun, also update stun visuals
+        if (debuffName === 'Stun') {
+            battle.updateStunVisuals(unit);
+        }
     }
-    
-    const battle = game.currentBattle;
-    const allUnits = [...battle.party, ...battle.enemies];
-    
-    if (unitIndex < 0 || unitIndex >= allUnits.length) {
-        this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
-        return;
-    }
-    
-    const unit = allUnits[unitIndex];
-    if (!unit || !unit.isAlive) {
-        this.addLog('error', 'Unit is dead or invalid');
-        return;
-    }
-    
-    // Validate debuff name
-    const validDebuffs = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Stun', 'Taunt', 'Silence', 'Mark'];
-    if (!validDebuffs.includes(debuffName)) {
-        this.addLog('error', `Invalid debuff name. Valid debuffs: ${validDebuffs.join(', ')}`);
-        return;
-    }
-    
-    duration = parseInt(duration) || 3;
-    
-    // Apply the debuff with appropriate effects
-    const effects = {};
-    if (debuffName === 'Stun') effects.stunned = true;
-    if (debuffName === 'Bleed') effects.bleedDamage = true;
-    if (debuffName === 'Blight') effects.noHeal = true;
-    
-    battle.applyDebuff(unit, debuffName, duration, effects);
-    this.addLog('info', `Applied ${debuffName} to ${unit.name} for ${duration} turns`);
-    
-    // Update the battle UI to show the debuff
-    battle.updateUI();
-    
-    // If applying stun, also update stun visuals
-    if (debuffName === 'Stun') {
-        battle.updateStunVisuals(unit);
-    }
-}
 
-applyShieldToUnit(unitIndex, amount) {
-    if (!window.game || !game.currentBattle) {
-        this.addLog('error', 'No battle in progress');
-        return;
+    applyShieldToUnit(unitIndex, amount) {
+        if (!window.game || !game.currentBattle) {
+            this.addLog('error', 'No battle in progress');
+            return;
+        }
+        
+        const battle = game.currentBattle;
+        const allUnits = [...battle.party, ...battle.enemies];
+        
+        if (unitIndex < 0 || unitIndex >= allUnits.length) {
+            this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
+            return;
+        }
+        
+        const unit = allUnits[unitIndex];
+        if (!unit || !unit.isAlive) {
+            this.addLog('error', 'Unit is dead or invalid');
+            return;
+        }
+        
+        amount = parseInt(amount) || 100;
+        
+        // Apply shield as a buff with -1 duration (permanent until depleted)
+        battle.applyBuff(unit, 'Shield', -1, { shieldAmount: amount });
+        this.addLog('info', `Applied ${amount} HP shield to ${unit.name}`);
+        
+        // Update the battle UI to show the shield
+        battle.updateUI();
     }
-    
-    const battle = game.currentBattle;
-    const allUnits = [...battle.party, ...battle.enemies];
-    
-    if (unitIndex < 0 || unitIndex >= allUnits.length) {
-        this.addLog('error', `Invalid unit index. Use listUnits() to see available units (0-${allUnits.length - 1})`);
-        return;
-    }
-    
-    const unit = allUnits[unitIndex];
-    if (!unit || !unit.isAlive) {
-        this.addLog('error', 'Unit is dead or invalid');
-        return;
-    }
-    
-    amount = parseInt(amount) || 100;
-    
-    // Apply shield as a buff with -1 duration (permanent until depleted)
-    battle.applyBuff(unit, 'Shield', -1, { shieldAmount: amount });
-    this.addLog('info', `Applied ${amount} HP shield to ${unit.name}`);
-    
-    // Update the battle UI to show the shield
-    battle.updateUI();
-}
 
     listBattleUnits() {
         if (!window.game || !game.currentBattle) {
