@@ -951,9 +951,9 @@ switch(game.currentScreen) {
                 }
                 
                 // Update skill description if on skills tab
-                if (game.currentTab === 'skills' && game.currentSkillIndex !== undefined) {
-                    const hero = game.heroes[game.selectedHero];
-                    const skill = hero.abilities[game.currentSkillIndex];
+                if (game.currentScreen === 'heroesScreen' && game.uiManager.currentTab === 'skills' && game.uiManager.currentSkillIndex !== undefined) {
+                    const hero = game.heroes[game.uiManager.selectedHero];
+                    const skill = hero.abilities[game.uiManager.currentSkillIndex];
                     const desc = document.getElementById('skillDescription');
                     if (desc && skill) {
                         desc.innerHTML = game.formatAbilityTooltip(skill, skill.level, hero, true);
@@ -1001,9 +1001,9 @@ switch(game.currentScreen) {
                 }
                 
                 // Update skill description if on skills tab
-                if (game.currentTab === 'skills' && game.currentSkillIndex !== undefined) {
-                    const hero = game.heroes[game.selectedHero];
-                    const skill = hero.abilities[game.currentSkillIndex];
+                if (game.uiManager.currentTab === 'skills' && game.currentSkillIndex !== undefined) {
+                    const hero = game.heroes[game.uiManager.selectedHero];
+                    const skill = hero.abilities[game.uiManager.currentSkillIndex];
                     const desc = document.getElementById('skillDescription');
                     if (desc && skill) {
                         desc.innerHTML = game.formatAbilityTooltip(skill, skill.level, hero, false);
