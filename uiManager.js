@@ -3,6 +3,15 @@ class UIManager {
     constructor(game) {
         this.game = game;
         
+        // UI state variables (moved from game.js)
+        this.selectedHero = 0;
+        this.currentTab = 'info';
+        this.expandedDungeon = null;
+        this.currentGearFilter = 'trinket';
+        this.currentStashFilter = null;
+        this.currentSkillIndex = undefined;
+        this.currentPreviewWave = 0;
+        
         // UI state
         this.currentTooltips = {
             item: null,
@@ -215,13 +224,13 @@ class UIManager {
         let filterValue = 'all';
         if (items.length > 250) {
             // Check if we already have a filter value for this stash
-            if (!this.game.currentStashFilter) {
-                this.game.currentStashFilter = 'trinket'; // Only set default on first open
+            if (!this.currentStashFilter) {
+                this.currentStashFilter = 'trinket'; // Only set default on first open
             }
-            filterValue = this.game.currentStashFilter;
+            filterValue = this.currentStashFilter;
         } else {
             // For smaller stashes, default to all unless user has already selected something
-            filterValue = this.game.currentStashFilter || 'all';
+            filterValue = this.currentStashFilter || 'all';
         }
         
         // Build header HTML with filter (always show)
@@ -240,7 +249,7 @@ class UIManager {
                     <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
                 </select>
             </div>
-            <button id="stashSortButton" class="sortSettingsButton" onclick="game.toggleSortSettings('stash')" title="Sort Settings">↕️</button>
+            <button id="stashSortButton" class="sortSettingsButton" onclick="game.uiManager.toggleSortSettings('stash')" title="Sort Settings">↕️</button>
         </div>`;
         document.getElementById('stashFamilyName').innerHTML = headerHTML;
         
@@ -283,7 +292,7 @@ class UIManager {
                 
                 // Add click handler
                 itemDiv.onclick = () => {
-                    if (this.game.currentScreen === 'heroesScreen' && this.game.selectedHero !== undefined) {
+                    if (this.game.currentScreen === 'heroesScreen' && this.selectedHero !== undefined) {
                         this.game.equipFromStash(originalIndex, item.slot);
                     }
                 };
@@ -771,14 +780,14 @@ class UIManager {
         });
         
         // Get the current wave enemies
-        const currentWaveEnemies = this.game.dungeonWaves[this.game.currentPreviewWave];
+        const currentWaveEnemies = this.game.dungeonWaves[this.currentPreviewWave];
         
         // Update wave counter
         const waveNav = document.getElementById('waveNavigation');
         if (waveNav) {
             const waveText = waveNav.querySelector('.waveText');
             if (waveText) {
-                waveText.textContent = `Wave ${this.game.currentPreviewWave + 1}/${this.game.dungeonWaves.length}`;
+                waveText.textContent = `Wave ${this.currentPreviewWave + 1}/${this.game.dungeonWaves.length}`;
             }
         }
         
@@ -893,7 +902,7 @@ class UIManager {
         sortedHeroes.forEach((hero, index) => {
             const thumb = document.createElement('div');
             thumb.className = 'heroThumb';
-            if (this.game.heroes.indexOf(hero) === this.game.selectedHero) {
+            if (this.game.heroes.indexOf(hero) === this.selectedHero) {
                 thumb.classList.add('selected');
             }
             
@@ -928,8 +937,8 @@ class UIManager {
 
     // Tab Content Rendering
     showHeroTab(tab) {
-        this.game.currentTab = tab;
-        const hero = this.game.heroes[this.game.selectedHero];
+        this.currentTab = tab;
+        const hero = this.game.heroes[this.selectedHero];
         const content = document.getElementById('heroContent');
         
         // Update tab buttons
@@ -979,26 +988,26 @@ class UIManager {
             <div style="margin-top: 40px; display: flex; gap: 40px; align-items: flex-start;">
                 <div style="flex: 0 0 auto; min-width: 200px; place-items: anchor-center; margin: 10px 0">
                     <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
-                        ${this.renderGearSlotReadOnly(hero, 'trinket', this.game.selectedHero)}
-                        ${this.renderGearSlotReadOnly(hero, 'head', this.game.selectedHero)}
-                        ${this.renderGearSlotReadOnly(hero, 'weapon', this.game.selectedHero)}
-                        ${this.renderGearSlotReadOnly(hero, 'chest', this.game.selectedHero)}
-                        ${this.renderGearSlotReadOnly(hero, 'offhand', this.game.selectedHero)}
-                        ${this.renderGearSlotReadOnly(hero, 'legs', this.game.selectedHero)}
+                        ${this.renderGearSlotReadOnly(hero, 'trinket', this.selectedHero)}
+                        ${this.renderGearSlotReadOnly(hero, 'head', this.selectedHero)}
+                        ${this.renderGearSlotReadOnly(hero, 'weapon', this.selectedHero)}
+                        ${this.renderGearSlotReadOnly(hero, 'chest', this.selectedHero)}
+                        ${this.renderGearSlotReadOnly(hero, 'offhand', this.selectedHero)}
+                        ${this.renderGearSlotReadOnly(hero, 'legs', this.selectedHero)}
                     </div>
                 </div>
                 
                 <div style="flex: 1; min-width: 200px;">
-                    ${this.renderStatLine('Health Points', 'Health', hero.baseStats.hp, hero.gearStats.hp, this.game.selectedHero)}
-                    ${this.renderStatLine('Attack', 'Attack', hero.baseStats.attack, hero.gearStats.attack, this.game.selectedHero)}
-                    ${this.renderStatLine('Strength', 'Strength', hero.baseStats.str, hero.gearStats.str, this.game.selectedHero, hero.mainstat === 'str')}
-                    ${this.renderStatLine('Agility', 'Agility', hero.baseStats.agi, hero.gearStats.agi, this.game.selectedHero, hero.mainstat === 'agi')}
-                    ${this.renderStatLine('Intelligence', 'Intelligence', hero.baseStats.int, hero.gearStats.int, this.game.selectedHero, hero.mainstat === 'int')}
+                    ${this.renderStatLine('Health Points', 'Health', hero.baseStats.hp, hero.gearStats.hp, this.selectedHero)}
+                    ${this.renderStatLine('Attack', 'Attack', hero.baseStats.attack, hero.gearStats.attack, this.selectedHero)}
+                    ${this.renderStatLine('Strength', 'Strength', hero.baseStats.str, hero.gearStats.str, this.selectedHero, hero.mainstat === 'str')}
+                    ${this.renderStatLine('Agility', 'Agility', hero.baseStats.agi, hero.gearStats.agi, this.selectedHero, hero.mainstat === 'agi')}
+                    ${this.renderStatLine('Intelligence', 'Intelligence', hero.baseStats.int, hero.gearStats.int, this.selectedHero, hero.mainstat === 'int')}
                 </div>
                 
                 <div style="flex: 1; min-width: 200px;">
-                    ${this.renderStatLine('HP Regeneration', 'HP Regen', hero.baseStats.hpRegen.toFixed(1), hero.gearStats.hpRegen > 0 ? hero.gearStats.hpRegen.toFixed(1) : 0, this.game.selectedHero)}
-                    ${this.renderStatLine('Attack Speed', 'Atk Spd', hero.baseStats.attackSpeed.toFixed(1) + '%', hero.gearStats.attackSpeed > 0 ? hero.gearStats.attackSpeed.toFixed(1) + '%' : 0, this.game.selectedHero)}
+                    ${this.renderStatLine('HP Regeneration', 'HP Regen', hero.baseStats.hpRegen.toFixed(1), hero.gearStats.hpRegen > 0 ? hero.gearStats.hpRegen.toFixed(1) : 0, this.selectedHero)}
+                    ${this.renderStatLine('Attack Speed', 'Atk Spd', hero.baseStats.attackSpeed.toFixed(1) + '%', hero.gearStats.attackSpeed > 0 ? hero.gearStats.attackSpeed.toFixed(1) + '%' : 0, this.selectedHero)}
                     <div class="statLine" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
                         <span class="statName">Armor</span>
                         <span class="statValue">${Math.floor(hero.baseStats.armor)} ${hero.gearStats.armor > 0 ? `<span class="statBonus">+${hero.gearStats.armor}</span>` : ''} <span style="color: #6a9aaa;">(${(hero.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
@@ -1058,7 +1067,7 @@ class UIManager {
 
     showSkillsTab(hero, content) {
         // Check if we have a previously selected skill index
-        const selectedIndex = this.game.currentSkillIndex !== undefined ? this.game.currentSkillIndex : 0;
+        const selectedIndex = this.currentSkillIndex !== undefined ? this.currentSkillIndex : 0;
         
         content.innerHTML = `
             <div class="skillsContainer">
@@ -1197,9 +1206,9 @@ class UIManager {
         // Always show filter, but default based on item count
         let filterValue = 'all';
         if (items.length > 100) {
-            filterValue = this.game.currentGearFilter || 'trinket';
+            filterValue = this.currentGearFilter || 'trinket';
         } else {
-            filterValue = this.game.currentGearFilter || 'all';
+            filterValue = this.currentGearFilter || 'all';
         }
         
         // Filter items based on selection
@@ -1216,12 +1225,12 @@ class UIManager {
                 <div style="flex: 0 0 auto;">
                     <h3>Gear</h3>
                     <div class="gearGrid">
-                        ${this.renderGearSlot(hero, 'trinket', this.game.selectedHero)}
-                        ${this.renderGearSlot(hero, 'head', this.game.selectedHero)}
-                        ${this.renderGearSlot(hero, 'weapon', this.game.selectedHero)}
-                        ${this.renderGearSlot(hero, 'chest', this.game.selectedHero)}
-                        ${this.renderGearSlot(hero, 'offhand', this.game.selectedHero)}
-                        ${this.renderGearSlot(hero, 'legs', this.game.selectedHero)}
+                        ${this.renderGearSlot(hero, 'trinket', this.selectedHero)}
+                        ${this.renderGearSlot(hero, 'head', this.selectedHero)}
+                        ${this.renderGearSlot(hero, 'weapon', this.selectedHero)}
+                        ${this.renderGearSlot(hero, 'chest', this.selectedHero)}
+                        ${this.renderGearSlot(hero, 'offhand', this.selectedHero)}
+                        ${this.renderGearSlot(hero, 'legs', this.selectedHero)}
                     </div>
                     <div class="gearStatsPreview">
                         <h4>Total Stats</h4>
@@ -1230,9 +1239,9 @@ class UIManager {
                             ${this.renderGearStatLine('HP Regeneration', 'REG:', hero.hpRegen.toFixed(1), false)}
                             ${this.renderGearStatLine('Attack', 'ATK:', hero.attack, false)}
                             ${this.renderGearStatLine('Attack Speed', 'SPD:', hero.actionBarSpeed.toFixed(1), false)}
-                            ${this.renderGearStatLine('Strength', 'STR:', hero.totalStats.str, hero.mainstat === 'str', this.game.selectedHero)}
-                            ${this.renderGearStatLine('Agility', 'AGI:', hero.totalStats.agi, hero.mainstat === 'agi', this.game.selectedHero)}
-                            ${this.renderGearStatLine('Intelligence', 'INT:', hero.totalStats.int, hero.mainstat === 'int', this.game.selectedHero)}
+                            ${this.renderGearStatLine('Strength', 'STR:', hero.totalStats.str, hero.mainstat === 'str', this.selectedHero)}
+                            ${this.renderGearStatLine('Agility', 'AGI:', hero.totalStats.agi, hero.mainstat === 'agi', this.selectedHero)}
+                            ${this.renderGearStatLine('Intelligence', 'INT:', hero.totalStats.int, hero.mainstat === 'int', this.selectedHero)}
                             ${this.renderGearStatLine('Armor', 'ARM:', Math.floor(hero.armor), false)}
                             ${this.renderGearStatLine('Armor', 'RED:', (hero.physicalDamageReduction * 100).toFixed(1) + '%', false)}
                             ${this.renderGearStatLine('Resistance', 'RES:', Math.floor(hero.resist), false)}
@@ -1256,7 +1265,7 @@ class UIManager {
                                 <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
                             </select>
                         </div>
-                        <button id="gearSortButton" class="sortSettingsButton" onclick="game.toggleSortSettings('gear')" title="Sort Settings">↕️</button>
+                        <button id="gearSortButton" class="sortSettingsButton" onclick="game.uiManager.toggleSortSettings('gear')" title="Sort Settings">↕️</button>
                     </h3>
                     <div style="flex: 1; background: rgba(10, 25, 41, 0.8); padding: 10px; overflow-y: auto;">
                         ${stash && sortedStashItems.length > 0 ? `
@@ -1414,7 +1423,7 @@ class UIManager {
             icon.addEventListener('mouseenter', (e) => {
                 const ability = hero.abilities[index];
                 const showFormula = e.altKey;
-                const tooltipHtml = this.game.formatAbilityTooltip(ability, ability.level, hero, showFormula);
+                const tooltipHtml = this.formatAbilityTooltip(ability, ability.level, hero, showFormula);
                 this.showAbilityTooltipFromHTML(e, tooltipHtml);
             });
             icon.addEventListener('mouseleave', () => {
@@ -1545,7 +1554,7 @@ class UIManager {
             icon.addEventListener('mouseenter', (e) => {
                 const ability = enemy.abilities[index];
                 const showFormula = e.altKey;
-                const tooltipHtml = this.game.formatAbilityTooltip(ability, ability.level || enemy.spellLevel, enemy, showFormula);
+                const tooltipHtml = this.formatAbilityTooltip(ability, ability.level || enemy.spellLevel, enemy, showFormula);
                 this.showAbilityTooltipFromHTML(e, tooltipHtml);
             });
             icon.addEventListener('mouseleave', () => {
@@ -1587,7 +1596,7 @@ class UIManager {
     }
 
     showPromotionConfirm(newClass) {
-        const hero = this.game.heroes[this.game.selectedHero];
+        const hero = this.game.heroes[this.selectedHero];
         const modal = document.getElementById('confirmModal');
         const confirmText = document.getElementById('confirmText');
         const confirmCost = document.getElementById('confirmCost');
@@ -1871,8 +1880,8 @@ class UIManager {
         // Check if we should show comparison (only in hero gear tab hovering stash items)
         let showComparison = false;
         let equippedItem = null;
-        if (isStashItem && this.game.currentScreen === 'heroesScreen' && this.game.currentTab === 'gear' && this.game.selectedHero !== undefined) {
-            const hero = this.game.heroes[this.game.selectedHero];
+        if (isStashItem && this.game.currentScreen === 'heroesScreen' && this.currentTab === 'gear' && this.selectedHero !== undefined) {
+            const hero = this.game.heroes[this.selectedHero];
             equippedItem = hero.gear[item.slot];
             showComparison = equippedItem !== null;
         }
@@ -1993,7 +2002,7 @@ class UIManager {
             effects: []
         };
         
-        const html = this.game.formatAbilityTooltip(ability, level);
+        const html = this.formatAbilityTooltip(ability, level);
         this.showAbilityTooltipFromHTML(event, html);
     }
     
@@ -2394,12 +2403,326 @@ class UIManager {
                     
                     // Refresh the current view
                     if (source === 'gear') {
-                        this.showGearTab(this.game.heroes[this.game.selectedHero], document.getElementById('heroContent'));
+                        this.showGearTab(this.game.heroes[this.selectedHero], document.getElementById('heroContent'));
                     } else if (source === 'stash') {
                         this.showIndividualStash(this.game.currentStashFamily);
                     }
                 }
             });
         });
+    }
+
+    // Navigation Methods (moved from game.js)
+    navigateWave(direction) {
+        if (!this.game.dungeonWaves || this.game.dungeonWaves.length === 0) return;
+        
+        if (direction === 'prev') {
+            this.currentPreviewWave--;
+            if (this.currentPreviewWave < 0) {
+                this.currentPreviewWave = this.game.dungeonWaves.length - 1;
+            }
+        } else {
+            this.currentPreviewWave++;
+            if (this.currentPreviewWave >= this.game.dungeonWaves.length) {
+                this.currentPreviewWave = 0;
+            }
+        }
+        
+        this.updateEnemyFormation();
+    }
+
+    // Ability Tooltip Formatting (moved from game.js)
+    formatAbilityTooltip(ability, level, unit = null, showFormula = false) {
+        const spell = spellManager ? spellManager.getSpell(ability.id) : null;
+        if (!spell) return `<h3>${ability.name} (Level ${level})</h3><p>${ability.description}</p>`;
+        
+        // Get the description
+        let description = spell.description;
+        const levelIndex = Math.max(0, Math.min(4, level - 1)); // Clamp between 0-4
+        
+        if (typeof description === 'string') {
+            if (showFormula) {
+                // When showing formula, replace individual placeholders with values
+                description = description.replace(/{(\w+(?:\.\w+)*)}/g, (match, property) => {
+                    // Get the value for this property
+                    let value = null;
+                    
+                    // Handle nested properties like scaling.base
+                    if (property.includes('.')) {
+                        const parts = property.split('.');
+                        let temp = spell;
+                        for (const part of parts) {
+                            temp = temp?.[part];
+                        }
+                        if (Array.isArray(temp)) {
+                            value = temp[levelIndex] || temp[0];
+                        } else {
+                            value = temp;
+                        }
+                    } else if (spell[property] && Array.isArray(spell[property])) {
+                        value = spell[property][levelIndex] || spell[property][0];
+                    } else if (spell.scaling && spell.scaling[property] && Array.isArray(spell.scaling[property])) {
+                        value = spell.scaling[property][levelIndex] || spell.scaling[property][0];
+                    }
+                    
+                    // Format the value
+                    if (value !== null && value !== undefined) {
+                        // Format percentages
+                        if (typeof value === 'number' && value < 1 && value > 0 && property.includes('percent')) {
+                            value = Math.round(value * 100) + '%';
+                        } else if (typeof value === 'number' && (property === 'attack' || property === 'str' || 
+                                   property === 'agi' || property === 'int')) {
+                            // For scaling values, add 'x' suffix
+                            value = value + 'x';
+                        }
+                        
+                        // Special case for base - don't show the property name
+                        if (property === 'base') {
+                            return value.toString();
+                        }
+                        
+                        return `${value} (${property})`;
+                    }
+                    
+                    return match;
+                });
+                
+                // Remove square brackets when showing formula
+                description = description.replace(/\[|\]/g, '');
+            } else {
+                // When not showing formula, calculate totals for bracketed sections
+                description = description.replace(/\[([^\]]+)\]/g, (match, bracketContent) => {
+                    // Calculate the total value for everything in brackets
+                    if (unit && spell.scaling) {
+                        const damage = this.calculateSpellValue(spell, unit, 'damage');
+                        return damage.toString();
+                    }
+                    return match;
+                });
+                
+                // Handle individual placeholders outside of brackets
+                description = description.replace(/{(\w+(?:\.\w+)*)}/g, (match, property) => {
+                    // Special handling for specific properties that aren't part of damage calculation
+                    if (property === 'shieldAmount' && unit) {
+                        const shield = this.calculateSpellValue(spell, unit, 'shield');
+                        return shield;
+                    }
+                    
+                    // For duration, cooldown, chances, etc.
+                    let value = null;
+                    
+                    if (property.includes('.')) {
+                        const parts = property.split('.');
+                        let temp = spell;
+                        for (const part of parts) {
+                            temp = temp?.[part];
+                        }
+                        if (Array.isArray(temp)) {
+                            value = temp[levelIndex] || temp[0];
+                        } else {
+                            value = temp;
+                        }
+                    } else if (spell[property] && Array.isArray(spell[property])) {
+                        value = spell[property][levelIndex] || spell[property][0];
+                    } else if (spell.scaling && spell.scaling[property] && Array.isArray(spell.scaling[property])) {
+                        value = spell.scaling[property][levelIndex] || spell.scaling[property][0];
+                    }
+                    
+                    if (value !== null && value !== undefined) {
+                        // Format percentages
+                        if (typeof value === 'number' && value < 1 && value > 0) {
+                            return Math.round(value * 100) + '%';
+                        }
+                        return value;
+                    }
+                    
+                    return match;
+                });
+            }
+        }
+        
+        // Build effect tags in specific order
+        let effectTags = '';
+        const effects = spell.effects || [];
+        
+        // Define the order of effects and their display names
+        const effectOrder = [
+            // Core effects
+            { key: 'passive', display: 'Passive' },
+            { key: 'aoe', display: 'AOE' },
+            
+            // Damage types
+            { key: 'physical', display: 'Physical' },
+            { key: 'magical', display: 'Magical' },
+            { key: 'pure', display: 'Pure' },
+            
+            // Special effects
+            { key: 'heal', display: 'Heal' },
+            { key: 'evasion', display: 'Evasion' },
+            { key: 'cleanse', display: 'Cleanse' },
+            { key: 'dispel', display: 'Dispel' },
+            { key: 'shield_break', display: 'Shield Break' },
+            { key: 'support', display: 'Support' },
+
+            // Buffs
+            { key: 'buff_increase_attack', display: 'Increase Attack' },
+            { key: 'buff_increase_speed', display: 'Increase Speed' },
+            { key: 'buff_increase_defense', display: 'Increase Defense' },
+            { key: 'buff_immune', display: 'Immune' },
+            { key: 'buff_shield', display: 'Shield' },
+            { key: 'buff_frost_armor', display: 'Frost Armor' },
+            
+            // Debuffs
+            { key: 'debuff_reduce_attack', display: 'Reduce Attack' },
+            { key: 'debuff_reduce_speed', display: 'Reduce Speed' },
+            { key: 'debuff_reduce_defense', display: 'Reduce Defense' },
+            { key: 'debuff_blight', display: 'Blight' },
+            { key: 'debuff_bleed', display: 'Bleed' },
+            { key: 'debuff_stun', display: 'Stun' },
+            { key: 'debuff_taunt', display: 'Taunt' },
+            { key: 'debuff_silence', display: 'Silence' },
+            { key: 'debuff_mark', display: 'Mark' },
+        ];
+
+        // Add effect tags in the specified order
+        effectOrder.forEach(effect => {
+            if (effects.includes(effect.key)) {
+                effectTags += `<span class="abilityEffectTag ${effect.key}">${effect.display}</span>`;
+            }
+        });
+        
+        // Format cooldown with level scaling
+        let cooldownText = 'Cooldown: ';
+        if (ability.passive || effects.includes('passive')) {
+            cooldownText += 'Passive';
+        } else {
+            let cooldownValue = 0;
+            if (Array.isArray(spell.cooldown)) {
+                cooldownValue = spell.cooldown[levelIndex] || spell.cooldown[0];
+            } else {
+                cooldownValue = ability.cooldown || 0;
+            }
+            
+            if (cooldownValue === 0) {
+                cooldownText += 'none';
+            } else {
+                cooldownText += `${cooldownValue} turns`;
+            }
+        }
+        
+        // Add formula indicator if showing formula
+        const formulaIndicator = showFormula ? ' <span style="color: #ffd700;">[Formula]</span>' : '';
+        
+        return `
+            <div style="font-size: 24px; color: #4dd0e1; margin-bottom: 8px;">${ability.name} (Level ${level})${formulaIndicator}</div>
+            <div style="margin-bottom: 8px;">${effectTags}</div>
+            <div style="font-size: 18px; color: #6a9aaa; margin-bottom: 8px;">${cooldownText}</div>
+            <div style="font-size: 18px; color: #b0e0f0;">${description}</div>
+            ${!showFormula && unit ? '<div style="font-size: 14px; color: #6a9aaa; margin-top: 8px;">Hold Alt to see damage formula</div>' : ''}
+        `;
+    }
+
+    calculateSpellValue(spell, unit, valueType = 'damage') {
+        if (!spell || !unit) return 0;
+        
+        const spellLevel = unit.abilities ? 
+            (unit.abilities.find(a => a.id === spell.id)?.level || 1) : 
+            (unit.spellLevel || 1);
+        const levelIndex = Math.max(0, Math.min(4, spellLevel - 1));
+        
+        let value = 0;
+        
+        // Handle different calculation types
+        if (valueType === 'damage' && spell.scaling) {
+            // Base damage
+            if (spell.scaling.base) {
+                value += spell.scaling.base[levelIndex] || spell.scaling.base[0] || 0;
+            }
+            
+            // Attack scaling
+            if (spell.scaling.attack) {
+                const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0] || 0;
+                value += unit.attack * attackScaling;
+            }
+            
+            // Stat scalings
+            const stats = unit.totalStats || unit.baseStats || unit.stats || {};
+            
+            if (spell.scaling.str) {
+                const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0] || 0;
+                value += (stats.str || 0) * strScaling;
+            }
+            
+            if (spell.scaling.agi) {
+                const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0] || 0;
+                value += (stats.agi || 0) * agiScaling;
+            }
+            
+            if (spell.scaling.int) {
+                const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0] || 0;
+                value += (stats.int || 0) * intScaling;
+            }
+            
+            // Special case for HP-based damage
+            if (spell.scaling.percent && unit.maxHp) {
+                const percent = spell.scaling.percent[levelIndex] || spell.scaling.percent[0] || 0;
+                const percentDamage = unit.maxHp * percent;
+                
+                if (spell.scaling.cap) {
+                    const cap = spell.scaling.cap[levelIndex] || spell.scaling.cap[0] || 0;
+                    value = Math.min(percentDamage, cap);
+                } else if (spell.scaling.floor) {
+                    const floor = spell.scaling.floor[levelIndex] || spell.scaling.floor[0] || 0;
+                    value = Math.max(percentDamage, floor);
+                } else {
+                    value = percentDamage;
+                }
+            }
+        } else if (valueType === 'shield' && spell.shieldAmount) {
+            value = spell.shieldAmount[levelIndex] || spell.shieldAmount[0] || 0;
+        } else if (valueType === 'heal' && spell.healAmount) {
+            value = spell.healAmount[levelIndex] || spell.healAmount[0] || 0;
+        }
+        
+        return Math.floor(value);
+    }
+
+    // Dev Console Toggle (moved from game.js)
+    toggleDevConsole() {
+        if (window.devConsole) {
+            window.devConsole.toggle();
+        }
+    }
+
+    // Refinement Popup Close (moved from game.js)
+    closeRefinementPopup() {
+        // Hide overlay
+        document.getElementById('refinementOverlay').style.display = 'none';
+        
+        const popup = document.getElementById('itemRefinementPopup');
+        popup.style.display = 'none';
+        
+        // Update UI based on current screen
+        if (this.game.refinementContext) {
+            if (this.game.currentScreen === 'heroesScreen') {
+                // Refresh gear tab to show updated gold
+                this.showGearTab(this.game.heroes[this.selectedHero], document.getElementById('heroContent'));
+            } else if (this.game.currentScreen === 'individualStashScreen') {
+                // Refresh stash to show updated gold
+                this.showIndividualStash(this.game.refinementContext.family);
+            }
+        }
+        
+        // Clean up context
+        this.game.refinementContext = null;
+        
+        // Reset popup to initial state for next use
+        document.getElementById('refinementColumns').style.display = 'flex';
+        document.getElementById('refinementResult').style.display = 'none';
+        document.getElementById('refinementButtons').style.display = 'flex';
+        document.getElementById('refinementCloseButton').style.display = 'none';
+        document.getElementById('refinementArrow').style.display = 'block';
+        document.getElementById('previewColumn').style.display = 'block';
+        document.getElementById('refinementResultLabel').textContent = 'Current Item';
     }
 }
