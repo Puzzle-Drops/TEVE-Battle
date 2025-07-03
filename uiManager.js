@@ -249,7 +249,7 @@ class UIManager {
                     <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
                 </select>
             </div>
-            <button id="stashSortButton" class="sortSettingsButton" onclick="game.uiManager.toggleSortSettings('stash')" title="Sort Settings">↕️</button>
+            <button id="stashSortButton" class="sortSettingsButton" onclick="this.toggleSortSettings('stash')" title="Sort Settings">↕️</button>
         </div>`;
         document.getElementById('stashFamilyName').innerHTML = headerHTML;
         
@@ -1008,11 +1008,11 @@ class UIManager {
                 <div style="flex: 1; min-width: 200px;">
                     ${this.renderStatLine('HP Regeneration', 'HP Regen', hero.baseStats.hpRegen.toFixed(1), hero.gearStats.hpRegen > 0 ? hero.gearStats.hpRegen.toFixed(1) : 0, this.selectedHero)}
                     ${this.renderStatLine('Attack Speed', 'Atk Spd', hero.baseStats.attackSpeed.toFixed(1) + '%', hero.gearStats.attackSpeed > 0 ? hero.gearStats.attackSpeed.toFixed(1) + '%' : 0, this.selectedHero)}
-                    <div class="statLine" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
+                    <div class="statLine" onmouseover="this.showStatTooltip(event, 'Armor')" onmouseout="this.hideStatTooltip()">
                         <span class="statName">Armor</span>
                         <span class="statValue">${Math.floor(hero.baseStats.armor)} ${hero.gearStats.armor > 0 ? `<span class="statBonus">+${hero.gearStats.armor}</span>` : ''} <span style="color: #6a9aaa;">(${(hero.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
                     </div>
-                    <div class="statLine" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
+                    <div class="statLine" onmouseover="this.showStatTooltip(event, 'Resistance')" onmouseout="this.hideStatTooltip()">
                         <span class="statName">Resistance</span>
                         <span class="statValue">${Math.floor(hero.baseStats.resist)} ${hero.gearStats.resist > 0 ? `<span class="statBonus">+${hero.gearStats.resist}</span>` : ''} <span style="color: #6a9aaa;">(${(hero.magicDamageReduction * 100).toFixed(1)}%)</span></span>
                     </div>
@@ -1038,8 +1038,8 @@ class UIManager {
                 ${item ? 
                     `<div class="gearItem ${item.getRarity()}" 
                          style="pointer-events: all;"
-                         onmouseover="game.uiManager.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
-                         onmouseout="game.uiManager.hideItemTooltip()">
+                         onmouseover="this.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
+                         onmouseout="this.hideItemTooltip()">
                         <div class="itemContainer">
                             <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                  alt="${item.name}"
@@ -1058,7 +1058,7 @@ class UIManager {
     renderStatLine(tooltip, label, base, bonus, heroIndex, isMainStat = false) {
         const bonusText = bonus > 0 ? `<span class="statBonus">+${bonus}</span>` : '';
         return `
-            <div class="statLine" onmouseover="game.uiManager.showStatTooltip(event, '${tooltip}', game.heroes[${heroIndex}])" onmouseout="game.uiManager.hideStatTooltip()">
+            <div class="statLine" onmouseover="this.showStatTooltip(event, '${tooltip}', game.heroes[${heroIndex}])" onmouseout="this.hideStatTooltip()">
                 <span class="statName ${isMainStat ? 'mainstat' : ''}">${label}</span>
                 <span class="statValue">${base} ${bonusText}</span>
             </div>
@@ -1111,7 +1111,7 @@ class UIManager {
                         <div style="font-size: 24px; font-weight: bold; color: #d896ff; text-shadow: 0 0 12px rgba(216, 150, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">★★★★★★</div>
                         <button class="promoteButton ${canPromote ? '' : 'disabled'}" 
                             style="${canPromote ? 'background: linear-gradient(135deg, #d896ff 0%, #a855f7 100%); box-shadow: 0 0 20px rgba(216, 150, 255, 0.5); color: #0a1929;' : ''}" 
-                            onclick="${canPromote ? 'game.showPromotionConfirm(\'Awaken\')' : ''}" 
+                            onclick="${canPromote ? 'this.showPromotionConfirm(\'Awaken\')' : ''}" 
                             onmouseover="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #e6b0ff 0%, #d896ff 100%)\'; this.style.boxShadow=\'0 0 30px rgba(230, 176, 255, 0.7)\'' : ''}"
                             onmouseout="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #d896ff 0%, #a855f7 100%)\'; this.style.boxShadow=\'0 0 20px rgba(216, 150, 255, 0.5)\'' : ''}"
                             ${canPromote ? '' : 'disabled'}>
@@ -1169,7 +1169,7 @@ class UIManager {
                                 <div class="classStars" style="font-size: 24px; font-weight: bold; color: #ffd700; text-shadow: 0 0 12px rgba(255, 215, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${promoStarData.html}</div>
                                 <h2>${displayName}</h2>
                                 <button class="promoteButton ${canPromote ? '' : 'disabled'}" 
-                                    onclick="${canPromote ? `game.showPromotionConfirm('${promo}')` : ''}"
+                                    onclick="${canPromote ? `this.showPromotionConfirm('${promo}')` : ''}"
                                     ${canPromote ? '' : 'disabled'}>
                                     ${canPromote ? 
                                         `Promote<br><span style="font-size: 14px;">💰 -${cost}</span>` : 
@@ -1265,7 +1265,7 @@ class UIManager {
                                 <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
                             </select>
                         </div>
-                        <button id="gearSortButton" class="sortSettingsButton" onclick="game.uiManager.toggleSortSettings('gear')" title="Sort Settings">↕️</button>
+                        <button id="gearSortButton" class="sortSettingsButton" onclick="this.toggleSortSettings('gear')" title="Sort Settings">↕️</button>
                     </h3>
                     <div style="flex: 1; background: rgba(10, 25, 41, 0.8); padding: 10px; overflow-y: auto;">
                         ${stash && sortedStashItems.length > 0 ? `
@@ -1278,8 +1278,8 @@ class UIManager {
                                         <div class="stashItemSlot ${item.getRarity()}" 
                                              onclick="game.equipFromStash(${originalIndex}, '${item.slot}')"
                                              oncontextmenu="event.preventDefault(); game.showItemOptionsFromGearTab(${originalIndex}, '${familyName}')"
-                                             onmouseover="game.uiManager.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}], true)"
-                                             onmouseout="game.uiManager.hideItemTooltip()">
+                                             onmouseover="this.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}], true)"
+                                             onmouseout="this.hideItemTooltip()">
                                             <div class="itemContainer">
                                                 <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                                      alt="${item.name}"
@@ -1322,8 +1322,8 @@ class UIManager {
                     `<div class="gearItem ${item.getRarity()}" 
                          onclick="game.unequipGear('${slot}')"
                          oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('${slot}')"
-                         onmouseover="game.uiManager.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
-                         onmouseout="game.uiManager.hideItemTooltip()">
+                         onmouseover="this.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
+                         onmouseout="this.hideItemTooltip()">
                         <div class="itemContainer">
                             <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                  alt="${item.name}"
@@ -1342,7 +1342,7 @@ class UIManager {
     renderGearStatLine(tooltip, label, value, isMainStat = false, heroIndex = null) {
         const heroParam = heroIndex !== null ? `, game.heroes[${heroIndex}]` : '';
         return `
-            <div class="gearStatLine" onmouseover="game.uiManager.showStatTooltip(event, '${tooltip}'${heroParam})" onmouseout="game.uiManager.hideStatTooltip()">
+            <div class="gearStatLine" onmouseover="this.showStatTooltip(event, '${tooltip}'${heroParam})" onmouseout="this.hideStatTooltip()">
                 <span class="gearStatLabel ${isMainStat ? 'mainstat' : ''}">${label}</span>
                 <span class="gearStatValue">${value}</span>
             </div>
@@ -1378,11 +1378,11 @@ class UIManager {
                 <div style="flex: 1;">
                     ${this.renderPopupStatRow('HP Regeneration', 'Regen', hero.hpRegen.toFixed(1))}
                     ${this.renderPopupStatRow('Attack Speed', 'Atk Spd', hero.actionBarSpeed.toFixed(1) + '%')}
-                    <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
+                    <div class="statRow" onmouseover="this.showStatTooltip(event, 'Armor')" onmouseout="this.hideStatTooltip()">
                         <span class="statLabel">Armor</span>
                         <span class="statValue">${Math.floor(hero.armor)} <span style="color: #6a9aaa;">(${(hero.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
                     </div>
-                    <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
+                    <div class="statRow" onmouseover="this.showStatTooltip(event, 'Resistance')" onmouseout="this.hideStatTooltip()">
                         <span class="statLabel">Resist</span>
                         <span class="statValue">${Math.floor(hero.resist)} <span style="color: #6a9aaa;">(${(hero.magicDamageReduction * 100).toFixed(1)}%)</span></span>
                     </div>
@@ -1450,7 +1450,7 @@ class UIManager {
     renderPopupStatRow(tooltip, label, value, isMainStat = false, hero = null) {
         const heroParam = hero ? ', document.getElementById(\'heroInfoPopup\')._currentHero' : '';
         return `
-            <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, '${tooltip}'${heroParam})" onmouseout="game.uiManager.hideStatTooltip()">
+            <div class="statRow" onmouseover="this.showStatTooltip(event, '${tooltip}'${heroParam})" onmouseout="this.hideStatTooltip()">
                 <span class="statLabel ${isMainStat ? 'mainstat' : ''}">${label}</span>
                 <span class="statValue">${value}</span>
             </div>
@@ -1473,8 +1473,8 @@ class UIManager {
                 <div class="gearLabel">${slotLabels[slot]}</div>
                 ${item ? 
                     `<div class="gearItem ${item.getRarity()}"
-                         onmouseover="game.uiManager.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
-                         onmouseout="game.uiManager.hideItemTooltip()">
+                         onmouseover="this.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
+                         onmouseout="this.hideItemTooltip()">
                         <div class="itemContainer">
                             <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                  alt="${item.name}"
@@ -1509,11 +1509,11 @@ class UIManager {
                 <div style="flex: 1;">
                     ${this.renderPopupStatRow('HP Regeneration', 'Regen', enemy.hpRegen.toFixed(1))}
                     ${this.renderPopupStatRow('Attack Speed', 'Atk Spd', enemy.actionBarSpeed.toFixed(1) + '%')}
-                    <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
+                    <div class="statRow" onmouseover="this.showStatTooltip(event, 'Armor')" onmouseout="this.hideStatTooltip()">
                         <span class="statLabel">Armor</span>
                         <span class="statValue">${Math.floor(enemy.armor)} <span style="color: #6a9aaa;">(${(enemy.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
                     </div>
-                    <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
+                    <div class="statRow" onmouseover="this.showStatTooltip(event, 'Resistance')" onmouseout="this.hideStatTooltip()">
                         <span class="statLabel">Resist</span>
                         <span class="statValue">${Math.floor(enemy.resist)} <span style="color: #6a9aaa;">(${(enemy.magicDamageReduction * 100).toFixed(1)}%)</span></span>
                     </div>
@@ -1682,7 +1682,7 @@ class UIManager {
             let rewardSlotHTML = '';
             if (result.item) {
                 const itemStarData = result.item.getStars();
-                rewardSlotHTML = `<div class="itemSlot" onmouseover="game.uiManager.showItemTooltip(event, game.pendingBattleResults.heroResults[${results.heroResults.indexOf(result)}].item)" onmouseout="game.uiManager.hideItemTooltip()">
+                rewardSlotHTML = `<div class="itemSlot" onmouseover="this.showItemTooltip(event, game.pendingBattleResults.heroResults[${results.heroResults.indexOf(result)}].item)" onmouseout="this.hideItemTooltip()">
                     <div class="itemContainer">
                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${result.item.id}.png" alt="${result.item.name}" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
                         ${result.item.refined ? '<div class="itemRefined">*</div>' : ''}
@@ -1692,7 +1692,7 @@ class UIManager {
                     </div>
                 </div>`;
             } else if (result.gold > 0) {
-                rewardSlotHTML = `<div class="itemSlot golden" onmouseover="game.uiManager.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseout="game.uiManager.hideGoldTooltip()">
+                rewardSlotHTML = `<div class="itemSlot golden" onmouseover="this.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseout="this.hideGoldTooltip()">
                     <img src="https://puzzle-drops.github.io/TEVE/img/items/gold.png" alt="Gold" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
                 </div>`;
             } else {
