@@ -50,15 +50,34 @@ class DevConsole {
         // Override console methods
         this.overrideConsoleMethods();
         
-        // Capture uncaught errors
-        window.addEventListener('error', (event) => {
-            this.addLog('error', `Uncaught Error: ${event.message} at ${event.filename}:${event.lineno}:${event.colno}`);
-        });
-        
-        // Capture unhandled promise rejections
-        window.addEventListener('unhandledrejection', (event) => {
-            this.addLog('error', `Unhandled Promise Rejection: ${event.reason}`);
-        });
+        // Replace these two event listeners in the init() method (around lines 47-56)
+
+// Capture uncaught errors
+window.addEventListener('error', (event) => {
+    let errorMsg = `Uncaught Error: ${event.message} at ${event.filename}:${event.lineno}:${event.colno}`;
+    if (event.error && event.error.stack) {
+        errorMsg += '\n' + event.error.stack;
+    }
+    this.addLog('error', errorMsg);
+});
+
+// Capture unhandled promise rejections
+window.addEventListener('unhandledrejection', (event) => {
+    let errorMsg = 'Unhandled Promise Rejection: ';
+    
+    if (event.reason instanceof Error) {
+        errorMsg += event.reason.message;
+        if (event.reason.stack) {
+            errorMsg += '\n' + event.reason.stack;
+        }
+    } else if (typeof event.reason === 'object' && event.reason !== null) {
+        errorMsg += JSON.stringify(event.reason, null, 2);
+    } else {
+        errorMsg += String(event.reason);
+    }
+    
+    this.addLog('error', errorMsg);
+});
         
         // Setup input handlers
         const input = document.getElementById('devConsoleInput');
