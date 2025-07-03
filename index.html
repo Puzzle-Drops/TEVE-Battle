@@ -447,11 +447,11 @@
                 </div>
                 <div class="heroStats">
                     <div class="heroTabs">
-                        <button class="tabButton active" onclick="game.showHeroTab('info')">Info</button>
-                        <button class="tabButton" onclick="game.showHeroTab('gear')">Gear</button>
-                        <button class="tabButton" onclick="game.showHeroTab('skills')">Skills</button>
-                        <button class="tabButton" onclick="game.showHeroTab('promote')">Promote</button>
-                        <button class="tabButton" onclick="game.showHeroTab('log')">Log</button>
+                        <button class="tabButton active" onclick="game.uiManager.showHeroTab('info')">Info</button>
+                        <button class="tabButton" onclick="game.uiManager.showHeroTab('gear')">Gear</button>
+                        <button class="tabButton" onclick="game.uiManager.showHeroTab('skills')">Skills</button>
+                        <button class="tabButton" onclick="game.uiManager.showHeroTab('promote')">Promote</button>
+                        <button class="tabButton" onclick="game.uiManager.showHeroTab('log')">Log</button>
                     </div>
                     <div class="tabContent" id="heroContent">
                         <!-- Content will be dynamically generated -->
@@ -848,7 +848,7 @@ if (refinementPopup && refinementPopup.style.display === 'block') {
                         collectionPopup._closeHandler = null;
                     }
                     // Show next popup if any
-                    game.showNextCollectionPopup();
+                    game.uiManager.showNextCollectionPopup();
                     e.preventDefault();
                     return;
                 }
