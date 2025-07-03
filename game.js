@@ -327,12 +327,6 @@ class Game {
         return this.isDungeonCompleted(previousDungeonId);
     }
 
-    closeDungeonSelect() {
-        this.uiManager.closeHeroInfo(); // Close any open popups
-        this.selectedTier = null;
-        this.uiManager.showMainMenu();
-    }
-
     enterDungeon(tierName, dungeonIndex) {
         const dungeon = this.dungeonTiers[tierName].dungeons[dungeonIndex];
         this.currentDungeon = dungeon;
@@ -605,14 +599,6 @@ class Game {
         this.showItemOptions(item, null, family, true, slot);
     }
     
-    closeItemContextMenu() {
-        const menu = document.getElementById('itemContextMenu');
-        if (menu) {
-            menu.remove();
-        }
-        this.contextMenuItem = null;
-    }
-
     // Item Refinement Popup Functions
     showRefinementPopup(item, itemIndex, family, isEquipped = false, slot = null) {
         // Show overlay
@@ -1864,28 +1850,6 @@ class Game {
         }
     }
 
-    showPromotionConfirm(newClass) {
-        const hero = this.heroes[this.uiManager.selectedHero];
-        const modal = document.getElementById('confirmModal');
-        const confirmText = document.getElementById('confirmText');
-        const confirmCost = document.getElementById('confirmCost');
-        
-        this.pendingPromotion = newClass;
-        
-        if (newClass === 'Awaken') {
-            confirmText.textContent = `Awaken ${hero.name} the ${hero.displayClassName}?`;
-            confirmCost.innerHTML = `💰 -10000000`;
-        } else {
-            const promoClass = unitData?.classes[newClass];
-            const displayName = promoClass ? promoClass.name : newClass;
-            confirmText.textContent = `Promote ${hero.name} the ${hero.displayClassName} to ${displayName}?`;
-            const cost = 1000 * Math.pow(10, hero.classTier);
-            confirmCost.innerHTML = `💰 -${cost}`;
-        }
-        
-        modal.style.display = 'flex';
-    }
-
     confirmPromotion() {
         const modal = document.getElementById('confirmModal');
         modal.style.display = 'none';
@@ -1951,11 +1915,6 @@ class Game {
         input.addEventListener('blur', () => {
             setTimeout(saveEdit, 10);
         });
-    }
-
-    useAbility(index) {
-        console.log('Using ability', index);
-        // Now handled by Battle class
     }
 
     toggleHeroSelection(heroIndex) {
