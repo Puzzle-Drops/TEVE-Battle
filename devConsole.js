@@ -447,8 +447,8 @@ Press \` to toggle console</span>`;
         this.addLog('info', `Set ${hero.name} to level ${level}`);
         
         if (game.currentScreen === 'heroesScreen') {
-            game.updateHeroList();
-            game.showHeroTab(game.currentTab);
+            game.uiManager.updateHeroList();
+            game.uiManager.showHeroTab(game.uiManager.currentTab);
         }
     }
     
@@ -468,8 +468,8 @@ Press \` to toggle console</span>`;
         this.addLog('info', `Set all heroes to level ${level}`);
         
         if (game.currentScreen === 'heroesScreen') {
-            game.updateHeroList();
-            game.showHeroTab(game.currentTab);
+            game.uiManager.updateHeroList();
+            game.uiManager.showHeroTab(game.uiManager.currentTab);
         }
     }
     
@@ -556,8 +556,8 @@ Press \` to toggle console</span>`;
             this.addLog('info', `Promoted ${hero.name} from ${oldClass} to ${hero.displayClassName}`);
             
             if (game.currentScreen === 'heroesScreen') {
-                game.updateHeroList();
-                game.showHeroTab(game.currentTab);
+                game.uiManager.updateHeroList();
+                game.uiManager.showHeroTab(game.uiManager.currentTab);
             }
         } else {
             this.addLog('error', `Failed to promote ${hero.name}`);
@@ -586,8 +586,8 @@ Press \` to toggle console</span>`;
         this.addLog('info', `Maxed out ${hero.name} - Level 500, Awakened: ${hero.awakened}`);
         
         if (game.currentScreen === 'heroesScreen') {
-            game.updateHeroList();
-            game.showHeroTab(game.currentTab);
+            game.uiManager.updateHeroList();
+            game.uiManager.showHeroTab(game.uiManager.currentTab);
         }
     }
     
@@ -797,7 +797,7 @@ Press \` to toggle console</span>`;
         
         // Update UI if on main menu
         if (game.currentScreen === 'mainMenuScreen') {
-            game.showMainMenu();
+            game.uiManager.showMainMenu();
         }
     }
     
@@ -959,8 +959,8 @@ Press \` to toggle console</span>`;
     
     // Update UI if on heroes screen
     if (game.currentScreen === 'heroesScreen') {
-        game.updateHeroList();
-        game.showHeroTab(game.currentTab);
+        game.uiManager.updateHeroList();
+        game.uiManager.showHeroTab(game.uiManager.currentTab);
     }
 }
     
