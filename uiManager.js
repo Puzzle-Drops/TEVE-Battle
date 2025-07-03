@@ -383,10 +383,10 @@ showHeroes() {
             }
             
             // Count collection for this dungeon
-            const dungeonCollection = this.game.collectionLog[dungeonInfo.id] || {};
-            const dungeonTotal = dungeonInfo.items.length * 4;
-            const dungeonCollected = Object.keys(dungeonCollection).length;
-            const isCompleted = dungeonCollected === dungeonTotal;
+const collectionStats = this.game.getDungeonCollectionStats(dungeonInfo.id);
+const dungeonTotal = collectionStats.total;
+const dungeonCollected = collectionStats.collected;
+const isCompleted = dungeonCollected === dungeonTotal;
             
             if (isCompleted) {
                 dungeonDiv.classList.add('completed');
@@ -893,6 +893,26 @@ showHeroes() {
             });
         }
     }
+
+updateRecordsDisplay() {
+    if (!this.game.currentDungeon) return;
+    
+    const dungeonId = this.game.currentDungeon.id;
+    const dungeonProgress = this.game.progression.completedDungeons[dungeonId] || { completions: 0, bestTime: null };
+    
+    // Update best time
+    const bestTimeElement = document.getElementById('dungeonBestTime');
+    bestTimeElement.textContent = dungeonProgress.bestTime || '--:--';
+    
+    // Update completions
+    const completionsElement = document.getElementById('dungeonCompletions');
+    completionsElement.textContent = `${dungeonProgress.completions} completed`;
+    
+    // Update collection percentage using the shared method
+    const collectionStats = this.game.getDungeonCollectionStats(dungeonId);
+    const collectionElement = document.getElementById('dungeonCollectionPercent');
+    collectionElement.textContent = `${collectionStats.percentage}%`;
+}
 
     updateHeroList() {
         const heroList = document.getElementById('heroList');
