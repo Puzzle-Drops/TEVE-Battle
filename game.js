@@ -3,6 +3,7 @@
             constructor() {
                 this.currentScreen = 'mainMenu';
                 this.heroes = [];
+                this.uiManager = new UIManager(this);
                 this.currentBattle = null;
                 this.selectedHero = 0;
                 this.currentTab = 'info';
@@ -122,8 +123,8 @@ getDungeonLevelRange(tierName) {
 filterStashSlots(source) {
 
     // Hide any existing tooltips before DOM manipulation
-    this.hideItemTooltip();
-    this.hideAbilityTooltip();
+    this.uiManager.hideItemTooltip();
+    this.uiManager.hideAbilityTooltip();
 
     if (source === 'gear') {
         // Store the current filter value
@@ -132,7 +133,7 @@ filterStashSlots(source) {
             this.currentGearFilter = select.value;
         }
         // Refresh the gear tab
-        this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+        this.uiManager.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
     } else if (source === 'individual') {
         // Store the current filter value for individual stash
         const select = document.getElementById('stashSlotFilterSelect');
@@ -141,7 +142,7 @@ filterStashSlots(source) {
         }
         // Refresh the individual stash screen
         if (this.currentStashFamily) {
-            this.showIndividualStash(this.currentStashFamily);
+            this.uiManager.showIndividualStash(this.currentStashFamily);
         }
     }
 }
@@ -332,143 +333,11 @@ isDungeonAccessible(dungeonId) {
     const previousDungeonId = tierDungeons[dungeonIndex - 1];
     return this.isDungeonCompleted(previousDungeonId);
 }
-		
-showSplashScreen() {
-    this.hideAllScreens();
-    this.closeHeroInfo(); // Close any open popups
-    this.currentScreen = 'splashScreen';
-    document.getElementById('splashScreen').style.display = 'flex';
-}
-
-showMainMenu() {
-    this.hideAllScreens();
-    this.closeHeroInfo(); // Close any open popups
-    this.currentScreen = 'mainMenuScreen';
-    document.getElementById('mainMenuScreen').style.display = 'block';
-    
-    // Update visibility based on progression
-    // Stash button
-    const stashButton = document.querySelector('.stashesButton');
-    if (stashButton) {
-        stashButton.style.display = this.progression.unlockedFeatures.stash ? '' : 'none';
-    }
-    
-    // Arena button
-    const arenaButton = document.querySelector('.arenaButton');
-    if (arenaButton) {
-        arenaButton.style.display = this.progression.unlockedFeatures.arena ? '' : 'none';
-    }
-    
-    // Dungeon tier orbs
-const tierOrder = this.getTierOrder();
-tierOrder.forEach((tier, index) => {
-    const orbElement = document.querySelector(`.dungeonOrb${index}`);
-    if (orbElement) {
-        orbElement.style.display = this.progression.unlockedTiers.includes(tier) ? '' : 'none';
-    }
-});
-}
-
-showArena() {
-    console.log('Arena not implemented yet');
-}
-
-            showHeroes() {
-                this.hideAllScreens();
-                this.closeHeroInfo(); // Close any open popups
-                this.currentScreen = 'heroesScreen';
-                document.getElementById('heroesScreen').style.display = 'block';
-                
-                this.updateHeroList();
-                
-                // Get the sorted heroes and select the first one
-                const sortedHeroes = [...this.heroes].sort((a, b) => {
-                    if (a.awakened !== b.awakened) return b.awakened ? 1 : -1;
-                    if (a.classTier !== b.classTier) return b.classTier - a.classTier;
-                    return b.level - a.level;
-                });
-                
-                if (sortedHeroes.length > 0) {
-                    this.selectHero(this.heroes.indexOf(sortedHeroes[0]));
-                }
-            }
-
-showDungeonBladeScreen(tierName) {
-    this.hideAllScreens();
-    this.closeHeroInfo(); // Close any open popups
-    this.currentScreen = 'dungeonSelectScreen';
-    document.getElementById('dungeonSelectScreen').style.display = 'block';
-    
-    const tierData = this.dungeonTiers[tierName];
-    const dungeons = tierData.dungeons;
-    
-    // Update all three blades
-for (let i = 0; i < 3; i++) {
-    const blade = document.getElementById(`dungeonBlade${i + 1}`);
-    const backdrop = blade.querySelector('.bladeBackdrop');
-    const nameElement = blade.querySelector('.bladeDungeonName');
-    const levelElement = blade.querySelector('.bladeDungeonLevel');
-    const starsElement = blade.querySelector('.bladeDungeonStars');
-    
-    if (i < dungeons.length) {
-        const dungeon = dungeons[i];
-        const isAccessible = this.isDungeonAccessible(dungeon.id);
-        
-        // Set background image
-        const dungeonName = dungeon.name.toLowerCase().replace(/ /g, '_');
-        backdrop.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
-        
-        // Set content
-        nameElement.textContent = dungeon.name;
-        levelElement.textContent = `Level ${dungeon.level}`;
-        
-        // Generate stars
-        const starData = this.generateStars({
-            type: 'enemy',
-            level: dungeon.level,
-            isBoss: true
-        });
-        starsElement.textContent = starData.html;
-        starsElement.className = `bladeDungeonStars ${starData.colorClass}`;
-        
-        // Handle accessibility
-        if (isAccessible) {
-            blade.classList.remove('disabled', 'locked');
-            blade.onclick = () => this.enterDungeon(tierName, i);
-            
-            // Remove any lock overlay
-            const lockOverlay = blade.querySelector('.bladeLockOverlay');
-            if (lockOverlay) {
-                lockOverlay.remove();
-            }
-        } else {
-            blade.classList.add('disabled', 'locked');
-            blade.onclick = null;
-            
-            // Add lock overlay if not present
-            if (!blade.querySelector('.bladeLockOverlay')) {
-                const lockOverlay = document.createElement('div');
-                lockOverlay.className = 'bladeLockOverlay';
-                lockOverlay.innerHTML = '<div class="bladeLockIcon">🔒</div>';
-                blade.appendChild(lockOverlay);
-            }
-        }
-    } else {
-            // Empty blade
-            backdrop.style.backgroundImage = '';
-            nameElement.textContent = 'Coming Soon';
-            levelElement.textContent = '';
-            starsElement.textContent = '';
-            blade.classList.add('disabled');
-            blade.onclick = null;
-        }
-    }
-}
 
 closeDungeonSelect() {
-    this.closeHeroInfo(); // Close any open popups
+    this.uiManager.closeHeroInfo(); // Close any open popups
     this.selectedTier = null;
-    this.showMainMenu();
+    this.uiManager.showMainMenu();
 }
 
 enterDungeon(tierName, dungeonIndex) {
@@ -501,7 +370,7 @@ enterDungeon(tierName, dungeonIndex) {
         // Return to main menu if dungeon data is missing
         console.warn(`No dungeon data found for: ${dungeonId}`);
         alert(`Dungeon "${dungeon.name}" is not yet implemented.`);
-        this.showMainMenu();
+        this.uiManager.showMainMenu();
         return;
     }
     
@@ -518,7 +387,7 @@ enterDungeon(tierName, dungeonIndex) {
     this.selectedParty = [null, null, null, null, null];
     
     // Show party select screen
-    this.showPartySelect();
+    this.uiManager.showPartySelect();
 }
 
             navigateWave(direction) {
@@ -536,27 +405,11 @@ enterDungeon(tierName, dungeonIndex) {
                     }
                 }
                 
-                this.updateEnemyFormation();
-            }
-
-            showStash() {
-                this.hideAllScreens();
-                this.closeHeroInfo(); // Close any open popups
-                this.currentScreen = 'stashScreen';
-                document.getElementById('stashScreen').style.display = 'block';
-                this.renderStashList();
+                this.uiManager.updateEnemyFormation();
             }
 
 		handleNPCClick(npcName) {
     console.log(`NPC ${npcName} clicked - not yet implemented`);
-}
-
-showCollectionLog() {
-    this.hideAllScreens();
-    this.closeHeroInfo();
-    this.currentScreen = 'collectionLogScreen';
-    document.getElementById('collectionLogScreen').style.display = 'block';
-    this.renderCollectionLog();
 }
 
 loadCollectionLog() {
@@ -612,525 +465,20 @@ checkItemForCollection(item, heroName, heroClass) {
             };
             
             this.saveCollectionLog();
-            this.showCollectionCompletePopup(item, totalRolls, heroName, heroClass);
+            this.uiManager.showCollectionCompletePopup(item, totalRolls, heroName, heroClass);
         }
     }
-}
-		
-showCollectionCompletePopup(item, qualityLevel, heroName, heroClass) {
-    // Add to queue
-    this.collectionPopupQueue.push({
-        item: item,
-        qualityLevel: qualityLevel,
-        heroName: heroName,
-        heroClass: heroClass
-    });
-    
-    // If no popup is currently active, show the next one
-    if (!this.collectionPopupActive) {
-        this.showNextCollectionPopup();
-    }
-}
-
-showNextCollectionPopup() {
-    // Check if there are popups in queue
-    if (this.collectionPopupQueue.length === 0) {
-        this.collectionPopupActive = false;
-        return;
-    }
-    
-    // Get the next popup data
-    const popupData = this.collectionPopupQueue.shift();
-    this.collectionPopupActive = true;
-    
-    const popup = document.getElementById('collectionCompletePopup');
-    const itemDiv = document.getElementById('collectionCompleteItem');
-    const infoDiv = document.getElementById('collectionCompleteInfo');
-    
-    // Create perfect display item with exact number of rolls
-    const displayItem = new Item(popupData.item.id);
-    
-    // First, clear all qualities
-    displayItem.quality1 = 0;
-    displayItem.quality2 = 0;
-    displayItem.quality3 = 0;
-    displayItem.quality4 = 0;
-    
-    // Then set only the exact number of perfect rolls
-    for (let i = 1; i <= popupData.qualityLevel; i++) {
-        displayItem[`quality${i}`] = 5;
-    }
-    
-    const starData = displayItem.getStars();
-    const rarity = displayItem.getRarity();
-    
-    // Update popup styling based on rarity
-    const rarityColors = {
-        green: '#00ff88',
-        blue: '#00c3ff',
-        purple: '#d896ff',
-        red: '#ff4444'
-    };
-    const color = rarityColors[rarity] || '#00ff88';
-    
-    popup.style.borderColor = color;
-    popup.style.boxShadow = `0 0 50px ${color.replace('#', '#')}88`;
-    const titleElement = popup.querySelector('.collectionCompleteTitle');
-    if (titleElement) {
-        titleElement.style.color = color;
-        titleElement.style.textShadow = `0 0 20px ${color.replace('#', '#')}88`;
-    }
-    
-    itemDiv.innerHTML = `
-        <div class="stashItemSlot ${rarity}" style="margin: 0 auto;">
-            <div class="itemContainer">
-                <img src="https://puzzle-drops.github.io/TEVE/img/items/${popupData.item.id}.png" 
-                     alt="${displayItem.name}"
-                     onerror="this.style.display='none'">
-                ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-                <div class="itemLevel">${displayItem.level}</div>
-                <div class="itemQuality">100%</div>
-            </div>
-        </div>
-    `;
-    
-    const timestamp = new Date().toLocaleString();
-    infoDiv.innerHTML = `
-        Obtained by ${popupData.heroName}, the ${popupData.heroClass}.<br>
-        ${timestamp}
-    `;
-    
-    popup.style.display = 'block';
-    
-    // Remove any existing handlers
-    const oldHandler = popup._closeHandler;
-    if (oldHandler) {
-        popup.removeEventListener('click', oldHandler);
-    }
-    
-    // Add click handler to close and show next
-    const closeHandler = () => {
-        popup.style.display = 'none';
-        popup.removeEventListener('click', closeHandler);
-        popup._closeHandler = null;
-        // Show next popup if any
-        this.showNextCollectionPopup();
-    };
-    
-    popup._closeHandler = closeHandler;
-    
-    setTimeout(() => {
-        popup.addEventListener('click', closeHandler);
-    }, 100);
-}
-		
-renderCollectionLog() {
-    const content = document.getElementById('collectionContent');
-    content.innerHTML = '';
-    
-    // Calculate total progress
-    let totalSlots = 0;
-    let collectedSlots = 0;
-    
-    // Get all dungeons that have items
-    const dungeonsWithItems = [];
-    Object.keys(dungeonData.dungeons).forEach(dungeonId => {
-        const dungeon = dungeonData.dungeons[dungeonId];
-        if (dungeon.rewards && dungeon.rewards.items && dungeon.rewards.items.length > 0) {
-            dungeonsWithItems.push({
-                id: dungeonId,
-                name: dungeon.name,
-                items: dungeon.rewards.items
-            });
-            // Each item has 4 quality levels to collect
-            totalSlots += dungeon.rewards.items.length * 4;
-        }
-    });
-    
-    // Count collected items
-    Object.values(this.collectionLog).forEach(dungeonCollection => {
-        collectedSlots += Object.keys(dungeonCollection).length;
-    });
-    
-    // Update progress display
-    document.getElementById('collectionProgressText').textContent = 
-        `${collectedSlots}/${totalSlots} collected`;
-    const progressPercent = totalSlots > 0 ? (collectedSlots / totalSlots * 100) : 0;
-    document.getElementById('collectionProgressFill').style.width = progressPercent + '%';
-    document.getElementById('collectionProgressPercent').textContent = 
-        Math.floor(progressPercent) + '%';
-    
-    // Render each dungeon
-    dungeonsWithItems.forEach((dungeonInfo, index) => {
-        const dungeonDiv = document.createElement('div');
-        dungeonDiv.className = 'dungeonCollection';
-        
-        // Auto-expand the first dungeon
-        if (index === 0) {
-            dungeonDiv.classList.add('expanded');
-        }
-        
-        // Count collection for this dungeon
-        const dungeonCollection = this.collectionLog[dungeonInfo.id] || {};
-        const dungeonTotal = dungeonInfo.items.length * 4;
-        const dungeonCollected = Object.keys(dungeonCollection).length;
-        const isCompleted = dungeonCollected === dungeonTotal;
-        
-        if (isCompleted) {
-            dungeonDiv.classList.add('completed');
-        }
-        
-        // Header
-        const headerDiv = document.createElement('div');
-        headerDiv.className = 'dungeonCollectionHeader';
-        headerDiv.innerHTML = `
-            <span>${isCompleted ? '[✓]' : `[${dungeonCollected}/${dungeonTotal}]`} ${dungeonInfo.name}</span>
-            <span>${isCompleted ? '✓' : '▼'}</span>
-        `;
-        
-        headerDiv.onclick = () => {
-            dungeonDiv.classList.toggle('expanded');
-        };
-        
-        dungeonDiv.appendChild(headerDiv);
-        
-        // Items
-        const itemsDiv = document.createElement('div');
-        itemsDiv.className = 'dungeonCollectionItems';
-        
-        dungeonInfo.items.forEach(itemId => {
-            const itemTemplate = itemData.items[itemId];
-            if (!itemTemplate) return;
-            
-            const rowDiv = document.createElement('div');
-            rowDiv.className = 'itemCollectionRow';
-            
-            const gridDiv = document.createElement('div');
-            gridDiv.className = 'itemQualityGrid';
-            
-            // Create 4 item thumbnails (1-roll green, 2-roll blue, 3-roll purple, 4-roll red)
-            for (let quality = 1; quality <= 4; quality++) {
-                // Create display item with specific number of rolls
-                const displayItem = new Item(itemId);
-                
-                // First, clear all qualities to 0
-                displayItem.quality1 = 0;
-                displayItem.quality2 = 0;
-                displayItem.quality3 = 0;
-                displayItem.quality4 = 0;
-                displayItem.quality5 = 0;
-                
-                // Then set only the exact number of perfect rolls
-                for (let i = 1; i <= quality; i++) {
-                    displayItem[`quality${i}`] = 5;
-                }
-                
-                const starData = displayItem.getStars();
-                const rarity = displayItem.getRarity();
-                
-                // Check if this quality is collected
-                const collectionKey = `${itemId}_${quality}`;
-                const collectionData = dungeonCollection[collectionKey];
-                const isCollected = !!collectionData;
-                
-                // Create item thumbnail
-const thumbnailDiv = document.createElement('div');
-// Use stashItemSlot class for consistent styling
-thumbnailDiv.className = `stashItemSlot ${rarity} ${isCollected ? 'collected' : ''}`;
-thumbnailDiv.style.opacity = isCollected ? '1' : '0.4';
-thumbnailDiv.innerHTML = `
-    <div class="itemContainer">
-        <img src="https://puzzle-drops.github.io/TEVE/img/items/${itemId}.png" 
-             alt="${itemTemplate.name}"
-             onerror="this.style.display='none'">
-        ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-        <div class="itemLevel">${itemTemplate.level}</div>
-        <div class="itemQuality">100%</div>
-        ${isCollected ? '<div class="collectionCheckmark">✓</div>' : ''}
-    </div>
-`;
-                
-                // Add hover tooltip
-                if (isCollected) {
-                    thumbnailDiv.onmouseover = (e) => {
-                        this.showCollectionTooltip(e, itemId, quality, collectionData);
-                    };
-                    thumbnailDiv.onmouseout = () => {
-                        this.hideItemTooltip();
-                    };
-                } else {
-                    thumbnailDiv.onmouseover = (e) => {
-                        // Create a fresh item for tooltip with proper quality
-                        const hoverItem = new Item(itemId);
-                        // Clear all qualities first
-                        hoverItem.quality1 = 0;
-                        hoverItem.quality2 = 0;
-                        hoverItem.quality3 = 0;
-                        hoverItem.quality4 = 0;
-                        hoverItem.quality5 = 0;
-                        // Set only the exact number of perfect rolls
-                        for (let i = 1; i <= quality; i++) {
-                            hoverItem[`quality${i}`] = 5;
-                        }
-                        this.showItemTooltip(e, hoverItem);
-                    };
-                    thumbnailDiv.onmouseout = () => {
-                        this.hideItemTooltip();
-                    };
-                }
-                
-                gridDiv.appendChild(thumbnailDiv);
-            }
-            
-            rowDiv.appendChild(gridDiv);
-            itemsDiv.appendChild(rowDiv);
-        });
-        
-        dungeonDiv.appendChild(itemsDiv);
-        content.appendChild(dungeonDiv);
-    });
-}
-
-showCollectionTooltip(event, itemId, qualityLevel, collectionData) {
-    // Create item with exact number of rolls for display
-    const displayItem = new Item(itemId);
-    
-    // Clear all qualities first
-    displayItem.quality1 = 0;
-    displayItem.quality2 = 0;
-    displayItem.quality3 = 0;
-    displayItem.quality4 = 0;
-    
-    // Set only the exact number of rolls to perfect
-    for (let i = 1; i <= qualityLevel; i++) {
-        displayItem[`quality${i}`] = 5;
-    }
-
-    // Get base tooltip
-    let tooltipHTML = displayItem.getTooltip(false);
-    
-    // Add collection info
-    const timestamp = new Date(collectionData.timestamp).toLocaleString();
-    tooltipHTML = tooltipHTML.replace('</div>', 
-        `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a6a8a; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">
-            Obtained by ${collectionData.heroName}, the ${collectionData.heroClass}<br>
-            ${timestamp}
-        </div></div>`);
-    
-    // Show tooltip
-    let tooltip = document.getElementById('itemTooltipDiv');
-    if (!tooltip) {
-        tooltip = document.createElement('div');
-        tooltip.id = 'itemTooltipDiv';
-        tooltip.style.cssText = `
-            position: fixed;
-            background: rgba(10, 15, 26, 0.95);
-            border: 2px solid #2a6a8a;
-            padding: 16px;
-            border-radius: 4px;
-            z-index: 10000;
-            pointer-events: none;
-        `;
-        document.body.appendChild(tooltip);
-    }
-    
-    tooltip.innerHTML = tooltipHTML;
-    tooltip.style.display = 'block';
-
-// Add colored border based on rarity
-const rarity = displayItem.getRarity();
-switch(rarity) {
-    case 'red':
-        tooltip.style.borderColor = '#ff4444';
-        tooltip.style.boxShadow = '0 0 20px rgba(255, 68, 68, 0.5)';
-        break;
-    case 'purple':
-        tooltip.style.borderColor = '#d896ff';
-        tooltip.style.boxShadow = '0 0 20px rgba(216, 150, 255, 0.3)';
-        break;
-    case 'blue':
-        tooltip.style.borderColor = '#4dd0e1';
-        tooltip.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.3)';
-        break;
-    case 'green':
-        tooltip.style.borderColor = '#00ff88';
-        tooltip.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.3)';
-        break;
-    case 'gold':
-        tooltip.style.borderColor = '#ffd700';
-        tooltip.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
-        break;
-    default:
-        tooltip.style.borderColor = '#2a6a8a';
-        tooltip.style.boxShadow = '';
-}
-	
-    // Position tooltip
-    const rect = event.target.getBoundingClientRect();
-    tooltip.style.left = rect.right + 10 + 'px';
-    tooltip.style.top = rect.top + 'px';
-    
-    // Adjust if tooltip goes off screen
-    const tooltipRect = tooltip.getBoundingClientRect();
-    if (tooltipRect.right > window.innerWidth) {
-        tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
-    }
-    if (tooltipRect.bottom > window.innerHeight) {
-        tooltip.style.top = (window.innerHeight - tooltipRect.height - 10) + 'px';
-    }
-}
-
-            renderStashList() {
-    const stashList = document.getElementById('stashList');
-    stashList.innerHTML = '';
-    
-    // Include Villager stash
-    const allFamilies = [
-        { name: 'Villager', icon: '👥', classes: ['Villager', 'Tester'] },
-        ...this.classFamilies
-    ];
-    
-    allFamilies.forEach((family, index) => {
-        const stashItem = document.createElement('div');
-        stashItem.className = 'stashItem';
-        
-        // Format family name for backdrop image
-        const backdropName = family.name.toLowerCase().replace(/ /g, '_');
-        
-        // Set the background image
-        stashItem.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_stashback.png')`;
-        stashItem.style.backgroundSize = 'cover';
-        stashItem.style.backgroundPosition = 'center';
-        stashItem.style.backgroundRepeat = 'no-repeat';
-        
-        stashItem.innerHTML = `
-            <div class="stashIcon">${family.icon}</div>
-            <div class="stashName">${family.name}</div>
-        `;
-        
-        stashItem.onclick = () => this.openStash(family);
-        stashList.appendChild(stashItem);
-    });
 }
 
             openStash(family) {
                 console.log(`Opening ${family.name} stash`);
                 this.currentStashFamily = family;
-                this.showIndividualStash(family);
+                this.uiManager.showIndividualStash(family);
             }
-
-showIndividualStash(family) {
-
-     // Hide any existing tooltips before DOM manipulation
-    this.hideItemTooltip();
-    this.hideAbilityTooltip();
-
-    this.hideAllScreens();
-    this.currentScreen = 'individualStashScreen';
-    document.getElementById('individualStashScreen').style.display = 'block';
-    
-    // Update header
-    const items = this.stashes[family.name].items;
-    const goldAmount = this.stashes[family.name].gold.toLocaleString();
-    
-    // Always show filter, but default based on item count
-    let filterValue = 'all';
-    if (items.length > 250) {
-        // Check if we already have a filter value for this stash
-        if (!this.currentStashFilter) {
-            this.currentStashFilter = 'trinket'; // Only set default on first open
-        }
-        filterValue = this.currentStashFilter;
-    } else {
-        // For smaller stashes, default to all unless user has already selected something
-        filterValue = this.currentStashFilter || 'all';
-    }
-    
-    // Build header HTML with filter (always show)
-    let headerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 100%;">
-        <span>${family.name} Stash</span>
-        <span style="color: #ffd700; margin-left: 20px;">💰 ${goldAmount}</span>
-        <div class="stashSlotFilter">
-            <label>Filter:</label>
-            <select id="stashSlotFilterSelect" onchange="game.filterStashSlots('individual')">
-                <option value="all" ${filterValue === 'all' ? 'selected' : ''}>All (${items.length})</option>
-                <option value="trinket" ${filterValue === 'trinket' ? 'selected' : ''}>Trinket</option>
-                <option value="head" ${filterValue === 'head' ? 'selected' : ''}>Head</option>
-                <option value="chest" ${filterValue === 'chest' ? 'selected' : ''}>Chest</option>
-                <option value="legs" ${filterValue === 'legs' ? 'selected' : ''}>Legs</option>
-                <option value="weapon" ${filterValue === 'weapon' ? 'selected' : ''}>Weapon</option>
-                <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
-            </select>
-        </div>
-        <button id="stashSortButton" class="sortSettingsButton" onclick="game.toggleSortSettings('stash')" title="Sort Settings">↕️</button>
-    </div>`;
-    document.getElementById('stashFamilyName').innerHTML = headerHTML;
-    
-    document.getElementById('stashGoldAmount').textContent = goldAmount;
-    
-    // Show items
-    const inventory = document.getElementById('stashInventory');
-    inventory.innerHTML = '';
-    
-    // Filter items based on selection
-    let itemsToShow = items;
-    if (filterValue !== 'all') {
-        itemsToShow = items.filter(item => item.slot === filterValue);
-    }
-    
-    // Sort items using custom sort settings
-    const sortedItems = this.sortItems(itemsToShow);
-    
-    if (sortedItems.length === 0) {
-        inventory.innerHTML = '<p style="text-align: center; color: #6a9aaa; margin-top: 50px;">No items in stash</p>';
-    } else {
-        sortedItems.forEach((item, index) => {
-            // Find the original index of this item in the unsorted array
-            const originalIndex = items.indexOf(item);
-            const starData = item.getStars();
-            
-            const itemDiv = document.createElement('div');
-            itemDiv.className = `stashItemSlot ${item.getRarity()}`;
-            itemDiv.innerHTML = `
-                <div class="itemContainer">
-                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
-                         alt="${item.name}"
-                         onerror="this.style.display='none'">
-                    ${item.refined ? '<div class="itemRefined">*</div>' : ''}
-                    ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-                    <div class="itemLevel">${item.level}</div>
-                    <div class="itemQuality">${item.getQualityPercent()}%</div>
-                </div>
-            `;
-            
-            // Add click handler
-            itemDiv.onclick = () => {
-                if (this.currentScreen === 'heroesScreen' && this.selectedHero !== undefined) {
-                    this.equipFromStash(originalIndex, item.slot);
-                }
-            };
-
-            // Right click for context menu
-            itemDiv.oncontextmenu = (e) => {
-                e.preventDefault();
-                this.showItemOptions(item, originalIndex, family);
-            };
-            
-            // Add hover tooltip with alt key detection
-            itemDiv.onmouseover = (e) => this.showItemTooltip(e, item);
-            itemDiv.onmouseout = () => this.hideItemTooltip();
-            
-            inventory.appendChild(itemDiv);
-        });
-    }
- // Hide any lingering tooltips after DOM update
-    this.hideItemTooltip();
-    this.hideAbilityTooltip();
-}
 		
 showItemOptions(item, itemIndex, family, isEquipped = false, slot = null) {
     // Hide item tooltip first
-    this.hideItemTooltip();
+    this.uiManager.hideItemTooltip();
     
     // Close any existing context menu
     this.closeItemContextMenu();
@@ -1207,10 +555,10 @@ options.push({
         // Refresh display based on current screen
         if (this.currentScreen === 'heroesScreen') {
             // Stay on hero screen
-            this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+            this.uiManager.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
         } else {
             // Only go to stash screen if we're already there
-            this.showIndividualStash(family);
+            this.uiManager.showIndividualStash(family);
         }
         this.closeItemContextMenu();
     }
@@ -1869,8 +1217,8 @@ showRefinedItemInSlot() {
     slot.classList.add(rarity);
     
     // Add hover and right-click handlers
-    slot.onmouseover = (e) => this.showItemTooltip(e, item);
-    slot.onmouseout = () => this.hideItemTooltip();
+    slot.onmouseover = (e) => this.uiManager.showItemTooltip(e, item);
+    slot.onmouseout = () => this.uiManager.hideItemTooltip();
     slot.oncontextmenu = (e) => {
         e.preventDefault();
         this.showRefinedItemContextMenu(e);
@@ -1971,7 +1319,7 @@ equipRefinedItem() {
     
     // Close popup and refresh
     this.closeRefinementPopup();
-    this.showGearTab(hero, document.getElementById('heroContent'));
+    this.uiManager.showGearTab(hero, document.getElementById('heroContent'));
 }
 
 sellRefinedItem() {
@@ -1994,9 +1342,9 @@ sellRefinedItem() {
     // Close popup and refresh
     this.closeRefinementPopup();
     if (this.currentScreen === 'heroesScreen') {
-        this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+        this.uiManager.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
     } else {
-        this.showIndividualStash(context.family);
+        this.uiManager.showIndividualStash(context.family);
     }
 }
 
@@ -2011,10 +1359,10 @@ closeRefinementPopup() {
     if (this.refinementContext) {
         if (this.currentScreen === 'heroesScreen') {
             // Refresh gear tab to show updated gold
-            this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+            this.uiManager.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
         } else if (this.currentScreen === 'individualStashScreen') {
             // Refresh stash to show updated gold
-            this.showIndividualStash(this.refinementContext.family);
+            this.uiManager.showIndividualStash(this.refinementContext.family);
         }
     }
     
@@ -2053,7 +1401,7 @@ equipFromContextMenu() {
     hero.equipItem(item, slot);
     
     // Refresh display
-    this.showHeroTab(this.currentTab);
+    this.uiManager.showHeroTab(this.currentTab);
 }
 
 refineFromContextMenu() {
@@ -2071,7 +1419,7 @@ refineFromContextMenu() {
         item.refine();
         
         // Refresh display
-        this.showIndividualStash(family);
+        this.uiManager.showIndividualStash(family);
     }
 }
 
@@ -2086,170 +1434,7 @@ sellFromContextMenu() {
     this.stashes[family.name].gold += item.sellcost;
     
     // Refresh display
-    this.showIndividualStash(family);
-}
-
-            showItemTooltip(event, item, isStashItem = false) {
-    // Check if alt key is held
-    const showMax = event.altKey;
-    
-    // Check if we should show comparison (only in hero gear tab hovering stash items)
-    let showComparison = false;
-    let equippedItem = null;
-    if (isStashItem && this.currentScreen === 'heroesScreen' && this.currentTab === 'gear' && this.selectedHero !== undefined) {
-        const hero = this.heroes[this.selectedHero];
-        equippedItem = hero.gear[item.slot];
-        showComparison = equippedItem !== null;
-    }
-    
-    // Create or get tooltip element
-    let tooltip = document.getElementById('itemTooltipDiv');
-    if (!tooltip) {
-        tooltip = document.createElement('div');
-        tooltip.id = 'itemTooltipDiv';
-        tooltip.style.cssText = `
-            position: fixed;
-            background: rgba(10, 15, 26, 0.95);
-            border: 2px solid #2a6a8a;
-            padding: 16px;
-            border-radius: 4px;
-            z-index: 10000;
-            pointer-events: none;
-            max-height: 600px;
-            overflow-y: auto;
-        `;
-        document.body.appendChild(tooltip);
-    }
-    
-    // Store item reference for alt key updates
-    tooltip._currentItem = item;
-    tooltip._isComparison = showComparison;
-    tooltip._equippedItem = equippedItem;
-    
-    // Build tooltip HTML
-    let tooltipHTML = '';
-    
-    if (showComparison) {
-        // Comparison layout
-        tooltipHTML = '<div style="display: flex; gap: 20px;">';
-        
-        // Hovered item (left)
-        tooltipHTML += '<div style="flex: 1;">';
-        tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
-        tooltipHTML += item.getTooltip(showMax);
-        tooltipHTML += '</div>';
-        
-        // Separator
-        tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
-        
-        // Equipped item (right)
-        tooltipHTML += '<div style="flex: 1;">';
-        tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
-        tooltipHTML += equippedItem.getTooltip(showMax);
-        tooltipHTML += '</div>';
-        
-        tooltipHTML += '</div>';
-    } else {
-        // Single item tooltip
-        tooltipHTML = item.getTooltip(showMax);
-    }
-    
-    // Add colored border based on rarity
-    const rarity = item.getRarity();
-    switch(rarity) {
-        case 'red':
-            tooltip.style.borderColor = '#ff4444';
-            tooltip.style.boxShadow = '0 0 20px rgba(255, 68, 68, 0.5)';
-            break;
-        case 'purple':
-            tooltip.style.borderColor = '#d896ff';
-            tooltip.style.boxShadow = '0 0 20px rgba(216, 150, 255, 0.3)';
-            break;
-        case 'blue':
-            tooltip.style.borderColor = '#4dd0e1';
-            tooltip.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.3)';
-            break;
-        case 'green':
-            tooltip.style.borderColor = '#00ff88';
-            tooltip.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.3)';
-            break;
-        case 'gold':
-            tooltip.style.borderColor = '#ffd700';
-            tooltip.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
-            break;
-        default:
-            tooltip.style.borderColor = '#2a6a8a';
-            tooltip.style.boxShadow = '';
-    }
-    
-    tooltip.innerHTML = tooltipHTML;
-    tooltip.style.display = 'block';
-    
-    // Position tooltip
-    const rect = event.target.getBoundingClientRect();
-    tooltip.style.left = rect.right + 10 + 'px';
-    tooltip.style.top = rect.top + 'px';
-    
-    // Adjust if tooltip goes off screen
-    const tooltipRect = tooltip.getBoundingClientRect();
-    if (tooltipRect.right > window.innerWidth) {
-        tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
-    }
-    if (tooltipRect.bottom > window.innerHeight) {
-        tooltip.style.top = (window.innerHeight - tooltipRect.height - 10) + 'px';
-    }
-}
-            hideItemTooltip() {
-                const tooltip = document.getElementById('itemTooltipDiv');
-                if (tooltip) {
-                    tooltip.style.display = 'none';
-                    tooltip._currentItem = null;
-                }
-            }
-
-showGoldTooltip(event, amount, isDefeat = false) {
-    // Create or get gold tooltip element
-    let tooltip = document.getElementById('goldTooltipDiv');
-    if (!tooltip) {
-        tooltip = document.createElement('div');
-        tooltip.id = 'goldTooltipDiv';
-        tooltip.style.cssText = `
-            position: fixed;
-            background: rgba(10, 15, 26, 0.95);
-            border: 2px solid #ffd700;
-            padding: 12px 20px;
-            border-radius: 4px;
-            z-index: 10000;
-            pointer-events: none;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        `;
-        document.body.appendChild(tooltip);
-    }
-    
-    const sign = isDefeat ? '-' : '+';
-    tooltip.innerHTML = `<div style="font-size: 20px; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">${sign}${amount} Gold</div>`;
-    tooltip.style.display = 'block';
-    
-    // Position tooltip
-    const rect = event.target.getBoundingClientRect();
-    tooltip.style.left = rect.right + 10 + 'px';
-    tooltip.style.top = rect.top + 'px';
-    
-    // Adjust if tooltip goes off screen
-    const tooltipRect = tooltip.getBoundingClientRect();
-    if (tooltipRect.right > window.innerWidth) {
-        tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
-    }
-    if (tooltipRect.bottom > window.innerHeight) {
-        tooltip.style.top = (window.innerHeight - tooltipRect.height - 10) + 'px';
-    }
-}
-
-hideGoldTooltip() {
-    const tooltip = document.getElementById('goldTooltipDiv');
-    if (tooltip) {
-        tooltip.style.display = 'none';
-    }
+    this.uiManager.showIndividualStash(family);
 }
 
 loadSortSettings() {
@@ -2283,156 +1468,18 @@ saveSortSettings() {
     localStorage.setItem('teveSortSettings', JSON.stringify(this.sortSettings));
 }
 
-toggleSortSettings(source) {
-    const panel = document.getElementById('sortSettingsPanel');
-    const button = document.querySelector(`#${source}SortButton`);
-    
-    if (panel && panel.style.display === 'block') {
-        panel.style.display = 'none';
-        button.classList.remove('active');
-    } else {
-        this.showSortSettings(source);
-        button.classList.add('active');
-    }
-}
-
-showSortSettings(source) {
-    // Close any existing panel
-    const existingPanel = document.getElementById('sortSettingsPanel');
-    if (existingPanel) {
-        existingPanel.remove();
-    }
-    
-    // Remove active class from all buttons
-    document.querySelectorAll('.sortSettingsButton').forEach(btn => btn.classList.remove('active'));
-    
-    // Create new panel
-    const panel = document.createElement('div');
-    panel.id = 'sortSettingsPanel';
-    panel.className = 'sortSettingsPanel';
-    
-    // Build sort criteria list
-const criteriaHTML = this.sortSettings.order.map((criteria, index) => {
-    const labels = {
-        rarity: 'Rarity',
-        stars: 'Stars',
-        quality: 'Quality %',
-	level: 'Level',
-        name: 'Name'
-    };
-    const direction = this.sortSettings.direction[criteria];
-    const arrow = direction === 'desc' ? '↓' : '↑';
-        
-        return `
-            <li class="sortCriteriaItem" draggable="true" data-criteria="${criteria}" data-index="${index}">
-                <span class="dragHandle">≡</span>
-                <span class="sortCriteriaLabel">${labels[criteria]}</span>
-                <button class="sortDirectionToggle" onclick="game.toggleSortDirection('${criteria}', '${source}')">${arrow}</button>
-            </li>
-        `;
-    }).join('');
-    
-    panel.innerHTML = `
-        <h4>Sort Order</h4>
-        <ul class="sortCriteriaList">
-            ${criteriaHTML}
-        </ul>
-        <button class="resetSortButton" onclick="game.resetSortSettings('${source}')">Reset to Default</button>
-    `;
-    
-    // Position panel below the button
-    const button = document.querySelector(`#${source}SortButton`);
-    const rect = button.getBoundingClientRect();
-    panel.style.position = 'fixed';
-    panel.style.top = (rect.bottom + 5) + 'px';
-    panel.style.left = rect.left + 'px';
-    
-    document.body.appendChild(panel);
-    
-    // Add drag and drop event listeners
-    this.setupSortDragDrop(source);
-    
-    // Close panel when clicking outside
-    setTimeout(() => {
-        document.addEventListener('click', (e) => {
-            if (!panel.contains(e.target) && e.target.id !== `${source}SortButton`) {
-                panel.style.display = 'none';
-                button.classList.remove('active');
-            }
-        }, { once: true });
-    }, 10);
-}
-
-setupSortDragDrop(source) {
-    const items = document.querySelectorAll('.sortCriteriaItem');
-    let draggedItem = null;
-    
-    items.forEach(item => {
-        item.addEventListener('dragstart', (e) => {
-            draggedItem = item;
-            item.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-        });
-        
-        item.addEventListener('dragend', () => {
-            item.classList.remove('dragging');
-        });
-        
-        item.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            
-            if (item !== draggedItem) {
-                item.classList.add('dragover');
-            }
-        });
-        
-        item.addEventListener('dragleave', () => {
-            item.classList.remove('dragover');
-        });
-        
-        item.addEventListener('drop', (e) => {
-            e.preventDefault();
-            item.classList.remove('dragover');
-            
-            if (item !== draggedItem) {
-                const allItems = [...items];
-                const draggedIndex = allItems.indexOf(draggedItem);
-                const targetIndex = allItems.indexOf(item);
-                
-                // Update sort order
-                const newOrder = [...this.sortSettings.order];
-                const [removed] = newOrder.splice(draggedIndex, 1);
-                newOrder.splice(targetIndex, 0, removed);
-                this.sortSettings.order = newOrder;
-                
-                // Save and refresh
-                this.saveSortSettings();
-                this.showSortSettings(source);
-                
-                // Refresh the current view
-                if (source === 'gear') {
-                    this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
-                } else if (source === 'stash') {
-                    this.showIndividualStash(this.currentStashFamily);
-                }
-            }
-        });
-    });
-}
-
 toggleSortDirection(criteria, source) {
     this.sortSettings.direction[criteria] = 
         this.sortSettings.direction[criteria] === 'desc' ? 'asc' : 'desc';
     
     this.saveSortSettings();
-    this.showSortSettings(source);
+    this.uiManager.showSortSettings(source);
     
     // Refresh the current view
     if (source === 'gear') {
-        this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+        this.uiManager.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
     } else if (source === 'stash') {
-        this.showIndividualStash(this.currentStashFamily);
+        this.uiManager.showIndividualStash(this.currentStashFamily);
     }
 }
 
@@ -2449,13 +1496,13 @@ resetSortSettings(source) {
     };
     
     this.saveSortSettings();
-    this.showSortSettings(source);
+    this.uiManager.showSortSettings(source);
     
     // Refresh the current view
     if (source === 'gear') {
-        this.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
+        this.uiManager.showGearTab(this.heroes[this.selectedHero], document.getElementById('heroContent'));
     } else if (source === 'stash') {
-        this.showIndividualStash(this.currentStashFamily);
+        this.uiManager.showIndividualStash(this.currentStashFamily);
     }
 }
 
@@ -2501,62 +1548,6 @@ sortItems(items) {
         return aSlot - bSlot;
     });
 }
-		
-            showBattle() {
-    this.hideAllScreens();
-    this.closeHeroInfo(); // Close any open popups
-    this.currentScreen = 'battleScene';
-    document.getElementById('battleScene').style.display = 'block';
-    
-    // Set battlefield background based on current dungeon
-    const battleFieldBg = document.querySelector('.battleFieldBackground');
-    if (battleFieldBg && this.currentDungeon) {
-        const dungeonName = this.currentDungeon.name.toLowerCase().replace(/ /g, '_');
-        battleFieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
-    }
-                
-              // Set auto toggles based on saved states
-                document.getElementById('autoModeToggle').checked = this.autoBattle;
-                document.getElementById('autoReplayToggle').checked = this.autoReplay;
-		    
-                // Update UI with actual units
-                this.updateBattleUI();
-            }
-
-            updateBattleUI() {
-                // Hide all unit slots first
-                for (let i = 1; i <= 5; i++) {
-                    document.getElementById(`party${i}`).style.display = 'none';
-                    document.getElementById(`enemy${i}`).style.display = 'none';
-                }
-                
-                // Show party units
-                const partyUnits = this.selectedParty.map(heroIndex => 
-                    heroIndex !== null ? this.heroes[heroIndex] : null
-                ).filter(hero => hero !== null);
-                
-                partyUnits.forEach((hero, index) => {
-    const slot = document.getElementById(`party${index + 1}`);
-    if (slot) {
-        slot.style.display = 'block';
-        let unitDiv = slot.querySelector('.unit');
-        
-        // Create unit div if it doesn't exist
-        if (!unitDiv) {
-            unitDiv = document.createElement('div');
-            unitDiv.className = 'unit';
-            slot.appendChild(unitDiv);
-        }
-        
-        unitDiv.innerHTML = `
-            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_portrait.png" alt="${hero.displayClassName}" 
-                 style="width: 100%; image-rendering: pixelated; object-fit: contain;"
-                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size: 9px; text-align: center; line-height: 1.2;\\'><div>${hero.name}</div><div style=\\'color: #6a9aaa;\\'>Lv${hero.level}</div></div>'">
-        `;
-    }
-});
-                
-            }
 
 startBattle() {
     // Clean up any existing battle timer interval
@@ -2571,7 +1562,7 @@ startBattle() {
     ).filter(hero => hero !== null);
     
     // Show battle screen
-    this.showBattle();
+    this.uiManager.showBattle();
 
 	// If auto replay is on, ensure auto battle is also on
 if (this.autoReplay && !this.autoBattle) {
@@ -2630,7 +1621,7 @@ toggleAutoReplay(enabled) {
         if (this.autoReplayTimer) {
             clearTimeout(this.autoReplayTimer);
             this.autoReplayTimer = null;
-            this.updateAutoReplayText(null);
+            this.uiManager.updateAutoReplayText(null);
         }
         // Reset automatic mode tracking
         this.automaticModeStartTime = null;
@@ -2715,7 +1706,7 @@ if (exitButton) {
                     }
         
                     // Close any open popup
-                    this.closeHeroInfo();
+                    this.uiManager.closeHeroInfo();
 
 			// Clear any auto replay timer
                     if (this.autoReplayTimer) {
@@ -2743,73 +1734,10 @@ if (!this.autoReplay) {
                 
                 // Return to party select screen instead of main menu
                 if (this.currentDungeon) {
-                    this.showPartySelect();
+                    this.uiManager.showPartySelect();
                 } else {
-                    this.showMainMenu();
+                    this.uiManager.showMainMenu();
                 }
-            }
-
-hideAllScreens() {
-    document.getElementById('splashScreen').style.display = 'none';
-    document.getElementById('mainMenuScreen').style.display = 'none';
-    document.getElementById('battleScene').style.display = 'none';
-    document.getElementById('heroesScreen').style.display = 'none';
-    document.getElementById('stashScreen').style.display = 'none';
-    document.getElementById('partySelectScreen').style.display = 'none';
-    document.getElementById('individualStashScreen').style.display = 'none';
-    document.getElementById('collectionLogScreen').style.display = 'none';
-    document.getElementById('dungeonSelectScreen').style.display = 'none';
-}
-
-            updateHeroList() {
-                const heroList = document.getElementById('heroList');
-                heroList.innerHTML = '';
-                
-                // Sort heroes by awakened status, then tier, then level
-                const sortedHeroes = [...this.heroes].sort((a, b) => {
-                    // Awakened heroes first
-                    if (a.awakened !== b.awakened) return b.awakened ? 1 : -1;
-                    // Then by tier
-                    if (a.classTier !== b.classTier) return b.classTier - a.classTier;
-                    // Finally by level
-                    return b.level - a.level;
-                });
-                
-                sortedHeroes.forEach((hero, index) => {
-                    const thumb = document.createElement('div');
-                    thumb.className = 'heroThumb';
-                    if (this.heroes.indexOf(hero) === this.selectedHero) {
-                        thumb.classList.add('selected');
-                    }
-                    
-                    // Generate stars using consolidated function
-                    const starData = hero.getStars();
-                    
-                    // Check if hero can promote (but not if already awakened)
-                    const canPromote = hero.canPromote() && !hero.awakened;
-                    const isAwakenable = hero.classTier === 4 && hero.level >= 400 && !hero.awakened;
-
-                    thumb.innerHTML = `
-    <div style="position: relative; width: 100px; height: 100px;">
-        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_portrait.png" alt="${hero.displayClassName}" 
-             style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
-             onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 100 100\\'><rect fill=\\'%23666\\' width=\\'100\\' height=\\'100\\'/><text x=\\'50\\' y=\\'55\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'14\\'>${hero.displayClassName}</text></svg>'">
-             
-        ${starData.html ? `<div class="thumbStars ${starData.colorClass}">${starData.html}</div>` : ''}
-
-        <div class="thumbLevel">${hero.level}</div>
-
-        ${canPromote ? `<div class="promoteArrowThumb ${isAwakenable ? 'awaken' : 'normal'}">^</div>` : ''}
-    </div>
-
-    <div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
-    <div class="thumbName">${hero.name}</div>
-`;
-
-                    
-                    thumb.onclick = () => this.selectHero(this.heroes.indexOf(hero));
-                    heroList.appendChild(thumb);
-                });
             }
 
             selectHero(index) {
@@ -2832,705 +1760,15 @@ hideAllScreens() {
     portrait.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_backdrop.png')`;
     
     // Update hero list selection
-    this.updateHeroList();
+    this.uiManager.updateHeroList();
     
     // Refresh current tab
-    this.showHeroTab(this.currentTab);
+    this.uiManager.showHeroTab(this.currentTab);
 }
 
-            showHeroTab(tab) {
-                this.currentTab = tab;
-                const hero = this.heroes[this.selectedHero];
-                const content = document.getElementById('heroContent');
-                
-                // Update tab buttons
-                document.querySelectorAll('.tabButton').forEach(btn => {
-                    btn.classList.toggle('active', btn.textContent.toLowerCase() === tab);
-                });
-                
-                switch(tab) {
-                    case 'info':
-                        this.showInfoTab(hero, content);
-                        break;
-                    case 'skills':
-                        this.showSkillsTab(hero, content);
-                        break;
-                    case 'promote':
-                        this.showPromoteTab(hero, content);
-                        break;
-                    case 'gear':
-                        this.showGearTab(hero, content);
-                        break;
-                    case 'log':
-                        this.showLogTab(hero, content);
-                        break;
-                }
-            }
-
-			showInfoTab(hero, content) {
-
-				
-    // Generate stars using consolidated function
-    const starData = hero.getStars();
-        
-    content.innerHTML = `
-        <div style="margin-bottom: 20px;">
-            ${starData.html ? `<div style="font-size: 48px; font-weight: bold; ${starData.colorClass === 'awakened' ? 'color: #d896ff;' : 'color: #ffd700;'} text-shadow: 0 0 12px ${starData.colorClass === 'awakened' ? 'rgba(216, 150, 255, 0.9)' : 'rgba(255, 215, 0, 0.9)'}, 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${starData.html}</div>` : ''}
-            <div class="heroName">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
-            <div style="font-size: 32px; color: #6a9aaa; cursor: pointer;" onclick="game.editHeroName()">
-                <span id="heroNameText">${hero.name}</span>
-            </div>
-            <div style="font-size: 32px; color: #4dd0e1; margin-top: 40px;">Level ${hero.level}</div>
-        </div>
-        <div class="expBar" style="position: relative; height: 40px; border: 1px solid #2a6a8a;">
-    <div class="expFill" style="width: ${hero.level >= 500 ? '100' : Math.max(0, Math.min((hero.exp / hero.expToNext) * 100, 100))}%; height: 100%; background: ${hero.level >= 500 && hero.awakened ? 'linear-gradient(90deg, #d896ff 0%, #a855f7 100%)' : 'linear-gradient(90deg, #0066cc 0%, #0099ff 100%)'}; box-shadow: 0 0 10px ${hero.level >= 500 && hero.awakened ? 'rgba(216, 150, 255, 0.5)' : 'rgba(0, 153, 255, 0.5)'};"></div>
-            <div class="expText" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: ${hero.level >= 500 ? '#fff' : '#6a9aaa'};">
-                ${hero.level >= 500 ? 'Max Level' : `${hero.exp} / ${hero.expToNext} (${((hero.exp / hero.expToNext) * 100).toFixed(1)}%)`}
-            </div>
-        </div>
-        
-        <div style="margin-top: 40px; display: flex; gap: 40px; align-items: flex-start;">
-            <div style="flex: 0 0 auto; min-width: 200px; place-items: anchor-center; margin: 10px 0">
-                <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
-                    <div class="gearSlot" style="cursor: default;">
-                        <div class="gearLabel" style="font-size: 10px;">Trinket</div>
-                        ${hero.gear.trinket ? 
-                            `<div class="gearItem ${hero.gear.trinket.getRarity()}" 
-                                 style="pointer-events: all;"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.trinket)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.trinket.id}.png" 
-                                         alt="${hero.gear.trinket.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.trinket.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.trinket.getStars().html ? `<div class="itemStars ${hero.gear.trinket.getStars().colorClass}">${hero.gear.trinket.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.trinket.level}</div>
-                                    <div class="itemQuality">${hero.gear.trinket.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                    <div class="gearSlot" style="cursor: default;">
-                        <div class="gearLabel" style="font-size: 10px;">Head</div>
-                        ${hero.gear.head ? 
-                            `<div class="gearItem ${hero.gear.head.getRarity()}"
-                                 style="pointer-events: all;"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.head)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.head.id}.png" 
-                                         alt="${hero.gear.head.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.head.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.head.getStars().html ? `<div class="itemStars ${hero.gear.head.getStars().colorClass}">${hero.gear.head.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.head.level}</div>
-                                    <div class="itemQuality">${hero.gear.head.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                    <div class="gearSlot" style="cursor: default;">
-                        <div class="gearLabel" style="font-size: 10px;">Weapon</div>
-                        ${hero.gear.weapon ? 
-                            `<div class="gearItem ${hero.gear.weapon.getRarity()}"
-                                 style="pointer-events: all;"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.weapon)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.weapon.id}.png" 
-                                         alt="${hero.gear.weapon.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.weapon.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.weapon.getStars().html ? `<div class="itemStars ${hero.gear.weapon.getStars().colorClass}">${hero.gear.weapon.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.weapon.level}</div>
-                                    <div class="itemQuality">${hero.gear.weapon.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                    <div class="gearSlot" style="cursor: default;">
-                        <div class="gearLabel" style="font-size: 10px;">Chest</div>
-                        ${hero.gear.chest ? 
-                            `<div class="gearItem ${hero.gear.chest.getRarity()}"
-                                 style="pointer-events: all;"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.chest)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.chest.id}.png" 
-                                         alt="${hero.gear.chest.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.chest.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.chest.getStars().html ? `<div class="itemStars ${hero.gear.chest.getStars().colorClass}">${hero.gear.chest.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.chest.level}</div>
-                                    <div class="itemQuality">${hero.gear.chest.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                    <div class="gearSlot" style="cursor: default;">
-                        <div class="gearLabel" style="font-size: 10px;">Offhand</div>
-                        ${hero.gear.offhand ? 
-                            `<div class="gearItem ${hero.gear.offhand.getRarity()}"
-                                 style="pointer-events: all;"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.offhand)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.offhand.id}.png" 
-                                         alt="${hero.gear.offhand.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.offhand.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.offhand.getStars().html ? `<div class="itemStars ${hero.gear.offhand.getStars().colorClass}">${hero.gear.offhand.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.offhand.level}</div>
-                                    <div class="itemQuality">${hero.gear.offhand.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                    <div class="gearSlot" style="cursor: default;">
-                        <div class="gearLabel" style="font-size: 10px;">Legs</div>
-                        ${hero.gear.legs ? 
-                            `<div class="gearItem ${hero.gear.legs.getRarity()}"
-                                 style="pointer-events: all;"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.legs)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.legs.id}.png" 
-                                         alt="${hero.gear.legs.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.legs.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.legs.getStars().html ? `<div class="itemStars ${hero.gear.legs.getStars().colorClass}">${hero.gear.legs.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.legs.level}</div>
-                                    <div class="itemQuality">${hero.gear.legs.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                </div>
-            </div>
-            
-            <div style="flex: 1; min-width: 200px;">
-                <div class="statLine" onmouseover="game.showStatTooltip(event, 'Health Points', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
-    <span class="statName">Health</span>
-    <span class="statValue">${hero.baseStats.hp} ${hero.gearStats.hp > 0 ? `<span class="statBonus">+${hero.gearStats.hp}</span>` : ''}</span>
-</div>
-<div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
-    <span class="statName">Attack</span>
-    <span class="statValue">${hero.baseStats.attack} ${hero.gearStats.attack > 0 ? `<span class="statBonus">+${hero.gearStats.attack}</span>` : ''}</span>
-</div>
-<div class="statLine" onmouseover="game.showStatTooltip(event, 'Strength', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
-    <span class="statName ${hero.mainstat === 'str' ? 'mainstat' : ''}">Strength</span>
-    <span class="statValue">${hero.baseStats.str} ${hero.gearStats.str > 0 ? `<span class="statBonus">+${hero.gearStats.str}</span>` : ''}</span>
-</div>
-<div class="statLine" onmouseover="game.showStatTooltip(event, 'Agility', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
-    <span class="statName ${hero.mainstat === 'agi' ? 'mainstat' : ''}">Agility</span>
-    <span class="statValue">${hero.baseStats.agi} ${hero.gearStats.agi > 0 ? `<span class="statBonus">+${hero.gearStats.agi}</span>` : ''}</span>
-</div>
-<div class="statLine" onmouseover="game.showStatTooltip(event, 'Intelligence', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
-    <span class="statName ${hero.mainstat === 'int' ? 'mainstat' : ''}">Intelligence</span>
-    <span class="statValue">${hero.baseStats.int} ${hero.gearStats.int > 0 ? `<span class="statBonus">+${hero.gearStats.int}</span>` : ''}</span>
-</div>
-            </div>
-            
-            <div style="flex: 1; min-width: 200px;">
-                <div class="statLine" onmouseover="game.showStatTooltip(event, 'HP Regeneration')" onmouseout="game.hideStatTooltip()">
-    <span class="statName">HP Regen</span>
-    <span class="statValue">${hero.baseStats.hpRegen.toFixed(1)} ${hero.gearStats.hpRegen > 0 ? `<span class="statBonus">+${hero.gearStats.hpRegen.toFixed(1)}</span>` : ''}</span>
-</div>
-<div class="statLine" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
-    <span class="statName">Atk Spd</span>
-    <span class="statValue">${hero.baseStats.attackSpeed.toFixed(1)}% ${hero.gearStats.attackSpeed > 0 ? `<span class="statBonus">+${hero.gearStats.attackSpeed.toFixed(1)}%</span>` : ''}</span>
-</div>
-<div class="statLine" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
-    <span class="statName">Armor</span>
-    <span class="statValue">${Math.floor(hero.baseStats.armor)} ${hero.gearStats.armor > 0 ? `<span class="statBonus">+${hero.gearStats.armor}</span>` : ''} <span style="color: #6a9aaa;">(${(hero.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
-</div>
-<div class="statLine" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
-    <span class="statName">Resistance</span>
-    <span class="statValue">${Math.floor(hero.baseStats.resist)} ${hero.gearStats.resist > 0 ? `<span class="statBonus">+${hero.gearStats.resist}</span>` : ''} <span style="color: #6a9aaa;">(${(hero.magicDamageReduction * 100).toFixed(1)}%)</span></span>
-</div>
-            </div>
-        </div>
-    `;
-}
-			
-showStatTooltip(event, statName, hero = null) {
-    // Check if this is the hero's main stat
-    const isMainStat = hero && hero.mainstat && 
-        ((statName === 'Strength' && hero.mainstat === 'str') ||
-         (statName === 'Agility' && hero.mainstat === 'agi') ||
-         (statName === 'Intelligence' && hero.mainstat === 'int'));
-    
-    // Define tooltip content with stat name as first line
-    const mainStatText = isMainStat ? ' <span style="color: #ffd700;">(Main Stat)</span>' : '';
-    
-    const tooltipData = {
-        "Strength": `<b>Strength${mainStatText}</b><br>Increases Max HP, HP Regeneration, and Armor.<br>Boosts Strength-based abilities.`,
-        "Agility": `<b>Agility${mainStatText}</b><br>Increases Attack Speed and slightly boosts Armor.<br>Boosts Agility-based abilities.`,
-        "Intelligence": `<b>Intelligence${mainStatText}</b><br>Increases Resistance (magic defense).<br>Boosts Intelligence-based abilities.`,
-
-        "Health Points": "<b>Health Points</b><br>Scales with STR.<br><code>5 × STR</code>",
-        "HP Regeneration": "<b>HP Regeneration</b><br>Scales with STR. Regain HP after your turn.<br><code>0.05 × STR</code>",
-        "Attack": "<b>Attack</b><br>Your total offensive power.<br>Equals your main stat + gear bonuses.",
-        "Attack Speed": "<b>Attack Speed</b><br>Increases how fast you attack. Scales with Agility.<br><code>100 + 100 × (AGI / (AGI + 1000))</code>",
-
-        "Armor": `<b>Armor</b><br>Reduces incoming physical damage.<br><code>(0.25 × STR) + (0.05 × AGI)</code><br><br>
-Physical Damage Reduction: Percentage of physical damage blocked.<br><code>(0.9 × Armor) / (Armor + 500)</code>`,
-
-        "Resistance": `<b>Resistance</b><br>Reduces magical damage taken.<br><code>0.25 × INT</code><br><br>
-Magical Damage Reduction: Percentage of magical damage blocked.<br><code>(0.3 × Resist) / (Resist + 1000)</code>`
-    };
-
-    // Create or get stat tooltip element
-    let tooltip = document.getElementById('statTooltip');
-    if (!tooltip) {
-        tooltip = document.createElement('div');
-        tooltip.id = 'statTooltip';
-        tooltip.style.cssText = `
-            position: fixed;
-            background: rgba(10, 15, 26, 0.95);
-            border: 2px solid #2a6a8a;
-            padding: 10px;
-            border-radius: 4px;
-            z-index: 1002;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            pointer-events: none;
-            font-size: 14px;
-            color: #b0e0f0;
-            max-width: 500px;
-        `;
-        document.body.appendChild(tooltip);
-    }
-
-    // Update border color if it's a main stat
-    if (isMainStat) {
-        tooltip.style.borderColor = '#ffd700';
-        tooltip.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
-    } else {
-        tooltip.style.borderColor = '#2a6a8a';
-        tooltip.style.boxShadow = '0 0 20px rgba(0,0,0,0.8)';
-    }
-
-    // Set tooltip content
-    tooltip.innerHTML = tooltipData[statName] || "No tooltip available.";
-    tooltip.style.display = 'block';
-
-    // Position near bottom of hovered element
-    const rect = event.target.getBoundingClientRect();
-    const tooltipRect = tooltip.getBoundingClientRect();
-
-    let left = rect.left;
-    let top = rect.bottom + 5;
-
-    // Adjust if tooltip would overflow the screen
-    if (left + tooltipRect.width > window.innerWidth) {
-        left = window.innerWidth - tooltipRect.width - 10;
-    }
-    if (top + tooltipRect.height > window.innerHeight) {
-        top = rect.top - tooltipRect.height - 5;
-    }
-
-    tooltip.style.left = `${left}px`;
-    tooltip.style.top = `${top}px`;
-}
-
-hideStatTooltip() {
-	const tooltip = document.getElementById('statTooltip');
-	if (tooltip) {
-		tooltip.style.display = 'none';
-	}
-}
-		
-            showSkillsTab(hero, content) {
-    // Check if we have a previously selected skill index
-    const selectedIndex = this.currentSkillIndex !== undefined ? this.currentSkillIndex : 0;
-    
-    content.innerHTML = `
-        <div class="skillsContainer">
-            ${hero.abilities.map((ability, index) => {
-                const isPassive = ability.passive === true;
-                const isSelected = index === selectedIndex;
-                return `
-                    <div class="skillBox ${isPassive ? 'passive' : ''} ${isSelected ? 'selected' : ''}" onclick="game.selectSkill(${index})">
-                        ${isPassive ? `
-                            <div class="waterbrush-overlay-1">
-                                <div class="waterbrush-blob-1"></div>
-                                <div class="waterbrush-blob-2"></div>
-                            </div>
-                        ` : ''}
-                        <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" alt="${ability.name}" onerror="this.style.display='none'">
-                    </div>
-                `;
-            }).join('')}
-        </div>
-        <div class="skillDescription" id="skillDescription">
-            Click on a skill to see its description
-        </div>
-    `;
-    
-    // Automatically select the stored skill or first skill
-    if (hero.abilities.length > 0) {
-        this.selectSkill(selectedIndex);
-    }
-}
-
-            showPromoteTab(hero, content) {
-    const canPromote = hero.canPromote();
-    const promotions = hero.getPromotionOptions();
-    
-    // Special case for Awakening
-if (promotions.includes('Awaken')) {
-    content.innerHTML = `
-        <div class="promoteContent">
-            <div class="classCard">
-                <h2>Awaken</h2>
-                <div style="font-size: 24px; font-weight: bold; color: #d896ff; text-shadow: 0 0 12px rgba(216, 150, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">★★★★★★</div>
-                <button class="promoteButton ${canPromote ? '' : 'disabled'}" 
-                    style="${canPromote ? 'background: linear-gradient(135deg, #d896ff 0%, #a855f7 100%); box-shadow: 0 0 20px rgba(216, 150, 255, 0.5); color: #0a1929;' : ''}" 
-                    onclick="${canPromote ? 'game.showPromotionConfirm(\'Awaken\')' : ''}" 
-                    onmouseover="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #e6b0ff 0%, #d896ff 100%)\'; this.style.boxShadow=\'0 0 30px rgba(230, 176, 255, 0.7)\'' : ''}"
-                    onmouseout="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #d896ff 0%, #a855f7 100%)\'; this.style.boxShadow=\'0 0 20px rgba(216, 150, 255, 0.5)\'' : ''}"
-                    ${canPromote ? '' : 'disabled'}>
-                    ${canPromote ? 'Awaken<br><span style="font-size: 14px;">💰 -10000000</span>' : `Requires:<br><span style="font-size: 14px;">Level 400</span>`}
-                </button>
-            </div>
-        </div>
-    `;
-    return;
-}
-    
-    // Already awakened
-    if (hero.awakened) {
-        content.innerHTML = `
-            <div class="promoteContent">
-                <h2>No promotions available</h2>
-                <p>Hero has been awakened!</p>
-            </div>
-        `;
-        return;
-    }
-    
-    // Get promotion level requirement
-    const promoteLevels = { 0: 50, 1: 100, 2: 200, 3: 300, 4: 400 };
-    const requiredLevel = promoteLevels[hero.classTier] || 999;
-    
-    // Determine if this is a villager (has 8 promotion options)
-    const isVillager = hero.classTier === 0 && promotions.length === 8;
-    const promoteClass = isVillager ? 'promoteOptionsVillager' : 'promoteOptions';
-    
-    content.innerHTML = `
-        <div class="promoteContent">
-            <div class="${promoteClass}">
-                ${promotions.map(promo => {
-                    const promoClass = unitData?.classes[promo];
-                    if (!promoClass) return '';
-                    
-                    // Generate stars for promotion class
-                    const promoStarData = this.generateStars({ 
-                        type: 'hero', 
-                        classTier: promoClass.tier, 
-                        awakened: false 
-                    });
-                    
-                    // Get display name
-                    let displayName = promoClass.name;
-                    
-                    const cost = 1000 * Math.pow(10, hero.classTier);
-                    
-                    return `
-                        <div class="classCard">
-                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${promo}_portrait.png" alt="${displayName}" 
-                                 style="width: 80px; height: 80px; object-fit: cover; object-position: top center; image-rendering: pixelated;"
-                                 onerror="this.style.display='none'">
-                            <div class="classStars" style="font-size: 24px; font-weight: bold; color: #ffd700; text-shadow: 0 0 12px rgba(255, 215, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${promoStarData.html}</div>
-                            <h2>${displayName}</h2>
-                            <button class="promoteButton ${canPromote ? '' : 'disabled'}" 
-                                onclick="${canPromote ? `game.showPromotionConfirm('${promo}')` : ''}"
-                                ${canPromote ? '' : 'disabled'}>
-                                ${canPromote ? 
-    `Promote<br><span style="font-size: 14px;">💰 -${cost}</span>` : 
-    `Requires:<br><span style="font-size: 14px;">Level ${requiredLevel}</span>`
-}
-                            </button>
-                        </div>
-                    `;
-                }).join('')}
-            </div>
-        </div>
-    `;
-}
-
-showGearTab(hero, content) {
-
-    // Hide any existing tooltips before DOM manipulation
-    this.hideItemTooltip();
-    this.hideAbilityTooltip();
-
-    // Get the stash for this hero's class family
-    const familyName = this.getClassFamily(hero.className, hero.classTier);
-    if (!this.currentStashFamily) {
-        this.currentStashFamily = this.classFamilies.find(f => f.name === familyName) || { name: familyName, classes: [] };
-        // Special case for Villager
-        if (familyName === 'Villager') {
-            this.currentStashFamily = { name: 'Villager', icon: '👥', classes: ['Villager', 'Tester'] };
-        }
-    }
-    
-    // Get the stash for this hero's class family
-    const stash = this.stashes[familyName];
-    const items = stash.items;
-    
-    // Always show filter, but default based on item count
-    let filterValue = 'all';
-    if (items.length > 100) {
-        filterValue = this.currentGearFilter || 'trinket';
-    } else {
-        filterValue = this.currentGearFilter || 'all';
-    }
-    
-    // Filter items based on selection
-    let itemsToShow = items;
-    if (filterValue !== 'all') {
-        itemsToShow = items.filter(item => item.slot === filterValue);
-    }
-
-    // Sort stash items using custom sort settings
-    const sortedStashItems = this.sortItems(itemsToShow);
-
-    content.innerHTML = `
-        <div style="display: flex; gap: 20px; height: 100%;">
-            <div style="flex: 0 0 auto;">
-                <h3>Gear</h3>
-                <div class="gearGrid">
-                    <div class="gearSlot">
-                        <div class="gearLabel">Trinket</div>
-                        ${hero.gear.trinket ? 
-                            `<div class="gearItem ${hero.gear.trinket.getRarity()}" 
-                                 onclick="game.unequipGear('trinket')"
-                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('trinket')"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.trinket)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.trinket.id}.png" 
-                                         alt="${hero.gear.trinket.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.trinket.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.trinket.getStars().html ? `<div class="itemStars ${hero.gear.trinket.getStars().colorClass}">${hero.gear.trinket.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.trinket.level}</div>
-                                    <div class="itemQuality">${hero.gear.trinket.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                    <div class="gearSlot">
-                        <div class="gearLabel">Head</div>
-                        ${hero.gear.head ? 
-                            `<div class="gearItem ${hero.gear.head.getRarity()}"
-                                 onclick="game.unequipGear('head')"
-                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('head')"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.head)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.head.id}.png" 
-                                         alt="${hero.gear.head.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.head.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.head.getStars().html ? `<div class="itemStars ${hero.gear.head.getStars().colorClass}">${hero.gear.head.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.head.level}</div>
-                                    <div class="itemQuality">${hero.gear.head.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                    <div class="gearSlot">
-                        <div class="gearLabel">Weapon</div>
-                        ${hero.gear.weapon ? 
-                            `<div class="gearItem ${hero.gear.weapon.getRarity()}"
-                                 onclick="game.unequipGear('weapon')"
-                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('weapon')"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.weapon)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.weapon.id}.png" 
-                                         alt="${hero.gear.weapon.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.weapon.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.weapon.getStars().html ? `<div class="itemStars ${hero.gear.weapon.getStars().colorClass}">${hero.gear.weapon.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.weapon.level}</div>
-                                    <div class="itemQuality">${hero.gear.weapon.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                    <div class="gearSlot">
-                        <div class="gearLabel">Chest</div>
-                        ${hero.gear.chest ? 
-                            `<div class="gearItem ${hero.gear.chest.getRarity()}"
-                                 onclick="game.unequipGear('chest')"
-                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('chest')"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.chest)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.chest.id}.png" 
-                                         alt="${hero.gear.chest.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.chest.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.chest.getStars().html ? `<div class="itemStars ${hero.gear.chest.getStars().colorClass}">${hero.gear.chest.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.chest.level}</div>
-                                    <div class="itemQuality">${hero.gear.chest.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                    <div class="gearSlot">
-                        <div class="gearLabel">Offhand</div>
-                        ${hero.gear.offhand ? 
-                            `<div class="gearItem ${hero.gear.offhand.getRarity()}"
-                                 onclick="game.unequipGear('offhand')"
-                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('offhand')"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.offhand)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.offhand.id}.png" 
-                                         alt="${hero.gear.offhand.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.offhand.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.offhand.getStars().html ? `<div class="itemStars ${hero.gear.offhand.getStars().colorClass}">${hero.gear.offhand.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.offhand.level}</div>
-                                    <div class="itemQuality">${hero.gear.offhand.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                    <div class="gearSlot">
-                        <div class="gearLabel">Legs</div>
-                        ${hero.gear.legs ? 
-                            `<div class="gearItem ${hero.gear.legs.getRarity()}"
-                                 onclick="game.unequipGear('legs')"
-                                 oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('legs')"
-                                 onmouseover="game.showItemTooltip(event, game.heroes[${this.selectedHero}].gear.legs)"
-                                 onmouseout="game.hideItemTooltip()">
-                                <div class="itemContainer">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.legs.id}.png" 
-                                         alt="${hero.gear.legs.name}"
-                                         onerror="this.style.display='none'">
-                                    ${hero.gear.legs.refined ? '<div class="itemRefined">*</div>' : ''}
-                                    ${hero.gear.legs.getStars().html ? `<div class="itemStars ${hero.gear.legs.getStars().colorClass}">${hero.gear.legs.getStars().html}</div>` : ''}
-                                    <div class="itemLevel">${hero.gear.legs.level}</div>
-                                    <div class="itemQuality">${hero.gear.legs.getQualityPercent()}%</div>
-                                </div>
-                            </div>` 
-                            : ''}
-                    </div>
-                </div>
-                <div class="gearStatsPreview">
-                    <h4>Total Stats</h4>
-                    <div class="gearStatsGrid">
-                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Health Points')" onmouseout="game.hideStatTooltip()">
-                            <span class="gearStatLabel">HP:</span>
-                            <span class="gearStatValue">${hero.hp}</span>
-                        </div>
-                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'HP Regeneration')" onmouseout="game.hideStatTooltip()">
-                            <span class="gearStatLabel">REG:</span>
-                            <span class="gearStatValue">${hero.hpRegen.toFixed(1)}</span>
-                        </div>
-                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Attack')" onmouseout="game.hideStatTooltip()">
-                            <span class="gearStatLabel">ATK:</span>
-                            <span class="gearStatValue">${hero.attack}</span>
-                        </div>
-                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
-                            <span class="gearStatLabel">SPD:</span>
-                            <span class="gearStatValue">${hero.actionBarSpeed.toFixed(1)}</span>
-                        </div>
-                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Strength', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
-    <span class="gearStatLabel ${hero.mainstat === 'str' ? 'mainstat' : ''}">STR:</span>
-    <span class="gearStatValue">${hero.totalStats.str}</span>
-</div>
-<div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Agility', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
-    <span class="gearStatLabel ${hero.mainstat === 'agi' ? 'mainstat' : ''}">AGI:</span>
-    <span class="gearStatValue">${hero.totalStats.agi}</span>
-</div>
-<div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Intelligence', game.heroes[${this.selectedHero}])" onmouseout="game.hideStatTooltip()">
-    <span class="gearStatLabel ${hero.mainstat === 'int' ? 'mainstat' : ''}">INT:</span>
-    <span class="gearStatValue">${hero.totalStats.int}</span>
-</div>
-                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
-                            <span class="gearStatLabel">ARM:</span>
-                            <span class="gearStatValue">${Math.floor(hero.armor)}</span>
-                        </div>
-                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
-                            <span class="gearStatLabel">RED:</span>
-                            <span class="gearStatValue">${(hero.physicalDamageReduction * 100).toFixed(1)}%</span>
-                        </div>
-                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
-                            <span class="gearStatLabel">RES:</span>
-                            <span class="gearStatValue">${Math.floor(hero.resist)}</span>
-                        </div>
-                        <div class="gearStatLine" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
-                            <span class="gearStatLabel">RED:</span>
-                            <span class="gearStatValue">${(hero.magicDamageReduction * 100).toFixed(1)}%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style="flex: 1; display: flex; flex-direction: column;">
-                <h3 style="text-align: center; margin-bottom: 20px;">
-                    ${familyName} Stash 
-                    <span style="color: #ffd700; margin-left: 10px;">💰 ${stash.gold.toLocaleString()}</span>
-                    <div class="stashSlotFilter" style="display: inline-flex; margin-left: 20px;">
-                        <label>Filter:</label>
-                        <select id="gearStashFilterSelect" onchange="game.filterStashSlots('gear')">
-                            <option value="all" ${filterValue === 'all' ? 'selected' : ''}>All (${items.length})</option>
-                            <option value="trinket" ${filterValue === 'trinket' ? 'selected' : ''}>Trinket</option>
-                            <option value="head" ${filterValue === 'head' ? 'selected' : ''}>Head</option>
-                            <option value="chest" ${filterValue === 'chest' ? 'selected' : ''}>Chest</option>
-                            <option value="legs" ${filterValue === 'legs' ? 'selected' : ''}>Legs</option>
-                            <option value="weapon" ${filterValue === 'weapon' ? 'selected' : ''}>Weapon</option>
-                            <option value="offhand" ${filterValue === 'offhand' ? 'selected' : ''}>Offhand</option>
-                        </select>
-                    </div>
-                    <button id="gearSortButton" class="sortSettingsButton" onclick="game.toggleSortSettings('gear')" title="Sort Settings">↕️</button>
-                </h3>
-                <div style="flex: 1; background: rgba(10, 25, 41, 0.8); padding: 10px; overflow-y: auto;">
-                    ${stash && sortedStashItems.length > 0 ? `
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, 60px); gap: 10px;">
-                            ${sortedStashItems.map((item, sortedIndex) => {
-                                // Find the original index of this item in the unsorted array
-                                const originalIndex = stash.items.indexOf(item);
-                                const starData = item.getStars();
-                                return `
-                                    <div class="stashItemSlot ${item.getRarity()}" 
-                                         onclick="game.equipFromStash(${originalIndex}, '${item.slot}')"
-                                         oncontextmenu="event.preventDefault(); game.showItemOptionsFromGearTab(${originalIndex}, '${familyName}')"
-                                         onmouseover="game.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}], true)"
-                                         onmouseout="game.hideItemTooltip()">
-                                        <div class="itemContainer">
-                                            <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
-                                                 alt="${item.name}"
-                                                 onerror="this.style.display='none'">
-                                            ${item.refined ? '<div class="itemRefined">*</div>' : ''}
-                                            ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-                                            <div class="itemLevel">${item.level}</div>
-                                            <div class="itemQuality">${item.getQualityPercent()}%</div>
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    ` : '<p style="text-align: center; color: #6a9aaa;">No items in stash</p>'}
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Hide any lingering tooltips after DOM update
-    this.hideItemTooltip();
-    this.hideAbilityTooltip();
-}
-		
 unequipGear(slot) {
     // Hide item tooltip first
-    this.hideItemTooltip();
+    this.uiManager.hideItemTooltip();
     
     const hero = this.heroes[this.selectedHero];
     const item = hero.unequipItem(slot);
@@ -3541,13 +1779,13 @@ unequipGear(slot) {
         this.stashes[familyName].items.push(item);
         
         // Refresh gear tab
-        this.showGearTab(hero, document.getElementById('heroContent'));
+        this.uiManager.showGearTab(hero, document.getElementById('heroContent'));
     }
 }
 		
 equipFromStash(itemIndex, slot) {
     // Hide item tooltip first
-    this.hideItemTooltip();
+    this.uiManager.hideItemTooltip();
     
     const hero = this.heroes[this.selectedHero];
     const familyName = this.getClassFamily(hero.className, hero.classTier);
@@ -3574,18 +1812,9 @@ equipFromStash(itemIndex, slot) {
         hero.equipItem(item, slot);
         
         // Refresh gear tab
-        this.showGearTab(hero, document.getElementById('heroContent'));
+        this.uiManager.showGearTab(hero, document.getElementById('heroContent'));
     }
 }
-		
-            showLogTab(hero, content) {
-                content.innerHTML = `
-                    <h3>Activity Log</h3>
-                    <div style="margin-top: 20px; background: #2a2a2a; padding: 20px; min-height: 300px; max-height: 400px; overflow-y: auto;">
-                        <p style="color: #888;">No recent activity</p>
-                    </div>
-                `;
-            }
 
             getClassFamily(className, classTier = null) {
                 // Special case for villager and tester
@@ -3657,8 +1886,8 @@ equipFromStash(itemIndex, slot) {
     const backdropName = familyName.toLowerCase().replace(/ /g, '_');
     portrait.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_backdrop.png')`;
     
-    this.showHeroTab('info');
-    this.updateHeroList();
+    this.uiManager.showHeroTab('info');
+    this.uiManager.updateHeroList();
 }
                     } else {
                         alert('Not enough gold!');
@@ -3683,8 +1912,8 @@ equipFromStash(itemIndex, slot) {
     const backdropName = familyName.toLowerCase().replace(/ /g, '_');
     portrait.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_backdrop.png')`;
     
-    this.showHeroTab('info');
-    this.updateHeroList();
+    this.uiManager.showHeroTab('info');
+    this.uiManager.updateHeroList();
 }
                     } else {
                         alert('Not enough gold!');
@@ -3755,7 +1984,7 @@ equipFromStash(itemIndex, slot) {
                     const newName = input.value.trim();
                     if (newName && newName !== hero.name) {
                         hero.name = newName;
-                        this.updateHeroList();
+                        this.uiManager.updateHeroList();
                     }
                     
                     // Recreate the span
@@ -3786,235 +2015,6 @@ equipFromStash(itemIndex, slot) {
                 // Now handled by Battle class
             }
 
-            showPartySelect() {
-    this.hideAllScreens();
-    this.currentScreen = 'partySelectScreen';
-    document.getElementById('partySelectScreen').style.display = 'block';
-    
-    // Set battlefield background based on current dungeon
-    const battlefieldBg = document.querySelector('.partySelectBattlefield');
-    if (battlefieldBg && this.currentDungeon) {
-        const dungeonName = this.currentDungeon.name.toLowerCase().replace(/ /g, '_');
-        battlefieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
-    }
-    
-    // Reset party selection if entering fresh (not from battle)
-    if (!this.currentBattle) {
-        this.selectedParty = [null, null, null, null, null];
-    }
-		    
-                // Update dungeon info
-                document.getElementById('dungeonName').textContent = this.currentDungeon.name;
-
-		    // Set toggle states
-                const autoBattleToggle = document.getElementById('autoBattleToggle');
-                if (autoBattleToggle) autoBattleToggle.checked = this.autoBattle;
-                const autoReplayToggle = document.getElementById('autoReplayToggleParty');
-                if (autoReplayToggle) autoReplayToggle.checked = this.autoReplay;
-                
-                // Render hero selection list
-                this.renderHeroSelectList();
-                
-                // Clear party slots
-                this.updatePartySlots();
-                
-                // Update enemy formation
-                this.updateEnemyFormation();
-
-		    // Update rewards display
-        this.updateRewardsDisplay();
-		    
-            }
-
-            updateEnemyFormation() {
-                const enemyFormation = document.getElementById('enemyFormation');
-                const slots = enemyFormation.querySelectorAll('.enemySlot');
-                
-                // Clear all enemy slots first
-                slots.forEach(slot => {
-                    slot.innerHTML = '<div class="slotPlaceholder">⬡</div>';
-                    slot.classList.remove('filled');
-                });
-                
-                // Get the current wave enemies
-                const currentWaveEnemies = this.dungeonWaves[this.currentPreviewWave];
-                
-                // Update wave counter
-                const waveNav = document.getElementById('waveNavigation');
-                if (waveNav) {
-                    const waveText = waveNav.querySelector('.waveText');
-                    if (waveText) {
-                        waveText.textContent = `Wave ${this.currentPreviewWave + 1}/${this.dungeonWaves.length}`;
-                    }
-                }
-                
-                // Populate with current wave enemies
-                currentWaveEnemies.forEach((enemy, index) => {
-                    if (index < 5) { // Ensure we don't exceed 5 slots
-                        const slot = slots[index];
-                        
-                        // Generate stars using consolidated function
-                        const starData = enemy.getStars();
-                        
-                        slot.innerHTML = `
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
-                                <div style="position: relative; width: 60px; height: 60px;">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${enemy.enemyId}.png"
-                                         alt="${enemy.name}" 
-                                         onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 60 60\\'><rect fill=\\'%23666\\' width=\\'60\\' height=\\'60\\'/><text x=\\'30\\' y=\\'35\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'10\\'>${enemy.name}</text></svg>'">
-                                    ${starData.html ? `<div class="enemyStars ${starData.colorClass}">${starData.html}</div>` : ''}
-                                    <div class="enemyLevel">${enemy.level}</div>
-                                </div>
-                                <div class="enemyName">${enemy.name}</div>
-                            </div>
-                        `;
-                        slot.classList.add('filled');
-                        
-                        // Add click handler for enemy info
-                        slot.style.cursor = 'pointer';
-                        slot.onclick = (e) => {
-                            e.stopPropagation();
-                            this.showEnemyInfoPopup(enemy);
-                        };
-			    // Add right-click handler for enemy info
-slot.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    this.showEnemyInfoPopup(enemy);
-});
-			    
-                    }
-                });
-            }
-
-updateRewardsDisplay() {
-        if (!this.currentDungeonData) return;
-        
-        const rewards = this.currentDungeonData.rewards || { gold: 0, exp: 0, items: [] };
-        
-        // Update gold and exp display
-        document.getElementById('dungeonGoldReward').textContent = rewards.gold.toLocaleString() + 'g';
-        document.getElementById('dungeonExpReward').textContent = `${rewards.exp.toLocaleString()} EXP`;
-        
-        // Update items grid
-        const itemsGrid = document.getElementById('rewardItemsGrid');
-        itemsGrid.innerHTML = '';
-        
-        if (rewards.items && rewards.items.length > 0) {
-            rewards.items.forEach(itemId => {
-                // Create a perfect 4-roll item for display
-                const displayItem = new Item(itemId);
-                
-                // Set all qualities to 5/5 if the item has the rolls
-                if (displayItem.roll1) displayItem.quality1 = 5;
-                if (displayItem.roll2) displayItem.quality2 = 5;
-                if (displayItem.roll3) displayItem.quality3 = 5;
-                if (displayItem.roll4) displayItem.quality4 = 5;
-                
-                const starData = displayItem.getStars();
-                const rarity = displayItem.getRarity();
-                
-                const itemSlot = document.createElement('div');
-                itemSlot.className = `rewardItemSlot ${rarity}`;
-                itemSlot.innerHTML = `
-                    <div class="itemContainer">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${itemId}.png" 
-                             alt="${displayItem.name}"
-                             style="width: 100%; height: 100%;"
-                             onerror="this.style.display='none'">
-                        ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-                        <div class="itemLevel">${displayItem.level}</div>
-                    </div>
-                `;
-                
-                // Add hover tooltip
-                itemSlot.onmouseover = (e) => {
-                    // Create a temporary reference for the tooltip
-                    this.tempRewardItem = displayItem;
-                    this.showItemTooltip(e, displayItem);
-                };
-                itemSlot.onmouseout = () => {
-                    this.hideItemTooltip();
-                    delete this.tempRewardItem;
-                };
-                
-                itemsGrid.appendChild(itemSlot);
-            });
-        }
-    }
-
-		
-            renderHeroSelectList() {
-                const container = document.getElementById('heroSelectList');
-                container.innerHTML = '';
-                
-                // Sort heroes by same criteria as hero list
-                const sortedHeroes = [...this.heroes].sort((a, b) => {
-                    if (a.awakened !== b.awakened) return b.awakened ? 1 : -1;
-                    if (a.classTier !== b.classTier) return b.classTier - a.classTier;
-                    return b.level - a.level;
-                });
-                
-                sortedHeroes.forEach((hero, index) => {
-                    const heroIndex = this.heroes.indexOf(hero);
-                    const heroThumb = this.createSelectableHeroThumb(hero, heroIndex);
-                    container.appendChild(heroThumb);
-                });
-            }
-
-            createSelectableHeroThumb(hero, heroIndex) {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'selectableHero';
-                
-                // Check if hero is already selected
-                if (this.selectedParty.includes(heroIndex)) {
-                    wrapper.classList.add('selected');
-                }
-                
-                // Create the same thumb structure as hero list
-                const thumb = document.createElement('div');
-                thumb.className = 'heroThumb';
-                
-                // Generate stars using consolidated function
-                const starData = hero.getStars();
-
-                thumb.innerHTML = `
-    <div style="position: relative; width: 100px; height: 100px;">
-        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_portrait.png" alt="${hero.displayClassName}" 
-             style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
-             onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 100 100\\'><rect fill=\\'%23666\\' width=\\'100\\' height=\\'100\\'/><text x=\\'50\\' y=\\'55\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'14\\'>${hero.displayClassName}</text></svg>'">
-             
-        ${starData.html ? `<div class="thumbStars ${starData.colorClass}">${starData.html}</div>` : ''}
-
-        <div class="thumbLevel">${hero.level}</div>
-    </div>
-
-    <div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
-    <div class="thumbName">${hero.name}</div>
-`;
-                
-                wrapper.appendChild(thumb);
-                
-                // Click to select/deselect
-                wrapper.onclick = () => this.toggleHeroSelection(heroIndex);
-                
-                // Long press for info
-                let pressTimer;
-                wrapper.addEventListener('mousedown', () => {
-                    pressTimer = setTimeout(() => this.showHeroInfoPopup(hero), 500);
-                });
-                wrapper.addEventListener('mouseup', () => clearTimeout(pressTimer));
-                wrapper.addEventListener('mouseleave', () => clearTimeout(pressTimer));
-
-		    // Right-click for info
-wrapper.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    this.showHeroInfoPopup(hero);
-});
-		    
-                return wrapper;
-            }
-		
             toggleHeroSelection(heroIndex) {
                 // Check if hero is already selected
                 const currentIndex = this.selectedParty.indexOf(heroIndex);
@@ -4031,473 +2031,13 @@ wrapper.addEventListener('contextmenu', (e) => {
                 }
                 
                 // Update UI
-                this.renderHeroSelectList();
-                this.updatePartySlots();
+                this.uiManager.renderHeroSelectList();
+                this.uiManager.updatePartySlots();
                 
                 // Enable/disable start button
                 const hasHeroes = this.selectedParty.some(h => h !== null);
                 document.getElementById('startBattleBtn').disabled = !hasHeroes;
             }
-
-            updatePartySlots() {
-                const slots = document.querySelectorAll('.partySlot');
-                
-                slots.forEach((slot, index) => {
-                    const heroIndex = this.selectedParty[index];
-                    
-                    if (heroIndex !== null) {
-                        const hero = this.heroes[heroIndex];
-						
-                        // Generate stars using consolidated function
-                        const starData = hero.getStars();
-                        
-                        slot.innerHTML = `
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
-                                <div style="position: relative; width: 60px; height: 60px;">
-                                    <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_portrait.png" alt="${hero.displayClassName}" 
-                                         style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
-                                         onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 60 60\\'><rect fill=\\'%23666\\' width=\\'60\\' height=\\'60\\'/><text x=\\'30\\' y=\\'35\\' text-anchor=\\'middle\\' fill=\\'white\\'>${hero.displayClassName}</text></svg>'">
-                                    ${starData.html ? `<div class="thumbStars ${starData.colorClass}">${starData.html}</div>` : ''}
-                                    <div class="thumbLevel">${hero.level}</div>
-                                </div>
-                                <div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
-                                <div class="thumbName">${hero.name}</div>
-                            </div>
-                        `;
-                        slot.classList.add('filled');
-                        
-                        // Make slot draggable
-                        slot.draggable = true;
-                        slot.dataset.heroIndex = heroIndex;
-                        slot.dataset.slotIndex = index;
-                        
-                        // Add drag event handlers
-                        slot.ondragstart = (e) => {
-                            e.dataTransfer.effectAllowed = 'move';
-                            e.dataTransfer.setData('text/plain', index);
-                            slot.classList.add('dragging');
-                            this.draggedSlotIndex = index;
-                        };
-                        
-                        slot.ondragend = () => {
-                            slot.classList.remove('dragging');
-                        };
-                        
-                        // Add long press handler for hero info
-                        let pressTimer;
-                        slot.addEventListener('mousedown', (e) => {
-                            if (e.button === 0 && !e.ctrlKey && !e.shiftKey) { // Left click only, no modifiers
-                                pressTimer = setTimeout(() => this.showHeroInfoPopup(hero), 500);
-                            }
-                        });
-                        slot.addEventListener('mouseup', () => clearTimeout(pressTimer));
-                        slot.addEventListener('mouseleave', () => clearTimeout(pressTimer));
-
-// Add right-click handler for hero info
-slot.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    this.showHeroInfoPopup(hero);
-});
-			    
-                        // Add click handler for removal (but not if dragging)
-                        slot.onclick = (e) => {
-                            if (!slot.classList.contains('dragging')) {
-                                this.selectedParty[index] = null;
-                                this.renderHeroSelectList();
-                                this.updatePartySlots();
-                                document.getElementById('startBattleBtn').disabled = !this.selectedParty.some(h => h !== null);
-                            }
-                        };
-                    } else {
-                        slot.innerHTML = '<div class="slotPlaceholder">⬡</div>';
-                        slot.classList.remove('filled');
-                        slot.draggable = false;
-                        slot.onclick = null;
-                        slot.ondragstart = null;
-                        slot.ondragend = null;
-                    }
-                    
-                    // Add drop zone handlers for all slots
-                    slot.ondragover = (e) => {
-                        e.preventDefault();
-                        e.dataTransfer.dropEffect = 'move';
-                        slot.classList.add('dragover');
-                    };
-                    
-                    slot.ondragleave = () => {
-                        slot.classList.remove('dragover');
-                    };
-                    
-                    slot.ondrop = (e) => {
-                        e.preventDefault();
-                        slot.classList.remove('dragover');
-                        
-                        const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
-                        const toIndex = index;
-                        
-                        if (fromIndex !== toIndex) {
-                            // Swap heroes
-                            const temp = this.selectedParty[fromIndex];
-                            this.selectedParty[fromIndex] = this.selectedParty[toIndex];
-                            this.selectedParty[toIndex] = temp;
-                            
-                            // Update display
-                            this.updatePartySlots();
-                        }
-                    };
-                });
-            }
-
-showHeroInfoPopup(hero) {
-    const popup = document.getElementById('heroInfoPopup');
-    popup._currentHero = hero;
-    document.getElementById('popupHeroName').innerHTML = `Lv.${hero.level} ${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span> | ${hero.name}`;
-    
-    // Show stats in double column format
-    const stats = hero.totalStats;
-    const statsHtml = `
-        <div style="display: flex; gap: 40px;">
-            <div style="flex: 1;">
-    <div class="statRow" onmouseover="game.showStatTooltip(event, 'Health Points')" onmouseout="game.hideStatTooltip()">
-        <span class="statLabel">HP</span>
-        <span class="statValue">${hero.hp}</span>
-    </div>
-    <div class="statRow" onmouseover="game.showStatTooltip(event, 'Attack')" onmouseout="game.hideStatTooltip()">
-        <span class="statLabel">Attack</span>
-        <span class="statValue">${hero.attack}</span>
-    </div>
-    <div class="statRow" onmouseover="game.showStatTooltip(event, 'Strength', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
-    <span class="statLabel ${hero.mainstat === 'str' ? 'mainstat' : ''}">STR</span>
-    <span class="statValue">${stats.str}</span>
-</div>
-<div class="statRow" onmouseover="game.showStatTooltip(event, 'Agility', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
-    <span class="statLabel ${hero.mainstat === 'agi' ? 'mainstat' : ''}">AGI</span>
-    <span class="statValue">${stats.agi}</span>
-</div>
-<div class="statRow" onmouseover="game.showStatTooltip(event, 'Intelligence', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
-    <span class="statLabel ${hero.mainstat === 'int' ? 'mainstat' : ''}">INT</span>
-    <span class="statValue">${stats.int}</span>
-</div>
-</div>
-            <div style="flex: 1;">
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'HP Regeneration')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Regen</span>
-                    <span class="statValue">${hero.hpRegen.toFixed(1)}</span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Atk Spd</span>
-                    <span class="statValue">${hero.actionBarSpeed.toFixed(1)}%</span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Armor</span>
-                    <span class="statValue">${Math.floor(hero.armor)} <span style="color: #6a9aaa;">(${(hero.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Resist</span>
-                    <span class="statValue">${Math.floor(hero.resist)} <span style="color: #6a9aaa;">(${(hero.magicDamageReduction * 100).toFixed(1)}%)</span></span>
-                </div>
-            </div>
-        </div>
-    `;
-    document.getElementById('popupStats').innerHTML = statsHtml;
-                
-                // Show ability icons with tooltips
-const abilityIconsHtml = `
-    <div style="display: flex; gap: 8px; margin-top: 10px;">
-        ${hero.abilities.map((ability, index) => {
-            const isPassive = ability.passive === true;
-            return `
-                <div class="abilityIconSmall ${isPassive ? 'passive' : ''}" 
-                     data-ability-index="${index}"
-                     data-hero-type="hero">
-                    ${isPassive ? `
-                        <div class="waterbrush-overlay-1">
-                            <div class="waterbrush-blob-1"></div>
-                            <div class="waterbrush-blob-2"></div>
-                        </div>
-                    ` : ''}
-                    <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" 
-                         style="width: 64px; height: 64px;" 
-                         alt="${ability.name}" 
-                         onerror="this.style.display='none'">
-                </div>
-            `;
-        }).join('')}
-    </div>
-`;
-                document.getElementById('popupAbilities').innerHTML = abilityIconsHtml;
-                
-                // Add event listeners for tooltips
-const abilityIcons = document.querySelectorAll('#popupAbilities .abilityIconSmall');
-abilityIcons.forEach((icon, index) => {
-    icon.addEventListener('mouseenter', (e) => {
-        const ability = hero.abilities[index];
-        const showFormula = e.altKey;
-        const tooltipHtml = this.formatAbilityTooltip(ability, ability.level, hero, showFormula);
-        this.showAbilityTooltipFromHTML(e, tooltipHtml);
-    });
-    icon.addEventListener('mouseleave', () => {
-        this.hideAbilityTooltip();
-    });
-});
-                
-// Show gear in grid format
-const gearHtml = `
-    <div class="gearGrid">
-        <div class="gearSlot">
-            <div class="gearLabel">Trinket</div>
-            ${hero.gear.trinket ? 
-                `<div class="gearItem ${hero.gear.trinket.getRarity()}" 
-                     onmouseover="game.showItemTooltip(event, game.heroes[${this.heroes.indexOf(hero)}].gear.trinket)"
-                     onmouseout="game.hideItemTooltip()">
-                    <div class="itemContainer">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.trinket.id}.png" 
-                             alt="${hero.gear.trinket.name}"
-                             onerror="this.style.display='none'">
-			${hero.gear.trinket.refined ? '<div class="itemRefined">*</div>' : ''}
-                        ${hero.gear.trinket.getStars().html ? `<div class="itemStars ${hero.gear.trinket.getStars().colorClass}">${hero.gear.trinket.getStars().html}</div>` : ''}
-                        <div class="itemLevel">${hero.gear.trinket.level}</div>
-                        <div class="itemQuality">${hero.gear.trinket.getQualityPercent()}%</div>
-                    </div>
-                </div>` 
-                : ''}
-        </div>
-        <div class="gearSlot">
-            <div class="gearLabel">Head</div>
-            ${hero.gear.head ? 
-                `<div class="gearItem ${hero.gear.head.getRarity()}"
-                     onmouseover="game.showItemTooltip(event, game.heroes[${this.heroes.indexOf(hero)}].gear.head)"
-                     onmouseout="game.hideItemTooltip()">
-                    <div class="itemContainer">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.head.id}.png" 
-                             alt="${hero.gear.head.name}"
-                             onerror="this.style.display='none'">
-			${hero.gear.head.refined ? '<div class="itemRefined">*</div>' : ''}
-                        ${hero.gear.head.getStars().html ? `<div class="itemStars ${hero.gear.head.getStars().colorClass}">${hero.gear.head.getStars().html}</div>` : ''}
-                        <div class="itemLevel">${hero.gear.head.level}</div>
-                        <div class="itemQuality">${hero.gear.head.getQualityPercent()}%</div>
-                    </div>
-                </div>` 
-                : ''}
-        </div>
-        <div class="gearSlot">
-            <div class="gearLabel">Weapon</div>
-            ${hero.gear.weapon ? 
-                `<div class="gearItem ${hero.gear.weapon.getRarity()}"
-                     onmouseover="game.showItemTooltip(event, game.heroes[${this.heroes.indexOf(hero)}].gear.weapon)"
-                     onmouseout="game.hideItemTooltip()">
-                    <div class="itemContainer">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.weapon.id}.png" 
-                             alt="${hero.gear.weapon.name}"
-                             onerror="this.style.display='none'">
-			${hero.gear.weapon.refined ? '<div class="itemRefined">*</div>' : ''}
-                        ${hero.gear.weapon.getStars().html ? `<div class="itemStars ${hero.gear.weapon.getStars().colorClass}">${hero.gear.weapon.getStars().html}</div>` : ''}
-                        <div class="itemLevel">${hero.gear.weapon.level}</div>
-                        <div class="itemQuality">${hero.gear.weapon.getQualityPercent()}%</div>
-                    </div>
-                </div>` 
-                : ''}
-        </div>
-        <div class="gearSlot">
-            <div class="gearLabel">Chest</div>
-            ${hero.gear.chest ? 
-                `<div class="gearItem ${hero.gear.chest.getRarity()}"
-                     onmouseover="game.showItemTooltip(event, game.heroes[${this.heroes.indexOf(hero)}].gear.chest)"
-                     onmouseout="game.hideItemTooltip()">
-                    <div class="itemContainer">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.chest.id}.png" 
-                             alt="${hero.gear.chest.name}"
-                             onerror="this.style.display='none'">
-			${hero.gear.chest.refined ? '<div class="itemRefined">*</div>' : ''}
-                        ${hero.gear.chest.getStars().html ? `<div class="itemStars ${hero.gear.chest.getStars().colorClass}">${hero.gear.chest.getStars().html}</div>` : ''}
-                        <div class="itemLevel">${hero.gear.chest.level}</div>
-                        <div class="itemQuality">${hero.gear.chest.getQualityPercent()}%</div>
-                    </div>
-                </div>` 
-                : ''}
-        </div>
-        <div class="gearSlot">
-            <div class="gearLabel">Offhand</div>
-            ${hero.gear.offhand ? 
-                `<div class="gearItem ${hero.gear.offhand.getRarity()}"
-                     onmouseover="game.showItemTooltip(event, game.heroes[${this.heroes.indexOf(hero)}].gear.offhand)"
-                     onmouseout="game.hideItemTooltip()">
-                    <div class="itemContainer">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.offhand.id}.png" 
-                             alt="${hero.gear.offhand.name}"
-                             onerror="this.style.display='none'">
-			${hero.gear.offhand.refined ? '<div class="itemRefined">*</div>' : ''}
-                        ${hero.gear.offhand.getStars().html ? `<div class="itemStars ${hero.gear.offhand.getStars().colorClass}">${hero.gear.offhand.getStars().html}</div>` : ''}
-                        <div class="itemLevel">${hero.gear.offhand.level}</div>
-                        <div class="itemQuality">${hero.gear.offhand.getQualityPercent()}%</div>
-                    </div>
-                </div>` 
-                : ''}
-        </div>
-        <div class="gearSlot">
-            <div class="gearLabel">Legs</div>
-            ${hero.gear.legs ? 
-                `<div class="gearItem ${hero.gear.legs.getRarity()}"
-                     onmouseover="game.showItemTooltip(event, game.heroes[${this.heroes.indexOf(hero)}].gear.legs)"
-                     onmouseout="game.hideItemTooltip()">
-                    <div class="itemContainer">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${hero.gear.legs.id}.png" 
-                             alt="${hero.gear.legs.name}"
-                             onerror="this.style.display='none'">
-			${hero.gear.legs.refined ? '<div class="itemRefined">*</div>' : ''}
-                        ${hero.gear.legs.getStars().html ? `<div class="itemStars ${hero.gear.legs.getStars().colorClass}">${hero.gear.legs.getStars().html}</div>` : ''}
-                        <div class="itemLevel">${hero.gear.legs.level}</div>
-                        <div class="itemQuality">${hero.gear.legs.getQualityPercent()}%</div>
-                    </div>
-                </div>` 
-                : ''}
-        </div>
-    </div>
-`;
-document.getElementById('popupGear').innerHTML = gearHtml;
-	
-                popup.style.display = 'block';
-            }
-
-showEnemyInfoPopup(enemy) {
-    const popup = document.getElementById('heroInfoPopup');
-    popup._currentHero = enemy;
-    document.getElementById('popupHeroName').textContent = `Lv.${enemy.level} ${enemy.name}`;
-    
-    // Show stats in double column format
-    const stats = enemy.baseStats;
-    const statsHtml = `
-        <div style="display: flex; gap: 40px;">
-            <div style="flex: 1;">
-    <div class="statRow" onmouseover="game.showStatTooltip(event, 'Health Points')" onmouseout="game.hideStatTooltip()">
-        <span class="statLabel">HP</span>
-        <span class="statValue">${enemy.hp}</span>
-    </div>
-    <div class="statRow" onmouseover="game.showStatTooltip(event, 'Attack')" onmouseout="game.hideStatTooltip()">
-        <span class="statLabel">Attack</span>
-        <span class="statValue">${enemy.attack}</span>
-    </div>
-    <div class="statRow" onmouseover="game.showStatTooltip(event, 'Strength', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
-    <span class="statLabel ${enemy.mainstat === 'str' ? 'mainstat' : ''}">STR</span>
-    <span class="statValue">${stats.str}</span>
-</div>
-<div class="statRow" onmouseover="game.showStatTooltip(event, 'Agility', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
-    <span class="statLabel ${enemy.mainstat === 'agi' ? 'mainstat' : ''}">AGI</span>
-    <span class="statValue">${stats.agi}</span>
-</div>
-<div class="statRow" onmouseover="game.showStatTooltip(event, 'Intelligence', document.getElementById('heroInfoPopup')._currentHero)" onmouseout="game.hideStatTooltip()">
-    <span class="statLabel ${enemy.mainstat === 'int' ? 'mainstat' : ''}">INT</span>
-    <span class="statValue">${stats.int}</span>
-</div>
-</div>
-            <div style="flex: 1;">
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'HP Regeneration')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Regen</span>
-                    <span class="statValue">${enemy.hpRegen.toFixed(1)}</span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Attack Speed')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Atk Spd</span>
-                    <span class="statValue">${enemy.actionBarSpeed.toFixed(1)}%</span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Armor')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Armor</span>
-                    <span class="statValue">${Math.floor(enemy.armor)} <span style="color: #6a9aaa;">(${(enemy.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
-                </div>
-                <div class="statRow" onmouseover="game.showStatTooltip(event, 'Resistance')" onmouseout="game.hideStatTooltip()">
-                    <span class="statLabel">Resist</span>
-                    <span class="statValue">${Math.floor(enemy.resist)} <span style="color: #6a9aaa;">(${(enemy.magicDamageReduction * 100).toFixed(1)}%)</span></span>
-                </div>
-            </div>
-        </div>
-    `;
-    document.getElementById('popupStats').innerHTML = statsHtml;
-    
-    // Show ability icons with tooltips
-const abilityIconsHtml = `
-    <div style="display: flex; gap: 8px; margin-top: 10px;">
-        ${enemy.abilities.map((ability, index) => {
-            const isPassive = ability.passive === true;
-            return `
-                <div class="abilityIconSmall ${isPassive ? 'passive' : ''}" 
-                     data-ability-index="${index}"
-                     data-hero-type="enemy">
-                    ${isPassive ? `
-                        <div class="waterbrush-overlay-1">
-                            <div class="waterbrush-blob-1"></div>
-                            <div class="waterbrush-blob-2"></div>
-                        </div>
-                    ` : ''}
-                    <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" 
-                         style="width: 64px; height: 64px;" 
-                         alt="${ability.name}" 
-                         onerror="this.style.display='none'">
-                </div>
-            `;
-        }).join('')}
-    </div>
-`;
-    document.getElementById('popupAbilities').innerHTML = abilityIconsHtml;
-    
-    // Add event listeners for tooltips
-const abilityIcons = document.querySelectorAll('#popupAbilities .abilityIconSmall');
-abilityIcons.forEach((icon, index) => {
-    icon.addEventListener('mouseenter', (e) => {
-        const ability = enemy.abilities[index];
-        const showFormula = e.altKey;
-        const tooltipHtml = this.formatAbilityTooltip(ability, ability.level || enemy.spellLevel, enemy, showFormula);
-        this.showAbilityTooltipFromHTML(e, tooltipHtml);
-    });
-    icon.addEventListener('mouseleave', () => {
-        this.hideAbilityTooltip();
-    });
-});
-    
-// Show empty gear grid for enemies
-const emptyGearHtml = `
-    <div class="gearGrid">
-        <div class="gearSlot">
-            <div class="gearLabel">Trinket</div>
-        </div>
-        <div class="gearSlot">
-            <div class="gearLabel">Head</div>
-        </div>
-        <div class="gearSlot">
-            <div class="gearLabel">Weapon</div>
-        </div>
-        <div class="gearSlot">
-            <div class="gearLabel">Chest</div>
-        </div>
-        <div class="gearSlot">
-            <div class="gearLabel">Offhand</div>
-        </div>
-        <div class="gearSlot">
-            <div class="gearLabel">Legs</div>
-        </div>
-    </div>
-`;
-document.getElementById('popupGear').innerHTML = emptyGearHtml;
-	
-    popup.style.display = 'block';
-}
-
-            closeHeroInfo() {
-                document.getElementById('heroInfoPopup').style.display = 'none';
-                this.hideAbilityTooltip();
-            }
-
-closeDungeonSelect() {
-    this.closeHeroInfo(); // Close any open popups
-    
-    // Reset dungeon-related data
-    this.dungeonWaves = null;
-    this.currentDungeon = null;
-    this.currentEnemy = null;
-    this.lastWaveEnemies = null;
-    this.selectedParty = [null, null, null, null, null];
-    
-    this.showMainMenu();
-}
 
 formatAbilityTooltip(ability, level, unit = null, showFormula = false) {
     const spell = spellManager ? spellManager.getSpell(ability.id) : null;
@@ -4754,203 +2294,6 @@ calculateSpellValue(spell, unit, valueType = 'damage') {
     return Math.floor(value);
 }
 
-		showAbilityTooltip(event, name, level, cooldown, description) {
-                // This old method is still called by battle.js showPlayerAbilities
-                // We'll convert it to use the new format
-                const ability = {
-                    name: name,
-                    description: description,
-                    cooldown: cooldown,
-                    effects: []
-                };
-                
-                const html = this.formatAbilityTooltip(ability, level);
-                this.showAbilityTooltipFromHTML(event, html);
-            }
-            
-            showAbilityTooltipFromHTML(event, html) {
-                // Create or get tooltip element
-                let tooltip = document.getElementById('abilityTooltip');
-                if (!tooltip) {
-                    tooltip = document.createElement('div');
-                    tooltip.id = 'abilityTooltip';
-                    tooltip.style.cssText = `
-                        position: fixed;
-                        background: rgba(10, 15, 26, 0.95);
-                        border: 2px solid #2a6a8a;
-                        padding: 16px;
-                        border-radius: 4px;
-                        z-index: 1002;
-			min-width: 440px;
-                        max-width: 600px;
-                        box-shadow: 0 0 20px rgba(0,0,0,0.8);
-                        pointer-events: none;
-                    `;
-                    document.body.appendChild(tooltip);
-                }
-                
-                tooltip.innerHTML = html;
-                
-                // Position tooltip
-                const rect = event.target.getBoundingClientRect();
-                tooltip.style.left = rect.left + 'px';
-                tooltip.style.top = (rect.bottom + 5) + 'px';
-                tooltip.style.display = 'block';
-                
-                // Adjust if tooltip goes off screen
-                const tooltipRect = tooltip.getBoundingClientRect();
-                if (tooltipRect.right > window.innerWidth) {
-                    tooltip.style.left = (window.innerWidth - tooltipRect.width - 10) + 'px';
-                }
-                if (tooltipRect.bottom > window.innerHeight) {
-                    tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
-                }
-            }
-
-            hideAbilityTooltip() {
-                const tooltip = document.getElementById('abilityTooltip');
-                if (tooltip) {
-                    tooltip.style.display = 'none';
-                }
-            }
-
-showBattleResults() {
-    if (!this.pendingBattleResults) return;
-
-	// Hide exit button when showing results
-const exitButton = document.querySelector('.exitBattleButton');
-if (exitButton) {
-    exitButton.style.display = 'none';
-}
-    
-    const results = this.pendingBattleResults;
-    
-    // Apply exp and track level ups BEFORE showing the popup
-    const levelUps = [];
-    results.heroResults.forEach(result => {
-        if (result.survived && result.expGained > 0) {
-            const hero = result.hero;
-            const startLevel = hero.level;
-            
-            // Apply the exp
-            this.addExpToHero(hero, result.expGained);
-            
-            // Track if hero leveled up
-            if (hero.level > startLevel) {
-                result.leveledUp = true;
-                result.levelsGained = hero.level - startLevel;
-                result.newLevel = hero.level;
-            }
-        }
-    });
-    
-    const popup = document.getElementById('battleResultsPopup');
-    
-    // Update header
-    const titleElement = document.getElementById('resultsTitle');
-    titleElement.textContent = results.victory ? 'Victory!' : 'Defeat!';
-    titleElement.className = `resultsTitle ${results.victory ? 'victory' : 'defeat'}`;
-    
-    const infoElement = document.getElementById('dungeonInfo');
-    const actionText = results.victory ? 'Defeated' : 'Failed';
-    infoElement.textContent = `${actionText} ${results.dungeonName} in ${results.time}`;
-	
-    // Generate hero results
-    const heroGrid = document.getElementById('heroResultsGrid');
-    heroGrid.innerHTML = '';
-    
-results.heroResults.forEach(result => {
-    const hero = result.hero;
-    const heroDiv = document.createElement('div');
-    heroDiv.className = `heroResult ${result.survived ? '' : 'dead'}`;
-    
-    // Add item rarity border if hero got an item
-    if (result.item) {
-        heroDiv.classList.add(result.item.getRarity());
-    }
-    
-    // Generate stars using consolidated function
-    const starData = hero.getStars();
-    
-    // Calculate exp bar fill
-    const expPercent = hero.level >= 500 ? 100 : (hero.expToNext > 0 ? (hero.exp / hero.expToNext * 100) : 0);
-    
-// Create item/gold slot HTML
-let rewardSlotHTML = '';
-if (result.item) {
-    const starData = result.item.getStars();
-rewardSlotHTML = `<div class="itemSlot" onmouseover="game.showItemTooltip(event, game.pendingBattleResults.heroResults[${results.heroResults.indexOf(result)}].item)" onmouseout="game.hideItemTooltip()">
-    <div class="itemContainer">
-        <img src="https://puzzle-drops.github.io/TEVE/img/items/${result.item.id}.png" alt="${result.item.name}" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
-        ${result.item.refined ? '<div class="itemRefined">*</div>' : ''}
-        ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
-        <div class="itemLevel">${result.item.level}</div>
-        <div class="itemQuality">${result.item.getQualityPercent()}%</div>
-    </div>
-</div>`;
-} else if (result.gold > 0) {
-    rewardSlotHTML = `<div class="itemSlot golden" onmouseover="game.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseout="game.hideGoldTooltip()">
-        <img src="https://puzzle-drops.github.io/TEVE/img/items/gold.png" alt="Gold" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
-    </div>`;
-} else {
-    rewardSlotHTML = '<div class="itemSlot"></div>';
-}
-	
-    heroDiv.innerHTML = `
-        <div class="heroResultThumb">
-            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${hero.className}_portrait.png" 
-                 alt="${hero.displayClassName}"
-                 style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
-                 onerror="this.style.display='none'">
-            ${starData.html ? `<div class="thumbStars ${starData.colorClass}" style="position: absolute; bottom: 0; left: 0; font-size: 12px;">${starData.html}</div>` : ''}
-            <div class="thumbLevel" style="position: absolute; bottom: 0; right: 0; font-size: 14px;">${hero.level}</div>
-        </div>
-        <div class="heroResultClass">${hero.name}</div>
-        <div class="heroResultName">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
-        ${result.survived ? `
-            <div class="expGainBar">
-                <div class="expGainFill" style="width: 0%"></div>
-                <div class="expGainText">+${result.expGained} EXP</div>
-            </div>
-            <div class="levelUpContainer" style="height: 30px; margin-top: 20px;">
-                ${result.leveledUp ? `<div style="color: #ffd700; font-size: 14px; font-weight: bold; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">Level Up! +${result.levelsGained}</div>` : ''}
-            </div>
-        ` : '<div style="color: #ff4444; font-size: 12px;">Did not survive</div>'}
-        ${rewardSlotHTML}
-    `;
-    
-    heroGrid.appendChild(heroDiv);
-    
-    // Animate exp bar after a delay
-    if (result.survived) {
-        setTimeout(() => {
-            const fillElement = heroDiv.querySelector('.expGainFill');
-            if (fillElement) {
-                fillElement.style.width = `${expPercent}%`;
-            }
-        }, 100);
-    }
-});    
-    popup.style.display = 'block';
-    
-// Handle auto replay if enabled and victory
-    if (this.autoReplay && results.victory) {
-        let countdown = 6;
-        this.updateAutoReplayText(countdown);
-        
-        this.autoReplayTimer = setInterval(() => {
-            countdown--;
-            if (countdown <= 0) {
-                clearInterval(this.autoReplayTimer);
-                this.autoReplayTimer = null;
-                this.closeBattleResults();
-            } else {
-                this.updateAutoReplayText(countdown);
-            }
-        }, 1000);
-    }
-}
-		
 closeBattleResults() {
     const popup = document.getElementById('battleResultsPopup');
     popup.style.display = 'none';
@@ -4968,7 +2311,7 @@ if (exitButton) {
     if (this.autoReplayTimer) {
         clearInterval(this.autoReplayTimer);
         this.autoReplayTimer = null;
-        this.updateAutoReplayText(null);
+        this.uiManager.updateAutoReplayText(null);
     }
     
     if (this.pendingBattleResults) {
@@ -4996,18 +2339,7 @@ if (this.pendingBattleResults.victory && this.autoReplay) {
         this.automaticModeCompletions = 0;
     }
             // Return to party select (either manual click or not auto replay)
-            this.showPartySelect();
-        }
-    }
-}
-
-updateAutoReplayText(countdown) {
-    const closeBtn = document.querySelector('.closeResultsBtn');
-    if (closeBtn) {
-        if (countdown !== null) {
-            closeBtn.textContent = `Auto Replay in ${countdown}...`;
-        } else {
-            closeBtn.textContent = 'Continue';
+            this.uiManager.showPartySelect();
         }
     }
 }
