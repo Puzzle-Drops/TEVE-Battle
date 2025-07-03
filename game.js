@@ -1254,7 +1254,7 @@ class Game {
         
         // Close when clicking elsewhere
         setTimeout(() => {
-            document.addEventListener('click', this.uiManager.closeItemContextMenu(), { once: true });
+            document.addEventListener('click', this.uiManager.closeItemContextMenu().bind(this.uiManager), { once: true });
         }, 10);
     }
 
