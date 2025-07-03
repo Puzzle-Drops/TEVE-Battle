@@ -547,6 +547,10 @@ enterDungeon(tierName, dungeonIndex) {
                 this.renderStashList();
             }
 
+		handleNPCClick(npcName) {
+    console.log(`NPC ${npcName} clicked - not yet implemented`);
+}
+
 showCollectionLog() {
     this.hideAllScreens();
     this.closeHeroInfo();
