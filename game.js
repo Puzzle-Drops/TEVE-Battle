@@ -444,13 +444,13 @@ class Game {
     }
 
 getDungeonCollectionStats(dungeonId) {
-    const dungeonData = window.dungeonData.dungeons[dungeonId];
-    if (!dungeonData || !dungeonData.rewards || !dungeonData.rewards.items) {
+    const dungeonInfo = dungeonData.dungeons[dungeonId];  // Changed from window.dungeonData
+    if (!dungeonInfo || !dungeonInfo.rewards || !dungeonInfo.rewards.items) {
         return { total: 0, collected: 0, percentage: 0 };
     }
     
     // Calculate total possible collection slots (4 quality levels per item)
-    const dungeonTotal = dungeonData.rewards.items.length * 4;
+    const dungeonTotal = dungeonInfo.rewards.items.length * 4;
     
     // Count collected items for this dungeon
     const dungeonCollection = this.collectionLog[dungeonId] || {};
