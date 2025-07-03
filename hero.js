@@ -279,25 +279,44 @@ getPromotionOptions() {
 }
 		
             promote(newClass) {
-                // Special case for Awakening
-                if (newClass === 'Awaken' && this.classTier === 4 && this.level >= 400) {
-                    this.awakened = true;
-                    // Don't reset level for awakening
-                    this.abilities = this.getClassAbilities();
-                    return true;
-                }
-                
-                if (!this.canPromote() || !this.getPromotionOptions().includes(newClass)) {
-                    return false;
-                }
-                
-                this.className = newClass;
-                this.level = 10 * this.classTier;
-                this.exp = 0;
-                this.expToNext = this.calculateExpToNext();
-                this.abilities = this.getClassAbilities();
-                return true;
-            }
+    // Special case for Awakening
+    if (newClass === 'Awaken' && this.classTier === 4 && this.level >= 400) {
+        this.awakened = true;
+        // Don't reset level for awakening
+        this.abilities = this.getClassAbilities();
+        return true;
+    }
+    
+    if (!this.canPromote() || !this.getPromotionOptions().includes(newClass)) {
+        return false;
+    }
+    
+    this.className = newClass;
+    this.level = 10 * this.classTier;
+    this.exp = 0;
+    this.expToNext = this.calculateExpToNext();
+    
+    // Update initial stats to match the new class
+    this.initial = {
+        hp: 0,
+        hpRegen: 0,
+        attack: 0,
+        attackSpeed: 0,
+        str: 0,
+        agi: 0,
+        int: 0,
+        armor: 0,
+        resist: 0
+    };
+    
+    // Override with new class-specific initial values if they exist
+    if (this.classData.initial) {
+        Object.assign(this.initial, this.classData.initial);
+    }
+    
+    this.abilities = this.getClassAbilities();
+    return true;
+}
             
 equipItem(item, slot) {
     if (!item || item.slot !== slot) return false;
