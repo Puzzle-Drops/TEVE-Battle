@@ -588,7 +588,7 @@
                         <button class="startBattleBtn" id="startBattleBtn" disabled onclick="game.startBattle()">
                             ⚔️ Start
                         </button>
-                        <button class="cancelBtn" onclick="game.closeDungeonSelect()">
+                        <button class="cancelBtn" onclick="game.uiManager.closeDungeonSelect()">
                             Cancel
                         </button>
                     </div>
@@ -878,7 +878,7 @@ switch(game.currentScreen) {
         e.preventDefault();
         break;
     case 'dungeonSelectScreen':
-        game.closeDungeonSelect();
+        game.uiManager.closeDungeonSelect();
         e.preventDefault();
         break;
     case 'individualStashScreen':
@@ -886,7 +886,7 @@ switch(game.currentScreen) {
         e.preventDefault();
         break;
     case 'partySelectScreen':
-        game.closeDungeonSelect();
+        game.uiManager.closeDungeonSelect();
         e.preventDefault();
         break;
     case 'stashScreen':
