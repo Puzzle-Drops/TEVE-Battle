@@ -3095,7 +3095,7 @@ this.party.forEach((unit, index) => {
         // Add tooltip on hover using the new format
         abilityDiv.onmouseover = (e) => {
             const showFormula = e.altKey;
-            const tooltipHtml = game.formatAbilityTooltip(ability, ability.level, unit.source, showFormula);
+            const tooltipHtml = game.uiManager.formatAbilityTooltip(ability, ability.level, unit.source, showFormula);
             game.uiManager.showAbilityTooltipFromHTML(e, tooltipHtml);
         };
         abilityDiv.onmouseout = () => {
