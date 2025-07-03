@@ -116,11 +116,15 @@ set spellLevel(value) {
     this._overrideSpellLevel = value;
 }
 
-            get baseStats() {
+get baseStats() {
     const mods = this.classData.modifiers;
     const str = Math.floor(this.initial.str + (this.level * mods.str));
     const agi = Math.floor(this.initial.agi + (this.level * mods.agi));
     const int = Math.floor(this.initial.int + (this.level * mods.int));
+    
+    // Get the mainstat value for attack calculation
+    const mainstat = this.classData.mainstat || 'str';
+    const mainstatValue = mainstat === 'str' ? str : (mainstat === 'agi' ? agi : int);
     
     return {
         str: str,
@@ -128,7 +132,7 @@ set spellLevel(value) {
         int: int,
         hp: (str * 5) + this.initial.hp,
         hpRegen: (str * 0.05) + this.initial.hpRegen,
-        attack: str + this.initial.attack, // Will be overridden by mainstat in getter
+        attack: mainstatValue + this.initial.attack,
         attackSpeed: (100 + 100 * (agi / (agi + 1000))) + this.initial.attackSpeed,
         armor: (0.25 * str) + (0.05 * agi) + this.initial.armor,
         resist: (0.25 * int) + this.initial.resist
