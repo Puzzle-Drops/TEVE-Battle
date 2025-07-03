@@ -626,9 +626,16 @@ body {
     margin: 15px auto 5px;
 }
 
-.closeResultsBtn {
-    display: block;
+/* Battle Results Buttons Container */
+.battleResultsButtons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
     margin: 30px auto 0;
+}
+
+/* Update the existing closeResultsBtn to be replayBtn */
+.replayBtn {
     padding: 15px 40px;
     background: linear-gradient(135deg, #4dd0e1 0%, #2a9aaa 100%);
     border: none;
@@ -640,9 +647,27 @@ body {
     transition: all 0.3s;
 }
 
-.closeResultsBtn:hover {
+.replayBtn:hover {
     background: linear-gradient(135deg, #6de0f1 0%, #4dd0e1 100%);
     box-shadow: 0 0 30px rgba(109, 224, 241, 0.7);
+}
+
+/* New Map button styles */
+.mapBtn {
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #8a2a8a 0%, #5a1a5a 100%);
+    border: none;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(138, 42, 138, 0.5);
+    transition: all 0.3s;
+}
+
+.mapBtn:hover {
+    background: linear-gradient(135deg, #aa4aaa 0%, #8a2a8a 100%);
+    box-shadow: 0 0 30px rgba(170, 74, 170, 0.7);
 }
 
 /* Gold in hero screen */
