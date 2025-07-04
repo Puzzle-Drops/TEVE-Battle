@@ -562,10 +562,16 @@ const isCompleted = dungeonCollected === dungeonTotal;
         });
     }
 
-    showPartySelect(mode = 'dungeon') {
+showPartySelect(mode = 'dungeon') {
     this.hideAllScreens();
     this.game.currentScreen = 'partySelectScreen';
     document.getElementById('partySelectScreen').style.display = 'block';
+    
+    // Ensure battle preview is visible
+    const battlePreview = document.querySelector('.battlePreview');
+    if (battlePreview) {
+        battlePreview.style.display = '';
+    }
     
     // Set battlefield background based on mode
     const battlefieldBg = document.querySelector('.partySelectBattlefield');
