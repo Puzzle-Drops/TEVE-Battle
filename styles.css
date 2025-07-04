@@ -1064,7 +1064,6 @@ body {
     gap: 20px;
     max-width: 800px;
     margin: 0 auto;
-    margin-bottom: 20px; /* Add space before collection log */
 }
 
 /* Heroes Screen */
@@ -2555,6 +2554,14 @@ body {
     margin-top: 40px;
 }
 
+/* Stash Center Content Wrapper */
+.stashCenterContent {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+}
+
 /* NPC Buttons */
 .npcButton {
     width: 530px;
@@ -3599,8 +3606,6 @@ body {
 /* Collection Log Button */
 .collectionLogButton {
     width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
     padding: 30px 20px;
     background: linear-gradient(135deg, #0a2e4a 0%, #0f3f5f 100%);
     border: 2px solid #2a6a8a;
@@ -3612,7 +3617,7 @@ body {
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 20px rgba(42, 106, 138, 0.5);
-    height: 160px; /* Match stashItem height */
+    height: 160px;
     position: relative;
     overflow: hidden;
 }
