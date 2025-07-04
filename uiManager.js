@@ -596,8 +596,14 @@ showPartySelect(mode = 'dungeon') {
         document.getElementById('dungeonName').textContent = this.game.currentDungeon.name;
     }
 
-    // Hide/show elements based on mode
+// Hide/show elements based on mode
 if (mode === 'arena') {
+    // Ensure battle preview is visible for arena
+    const battlePreview = document.querySelector('.battlePreview');
+    if (battlePreview) {
+        battlePreview.style.display = '';  // Explicitly show it
+    }
+    
     // Hide dungeon-specific elements
     const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
     if (recordsSection) recordsSection.style.display = 'none';
@@ -609,34 +615,40 @@ if (mode === 'arena') {
     const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
     if (rewardsSection) rewardsSection.style.display = 'none';
         
-        // Hide auto toggles
-        const autoBattleToggle = document.getElementById('autoBattleToggle');
-        if (autoBattleToggle) autoBattleToggle.parentElement.style.display = 'none';
-        
-        const autoReplayToggle = document.getElementById('autoReplayToggleParty');
-        if (autoReplayToggle) autoReplayToggle.parentElement.style.display = 'none';
-    } else {
-        // Show all elements for dungeon mode
-        const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
-        if (recordsSection) recordsSection.style.display = '';
-        
-        const waveNav = document.getElementById('waveNavigation');
-        if (waveNav) waveNav.style.display = '';
-        
-        const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
-        if (rewardsSection) rewardsSection.style.display = '';
-        
-        // Show auto toggles
-        const autoBattleToggle = document.getElementById('autoBattleToggle');
-        if (autoBattleToggle) autoBattleToggle.parentElement.style.display = '';
-        
-        const autoReplayToggle = document.getElementById('autoReplayToggleParty');
-        if (autoReplayToggle) autoReplayToggle.parentElement.style.display = '';
-        
-        // Set toggle states
-        if (autoBattleToggle) autoBattleToggle.checked = this.game.autoBattle;
-        if (autoReplayToggle) autoReplayToggle.checked = this.game.autoReplay;
+    // Hide auto toggles
+    const autoBattleToggle = document.getElementById('autoBattleToggle');
+    if (autoBattleToggle) autoBattleToggle.parentElement.style.display = 'none';
+    
+    const autoReplayToggle = document.getElementById('autoReplayToggleParty');
+    if (autoReplayToggle) autoReplayToggle.parentElement.style.display = 'none';
+} else {
+    // Ensure battle preview is visible for dungeons
+    const battlePreview = document.querySelector('.battlePreview');
+    if (battlePreview) {
+        battlePreview.style.display = '';  // Explicitly show it
     }
+    
+    // Show all elements for dungeon mode
+    const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
+    if (recordsSection) recordsSection.style.display = '';
+    
+    const waveNav = document.getElementById('waveNavigation');
+    if (waveNav) waveNav.style.display = '';
+    
+    const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
+    if (rewardsSection) rewardsSection.style.display = '';
+    
+    // Show auto toggles
+    const autoBattleToggle = document.getElementById('autoBattleToggle');
+    if (autoBattleToggle) autoBattleToggle.parentElement.style.display = '';
+    
+    const autoReplayToggle = document.getElementById('autoReplayToggleParty');
+    if (autoReplayToggle) autoReplayToggle.parentElement.style.display = '';
+    
+    // Set toggle states
+    if (autoBattleToggle) autoBattleToggle.checked = this.game.autoBattle;
+    if (autoReplayToggle) autoReplayToggle.checked = this.game.autoReplay;
+}
     
     // Render hero selection list
     this.renderHeroSelectList();
