@@ -47,64 +47,11 @@ generateArenaTeamOpponents(teamData) {
         enemy.name = heroData.name;
         enemy.gender = heroData.gender;
         enemy.className = heroData.className;
-        
+
         // Set spell level based on class tier
-        const classData = unitData.classes[heroData.className];
-        if (classData) {
-            enemy.spellLevel = Math.min(4, classData.tier || 1);
-            
-            // Set abilities based on the class
-            const abilities = [];
-            
-            // Add class abilities based on the class data
-            if (classData.abilities) {
-                classData.abilities.forEach(abilityId => {
-                    abilities.push({
-                        id: abilityId,
-                        name: spellManager.getSpell(abilityId)?.name || abilityId,
-                        level: enemy.spellLevel,
-                        cooldown: spellManager.getSpell(abilityId)?.cooldown?.[enemy.spellLevel - 1] || 0,
-                        passive: spellManager.getSpell(abilityId)?.effects?.includes('passive') || false
-                    });
-                });
-            }
-            
-            enemy.abilities = abilities;
-        }
-        
-        // Create gear from the data
-        const gear = {};
-        Object.entries(heroData.gear || {}).forEach(([slot, gearData]) => {
-            const item = new Item(gearData.id);
-            // Set specific quality values
-            item.quality1 = gearData.quality[0] || 0;
-            item.quality2 = gearData.quality[1] || 0;
-            item.quality3 = gearData.quality[2] || 0;
-            item.quality4 = gearData.quality[3] || 0;
-            gear[slot] = item;
-        });
-        
-        enemy.arenaGear = gear;
-        enemy.gear = gear; // Store directly on enemy for display
-        
-        // Calculate gear stats and add to initial stats
-        const gearStats = this.calculateGearStats(gear);
-        
-        // Add gear stats to enemy's initial values
-        enemy.initial.str += gearStats.str;
-        enemy.initial.agi += gearStats.agi;
-        enemy.initial.int += gearStats.int;
-        enemy.initial.hp += gearStats.hp;
-        enemy.initial.armor += gearStats.armor;
-        enemy.initial.resist += gearStats.resist;
-        enemy.initial.hpRegen += gearStats.hpRegen;
-        enemy.initial.attack += gearStats.attack;
-        enemy.initial.attackSpeed += gearStats.attackSpeed;
-        
-        opponents.push(enemy);
-    });
-    
-    return opponents;
+const classData = unitData.classes[heroData.className];
+if (classData) {
+    enemy.spellLevel = Math.min(4, classData.tier || 1);
 }
         
         // Create gear from the data
