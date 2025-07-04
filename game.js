@@ -1508,12 +1508,17 @@ getDungeonCollectionStats(dungeonId) {
             return aSlot - bSlot;
         });
     }
-
-startBattle(mode = 'dungeon') {
+    
+startBattle(mode = null) {
     // Clean up any existing battle timer interval
     if (this.currentBattle && this.currentBattle.timerInterval) {
         clearInterval(this.currentBattle.timerInterval);
         this.currentBattle.timerInterval = null;
+    }
+    
+    // Determine mode automatically if not provided
+    if (mode === null) {
+        mode = this.arenaMode === 'spar' ? 'arena' : 'dungeon';
     }
     
     // Store mode for later
