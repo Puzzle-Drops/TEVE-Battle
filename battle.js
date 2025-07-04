@@ -169,9 +169,10 @@ get spellLevel() {
 }
 
 class Battle {
-    constructor(game, party, enemyWaves) {
-        this.game = game;
-        this.turn = 0;
+constructor(game, party, enemyWaves, mode = 'dungeon') {
+    this.game = game;
+    this.mode = mode;
+    this.turn = 0;
         this.currentUnit = null;
         this.waitingForPlayer = false;
         this.autoMode = false;
@@ -219,6 +220,20 @@ class Battle {
         
         // Track exp earned per wave for each hero
         this.waveExpEarned = [];
+
+    // Initialize tracking for ALL battles (not just arena)
+this.battleStats = {};
+
+// Hide auto controls if arena mode
+if (this.mode === 'arena') {
+    const autoModeToggle = document.getElementById('autoModeToggle');
+    const autoReplayToggle = document.getElementById('autoReplayToggle');
+    const autoToggleContainer = document.querySelector('.autoToggleContainer');
+    
+    if (autoModeToggle) autoModeToggle.style.display = 'none';
+    if (autoReplayToggle) autoReplayToggle.style.display = 'none';
+    if (autoToggleContainer) autoToggleContainer.style.display = 'none';
+}
         
         // Create battle units for party and ensure they're properly initialized
         this.party = party.map((hero, index) => {
@@ -241,6 +256,9 @@ class Battle {
         
         // Apply initial passives
         this.applyInitialPassives();
+
+// Initialize battle stats
+this.initializeBattleStats();
 
         // Initialize UI elements for all units
         this.initializeAllUI();
@@ -598,6 +616,31 @@ if (unit.isEnemy) {
         });
     });
 }
+
+initializeBattleStats() {
+    // For each unit in this.allUnits:
+    this.allUnits.forEach(unit => {
+        this.battleStats[unit.name] = {
+            kills: 0,
+            deaths: 0,
+            turnsTaken: 0,
+            damageDealt: 0,
+            damageTaken: 0,
+            healingDone: 0,
+            shieldingApplied: 0,
+            buffsApplied: 0,
+            debuffsApplied: 0,
+            buffsDispelled: 0,
+            debuffsCleansed: 0
+        };
+    });
+}
+
+trackBattleStat(unitName, stat, value) {
+    if (this.battleStats && this.battleStats[unitName]) {
+        this.battleStats[unitName][stat] += value;
+    }
+}
     
     start() {
     this.log("Battle started!");
@@ -899,6 +942,9 @@ if (unit.isEnemy) {
     
     processTurn() {
         const unit = this.currentUnit;
+        
+        // Track turn taken
+this.trackBattleStat(unit.name, 'turnsTaken', 1);
 
         // Debug log all possible actions if debugging is enabled
         this.debugLogAllPossibleActions(unit);
@@ -2125,10 +2171,17 @@ if (target.damageReduction && damageType !== 'pure') {
     damage *= (1 - target.damageReduction);
 }
 
+
+        // DEAL THE DAMAGE
         damage = Math.round(damage);
         const previousHp = target.currentHp;
         target.currentHp = Math.max(0, target.currentHp - damage);
 
+// Track damage stats
+this.trackBattleStat(attacker.name, 'damageDealt', damage);
+this.trackBattleStat(target.name, 'damageTaken', damage);
+
+        // AFTER DAMAGE TAKEN EFFECTS BELOW
 
 // Check for on-hit effects from attacker
 if (attacker.onHitEffects && target.isAlive) {
@@ -2327,6 +2380,8 @@ showDodgeAnimation(target) {
 
     handleUnitDeath(unit, killer = null) {
     unit.isDead = true;
+        // Track death
+this.trackBattleStat(unit.name, 'deaths', 1);
     
     // Hide active circle on death
     const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
@@ -2345,6 +2400,8 @@ showDodgeAnimation(target) {
     if (killer && killer.isAlive) {
         // Sniper Female passive - speed buff on kill
         if (killer.onKillEffects) {
+            // Track kill
+this.trackBattleStat(killer.name, 'kills', 1);
             killer.onKillEffects.forEach(effect => {
                 if (effect.type === 'buff') {
                     this.applyBuff(killer, effect.buffName, effect.duration, {});
@@ -2459,6 +2516,11 @@ showDodgeAnimation(target) {
         const overheal = heal - actualHeal;
         
         target.currentHp += actualHeal;
+
+        // Track healing done (use currentUnit as healer)
+if (this.currentUnit) {
+    this.trackBattleStat(this.currentUnit.name, 'healingDone', actualHeal);
+}
         
         // Handle overhealing for Prophet/Prophetess passives
         if (overheal > 0) {
@@ -2528,6 +2590,11 @@ showDodgeAnimation(target) {
                 
                 target.buffs.push(shield);
                 this.log(`${target.name} gains a ${effects.shieldAmount} HP shield!`);
+
+                // Track shield application
+if (this.currentUnit) {
+    this.trackBattleStat(this.currentUnit.name, 'shieldingApplied', effects.shieldAmount);
+}
             }
             return;
         }
@@ -2565,6 +2632,11 @@ showDodgeAnimation(target) {
             
             target.buffs.push(buff);
             this.log(`${target.name} gains ${buffName}!`);
+
+            // Track buff application
+if (this.currentUnit) {
+    this.trackBattleStat(this.currentUnit.name, 'buffsApplied', 1);
+}
         }
         
         // Hierophant Male passive - 20% shield when buffed
@@ -2633,6 +2705,11 @@ showDodgeAnimation(target) {
             
             target.debuffs.push(debuff);
             this.log(`${target.name} suffers from ${debuffName}!`);
+
+            // Track debuff application
+if (this.currentUnit) {
+    this.trackBattleStat(this.currentUnit.name, 'debuffsApplied', 1);
+}
             
             // Apply stun visuals if it's a stun debuff
             if (debuffName === 'Stun' || effects.stunned) {
@@ -2658,30 +2735,26 @@ showDodgeAnimation(target) {
         this.applyBuff(target, 'Shield', 3, { shieldAmount: Math.floor(amount) });
     }
     
-    removeBuffs(target) {
-        target.buffs = target.buffs.filter(buff => buff.duration === -1);
-    }
+removeBuffs(target) {
+    const removedCount = target.buffs.filter(buff => buff.duration !== -1).length;
+    target.buffs = target.buffs.filter(buff => buff.duration === -1);
     
-    removeDebuffs(target) {
-        // Store if unit was stunned before removing
-        const wasStunned = target.debuffs.some(d => d.name === 'Stun' || d.stunned);
-        
-        target.debuffs = [];
-        
-        // Update stun visuals if needed
-        if (wasStunned) {
-            this.updateStunVisuals(target);
-        }
-        
-        // White Wizard/Witch passives
-        if (this.currentUnit) {
-            if (this.currentUnit.whiteWizardMalePassive && target.isAlive) {
-                this.applyBuff(target, 'Increase Attack', 1, { damageMultiplier: 1.5 });
-            }
-            if (this.currentUnit.whiteWitchFemalePassive && target.isAlive) {
-                this.applyBuff(target, 'Increase Speed', 1, {});
-            }
-        }
+    // Track buffs dispelled
+    if (this.currentUnit && removedCount > 0) {
+        this.trackBattleStat(this.currentUnit.name, 'buffsDispelled', removedCount);
+    }
+}
+    
+removeDebuffs(target) {
+    // Store if unit was stunned before removing
+    const wasStunned = target.debuffs.some(d => d.name === 'Stun' || d.stunned);
+    
+    const removedCount = target.debuffs.length;
+    target.debuffs = [];
+    
+    // Track debuffs cleansed
+    if (this.currentUnit && removedCount > 0) {
+        this.trackBattleStat(this.currentUnit.name, 'debuffsCleansed', removedCount);
     }
     
     getParty(unit) {
@@ -2852,6 +2925,9 @@ this.party.forEach((unit, index) => {
         unit.buffs = [];
         unit.debuffs = [];
     });
+        
+        // Store battle stats in results
+this.game.pendingBattleResults.battleStats = this.battleStats;
     
     // Clear pending exp for all party members if defeat
     if (!victory) {
@@ -3044,10 +3120,24 @@ this.party.forEach((unit, index) => {
         }).filter(r => r !== null)
     };
     
-    // Show results popup
-    setTimeout(() => {
+// Show results popup - use arena results for arena mode
+setTimeout(() => {
+    if (this.mode === 'arena') {
+        this.game.uiManager.showArenaResults();
+    } else {
         this.game.uiManager.showBattleResults();
-    }, 1000);
+    }
+}, 1000);
+}
+
+exitBattle() {
+    if (this.mode === 'arena') {
+        // Return to arena party select
+        this.game.uiManager.showPartySelect('arena');
+    } else {
+        // Return to main menu
+        this.game.uiManager.showMainMenu();
+    }
 }
     
     log(message) {
