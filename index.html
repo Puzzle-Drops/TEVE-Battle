@@ -479,15 +479,17 @@
             <!-- Stash grid will be dynamically generated -->
         </div>
         
+        <!-- Collection Log as bottom row -->
+        <button class="collectionLogButton" onclick="game.uiManager.showCollectionLog()">
+            <span style="font-size: 24px; margin-right: 10px;">📖</span>
+            Collection Log
+        </button>
+        
         <!-- Right NPC Button -->
         <button class="npcButton npcButtonRight" onclick="game.handleNPCClick('squeaky')">
             <img src="https://puzzle-drops.github.io/TEVE/img/npc/squeaky_city_1.png" alt="Squeaky" />
         </button>
     </div>
-    <button class="collectionLogButton" onclick="game.uiManager.showCollectionLog()">
-        <span style="font-size: 24px; margin-right: 10px;">📖</span>
-        Collection Log
-    </button>
     <button class="backButton" onclick="game.uiManager.showMainMenu()">Back</button>
 </div>
 
