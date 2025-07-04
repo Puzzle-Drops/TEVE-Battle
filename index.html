@@ -661,6 +661,28 @@
     <button class="mapBtn" onclick="game.returnToMap()">Continue</button>
 </div>
         </div>
+
+	    <!-- Arena Results Popup -->
+<div id="arenaResultsPopup" class="arenaResultsPopup">
+    <div class="arenaResultsHeader">
+        <div class="arenaResultsTitle">Arena Results</div>
+        <div class="arenaMatchInfo" id="arenaMatchInfo">Spar Mode - Time: 00:00</div>
+    </div>
+    <div class="arenaStatsContainer">
+        <div class="arenaTeamStats" id="playerTeamStats">
+            <h3>Your Team</h3>
+            <!-- Stats grid here -->
+        </div>
+        <div class="arenaTeamStats" id="enemyTeamStats">
+            <h3>Enemy Team</h3>
+            <!-- Stats grid here -->
+        </div>
+    </div>
+    <div class="arenaResultsButtons">
+        <button class="rematchBtn" onclick="game.rematchArena()">Rematch</button>
+        <button class="continueBtn" onclick="game.continueFromArena()">Continue</button>
+    </div>
+</div>
         
         <!-- Individual Stash Screen -->
         <div id="individualStashScreen" class="individualStashScreen">
