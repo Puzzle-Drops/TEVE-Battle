@@ -598,11 +598,6 @@ showPartySelect(mode = 'dungeon') {
 
 // Hide/show elements based on mode
 if (mode === 'arena') {
-    // Ensure battle preview is visible for arena
-    const battlePreview = document.querySelector('.battlePreview');
-    if (battlePreview) {
-        battlePreview.style.display = '';  // Explicitly show it
-    }
     
     // Hide dungeon-specific elements
     const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
@@ -621,13 +616,13 @@ if (mode === 'arena') {
     
     const autoReplayToggle = document.getElementById('autoReplayToggleParty');
     if (autoReplayToggle) autoReplayToggle.parentElement.style.display = 'none';
-} else {
-    // Ensure battle preview is visible for dungeons
+
+        // Ensure battle preview is visible for arena
     const battlePreview = document.querySelector('.battlePreview');
     if (battlePreview) {
         battlePreview.style.display = '';  // Explicitly show it
     }
-    
+} else {    
     // Show all elements for dungeon mode
     const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
     if (recordsSection) recordsSection.style.display = '';
@@ -648,6 +643,12 @@ if (mode === 'arena') {
     // Set toggle states
     if (autoBattleToggle) autoBattleToggle.checked = this.game.autoBattle;
     if (autoReplayToggle) autoReplayToggle.checked = this.game.autoReplay;
+
+    // Ensure battle preview is visible for dungeons
+    const battlePreview = document.querySelector('.battlePreview');
+    if (battlePreview) {
+        battlePreview.style.display = '';  // Explicitly show it
+    }
 }
     
     // Render hero selection list
