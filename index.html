@@ -677,7 +677,33 @@
             <button class="backButton" onclick="game.uiManager.showStash()">Back</button>
         </div>
     
+<!-- Arena Screen -->
+<div id="arenaScreen" class="arenaScreen">
+    <h1 class="arenaTitle">Arena</h1>
+    <div class="arenaContainer">
+        <!-- Left NPC Button (Bob) -->
+        <button class="npcButton npcButtonLeft" onclick="game.handleNPCClick('bob')">
+            <img src="https://puzzle-drops.github.io/TEVE/img/npc/bob_colo_1.png" alt="Bob" />
+        </button>
+        
+        <!-- Center Content -->
+        <div class="arenaCenterContent">
+            <div class="arenaModeButtons">
+                <button class="arenaModeButton" onclick="console.log('PvP not implemented yet')">
+                    <span class="arenaModeTitle">PvP</span>
+                    <span class="arenaModeSubtitle">Challenge other players</span>
+                </button>
+                <button class="arenaModeButton" onclick="game.arena.enterSparMode()">
+                    <span class="arenaModeTitle">Spar</span>
+                    <span class="arenaModeSubtitle">Practice against AI teams</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <button class="backButton" onclick="game.uiManager.showMainMenu()">Back</button>
+</div>
 
+	    
 <!-- Collection Log Screen -->
 <div id="collectionLogScreen" class="collectionLogScreen">
     <div class="collectionHeader">
