@@ -902,14 +902,31 @@ updateArenaEnemyFormation() {
         slot.classList.remove('filled');
     });
     
+    // Update wave navigation for arena teams
+    const waveNav = document.getElementById('waveNavigation');
+    if (waveNav && this.game.arenaTeams) {
+        waveNav.style.display = '';
+        const waveText = waveNav.querySelector('.waveText');
+        if (waveText) {
+            const currentTeam = this.game.arenaTeams[this.game.currentArenaTeam];
+            waveText.textContent = currentTeam ? currentTeam.name : 'No Team';
+        }
+    }
+    
     // Show arena opponents if they exist
     if (this.game.arenaOpponents) {
         this.game.arenaOpponents.forEach((enemy, index) => {
             if (index < 5) {
                 const slot = slots[index];
                 
-                // Generate stars
-                const starData = enemy.getStars();
+                // Generate stars based on class tier
+                const classData = unitData?.classes[enemy.className];
+                const classTier = classData?.tier || 0;
+                const starData = this.game.generateStars({ 
+                    type: 'hero', 
+                    classTier: classTier, 
+                    awakened: false 
+                });
                 
                 slot.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
@@ -1016,16 +1033,16 @@ showArenaEnemyInfoPopup(enemy) {
     });
     
     // Show gear
-    const gearHtml = `
-        <div class="gearGrid">
-            ${this.renderArenaGearSlot(enemy, 'trinket')}
-            ${this.renderArenaGearSlot(enemy, 'head')}
-            ${this.renderArenaGearSlot(enemy, 'weapon')}
-            ${this.renderArenaGearSlot(enemy, 'chest')}
-            ${this.renderArenaGearSlot(enemy, 'offhand')}
-            ${this.renderArenaGearSlot(enemy, 'legs')}
-        </div>
-    `;
+const gearHtml = `
+    <div class="gearGrid">
+        ${this.renderArenaGearSlot(enemy, 'trinket')}
+        ${this.renderArenaGearSlot(enemy, 'head')}
+        ${this.renderArenaGearSlot(enemy, 'weapon')}
+        ${this.renderArenaGearSlot(enemy, 'chest')}
+        ${this.renderArenaGearSlot(enemy, 'offhand')}
+        ${this.renderArenaGearSlot(enemy, 'legs')}
+    </div>
+`;
     document.getElementById('popupGear').innerHTML = gearHtml;
     
     popup.style.display = 'block';
@@ -2687,6 +2704,30 @@ updateAutoReplayText(countdown) {
 
     // Navigation Methods (moved from game.js)
     navigateWave(direction) {
+    if (this.game.arenaMode === 'spar') {
+        // Navigate arena teams
+        if (!this.game.arenaTeams || this.game.arenaTeams.length === 0) return;
+        
+        if (direction === 'prev') {
+            this.game.currentArenaTeam--;
+            if (this.game.currentArenaTeam < 0) {
+                this.game.currentArenaTeam = this.game.arenaTeams.length - 1;
+            }
+        } else {
+            this.game.currentArenaTeam++;
+            if (this.game.currentArenaTeam >= this.game.arenaTeams.length) {
+                this.game.currentArenaTeam = 0;
+            }
+        }
+        
+        // Generate new opponents
+        const currentTeam = this.game.arenaTeams[this.game.currentArenaTeam];
+        this.game.arenaOpponents = this.game.arena.generateArenaTeamOpponents(currentTeam);
+        
+        // Update display
+        this.updateArenaEnemyFormation();
+    } else {
+        // Normal dungeon wave navigation
         if (!this.game.dungeonWaves || this.game.dungeonWaves.length === 0) return;
         
         if (direction === 'prev') {
@@ -2703,6 +2744,7 @@ updateAutoReplayText(countdown) {
         
         this.updateEnemyFormation();
     }
+}
 
     // Ability Tooltip Formatting (moved from game.js)
     formatAbilityTooltip(ability, level, unit = null, showFormula = false) {
