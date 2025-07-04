@@ -112,13 +112,32 @@ class Arena {
     }
     
     createArenaEnemy(className, level, tier) {
-        // Create a special arena enemy that extends Enemy
-        const enemy = new ArenaEnemy(className, level, tier);
+        // Determine spell level based on tier
+        let spellLevel = 1;
+        if (tier === 2) spellLevel = 2;
+        else if (tier === 3) spellLevel = 3;
+        else if (tier === 4) spellLevel = 4;
         
-        // Generate and equip gear
+        // Create regular Enemy object
+        const enemy = new Enemy(className, level, spellLevel);
+        
+        // Generate gear for display purposes (stored as metadata)
         const gear = this.generateHeroGear(enemy, level);
-        enemy.gear = gear;
-        enemy.updateGearStats();
+        enemy.arenaGear = gear; // Store gear for display in popup
+        
+        // Calculate gear stats and add to initial stats
+        const gearStats = this.calculateGearStats(gear);
+        
+        // Add gear stats to enemy's initial values
+        enemy.initial.str += gearStats.str;
+        enemy.initial.agi += gearStats.agi;
+        enemy.initial.int += gearStats.int;
+        enemy.initial.hp += gearStats.hp;
+        enemy.initial.armor += gearStats.armor;
+        enemy.initial.resist += gearStats.resist;
+        enemy.initial.hpRegen += gearStats.hpRegen;
+        enemy.initial.attack += gearStats.attack;
+        enemy.initial.attackSpeed += gearStats.attackSpeed;
         
         return enemy;
     }
@@ -176,116 +195,9 @@ class Arena {
         
         return gear;
     }
-}
-
-// Arena Enemy class that extends Enemy
-class ArenaEnemy extends Enemy {
-    constructor(className, level, tier) {
-        // Extract enemy ID from class name (remove gender suffix)
-        const enemyId = className.replace(/_male$|_female$/, '');
-        
-        // Initialize as normal enemy
-        super(enemyId, level);
-        
-        // Override with hero class data
-        this.className = className;
-        this.classData = unitData.classes[className];
-        this.name = this.classData.name;
-        this.classTier = tier;
-        
-        // Set proper spell level based on tier
-        if (tier === 0) this.spellLevel = 1;
-        else if (tier === 1) this.spellLevel = 1;
-        else if (tier === 2) this.spellLevel = 2;
-        else if (tier === 3) this.spellLevel = 3;
-        else if (tier === 4) this.spellLevel = 4;
-        
-        // Use class modifiers
-        this.modifiers = this.classData.modifiers;
-        // Around line 205, change:
-this._mainstat = this.classData.mainstat;  // Changed from this.mainstat
-
-        
-        // Initialize gear system
-        this.gear = {
-            head: null,
-            chest: null,
-            legs: null,
-            weapon: null,
-            offhand: null,
-            trinket: null
-        };
-        
-        this.gearStats = { 
-            str: 0, 
-            agi: 0, 
-            int: 0,
-            hp: 0,
-            armor: 0,
-            resist: 0,
-            hpRegen: 0,
-            attack: 0,
-            attackSpeed: 0
-        };
-        
-        // Override initial values from class
-        if (this.classData.initial) {
-            Object.assign(this.initial, this.classData.initial);
-        }
-        
-        // Get abilities from class
-        this.abilities = this.getClassAbilities();
-    }
-
-    // Then add after the constructor:
-get mainstat() {
-    return this._mainstat || 'str';
-}
     
-    getClassAbilities() {
-        const abilities = [];
-        if (!this.classData.spells || this.classData.spells.length === 0) {
-            return abilities;
-        }
-        
-        const spellIds = this.classData.spells;
-        const spells = spellManager ? spellManager.getSpellsByIds(spellIds) : [];
-        
-        spells.forEach((spell, index) => {
-            if (spell) {
-                // Skip 4th ability if not tier 4
-                if (index === 3 && this.classTier < 4) {
-                    return;
-                }
-                
-                let cooldownValue = 0;
-                if (Array.isArray(spell.cooldown)) {
-                    const cooldownIndex = Math.max(0, Math.min(4, this.spellLevel - 1));
-                    cooldownValue = spell.cooldown[cooldownIndex] || spell.cooldown[0];
-                } else {
-                    cooldownValue = spell.cooldown || 0;
-                }
-                
-                abilities.push({
-                    id: spell.id,
-                    name: spell.name,
-                    description: spell.description,
-                    cooldown: cooldownValue,
-                    currentCooldown: 0,
-                    level: this.spellLevel,
-                    icon: `${spell.id}.png`,
-                    effects: spell.effects,
-                    passive: spell.passive || false
-                });
-            }
-        });
-        
-        return abilities;
-    }
-    
-    updateGearStats() {
-        // Reset gear stats
-        this.gearStats = {
+    calculateGearStats(gear) {
+        const stats = {
             str: 0,
             agi: 0,
             int: 0,
@@ -298,34 +210,15 @@ get mainstat() {
         };
         
         // Add stats from all equipped items
-        Object.values(this.gear).forEach(item => {
+        Object.values(gear).forEach(item => {
             if (item) {
                 const itemStats = item.getStats();
                 Object.keys(itemStats).forEach(stat => {
-                    this.gearStats[stat] += itemStats[stat];
+                    stats[stat] += itemStats[stat];
                 });
             }
         });
-    }
-    
-    // Override baseStats to include gear
-    get baseStats() {
-        const str = Math.floor(this.initial.str + (this.level * this.modifiers.str)) + this.gearStats.str;
-        const agi = Math.floor(this.initial.agi + (this.level * this.modifiers.agi)) + this.gearStats.agi;
-        const int = Math.floor(this.initial.int + (this.level * this.modifiers.int)) + this.gearStats.int;
         
-        const mainstatValue = this.mainstat === 'str' ? str : (this.mainstat === 'agi' ? agi : int);
-        
-        return {
-            str: str,
-            agi: agi,
-            int: int,
-            hp: (str * 5) + this.initial.hp + this.gearStats.hp,
-            hpRegen: (str * 0.05) + this.initial.hpRegen + this.gearStats.hpRegen,
-            attack: mainstatValue + this.initial.attack + this.gearStats.attack,
-            attackSpeed: (100 + 100 * (agi / (agi + 1000))) + this.initial.attackSpeed + this.gearStats.attackSpeed,
-            armor: (0.25 * str) + (0.05 * agi) + this.initial.armor + this.gearStats.armor,
-            resist: (0.25 * int) + this.initial.resist + this.gearStats.resist
-        };
+        return stats;
     }
 }
