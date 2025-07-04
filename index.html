@@ -474,16 +474,19 @@
             <img src="https://puzzle-drops.github.io/TEVE/img/npc/arnold_city_1.png" alt="Arnold" />
         </button>
         
-        <!-- Stash Grid -->
-        <div class="stashGrid" id="stashList">
-            <!-- Stash grid will be dynamically generated -->
+        <!-- Center Content Wrapper -->
+        <div class="stashCenterContent">
+            <!-- Stash Grid -->
+            <div class="stashGrid" id="stashList">
+                <!-- Stash grid will be dynamically generated -->
+            </div>
+            
+            <!-- Collection Log Button -->
+            <button class="collectionLogButton" onclick="game.uiManager.showCollectionLog()">
+                <span style="font-size: 24px; margin-right: 10px;">📖</span>
+                Collection Log
+            </button>
         </div>
-        
-        <!-- Collection Log as bottom row -->
-        <button class="collectionLogButton" onclick="game.uiManager.showCollectionLog()">
-            <span style="font-size: 24px; margin-right: 10px;">📖</span>
-            Collection Log
-        </button>
         
         <!-- Right NPC Button -->
         <button class="npcButton npcButtonRight" onclick="game.handleNPCClick('squeaky')">
