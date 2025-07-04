@@ -2756,6 +2756,7 @@ removeDebuffs(target) {
     if (this.currentUnit && removedCount > 0) {
         this.trackBattleStat(this.currentUnit.name, 'debuffsCleansed', removedCount);
     }
+}
     
     getParty(unit) {
         return unit.isEnemy ? this.enemies : this.party;
