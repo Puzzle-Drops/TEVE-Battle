@@ -591,16 +591,17 @@ const isCompleted = dungeonCollected === dungeonTotal;
     }
 
     // Hide/show elements based on mode
-    if (mode === 'arena') {
-        // Hide dungeon-specific elements
-        const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
-        if (recordsSection) recordsSection.style.display = 'none';
-        
-        const waveNav = document.getElementById('waveNavigation');
-        if (waveNav) waveNav.style.display = 'none';
-        
-        const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
-        if (rewardsSection) rewardsSection.style.display = 'none';
+if (mode === 'arena') {
+    // Hide dungeon-specific elements
+    const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
+    if (recordsSection) recordsSection.style.display = 'none';
+    
+    // Keep wave navigation visible for arena team selection
+    const waveNav = document.getElementById('waveNavigation');
+    if (waveNav) waveNav.style.display = '';
+    
+    const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
+    if (rewardsSection) rewardsSection.style.display = 'none';
         
         // Hide auto toggles
         const autoBattleToggle = document.getElementById('autoBattleToggle');
