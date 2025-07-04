@@ -1516,7 +1516,7 @@ getDungeonCollectionStats(dungeonId) {
         console.log('Arena match prepared!');
         console.log('Player team:', this.selectedParty.map(i => i !== null ? this.heroes[i] : null));
         console.log('Arena opponents:', this.arenaOpponents);
-        alert('Arena battles coming soon! Team generated successfully.');
+        alert('Arena battles coming soon! Team: ' + (this.arenaTeams[this.currentArenaTeam]?.name || 'Unknown'));
         return;
     }
     
