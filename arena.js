@@ -4,36 +4,84 @@ class Arena {
         this.game = game;
     }
     
-    enterSparMode() {
-        // Set arena mode
-        this.game.arenaMode = 'spar';
-        
-        // Get selected party heroes (use existing selection or default to first 5)
-let partyHeroes = [];
-if (this.game.selectedParty && this.game.selectedParty.some(h => h !== null)) {
-    // Use existing selection
-    partyHeroes = this.game.selectedParty
-        .filter(index => index !== null)
-        .map(index => this.game.heroes[index]);
-} else {
-    // Default to first 5 heroes
-    partyHeroes = this.game.heroes.slice(0, 5);
-    this.game.selectedParty = [0, 1, 2, 3, 4];
-}
-        
-        // Calculate average level of two highest level heroes
-        const sortedByLevel = [...partyHeroes].sort((a, b) => b.level - a.level);
-        const avgLevel = Math.floor((sortedByLevel[0].level + (sortedByLevel[1] || sortedByLevel[0]).level) / 2);
-        
-        // Find highest tier in party
-        const highestTier = Math.max(...partyHeroes.map(h => h.classTier));
-        
-        // Generate opponents
-        this.game.arenaOpponents = this.generateSparOpponents(partyHeroes, avgLevel, highestTier);
-        
-        // Show party select in arena mode
-        this.game.uiManager.showPartySelect('arena');
+enterSparMode() {
+    // Set arena mode
+    this.game.arenaMode = 'spar';
+    
+    // Load arena teams from data
+    this.game.arenaTeams = arenaData ? arenaData.teams : [];
+    this.game.currentArenaTeam = 0;
+    
+    // Get selected party heroes (use existing selection or default to first 5)
+    let partyHeroes = [];
+    if (this.game.selectedParty && this.game.selectedParty.some(h => h !== null)) {
+        // Use existing selection
+        partyHeroes = this.game.selectedParty
+            .filter(index => index !== null)
+            .map(index => this.game.heroes[index]);
+    } else {
+        // Default to first 5 heroes
+        partyHeroes = this.game.heroes.slice(0, 5);
+        this.game.selectedParty = [0, 1, 2, 3, 4];
     }
+    
+    // Generate opponents from first team
+    if (this.game.arenaTeams.length > 0) {
+        this.game.arenaOpponents = this.generateArenaTeamOpponents(this.game.arenaTeams[0]);
+    } else {
+        this.game.arenaOpponents = [];
+    }
+    
+    // Show party select in arena mode
+    this.game.uiManager.showPartySelect('arena');
+}
+
+generateArenaTeamOpponents(teamData) {
+    const opponents = [];
+    
+    teamData.heroes.forEach(heroData => {
+        // Create an Enemy object that looks like a hero
+        const enemy = new Enemy(heroData.className, heroData.level);
+        
+        // Override the name
+        enemy.name = heroData.name;
+        enemy.gender = heroData.gender;
+        enemy.className = heroData.className;
+        
+        // Create gear from the data
+        const gear = {};
+        Object.entries(heroData.gear || {}).forEach(([slot, gearData]) => {
+            const item = new Item(gearData.id);
+            // Set specific quality values
+            item.quality1 = gearData.quality[0] || 0;
+            item.quality2 = gearData.quality[1] || 0;
+            item.quality3 = gearData.quality[2] || 0;
+            item.quality4 = gearData.quality[3] || 0;
+            gear[slot] = item;
+        });
+        
+        enemy.arenaGear = gear;
+        enemy.gear = gear; // Store directly on enemy for display
+        
+        // Calculate gear stats and add to initial stats
+        const gearStats = this.calculateGearStats(gear);
+        
+        // Add gear stats to enemy's initial values
+        enemy.initial.str += gearStats.str;
+        enemy.initial.agi += gearStats.agi;
+        enemy.initial.int += gearStats.int;
+        enemy.initial.hp += gearStats.hp;
+        enemy.initial.armor += gearStats.armor;
+        enemy.initial.resist += gearStats.resist;
+        enemy.initial.hpRegen += gearStats.hpRegen;
+        enemy.initial.attack += gearStats.attack;
+        enemy.initial.attackSpeed += gearStats.attackSpeed;
+        
+        opponents.push(enemy);
+    });
+    
+    return opponents;
+}
     
     generateSparOpponents(partyHeroes, avgLevel, highestTier) {
         const opponents = [];
