@@ -1,0 +1,187 @@
+{
+  "teams": [
+    {
+      "id": "novice_villagers",
+      "name": "Novice Villagers",
+      "description": "A group of aspiring villagers",
+      "heroes": [
+        {
+          "className": "villager_male",
+          "name": "Brin",
+          "level": 10,
+          "gender": "male",
+          "gear": {
+            "weapon": {"id": "glade_fangblade", "quality": [2, 0, 0, 0]},
+            "chest": {"id": "glade_hidewrap", "quality": [3, 1, 0, 0]},
+            "head": {"id": "glade_horncap", "quality": [2, 0, 0, 0]}
+          }
+        },
+        {
+          "className": "villager_male",
+          "name": "Dain",
+          "level": 10,
+          "gender": "male",
+          "gear": {
+            "offhand": {"id": "glade_wicker_guard", "quality": [2, 2, 0, 0]},
+            "legs": {"id": "glade_stepbinds", "quality": [3, 0, 0, 0]},
+            "trinket": {"id": "glade_focus", "quality": [2, 0, 0, 0]}
+          }
+        },
+        {
+          "className": "villager_male",
+          "name": "Finn",
+          "level": 10,
+          "gender": "male",
+          "gear": {
+            "weapon": {"id": "glade_shadowfang", "quality": [3, 2, 0, 0]},
+            "head": {"id": "glade_horncap", "quality": [2, 0, 0, 0]}
+          }
+        },
+        {
+          "className": "villager_female",
+          "name": "Aria",
+          "level": 10,
+          "gender": "female",
+          "gear": {
+            "chest": {"id": "glade_hidewrap", "quality": [2, 1, 0, 0]},
+            "legs": {"id": "glade_stepbinds", "quality": [2, 0, 0, 0]},
+            "trinket": {"id": "glade_focus", "quality": [3, 0, 0, 0]}
+          }
+        },
+        {
+          "className": "villager_female",
+          "name": "Cara",
+          "level": 10,
+          "gender": "female",
+          "gear": {
+            "weapon": {"id": "glade_fangblade", "quality": [2, 0, 0, 0]},
+            "offhand": {"id": "glade_wicker_guard", "quality": [3, 1, 0, 0]}
+          }
+        }
+      ]
+    },
+    {
+      "id": "wetland_militia",
+      "name": "Wetland Militia",
+      "description": "Seasoned fighters from the wetlands",
+      "heroes": [
+        {
+          "className": "swordsman_male",
+          "name": "Magnus",
+          "level": 25,
+          "gender": "male",
+          "gear": {
+            "weapon": {"id": "wetland_blightmaul", "quality": [3, 2, 0, 0]},
+            "chest": {"id": "wetland_soddenwrap", "quality": [3, 2, 1, 0]},
+            "head": {"id": "wetland_miretooth", "quality": [2, 2, 0, 0]}
+          }
+        },
+        {
+          "className": "archer_male",
+          "name": "Quinn",
+          "level": 25,
+          "gender": "male",
+          "gear": {
+            "weapon": {"id": "wetland_murkspire", "quality": [3, 1, 0, 0]},
+            "legs": {"id": "wetland_fenstompers", "quality": [3, 2, 0, 0]},
+            "trinket": {"id": "wetland_mirecharm", "quality": [3, 2, 1, 0]}
+          }
+        },
+        {
+          "className": "acolyte_female",
+          "name": "Luna",
+          "level": 25,
+          "gender": "female",
+          "gear": {
+            "offhand": {"id": "wetland_brackenguard", "quality": [2, 2, 0, 0]},
+            "chest": {"id": "wetland_soddenwrap", "quality": [3, 1, 0, 0]},
+            "head": {"id": "wetland_miretooth", "quality": [3, 2, 0, 0]}
+          }
+        },
+        {
+          "className": "druid_female",
+          "name": "Sage",
+          "level": 25,
+          "gender": "female",
+          "gear": {
+            "weapon": {"id": "wetland_murkspire", "quality": [4, 2, 0, 0]},
+            "trinket": {"id": "wetland_mirecharm", "quality": [3, 2, 0, 0]}
+          }
+        },
+        {
+          "className": "thief_female",
+          "name": "Nova",
+          "level": 25,
+          "gender": "female",
+          "gear": {
+            "weapon": {"id": "wetland_blightmaul", "quality": [3, 2, 1, 0]},
+            "legs": {"id": "wetland_fenstompers", "quality": [2, 2, 0, 0]},
+            "offhand": {"id": "wetland_brackenguard", "quality": [3, 0, 0, 0]}
+          }
+        }
+      ]
+    },
+    {
+      "id": "frozen_champions",
+      "name": "Frozen Champions",
+      "description": "Elite warriors forged in ice",
+      "heroes": [
+        {
+          "className": "templar_male",
+          "name": "Thane",
+          "level": 50,
+          "gender": "male",
+          "gear": {
+            "weapon": {"id": "icy_frostfang", "quality": [4, 3, 2, 0]},
+            "chest": {"id": "icy_mauler_plate", "quality": [4, 3, 2, 0]},
+            "offhand": {"id": "icy_fangguard", "quality": [3, 3, 0, 0]}
+          }
+        },
+        {
+          "className": "witch_hunter_female",
+          "name": "Vera",
+          "level": 50,
+          "gender": "female",
+          "gear": {
+            "weapon": {"id": "icy_howler", "quality": [4, 3, 0, 0]},
+            "head": {"id": "icy_wolfhood", "quality": [4, 3, 2, 0]},
+            "legs": {"id": "icy_tundrastride", "quality": [3, 3, 2, 0]}
+          }
+        },
+        {
+          "className": "initiate_male",
+          "name": "Kael",
+          "level": 50,
+          "gender": "male",
+          "gear": {
+            "trinket": {"id": "icy_shardcore", "quality": [5, 3, 2, 1]},
+            "chest": {"id": "icy_mauler_plate", "quality": [4, 2, 0, 0]},
+            "weapon": {"id": "icy_frostfang", "quality": [3, 3, 0, 0]}
+          }
+        },
+        {
+          "className": "archer_female",
+          "name": "Kira",
+          "level": 50,
+          "gender": "female",
+          "gear": {
+            "weapon": {"id": "icy_howler", "quality": [4, 4, 2, 0]},
+            "legs": {"id": "icy_tundrastride", "quality": [4, 3, 0, 0]},
+            "trinket": {"id": "icy_shardcore", "quality": [3, 3, 2, 0]}
+          }
+        },
+        {
+          "className": "swordsman_male",
+          "name": "Viktor",
+          "level": 50,
+          "gender": "male",
+          "gear": {
+            "weapon": {"id": "icy_frostfang", "quality": [5, 4, 2, 0]},
+            "offhand": {"id": "icy_fangguard", "quality": [4, 3, 2, 1]},
+            "head": {"id": "icy_wolfhood", "quality": [3, 2, 0, 0]}
+          }
+        }
+      ]
+    }
+  ]
+}
