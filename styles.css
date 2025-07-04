@@ -1064,6 +1064,7 @@ body {
     gap: 20px;
     max-width: 800px;
     margin: 0 auto;
+    margin-bottom: 20px; /* Add space before collection log */
 }
 
 /* Heroes Screen */
@@ -3599,8 +3600,8 @@ body {
 .collectionLogButton {
     width: 100%;
     max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
+    margin: 0 auto;
+    padding: 30px 20px;
     background: linear-gradient(135deg, #0a2e4a 0%, #0f3f5f 100%);
     border: 2px solid #2a6a8a;
     color: #b0e0f0;
@@ -3611,6 +3612,9 @@ body {
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 20px rgba(42, 106, 138, 0.5);
+    height: 160px; /* Match stashItem height */
+    position: relative;
+    overflow: hidden;
 }
 
 .collectionLogButton:hover {
@@ -3618,6 +3622,30 @@ body {
     border-color: #4dd0e1;
     box-shadow: 0 0 30px rgba(77, 208, 225, 0.5);
     transform: translateY(-2px);
+}
+
+/* Collection Log Button background effect */
+.collectionLogButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://puzzle-drops.github.io/TEVE/img/menu/collection_log_bg.png') center/cover;
+    opacity: 0.2;
+    z-index: 0;
+    transition: opacity 0.3s;
+}
+
+.collectionLogButton:hover::before {
+    opacity: 0.3;
+}
+
+.collectionLogButton span,
+.collectionLogButton::after {
+    position: relative;
+    z-index: 1;
 }
 
 /* Collection Log Screen */
