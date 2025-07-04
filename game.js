@@ -1510,46 +1510,48 @@ getDungeonCollectionStats(dungeonId) {
     }
 
 startBattle(mode = 'dungeon') {
+    // Clean up any existing battle timer interval
+    if (this.currentBattle && this.currentBattle.timerInterval) {
+        clearInterval(this.currentBattle.timerInterval);
+        this.currentBattle.timerInterval = null;
+    }
+    
     // Store mode for later
     this.currentBattleMode = mode;
+    
+    // Create party array from selected heroes
+    const party = this.selectedParty.map(heroIndex => 
+        heroIndex !== null ? this.heroes[heroIndex] : null
+    ).filter(hero => hero !== null);
+    
+    // Show battle screen
+    this.uiManager.showBattle();
     
     if (mode === 'arena') {
         // Store compositions for rematch
         this.lastArenaParty = [...this.selectedParty];
         this.lastArenaOpponents = this.arenaOpponents;
         
-        const party = this.selectedParty.map(heroIndex => 
-            heroIndex !== null ? this.heroes[heroIndex] : null
-        ).filter(hero => hero !== null);
-        
-        this.uiManager.showBattle();
+        // Create and start arena battle
         this.currentBattle = new Battle(this, party, [this.arenaOpponents], 'arena');
-        this.currentBattle.start();
     } else {
-        // Dungeon mode - only access currentDungeon here
-        const party = this.selectedParty.map(heroIndex => 
-            heroIndex !== null ? this.heroes[heroIndex] : null
-        ).filter(hero => hero !== null);
+        // Dungeon mode - use existing dungeonWaves
         
-        // Calculate max level for dynamic enemy generation
-        const maxLevel = Math.max(...party.map(hero => hero.level));
+        // If auto replay is on, ensure auto battle is also on
+        if (this.autoReplay && !this.autoBattle) {
+            this.toggleAutoBattle(true);
+        }
         
-        // Get the current dungeon data
-        const dungeonConfig = dungeonData.dungeons[this.currentDungeon.id];
+        // Create and start battle with waves
+        this.currentBattle = new Battle(this, party, this.dungeonWaves, 'dungeon');
         
-        // Identify boss types based on dungeon configuration
-        const bossTypes = dungeonConfig.bossTypes || [];
-        
-        // Generate enemy waves
-        const enemyWaves = this.generateEnemyWaves(maxLevel, dungeonConfig, bossTypes);
-        
-        // Store for party select screen preview
-        this.dungeonWaves = enemyWaves;
-        
-        this.uiManager.showBattle();
-        this.currentBattle = new Battle(this, party, enemyWaves, 'dungeon');
-        this.currentBattle.start();
+        // Set auto mode if enabled
+        if (this.autoBattle) {
+            this.currentBattle.autoMode = true;
+        }
     }
+    
+    this.currentBattle.start();
 }
 
 rematchArena() {
