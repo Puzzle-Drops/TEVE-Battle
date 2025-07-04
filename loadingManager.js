@@ -1,7 +1,7 @@
 // Loading manager
 class LoadingManager {
     constructor() {
-        this.totalAssets = 4; // spells.json, units.json, dungeons.json, items.json
+        this.totalAssets = 5; // spells.json, units.json, dungeons.json, items.json, arena.json
         this.loadedAssets = 0;
         this.failedAssets = []; // Track which assets failed
         this.loadingScreen = document.getElementById('loadingScreen');
@@ -89,6 +89,17 @@ async function loadGameData() {
                 itemData = await itemsResponse.json();
                 console.log('Item data loaded');
                 loadingManager.updateProgress('items');
+            }
+        },
+        {
+            name: 'arena.json',
+            load: async () => {
+                loadingManager.loadingText.textContent = 'Loading arena...';
+                const arenaResponse = await fetch('arena.json');
+                if (!arenaResponse.ok) throw new Error('Failed to load arena.json');
+                arenaData = await arenaResponse.json();
+                console.log('Arena data loaded');
+                loadingManager.updateProgress('arena');
             }
         }
     ];
