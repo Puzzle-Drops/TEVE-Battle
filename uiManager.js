@@ -2064,6 +2064,115 @@ if (this.game.autoReplay && results.victory) {
 }
     }
 
+showArenaResults() {
+    if (!this.game.pendingBattleResults) return;
+    
+    const results = this.game.pendingBattleResults;
+    const stats = results.battleStats || {};
+    
+    // Hide exit button
+    const exitButton = document.querySelector('.exitBattleButton');
+    if (exitButton) {
+        exitButton.style.display = 'none';
+    }
+    
+    // Update header
+    const duration = Math.floor((this.game.currentBattle.endTime - this.game.currentBattle.startTime) / 1000);
+    const minutes = Math.floor(duration / 60);
+    const seconds = duration % 60;
+    const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    document.getElementById('arenaMatchInfo').textContent = `Spar Mode - Time: ${timeString}`;
+    
+    // Helper function to create stat row
+    const createStatRow = (unit, stats) => {
+        const unitStats = stats[unit.name] || {
+            kills: 0, deaths: 0, turnsTaken: 0, damageDealt: 0, damageTaken: 0,
+            healingDone: 0, shieldingApplied: 0, buffsApplied: 0, debuffsApplied: 0,
+            buffsDispelled: 0, debuffsCleansed: 0
+        };
+        
+        // Get portrait URL based on unit type
+        let portraitUrl;
+        if (unit.source) {
+            // It's a BattleUnit
+            if (unit.isEnemy) {
+                portraitUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unit.source.className}_portrait.png`;
+            } else {
+                portraitUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unit.source.className}_portrait.png`;
+            }
+        }
+        
+        return `
+            <div class="arenaStatRow">
+                <div class="arenaUnitInfo">
+                    <img src="${portraitUrl}" alt="${unit.name}" class="arenaUnitPortrait">
+                    <div class="arenaUnitDetails">
+                        <div class="arenaUnitName">${unit.name}</div>
+                        <div class="arenaUnitLevel">Lv ${unit.source.level}</div>
+                    </div>
+                </div>
+                <div class="arenaStatGrid">
+                    <div class="arenaStat">
+                        <span class="arenaKDA">${unitStats.kills}/${unitStats.deaths}/${unitStats.turnsTaken}</span>
+                        <span class="arenaStatLabel">K/D/T</span>
+                    </div>
+                    <div class="arenaStat">
+                        <span class="arenaDamage">${unitStats.damageDealt}↑ ${unitStats.damageTaken}↓</span>
+                        <span class="arenaStatLabel">Damage</span>
+                    </div>
+                    <div class="arenaStat">
+                        <span class="arenaSupport">${unitStats.healingDone}❤️ ${unitStats.shieldingApplied}🛡️</span>
+                        <span class="arenaStatLabel">Support</span>
+                    </div>
+                    <div class="arenaStat">
+                        <span class="arenaBuffs">${unitStats.buffsApplied}↑ ${unitStats.buffsDispelled}✕</span>
+                        <span class="arenaStatLabel">Buffs</span>
+                    </div>
+                    <div class="arenaStat">
+                        <span class="arenaDebuffs">${unitStats.debuffsApplied}↓ ${unitStats.debuffsCleansed}✓</span>
+                        <span class="arenaStatLabel">Debuffs</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+    
+    // Populate team stats
+    const playerTeamStats = document.getElementById('playerTeamStats');
+    const enemyTeamStats = document.getElementById('enemyTeamStats');
+    
+    // Clear existing content except headers
+    const playerHeader = playerTeamStats.querySelector('h3');
+    const enemyHeader = enemyTeamStats.querySelector('h3');
+    playerTeamStats.innerHTML = '';
+    enemyTeamStats.innerHTML = '';
+    playerTeamStats.appendChild(playerHeader);
+    enemyTeamStats.appendChild(enemyHeader);
+    
+    // Add player team stats
+    this.game.currentBattle.party.forEach(unit => {
+        if (unit) {
+            const row = document.createElement('div');
+            row.innerHTML = createStatRow(unit, stats);
+            playerTeamStats.appendChild(row.firstElementChild);
+        }
+    });
+    
+    // Add enemy team stats
+    this.game.currentBattle.enemies.forEach(unit => {
+        if (unit) {
+            const row = document.createElement('div');
+            row.innerHTML = createStatRow(unit, stats);
+            enemyTeamStats.appendChild(row.firstElementChild);
+        }
+    });
+    
+    // Show popup
+    document.getElementById('arenaResultsPopup').style.display = 'block';
+}
+
+    
 updateAutoReplayText(countdown) {
     const replayBtn = document.querySelector('.replayBtn');
     if (replayBtn) {
