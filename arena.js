@@ -202,7 +202,9 @@ class ArenaEnemy extends Enemy {
         
         // Use class modifiers
         this.modifiers = this.classData.modifiers;
-        this.mainstat = this.classData.mainstat;
+        // Around line 205, change:
+this._mainstat = this.classData.mainstat;  // Changed from this.mainstat
+
         
         // Initialize gear system
         this.gear = {
@@ -234,6 +236,11 @@ class ArenaEnemy extends Enemy {
         // Get abilities from class
         this.abilities = this.getClassAbilities();
     }
+
+    // Then add after the constructor:
+get mainstat() {
+    return this._mainstat || 'str';
+}
     
     getClassAbilities() {
         const abilities = [];
