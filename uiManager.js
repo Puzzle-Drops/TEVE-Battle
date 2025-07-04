@@ -28,17 +28,18 @@ class UIManager {
     }
 
     // Screen Management
-    hideAllScreens() {
-        document.getElementById('splashScreen').style.display = 'none';
-        document.getElementById('mainMenuScreen').style.display = 'none';
-        document.getElementById('battleScene').style.display = 'none';
-        document.getElementById('heroesScreen').style.display = 'none';
-        document.getElementById('stashScreen').style.display = 'none';
-        document.getElementById('partySelectScreen').style.display = 'none';
-        document.getElementById('individualStashScreen').style.display = 'none';
-        document.getElementById('collectionLogScreen').style.display = 'none';
-        document.getElementById('dungeonSelectScreen').style.display = 'none';
-    }
+hideAllScreens() {
+    document.getElementById('splashScreen').style.display = 'none';
+    document.getElementById('mainMenuScreen').style.display = 'none';
+    document.getElementById('battleScene').style.display = 'none';
+    document.getElementById('heroesScreen').style.display = 'none';
+    document.getElementById('stashScreen').style.display = 'none';
+    document.getElementById('partySelectScreen').style.display = 'none';
+    document.getElementById('individualStashScreen').style.display = 'none';
+    document.getElementById('collectionLogScreen').style.display = 'none';
+    document.getElementById('dungeonSelectScreen').style.display = 'none';
+    document.getElementById('arenaScreen').style.display = 'none';
+}
 
     showSplashScreen() {
         this.hideAllScreens();
