@@ -944,9 +944,16 @@ switch(game.currentScreen) {
         e.preventDefault();
         break;
     case 'partySelectScreen':
+    if (game.arenaMode === 'spar') {
+        // Go back to arena screen and clear arena mode
+        game.arenaMode = null;
+        game.arenaOpponents = null;
+        game.uiManager.showArena();
+    } else {
         game.uiManager.closeDungeonSelect();
-        e.preventDefault();
-        break;
+    }
+    e.preventDefault();
+    break;
     case 'stashScreen':
         game.uiManager.showMainMenu();
         e.preventDefault();
@@ -959,6 +966,10 @@ switch(game.currentScreen) {
         game.uiManager.showStash();
         e.preventDefault();
         break;
+    case 'arenaScreen':
+        game.uiManager.showMainMenu();
+        e.preventDefault();
+    break;
 }
             }
         });
