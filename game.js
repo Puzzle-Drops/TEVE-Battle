@@ -1509,45 +1509,64 @@ getDungeonCollectionStats(dungeonId) {
         });
     }
 
-    startBattle() {
-    // Check if this is an arena battle
-    if (this.arenaMode === 'spar') {
-        // For now, just show alert and log
-        console.log('Arena match prepared!');
-        console.log('Player team:', this.selectedParty.map(i => i !== null ? this.heroes[i] : null));
-        console.log('Arena opponents:', this.arenaOpponents);
-        alert('Arena battles coming soon! Team: ' + (this.arenaTeams[this.currentArenaTeam]?.name || 'Unknown'));
-        return;
+    startBattle(mode = 'dungeon') {
+    // Store mode for later
+    this.currentBattleMode = mode;
+    
+    if (mode === 'arena') {
+        // Store compositions for rematch
+        this.lastArenaParty = [...this.selectedParty];
+        this.lastArenaOpponents = this.arenaOpponents;
+        
+        const party = this.selectedParty.map(heroIndex => 
+            heroIndex !== null ? this.heroes[heroIndex] : null
+        ).filter(hero => hero !== null);
+        
+        this.uiManager.showBattle();
+        this.currentBattle = new Battle(this, party, [this.arenaOpponents], 'arena');
+        this.currentBattle.start();
+    } else {
+        // existing dungeon logic
+        const party = this.selectedParty.map(heroIndex => 
+            heroIndex !== null ? this.heroes[heroIndex] : null
+        ).filter(hero => hero !== null);
+        
+        // Calculate max level for dynamic enemy generation
+        const maxLevel = Math.max(...party.map(hero => hero.level));
+        
+        // Get the current dungeon data
+        const dungeonConfig = dungeonData.dungeons[this.currentDungeon.id];
+        
+        // Identify boss types based on dungeon configuration
+        const bossTypes = dungeonConfig.bossTypes || [];
+        
+        // Generate enemy waves
+        const enemyWaves = this.generateEnemyWaves(maxLevel, dungeonConfig, bossTypes);
+        
+        // Store for party select screen preview
+        this.dungeonWaves = enemyWaves;
+        
+        this.uiManager.showBattle();
+        this.currentBattle = new Battle(this, party, enemyWaves);
+        this.currentBattle.start();
     }
-    
-    // Clean up any existing battle timer interval
-    if (this.currentBattle && this.currentBattle.timerInterval) {
-        clearInterval(this.currentBattle.timerInterval);
-        this.currentBattle.timerInterval = null;
-    }
-    
-    // Create party array from selected heroes
-    const party = this.selectedParty.map(heroIndex => 
-        heroIndex !== null ? this.heroes[heroIndex] : null
-    ).filter(hero => hero !== null);
-    
-    // Show battle screen
-    this.uiManager.showBattle();
+}
 
-    // If auto replay is on, ensure auto battle is also on
-    if (this.autoReplay && !this.autoBattle) {
-        this.toggleAutoBattle(true);
-    }
-    
-    // Create and start battle with waves
-    this.currentBattle = new Battle(this, party, this.dungeonWaves);
-    
-    // Set auto mode if enabled
-    if (this.autoBattle) {
-        this.currentBattle.autoMode = true;
-    }
-    
-    this.currentBattle.start();
+rematchArena() {
+    // Restore last compositions
+    this.selectedParty = [...this.lastArenaParty];
+    this.arenaOpponents = this.lastArenaOpponents;
+    // Close results popup
+    document.getElementById('arenaResultsPopup').style.display = 'none';
+    // Return to party select (arena mode)
+    this.uiManager.showPartySelect('arena');
+}
+
+continueFromArena() {
+    // Close results popup
+    document.getElementById('arenaResultsPopup').style.display = 'none';
+    // Return to arena home
+    this.uiManager.showArena();
 }
     
     toggleAutoBattle(enabled) {
