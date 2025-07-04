@@ -1509,7 +1509,7 @@ getDungeonCollectionStats(dungeonId) {
         });
     }
 
-    startBattle(mode = 'dungeon') {
+startBattle(mode = 'dungeon') {
     // Store mode for later
     this.currentBattleMode = mode;
     
@@ -1526,7 +1526,7 @@ getDungeonCollectionStats(dungeonId) {
         this.currentBattle = new Battle(this, party, [this.arenaOpponents], 'arena');
         this.currentBattle.start();
     } else {
-        // existing dungeon logic
+        // Dungeon mode - only access currentDungeon here
         const party = this.selectedParty.map(heroIndex => 
             heroIndex !== null ? this.heroes[heroIndex] : null
         ).filter(hero => hero !== null);
@@ -1547,7 +1547,7 @@ getDungeonCollectionStats(dungeonId) {
         this.dungeonWaves = enemyWaves;
         
         this.uiManager.showBattle();
-        this.currentBattle = new Battle(this, party, enemyWaves);
+        this.currentBattle = new Battle(this, party, enemyWaves, 'dungeon');
         this.currentBattle.start();
     }
 }
