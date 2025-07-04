@@ -9,17 +9,17 @@ class Arena {
         this.game.arenaMode = 'spar';
         
         // Get selected party heroes (use existing selection or default to first 5)
-        let partyHeroes = [];
-        if (this.game.selectedParty.some(h => h !== null)) {
-            // Use existing selection
-            partyHeroes = this.game.selectedParty
-                .filter(index => index !== null)
-                .map(index => this.game.heroes[index]);
-        } else {
-            // Default to first 5 heroes
-            partyHeroes = this.game.heroes.slice(0, 5);
-            this.game.selectedParty = [0, 1, 2, 3, 4];
-        }
+let partyHeroes = [];
+if (this.game.selectedParty && this.game.selectedParty.some(h => h !== null)) {
+    // Use existing selection
+    partyHeroes = this.game.selectedParty
+        .filter(index => index !== null)
+        .map(index => this.game.heroes[index]);
+} else {
+    // Default to first 5 heroes
+    partyHeroes = this.game.heroes.slice(0, 5);
+    this.game.selectedParty = [0, 1, 2, 3, 4];
+}
         
         // Calculate average level of two highest level heroes
         const sortedByLevel = [...partyHeroes].sort((a, b) => b.level - a.level);
