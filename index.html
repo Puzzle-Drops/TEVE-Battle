@@ -1027,14 +1027,14 @@ switch(game.currentScreen) {
                 }
                 
                 // Update skill description if on skills tab
-                if (game.uiManager.currentTab === 'skills' && game.currentSkillIndex !== undefined) {
-                    const hero = game.heroes[game.uiManager.selectedHero];
-                    const skill = hero.abilities[game.uiManager.currentSkillIndex];
-                    const desc = document.getElementById('skillDescription');
-                    if (desc && skill) {
-                        desc.innerHTML = game.uiManager.formatAbilityTooltip(skill, skill.level, hero, false);
-                    }
-                }
+if (game.currentScreen === 'heroesScreen' && game.uiManager.currentTab === 'skills' && game.uiManager.currentSkillIndex !== undefined) {
+    const hero = game.heroes[game.uiManager.selectedHero];
+    const skill = hero.abilities[game.uiManager.currentSkillIndex];
+    const desc = document.getElementById('skillDescription');
+    if (desc && skill) {
+        desc.innerHTML = game.uiManager.formatAbilityTooltip(skill, skill.level, hero, false);
+    }
+}
             }
         });
 
