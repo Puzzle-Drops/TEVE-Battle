@@ -442,7 +442,7 @@ const isCompleted = dungeonCollected === dungeonTotal;
                     
                     // Check if this quality is collected
                     const collectionKey = `${itemId}_${quality}`;
-                    const collectionData = dungeonCollection[collectionKey];
+                    const collectionData = this.game.collectionLog[dungeonInfo.id] && this.game.collectionLog[dungeonInfo.id][collectionKey];
                     const isCollected = !!collectionData;
                     
                     // Create item thumbnail
