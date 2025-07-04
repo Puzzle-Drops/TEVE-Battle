@@ -324,9 +324,12 @@ showHeroes() {
         this.hideAbilityTooltip();
     }
 
-    showArena() {
-        console.log('Arena not implemented yet');
-    }
+showArena() {
+    this.hideAllScreens();
+    this.closeHeroInfo();
+    this.game.currentScreen = 'arenaScreen';
+    document.getElementById('arenaScreen').style.display = 'block';
+}
 
     showCollectionLog() {
         this.hideAllScreens();
@@ -558,47 +561,94 @@ const isCompleted = dungeonCollected === dungeonTotal;
         });
     }
 
-    showPartySelect() {
-        this.hideAllScreens();
-        this.game.currentScreen = 'partySelectScreen';
-        document.getElementById('partySelectScreen').style.display = 'block';
-        
-        // Set battlefield background based on current dungeon
-        const battlefieldBg = document.querySelector('.partySelectBattlefield');
-        if (battlefieldBg && this.game.currentDungeon) {
+    showPartySelect(mode = 'dungeon') {
+    this.hideAllScreens();
+    this.game.currentScreen = 'partySelectScreen';
+    document.getElementById('partySelectScreen').style.display = 'block';
+    
+    // Set battlefield background based on mode
+    const battlefieldBg = document.querySelector('.partySelectBattlefield');
+    if (battlefieldBg) {
+        if (mode === 'arena') {
+            battlefieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/arena.png')`;
+        } else if (this.game.currentDungeon) {
             const dungeonName = this.game.currentDungeon.name.toLowerCase().replace(/ /g, '_');
             battlefieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
         }
-        
-        // Reset party selection if entering fresh (not from battle)
-        if (!this.game.currentBattle) {
-            this.game.selectedParty = [null, null, null, null, null];
-        }
-            
-        // Update dungeon info
+    }
+    
+    // Reset party selection if entering fresh (not from battle)
+    if (!this.game.currentBattle) {
+        this.game.selectedParty = [null, null, null, null, null];
+    }
+    
+    // Update dungeon info or arena title
+    if (mode === 'arena') {
+        document.getElementById('dungeonName').textContent = 'Arena - Spar Mode';
+    } else {
         document.getElementById('dungeonName').textContent = this.game.currentDungeon.name;
+    }
 
-        // Set toggle states
+    // Hide/show elements based on mode
+    if (mode === 'arena') {
+        // Hide dungeon-specific elements
+        const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
+        if (recordsSection) recordsSection.style.display = 'none';
+        
+        const waveNav = document.getElementById('waveNavigation');
+        if (waveNav) waveNav.style.display = 'none';
+        
+        const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
+        if (rewardsSection) rewardsSection.style.display = 'none';
+        
+        // Hide auto toggles
         const autoBattleToggle = document.getElementById('autoBattleToggle');
-        if (autoBattleToggle) autoBattleToggle.checked = this.game.autoBattle;
+        if (autoBattleToggle) autoBattleToggle.parentElement.style.display = 'none';
+        
         const autoReplayToggle = document.getElementById('autoReplayToggleParty');
+        if (autoReplayToggle) autoReplayToggle.parentElement.style.display = 'none';
+    } else {
+        // Show all elements for dungeon mode
+        const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
+        if (recordsSection) recordsSection.style.display = '';
+        
+        const waveNav = document.getElementById('waveNavigation');
+        if (waveNav) waveNav.style.display = '';
+        
+        const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
+        if (rewardsSection) rewardsSection.style.display = '';
+        
+        // Show auto toggles
+        const autoBattleToggle = document.getElementById('autoBattleToggle');
+        if (autoBattleToggle) autoBattleToggle.parentElement.style.display = '';
+        
+        const autoReplayToggle = document.getElementById('autoReplayToggleParty');
+        if (autoReplayToggle) autoReplayToggle.parentElement.style.display = '';
+        
+        // Set toggle states
+        if (autoBattleToggle) autoBattleToggle.checked = this.game.autoBattle;
         if (autoReplayToggle) autoReplayToggle.checked = this.game.autoReplay;
-        
-        // Render hero selection list
-        this.renderHeroSelectList();
-        
-        // Clear party slots
-        this.updatePartySlots();
-        
-        // Update enemy formation
+    }
+    
+    // Render hero selection list
+    this.renderHeroSelectList();
+    
+    // Clear party slots
+    this.updatePartySlots();
+    
+    // Update enemy formation
+    if (mode === 'arena') {
+        this.updateArenaEnemyFormation();
+    } else {
         this.updateEnemyFormation();
+    }
 
-        // Update rewards display
+    // Update displays based on mode
+    if (mode === 'dungeon') {
         this.updateRewardsDisplay();
-
-        // Update records display
         this.updateRecordsDisplay();
     }
+}
 
     renderHeroSelectList() {
         const container = document.getElementById('heroSelectList');
@@ -841,6 +891,178 @@ const isCompleted = dungeonCollected === dungeonTotal;
         });
     }
 
+updateArenaEnemyFormation() {
+    const enemyFormation = document.getElementById('enemyFormation');
+    const slots = enemyFormation.querySelectorAll('.enemySlot');
+    
+    // Clear all enemy slots first
+    slots.forEach(slot => {
+        slot.innerHTML = '<div class="slotPlaceholder">⬡</div>';
+        slot.classList.remove('filled');
+    });
+    
+    // Show arena opponents if they exist
+    if (this.game.arenaOpponents) {
+        this.game.arenaOpponents.forEach((enemy, index) => {
+            if (index < 5) {
+                const slot = slots[index];
+                
+                // Generate stars
+                const starData = enemy.getStars();
+                
+                slot.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                        <div style="position: relative; width: 60px; height: 60px;">
+                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${enemy.className}_portrait.png"
+                                 alt="${enemy.name}" 
+                                 style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
+                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 60 60\\'><rect fill=\\'%23666\\' width=\\'60\\' height=\\'60\\'/><text x=\\'30\\' y=\\'35\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'10\\'>${enemy.name}</text></svg>'">
+                            ${starData.html ? `<div class="thumbStars ${starData.colorClass}" style="position: absolute; bottom: 0; left: 0; font-size: 12px;">${starData.html}</div>` : ''}
+                            <div class="enemyLevel">${enemy.level}</div>
+                        </div>
+                        <div class="enemyName">${enemy.name}</div>
+                    </div>
+                `;
+                slot.classList.add('filled');
+                
+                // Add click handler for enemy info
+                slot.style.cursor = 'pointer';
+                slot.onclick = (e) => {
+                    e.stopPropagation();
+                    this.showArenaEnemyInfoPopup(enemy);
+                };
+                slot.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.showArenaEnemyInfoPopup(enemy);
+                });
+            }
+        });
+    }
+}
+
+showArenaEnemyInfoPopup(enemy) {
+    // Similar to showEnemyInfoPopup but shows gear
+    const popup = document.getElementById('heroInfoPopup');
+    popup._currentHero = enemy;
+    document.getElementById('popupHeroName').textContent = `Lv.${enemy.level} ${enemy.name}`;
+    
+    // Show stats
+    const stats = enemy.baseStats;
+    const statsHtml = `
+        <div style="display: flex; gap: 40px;">
+            <div style="flex: 1;">
+                ${this.renderPopupStatRow('Health Points', 'HP', enemy.hp)}
+                ${this.renderPopupStatRow('Attack', 'Attack', enemy.attack)}
+                ${this.renderPopupStatRow('Strength', 'STR', stats.str, enemy.mainstat === 'str', enemy)}
+                ${this.renderPopupStatRow('Agility', 'AGI', stats.agi, enemy.mainstat === 'agi', enemy)}
+                ${this.renderPopupStatRow('Intelligence', 'INT', stats.int, enemy.mainstat === 'int', enemy)}
+            </div>
+            <div style="flex: 1;">
+                ${this.renderPopupStatRow('HP Regeneration', 'Regen', enemy.hpRegen.toFixed(1))}
+                ${this.renderPopupStatRow('Attack Speed', 'Atk Spd', enemy.actionBarSpeed.toFixed(1) + '%')}
+                <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
+                    <span class="statLabel">Armor</span>
+                    <span class="statValue">${Math.floor(enemy.armor)} <span style="color: #6a9aaa;">(${(enemy.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
+                </div>
+                <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
+                    <span class="statLabel">Resist</span>
+                    <span class="statValue">${Math.floor(enemy.resist)} <span style="color: #6a9aaa;">(${(enemy.magicDamageReduction * 100).toFixed(1)}%)</span></span>
+                </div>
+            </div>
+        </div>
+    `;
+    document.getElementById('popupStats').innerHTML = statsHtml;
+    
+    // Show abilities
+    const abilityIconsHtml = `
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+            ${enemy.abilities.map((ability, index) => {
+                const isPassive = ability.passive === true;
+                return `
+                    <div class="abilityIconSmall ${isPassive ? 'passive' : ''}" 
+                         data-ability-index="${index}"
+                         data-hero-type="enemy">
+                        ${isPassive ? `
+                            <div class="waterbrush-overlay-1">
+                                <div class="waterbrush-blob-1"></div>
+                                <div class="waterbrush-blob-2"></div>
+                            </div>
+                        ` : ''}
+                        <img src="https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png" 
+                             style="width: 64px; height: 64px;" 
+                             alt="${ability.name}" 
+                             onerror="this.style.display='none'">
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+    document.getElementById('popupAbilities').innerHTML = abilityIconsHtml;
+    
+    // Add event listeners for tooltips
+    const abilityIcons = document.querySelectorAll('#popupAbilities .abilityIconSmall');
+    abilityIcons.forEach((icon, index) => {
+        icon.addEventListener('mouseenter', (e) => {
+            const ability = enemy.abilities[index];
+            const showFormula = e.altKey;
+            const tooltipHtml = this.formatAbilityTooltip(ability, ability.level || enemy.spellLevel, enemy, showFormula);
+            this.showAbilityTooltipFromHTML(e, tooltipHtml);
+        });
+        icon.addEventListener('mouseleave', () => {
+            this.hideAbilityTooltip();
+        });
+    });
+    
+    // Show gear
+    const gearHtml = `
+        <div class="gearGrid">
+            ${this.renderArenaGearSlot(enemy, 'trinket')}
+            ${this.renderArenaGearSlot(enemy, 'head')}
+            ${this.renderArenaGearSlot(enemy, 'weapon')}
+            ${this.renderArenaGearSlot(enemy, 'chest')}
+            ${this.renderArenaGearSlot(enemy, 'offhand')}
+            ${this.renderArenaGearSlot(enemy, 'legs')}
+        </div>
+    `;
+    document.getElementById('popupGear').innerHTML = gearHtml;
+    
+    popup.style.display = 'block';
+}
+
+renderArenaGearSlot(enemy, slot) {
+    const slotLabels = {
+        trinket: 'Trinket',
+        head: 'Head',
+        weapon: 'Weapon',
+        chest: 'Chest',
+        offhand: 'Offhand',
+        legs: 'Legs'
+    };
+    
+    const item = enemy.gear[slot];
+    return `
+        <div class="gearSlot">
+            <div class="gearLabel">${slotLabels[slot]}</div>
+            ${item ? 
+                `<div class="gearItem ${item.getRarity()}"
+                     onmouseover="game.uiManager.showItemTooltip(event, game.arenaOpponents[${this.game.arenaOpponents.indexOf(enemy)}].gear.${slot})"
+                     onmouseout="game.uiManager.hideItemTooltip()">
+                    <div class="itemContainer">
+                        <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
+                             alt="${item.name}"
+                             onerror="this.style.display='none'">
+                        ${item.refined ? '<div class="itemRefined">*</div>' : ''}
+                        ${item.getStars().html ? `<div class="itemStars ${item.getStars().colorClass}">${item.getStars().html}</div>` : ''}
+                        <div class="itemLevel">${item.level}</div>
+                        <div class="itemQuality">${item.getQualityPercent()}%</div>
+                    </div>
+                </div>` 
+                : ''}
+        </div>
+    `;
+}
+    
     updateRewardsDisplay() {
         if (!this.game.currentDungeonData) return;
         
