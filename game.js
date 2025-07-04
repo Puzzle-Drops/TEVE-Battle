@@ -17,6 +17,11 @@ class Game {
         this.collectionPopupQueue = [];
         this.collectionPopupActive = false;
 
+        // Arena system
+this.arena = new Arena(this);
+this.arenaMode = null; // 'spar' or 'pvp'
+this.arenaOpponents = null; // array of Enemy objects
+
         // Progression tracking
         this.progression = {
             unlockedFeatures: {
@@ -1505,35 +1510,45 @@ getDungeonCollectionStats(dungeonId) {
     }
 
     startBattle() {
-        // Clean up any existing battle timer interval
-        if (this.currentBattle && this.currentBattle.timerInterval) {
-            clearInterval(this.currentBattle.timerInterval);
-            this.currentBattle.timerInterval = null;
-        }
-        
-        // Create party array from selected heroes
-        const party = this.selectedParty.map(heroIndex => 
-            heroIndex !== null ? this.heroes[heroIndex] : null
-        ).filter(hero => hero !== null);
-        
-        // Show battle screen
-        this.uiManager.showBattle();
-
-        // If auto replay is on, ensure auto battle is also on
-        if (this.autoReplay && !this.autoBattle) {
-            this.toggleAutoBattle(true);
-        }
-        
-        // Create and start battle with waves
-        this.currentBattle = new Battle(this, party, this.dungeonWaves);
-        
-        // Set auto mode if enabled
-        if (this.autoBattle) {
-            this.currentBattle.autoMode = true;
-        }
-        
-        this.currentBattle.start();
+    // Check if this is an arena battle
+    if (this.arenaMode === 'spar') {
+        // For now, just show alert and log
+        console.log('Arena match prepared!');
+        console.log('Player team:', this.selectedParty.map(i => i !== null ? this.heroes[i] : null));
+        console.log('Arena opponents:', this.arenaOpponents);
+        alert('Arena battles coming soon! Team generated successfully.');
+        return;
     }
+    
+    // Clean up any existing battle timer interval
+    if (this.currentBattle && this.currentBattle.timerInterval) {
+        clearInterval(this.currentBattle.timerInterval);
+        this.currentBattle.timerInterval = null;
+    }
+    
+    // Create party array from selected heroes
+    const party = this.selectedParty.map(heroIndex => 
+        heroIndex !== null ? this.heroes[heroIndex] : null
+    ).filter(hero => hero !== null);
+    
+    // Show battle screen
+    this.uiManager.showBattle();
+
+    // If auto replay is on, ensure auto battle is also on
+    if (this.autoReplay && !this.autoBattle) {
+        this.toggleAutoBattle(true);
+    }
+    
+    // Create and start battle with waves
+    this.currentBattle = new Battle(this, party, this.dungeonWaves);
+    
+    // Set auto mode if enabled
+    if (this.autoBattle) {
+        this.currentBattle.autoMode = true;
+    }
+    
+    this.currentBattle.start();
+}
     
     toggleAutoBattle(enabled) {
         this.autoBattle = enabled;
