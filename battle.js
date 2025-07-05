@@ -2976,23 +2976,29 @@ this.party.forEach((unit, index) => {
     const seconds = duration % 60;
     const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     
-    // Get dungeon data
-    const dungeonId = this.game.currentDungeon.id;
-    const dungeonConfig = dungeonData.dungeons[dungeonId];
-    const rewards = dungeonConfig.rewards || { gold: 0, exp: 0, items: [] };
+// Get dungeon data (only for dungeon mode)
+    let dungeonId = null;
+    let dungeonConfig = null;
+    let rewards = { gold: 0, exp: 0, items: [] };
     
-    // Process items only on victory
+    if (this.mode === 'dungeon' && this.game.currentDungeon) {
+        dungeonId = this.game.currentDungeon.id;
+        dungeonConfig = dungeonData.dungeons[dungeonId];
+        rewards = dungeonConfig.rewards || { gold: 0, exp: 0, items: [] };
+    }
+    
+// Process items only on victory and in dungeon mode
     const itemRolls = [];
-    if (victory) {
+    if (victory && this.mode === 'dungeon' && dungeonConfig) {
         // Only roll items if we won
         this.party.forEach(unit => {
             if (!unit || !unit.source) return;
             
             const hero = unit.source;
             
-            // Check if villager (they only get items from first 3 dungeons and only gold after that)
+// Check if villager (they only get items from first 3 dungeons and only gold after that)
             const isVillager = hero.className.includes('villager') || hero.className.includes('tester');
-            const dungeonLevel = dungeonConfig.level;
+            const dungeonLevel = dungeonConfig ? dungeonConfig.level : 0;
             
             if (isVillager) {
                 // Villagers only get items from dungeons level 50 and below (first 3 easy dungeons)
@@ -3091,10 +3097,10 @@ this.party.forEach((unit, index) => {
         });
     }
     
-    // Store battle results
+// Store battle results
     this.game.pendingBattleResults = {
         victory: victory,
-        dungeonName: this.game.currentDungeon.name,
+        dungeonName: this.mode === 'arena' ? 'Arena Battle' : (this.game.currentDungeon ? this.game.currentDungeon.name : 'Unknown'),
         time: timeString,
         goldChange: 0, // No longer used at this level
         dungeonBonusExp: victory ? rewards.exp : 0,
