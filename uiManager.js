@@ -508,10 +508,16 @@ const isCompleted = dungeonCollected === dungeonTotal;
     }
 
     showBattle() {
-        this.hideAllScreens();
-        this.closeHeroInfo();
-        this.game.currentScreen = 'battleScene';
-        document.getElementById('battleScene').style.display = 'block';
+    this.hideAllScreens();
+    this.closeHeroInfo();
+    this.game.currentScreen = 'battleScene';
+    document.getElementById('battleScene').style.display = 'block';
+    
+    // Ensure exit button is visible by default
+    const exitButton = document.querySelector('.exitBattleButton');
+    if (exitButton) {
+        exitButton.style.display = '';
+    }
         
         // Set battlefield background based on current battle mode
         const battleFieldBg = document.querySelector('.battleFieldBackground');
