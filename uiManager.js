@@ -513,16 +513,17 @@ const isCompleted = dungeonCollected === dungeonTotal;
         this.game.currentScreen = 'battleScene';
         document.getElementById('battleScene').style.display = 'block';
         
-        // Set battlefield background based on current dungeon or arena mode
-const battleFieldBg = document.querySelector('.battleFieldBackground');
-if (battleFieldBg) {
-    if (this.game.currentBattleMode === 'arena' || this.game.arenaMode === 'spar') {
-        battleFieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/arena.png')`;
-    } else if (this.game.currentDungeon) {
-        const dungeonName = this.game.currentDungeon.name.toLowerCase().replace(/ /g, '_');
-        battleFieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
-    }
-}
+        // Set battlefield background based on current battle mode
+        const battleFieldBg = document.querySelector('.battleFieldBackground');
+        if (battleFieldBg) {
+            // Check if we have an active battle to determine mode
+            if (this.game.currentBattle && this.game.currentBattle.mode === 'arena') {
+                battleFieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/arena.png')`;
+            } else if (this.game.currentDungeon) {
+                const dungeonName = this.game.currentDungeon.name.toLowerCase().replace(/ /g, '_');
+                battleFieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
+            }
+        }
                     
         // Set auto toggles based on saved states
         document.getElementById('autoModeToggle').checked = this.game.autoBattle;
