@@ -613,13 +613,6 @@ if (mode === 'arena') {
     
     const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
     if (rewardsSection) rewardsSection.style.display = 'none';
-        
-    // Hide auto toggles
-    const autoBattleToggle = document.getElementById('autoBattleToggle');
-    if (autoBattleToggle) autoBattleToggle.parentElement.style.display = 'none';
-    
-    const autoReplayToggle = document.getElementById('autoReplayToggleParty');
-    if (autoReplayToggle) autoReplayToggle.parentElement.style.display = 'none';
 
         // Ensure battle preview is visible for arena
     const battlePreview = document.querySelector('.battlePreview');
