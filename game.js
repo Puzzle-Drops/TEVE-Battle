@@ -2120,19 +2120,28 @@ if (this.arenaMode === 'spar') {
             const shouldAutoReplay = this.autoReplay && this.pendingBattleResults.victory && !wasManualClick;
             
             // Clear pending results
-            this.pendingBattleResults = null;
-            
-            if (shouldAutoReplay) {
-                // Auto start next battle
-                this.startBattle();
-            } else {
-                if (!this.autoReplay) {
-                    this.automaticModeStartTime = null;
-                    this.automaticModeCompletions = 0;
-                }
-                // Return to party select (either manual click or not auto replay)
-                this.uiManager.showPartySelect();
-            }
+this.pendingBattleResults = null;
+
+if (shouldAutoReplay) {
+    // Auto start next battle
+    this.startBattle();
+} else {
+    if (!this.autoReplay) {
+        this.automaticModeStartTime = null;
+        this.automaticModeCompletions = 0;
+    }
+    // Return to appropriate screen based on battle mode
+    if (this.currentBattleMode === 'arena') {
+        // Clear arena state and return to arena
+        this.arenaMode = null;
+        this.arenaOpponents = null;
+        this.currentArenaTeam = 0;
+        this.uiManager.showArena();
+    } else {
+        // Return to party select for dungeons
+        this.uiManager.showPartySelect();
+    }
+}
         }
     }
 
