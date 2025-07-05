@@ -36,7 +36,7 @@ enterSparMode() {
     this.game.uiManager.showPartySelect('arena');
 }
 
-generateArenaTeamOpponents(teamData) {generateArenaTeamOpponents(teamData) {
+generateArenaTeamOpponents(teamData) {
     const opponents = [];
     
     teamData.heroes.forEach(heroData => {
