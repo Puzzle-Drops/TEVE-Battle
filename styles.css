@@ -5760,6 +5760,51 @@ body {
     transform: translateY(-2px);
 }
 
+/* Arena Stats Vertical Layout */
+.arenaStatStacked {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.arenaStatLine {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.2;
+}
+
+.arenaStatIcon {
+    font-size: 14px;
+    min-width: 16px;
+    text-align: center;
+}
+
+.arenaStatValue {
+    font-size: 16px;
+}
+
+/* K/D/T Coloring */
+.kdKills {
+    color: #00ff88;
+    font-weight: bold;
+}
+
+.kdDeaths {
+    color: #ff4444;
+    font-weight: bold;
+}
+
+.kdTurns {
+    color: #4dd0e1;
+    font-weight: bold;
+}
+
+.kdSeparator {
+    color: #4dd0e1;
+    margin: 0 2px;
+}
+
 /* END end EnD eNd ENd eND enD bottom document/*
 
 /* Directional lunge animations */
