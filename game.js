@@ -336,9 +336,14 @@ this.arenaOpponents = null; // array of Enemy objects
         return this.isDungeonCompleted(previousDungeonId);
     }
 
-    enterDungeon(tierName, dungeonIndex) {
-        const dungeon = this.dungeonTiers[tierName].dungeons[dungeonIndex];
-        this.currentDungeon = dungeon;
+enterDungeon(tierName, dungeonIndex) {
+    // Clear any arena state when entering dungeon
+    this.arenaMode = null;
+    this.arenaOpponents = null;
+    this.currentArenaTeam = 0;
+    
+    const dungeon = this.dungeonTiers[tierName].dungeons[dungeonIndex];
+    this.currentDungeon = dungeon;
         
         // Get dungeon ID from the dungeon object
         const dungeonId = dungeon.id || dungeon.name.toLowerCase().replace(/ /g, '_').replace('?', '');
@@ -1737,12 +1742,18 @@ continueFromArena() {
             this.currentBattle = null;
         }
         
-        // Return to party select screen instead of main menu
-        if (this.currentDungeon) {
-            this.uiManager.showPartySelect();
-        } else {
-            this.uiManager.showMainMenu();
-        }
+        // Return to appropriate screen based on mode
+if (this.arenaMode === 'spar') {
+    // Clear arena state and return to arena
+    this.arenaMode = null;
+    this.arenaOpponents = null;
+    this.currentArenaTeam = 0;
+    this.uiManager.showArena();
+} else if (this.currentDungeon) {
+    this.uiManager.showPartySelect();
+} else {
+    this.uiManager.showMainMenu();
+}
     }
 
     selectHero(index) {
