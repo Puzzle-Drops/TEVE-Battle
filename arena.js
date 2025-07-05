@@ -82,9 +82,9 @@ generateArenaTeamOpponents(teamData) {
             trinket: null
         };
         
-        // Find all items within 10 levels of target
-        const minLevel = Math.max(1, targetLevel - 10);
-        const maxLevel = targetLevel + 10;
+        // Find all items within 15 levels of target
+        const minLevel = Math.max(1, targetLevel - 15);
+        const maxLevel = targetLevel + 15;
         
         // Get available items for each slot
         const itemsBySlot = {
