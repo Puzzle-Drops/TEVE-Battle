@@ -1088,8 +1088,8 @@ renderArenaGearSlot(enemy, slot) {
             <div class="gearLabel">${slotLabels[slot]}</div>
             ${item ? 
                 `<div class="gearItem ${item.getRarity()}"
-                     onmouseover="game.uiManager.showItemTooltip(event, game.arenaOpponents[${this.game.arenaOpponents.indexOf(enemy)}].gear.${slot})"
-                     onmouseout="game.uiManager.hideItemTooltip()">
+onmouseover="game.uiManager.showItemTooltip(event, document.getElementById('heroInfoPopup')._currentHero.gear.${slot})"
+onmouseout="game.uiManager.hideItemTooltip()">
                     <div class="itemContainer">
                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                              alt="${item.name}"
@@ -1807,7 +1807,17 @@ updateHeroSelection() {
     showEnemyInfoPopup(enemy) {
         const popup = document.getElementById('heroInfoPopup');
         popup._currentHero = enemy;
-        document.getElementById('popupHeroName').textContent = `Lv.${enemy.level} ${enemy.name}`;
+        
+        // Check if this is an arena enemy (has className)
+        if (enemy.className) {
+            // Arena enemy - show full format like heroes
+            const classData = unitData?.classes[enemy.className];
+            const displayClassName = classData?.name || enemy.className;
+            document.getElementById('popupHeroName').innerHTML = `Lv.${enemy.level} ${displayClassName} <span class="gender-${enemy.gender}">${enemy.gender === 'male' ? '♂' : '♀'}</span> | ${enemy.name}`;
+        } else {
+            // Regular enemy - just show level and name
+            document.getElementById('popupHeroName').textContent = `Lv.${enemy.level} ${enemy.name}`;
+        }
         
         // Show stats in double column format
         const stats = enemy.baseStats;
@@ -1876,30 +1886,46 @@ updateHeroSelection() {
             });
         });
         
-        // Show empty gear grid for enemies
-        const emptyGearHtml = `
-            <div class="gearGrid">
-                <div class="gearSlot">
-                    <div class="gearLabel">Trinket</div>
+        // Check if enemy has gear (arena enemies)
+        if (enemy.gear && Object.keys(enemy.gear).some(slot => enemy.gear[slot] !== null)) {
+            // Show gear for arena enemies
+            const gearHtml = `
+                <div class="gearGrid">
+                    ${this.renderArenaGearSlot(enemy, 'trinket')}
+                    ${this.renderArenaGearSlot(enemy, 'head')}
+                    ${this.renderArenaGearSlot(enemy, 'weapon')}
+                    ${this.renderArenaGearSlot(enemy, 'chest')}
+                    ${this.renderArenaGearSlot(enemy, 'offhand')}
+                    ${this.renderArenaGearSlot(enemy, 'legs')}
                 </div>
-                <div class="gearSlot">
-                    <div class="gearLabel">Head</div>
+            `;
+            document.getElementById('popupGear').innerHTML = gearHtml;
+        } else {
+            // Show empty gear grid for regular enemies
+            const emptyGearHtml = `
+                <div class="gearGrid">
+                    <div class="gearSlot">
+                        <div class="gearLabel">Trinket</div>
+                    </div>
+                    <div class="gearSlot">
+                        <div class="gearLabel">Head</div>
+                    </div>
+                    <div class="gearSlot">
+                        <div class="gearLabel">Weapon</div>
+                    </div>
+                    <div class="gearSlot">
+                        <div class="gearLabel">Chest</div>
+                    </div>
+                    <div class="gearSlot">
+                        <div class="gearLabel">Offhand</div>
+                    </div>
+                    <div class="gearSlot">
+                        <div class="gearLabel">Legs</div>
+                    </div>
                 </div>
-                <div class="gearSlot">
-                    <div class="gearLabel">Weapon</div>
-                </div>
-                <div class="gearSlot">
-                    <div class="gearLabel">Chest</div>
-                </div>
-                <div class="gearSlot">
-                    <div class="gearLabel">Offhand</div>
-                </div>
-                <div class="gearSlot">
-                    <div class="gearLabel">Legs</div>
-                </div>
-            </div>
-        `;
-        document.getElementById('popupGear').innerHTML = emptyGearHtml;
+            `;
+            document.getElementById('popupGear').innerHTML = emptyGearHtml;
+        }
         
         popup.style.display = 'block';
     }
