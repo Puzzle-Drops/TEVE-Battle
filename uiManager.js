@@ -2097,7 +2097,7 @@ if (this.game.autoReplay && results.victory) {
     }, 1000);
 }
     }
-
+    
 showArenaResults() {
     if (!this.game.pendingBattleResults) return;
     
@@ -2118,7 +2118,7 @@ showArenaResults() {
     
     document.getElementById('arenaMatchInfo').textContent = `Spar Mode - Time: ${timeString}`;
     
-    // Helper function to create stat row
+    // Helper function to create stat row (modified to not include labels)
     const createStatRow = (unit, stats) => {
         const unitStats = stats[unit.name] || {
             kills: 0, deaths: 0, turnsTaken: 0, damageDealt: 0, damageTaken: 0,
@@ -2126,63 +2126,85 @@ showArenaResults() {
             buffsDispelled: 0, debuffsCleansed: 0
         };
         
-        // Get portrait URL based on unit type
+        // Get portrait URL and class info
         let portraitUrl;
+        let className = '';
+        let displayClassName = '';
         if (unit.source) {
-            // It's a BattleUnit
-            if (unit.isEnemy) {
-                portraitUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unit.source.className}_portrait.png`;
-            } else {
-                portraitUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unit.source.className}_portrait.png`;
-            }
+            portraitUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unit.source.className}_portrait.png`;
+            className = unit.source.className;
+            // Get display class name
+            const classData = unitData?.classes[className];
+            displayClassName = classData?.name || className;
         }
+        
+        // Format name with class and gender
+        const genderSymbol = unit.source.gender === 'male' ? '♂' : '♀';
+        const formattedName = `${displayClassName} ${genderSymbol} | ${unit.name}`;
         
         return `
             <div class="arenaStatRow">
                 <div class="arenaUnitInfo">
                     <img src="${portraitUrl}" alt="${unit.name}" class="arenaUnitPortrait">
                     <div class="arenaUnitDetails">
-                        <div class="arenaUnitName">${unit.name}</div>
+                        <div class="arenaUnitName">${formattedName}</div>
                         <div class="arenaUnitLevel">Lv ${unit.source.level}</div>
                     </div>
                 </div>
                 <div class="arenaStatGrid">
                     <div class="arenaStat">
                         <span class="arenaKDA">${unitStats.kills}/${unitStats.deaths}/${unitStats.turnsTaken}</span>
-                        <span class="arenaStatLabel">K/D/T</span>
                     </div>
                     <div class="arenaStat">
                         <span class="arenaDamage">${unitStats.damageDealt}↑ ${unitStats.damageTaken}↓</span>
-                        <span class="arenaStatLabel">Damage</span>
                     </div>
                     <div class="arenaStat">
                         <span class="arenaSupport">${unitStats.healingDone}❤️ ${unitStats.shieldingApplied}🛡️</span>
-                        <span class="arenaStatLabel">Support</span>
                     </div>
                     <div class="arenaStat">
                         <span class="arenaBuffs">${unitStats.buffsApplied}↑ ${unitStats.buffsDispelled}✕</span>
-                        <span class="arenaStatLabel">Buffs</span>
                     </div>
                     <div class="arenaStat">
                         <span class="arenaDebuffs">${unitStats.debuffsApplied}↓ ${unitStats.debuffsCleansed}✓</span>
-                        <span class="arenaStatLabel">Debuffs</span>
                     </div>
                 </div>
             </div>
         `;
     };
     
+    // Create header row HTML
+    const createHeaderRow = () => {
+        return `
+            <div class="arenaStatsHeader">
+                <div class="arenaUnitInfo">
+                    <!-- Empty space for alignment -->
+                </div>
+                <div class="arenaStatGrid">
+                    <div class="arenaStat">K/D/T</div>
+                    <div class="arenaStat">Damage</div>
+                    <div class="arenaStat">Support</div>
+                    <div class="arenaStat">Buffs</div>
+                    <div class="arenaStat">Debuffs</div>
+                </div>
+            </div>
+        `;
+    };
+    
+    // Get arena team name for enemy header
+    const currentArenaTeam = this.game.arenaTeams && this.game.arenaTeams[this.game.currentArenaTeam];
+    const enemyTeamName = currentArenaTeam ? currentArenaTeam.name : 'Enemy Team';
+    
     // Populate team stats
     const playerTeamStats = document.getElementById('playerTeamStats');
     const enemyTeamStats = document.getElementById('enemyTeamStats');
     
-    // Clear existing content except headers
-    const playerHeader = playerTeamStats.querySelector('h3');
-    const enemyHeader = enemyTeamStats.querySelector('h3');
+    // Clear existing content
     playerTeamStats.innerHTML = '';
     enemyTeamStats.innerHTML = '';
-    playerTeamStats.appendChild(playerHeader);
-    enemyTeamStats.appendChild(enemyHeader);
+    
+    // Add headers
+    playerTeamStats.innerHTML = '<h3>Your Team</h3>' + createHeaderRow();
+    enemyTeamStats.innerHTML = `<h3>${enemyTeamName}</h3>` + createHeaderRow();
     
     // Add player team stats
     this.game.currentBattle.party.forEach(unit => {
@@ -2205,7 +2227,6 @@ showArenaResults() {
     // Show popup
     document.getElementById('arenaResultsPopup').style.display = 'block';
 }
-
     
 updateAutoReplayText(countdown) {
     const replayBtn = document.querySelector('.replayBtn');
