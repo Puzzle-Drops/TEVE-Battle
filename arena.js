@@ -36,14 +36,14 @@ enterSparMode() {
     this.game.uiManager.showPartySelect('arena');
 }
 
-generateArenaTeamOpponents(teamData) {
+generateArenaTeamOpponents(teamData) {generateArenaTeamOpponents(teamData) {
     const opponents = [];
     
     teamData.heroes.forEach(heroData => {
         // Create an Enemy object that looks like a hero
         const enemy = new Enemy(heroData.className, heroData.level);
         
-        // Override the name
+        // Override the name and properties
         enemy.name = heroData.name;
         enemy.gender = heroData.gender;
         enemy.className = heroData.className;
@@ -51,10 +51,17 @@ generateArenaTeamOpponents(teamData) {
         // Get class data from units.json
         const classData = unitData.classes[heroData.className];
         if (classData) {
-            // Set spell level based on class tier
-            enemy.spellLevel = Math.min(4, classData.tier || 1);
+            // Set the tier for proper spell level calculation
+            const tier = classData.tier || 1;
             
-            // Set abilities from the class spells
+            // Calculate spell level based on tier (same as heroes)
+            if (tier === 0) enemy.spellLevel = 1;
+            else if (tier === 1) enemy.spellLevel = 1;
+            else if (tier === 2) enemy.spellLevel = 2;
+            else if (tier === 3) enemy.spellLevel = 3;
+            else if (tier === 4) enemy.spellLevel = 4;
+            
+            // Get abilities from the class spells
             if (classData.spells && classData.spells.length > 0) {
                 enemy.abilities = enemy.getAbilities(classData.spells);
             }
@@ -66,8 +73,72 @@ generateArenaTeamOpponents(teamData) {
             
             // Set mainstat
             enemy.mainstat = classData.mainstat || 'str';
+            
+            // Apply gear if specified in arena data
+            if (heroData.gear) {
+                enemy.gear = {};
+                Object.keys(heroData.gear).forEach(slot => {
+                    const gearData = heroData.gear[slot];
+                    const item = new Item(gearData.id);
+                    
+                    // Set quality values
+                    if (gearData.quality) {
+                        item.quality1 = gearData.quality[0] || 0;
+                        item.quality2 = gearData.quality[1] || 0;
+                        item.quality3 = gearData.quality[2] || 0;
+                        item.quality4 = gearData.quality[3] || 0;
+                    }
+                    
+                    enemy.gear[slot] = item;
+                });
+                
+                // Calculate gear stats and add to initial stats
+                const gearStats = this.calculateGearStats(enemy.gear);
+                
+                // Add gear stats to enemy's initial values
+                enemy.initial.str += gearStats.str;
+                enemy.initial.agi += gearStats.agi;
+                enemy.initial.int += gearStats.int;
+                enemy.initial.hp += gearStats.hp;
+                enemy.initial.armor += gearStats.armor;
+                enemy.initial.resist += gearStats.resist;
+                enemy.initial.hpRegen += gearStats.hpRegen;
+                enemy.initial.attack += gearStats.attack;
+                enemy.initial.attackSpeed += gearStats.attackSpeed;
+            }
         }
-    }
+        
+        opponents.push(enemy);
+    });
+    
+    return opponents;
+}
+
+calculateGearStats(gear) {
+    const stats = {
+        str: 0,
+        agi: 0,
+        int: 0,
+        hp: 0,
+        armor: 0,
+        resist: 0,
+        hpRegen: 0,
+        attack: 0,
+        attackSpeed: 0
+    };
+    
+    // Add stats from all equipped items
+    Object.values(gear).forEach(item => {
+        if (item) {
+            const itemStats = item.getStats();
+            Object.keys(itemStats).forEach(stat => {
+                stats[stat] += itemStats[stat];
+            });
+        }
+    });
+    
+    return stats;
+}
     
     createArenaEnemy(className, level, tier) {
         // Determine spell level based on tier
