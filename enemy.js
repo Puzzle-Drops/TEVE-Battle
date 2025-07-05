@@ -1,7 +1,5 @@
 // Enemy Class
 class Enemy {
-    // Enemy Class
-class Enemy {
     constructor(enemyId, level, spellLevel = null) {
         this.enemyId = enemyId;
         this.level = level;
