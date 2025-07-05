@@ -48,47 +48,25 @@ generateArenaTeamOpponents(teamData) {
         enemy.gender = heroData.gender;
         enemy.className = heroData.className;
 
-        // Set spell level based on class tier
-const classData = unitData.classes[heroData.className];
-if (classData) {
-    enemy.spellLevel = Math.min(4, classData.tier || 1);
-}
-        
-        // Create gear from the data
-        const gear = {};
-        Object.entries(heroData.gear || {}).forEach(([slot, gearData]) => {
-            const item = new Item(gearData.id);
-            // Set specific quality values
-            item.quality1 = gearData.quality[0] || 0;
-            item.quality2 = gearData.quality[1] || 0;
-            item.quality3 = gearData.quality[2] || 0;
-            item.quality4 = gearData.quality[3] || 0;
-            gear[slot] = item;
-        });
-        
-        enemy.arenaGear = gear;
-        enemy.gear = gear; // Store directly on enemy for display
-        
-        // Calculate gear stats and add to initial stats
-        const gearStats = this.calculateGearStats(gear);
-        
-        // Add gear stats to enemy's initial values
-        enemy.initial.str += gearStats.str;
-        enemy.initial.agi += gearStats.agi;
-        enemy.initial.int += gearStats.int;
-        enemy.initial.hp += gearStats.hp;
-        enemy.initial.armor += gearStats.armor;
-        enemy.initial.resist += gearStats.resist;
-        enemy.initial.hpRegen += gearStats.hpRegen;
-        enemy.initial.attack += gearStats.attack;
-        enemy.initial.attackSpeed += gearStats.attackSpeed;
-        
-        opponents.push(enemy);
-    });
-    
-    return opponents;
-}
-    
+        // Get class data from units.json
+        const classData = unitData.classes[heroData.className];
+        if (classData) {
+            // Set spell level based on class tier
+            enemy.spellLevel = Math.min(4, classData.tier || 1);
+            
+            // Set abilities from the class spells
+            if (classData.spells && classData.spells.length > 0) {
+                enemy.abilities = enemy.getAbilities(classData.spells);
+            }
+            
+            // Copy initial stats from class data
+            if (classData.initial) {
+                Object.assign(enemy.initial, classData.initial);
+            }
+            
+            // Set mainstat
+            enemy.mainstat = classData.mainstat || 'str';
+        }
     
     
     createArenaEnemy(className, level, tier) {
