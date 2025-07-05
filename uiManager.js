@@ -987,7 +987,11 @@ showArenaEnemyInfoPopup(enemy) {
     // Similar to showEnemyInfoPopup but shows gear
     const popup = document.getElementById('heroInfoPopup');
     popup._currentHero = enemy;
-    document.getElementById('popupHeroName').textContent = `Lv.${enemy.level} ${enemy.name}`;
+    
+    // Show full format like heroes
+    const classData = unitData?.classes[enemy.className];
+    const displayClassName = classData?.name || enemy.className;
+    document.getElementById('popupHeroName').innerHTML = `Lv.${enemy.level} ${displayClassName} <span class="gender-${enemy.gender}">${enemy.gender === 'male' ? '♂' : '♀'}</span> | ${enemy.name}`;
     
     // Show stats
     const stats = enemy.baseStats;
