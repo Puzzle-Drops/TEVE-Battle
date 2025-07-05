@@ -1883,24 +1883,6 @@
     }
   },
   "enemies": {
-    "satyr_instigator": {
-      "name": "Satyr Instigator",
-      "boss": true,
-      "modifiers": { "str": 2.2, "agi": 2.0, "int": 1.8 },
-      "mainstat": "str",
-      "initial": {
-        "hp": 55,
-        "hpRegen": 1,
-        "attack": 6,
-        "attackSpeed": 0,
-        "str": 10,
-        "agi": 7,
-        "int": 5,
-        "armor": 13,
-        "resist": 2
-      },
-      "spells": ["slash", "bite", "fury"]
-    },
     "satyr_youth": {
       "name": "Satyr Youth",
       "boss": false,
@@ -1936,6 +1918,24 @@
         "resist": 4
       },
       "spells": ["slash", "bite"]
+    },
+    "satyr_instigator": {
+      "name": "Satyr Instigator",
+      "boss": true,
+      "modifiers": { "str": 2.2, "agi": 2.0, "int": 1.8 },
+      "mainstat": "str",
+      "initial": {
+        "hp": 55,
+        "hpRegen": 1,
+        "attack": 6,
+        "attackSpeed": 0,
+        "str": 10,
+        "agi": 7,
+        "int": 5,
+        "armor": 13,
+        "resist": 2
+      },
+      "spells": ["slash", "bite", "fury"]
     },
     "murkin_warrior": {
       "name": "Murkin Warrior",
@@ -2007,7 +2007,7 @@
         "armor": 7,
         "resist": 8
       },
-      "spells": ["staff_whack", "ancient_protection", "ancestral_taunt"]
+      "spells": ["staff_whack", "ancestral_taunt", "ancient_protection"]
     },
     "murkin_chieftain": {
       "name": "Murkin Chieftain",
