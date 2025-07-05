@@ -41,7 +41,7 @@ class Enemy {
             this.name = enemyData.name;
             this.isBoss = enemyData.boss || false;
             this.modifiers = enemyData.modifiers;
-            this.mainstat = enemyData.mainstat || 'str';
+            this._mainstat = enemyData.mainstat || 'str';
             this.className = isHeroLike ? enemyId : null;
             
             // Add default initial values
@@ -74,7 +74,7 @@ class Enemy {
             this.isBoss = false;
             this.modifiers = { str: 1.0, agi: 1.0, int: 1.0 };
             this.abilities = [];
-            this.mainstat = 'str';
+            this._mainstat = 'str';
             this.className = null;
                     
                     // Default initial values
@@ -142,8 +142,7 @@ get baseStats() {
 }
 
 get mainstat() {
-    const enemyData = unitData?.enemies[this.enemyId];
-    return enemyData?.mainstat || 'str';
+    return this._mainstat || 'str';
 }
 
 	get hp() {
