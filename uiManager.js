@@ -2118,7 +2118,7 @@ showArenaResults() {
     
     document.getElementById('arenaMatchInfo').textContent = `Spar Mode - Time: ${timeString}`;
     
-    // Helper function to create stat row (modified to not include labels)
+    // Helper function to create stat row
     const createStatRow = (unit, stats) => {
         const unitStats = stats[unit.name] || {
             kills: 0, deaths: 0, turnsTaken: 0, damageDealt: 0, damageTaken: 0,
@@ -2143,31 +2143,27 @@ showArenaResults() {
         const formattedName = `${displayClassName} ${genderSymbol} | ${unit.name}`;
         
         return `
-            <div class="arenaStatRow">
-                <div class="arenaUnitInfo">
-                    <img src="${portraitUrl}" alt="${unit.name}" class="arenaUnitPortrait">
-                    <div class="arenaUnitDetails">
-                        <div class="arenaUnitName">${formattedName}</div>
-                        <div class="arenaUnitLevel">Lv ${unit.source.level}</div>
-                    </div>
+            <div class="arenaUnitInfo">
+                <img src="${portraitUrl}" alt="${unit.name}" class="arenaUnitPortrait">
+                <div class="arenaUnitDetails">
+                    <div class="arenaUnitName" title="${formattedName}">${formattedName}</div>
+                    <div class="arenaUnitLevel">Lv ${unit.source.level}</div>
                 </div>
-                <div class="arenaStatGrid">
-                    <div class="arenaStat">
-                        <span class="arenaKDA">${unitStats.kills}/${unitStats.deaths}/${unitStats.turnsTaken}</span>
-                    </div>
-                    <div class="arenaStat">
-                        <span class="arenaDamage">${unitStats.damageDealt}↑ ${unitStats.damageTaken}↓</span>
-                    </div>
-                    <div class="arenaStat">
-                        <span class="arenaSupport">${unitStats.healingDone}❤️ ${unitStats.shieldingApplied}🛡️</span>
-                    </div>
-                    <div class="arenaStat">
-                        <span class="arenaBuffs">${unitStats.buffsApplied}↑ ${unitStats.buffsDispelled}✕</span>
-                    </div>
-                    <div class="arenaStat">
-                        <span class="arenaDebuffs">${unitStats.debuffsApplied}↓ ${unitStats.debuffsCleansed}✓</span>
-                    </div>
-                </div>
+            </div>
+            <div class="arenaStat">
+                <span class="arenaKDA">${unitStats.kills}/${unitStats.deaths}/${unitStats.turnsTaken}</span>
+            </div>
+            <div class="arenaStat">
+                <span class="arenaDamage">${unitStats.damageDealt}↑ ${unitStats.damageTaken}↓</span>
+            </div>
+            <div class="arenaStat">
+                <span class="arenaSupport">${unitStats.healingDone}❤️ ${unitStats.shieldingApplied}🛡️</span>
+            </div>
+            <div class="arenaStat">
+                <span class="arenaBuffs">${unitStats.buffsApplied}↑ ${unitStats.buffsDispelled}✕</span>
+            </div>
+            <div class="arenaStat">
+                <span class="arenaDebuffs">${unitStats.debuffsApplied}↓ ${unitStats.debuffsCleansed}✓</span>
             </div>
         `;
     };
@@ -2176,16 +2172,12 @@ showArenaResults() {
     const createHeaderRow = () => {
         return `
             <div class="arenaStatsHeader">
-                <div class="arenaUnitInfo">
-                    <!-- Empty space for alignment -->
-                </div>
-                <div class="arenaStatGrid">
-                    <div class="arenaStat">K/D/T</div>
-                    <div class="arenaStat">Damage</div>
-                    <div class="arenaStat">Support</div>
-                    <div class="arenaStat">Buffs</div>
-                    <div class="arenaStat">Debuffs</div>
-                </div>
+                <div class="arenaHeaderUnit">Unit</div>
+                <div class="arenaHeaderStat">K/D/T</div>
+                <div class="arenaHeaderStat">Damage</div>
+                <div class="arenaHeaderStat">Support</div>
+                <div class="arenaHeaderStat">Buffs</div>
+                <div class="arenaHeaderStat">Debuffs</div>
             </div>
         `;
     };
@@ -2203,15 +2195,25 @@ showArenaResults() {
     enemyTeamStats.innerHTML = '';
     
     // Add headers
-    playerTeamStats.innerHTML = '<h3>Your Team</h3>' + createHeaderRow();
-    enemyTeamStats.innerHTML = `<h3>${enemyTeamName}</h3>` + createHeaderRow();
+    playerTeamStats.innerHTML = '<h3>Your Team</h3>';
+    enemyTeamStats.innerHTML = `<h3>${enemyTeamName}</h3>`;
+    
+    // Create grid containers
+    const playerGrid = document.createElement('div');
+    playerGrid.className = 'arenaStatsGrid';
+    playerGrid.innerHTML = createHeaderRow();
+    
+    const enemyGrid = document.createElement('div');
+    enemyGrid.className = 'arenaStatsGrid';
+    enemyGrid.innerHTML = createHeaderRow();
     
     // Add player team stats
     this.game.currentBattle.party.forEach(unit => {
         if (unit) {
             const row = document.createElement('div');
+            row.className = 'arenaStatRow';
             row.innerHTML = createStatRow(unit, stats);
-            playerTeamStats.appendChild(row.firstElementChild);
+            playerGrid.appendChild(row);
         }
     });
     
@@ -2219,10 +2221,14 @@ showArenaResults() {
     this.game.currentBattle.enemies.forEach(unit => {
         if (unit) {
             const row = document.createElement('div');
+            row.className = 'arenaStatRow';
             row.innerHTML = createStatRow(unit, stats);
-            enemyTeamStats.appendChild(row.firstElementChild);
+            enemyGrid.appendChild(row);
         }
     });
+    
+    playerTeamStats.appendChild(playerGrid);
+    enemyTeamStats.appendChild(enemyGrid);
     
     // Show popup
     document.getElementById('arenaResultsPopup').style.display = 'block';
