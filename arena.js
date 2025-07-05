@@ -67,7 +67,7 @@ generateArenaTeamOpponents(teamData) {
             // Set mainstat
             enemy.mainstat = classData.mainstat || 'str';
         }
-    
+    }
     
     createArenaEnemy(className, level, tier) {
         // Determine spell level based on tier
