@@ -5615,6 +5615,33 @@ body {
     margin-bottom: 30px;
 }
 
+.arenaStatsHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: rgba(10, 25, 41, 0.6);
+    border-bottom: 2px solid #2a6a8a;
+}
+
+.arenaStatsHeader .arenaUnitInfo {
+    /* Empty space to align with unit info column */
+}
+
+.arenaStatsHeader .arenaStatGrid {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.arenaStatsHeader .arenaStat {
+    text-align: center;
+    color: #4dd0e1;
+    font-weight: bold;
+    font-size: 14px;
+}
+
 .arenaTeamStats {
     flex: 1;
     background: rgba(10, 25, 41, 0.8);
