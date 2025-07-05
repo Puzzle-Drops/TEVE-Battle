@@ -2119,68 +2119,90 @@ showArenaResults() {
     document.getElementById('arenaMatchInfo').textContent = `Spar Mode - Time: ${timeString}`;
     
     // Helper function to create stat row
-    const createStatRow = (unit, stats) => {
-        const unitStats = stats[unit.name] || {
-            kills: 0, deaths: 0, turnsTaken: 0, damageDealt: 0, damageTaken: 0,
-            healingDone: 0, shieldingApplied: 0, buffsApplied: 0, debuffsApplied: 0,
-            buffsDispelled: 0, debuffsCleansed: 0
-        };
-        
-        // Get portrait URL and class info
-        let portraitUrl;
-        let className = '';
-        let displayClassName = '';
-        if (unit.source) {
-            portraitUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unit.source.className}_portrait.png`;
-            className = unit.source.className;
-            // Get display class name
-            const classData = unitData?.classes[className];
-            displayClassName = classData?.name || className;
-        }
-        
-        // Format name with class and gender
-        const genderSymbol = unit.source.gender === 'male' ? '♂' : '♀';
-        const formattedName = `${displayClassName} ${genderSymbol} | ${unit.name}`;
-        
-        return `
-            <div class="arenaUnitInfo">
-                <img src="${portraitUrl}" alt="${unit.name}" class="arenaUnitPortrait">
-                <div class="arenaUnitDetails">
-                    <div class="arenaUnitName" title="${formattedName}">${formattedName}</div>
-                    <div class="arenaUnitLevel">Lv ${unit.source.level}</div>
-                </div>
-            </div>
-            <div class="arenaStat">
-                <span class="arenaKDA">${unitStats.kills}/${unitStats.deaths}/${unitStats.turnsTaken}</span>
-            </div>
-            <div class="arenaStat">
-                <span class="arenaDamage">${unitStats.damageDealt}↑ ${unitStats.damageTaken}↓</span>
-            </div>
-            <div class="arenaStat">
-                <span class="arenaSupport">${unitStats.healingDone}❤️ ${unitStats.shieldingApplied}🛡️</span>
-            </div>
-            <div class="arenaStat">
-                <span class="arenaBuffs">${unitStats.buffsApplied}↑ ${unitStats.buffsDispelled}✕</span>
-            </div>
-            <div class="arenaStat">
-                <span class="arenaDebuffs">${unitStats.debuffsApplied}↓ ${unitStats.debuffsCleansed}✓</span>
-            </div>
-        `;
+const createStatRow = (unit, stats) => {
+    const unitStats = stats[unit.name] || {
+        kills: 0, deaths: 0, turnsTaken: 0, damageDealt: 0, damageTaken: 0,
+        healingDone: 0, shieldingApplied: 0, buffsApplied: 0, debuffsApplied: 0,
+        buffsDispelled: 0, debuffsCleansed: 0
     };
     
-    // Create header row HTML
-    const createHeaderRow = () => {
-        return `
-            <div class="arenaStatsHeader">
-                <div class="arenaHeaderUnit">Unit</div>
-                <div class="arenaHeaderStat">K/D/T</div>
-                <div class="arenaHeaderStat">Damage</div>
-                <div class="arenaHeaderStat">Support</div>
-                <div class="arenaHeaderStat">Buffs</div>
-                <div class="arenaHeaderStat">Debuffs</div>
+    // Get portrait URL and class info
+    let portraitUrl;
+    let className = '';
+    let displayClassName = '';
+    if (unit.source) {
+        portraitUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unit.source.className}_portrait.png`;
+        className = unit.source.className;
+        // Get display class name
+        const classData = unitData?.classes[className];
+        displayClassName = classData?.name || className;
+    }
+    
+    // Format name with class and gender
+    const genderSymbol = unit.source.gender === 'male' ? '♂' : '♀';
+    const formattedName = `${displayClassName} ${genderSymbol} | ${unit.name}`;
+    
+    return `
+        <div class="arenaUnitInfo">
+            <img src="${portraitUrl}" alt="${unit.name}" class="arenaUnitPortrait">
+            <div class="arenaUnitDetails">
+                <div class="arenaUnitName" title="${formattedName}">${formattedName}</div>
+                <div class="arenaUnitLevel">Lv ${unit.source.level}</div>
             </div>
-        `;
-    };
+        </div>
+        <div class="arenaStat">
+            <span class="arenaKDA">
+                <span class="kdKills">${unitStats.kills}</span><span class="kdSeparator">/</span><span class="kdDeaths">${unitStats.deaths}</span><span class="kdSeparator">/</span><span class="kdTurns">${unitStats.turnsTaken}</span>
+            </span>
+        </div>
+        <div class="arenaStat arenaStatStacked">
+            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Damage dealt')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+                <span class="arenaStatIcon">↑</span> <span class="arenaStatValue">${unitStats.damageDealt}</span>
+            </div>
+            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Damage taken')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+                <span class="arenaStatIcon">↓</span> <span class="arenaStatValue">${unitStats.damageTaken}</span>
+            </div>
+        </div>
+        <div class="arenaStat arenaStatStacked">
+            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Healing done')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+                <span class="arenaStatIcon">❤️</span> <span class="arenaStatValue">${unitStats.healingDone}</span>
+            </div>
+            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Shielding applied')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+                <span class="arenaStatIcon">🛡️</span> <span class="arenaStatValue">${unitStats.shieldingApplied}</span>
+            </div>
+        </div>
+        <div class="arenaStat arenaStatStacked">
+            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Buffs applied')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+                <span class="arenaStatIcon">↑</span> <span class="arenaStatValue">${unitStats.buffsApplied}</span>
+            </div>
+            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Buffs dispelled')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+                <span class="arenaStatIcon">✕</span> <span class="arenaStatValue">${unitStats.buffsDispelled}</span>
+            </div>
+        </div>
+        <div class="arenaStat arenaStatStacked">
+            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Debuffs applied')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+                <span class="arenaStatIcon">↓</span> <span class="arenaStatValue">${unitStats.debuffsApplied}</span>
+            </div>
+            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Debuffs cleansed')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+                <span class="arenaStatIcon">✓</span> <span class="arenaStatValue">${unitStats.debuffsCleansed}</span>
+            </div>
+        </div>
+    `;
+};
+    
+    // Create header row HTML
+const createHeaderRow = () => {
+    return `
+        <div class="arenaStatsHeader">
+            <div class="arenaHeaderUnit">Unit</div>
+            <div class="arenaHeaderStat">K/D/T</div>
+            <div class="arenaHeaderStat" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Damage dealt / Damage taken')" onmouseout="game.uiManager.hideArenaStatTooltip()">Damage</div>
+            <div class="arenaHeaderStat" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Healing / Shielding')" onmouseout="game.uiManager.hideArenaStatTooltip()">Support</div>
+            <div class="arenaHeaderStat" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Buffs applied / Buffs dispelled')" onmouseout="game.uiManager.hideArenaStatTooltip()">Buffs</div>
+            <div class="arenaHeaderStat" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Debuffs applied / Debuffs cleansed')" onmouseout="game.uiManager.hideArenaStatTooltip()">Debuffs</div>
+        </div>
+    `;
+};
     
     // Get arena team name for enemy header
     const currentArenaTeam = this.game.arenaTeams && this.game.arenaTeams[this.game.currentArenaTeam];
@@ -2663,6 +2685,53 @@ updateAutoReplayText(countdown) {
             tooltip.style.display = 'none';
         }
     }
+
+    showArenaStatTooltip(event, text) {
+    // Create or get arena stat tooltip element
+    let tooltip = document.getElementById('arenaStatTooltipDiv');
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'arenaStatTooltipDiv';
+        tooltip.style.cssText = `
+            position: fixed;
+            background: rgba(10, 15, 26, 0.95);
+            border: 2px solid #4dd0e1;
+            padding: 8px 12px;
+            border-radius: 4px;
+            z-index: 10000;
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(77, 208, 225, 0.3);
+            font-size: 14px;
+            color: #b0e0f0;
+            white-space: nowrap;
+        `;
+        document.body.appendChild(tooltip);
+    }
+    
+    tooltip.textContent = text;
+    tooltip.style.display = 'block';
+    
+    // Position tooltip
+    const rect = event.target.getBoundingClientRect();
+    tooltip.style.left = rect.left + 'px';
+    tooltip.style.top = (rect.bottom + 5) + 'px';
+    
+    // Adjust if tooltip goes off screen
+    const tooltipRect = tooltip.getBoundingClientRect();
+    if (tooltipRect.right > window.innerWidth) {
+        tooltip.style.left = (window.innerWidth - tooltipRect.width - 10) + 'px';
+    }
+    if (tooltipRect.bottom > window.innerHeight) {
+        tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
+    }
+}
+
+hideArenaStatTooltip() {
+    const tooltip = document.getElementById('arenaStatTooltipDiv');
+    if (tooltip) {
+        tooltip.style.display = 'none';
+    }
+}
 
     showCollectionTooltip(event, itemId, qualityLevel, collectionData) {
         // Create item with exact number of rolls for display
