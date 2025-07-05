@@ -1572,6 +1572,10 @@ rematchArena() {
 continueFromArena() {
     // Close results popup
     document.getElementById('arenaResultsPopup').style.display = 'none';
+    // Clear arena state
+    this.arenaMode = null;
+    this.arenaOpponents = null;
+    this.currentArenaTeam = 0;
     // Return to arena home
     this.uiManager.showArena();
 }
@@ -1636,13 +1640,18 @@ continueFromArena() {
     }
     
     exitBattle() {
-        if (this.currentBattle) {
-            // Reset battlefield position
-            const battleField = document.querySelector('.battleField');
-            if (battleField) {
-                battleField.style.transition = 'none';
-                battleField.style.top = '0%';
-            }
+    if (this.currentBattle) {
+        // Reset battlefield position
+        const battleField = document.querySelector('.battleField');
+        if (battleField) {
+            battleField.style.transition = 'none';
+            battleField.style.top = '0%';
+        }
+        
+        // Clear arena state when exiting battle
+        this.arenaMode = null;
+        this.arenaOpponents = null;
+        this.currentArenaTeam = 0;
             
             // Clear any active targeting
             if (this.currentBattle.targetingState) {
@@ -2162,6 +2171,11 @@ returnToMap() {
     if (exitButton) {
         exitButton.style.display = '';
     }
+    
+    // Clear arena state when returning to map
+    this.game.arenaMode = null;
+    this.game.arenaOpponents = null;
+    this.game.currentArenaTeam = 0;
     
     // Clear any auto replay timer
     if (this.autoReplayTimer) {
