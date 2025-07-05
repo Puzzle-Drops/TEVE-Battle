@@ -5585,9 +5585,9 @@ body {
     padding: 30px;
     z-index: 1001;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-    max-width: 1200px;
-    width: 90%;
-    max-height: 80vh;
+    width: 1600px;
+    max-width: 1800px;
+    max-height: 900px;
     overflow-y: auto;
 }
 
