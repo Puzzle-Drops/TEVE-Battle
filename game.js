@@ -1544,6 +1544,17 @@ startBattle(mode = null) {
         
         // Create and start arena battle
         this.currentBattle = new Battle(this, party, [this.arenaOpponents], 'arena');
+
+        // If auto replay is on, ensure auto battle is also on
+        if (this.autoReplay && !this.autoBattle) {
+            this.toggleAutoBattle(true);
+        }
+        
+        // Set auto mode if enabled (same as dungeon)
+if (this.autoBattle) {
+    this.currentBattle.autoMode = true;
+}
+        
     } else {
         // Dungeon mode - use existing dungeonWaves
         
