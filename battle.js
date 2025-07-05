@@ -223,17 +223,6 @@ constructor(game, party, enemyWaves, mode = 'dungeon') {
 
     // Initialize tracking for ALL battles (not just arena)
 this.battleStats = {};
-
-// Hide auto controls if arena mode
-if (this.mode === 'arena') {
-    const autoModeToggle = document.getElementById('autoModeToggle');
-    const autoReplayToggle = document.getElementById('autoReplayToggle');
-    const autoToggleContainer = document.querySelector('.autoToggleContainer');
-    
-    if (autoModeToggle) autoModeToggle.style.display = 'none';
-    if (autoReplayToggle) autoReplayToggle.style.display = 'none';
-    if (autoToggleContainer) autoToggleContainer.style.display = 'none';
-}
         
         // Create battle units for party and ensure they're properly initialized
         this.party = party.map((hero, index) => {
