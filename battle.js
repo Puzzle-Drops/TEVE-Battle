@@ -726,7 +726,7 @@ trackBattleStat(unitName, stat, value) {
         }
     }
 
-    createDungeonNameDisplay() {
+createDungeonNameDisplay() {
         // Remove any existing dungeon name
         const existingName = document.getElementById('dungeonNameDisplay');
         if (existingName) {
@@ -737,7 +737,15 @@ trackBattleStat(unitName, stat, value) {
         const nameDisplay = document.createElement('div');
         nameDisplay.id = 'dungeonNameDisplay';
         nameDisplay.className = 'dungeonNameDisplay';
-        nameDisplay.textContent = this.game.currentDungeon ? this.game.currentDungeon.name : '';
+        
+        if (this.mode === 'arena') {
+            // Show arena team name
+            const currentTeam = this.game.arenaTeams && this.game.arenaTeams[this.game.currentArenaTeam];
+            nameDisplay.textContent = currentTeam ? currentTeam.name : 'Arena Battle';
+        } else {
+            // Show dungeon name
+            nameDisplay.textContent = this.game.currentDungeon ? this.game.currentDungeon.name : '';
+        }
         
         const battleScene = document.getElementById('battleScene');
         if (battleScene) {
