@@ -5585,9 +5585,9 @@ body {
     padding: 30px;
     z-index: 1001;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-    width: 1600px;
-    max-width: 1800px;
-    max-height: 900px;
+    max-width: 1200px;
+    width: 90%;
+    max-height: 80vh;
     overflow-y: auto;
 }
 
@@ -5615,33 +5615,6 @@ body {
     margin-bottom: 30px;
 }
 
-.arenaStatsHeader {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    padding: 10px;
-    background: rgba(10, 25, 41, 0.6);
-    border-bottom: 2px solid #2a6a8a;
-}
-
-.arenaStatsHeader .arenaUnitInfo {
-    /* Empty space to align with unit info column */
-}
-
-.arenaStatsHeader .arenaStatGrid {
-    flex: 1;
-    display: flex;
-    justify-content: space-around;
-    gap: 20px;
-}
-
-.arenaStatsHeader .arenaStat {
-    text-align: center;
-    color: #4dd0e1;
-    font-weight: bold;
-    font-size: 14px;
-}
-
 .arenaTeamStats {
     flex: 1;
     background: rgba(10, 25, 41, 0.8);
@@ -5656,20 +5629,50 @@ body {
     margin-bottom: 20px;
 }
 
-.arenaStatRow {
-    display: flex;
+/* Grid-based layout for perfect alignment */
+.arenaStatsGrid {
+    display: grid;
+    grid-template-columns: 280px repeat(5, 1fr);
+    gap: 0;
     align-items: center;
-    margin-bottom: 15px;
+}
+
+.arenaStatsHeader {
+    display: contents;
+}
+
+.arenaStatsHeader .arenaHeaderUnit {
     padding: 10px;
+    background: rgba(10, 25, 41, 0.6);
+    border-bottom: 2px solid #2a6a8a;
+    font-weight: bold;
+    color: #4dd0e1;
+}
+
+.arenaStatsHeader .arenaHeaderStat {
+    padding: 10px;
+    background: rgba(10, 25, 41, 0.6);
+    border-bottom: 2px solid #2a6a8a;
+    text-align: center;
+    font-weight: bold;
+    color: #4dd0e1;
+    font-size: 14px;
+}
+
+.arenaStatRow {
+    display: contents;
+}
+
+.arenaStatRow:hover > * {
     background: rgba(42, 106, 138, 0.2);
-    border-radius: 4px;
 }
 
 .arenaUnitInfo {
     display: flex;
     align-items: center;
-    width: 200px;
     gap: 10px;
+    padding: 10px;
+    min-width: 280px;
 }
 
 .arenaUnitPortrait {
@@ -5683,11 +5686,15 @@ body {
 
 .arenaUnitDetails {
     flex: 1;
+    min-width: 0; /* Allow text truncation */
 }
 
 .arenaUnitName {
     font-weight: bold;
     color: #b0e0f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .arenaUnitLevel {
@@ -5695,14 +5702,8 @@ body {
     color: #6a9aaa;
 }
 
-.arenaStatGrid {
-    flex: 1;
-    display: flex;
-    justify-content: space-around;
-    gap: 20px;
-}
-
 .arenaStat {
+    padding: 10px;
     text-align: center;
 }
 
@@ -5730,13 +5731,6 @@ body {
 .arenaDebuffs {
     font-size: 16px;
     color: #ff6666;
-}
-
-.arenaStatLabel {
-    display: block;
-    font-size: 12px;
-    color: #6a9aaa;
-    margin-top: 4px;
 }
 
 .arenaResultsButtons {
