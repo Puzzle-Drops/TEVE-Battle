@@ -1652,12 +1652,7 @@ continueFromArena() {
             battleField.style.transition = 'none';
             battleField.style.top = '0%';
         }
-        
-        // Clear arena state when exiting battle
-        this.arenaMode = null;
-        this.arenaOpponents = null;
-        this.currentArenaTeam = 0;
-            
+                    
             // Clear any active targeting
             if (this.currentBattle.targetingState) {
                 this.currentBattle.clearTargeting();
