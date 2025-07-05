@@ -12,7 +12,7 @@ enterSparMode() {
     this.game.arenaTeams = arenaData ? arenaData.teams : [];
     this.game.currentArenaTeam = 0;
     
-    // Get selected party heroes (use existing selection or default to first 5)
+    // Get selected party heroes (don't auto-select like dungeons)
     let partyHeroes = [];
     if (this.game.selectedParty && this.game.selectedParty.some(h => h !== null)) {
         // Use existing selection
@@ -20,9 +20,8 @@ enterSparMode() {
             .filter(index => index !== null)
             .map(index => this.game.heroes[index]);
     } else {
-        // Default to first 5 heroes
-        partyHeroes = this.game.heroes.slice(0, 5);
-        this.game.selectedParty = [0, 1, 2, 3, 4];
+        // Start with empty selection like dungeons
+        this.game.selectedParty = [null, null, null, null, null];
     }
     
     // Generate opponents from first team
