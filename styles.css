@@ -5634,7 +5634,7 @@ body {
     display: grid;
     grid-template-columns: 280px repeat(5, 1fr);
     gap: 0;
-    align-items: center;
+    align-items: stretch;
 }
 
 .arenaStatsHeader {
@@ -5647,7 +5647,7 @@ body {
     border-bottom: 2px solid #2a6a8a;
     font-weight: bold;
     color: #4dd0e1;
-    font-weight: 16px;
+    font-size: 16px;
 }
 
 .arenaStatsHeader .arenaHeaderStat {
@@ -5687,7 +5687,7 @@ body {
 
 .arenaUnitDetails {
     flex: 1;
-    min-width: 0; /* Allow text truncation */
+    min-width: 0;
 }
 
 .arenaUnitName {
@@ -5706,6 +5706,9 @@ body {
 .arenaStat {
     padding: 10px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .arenaKDA {
