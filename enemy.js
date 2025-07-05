@@ -1,42 +1,83 @@
 // Enemy Class
 class Enemy {
+    // Enemy Class
+class Enemy {
     constructor(enemyId, level, spellLevel = null) {
         this.enemyId = enemyId;
         this.level = level;
         this.spellLevel = spellLevel || Math.max(1, Math.min(5, Math.floor(level / 100) + 1));
         this.stars = this.calculateStars(level);
+        
+        // Add gear system
+        this.gear = {
+            head: null,
+            chest: null,
+            legs: null,
+            weapon: null,
+            offhand: null,
+            trinket: null
+        };
+        this.gearStats = { 
+            str: 0, 
+            agi: 0, 
+            int: 0,
+            hp: 0,
+            armor: 0,
+            resist: 0,
+            hpRegen: 0,
+            attack: 0,
+            attackSpeed: 0
+        };
                 
-                // Load enemy data from unitData
-                const enemyData = unitData?.enemies[enemyId];
-                if (enemyData) {
-                    this.name = enemyData.name;
-                    this.isBoss = enemyData.boss;
-                    this.modifiers = enemyData.modifiers;
-                    this.abilities = this.getAbilities(enemyData.spells);
-                    
-                    // Add default initial values
-                    this.initial = {
-                        hp: 0,
-                        hpRegen: 0,
-                        attack: 0,
-                        attackSpeed: 0,
-                        str: 0,
-                        agi: 0,
-                        int: 0,
-                        armor: 0,
-                        resist: 0
-                    };
+        // Try to load from enemies first, then classes
+        let enemyData = unitData?.enemies[enemyId];
+        let isHeroLike = false;
+        
+        if (!enemyData) {
+            // Try loading from classes (for arena enemies)
+            enemyData = unitData?.classes[enemyId];
+            isHeroLike = true;
+        }
+        
+        if (enemyData) {
+            this.name = enemyData.name;
+            this.isBoss = enemyData.boss || false;
+            this.modifiers = enemyData.modifiers;
+            this.mainstat = enemyData.mainstat || 'str';
+            this.className = isHeroLike ? enemyId : null;
+            
+            // Add default initial values
+            this.initial = {
+                hp: 0,
+                hpRegen: 0,
+                attack: 0,
+                attackSpeed: 0,
+                str: 0,
+                agi: 0,
+                int: 0,
+                armor: 0,
+                resist: 0
+            };
 
-                    // Override with enemy-specific initial values if they exist
-                    if (enemyData && enemyData.initial) {
-                        Object.assign(this.initial, enemyData.initial);
-                    }
-                } else {
-                    // Fallback values
-                    this.name = enemyId;
-                    this.isBoss = false;
-                    this.modifiers = { str: 1.0, agi: 1.0, int: 1.0 };
-                    this.abilities = [];
+            // Override with enemy-specific initial values if they exist
+            if (enemyData && enemyData.initial) {
+                Object.assign(this.initial, enemyData.initial);
+            }
+            
+            // Get abilities based on type
+            if (isHeroLike) {
+                this.abilities = this.getClassAbilities(enemyData.spells);
+            } else {
+                this.abilities = this.getAbilities(enemyData.spells);
+            }
+        } else {
+            // Fallback values
+            this.name = enemyId;
+            this.isBoss = false;
+            this.modifiers = { str: 1.0, agi: 1.0, int: 1.0 };
+            this.abilities = [];
+            this.mainstat = 'str';
+            this.className = null;
                     
                     // Default initial values
                     this.initial = {
@@ -77,48 +118,59 @@ get baseStats() {
     const agi = Math.floor(this.initial.agi + (this.level * this.modifiers.agi));
     const int = Math.floor(this.initial.int + (this.level * this.modifiers.int));
     
+    // Get the mainstat value for attack calculation
+    const mainstatValue = this.mainstat === 'str' ? str : (this.mainstat === 'agi' ? agi : int);
+    
     return {
         str: str,
         agi: agi,
         int: int,
         hp: (str * 5) + this.initial.hp,
         hpRegen: (str * 0.05) + this.initial.hpRegen,
-        attack: str + this.initial.attack, // Will be overridden by mainstat in getter
+        attack: mainstatValue + this.initial.attack,
         attackSpeed: (100 + 100 * (agi / (agi + 1000))) + this.initial.attackSpeed,
         armor: (0.25 * str) + (0.05 * agi) + this.initial.armor,
         resist: (0.25 * int) + this.initial.resist
     };
 }
 
-get hp() {
-    return this.baseStats.hp;
-}
-
-get attack() {
-    const enemyData = unitData?.enemies[this.enemyId];
-    const mainstat = enemyData?.mainstat || 'str';
-    return this.baseStats[mainstat] + this.initial.attack;
+	get totalStats() {
+    const base = this.baseStats;
+    return {
+        str: base.str + this.gearStats.str,
+        agi: base.agi + this.gearStats.agi,
+        int: base.int + this.gearStats.int
+    };
 }
 
 get mainstat() {
     const enemyData = unitData?.enemies[this.enemyId];
     return enemyData?.mainstat || 'str';
 }
+
+	get hp() {
+    return this.baseStats.hp + this.gearStats.hp;
+}
+
+get attack() {
+    const mainstatValue = this.totalStats[this.mainstat];
+    return mainstatValue + (this.gearStats.attack || 0) + this.initial.attack;
+}
 		
 get armor() {
-    return this.baseStats.armor;
+    return this.baseStats.armor + this.gearStats.armor;
 }
 
 get resist() {
-    return this.baseStats.resist;
+    return this.baseStats.resist + this.gearStats.resist;
 }
 
 get hpRegen() {
-    return this.baseStats.hpRegen;
+    return this.baseStats.hpRegen + this.gearStats.hpRegen;
 }
 
 get actionBarSpeed() {
-    return this.baseStats.attackSpeed;
+    return this.baseStats.attackSpeed + this.gearStats.attackSpeed;
 }
 
 get physicalDamageReduction() {
@@ -164,5 +216,102 @@ get magicDamageReduction() {
     
     return abilities;
 }
+
+equipItem(item, slot) {
+    if (!item || item.slot !== slot) return false;
+    
+    // Unequip current item if any
+    if (this.gear[slot]) {
+        this.unequipItem(slot);
+    }
+    
+    // Equip new item
+    this.gear[slot] = item;
+    
+    // Update gear stats
+    this.updateGearStats();
+    
+    return true;
+}
+
+unequipItem(slot) {
+    const item = this.gear[slot];
+    if (!item) return null;
+    
+    this.gear[slot] = null;
+    this.updateGearStats();
+    
+    return item;
+}
+
+updateGearStats() {
+    // Reset gear stats
+    this.gearStats = {
+        str: 0,
+        agi: 0,
+        int: 0,
+        hp: 0,
+        armor: 0,
+        resist: 0,
+        hpRegen: 0,
+        attack: 0,
+        attackSpeed: 0,
+    };
+    
+    // Add stats from all equipped items
+    Object.values(this.gear).forEach(item => {
+        if (item) {
+            const itemStats = item.getStats();
+            Object.keys(itemStats).forEach(stat => {
+                this.gearStats[stat] += itemStats[stat];
+            });
+        }
+    });
+}
+
+getClassAbilities(spellIds) {
+    const abilities = [];
+    
+    if (!spellIds || spellIds.length === 0) {
+        return abilities;
+    }
+    
+    // Get spell data from manager
+    const spells = spellManager ? spellManager.getSpellsByIds(spellIds) : [];
+    
+    // Use the spellLevel property
+    const abilityLevel = this.spellLevel;
+    
+    // Add abilities from spell list
+    spells.forEach((spell, index) => {
+        if (spell) {
+            // Get the correct cooldown for this spell level
+            let cooldownValue = 0;
+            if (Array.isArray(spell.cooldown)) {
+                const cooldownIndex = Math.max(0, Math.min(4, abilityLevel - 1));
+                cooldownValue = spell.cooldown[cooldownIndex] || spell.cooldown[0];
+            } else {
+                cooldownValue = spell.cooldown || 0;
+            }
+            
+            const ability = {
+                id: spell.id,
+                name: spell.name,
+                cooldown: cooldownValue,
+                currentCooldown: 0,
+                level: abilityLevel,
+                description: spell.description,
+                icon: `${spell.id}.png`,
+                effects: spell.effects,
+                passive: spell.passive || false
+            };
+            
+            abilities.push(ability);
+        }
+    });
+                
+    return abilities;
+}
+
 	
 }
