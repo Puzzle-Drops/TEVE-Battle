@@ -2926,9 +2926,6 @@ this.party.forEach((unit, index) => {
         unit.buffs = [];
         unit.debuffs = [];
     });
-        
-        // Store battle stats in results
-this.game.pendingBattleResults.battleStats = this.battleStats;
     
     // Clear pending exp for all party members if defeat
     if (!victory) {
@@ -3101,6 +3098,7 @@ this.game.pendingBattleResults.battleStats = this.battleStats;
         time: timeString,
         goldChange: 0, // No longer used at this level
         dungeonBonusExp: victory ? rewards.exp : 0,
+        battleStats: this.battleStats, // Add this line here
         // In endBattle method, when creating heroResults:
         heroResults: this.party.map((unit, index) => {
             if (!unit) return null;
