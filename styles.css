@@ -5665,7 +5665,7 @@ body {
 }
 
 .arenaStatRow:hover > * {
-    background: rgba(42, 106, 138, 0.2);
+    background: rgba(42, 106, 138, 0.3);
 }
 
 .arenaUnitInfo {
@@ -5705,10 +5705,10 @@ body {
 
 .arenaStat {
     padding: 10px;
-    text-align: center;
+    text-align: left;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .arenaKDA {
@@ -5765,6 +5765,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    justify-content: center;
+    width: 100%;
 }
 
 .arenaStatLine {
@@ -5785,6 +5787,11 @@ body {
 }
 
 /* K/D/T Coloring */
+.arenaKDA {
+    display: flex;
+    align-items: center;
+}
+
 .kdKills {
     color: #00ff88;
     font-weight: bold;
