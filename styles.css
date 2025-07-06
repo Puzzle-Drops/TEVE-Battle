@@ -5767,6 +5767,7 @@ body {
     gap: 2px;
     justify-content: center;
     width: 100%;
+    align-items: flex-start;
 }
 
 .arenaStatLine {
