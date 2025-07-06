@@ -2302,7 +2302,7 @@ returnToMap() {
     if (results.victory) {
         if (this.currentBattleMode === 'arena' && this.arenaMode === 'spar') {
             // Arena completion - count deaths
-            const deathCount = results.heroResults.filter(r => !r.survived).length;
+            const deathCount = results.partyDeaths || 0;
             this.markArenaTeamComplete(this.currentArenaTeam, results.time, deathCount);
         } else if (this.currentDungeon) {
             // Dungeon completion
