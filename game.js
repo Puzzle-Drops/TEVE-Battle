@@ -1640,16 +1640,13 @@ continueFromArena() {
     
     // Apply battle results (this was missing!)
     if (this.pendingBattleResults) {
+        console.log('Applying arena battle results');
         this.applyBattleResults();
         this.pendingBattleResults = null;
     }
     
-    // Clear arena state
-    this.arenaMode = null;
-    this.arenaOpponents = null;
-    this.currentArenaTeam = 0;
-    // Return to arena home
-    this.uiManager.showArena();
+    // Just return to party select
+    this.uiManager.showPartySelect('arena');
 }
     
     toggleAutoBattle(enabled) {
