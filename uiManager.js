@@ -73,8 +73,240 @@ hideAllScreens() {
                 orbElement.style.display = this.game.progression.unlockedTiers.includes(tier) ? '' : 'none';
             }
         });
+
+        // Initialize trail system if not already done
+        if (!this.trailCanvas) {
+            this.initializeTrailSystem();
+        }
+        
+        // Resize canvas to match window
+        this.resizeTrailCanvas();
+        
+        
     }
 
+    // Trail System Methods
+    initializeTrailSystem() {
+        this.trailCanvas = document.getElementById('progressionTrailCanvas');
+        this.trailCtx = this.trailCanvas ? this.trailCanvas.getContext('2d') : null;
+        this.portalRotation = 0;
+        this.portalPulse = 0;
+        
+        // Trail connections matching your dungeon order
+        this.trailConnections = [
+            { from: 'heroesButton', to: 'dungeonOrb0', tier: 'Easy' },
+            { from: 'dungeonOrb0', to: 'dungeonOrb1', tier: 'Medium' },
+            { from: 'dungeonOrb1', to: 'dungeonOrb2', tier: 'Hard' },
+            { from: 'dungeonOrb2', to: 'dungeonOrb3', tier: 'Forsaken' },
+            { from: 'dungeonOrb3', to: 'dungeonOrb4', tier: 'Nightmare' },
+            { from: 'dungeonOrb4', to: 'dungeonOrb5', tier: 'Hell' },
+            { from: 'dungeonOrb5', to: 'dungeonOrb6', tier: 'Impossible' },
+            { from: 'dungeonOrb6', to: 'dungeonOrb7', tier: 'Mythical' },
+            { from: 'dungeonOrb7', to: 'dungeonOrb8', tier: 'Divine' },
+            { from: 'dungeonOrb8', to: 'portal', tier: 'Ascended', special: 'to-portal' },
+            { from: 'offscreen', to: 'dungeonOrb9', tier: 'Ascended', special: 'from-portal' },
+            { from: 'dungeonOrb9', to: 'dungeonOrb10', tier: 'Transcendent' },
+            { from: 'dungeonOrb10', to: 'dungeonOrb11', tier: 'Twilight' }
+        ];
+        
+        // Start animation loop for portal
+        if (this.trailCanvas) {
+            this.animateTrails();
+        }
+    }
+    
+    resizeTrailCanvas() {
+        if (!this.trailCanvas) return;
+        this.trailCanvas.width = window.innerWidth;
+        this.trailCanvas.height = window.innerHeight;
+        this.drawProgressionTrails();
+    }
+    
+    getElementCenter(elementClass) {
+        // Special positions for portal effect
+        if (elementClass === 'portal') {
+            const orb8 = document.querySelector('.dungeonOrb8');
+            if (!orb8) return { x: 0, y: 0 };
+            const rect = orb8.getBoundingClientRect();
+            return {
+                x: rect.left + rect.width / 2,
+                y: rect.top - 120 // Portal position above orb 8
+            };
+        }
+        if (elementClass === 'offscreen') {
+            return {
+                x: window.innerWidth + 100, // Off screen to the right
+                y: window.innerHeight - 100 // Near bottom
+            };
+        }
+        
+        const elem = document.querySelector('.' + elementClass);
+        if (!elem) return { x: 0, y: 0 };
+        const rect = elem.getBoundingClientRect();
+        return {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+        };
+    }
+    
+    drawMapTrail(from, to, index) {
+        const start = this.getElementCenter(from);
+        const end = this.getElementCenter(to);
+        const ctx = this.trailCtx;
+        
+        ctx.save();
+        
+        // Check if this is a portal-related trail
+        const isToPortal = to === 'portal';
+        const isFromPortal = from === 'offscreen';
+        
+        // Set up the dotted line style
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([8, 8]); // Dotted pattern
+        ctx.lineCap = 'round';
+        
+        // Add subtle shadow for depth
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        
+        // Draw the path
+        ctx.beginPath();
+        ctx.moveTo(start.x, start.y);
+        
+        // Calculate curve direction - alternate left/right
+        const curveDirection = (index % 2 === 0) ? 1 : -1;
+        const midX = (start.x + end.x) / 2;
+        const midY = (start.y + end.y) / 2;
+        
+        // Create gradient for portal fade effects
+        if (isToPortal || isFromPortal) {
+            const gradient = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
+            if (isToPortal) {
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+                gradient.addColorStop(0.7, 'rgba(255, 255, 255, 0.8)');
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            } else {
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
+                gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.8)');
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 1)');
+            }
+            ctx.strokeStyle = gradient;
+        }
+        
+        // Curve based on direction with alternating sway
+        if (Math.abs(start.x - end.x) > Math.abs(start.y - end.y)) {
+            // Horizontal movement - slight vertical curve
+            ctx.quadraticCurveTo(midX, midY - (20 * curveDirection), end.x, end.y);
+        } else {
+            // Vertical movement - slight horizontal curve
+            ctx.quadraticCurveTo(midX + (20 * curveDirection), midY, end.x, end.y);
+        }
+        
+        ctx.stroke();
+        
+        // Draw a second pass with lower opacity for glow effect
+        if (!isToPortal && !isFromPortal) {
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 8;
+            ctx.shadowBlur = 0;
+            ctx.stroke();
+        }
+        
+        ctx.restore();
+    }
+    
+    drawPortal(x, y) {
+        const ctx = this.trailCtx;
+        ctx.save();
+        
+        // Pulsating scale
+        const pulseScale = 1 + Math.sin(this.portalPulse) * 0.1;
+        
+        // Translate to portal center for rotation
+        ctx.translate(x, y);
+        ctx.scale(pulseScale, pulseScale);
+        
+        // Outer swirling glow
+        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 40);
+        gradient.addColorStop(0, 'rgba(216, 150, 255, 0.8)');
+        gradient.addColorStop(0.5, 'rgba(138, 42, 138, 0.6)');
+        gradient.addColorStop(1, 'rgba(138, 42, 138, 0)');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, 40, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Inner dark portal
+        ctx.fillStyle = 'rgba(40, 0, 60, 0.9)';
+        ctx.beginPath();
+        ctx.arc(0, 0, 20, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Portal edge
+        ctx.strokeStyle = '#d896ff';
+        ctx.lineWidth = 3;
+        ctx.shadowColor = '#d896ff';
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.arc(0, 0, 20, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        // Rotating swirling effect
+        ctx.rotate(this.portalRotation);
+        ctx.strokeStyle = 'rgba(216, 150, 255, 0.4)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([]);
+        
+        // Multiple swirl arms
+        for (let i = 0; i < 3; i++) {
+            ctx.beginPath();
+            ctx.arc(0, 0, 25, (Math.PI * 2 / 3) * i, (Math.PI * 2 / 3) * i + Math.PI);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.arc(0, 0, 30, (Math.PI * 2 / 3) * i + Math.PI, (Math.PI * 2 / 3) * i + Math.PI * 2);
+            ctx.stroke();
+        }
+        
+        ctx.restore();
+    }
+    
+    drawProgressionTrails() {
+        if (!this.trailCtx) return;
+        
+        this.trailCtx.clearRect(0, 0, this.trailCanvas.width, this.trailCanvas.height);
+        
+        // Draw trails based on unlocked tiers
+        this.trailConnections.forEach((connection, index) => {
+            if (this.game.progression.unlockedTiers.includes(connection.tier)) {
+                if (connection.special === 'to-portal') {
+                    // Draw trail to portal and the portal itself
+                    this.drawMapTrail(connection.from, connection.to, index);
+                    const portalPos = this.getElementCenter('portal');
+                    this.drawPortal(portalPos.x, portalPos.y);
+                } else {
+                    this.drawMapTrail(connection.from, connection.to, index);
+                }
+            }
+        });
+    }
+    
+    animateTrails() {
+        // Update portal animation values
+        this.portalRotation += 0.01; // Slow rotation
+        this.portalPulse += 0.05; // Pulsating effect
+        
+        // Redraw trails
+        this.drawProgressionTrails();
+        
+        // Continue animation loop
+        requestAnimationFrame(() => this.animateTrails());
+    }
+    
 showHeroes() {
     this.hideAllScreens();
     this.closeHeroInfo();
