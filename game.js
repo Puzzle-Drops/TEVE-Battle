@@ -2241,9 +2241,9 @@ returnToMap() {
     }
     
     // Clear arena state when returning to map
-    this.game.arenaMode = null;
-    this.game.arenaOpponents = null;
-    this.game.currentArenaTeam = 0;
+    this.arenaMode = null;
+    this.arenaOpponents = null;
+    this.currentArenaTeam = 0;
     
     // Clear any auto replay timer
     if (this.autoReplayTimer) {
