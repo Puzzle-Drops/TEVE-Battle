@@ -92,21 +92,27 @@ hideAllScreens() {
         this.portalRotation = 0;
         this.portalPulse = 0;
         
-        // Trail connections matching your dungeon order
+        // Trail connections with specific curve directions
         this.trailConnections = [
-            { from: 'heroesButton', to: 'dungeonOrb0', tier: 'Easy' },
-            { from: 'dungeonOrb0', to: 'dungeonOrb1', tier: 'Medium' },
-            { from: 'dungeonOrb1', to: 'dungeonOrb2', tier: 'Hard' },
-            { from: 'dungeonOrb2', to: 'dungeonOrb3', tier: 'Forsaken' },
-            { from: 'dungeonOrb3', to: 'dungeonOrb4', tier: 'Nightmare' },
-            { from: 'dungeonOrb4', to: 'dungeonOrb5', tier: 'Hell' },
-            { from: 'dungeonOrb5', to: 'dungeonOrb6', tier: 'Impossible' },
-            { from: 'dungeonOrb6', to: 'dungeonOrb7', tier: 'Mythical' },
-            { from: 'dungeonOrb7', to: 'dungeonOrb8', tier: 'Divine' },
+            { from: 'heroesButton', to: 'dungeonOrb0', tier: 'Easy', curve: 'south' },
+            { from: 'dungeonOrb0', to: 'dungeonOrb1', tier: 'Medium', curve: 'east' },
+            { from: 'dungeonOrb1', to: 'dungeonOrb2', tier: 'Hard', curve: 'east' },
+            { from: 'dungeonOrb2', to: 'dungeonOrb3', tier: 'Forsaken', curve: 'north' },
+            { from: 'dungeonOrb3', to: 'dungeonOrb4', tier: 'Nightmare', curve: 'west' },
+            { from: 'dungeonOrb4', to: 'dungeonOrb5', tier: 'Hell', curve: 'west' },
+            { from: 'dungeonOrb5', to: 'dungeonOrb6', tier: 'Impossible', curve: 'south' },
+            { from: 'dungeonOrb6', to: 'dungeonOrb7', tier: 'Mythical', curve: 'west' },
+            { from: 'dungeonOrb7', to: 'dungeonOrb8', tier: 'Divine', curve: 'west' },
             { from: 'dungeonOrb8', to: 'portal', tier: 'Ascended', special: 'to-portal' },
-            { from: 'offscreen', to: 'dungeonOrb9', tier: 'Ascended', special: 'from-portal' },
-            { from: 'dungeonOrb9', to: 'dungeonOrb10', tier: 'Transcendent' },
-            { from: 'dungeonOrb10', to: 'dungeonOrb11', tier: 'Twilight' }
+            { from: 'offscreen', to: 'dungeonOrb9', tier: 'Ascended', special: 'from-portal', curve: 'south' },
+            { from: 'dungeonOrb9', to: 'dungeonOrb10', tier: 'Transcendent', curve: 'east' },
+            { from: 'dungeonOrb10', to: 'dungeonOrb11', tier: 'Twilight', curve: 'east' }
+        ];
+        
+        // Additional feature connections
+        this.featureConnections = [
+            { from: 'heroesButton', to: 'arenaButton', feature: 'arena', curve: 'east' },
+            { from: 'arenaButton', to: 'stashesButton', feature: 'stash', curve: 'west' }
         ];
         
         // Start animation loop for portal
@@ -130,7 +136,7 @@ hideAllScreens() {
             const rect = orb8.getBoundingClientRect();
             return {
                 x: rect.left + rect.width / 2,
-                y: rect.top - 120 // Portal position above orb 8
+                y: rect.top - 100 // Portal position above orb 8 (moved down 20px from -120)
             };
         }
         if (elementClass === 'offscreen') {
@@ -149,7 +155,7 @@ hideAllScreens() {
         };
     }
     
-    drawMapTrail(from, to, index) {
+    drawMapTrail(from, to, curveDirection) {
         const start = this.getElementCenter(from);
         const end = this.getElementCenter(to);
         const ctx = this.trailCtx;
@@ -176,10 +182,25 @@ hideAllScreens() {
         ctx.beginPath();
         ctx.moveTo(start.x, start.y);
         
-        // Calculate curve direction - alternate left/right
-        const curveDirection = (index % 2 === 0) ? 1 : -1;
-        const midX = (start.x + end.x) / 2;
-        const midY = (start.y + end.y) / 2;
+        // Calculate control point based on specified curve direction
+        let controlX = (start.x + end.x) / 2;
+        let controlY = (start.y + end.y) / 2;
+        const curveAmount = 40; // Increased from 20 for more pronounced curves
+        
+        switch(curveDirection) {
+            case 'north':
+                controlY -= curveAmount;
+                break;
+            case 'south':
+                controlY += curveAmount;
+                break;
+            case 'east':
+                controlX += curveAmount;
+                break;
+            case 'west':
+                controlX -= curveAmount;
+                break;
+        }
         
         // Create gradient for portal fade effects
         if (isToPortal || isFromPortal) {
@@ -196,15 +217,8 @@ hideAllScreens() {
             ctx.strokeStyle = gradient;
         }
         
-        // Curve based on direction with alternating sway
-        if (Math.abs(start.x - end.x) > Math.abs(start.y - end.y)) {
-            // Horizontal movement - slight vertical curve
-            ctx.quadraticCurveTo(midX, midY - (20 * curveDirection), end.x, end.y);
-        } else {
-            // Vertical movement - slight horizontal curve
-            ctx.quadraticCurveTo(midX + (20 * curveDirection), midY, end.x, end.y);
-        }
-        
+        // Draw the curved path
+        ctx.quadraticCurveTo(controlX, controlY, end.x, end.y);
         ctx.stroke();
         
         // Draw a second pass with lower opacity for glow effect
@@ -280,25 +294,32 @@ hideAllScreens() {
         
         this.trailCtx.clearRect(0, 0, this.trailCanvas.width, this.trailCanvas.height);
         
-        // Draw trails based on unlocked tiers
-        this.trailConnections.forEach((connection, index) => {
+        // Draw dungeon trails based on unlocked tiers
+        this.trailConnections.forEach((connection) => {
             if (this.game.progression.unlockedTiers.includes(connection.tier)) {
                 if (connection.special === 'to-portal') {
                     // Draw trail to portal and the portal itself
-                    this.drawMapTrail(connection.from, connection.to, index);
+                    this.drawMapTrail(connection.from, connection.to, 'north');
                     const portalPos = this.getElementCenter('portal');
                     this.drawPortal(portalPos.x, portalPos.y);
                 } else {
-                    this.drawMapTrail(connection.from, connection.to, index);
+                    this.drawMapTrail(connection.from, connection.to, connection.curve);
                 }
+            }
+        });
+        
+        // Draw feature trails (arena and stash)
+        this.featureConnections.forEach((connection) => {
+            if (this.game.progression.unlockedFeatures[connection.feature]) {
+                this.drawMapTrail(connection.from, connection.to, connection.curve);
             }
         });
     }
     
     animateTrails() {
-        // Update portal animation values
-        this.portalRotation += 0.01; // Slow rotation
-        this.portalPulse += 0.05; // Pulsating effect
+        // Update portal animation values (much slower)
+        this.portalRotation += 0.002; // Slowed from 0.01
+        this.portalPulse += 0.02; // Slowed from 0.05
         
         // Redraw trails
         this.drawProgressionTrails();
