@@ -30,7 +30,8 @@ this.arenaOpponents = null; // array of Enemy objects
                 arena: false
             },
             unlockedTiers: ['Easy'],
-            completedDungeons: {} // {dungeonId: {completions: 0, bestTime: null}}
+            completedDungeons: {}, // {dungeonId: {completions: 0, bestTime: null}}
+            completedArenas: {} // {team_0: {completions: 0, bestTime: null, lowestDeaths: null}}
         };
         this.loadProgression(); // Load saved progression
 
@@ -335,6 +336,47 @@ this.arenaOpponents = null; // array of Enemy objects
         const previousDungeonId = tierDungeons[dungeonIndex - 1];
         return this.isDungeonCompleted(previousDungeonId);
     }
+
+    isArenaTeamCompleted(teamIndex) {
+    const teamId = `team_${teamIndex}`;
+    return this.progression.completedArenas[teamId] && 
+           this.progression.completedArenas[teamId].completions > 0;
+}
+
+markArenaTeamComplete(teamIndex, timeString, deathCount) {
+    const teamId = `team_${teamIndex}`;
+    
+    if (!this.progression.completedArenas[teamId]) {
+        this.progression.completedArenas[teamId] = {
+            completions: 0,
+            bestTime: null,
+            lowestDeaths: null
+        };
+    }
+    
+    const arenaData = this.progression.completedArenas[teamId];
+    arenaData.completions++;
+    
+    // Update best time if better
+    if (!arenaData.bestTime || timeString < arenaData.bestTime) {
+        arenaData.bestTime = timeString;
+    }
+    
+    // Update lowest deaths if better (or first completion)
+    if (arenaData.lowestDeaths === null || deathCount < arenaData.lowestDeaths) {
+        arenaData.lowestDeaths = deathCount;
+    }
+    
+    this.saveProgression();
+}
+
+isArenaTeamAccessible(teamIndex) {
+    // First team is always accessible
+    if (teamIndex === 0) return true;
+    
+    // Otherwise, check if previous team is completed
+    return this.isArenaTeamCompleted(teamIndex - 1);
+}
 
 enterDungeon(tierName, dungeonIndex) {
     // Clear any arena state when entering dungeon
@@ -2227,40 +2269,47 @@ returnToMap() {
 }
     
     applyBattleResults() {
-        if (!this.pendingBattleResults) return;
-        
-        const results = this.pendingBattleResults;
-        
-        // Apply gold changes - add to appropriate stashes
-        results.heroResults.forEach(result => {
-            if (result.survived || result.gold) {
-                const familyName = this.getClassFamily(result.hero.className, result.hero.classTier);
-                if (result.gold) {
-                    this.stashes[familyName].gold += result.gold;
-                }
+    if (!this.pendingBattleResults) return;
+    
+    const results = this.pendingBattleResults;
+    
+    // Apply gold changes - add to appropriate stashes
+    results.heroResults.forEach(result => {
+        if (result.survived || result.gold) {
+            const familyName = this.getClassFamily(result.hero.className, result.hero.classTier);
+            if (result.gold) {
+                this.stashes[familyName].gold += result.gold;
+            }
+            
+            // Add items to stash
+            if (result.item) {
+                this.stashes[familyName].items.push(result.item);
                 
-                // Add items to stash
-                if (result.item) {
-                    this.stashes[familyName].items.push(result.item);
-                    
-                    // Check for collection
-                    if (result.survived) {
-                        this.checkItemForCollection(result.item, result.hero.name, result.hero.displayClassName);
-                    }
+                // Check for collection
+                if (result.survived) {
+                    this.checkItemForCollection(result.item, result.hero.name, result.hero.displayClassName);
                 }
             }
-        });
-        
-        // Reset pending exp for all heroes (already applied in showBattleResults)
-        results.heroResults.forEach(result => {
-            result.hero.pendingExp = 0;
-        });
+        }
+    });
+    
+    // Reset pending exp for all heroes (already applied in showBattleResults)
+    results.heroResults.forEach(result => {
+        result.hero.pendingExp = 0;
+    });
 
-        // Mark dungeon as completed if victory
-        if (results.victory && this.currentDungeon) {
+    // Mark dungeon or arena as completed if victory
+    if (results.victory) {
+        if (this.currentBattleMode === 'arena' && this.arenaMode === 'spar') {
+            // Arena completion - count deaths
+            const deathCount = results.heroResults.filter(r => !r.survived).length;
+            this.markArenaTeamComplete(this.currentArenaTeam, results.time, deathCount);
+        } else if (this.currentDungeon) {
+            // Dungeon completion
             this.markDungeonComplete(this.currentDungeon.id, results.time);
         }
     }
+}
 
     addExpToHero(hero, expAmount) {
         if (hero.level >= 500) return; // Max level
