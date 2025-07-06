@@ -2313,18 +2313,18 @@ returnToMap() {
     });
 
     // Mark dungeon or arena as completed if victory
-    if (results.victory) {
-        console.log("Mode");
+if (results.victory) {
+            console.log("Mode");
         console.log(this.currentBattleMode);
-        if (this.currentBattleMode === 'arena' && this.arenaMode === 'spar') {
-            // Arena completion - count deaths
-            const deathCount = results.partyDeaths || 0;
-            this.markArenaTeamComplete(this.currentArenaTeam, results.time, deathCount);
-        } else if (this.currentDungeon) {
-            // Dungeon completion
-            this.markDungeonComplete(this.currentDungeon.id, results.time);
-        }
+    if (this.currentBattleMode === 'arena' && results.currentArenaTeam !== null) {
+        // Arena completion - count deaths
+        const deathCount = results.partyDeaths || 0;
+        this.markArenaTeamComplete(results.currentArenaTeam, results.time, deathCount);
+    } else if (this.currentDungeon) {
+        // Dungeon completion
+        this.markDungeonComplete(this.currentDungeon.id, results.time);
     }
+}
 }
 
     addExpToHero(hero, expAmount) {
