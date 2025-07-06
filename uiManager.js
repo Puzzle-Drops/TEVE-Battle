@@ -243,7 +243,23 @@ hideAllScreens() {
         ctx.translate(x, y);
         ctx.scale(pulseScale, pulseScale);
         
-        // Outer swirling glow
+        // Outer glow effect - multiple layers for intensity
+        ctx.shadowColor = '#d896ff';
+        ctx.shadowBlur = 30;
+        
+        // First glow layer
+        const glowGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 50);
+        glowGradient.addColorStop(0, 'rgba(216, 150, 255, 0.4)');
+        glowGradient.addColorStop(0.3, 'rgba(216, 150, 255, 0.3)');
+        glowGradient.addColorStop(0.6, 'rgba(138, 42, 138, 0.2)');
+        glowGradient.addColorStop(1, 'rgba(138, 42, 138, 0)');
+        
+        ctx.fillStyle = glowGradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, 50, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Main portal gradient
         const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 40);
         gradient.addColorStop(0, 'rgba(216, 150, 255, 0.8)');
         gradient.addColorStop(0.5, 'rgba(138, 42, 138, 0.6)');
@@ -260,13 +276,21 @@ hideAllScreens() {
         ctx.arc(0, 0, 20, 0, Math.PI * 2);
         ctx.fill();
         
-        // Portal edge
+        // Portal edge with enhanced glow
         ctx.strokeStyle = '#d896ff';
         ctx.lineWidth = 3;
         ctx.shadowColor = '#d896ff';
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 20;
         ctx.beginPath();
         ctx.arc(0, 0, 20, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        // Additional inner glow ring
+        ctx.strokeStyle = 'rgba(255, 200, 255, 0.6)';
+        ctx.lineWidth = 1;
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(0, 0, 22, 0, Math.PI * 2);
         ctx.stroke();
         
         // Rotating swirling effect
@@ -274,6 +298,7 @@ hideAllScreens() {
         ctx.strokeStyle = 'rgba(216, 150, 255, 0.4)';
         ctx.lineWidth = 2;
         ctx.setLineDash([]);
+        ctx.shadowBlur = 5;
         
         // Multiple swirl arms
         for (let i = 0; i < 3; i++) {
@@ -298,8 +323,8 @@ hideAllScreens() {
         this.trailConnections.forEach((connection) => {
             if (this.game.progression.unlockedTiers.includes(connection.tier)) {
                 if (connection.special === 'to-portal') {
-                    // Draw trail to portal and the portal itself
-                    this.drawMapTrail(connection.from, connection.to, 'north');
+                    // Draw trail to portal with west curve
+                    this.drawMapTrail(connection.from, connection.to, 'west');
                     const portalPos = this.getElementCenter('portal');
                     this.drawPortal(portalPos.x, portalPos.y);
                 } else {
@@ -316,10 +341,10 @@ hideAllScreens() {
         });
     }
     
-    animateTrails() {
-        // Update portal animation values (much slower)
-        this.portalRotation += 0.002; // Slowed from 0.01
-        this.portalPulse += 0.02; // Slowed from 0.05
+animateTrails() {
+        // Update portal animation values - both at the same slow speed
+        this.portalRotation += 0.003; // Slow rotation
+        this.portalPulse += 0.003; // Matching slow pulse
         
         // Redraw trails
         this.drawProgressionTrails();
