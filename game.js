@@ -1811,6 +1811,16 @@ if (this.arenaMode === 'spar') {
 }
     }
 
+closePartySelect() {
+    if (this.arenaMode === 'spar') {
+        // Exit arena mode
+        this.exitArenaMode();
+    } else {
+        // Return to dungeon select
+        this.uiManager.closeDungeonSelect();
+    }
+}
+    
     exitArenaMode() {
     // Reset party selection
     this.selectedParty = [null, null, null, null, null];
