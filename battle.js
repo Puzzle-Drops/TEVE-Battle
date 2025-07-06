@@ -628,6 +628,8 @@ initializeBattleStats() {
 trackBattleStat(unitName, stat, value) {
     if (this.battleStats && this.battleStats[unitName]) {
         this.battleStats[unitName][stat] += value;
+    } else {
+        console.warn(`Battle stat tracking failed for ${unitName} - ${stat}`);
     }
 }
     
@@ -937,12 +939,9 @@ createDungeonNameDisplay() {
         }
     }
     
-    processTurn() {
-        const unit = this.currentUnit;
-        
-        // Track turn taken
-this.trackBattleStat(unit.name, 'turnsTaken', 1);
-
+processTurn() {
+    const unit = this.currentUnit;
+    
         // Debug log all possible actions if debugging is enabled
         this.debugLogAllPossibleActions(unit);
         
@@ -1025,7 +1024,10 @@ this.trackBattleStat(unit.name, 'turnsTaken', 1);
         // Check if unit is taunted
         const tauntDebuff = unit.debuffs.find(d => d.name === 'Taunt' && d.tauntTarget);
         const isTaunted = tauntDebuff && tauntDebuff.tauntTarget && tauntDebuff.tauntTarget.isAlive;
-        
+
+// Track turn taken - unit made it past stun, silence, and taunt checks
+this.trackBattleStat(unit.name, 'turnsTaken', 1);
+    
         // Check if it's a player unit and not in auto mode and not taunted
         if (!unit.isEnemy && !this.autoMode && !isTaunted) {
             this.waitingForPlayer = true;
@@ -2394,12 +2396,13 @@ this.trackBattleStat(unit.name, 'deaths', 1);
     }
     
     // Check for kill effects from killer
-    if (killer && killer.isAlive) {
-        // Sniper Female passive - speed buff on kill
-        if (killer.onKillEffects) {
-            // Track kill
-this.trackBattleStat(killer.name, 'kills', 1);
-            killer.onKillEffects.forEach(effect => {
+if (killer && killer.isAlive) {
+    // Track kill for ANY killer
+    this.trackBattleStat(killer.name, 'kills', 1);
+    
+    // Sniper Female passive - speed buff on kill
+    if (killer.onKillEffects) {
+        killer.onKillEffects.forEach(effect => {
                 if (effect.type === 'buff') {
                     this.applyBuff(killer, effect.buffName, effect.duration, {});
                     this.log(`${killer.name} gains ${effect.buffName} from the kill!`);
@@ -2514,8 +2517,8 @@ this.trackBattleStat(killer.name, 'kills', 1);
         
         target.currentHp += actualHeal;
 
-        // Track healing done (use currentUnit as healer)
-if (this.currentUnit) {
+// Track healing done (use currentUnit as healer)
+if (this.currentUnit && this.currentUnit.isAlive) {
     this.trackBattleStat(this.currentUnit.name, 'healingDone', actualHeal);
 }
         
@@ -2586,10 +2589,10 @@ if (this.currentUnit) {
                 };
                 
                 target.buffs.push(shield);
-                this.log(`${target.name} gains a ${effects.shieldAmount} HP shield!`);
+this.log(`${target.name} gains a ${effects.shieldAmount} HP shield!`);
 
-                // Track shield application
-if (this.currentUnit) {
+// Track shield application  
+if (this.currentUnit && this.currentUnit.isAlive) {
     this.trackBattleStat(this.currentUnit.name, 'shieldingApplied', effects.shieldAmount);
 }
             }
@@ -2628,10 +2631,10 @@ if (this.currentUnit) {
             };
             
             target.buffs.push(buff);
-            this.log(`${target.name} gains ${buffName}!`);
+this.log(`${target.name} gains ${buffName}!`);
 
-            // Track buff application
-if (this.currentUnit) {
+// Track buff application
+if (this.currentUnit && this.currentUnit.isAlive) {
     this.trackBattleStat(this.currentUnit.name, 'buffsApplied', 1);
 }
         }
@@ -2701,10 +2704,10 @@ if (this.currentUnit) {
             };
             
             target.debuffs.push(debuff);
-            this.log(`${target.name} suffers from ${debuffName}!`);
+this.log(`${target.name} suffers from ${debuffName}!`);
 
-            // Track debuff application
-if (this.currentUnit) {
+// Track debuff application
+if (this.currentUnit && this.currentUnit.isAlive) {
     this.trackBattleStat(this.currentUnit.name, 'debuffsApplied', 1);
 }
             
