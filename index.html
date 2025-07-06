@@ -46,14 +46,18 @@
     <div class="splashText">Press any button to continue</div>
 </div>
 
-<!-- Main Menu (formerly dungeons screen) -->
+<!-- Main Menu -->
 <div id="mainMenuScreen">
     <div class="gameTitleSmall">TEVE</div>
     <div class="worldMap" id="worldMap">
     </div>
+
+    <!-- Trail System Canvas -->
+    <canvas id="progressionTrailCanvas"></canvas>
     
     <!-- Menu Navigation Buttons -->
     <div class="menuNavigation">
+	    
         <!-- Stashes Button (top middle) -->
 <div class="menuNavButton stashesButton">
     <button class="menuNavPlaceholder" onclick="game.uiManager.showStash()">
