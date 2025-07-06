@@ -5,6 +5,9 @@ class Arena {
     }
     
 enterSparMode() {
+    // Reset party selection first
+    this.game.selectedParty = [null, null, null, null, null];
+    
     // Set arena mode
     this.game.arenaMode = 'spar';
     
