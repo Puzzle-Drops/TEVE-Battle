@@ -1803,11 +1803,7 @@ continueFromArena() {
         
         // Return to appropriate screen based on mode
 if (this.arenaMode === 'spar') {
-    // Clear arena state and return to arena
-    this.arenaMode = null;
-    this.arenaOpponents = null;
-    this.currentArenaTeam = 0;
-    this.uiManager.showArena();
+    this.exitArenaMode();
 } else if (this.currentDungeon) {
     this.uiManager.showPartySelect();
 } else {
@@ -1815,6 +1811,17 @@ if (this.arenaMode === 'spar') {
 }
     }
 
+    exitArenaMode() {
+    // Reset party selection
+    this.selectedParty = [null, null, null, null, null];
+    // Clear arena state
+    this.arenaMode = null;
+    this.arenaOpponents = null;
+    this.currentArenaTeam = 0;
+    // Return to arena home
+    this.uiManager.showArena();
+}
+    
     selectHero(index) {
     this.uiManager.selectedHero = index;
     const hero = this.heroes[index];
@@ -2191,11 +2198,8 @@ if (shouldAutoReplay) {
     }
     // Return to appropriate screen based on battle mode
     if (this.currentBattleMode === 'arena') {
-        // Clear arena state and return to arena
-        this.arenaMode = null;
-        this.arenaOpponents = null;
-        this.currentArenaTeam = 0;
-        this.uiManager.showArena();
+// Stay in party select for arena
+        this.uiManager.showPartySelect('arena');
     } else {
         // Return to party select for dungeons
         this.uiManager.showPartySelect();
@@ -2250,11 +2254,6 @@ returnToMap() {
     if (exitButton) {
         exitButton.style.display = '';
     }
-    
-    // Clear arena state when returning to map
-    this.arenaMode = null;
-    this.arenaOpponents = null;
-    this.currentArenaTeam = 0;
     
     // Clear any auto replay timer
     if (this.autoReplayTimer) {
