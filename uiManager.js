@@ -650,10 +650,31 @@ if (mode === 'arena') {
     if (battlePreview) {
         battlePreview.style.display = '';  // Explicitly show it
     }
-} else {    
+} else {
     // Show all elements for dungeon mode
     const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
     if (recordsSection) recordsSection.style.display = '';
+    
+    // Reset records content to dungeon format (with book emoji)
+    const recordsContent = document.getElementById('recordsContent');
+    if (recordsContent) {
+        recordsContent.innerHTML = `
+            <div class="rewardStats">
+                <div class="rewardStat">
+                    <span class="recordIcon">⏱️</span>
+                    <span id="dungeonBestTime">--:--</span>
+                </div>
+                <div class="rewardStat">
+                    <span class="recordIcon">🏆</span>
+                    <span id="dungeonCompletions">0</span>
+                </div>
+                <div class="rewardStat">
+                    <span class="recordIcon">📖</span>
+                    <span id="dungeonCollectionPercent">0%</span>
+                </div>
+            </div>
+        `;
+    }
     
     const waveNav = document.getElementById('waveNavigation');
     if (waveNav) waveNav.style.display = '';
