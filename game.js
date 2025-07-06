@@ -307,10 +307,10 @@ this.arenaOpponents = null; // array of Enemy objects
         
         // Unlock features based on specific dungeons
         if (completedDungeonId === 'satyrs_glade') {
-            this.progression.unlockedFeatures.stash = true;
+            this.progression.unlockedFeatures.arena = true;
         }
         if (completedDungeonId === 'icy_highland') {
-            this.progression.unlockedFeatures.arena = true;
+            this.progression.unlockedFeatures.stash = true;
         }
 
         if (this.uiManager) {
