@@ -10,7 +10,18 @@ enterSparMode() {
     
     // Load arena teams from data
     this.game.arenaTeams = arenaData ? arenaData.teams : [];
+    
+    // Start at first accessible team (should always be 0, but just in case)
     this.game.currentArenaTeam = 0;
+    while (this.game.currentArenaTeam < this.game.arenaTeams.length && 
+           !this.game.isArenaTeamAccessible(this.game.currentArenaTeam)) {
+        this.game.currentArenaTeam++;
+    }
+    
+    // If no accessible teams, default to 0
+    if (this.game.currentArenaTeam >= this.game.arenaTeams.length) {
+        this.game.currentArenaTeam = 0;
+    }
     
     // Get selected party heroes (don't auto-select like dungeons)
     let partyHeroes = [];
