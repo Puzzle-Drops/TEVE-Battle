@@ -617,7 +617,7 @@
                         <button class="startBattleBtn" id="startBattleBtn" disabled onclick="game.startBattle()">
                             ⚔️ Start
                         </button>
-                        <button class="cancelBtn" onclick="game.uiManager.closeDungeonSelect()">
+                        <button class="cancelBtn" onclick="game.closePartySelect()">
                             Cancel
                         </button>
                     </div>
@@ -968,14 +968,7 @@ switch(game.currentScreen) {
         e.preventDefault();
         break;
     case 'partySelectScreen':
-    if (game.arenaMode === 'spar') {
-        // Go back to arena screen and clear arena mode
-        game.arenaMode = null;
-        game.arenaOpponents = null;
-        game.uiManager.showArena();
-    } else {
-        game.uiManager.closeDungeonSelect();
-    }
+        game.closePartySelect();
     e.preventDefault();
     break;
     case 'stashScreen':
