@@ -5505,8 +5505,15 @@ body {
 .arenaScreen {
     display: none;
     padding: 20px;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     overflow-y: auto;
+    background-image: url('https://puzzle-drops.github.io/TEVE/img/fields/arena.png');
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-color: #0a0f1a;
+    z-index: 0;
 }
 
 .arenaTitle {
