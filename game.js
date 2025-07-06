@@ -312,6 +312,11 @@ this.arenaOpponents = null; // array of Enemy objects
         if (completedDungeonId === 'icy_highland') {
             this.progression.unlockedFeatures.arena = true;
         }
+
+        if (this.uiManager) {
+            this.uiManager.drawProgressionTrails();
+        }
+        
     }
 
     isDungeonAccessible(dungeonId) {
