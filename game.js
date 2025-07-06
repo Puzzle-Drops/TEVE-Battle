@@ -2300,6 +2300,8 @@ returnToMap() {
 
     // Mark dungeon or arena as completed if victory
     if (results.victory) {
+        console.log("Mode");
+        console.log(this.currentBattleMode);
         if (this.currentBattleMode === 'arena' && this.arenaMode === 'spar') {
             // Arena completion - count deaths
             const deathCount = results.partyDeaths || 0;
