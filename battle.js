@@ -320,6 +320,25 @@ this.debugAI = true; // AI decision making shown in console
         // Force complete UI update
         this.updateUI();
 
+        // Initialize battle stats for new wave enemies
+this.enemies.forEach(enemy => {
+    if (!this.battleStats[enemy.name]) {
+        this.battleStats[enemy.name] = {
+            kills: 0,
+            deaths: 0,
+            turnsTaken: 0,
+            damageDealt: 0,
+            damageTaken: 0,
+            healingDone: 0,
+            shieldingApplied: 0,
+            buffsApplied: 0,
+            debuffsApplied: 0,
+            buffsDispelled: 0,
+            debuffsCleansed: 0
+        };
+    }
+});
+        
         return true;
     }
 
@@ -2381,9 +2400,12 @@ showDodgeAnimation(target) {
 
 
     handleUnitDeath(unit, killer = null) {
+    // Prevent double death handling
+    if (unit.isDead) return;
+    
     unit.isDead = true;
-        // Track death
-this.trackBattleStat(unit.name, 'deaths', 1);
+    // Track death
+    this.trackBattleStat(unit.name, 'deaths', 1);
     
     // Hide active circle on death
     const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
