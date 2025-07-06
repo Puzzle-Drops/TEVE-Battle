@@ -1185,12 +1185,23 @@ if (game.currentScreen === 'heroesScreen' && game.uiManager.currentTab === 'skil
             }
         });
 
+	    // Add resize handler for trail canvas
+window.addEventListener('resize', () => {
+    if (game && game.uiManager) {
+        game.uiManager.resizeTrailCanvas();
+    }
+});
+
+	    
         // Disable right-click context menu globally
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             return false;
         });
     });
+
+	
+	
 </script>
 </body>
 </html>
