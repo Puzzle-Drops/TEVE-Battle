@@ -1618,11 +1618,18 @@ if (this.autoBattle) {
 }
 
 rematchArena() {
+    // Close results popup
+    document.getElementById('arenaResultsPopup').style.display = 'none';
+    
+    // Apply battle results before rematch
+    if (this.pendingBattleResults) {
+        this.applyBattleResults();
+        this.pendingBattleResults = null;
+    }
+    
     // Restore last compositions
     this.selectedParty = [...this.lastArenaParty];
     this.arenaOpponents = this.lastArenaOpponents;
-    // Close results popup
-    document.getElementById('arenaResultsPopup').style.display = 'none';
     // Return to party select (arena mode)
     this.uiManager.showPartySelect('arena');
 }
@@ -1630,6 +1637,13 @@ rematchArena() {
 continueFromArena() {
     // Close results popup
     document.getElementById('arenaResultsPopup').style.display = 'none';
+    
+    // Apply battle results (this was missing!)
+    if (this.pendingBattleResults) {
+        this.applyBattleResults();
+        this.pendingBattleResults = null;
+    }
+    
     // Clear arena state
     this.arenaMode = null;
     this.arenaOpponents = null;
