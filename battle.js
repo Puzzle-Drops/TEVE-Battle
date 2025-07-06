@@ -3117,6 +3117,7 @@ this.game.pendingBattleResults = {
     dungeonBonusExp: victory ? rewards.exp : 0,
     battleStats: this.battleStats, // Add this line here
     partyDeaths: partyDeaths, // Add calculated party deaths
+    currentArenaTeam: this.mode === 'arena' ? this.game.currentArenaTeam : null, // Add this line
     // In endBattle method, when creating heroResults:
     heroResults: this.party.map((unit, index) => {
             if (!unit) return null;
