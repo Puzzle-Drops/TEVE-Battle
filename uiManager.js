@@ -2156,37 +2156,37 @@ const createStatRow = (unit, stats) => {
             </span>
         </div>
         <div class="arenaStat arenaStatStacked">
-            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Damage dealt')" onmouseout="game.uiManager.hideArenaStatTooltip()">
-                <span class="arenaStatIcon">↑</span> <span class="arenaStatValue">${unitStats.damageDealt}</span>
-            </div>
-            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Damage taken')" onmouseout="game.uiManager.hideArenaStatTooltip()">
-                <span class="arenaStatIcon">↓</span> <span class="arenaStatValue">${unitStats.damageTaken}</span>
-            </div>
-        </div>
-        <div class="arenaStat arenaStatStacked">
-            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Healing done')" onmouseout="game.uiManager.hideArenaStatTooltip()">
-                <span class="arenaStatIcon">❤️</span> <span class="arenaStatValue">${unitStats.healingDone}</span>
-            </div>
-            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Shielding applied')" onmouseout="game.uiManager.hideArenaStatTooltip()">
-                <span class="arenaStatIcon">🛡️</span> <span class="arenaStatValue">${unitStats.shieldingApplied}</span>
-            </div>
-        </div>
-        <div class="arenaStat arenaStatStacked">
-            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Buffs applied')" onmouseout="game.uiManager.hideArenaStatTooltip()">
-                <span class="arenaStatIcon">↑</span> <span class="arenaStatValue">${unitStats.buffsApplied}</span>
-            </div>
-            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Buffs dispelled')" onmouseout="game.uiManager.hideArenaStatTooltip()">
-                <span class="arenaStatIcon">✕</span> <span class="arenaStatValue">${unitStats.buffsDispelled}</span>
-            </div>
-        </div>
-        <div class="arenaStat arenaStatStacked">
-            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Debuffs applied')" onmouseout="game.uiManager.hideArenaStatTooltip()">
-                <span class="arenaStatIcon">↓</span> <span class="arenaStatValue">${unitStats.debuffsApplied}</span>
-            </div>
-            <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Debuffs cleansed')" onmouseout="game.uiManager.hideArenaStatTooltip()">
-                <span class="arenaStatIcon">✓</span> <span class="arenaStatValue">${unitStats.debuffsCleansed}</span>
-            </div>
-        </div>
+    <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Damage dealt')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+        <span class="arenaStatIcon">💥</span> <span class="arenaStatValue">${unitStats.damageDealt}</span>
+    </div>
+    <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Damage taken')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+        <span class="arenaStatIcon">💢</span> <span class="arenaStatValue">${unitStats.damageTaken}</span>
+    </div>
+</div>
+<div class="arenaStat arenaStatStacked">
+    <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Healing done')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+        <span class="arenaStatIcon">💚</span> <span class="arenaStatValue">${unitStats.healingDone}</span>
+    </div>
+    <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Shielding applied')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+        <span class="arenaStatIcon">🛡️</span> <span class="arenaStatValue">${unitStats.shieldingApplied}</span>
+    </div>
+</div>
+<div class="arenaStat arenaStatStacked">
+    <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Buffs applied')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+        <span class="arenaStatIcon">🔆</span> <span class="arenaStatValue">${unitStats.buffsApplied}</span>
+    </div>
+    <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Buffs dispelled')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+        <span class="arenaStatIcon">🧹</span> <span class="arenaStatValue">${unitStats.buffsDispelled}</span>
+    </div>
+</div>
+<div class="arenaStat arenaStatStacked">
+    <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Debuffs applied')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+        <span class="arenaStatIcon">🕸️</span> <span class="arenaStatValue">${unitStats.debuffsApplied}</span>
+    </div>
+    <div class="arenaStatLine" onmouseover="game.uiManager.showArenaStatTooltip(event, 'Debuffs cleansed')" onmouseout="game.uiManager.hideArenaStatTooltip()">
+        <span class="arenaStatIcon">🧼</span> <span class="arenaStatValue">${unitStats.debuffsCleansed}</span>
+    </div>
+</div>
     `;
 };
     
