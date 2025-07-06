@@ -610,9 +610,33 @@ showPartySelect(mode = 'dungeon') {
 // Hide/show elements based on mode
 if (mode === 'arena') {
     
-    // Hide dungeon-specific elements
+    // Show records section for arena (different from dungeons)
     const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
-    if (recordsSection) recordsSection.style.display = 'none';
+    if (recordsSection) recordsSection.style.display = '';
+    
+    // Update the records content for arena format
+    const recordsContent = document.getElementById('recordsContent');
+    if (recordsContent) {
+        recordsContent.innerHTML = `
+            <div class="rewardStats">
+                <div class="rewardStat">
+                    <span class="recordIcon">⏱️</span>
+                    <span id="dungeonBestTime">--:--</span>
+                </div>
+                <div class="rewardStat">
+                    <span class="recordIcon">🏆</span>
+                    <span id="dungeonCompletions">0</span>
+                </div>
+                <div class="rewardStat">
+                    <span class="recordIcon">💀</span>
+                    <span id="dungeonCollectionPercent">-- deaths</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Update records display for current arena team
+    this.updateArenaRecordsDisplay();
     
     // Keep wave navigation visible for arena team selection
     const waveNav = document.getElementById('waveNavigation');
@@ -933,12 +957,38 @@ updateArenaEnemyFormation() {
         const waveText = waveNav.querySelector('.waveText');
         if (waveText) {
             const currentTeam = this.game.arenaTeams[this.game.currentArenaTeam];
-            waveText.textContent = currentTeam ? currentTeam.name : 'No Team';
+            const teamName = currentTeam ? currentTeam.name : 'No Team';
+            const isAccessible = this.game.isArenaTeamAccessible(this.game.currentArenaTeam);
+            
+            // Show lock icon if not accessible
+            if (!isAccessible) {
+                waveText.innerHTML = `🔒 ${teamName}`;
+            } else {
+                waveText.textContent = teamName;
+            }
+        }
+        
+        // Disable/enable navigation arrows
+        const prevArrow = waveNav.querySelector('.waveArrow:first-child');
+        const nextArrow = waveNav.querySelector('.waveArrow:last-child');
+        
+        if (prevArrow) {
+            prevArrow.disabled = this.game.currentArenaTeam === 0;
+            prevArrow.style.opacity = prevArrow.disabled ? '0.5' : '1';
+            prevArrow.style.cursor = prevArrow.disabled ? 'default' : 'pointer';
+        }
+        
+        if (nextArrow) {
+            const canGoNext = this.game.currentArenaTeam < this.game.arenaTeams.length - 1 && 
+                            this.game.isArenaTeamAccessible(this.game.currentArenaTeam + 1);
+            nextArrow.disabled = !canGoNext;
+            nextArrow.style.opacity = nextArrow.disabled ? '0.5' : '1';
+            nextArrow.style.cursor = nextArrow.disabled ? 'default' : 'pointer';
         }
     }
     
-    // Show arena opponents if they exist
-    if (this.game.arenaOpponents) {
+    // Only show opponents if team is accessible
+    if (this.game.isArenaTeamAccessible(this.game.currentArenaTeam) && this.game.arenaOpponents) {
         this.game.arenaOpponents.forEach((enemy, index) => {
             if (index < 5) {
                 const slot = slots[index];
@@ -980,6 +1030,17 @@ updateArenaEnemyFormation() {
                 });
             }
         });
+    } else {
+        // Show locked state
+        const centerSlot = slots[2]; // Middle slot
+        if (centerSlot) {
+            centerSlot.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <div style="font-size: 48px;">🔒</div>
+                    <div style="color: #6a9aaa; font-size: 12px;">Beat previous team to unlock</div>
+                </div>
+            `;
+        }
     }
 }
 
@@ -1183,6 +1244,39 @@ updateRecordsDisplay() {
     const collectionStats = this.game.getDungeonCollectionStats(dungeonId);
     const collectionElement = document.getElementById('dungeonCollectionPercent');
     collectionElement.textContent = `${collectionStats.percentage}%`;
+}
+
+    updateArenaRecordsDisplay() {
+    if (this.game.arenaMode !== 'spar' || this.game.currentArenaTeam === undefined) return;
+    
+    const teamId = `team_${this.game.currentArenaTeam}`;
+    const arenaProgress = this.game.progression.completedArenas[teamId] || { 
+        completions: 0, 
+        bestTime: null, 
+        lowestDeaths: null 
+    };
+    
+    // Update best time
+    const bestTimeElement = document.getElementById('dungeonBestTime');
+    if (bestTimeElement) {
+        bestTimeElement.textContent = arenaProgress.bestTime || '--:--';
+    }
+    
+    // Update completions
+    const completionsElement = document.getElementById('dungeonCompletions');
+    if (completionsElement) {
+        completionsElement.textContent = `${arenaProgress.completions} completed`;
+    }
+    
+    // Update deaths record (using collection percent element)
+    const deathsElement = document.getElementById('dungeonCollectionPercent');
+    if (deathsElement) {
+        if (arenaProgress.lowestDeaths !== null) {
+            deathsElement.textContent = `${arenaProgress.lowestDeaths} deaths`;
+        } else {
+            deathsElement.textContent = '-- deaths';
+        }
+    }
 }
 
     updateHeroList() {
@@ -2967,24 +3061,37 @@ hideArenaStatTooltip() {
         // Navigate arena teams
         if (!this.game.arenaTeams || this.game.arenaTeams.length === 0) return;
         
+        const currentTeam = this.game.currentArenaTeam;
+        let newTeam = currentTeam;
+        
         if (direction === 'prev') {
-            this.game.currentArenaTeam--;
-            if (this.game.currentArenaTeam < 0) {
-                this.game.currentArenaTeam = this.game.arenaTeams.length - 1;
+            newTeam = currentTeam - 1;
+            if (newTeam < 0) {
+                newTeam = 0; // Can't go below first team
             }
         } else {
-            this.game.currentArenaTeam++;
-            if (this.game.currentArenaTeam >= this.game.arenaTeams.length) {
-                this.game.currentArenaTeam = 0;
+            newTeam = currentTeam + 1;
+            if (newTeam >= this.game.arenaTeams.length) {
+                newTeam = this.game.arenaTeams.length - 1;
+            }
+            
+            // Check if new team is accessible
+            if (!this.game.isArenaTeamAccessible(newTeam)) {
+                return; // Don't navigate to locked team
             }
         }
         
-        // Generate new opponents
-        const currentTeam = this.game.arenaTeams[this.game.currentArenaTeam];
-        this.game.arenaOpponents = this.game.arena.generateArenaTeamOpponents(currentTeam);
-        
-        // Update display
-        this.updateArenaEnemyFormation();
+        if (newTeam !== currentTeam) {
+            this.game.currentArenaTeam = newTeam;
+            
+            // Generate new opponents
+            const currentTeamData = this.game.arenaTeams[this.game.currentArenaTeam];
+            this.game.arenaOpponents = this.game.arena.generateArenaTeamOpponents(currentTeamData);
+            
+            // Update display
+            this.updateArenaEnemyFormation();
+            this.updateArenaRecordsDisplay();
+        }
     } else {
         // Normal dungeon wave navigation
         if (!this.game.dungeonWaves || this.game.dungeonWaves.length === 0) return;
