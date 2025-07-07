@@ -457,18 +457,19 @@ renderHeroTrees(container, svg, gender) {
     </div>
 `;
     } else {
-        // Enemy portrait without backdrop
-        mainContent += `
-            <div style="width: 256px; height: 256px; 
-                        background: rgba(0, 0, 0, 0.3);
-                        border: 2px solid #2a6a8a; border-radius: 8px;
-                        display: flex; align-items: center; justify-content: center;">
-                <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${unitId}.png"
-                     style="width: 90%; height: 90%; image-rendering: pixelated;"
-                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 256 256\\'><rect fill=\\'%23666\\' width=\\'256\\' height=\\'256\\'/><text x=\\'128\\' y=\\'128\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${unitData.name}</text></svg>'">
-            </div>
-        `;
-    }
+    // Enemy portrait with universal enemy backdrop
+    mainContent += `
+        <div style="width: 256px; height: 256px; 
+                    background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/enemy_backdrop.png');
+                    background-size: cover; background-position: center;
+                    border: 2px solid #2a6a8a; border-radius: 8px;
+                    display: flex; align-items: center; justify-content: center;">
+            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${unitId}.png"
+                 style="width: 90%; height: 90%; image-rendering: pixelated;"
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 256 256\\'><rect fill=\\'%23666\\' width=\\'256\\' height=\\'256\\'/><text x=\\'128\\' y=\\'128\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${unitData.name}</text></svg>'">
+        </div>
+    `;
+}
     
     mainContent += `</div>`;
 
