@@ -214,7 +214,7 @@ renderHeroTrees(container, svg, gender) {
         const villagerY = startY;
         const villagerDiv = this.createHeroThumb(villagerClass, villagerData, villagerX, villagerY);
         container.appendChild(villagerDiv);
-        positions['villager'] = { x: villagerX + 60, y: villagerY + 60 }; // Store without gender suffix for parent lookup
+        positions['villager'] = { x: villagerX + 76, y: villagerY + 76 }; // Store without gender suffix for parent lookup
     }
     
     // Define class layout with specific positions
@@ -307,7 +307,7 @@ renderHeroTrees(container, svg, gender) {
             container.appendChild(div);
             
             // Store position with simple name for parent lookup
-            positions[classInfo.name] = { x: x + 60, y: y + 60 };
+            positions[classInfo.name] = { x: x + 76, y: y + 76 };
             
             // Draw path from parent
             if (positions[classInfo.parent]) {
@@ -617,7 +617,7 @@ renderHeroTrees(container, svg, gender) {
     if (unitData.spells && unitData.spells.length > 0) {
         mainContent += `
             <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px;">
-                <h3 style="color: #4dd0e1; margin-top: 0; margin-bottom: 20px;">Abilities</h3>
+                <h3 style="color: #4dd0e1; margin-top: 0; margin-bottom: 20px;">Abilities | Level 1/2/3/4/5</h3>
         `;
         
         unitData.spells.forEach(spellId => {
