@@ -213,7 +213,7 @@ showHeroClasses(gender) {
         const villagerY = startY;
         const villagerDiv = this.createHeroThumb(villagerClass, villagerData, villagerX, villagerY);
         container.appendChild(villagerDiv);
-        positions[villagerClass] = { x: villagerX + 48, y: villagerY + 48 };
+        positions[villagerClass] = { x: villagerX + 60, y: villagerY + 60 };
     }
     
     // Define class layout with specific positions
@@ -372,7 +372,7 @@ processFamilyPaths(container, svg, family, positions, startCol, startX, startY, 
             position: absolute;
             left: ${x}px;
             top: ${y}px;
-            width: 96px;
+            width: 120px;
             height: 120px;
             cursor: pointer;
             z-index: 2;
@@ -567,16 +567,15 @@ if (window.unitData && window.unitData.classes) {
             }
 
             // Promotes to
-            if (unitData.promotesTo && unitData.promotesTo.length > 0) {
+if (unitData.promotesTo && unitData.promotesTo.length > 0 && window.unitData && window.unitData.classes) {
                 content += `
                     <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; margin-bottom: 20px;">
                         <h3 style="color: #4dd0e1; margin-top: 0;">Promotes To</h3>
                         <div style="display: flex; gap: 15px;">
                 `;
                 unitData.promotesTo.forEach(childId => {
-                    const childData = unitData.classes[childId];
-                    if (childData) {
-                        content += `
+    const childData = window.unitData.classes[childId];
+    if (childData) {        content += `
                             <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${childId}', unitData.classes['${childId}'], 'hero')">
                                 <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${childId}_portrait.png"
                                      style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
