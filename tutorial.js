@@ -17,37 +17,43 @@ class Tutorial {
     }
 
     // NPC Dialogue System
-    npcDialogue(npcName, dialogueText, blur = false) {
-        // Clear any existing dialogue
-        this.clearDialogue();
-        
-        // Convert single string to array for consistency
-        this.currentDialogueQueue = Array.isArray(dialogueText) ? dialogueText : [dialogueText];
-        this.currentDialogueIndex = 0;
-        
-        // Show overlay with optional blur
-        const overlay = document.getElementById('npcDialogueOverlay');
-        overlay.style.display = 'block';
-        if (blur) {
-            overlay.classList.add('blurred');
-        } else {
-            overlay.classList.remove('blurred');
-        }
-        
-        // Set NPC portrait
-        const validNPCs = ['skypper', 'bob', 'arnold', 'squeaky'];
-        const npcNameLower = npcName.toLowerCase();
-        if (validNPCs.includes(npcNameLower)) {
-            const portraitImg = document.getElementById('npcPortraitImage');
-            portraitImg.src = `https://puzzle-drops.github.io/TEVE/img/npc/${npcNameLower}_dialogue.png`;
-        }
-        
-        // Add click handler
-        overlay.addEventListener('click', this.handleDialogueClick);
-        
-        // Start first dialogue
-        this.showNextDialogue();
+npcDialogue(npcName, dialogueText, blur = false) {
+    // Clear any existing dialogue
+    this.clearDialogue();
+    
+    // Convert single string to array for consistency
+    let dialogueArray = Array.isArray(dialogueText) ? dialogueText : [dialogueText];
+    
+    // Format NPC name properly (capitalize first letter)
+    const formattedNPCName = npcName.charAt(0).toUpperCase() + npcName.slice(1).toLowerCase();
+    
+    // Prepend NPC name to each dialogue line
+    this.currentDialogueQueue = dialogueArray.map(text => `${formattedNPCName}: ${text}`);
+    this.currentDialogueIndex = 0;
+    
+    // Show overlay with optional blur
+    const overlay = document.getElementById('npcDialogueOverlay');
+    overlay.style.display = 'block';
+    if (blur) {
+        overlay.classList.add('blurred');
+    } else {
+        overlay.classList.remove('blurred');
     }
+    
+    // Set NPC portrait
+    const validNPCs = ['skypper', 'bob', 'arnold', 'squeaky'];
+    const npcNameLower = npcName.toLowerCase();
+    if (validNPCs.includes(npcNameLower)) {
+        const portraitImg = document.getElementById('npcPortraitImage');
+        portraitImg.src = `https://puzzle-drops.github.io/TEVE/img/npc/${npcNameLower}_dialogue.png`;
+    }
+    
+    // Add click handler
+    overlay.addEventListener('click', this.handleDialogueClick);
+    
+    // Start first dialogue
+    this.showNextDialogue();
+}
     
     showNextDialogue() {
         if (this.currentDialogueIndex >= this.currentDialogueQueue.length) {
@@ -109,7 +115,7 @@ class Tutorial {
             this.continueTimeout = setTimeout(() => {
                 this.canContinue = true;
                 document.getElementById('npcDialogueContinue').style.display = 'block';
-            }, 2000);
+            }, 1000);
         } else if (this.canContinue) {
             this.showNextDialogue();
         }
@@ -146,7 +152,7 @@ testDialogueArnold() {
         "I've been waiting for someone like you to arrive.",
         "The City of New Lights needs heroes now more than ever.",
         "Are you ready to begin your journey?"
-    ], true);
+    ], false);
 }
 
 // Test function for Bob
@@ -156,7 +162,7 @@ testDialogueBob() {
         "This is where the bravest warriors test their mettle.",
         "You'll find challenges here that push you to your limits.",
         "Think you have what it takes to become a champion?"
-    ], true);
+    ], false);
 }
 
 // Test function for Squeaky
@@ -166,7 +172,7 @@ testDialogueSqueaky() {
         "I'm Squeaky, the city's... um... information broker.",
         "I hear things. Lots of things. Tiny mouse ears, you know?",
         "If you need to know something, just ask! *squeak*"
-    ], true);
+    ], false);
 }
 
 // Test function for Skypper
@@ -176,7 +182,7 @@ testDialogueSkypper() {
         "I have watched over these lands for countless years.",
         "Ancient secrets and forgotten powers lie dormant here.",
         "Perhaps you are the one destined to awaken them..."
-    ], true);
+    ], false);
 }
 
     showNewHeroCreation() {
