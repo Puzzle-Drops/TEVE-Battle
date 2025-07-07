@@ -23,7 +23,7 @@ class Tutorial {
             justify-content: center;
         `;
 
-        // Create select container
+        // Create villager select container
         const dialog = document.createElement('div');
         dialog.id = 'newHeroDialog';
         dialog.style.cssText = `
@@ -35,7 +35,7 @@ class Tutorial {
             box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
         `;
 
-// Build dialog content
+// Build villager select content
         dialog.innerHTML = `
             <h2 style="color: #4dd0e1; text-align: center; margin-bottom: 20px; font-size: 28px;">Create New Hero</h2>
             
