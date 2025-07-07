@@ -445,187 +445,215 @@ processFamilyPaths(container, svg, family, positions, startCol, startX, startY, 
     }
 
     showUnitDetails(unitId, unitData, unitType) {
-        // Create popup overlay
-        const popup = document.createElement('div');
-        popup.id = 'unitDetailsPopup';
-        popup.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(10, 25, 41, 0.98);
-            border: 2px solid #2a6a8a;
-            border-radius: 8px;
-            padding: 30px;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            z-index: 10001;
-            box-shadow: 0 0 50px rgba(42, 106, 138, 0.8);
-        `;
+    // Create popup overlay
+    const popup = document.createElement('div');
+    popup.id = 'unitDetailsPopup';
+    popup.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(10, 25, 41, 0.98);
+        z-index: 10001;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    `;
 
-        let content = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="color: #4dd0e1; margin: 0; font-size: 24px;">${unitData.name}</h2>
-                <button onclick="document.getElementById('unitDetailsPopup').remove()" style="
-                    background: #cc0000;
-                    color: white;
-                    border: none;
-                    padding: 5px 15px;
-                    font-size: 18px;
-                    cursor: pointer;
-                    border-radius: 4px;
-                ">✕</button>
+    // Header with close button
+    let headerContent = `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; border-bottom: 2px solid #2a6a8a;">
+            <h2 style="color: #4dd0e1; margin: 0; font-size: 28px;">
+                ${unitData.name}${unitType === 'hero' ? ` <span class="gender-${unitId.includes('_male') ? 'male' : 'female'}">${unitId.includes('_male') ? '♂' : '♀'}</span>` : ''}
+                ${unitType === 'hero' ? ` <span style="color: #ffd700;">Tier ${unitData.tier + 1}</span>` : ''}
+            </h2>
+            <button onclick="document.getElementById('unitDetailsPopup').remove()" style="
+                background: #cc0000;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                font-size: 18px;
+                cursor: pointer;
+                border-radius: 4px;
+            ">✕</button>
+        </div>
+    `;
+
+    // Main content area with 3 columns
+    let mainContent = `<div style="flex: 1; display: flex; padding: 30px; gap: 30px; align-items: flex-start;">`;
+
+    // Column 1: Portrait with backdrop
+    mainContent += `<div style="flex: 0 0 300px; display: flex; align-items: center; justify-content: center;">`;
+    
+    if (unitType === 'hero') {
+        // Get class family for backdrop
+        const familyName = this.game.getClassFamily(unitId.replace(/_male$|_female$/, ''), unitData.tier);
+        const backdropName = familyName.toLowerCase().replace(/ /g, '_');
+        
+        mainContent += `
+            <div style="position: relative; width: 256px; height: 256px; 
+                        background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_backdrop.png');
+                        background-size: cover; background-position: center;
+                        border: 2px solid #2a6a8a; border-radius: 8px;
+                        display: flex; align-items: center; justify-content: center;">
+                <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unitId}_battle.png"
+                     style="width: 90%; height: 90%; image-rendering: pixelated; z-index: 1;"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 256 256\\'><rect fill=\\'%23666\\' width=\\'256\\' height=\\'256\\'/><text x=\\'128\\' y=\\'128\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${unitData.name}</text></svg>'">
             </div>
         `;
-
-        // Unit image and basic info
-        content += `
-            <div style="display: flex; gap: 30px; margin-bottom: 20px;">
-                <div>
-                    <img src="https://puzzle-drops.github.io/TEVE/img/sprites/${unitType === 'hero' ? 'heroes' : 'enemies'}/${unitId}${unitType === 'hero' ? '_battle' : ''}.png"
-                         style="width: 128px; height: 128px; image-rendering: pixelated; border: 2px solid #2a6a8a; padding: 10px; background: rgba(0, 0, 0, 0.3);"
-                         onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 128 128\\'><rect fill=\\'%23666\\' width=\\'128\\' height=\\'128\\'/><text x=\\'64\\' y=\\'64\\' text-anchor=\\'middle\\' fill=\\'white\\'>${unitData.name}</text></svg>'">
-                </div>
-                <div style="flex: 1;">
+    } else {
+        // Enemy portrait without backdrop
+        mainContent += `
+            <div style="width: 256px; height: 256px; 
+                        background: rgba(0, 0, 0, 0.3);
+                        border: 2px solid #2a6a8a; border-radius: 8px;
+                        display: flex; align-items: center; justify-content: center;">
+                <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${unitId}.png"
+                     style="width: 90%; height: 90%; image-rendering: pixelated;"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 256 256\\'><rect fill=\\'%23666\\' width=\\'256\\' height=\\'256\\'/><text x=\\'128\\' y=\\'128\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${unitData.name}</text></svg>'">
+            </div>
         `;
+    }
+    
+    mainContent += `</div>`;
 
-        // Type-specific info
-        if (unitType === 'hero') {
-            const gender = unitId.includes('_male') ? 'Male' : 'Female';
-            const tierStars = '★'.repeat(unitData.tier + 1);
-            content += `
-                <div style="color: #6a9aaa; font-size: 18px; margin-bottom: 10px;">
-                    <div>Gender: <span style="color: #b0e0f0;">${gender}</span></div>
-                    <div>Tier: <span style="color: #ffd700;">${tierStars}</span></div>
-                </div>
+    // Column 2: Stats
+    mainContent += `<div style="flex: 1; min-width: 300px;">`;
+    
+    // Boss indicator
+    if (unitType === 'enemy' && unitData.boss) {
+        mainContent += `<div style="color: #ff4444; font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center;">BOSS</div>`;
+    }
+
+    // Stat Modifiers
+    mainContent += `
+        <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="color: #4dd0e1; margin-top: 0;">Stat Growth Modifiers (per level)</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-size: 18px;">
+                <div>STR: <span style="color: ${unitData.mainstat === 'str' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.str}x</span></div>
+                <div>AGI: <span style="color: ${unitData.mainstat === 'agi' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.agi}x</span></div>
+                <div>INT: <span style="color: ${unitData.mainstat === 'int' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.int}x</span></div>
+            </div>
+        </div>
+    `;
+
+    // Initial Stats
+    mainContent += `
+        <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="color: #4dd0e1; margin-top: 0;">Base Stats (Level 1)</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; font-size: 16px;">
+                <div>HP: <span style="color: #b0e0f0;">${unitData.initial.hp}</span></div>
+                <div>HP Regen: <span style="color: #b0e0f0;">${unitData.initial.hpRegen}</span></div>
+                <div>Attack: <span style="color: #b0e0f0;">${unitData.initial.attack}</span></div>
+                <div>Attack Speed: <span style="color: #b0e0f0;">${unitData.initial.attackSpeed}%</span></div>
+                <div>STR: <span style="color: #b0e0f0;">${unitData.initial.str}</span></div>
+                <div>AGI: <span style="color: #b0e0f0;">${unitData.initial.agi}</span></div>
+                <div>INT: <span style="color: #b0e0f0;">${unitData.initial.int}</span></div>
+                <div>Armor: <span style="color: #b0e0f0;">${unitData.initial.armor}</span></div>
+                <div>Resist: <span style="color: #b0e0f0;">${unitData.initial.resist}</span></div>
+            </div>
+        </div>
+    `;
+
+    // Promotion paths (heroes only)
+    if (unitType === 'hero') {
+        // Promotes from
+        const promotesFrom = [];
+        if (window.unitData && window.unitData.classes) {
+            Object.entries(window.unitData.classes).forEach(([className, classData]) => {
+                if (classData.promotesTo && classData.promotesTo.includes(unitId)) {
+                    promotesFrom.push({ id: className, data: classData });
+                }
+            });
+        }
+        
+        if (promotesFrom.length > 0) {
+            mainContent += `
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h3 style="color: #4dd0e1; margin-top: 0;">Promotes From</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
             `;
-        } else if (unitType === 'enemy' && unitData.boss) {
-            content += `<div style="color: #ff4444; font-size: 20px; font-weight: bold; margin-bottom: 10px;">BOSS</div>`;
-        }
-
-        content += '</div></div>';
-
-        // Stat Modifiers
-        content += `
-            <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; margin-bottom: 20px;">
-                <h3 style="color: #4dd0e1; margin-top: 0;">Stat Growth Modifiers (per level)</h3>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                    <div>STR: <span style="color: ${unitData.mainstat === 'str' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.str}x</span></div>
-                    <div>AGI: <span style="color: ${unitData.mainstat === 'agi' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.agi}x</span></div>
-                    <div>INT: <span style="color: ${unitData.mainstat === 'int' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.int}x</span></div>
-                </div>
-            </div>
-        `;
-
-        // Initial Stats
-        content += `
-            <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; margin-bottom: 20px;">
-                <h3 style="color: #4dd0e1; margin-top: 0;">Base Stats (Level 1)</h3>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                    <div>HP: <span style="color: #b0e0f0;">${unitData.initial.hp}</span></div>
-                    <div>HP Regen: <span style="color: #b0e0f0;">${unitData.initial.hpRegen}</span></div>
-                    <div>Attack: <span style="color: #b0e0f0;">${unitData.initial.attack}</span></div>
-                    <div>Attack Speed: <span style="color: #b0e0f0;">${unitData.initial.attackSpeed}%</span></div>
-                    <div>STR: <span style="color: #b0e0f0;">${unitData.initial.str}</span></div>
-                    <div>AGI: <span style="color: #b0e0f0;">${unitData.initial.agi}</span></div>
-                    <div>INT: <span style="color: #b0e0f0;">${unitData.initial.int}</span></div>
-                    <div>Armor: <span style="color: #b0e0f0;">${unitData.initial.armor}</span></div>
-                    <div>Resist: <span style="color: #b0e0f0;">${unitData.initial.resist}</span></div>
-                </div>
-            </div>
-        `;
-
-        // Promotion paths (heroes only)
-        if (unitType === 'hero') {
-            // Promotes from
-const promotesFrom = [];
-if (window.unitData && window.unitData.classes) {
-    Object.entries(window.unitData.classes).forEach(([className, classData]) => {
-        if (classData.promotesTo && classData.promotesTo.includes(unitId)) {
-            promotesFrom.push({ id: className, data: classData });
-        }
-    });
-}
-            if (promotesFrom.length > 0) {
-                content += `
-                    <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; margin-bottom: 20px;">
-                        <h3 style="color: #4dd0e1; margin-top: 0;">Promotes From</h3>
-                        <div style="display: flex; gap: 15px;">
+            promotesFrom.forEach(parent => {
+                mainContent += `
+                    <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${parent.id}', unitData.classes['${parent.id}'], 'hero')">
+                        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${parent.id}_portrait.png"
+                             style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
+                             onerror="this.style.display='none'">
+                        <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${parent.data.name}</div>
+                    </div>
                 `;
-                promotesFrom.forEach(parent => {
-                    content += `
-                        <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${parent.id}', unitData.classes['${parent.id}'], 'hero')">
-                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${parent.id}_portrait.png"
+            });
+            mainContent += '</div></div>';
+        }
+
+        // Promotes to
+        if (unitData.promotesTo && unitData.promotesTo.length > 0 && window.unitData && window.unitData.classes) {
+            mainContent += `
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px;">
+                    <h3 style="color: #4dd0e1; margin-top: 0;">Promotes To</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            `;
+            unitData.promotesTo.forEach(childId => {
+                const childData = window.unitData.classes[childId];
+                if (childData) {
+                    mainContent += `
+                        <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${childId}', unitData.classes['${childId}'], 'hero')">
+                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${childId}_portrait.png"
                                  style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
                                  onerror="this.style.display='none'">
-                            <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${parent.data.name}</div>
-                        </div>
-                    `;
-                });
-                content += '</div></div>';
-            }
-
-            // Promotes to
-if (unitData.promotesTo && unitData.promotesTo.length > 0 && window.unitData && window.unitData.classes) {
-                content += `
-                    <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; margin-bottom: 20px;">
-                        <h3 style="color: #4dd0e1; margin-top: 0;">Promotes To</h3>
-                        <div style="display: flex; gap: 15px;">
-                `;
-                unitData.promotesTo.forEach(childId => {
-    const childData = window.unitData.classes[childId];
-    if (childData) {        content += `
-                            <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${childId}', unitData.classes['${childId}'], 'hero')">
-                                <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${childId}_portrait.png"
-                                     style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
-                                     onerror="this.style.display='none'">
-                                <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${childData.name}</div>
-                            </div>
-                        `;
-                    }
-                });
-                content += '</div></div>';
-            }
-        }
-
-        // Spells
-        if (unitData.spells && unitData.spells.length > 0) {
-            content += `
-                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px;">
-                    <h3 style="color: #4dd0e1; margin-top: 0;">Abilities</h3>
-            `;
-            
-            unitData.spells.forEach(spellId => {
-                const spell = spellManager?.getSpell(spellId);
-                if (spell) {
-                    content += `
-                        <div style="margin-bottom: 20px; padding: 15px; background: rgba(10, 25, 41, 0.5); border: 1px solid #2a6a8a; border-radius: 4px;">
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <img src="https://puzzle-drops.github.io/TEVE/img/spells/${spellId}.png"
-                                     style="width: 64px; height: 64px; border: 1px solid #2a6a8a;"
-                                     onerror="this.style.display='none'">
-                                <div style="flex: 1;">
-                                    <div style="font-size: 18px; color: #4dd0e1; font-weight: bold;">${spell.name}</div>
-                                    <div style="color: #6a9aaa; margin-top: 5px;">
-                                        ${spell.passive || (spell.effects && spell.effects.includes('passive')) ? 'Passive' : `Cooldown: ${Array.isArray(spell.cooldown) ? spell.cooldown.join('/') : spell.cooldown} turns`}
-                                    </div>
-                                    <div style="color: #b0e0f0; margin-top: 10px; line-height: 1.5;">
-                                        ${this.formatSpellDescription(spell)}
-                                    </div>
-                                </div>
-                            </div>
+                            <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${childData.name}</div>
                         </div>
                     `;
                 }
             });
-            
-            content += '</div>';
+            mainContent += '</div></div>';
         }
-
-        popup.innerHTML = content;
-        document.body.appendChild(popup);
     }
+
+    mainContent += `</div>`;
+
+    // Column 3: Abilities
+    mainContent += `<div style="flex: 1; min-width: 400px;">`;
+    
+    if (unitData.spells && unitData.spells.length > 0) {
+        mainContent += `
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px;">
+                <h3 style="color: #4dd0e1; margin-top: 0; margin-bottom: 20px;">Abilities</h3>
+        `;
+        
+        unitData.spells.forEach(spellId => {
+            const spell = spellManager?.getSpell(spellId);
+            if (spell) {
+                mainContent += `
+                    <div style="margin-bottom: 20px; padding: 15px; background: rgba(10, 25, 41, 0.5); border: 1px solid #2a6a8a; border-radius: 4px;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <img src="https://puzzle-drops.github.io/TEVE/img/spells/${spellId}.png"
+                                 style="width: 64px; height: 64px; border: 1px solid #2a6a8a;"
+                                 onerror="this.style.display='none'">
+                            <div style="flex: 1;">
+                                <div style="font-size: 18px; color: #4dd0e1; font-weight: bold;">${spell.name}</div>
+                                <div style="color: #6a9aaa; margin-top: 5px;">
+                                    ${spell.passive || (spell.effects && spell.effects.includes('passive')) ? 'Passive' : `Cooldown: ${Array.isArray(spell.cooldown) ? spell.cooldown.join('/') : spell.cooldown} turns`}
+                                </div>
+                                <div style="color: #b0e0f0; margin-top: 10px; line-height: 1.5;">
+                                    ${this.formatSpellDescription(spell)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+        
+        mainContent += '</div>';
+    }
+
+    mainContent += `</div></div>`;
+
+    popup.innerHTML = headerContent + mainContent;
+    document.body.appendChild(popup);
+}
 
     formatSpellDescription(spell) {
         let description = spell.description || '';
