@@ -148,11 +148,30 @@ class Tutorial {
             "The City of New Lights needs heroes now more than ever.",
             "Are you ready to begin your journey?"
         ], true);
-    }
-    
-    // Another test with different NPC
-    testBobDialogue() {
-        this.npcDialogue('Bob', "Welcome to the Arena! I'm Bob, the arena master. Come find me when you're ready for a real challenge!", false);
+
+                // Example with array of strings
+        this.npcDialogue('Bob', [
+            "Hello there, adventurer! My name is Bob.",
+            "I've been waiting for someone like you to arrive.",
+            "The City of New Lights needs heroes now more than ever.",
+            "Are you ready to begin your journey?"
+        ], true);
+
+                // Example with array of strings
+        this.npcDialogue('Squeaky', [
+            "Hello there, adventurer! My name is Squeaky.",
+            "I've been waiting for someone like you to arrive.",
+            "The City of New Lights needs heroes now more than ever.",
+            "Are you ready to begin your journey?"
+        ], true);
+
+                // Example with array of strings
+        this.npcDialogue('Skypper', [
+            "Hello there, adventurer! My name is Skypper.",
+            "I've been waiting for someone like you to arrive.",
+            "The City of New Lights needs heroes now more than ever.",
+            "Are you ready to begin your journey?"
+        ], true);
     }
 
     showNewHeroCreation() {
