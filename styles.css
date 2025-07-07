@@ -5833,6 +5833,81 @@ body {
     margin: 0 2px;
 }
 
+/* NPC Dialogue System */
+.npcDialogueOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.npcDialogueOverlay.blurred {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    pointer-events: all;
+}
+
+.npcDialogueContainer {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    pointer-events: all;
+}
+
+.npcPortrait {
+    width: 300px;
+    height: 300px;
+    background: rgba(10, 25, 41, 0.95);
+    border: 3px solid #2a6a8a;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
+}
+
+.npcPortrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+}
+
+.npcDialogueBox {
+    background: rgba(10, 25, 41, 0.95);
+    border: 3px solid #2a6a8a;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 600px;
+    min-height: 120px;
+    box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
+    position: relative;
+}
+
+.npcDialogueText {
+    font-size: 20px;
+    color: #b0e0f0;
+    line-height: 1.5;
+}
+
+.npcDialogueContinue {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    font-size: 14px;
+    color: #6a9aaa;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
 /* END end EnD eNd ENd eND enD bottom document/*
 
 /* Directional lunge animations */
