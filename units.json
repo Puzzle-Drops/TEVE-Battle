@@ -20,43 +20,59 @@
       "promotesTo": []
     },
     "villager_male": {
-      "name": "Villager",
-      "tier": 0,
-      "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
-      "mainstat": "str",
-      "initial": {
+    "name": "Villager",
+    "tier": 0,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 1.0,
+        "agi": 1.0,
+        "int": 1.0,
+        "hp": 3.5,
+        "attack": 0.2,
+        "armor": 0.11,
+        "resist": 0.08
+    },
+    "initial": {
+        "str": 5,
+        "agi": 4,
+        "int": 3,
         "hp": 25,
         "hpRegen": 0.5,
         "attack": 2,
         "attackSpeed": 0,
+        "armor": 6.5,
+        "resist": 4
+    },
+    "spells": ["punch", "fury"],
+    "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
+},
+"villager_female": {
+    "name": "Villager",
+    "tier": 0,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 1.0,
+        "agi": 1.0,
+        "int": 1.0,
+        "hp": 3.5,
+        "attack": 0.2,
+        "armor": 0.11,
+        "resist": 0.08
+    },
+    "initial": {
         "str": 5,
         "agi": 4,
         "int": 3,
-        "armor": 6.5,
-        "resist": 4
-      },
-      "spells": ["punch", "fury"],
-      "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
-    },
-    "villager_female": {
-      "name": "Villager",
-      "tier": 0,
-      "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
-      "mainstat": "str",
-      "initial": {
         "hp": 25,
         "hpRegen": 0.5,
         "attack": 2,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 4,
-        "int": 3,
         "armor": 6.5,
         "resist": 4
-      },
-      "spells": ["punch", "throw_rock"],
-      "promotesTo": ["acolyte_female", "archer_female", "druid_female", "initiate_female", "swordsman_female", "templar_female", "thief_female", "witch_hunter_female"]
     },
+    "spells": ["punch", "throw_rock"],
+    "promotesTo": ["acolyte_female", "archer_female", "druid_female", "initiate_female", "swordsman_female", "templar_female", "thief_female", "witch_hunter_female"]
+},
     "acolyte_male": {
       "name": "Acolyte",
       "tier": 1,
