@@ -441,9 +441,11 @@ enterDungeon(tierName, dungeonIndex) {
         this.uiManager.showPartySelect();
     }
 
-    handleNPCClick(npcName) {
-        console.log(`NPC ${npcName} clicked - not yet implemented`);
+handleNPCClick(npcName) {
+    if (this.tutorial) {
+        this.tutorial.handleNPCClick(npcName);
     }
+}
 
     loadCollectionLog() {
         // In a real implementation, this would load from localStorage
