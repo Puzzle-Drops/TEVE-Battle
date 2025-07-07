@@ -195,25 +195,29 @@ class Tutorial {
         // Process female heroes (rows 6-9)
         this.renderHeroTrees(treeContainer, svg, 'female', 1100);
     }
-
+    
     renderHeroTrees(container, svg, gender, startY) {
-        const tiers = [[], [], [], [], []]; // 5 tiers
-        const startClass = gender === 'male' ? 'villager_male' : 'villager_female';
-        
-        // Organize classes by tier
-        Object.entries(unitData.classes).forEach(([className, classData]) => {
-            if (className.includes(gender) && className !== 'tester_male') {
+    const tiers = [[], [], [], [], []]; // 5 tiers (0-4)
+    const startClass = gender === 'male' ? 'villager_male' : 'villager_female';
+    
+    // Organize classes by tier
+    Object.entries(unitData.classes).forEach(([className, classData]) => {
+        if (className.includes(gender) && className !== 'tester_male') {
+            // Make sure tier is defined and within bounds
+            if (classData.tier !== undefined && classData.tier >= 0 && classData.tier <= 4) {
                 tiers[classData.tier].push({ className, classData });
             }
-        });
+        }
+    });
 
-        // Position calculations
-        const xSpacing = 160;
-        const ySpacing = 180;
-        const startX = 50;
+    // Position calculations
+    const xSpacing = 160;
+    const ySpacing = 180;
+    const startX = 50;
 
-        // Render Villager
-        const villagerData = unitData.classes[startClass];
+    // Render Villager
+    const villagerData = unitData.classes[startClass];
+    if (villagerData) {
         const villagerDiv = this.createHeroThumb(startClass, villagerData, startX, startY);
         container.appendChild(villagerDiv);
 
@@ -271,6 +275,7 @@ class Tutorial {
             });
         }
     }
+}
 
     createHeroThumb(className, classData, x, y) {
         const div = document.createElement('div');
