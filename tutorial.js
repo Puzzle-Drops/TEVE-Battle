@@ -677,12 +677,22 @@ renderHeroTrees(container, svg, gender) {
             
             // Format the values
             if (Array.isArray(values)) {
-                return values.map((v, i) => {
+                const formattedValues = values.map((v, i) => {
                     if (typeof v === 'number' && v < 1 && v > 0 && property.includes('percent')) {
                         return Math.round(v * 100) + '%';
                     }
                     return v;
                 }).join('/');
+                
+                // Add brackets around the values
+                let formattedOutput = `[${formattedValues}]`;
+                
+                // For scaling properties (attack, str, agi, int), add 'x (property)'
+                if (['attack', 'str', 'agi', 'int'].includes(property)) {
+                    formattedOutput += `x (${property})`;
+                }
+                
+                return formattedOutput;
             } else if (values !== null && values !== undefined) {
                 return values;
             }
@@ -690,8 +700,8 @@ renderHeroTrees(container, svg, gender) {
             return match;
         });
         
-        // Clean up any remaining brackets
-        description = description.replace(/\[|\]/g, '');
+        // Clean up any remaining brackets that aren't part of our formatted output
+        description = description.replace(/\[(?!\d)/g, '').replace(/(?<!\d)\]/g, '');
         
         return description;
     }
