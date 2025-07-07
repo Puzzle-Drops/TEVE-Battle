@@ -143,11 +143,9 @@ You gain exp for each enemy wave defeated if you are a live upon completing that
 
 ## 1. INITIAL STATS (Level 1 Base Values)
 Points to distribute by tier:
-Tier 0: 12 pts (min 3/stat)
-Tier 1: 16 pts (min 4/stat)
+Tier 0: 12 pts (min 3/stat)    Tier 3: 36 pts (min 6/stat)
+Tier 1: 16 pts (min 4/stat)    Tier 4: 48 pts (min 8/stat)
 Tier 2: 24 pts (min 5/stat)
-Tier 3: 36 pts (min 6/stat)
-Tier 4: 48 pts (min 8/stat)
 
 Attribute costs: 1 point = 1 STR/AGI/INT
 Non-attribute costs (max 50% in any stat):
@@ -155,11 +153,9 @@ Non-attribute costs (max 50% in any stat):
 
 ## 2. MODIFIERS (Per-Level Scaling)
 ### Attributes (Required totals):
-Tier 0: 3.0 (min 1.0/stat)
-Tier 1: 4.0 (min 1.25/stat)
+Tier 0: 3.0 (min 1.0/stat)     Tier 3: 9.0 (min 2.0/stat)
+Tier 1: 4.0 (min 1.25/stat)    Tier 4: 12.0 (min 2.5/stat)
 Tier 2: 6.0 (min 1.5/stat)
-Tier 3: 9.0 (min 2.0/stat)
-Tier 4: 12.0 (min 2.5/stat)
 
 ### Non-Attributes:
 BASELINE (all classes get):
@@ -173,20 +169,21 @@ BONUS POINTS by tier: 20/24/28/32/36
 
 ## 3. FINAL STAT FORMULAS
 STR/AGI/INT = initial + (level × modifier)
-HP = STR × modHP
-Attack = mainstat × modAttack
-Armor = (modArmor × level) + (0.05 × STR) + (0.01 × AGI) + gear
-Resist = (modResist × level) + (0.05 × INT) + gear
+HP = initial + (STR × modHP)
+Attack = initial + (mainstat × modAttack)
+Armor = initial + (modArmor × level) + (0.05 × STR) + (0.01 × AGI) + gear
+Resist = initial + (modResist × level) + (0.05 × INT) + gear
 
 Physical DR = 0.9 × Armor / (Armor + 500)
 Magic DR = 0.3 × Resist / (Resist + 1000)
-HP Regen = STR × 0.01
-Action Speed = 100 + 100 × (AGI / (AGI + 1000))
+HP Regen = initial + (STR × 0.01)
+Action Speed = initial + (100 + 100 × (AGI / (AGI + 1000)))
+
+## 4. ENEMY STATS
+Enemy tier = dungeon tier + 1 (bosses +2)
+Example: Level 0-50 dungeon = tier 1 enemies, tier 2 bosses
 
 These stats are further increased by items.
-
---Enemies Stats
-Enemies are treated per tier as intended level, and if boss add a tier. So level 0-50 = tier 1, bosses tier 2.
 
 -Action bar
 Each unit begins combat with an action bar value of 0. During every cycle, each unit gains a certain amount of action bar units based on their Agility stat. When a unit's action bar reaches or exceeds 10,000 units, it becomes eligible to act. If multiple units cross this threshold within the same cycle, the one with the highest total action bar value goes first. After a unit acts, 10,000 units are subtracted from its action bar, and if it still has more than 10,000 remaining, it may act again within the same cycle if no other units have a higher value. This continues until no units have at least 10,000 units remaining. At that point, the next cycle begins and all units gain additional action bar units according to their Agi. This system ensures that faster units act more frequently, but in a dynamic, fair order that reflects their accumulated speed.
