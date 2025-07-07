@@ -6,6 +6,9 @@ class Game {
         
         // Create UIManager early so it's available
         this.uiManager = new UIManager(this);
+
+        // Create Tutorial system
+        this.tutorial = new Tutorial(this);
         
         this.currentBattle = null;
         this.selectedTier = null;
