@@ -213,7 +213,7 @@ showHeroClasses(gender) {
         const villagerY = startY;
         const villagerDiv = this.createHeroThumb(villagerClass, villagerData, villagerX, villagerY);
         container.appendChild(villagerDiv);
-        positions[villagerClass] = { x: villagerX + 60, y: villagerY + 60 };
+        positions[villagerClass] = { x: villagerX + 96, y: villagerY + 96 };
     }
     
     // Define class layout with specific positions
@@ -304,7 +304,7 @@ showHeroClasses(gender) {
             
             const div = this.createHeroThumb(className, classData, x, y);
             container.appendChild(div);
-            positions[className] = { x: x + 48, y: y + 48 };
+            positions[className] = { x: x + 96, y: y + 96 };
             
             // Draw path from parent
             const parentClass = classInfo.parent.includes('_') ? classInfo.parent : classInfo.parent + '_' + gender;
@@ -463,12 +463,11 @@ processFamilyPaths(container, svg, family, positions, startCol, startX, startY, 
 
     // Header with close button
     let headerContent = `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; border-bottom: 2px solid #2a6a8a;">
-            <h2 style="color: #4dd0e1; margin: 0; font-size: 28px;">
-                ${unitData.name}${unitType === 'hero' ? ` <span class="gender-${unitId.includes('_male') ? 'male' : 'female'}">${unitId.includes('_male') ? '♂' : '♀'}</span>` : ''}
-                ${unitType === 'hero' ? ` <span style="color: #ffd700;">Tier ${unitData.tier + 1}</span>` : ''}
-            </h2>
-            <button onclick="document.getElementById('unitDetailsPopup').remove()" style="
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; border-bottom: 2px solid #2a6a8a;">
+        <h2 style="color: #4dd0e1; margin: 0; font-size: 28px;">
+            ${unitData.name}${unitType === 'hero' ? ` <span class="gender-${unitId.includes('_male') ? 'male' : 'female'}">${unitId.includes('_male') ? '♂' : '♀'}</span>` : ''}
+        </h2>
+        <button onclick="document.getElementById('unitDetailsPopup').remove()" style="
                 background: #cc0000;
                 color: white;
                 border: none;
@@ -492,16 +491,21 @@ processFamilyPaths(container, svg, family, positions, startCol, startX, startY, 
         const backdropName = familyName.toLowerCase().replace(/ /g, '_');
         
         mainContent += `
-            <div style="position: relative; width: 256px; height: 256px; 
-                        background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_backdrop.png');
-                        background-size: cover; background-position: center;
-                        border: 2px solid #2a6a8a; border-radius: 8px;
-                        display: flex; align-items: center; justify-content: center;">
-                <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unitId}_battle.png"
-                     style="width: 90%; height: 90%; image-rendering: pixelated; z-index: 1;"
-                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 256 256\\'><rect fill=\\'%23666\\' width=\\'256\\' height=\\'256\\'/><text x=\\'128\\' y=\\'128\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${unitData.name}</text></svg>'">
-            </div>
-        `;
+    <div style="text-align: center;">
+        <div style="position: relative; width: 256px; height: 256px; 
+                    background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/${backdropName}_backdrop.png');
+                    background-size: cover; background-position: center;
+                    border: 2px solid #2a6a8a; border-radius: 8px;
+                    display: flex; align-items: center; justify-content: center;
+                    margin-bottom: 15px;">
+            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unitId}_battle.png"
+                 style="width: 90%; height: 90%; image-rendering: pixelated; z-index: 1;"
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 256 256\\'><rect fill=\\'%23666\\' width=\\'256\\' height=\\'256\\'/><text x=\\'128\\' y=\\'128\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${unitData.name}</text></svg>'">
+        </div>
+        <div style="font-size: 20px; color: #6a9aaa; margin-bottom: 10px;">Tier ${unitData.tier + 1}</div>
+        <div style="font-size: 36px; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">${'★'.repeat(unitData.tier + 1)}</div>
+    </div>
+`;
     } else {
         // Enemy portrait without backdrop
         mainContent += `
@@ -539,22 +543,26 @@ processFamilyPaths(container, svg, family, positions, startCol, startX, startY, 
     `;
 
     // Initial Stats
-    mainContent += `
-        <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h3 style="color: #4dd0e1; margin-top: 0;">Base Stats (Level 1)</h3>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; font-size: 16px;">
-                <div>HP: <span style="color: #b0e0f0;">${unitData.initial.hp}</span></div>
-                <div>HP Regen: <span style="color: #b0e0f0;">${unitData.initial.hpRegen}</span></div>
-                <div>Attack: <span style="color: #b0e0f0;">${unitData.initial.attack}</span></div>
-                <div>Attack Speed: <span style="color: #b0e0f0;">${unitData.initial.attackSpeed}%</span></div>
-                <div>STR: <span style="color: #b0e0f0;">${unitData.initial.str}</span></div>
-                <div>AGI: <span style="color: #b0e0f0;">${unitData.initial.agi}</span></div>
-                <div>INT: <span style="color: #b0e0f0;">${unitData.initial.int}</span></div>
-                <div>Armor: <span style="color: #b0e0f0;">${unitData.initial.armor}</span></div>
-                <div>Resist: <span style="color: #b0e0f0;">${unitData.initial.resist}</span></div>
+mainContent += `
+    <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h3 style="color: #4dd0e1; margin-top: 0;">Base Stats (Level 1)</h3>
+        <div style="display: flex; gap: 40px;">
+            <div style="flex: 1;">
+                <div style="margin-bottom: 10px;">Health: <span style="color: #b0e0f0;">${unitData.initial.hp}</span></div>
+                <div style="margin-bottom: 10px;">Attack: <span style="color: #b0e0f0;">${unitData.initial.attack}</span></div>
+                <div style="margin-bottom: 10px;">Strength: <span style="color: #b0e0f0;">${unitData.initial.str}</span></div>
+                <div style="margin-bottom: 10px;">Agility: <span style="color: #b0e0f0;">${unitData.initial.agi}</span></div>
+                <div>Intelligence: <span style="color: #b0e0f0;">${unitData.initial.int}</span></div>
+            </div>
+            <div style="flex: 1;">
+                <div style="margin-bottom: 10px;">HP Regen: <span style="color: #b0e0f0;">${unitData.initial.hpRegen}</span></div>
+                <div style="margin-bottom: 10px;">Attack Speed: <span style="color: #b0e0f0;">${unitData.initial.attackSpeed}%</span></div>
+                <div style="margin-bottom: 10px;">Armor: <span style="color: #b0e0f0;">${unitData.initial.armor}</span></div>
+                <div>Resistance: <span style="color: #b0e0f0;">${unitData.initial.resist}</span></div>
             </div>
         </div>
-    `;
+    </div>
+`;
 
     // Promotion paths (heroes only)
     if (unitType === 'hero') {
