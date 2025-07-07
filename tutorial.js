@@ -35,23 +35,31 @@ class Tutorial {
             box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
         `;
 
-        // Build dialog content
+        // Build selection content
         dialog.innerHTML = `
             <h2 style="color: #4dd0e1; text-align: center; margin-bottom: 20px; font-size: 28px;">Create New Hero</h2>
             
             <div style="display: flex; gap: 20px; margin-bottom: 30px;">
                 <!-- Male Option -->
-                <div id="maleOption" class="genderOption" style="flex: 1; padding: 20px; border: 2px solid #2a6a8a; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s;">
-                    <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/villager_male_portrait.png" 
-                         style="width: 100px; height: 100px; object-fit: cover; object-position: top center; image-rendering: pixelated; margin-bottom: 10px;">
-                    <div style="color: #b0e0f0; font-size: 20px;">Villager <span class="gender-male">♂</span></div>
+                <div id="maleOption" class="genderOption" style="flex: 1; border: 2px solid #2a6a8a; border-radius: 8px; cursor: pointer; transition: all 0.3s; overflow: hidden;">
+                    <div style="position: relative; height: 200px; background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/villager_backdrop.png'); background-size: cover; background-position: center;">
+                        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/villager_male_battle.png" 
+                             style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); height: 180px; image-rendering: pixelated;">
+                    </div>
+                    <div style="padding: 15px; text-align: center; background: rgba(10, 25, 41, 0.8);">
+                        <div style="color: #b0e0f0; font-size: 20px;">Villager <span class="gender-male">♂</span></div>
+                    </div>
                 </div>
                 
                 <!-- Female Option -->
-                <div id="femaleOption" class="genderOption" style="flex: 1; padding: 20px; border: 2px solid #2a6a8a; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s;">
-                    <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/villager_female_portrait.png" 
-                         style="width: 100px; height: 100px; object-fit: cover; object-position: top center; image-rendering: pixelated; margin-bottom: 10px;">
-                    <div style="color: #b0e0f0; font-size: 20px;">Villager <span class="gender-female">♀</span></div>
+                <div id="femaleOption" class="genderOption" style="flex: 1; border: 2px solid #2a6a8a; border-radius: 8px; cursor: pointer; transition: all 0.3s; overflow: hidden;">
+                    <div style="position: relative; height: 200px; background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/villager_backdrop.png'); background-size: cover; background-position: center; filter: invert(1) hue-rotate(180deg);">
+                        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/villager_female_battle.png" 
+                             style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); height: 180px; image-rendering: pixelated;">
+                    </div>
+                    <div style="padding: 15px; text-align: center; background: rgba(10, 25, 41, 0.8);">
+                        <div style="color: #b0e0f0; font-size: 20px;">Villager <span class="gender-female">♀</span></div>
+                    </div>
                 </div>
             </div>
             
@@ -88,18 +96,18 @@ class Tutorial {
         maleOption.onclick = () => {
             this.selectedGender = 'male';
             maleOption.style.borderColor = '#4dd0e1';
-            maleOption.style.backgroundColor = 'rgba(77, 208, 225, 0.1)';
+            maleOption.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
             femaleOption.style.borderColor = '#2a6a8a';
-            femaleOption.style.backgroundColor = 'transparent';
+            femaleOption.style.boxShadow = 'none';
             this.checkFormValidity();
         };
 
         femaleOption.onclick = () => {
             this.selectedGender = 'female';
             femaleOption.style.borderColor = '#4dd0e1';
-            femaleOption.style.backgroundColor = 'rgba(77, 208, 225, 0.1)';
+            femaleOption.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
             maleOption.style.borderColor = '#2a6a8a';
-            maleOption.style.backgroundColor = 'transparent';
+            maleOption.style.boxShadow = 'none';
             this.checkFormValidity();
         };
 
