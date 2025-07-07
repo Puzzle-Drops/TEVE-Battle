@@ -139,40 +139,45 @@ class Tutorial {
         document.getElementById('npcDialogueContinue').style.display = 'none';
     }
     
-    // Test function for console
-    testDialogue() {
-        // Example with array of strings
-        this.npcDialogue('Arnold', [
-            "Hello there, adventurer! My name is Arnold.",
-            "I've been waiting for someone like you to arrive.",
-            "The City of New Lights needs heroes now more than ever.",
-            "Are you ready to begin your journey?"
-        ], true);
+// Test function for Arnold
+testDialogueArnold() {
+    this.npcDialogue('Arnold', [
+        "Hello there, adventurer! My name is Arnold.",
+        "I've been waiting for someone like you to arrive.",
+        "The City of New Lights needs heroes now more than ever.",
+        "Are you ready to begin your journey?"
+    ], true);
+}
 
-                // Example with array of strings
-        this.npcDialogue('Bob', [
-            "Hello there, adventurer! My name is Bob.",
-            "I've been waiting for someone like you to arrive.",
-            "The City of New Lights needs heroes now more than ever.",
-            "Are you ready to begin your journey?"
-        ], true);
+// Test function for Bob
+testDialogueBob() {
+    this.npcDialogue('Bob', [
+        "Welcome to the Arena! I'm Bob, the arena master.",
+        "This is where the bravest warriors test their mettle.",
+        "You'll find challenges here that push you to your limits.",
+        "Think you have what it takes to become a champion?"
+    ], true);
+}
 
-                // Example with array of strings
-        this.npcDialogue('Squeaky', [
-            "Hello there, adventurer! My name is Squeaky.",
-            "I've been waiting for someone like you to arrive.",
-            "The City of New Lights needs heroes now more than ever.",
-            "Are you ready to begin your journey?"
-        ], true);
+// Test function for Squeaky
+testDialogueSqueaky() {
+    this.npcDialogue('Squeaky', [
+        "Squeak squeak! Oh, I mean... Hello there!",
+        "I'm Squeaky, the city's... um... information broker.",
+        "I hear things. Lots of things. Tiny mouse ears, you know?",
+        "If you need to know something, just ask! *squeak*"
+    ], true);
+}
 
-                // Example with array of strings
-        this.npcDialogue('Skypper', [
-            "Hello there, adventurer! My name is Skypper.",
-            "I've been waiting for someone like you to arrive.",
-            "The City of New Lights needs heroes now more than ever.",
-            "Are you ready to begin your journey?"
-        ], true);
-    }
+// Test function for Skypper
+testDialogueSkypper() {
+    this.npcDialogue('Skypper', [
+        "Greetings, traveler. I am Skypper.",
+        "I have watched over these lands for countless years.",
+        "Ancient secrets and forgotten powers lie dormant here.",
+        "Perhaps you are the one destined to awaken them..."
+    ], true);
+}
 
     showNewHeroCreation() {
         // Create overlay
