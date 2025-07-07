@@ -35,7 +35,7 @@ class Tutorial {
             box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
         `;
 
-// Build select content
+// Build dialog content
         dialog.innerHTML = `
             <h2 style="color: #4dd0e1; text-align: center; margin-bottom: 20px; font-size: 28px;">Create New Hero</h2>
             
@@ -100,16 +100,14 @@ class Tutorial {
             this.checkFormValidity();
         };
 
-<!-- Female Option -->
-                <div id="femaleOption" class="genderOption" style="flex: 1; border: 2px solid #2a6a8a; border-radius: 8px; cursor: pointer; transition: all 0.3s; overflow: hidden;">
-                    <div style="position: relative; height: 200px; background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/villager_backdrop.png'); background-size: cover; background-position: center;">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/villager_female_battle.png" 
-                             style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); height: 180px; image-rendering: pixelated;">
-                    </div>
-                    <div style="padding: 15px; text-align: center; background: rgba(10, 25, 41, 0.8);">
-                        <div style="color: #b0e0f0; font-size: 20px;">Villager <span class="gender-female">♀</span></div>
-                    </div>
-                </div>
+        femaleOption.onclick = () => {
+            this.selectedGender = 'female';
+            femaleOption.style.borderColor = '#4dd0e1';
+            femaleOption.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
+            maleOption.style.borderColor = '#2a6a8a';
+            maleOption.style.boxShadow = 'none';
+            this.checkFormValidity();
+        };
 
         // Name input
         nameInput.oninput = () => {
