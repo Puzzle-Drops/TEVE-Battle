@@ -3,19 +3,27 @@
     "tester_male": {
       "name": "Tester",
       "tier": 0,
-      "modifiers": { "str": 1.0, "agi": 1.0, "int": 1.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 1.0,
+        "agi": 1.0,
+        "int": 1.0,
+        "hp": 1.0,
+        "attack": 1.0,
+        "armor": 1.0,
+        "resist": 1.0
+    },
       "initial": {
-        "hp": 100000000,
-        "hpRegen": 100000000,
-        "attack": 100000000,
-        "attackSpeed": 100000000,
-        "str": 100000000,
-        "agi": 100000000,
-        "int": 100000000,
-        "armor": 100000000,
-        "resist": 100000000
-      },
+        "str": 1,
+        "agi": 1,
+        "int": 1,
+        "hp": 1000000000,
+        "hpRegen": 1000000000,
+        "attack": 1000000000,
+        "attackSpeed": 1000000000,
+        "armor": 1000000000,
+        "resist": 1000000000
+    },
       "spells": ["lose", "win"],
       "promotesTo": []
     },
