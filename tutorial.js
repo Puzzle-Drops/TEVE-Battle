@@ -170,110 +170,185 @@ class Tutorial {
         }
     }
 
-    showHeroClasses() {
-        const content = document.getElementById('bestiaryContent');
-        content.innerHTML = '';
-
-        // Create SVG for paths
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;';
-        content.appendChild(svg);
-
-        // Create hero tree container
-        const treeContainer = document.createElement('div');
-        treeContainer.style.cssText = 'position: relative; min-height: 2000px;';
-        content.appendChild(treeContainer);
-
-        // Process male heroes (rows 1-4)
-        this.renderHeroTrees(treeContainer, svg, 'male', 0);
-        
-        // Add spacing
-        const spacer = document.createElement('div');
-        spacer.style.cssText = 'height: 100px;';
-        treeContainer.appendChild(spacer);
-        
-        // Process female heroes (rows 6-9)
-        this.renderHeroTrees(treeContainer, svg, 'female', 1100);
-    }
+renderHeroTrees(container, svg, gender, startY) {
+    const cellWidth = 120;
+    const cellHeight = 140;
+    const startX = 50;
     
-    renderHeroTrees(container, svg, gender, startY) {
-    const tiers = [[], [], [], [], []]; // 5 tiers (0-4)
-    const startClass = gender === 'male' ? 'villager_male' : 'villager_female';
-    
-    // Organize classes by tier
-    Object.entries(unitData.classes).forEach(([className, classData]) => {
-        if (className.includes(gender) && className !== 'tester_male') {
-            // Make sure tier is defined and within bounds
-            if (classData.tier !== undefined && classData.tier >= 0 && classData.tier <= 4) {
-                tiers[classData.tier].push({ className, classData });
+    // Define class families and their positions
+    const classFamilies = [
+        {
+            name: 'Acolyte',
+            startCol: 1,
+            tier1: gender === 'male' ? 'acolyte_male' : 'acolyte_female',
+            paths: {
+                'Acolyte': [['Cleric']],
+                'Cleric': [['Priest', 'Priestess'], ['Patriarch', 'Matriarch']],
+                'Priest': [['Hierophant']],
+                'Priestess': [['Hierophant']],
+                'Patriarch': [['Prophet']],
+                'Matriarch': [['Prophetess']]
+            }
+        },
+        {
+            name: 'Archer',
+            startCol: 3,
+            tier1: gender === 'male' ? 'archer_male' : 'archer_female',
+            paths: {
+                'Archer': [['Ranger']],
+                'Ranger': [['Marksman'], ['Tracker']],
+                'Marksman': [['Sniper']],
+                'Tracker': [['Monster Hunter']]
+            }
+        },
+        {
+            name: 'Druid',
+            startCol: 5,
+            tier1: gender === 'male' ? 'druid_male' : 'druid_female',
+            paths: {
+                'Druid': [['Arch Druid']],
+                'Arch Druid': [['Shapeshifter'], ['Shaman']],
+                'Shapeshifter': [['Runemaster']],
+                'Shaman': [['Summoner']]
+            }
+        },
+        {
+            name: 'Initiate',
+            startCol: 7,
+            tier1: gender === 'male' ? 'initiate_male' : 'initiate_female',
+            paths: {
+                'Initiate': [['Mage']],
+                'Mage': gender === 'male' ? [['Wizard'], ['Sage']] : [['Witch'], ['Sage']],
+                'Wizard': [['White Wizard']],
+                'Witch': [['White Witch']],
+                'Sage': [['Arch Sage']]
+            }
+        },
+        {
+            name: 'Swordsman',
+            startCol: 9,
+            tier1: gender === 'male' ? 'swordsman_male' : 'swordsman_female',
+            paths: {
+                'Swordsman': [['Knight']],
+                'Knight': [['Imperial Knight'], ['Crusader']],
+                'Imperial Knight': [['Champion']],
+                'Crusader': [['Avenger']]
+            }
+        },
+        {
+            name: 'Templar',
+            startCol: 11,
+            tier1: gender === 'male' ? 'templar_male' : 'templar_female',
+            paths: {
+                'Templar': [['Arch Templar']],
+                'Arch Templar': [['Dark Templar'], ['High Templar']],
+                'Dark Templar': [['Dark Arch Templar']],
+                'High Templar': [['Grand Templar']]
+            }
+        },
+        {
+            name: 'Thief',
+            startCol: 13,
+            tier1: gender === 'male' ? 'thief_male' : 'thief_female',
+            paths: {
+                'Thief': [['Rogue']],
+                'Rogue': [['Assassin'], ['Stalker']],
+                'Assassin': [['Phantom Assassin']],
+                'Stalker': [['Master Stalker']]
+            }
+        },
+        {
+            name: 'Witch Hunter',
+            startCol: 15,
+            tier1: gender === 'male' ? 'witch_hunter_male' : 'witch_hunter_female',
+            paths: {
+                'Witch Hunter': [['Slayer']],
+                'Slayer': [['Inquisitor'], ['Witcher']],
+                'Inquisitor': [['Grand Inquisitor']],
+                'Witcher': [['Professional Witcher']]
             }
         }
-    });
-
-    // Position calculations
-    const xSpacing = 160;
-    const ySpacing = 180;
-    const startX = 50;
-
-    // Render Villager
-    const villagerData = unitData.classes[startClass];
+    ];
+    
+    // Track positions for drawing paths
+    const positions = {};
+    
+    // Place villager at 0,0
+    const villagerClass = gender === 'male' ? 'villager_male' : 'villager_female';
+    const villagerData = unitData.classes[villagerClass];
     if (villagerData) {
-        const villagerDiv = this.createHeroThumb(startClass, villagerData, startX, startY);
+        const villagerDiv = this.createHeroThumb(villagerClass, villagerData, startX, startY);
         container.appendChild(villagerDiv);
-
-        // Track positions for SVG paths
-        const positions = {};
-        positions[startClass] = { x: startX + 48, y: startY + 48 };
-
-        // Render tier 1
-        let currentX = startX + xSpacing;
-        const tier1Y = startY;
+        positions[villagerClass] = { x: startX + 48, y: startY + 48 };
+    }
+    
+    // Process each class family
+    classFamilies.forEach(family => {
+        const familyPositions = {};
         
-        tiers[1].forEach((classInfo) => {
-            const div = this.createHeroThumb(classInfo.className, classInfo.classData, currentX, tier1Y);
+        // Place tier 1 class
+        const tier1Data = unitData.classes[family.tier1];
+        if (tier1Data) {
+            const x = startX + (family.startCol * cellWidth);
+            const y = startY;
+            const div = this.createHeroThumb(family.tier1, tier1Data, x, y);
             container.appendChild(div);
-            positions[classInfo.className] = { x: currentX + 48, y: tier1Y + 48 };
-            
-            // Draw path from villager
-            this.drawPath(svg, positions[startClass], positions[classInfo.className]);
-            
-            currentX += xSpacing;
-        });
-
-        // Render tiers 2-4 with promotion paths
-        for (let tier = 2; tier <= 4; tier++) {
-            const tierY = startY + (tier - 1) * ySpacing;
-            const tierClasses = tiers[tier];
-            
-            tierClasses.forEach((classInfo, index) => {
-                // Find parent class
-                let parentX = startX;
-                Object.entries(unitData.classes).forEach(([parentName, parentData]) => {
-                    if (parentData.promotesTo && parentData.promotesTo.includes(classInfo.className)) {
-                        if (positions[parentName]) {
-                            parentX = positions[parentName].x - 48;
-                        }
-                    }
-                });
-                
-                // Position based on parent with some offset for branching
-                const offsetX = (index % 2) * 80;
-                const x = parentX + offsetX;
-                
-                const div = this.createHeroThumb(classInfo.className, classInfo.classData, x, tierY);
-                container.appendChild(div);
-                positions[classInfo.className] = { x: x + 48, y: tierY + 48 };
-                
-                // Draw path from parent
-                Object.entries(unitData.classes).forEach(([parentName, parentData]) => {
-                    if (parentData.promotesTo && parentData.promotesTo.includes(classInfo.className)) {
-                        if (positions[parentName]) {
-                            this.drawPath(svg, positions[parentName], positions[classInfo.className]);
-                        }
-                    }
-                });
-            });
+            familyPositions[tier1Data.name] = { x: x + 48, y: y + 48, id: family.tier1 };
         }
+        
+        // Process promotion paths within this family
+        this.processFamilyPaths(container, svg, family, familyPositions, family.startCol, startX, startY, cellWidth, cellHeight, gender);
+    });
+}
+
+processFamilyPaths(container, svg, family, positions, startCol, startX, startY, cellWidth, cellHeight, gender) {
+    // Helper function to place a class
+    const placeClass = (className, row, col) => {
+        const fullClassName = className.toLowerCase().replace(/ /g, '_') + '_' + gender;
+        const classData = unitData.classes[fullClassName];
+        if (classData) {
+            const x = startX + ((startCol + col) * cellWidth);
+            const y = startY + (row * cellHeight);
+            const div = this.createHeroThumb(fullClassName, classData, x, y);
+            container.appendChild(div);
+            positions[className] = { x: x + 48, y: y + 48, id: fullClassName };
+        }
+    };
+    
+    // Process tier 2
+    if (family.paths[family.name]) {
+        const tier2Classes = family.paths[family.name][0];
+        tier2Classes.forEach((className, index) => {
+            placeClass(className, 1, index);
+            // Draw path from tier 1
+            if (positions[family.name] && positions[className]) {
+                this.drawPath(svg, positions[family.name], positions[className]);
+            }
+        });
+        
+        // Process tier 3 and 4
+        Object.entries(family.paths).forEach(([parentName, children]) => {
+            if (parentName !== family.name) {
+                children.forEach((childGroup, groupIndex) => {
+                    childGroup.forEach((childName, childIndex) => {
+                        // Determine row based on class tier
+                        const fullChildName = childName.toLowerCase().replace(/ /g, '_') + '_' + gender;
+                        const childData = unitData.classes[fullChildName];
+                        if (childData) {
+                            const row = childData.tier - 1; // tier 3 = row 2, tier 4 = row 3
+                            const col = groupIndex; // 0 for left branch, 1 for right branch
+                            
+                            placeClass(childName, row, col);
+                            
+                            // Draw path from parent
+                            if (positions[parentName] && positions[childName]) {
+                                this.drawPath(svg, positions[parentName], positions[childName]);
+                            }
+                        }
+                    });
+                });
+            }
+        });
     }
 }
 
@@ -451,12 +526,13 @@ class Tutorial {
         if (unitType === 'hero') {
             // Promotes from
             const promotesFrom = [];
-            Object.entries(unitData.classes).forEach(([className, classData]) => {
-                if (classData.promotesTo && classData.promotesTo.includes(unitId)) {
-                    promotesFrom.push({ id: className, data: classData });
-                }
-            });
-
+if (window.unitData && window.unitData.classes) {
+    Object.entries(window.unitData.classes).forEach(([className, classData]) => {
+        if (classData.promotesTo && classData.promotesTo.includes(unitId)) {
+            promotesFrom.push({ id: className, data: classData });
+        }
+    });
+}
             if (promotesFrom.length > 0) {
                 content += `
                     <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; margin-bottom: 20px;">
@@ -465,7 +541,7 @@ class Tutorial {
                 `;
                 promotesFrom.forEach(parent => {
                     content += `
-                        <div style="cursor: pointer; text-align: center;" onclick="game.tutorial.showUnitDetails('${parent.id}', unitData.classes['${parent.id}'], 'hero')">
+                        <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${parent.id}', unitData.classes['${parent.id}'], 'hero')">
                             <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${parent.id}_portrait.png"
                                  style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
                                  onerror="this.style.display='none'">
@@ -487,7 +563,7 @@ class Tutorial {
                     const childData = unitData.classes[childId];
                     if (childData) {
                         content += `
-                            <div style="cursor: pointer; text-align: center;" onclick="game.tutorial.showUnitDetails('${childId}', unitData.classes['${childId}'], 'hero')">
+                            <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${childId}', unitData.classes['${childId}'], 'hero')">
                                 <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${childId}_portrait.png"
                                      style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
                                      onerror="this.style.display='none'">
