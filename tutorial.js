@@ -213,7 +213,7 @@ showHeroClasses(gender) {
         const villagerY = startY;
         const villagerDiv = this.createHeroThumb(villagerClass, villagerData, villagerX, villagerY);
         container.appendChild(villagerDiv);
-        positions[villagerClass] = { x: villagerX + 64, y: villagerY + 64 };
+        positions[villagerClass] = { x: villagerX + 72, y: villagerY + 72 };
     }
     
     // Define class layout with specific positions
@@ -304,7 +304,7 @@ showHeroClasses(gender) {
             
             const div = this.createHeroThumb(className, classData, x, y);
             container.appendChild(div);
-            positions[className] = { x: x + 64, y: y + 64 };
+            positions[className] = { x: x + 72, y: y + 72 };
             
             // Draw path from parent
             const parentClass = classInfo.parent.includes('_') ? classInfo.parent : classInfo.parent + '_' + gender;
@@ -560,7 +560,6 @@ mainContent += `
                 <div>Resistance: <span style="color: #b0e0f0;">${unitData.initial.resist}</span></div>
             </div>
         </div>
-    </div>
 `;
 
     // Promotion paths (heroes only)
@@ -618,7 +617,7 @@ mainContent += `
         }
     }
 
-    mainContent += `</div>`;
+    mainContent += `</div></div>`;
 
     // Column 3: Abilities
     mainContent += `<div style="flex: 1; min-width: 400px;">`;
