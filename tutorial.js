@@ -170,7 +170,33 @@ class Tutorial {
         }
     }
 
-renderHeroTrees(container, svg, gender, startY) {
+    showHeroClasses() {
+    const content = document.getElementById('bestiaryContent');
+    content.innerHTML = '';
+
+    // Create SVG for paths
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;';
+    content.appendChild(svg);
+
+    // Create hero tree container
+    const treeContainer = document.createElement('div');
+    treeContainer.style.cssText = 'position: relative; min-height: 2000px;';
+    content.appendChild(treeContainer);
+
+    // Process male heroes (rows 1-4)
+    this.renderHeroTrees(treeContainer, svg, 'male', 0);
+    
+    // Add spacing
+    const spacer = document.createElement('div');
+    spacer.style.cssText = 'height: 100px;';
+    treeContainer.appendChild(spacer);
+    
+    // Process female heroes (rows 6-9)
+    this.renderHeroTrees(treeContainer, svg, 'female', 1100);
+}
+    
+   renderHeroTrees(container, svg, gender, startY) {
     const cellWidth = 120;
     const cellHeight = 140;
     const startX = 50;
@@ -351,7 +377,7 @@ processFamilyPaths(container, svg, family, positions, startCol, startX, startY, 
         });
     }
 }
-
+    
     createHeroThumb(className, classData, x, y) {
         const div = document.createElement('div');
         div.style.cssText = `
@@ -525,7 +551,7 @@ processFamilyPaths(container, svg, family, positions, startCol, startX, startY, 
         // Promotion paths (heroes only)
         if (unitType === 'hero') {
             // Promotes from
-            const promotesFrom = [];
+const promotesFrom = [];
 if (window.unitData && window.unitData.classes) {
     Object.entries(window.unitData.classes).forEach(([className, classData]) => {
         if (classData.promotesTo && classData.promotesTo.includes(unitId)) {
