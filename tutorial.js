@@ -548,8 +548,8 @@ renderHeroTrees(container, svg, gender) {
         const gender = unitId.includes('_male') ? 'male' : 'female';
         
         // Promotes from
-const promotesFrom = [];
-if (unitData && unitData.classes) {
+        const promotesFrom = [];
+        if (window.unitData && window.unitData.classes) {
             Object.entries(window.unitData.classes).forEach(([className, classData]) => {
                 if (classData.promotesTo) {
                     // Check if this class promotes to our base unit
@@ -573,7 +573,7 @@ if (unitData && unitData.classes) {
             `;
             promotesFrom.forEach(parent => {
                 mainContent += `
-                    <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${parent.id}', window.unitData.classes['${parent.id}'], 'hero')">
+                    <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${parent.id}', unitData.classes['${parent.id}'], 'hero')">
                         <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${parent.id}_portrait.png"
                              style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
                              onerror="this.style.display='none'">
@@ -585,7 +585,7 @@ if (unitData && unitData.classes) {
         }
 
         // Promotes to
-if (unitData.promotesTo && unitData.promotesTo.length > 0 && unitData && unitData.classes) {
+        if (unitData.promotesTo && unitData.promotesTo.length > 0 && window.unitData && window.unitData.classes) {
             mainContent += `
                 <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px;">
                     <h3 style="color: #4dd0e1; margin-top: 0;">Promotes To</h3>
@@ -596,7 +596,7 @@ if (unitData.promotesTo && unitData.promotesTo.length > 0 && unitData && unitDat
                 const childData = window.unitData.classes[childIdWithGender];
                 if (childData) {
                     mainContent += `
-                        <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${childIdWithGender}', window.unitData.classes['${childIdWithGender}'], 'hero')">
+                        <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${childIdWithGender}', unitData.classes['${childIdWithGender}'], 'hero')">
                             <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${childIdWithGender}_portrait.png"
                                  style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
                                  onerror="this.style.display='none'">
@@ -635,7 +635,7 @@ if (unitData.promotesTo && unitData.promotesTo.length > 0 && unitData && unitDat
                                     ${spell.passive || (spell.effects && spell.effects.includes('passive')) ? 'Passive' : `Cooldown: ${Array.isArray(spell.cooldown) ? spell.cooldown.join('/') : spell.cooldown} turns`}
                                 </div>
                                 <div style="color: #b0e0f0; margin-top: 10px; line-height: 1.5;">
-                                    ${this.formatSpellDescription(spell, unitData)}
+                                    ${this.formatSpellDescription(spell)}
                                 </div>
                             </div>
                         </div>
@@ -653,24 +653,11 @@ if (unitData.promotesTo && unitData.promotesTo.length > 0 && unitData && unitDat
     document.body.appendChild(popup);
 }
 
-    formatSpellDescription(spell, unit = null) {
-    let description = spell.description || '';
-    
-    // Determine the level index based on unit type and tier
-    let levelIndex = 0; // Default to first level
-    if (unit) {
-        if (unit.tier !== undefined) {
-            // Hero unit - use tier as level index (tier 0 = index 0, tier 1 = index 1, etc.)
-            levelIndex = Math.min(unit.tier, 4); // Cap at 4 (5 levels max)
-        } else if (unit.level) {
-            // Enemy unit - use spell level calculation
-            const spellLevel = Math.floor(unit.level / 100) + 1;
-            levelIndex = Math.min(spellLevel - 1, 4);
-        }
-    }
-    
-    // Replace placeholders with actual values at the correct level
-    description = description.replace(/{(\w+(?:\.\w+)*)}/g, (match, property) => {
+    formatSpellDescription(spell) {
+        let description = spell.description || '';
+        
+        // Replace placeholders with actual values (showing all levels)
+        description = description.replace(/{(\w+(?:\.\w+)*)}/g, (match, property) => {
             // Get the value for this property
             let values = null;
             
@@ -689,13 +676,13 @@ if (unitData.promotesTo && unitData.promotesTo.length > 0 && unitData && unitDat
             }
             
             // Format the values
-if (Array.isArray(values)) {
-    // Only show the value for the current level
-    const value = values[levelIndex] || values[0];
-    if (typeof value === 'number' && value < 1 && value > 0 && property.includes('percent')) {
-        return Math.round(value * 100) + '%';
-    }
-    return value;
+            if (Array.isArray(values)) {
+                return values.map((v, i) => {
+                    if (typeof v === 'number' && v < 1 && v > 0 && property.includes('percent')) {
+                        return Math.round(v * 100) + '%';
+                    }
+                    return v;
+                }).join('/');
             } else if (values !== null && values !== undefined) {
                 return values;
             }
