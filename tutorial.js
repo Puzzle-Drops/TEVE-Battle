@@ -3,6 +3,156 @@ class Tutorial {
     constructor(game) {
         this.game = game;
         this.selectedGender = null;
+        
+        // Dialogue system properties
+        this.currentDialogueQueue = [];
+        this.currentDialogueIndex = 0;
+        this.isTyping = false;
+        this.canContinue = false;
+        this.typewriterTimeout = null;
+        this.continueTimeout = null;
+        
+        // Bind the click handler
+        this.handleDialogueClick = this.handleDialogueClick.bind(this);
+    }
+
+    // NPC Dialogue System
+    npcDialogue(npcName, dialogueText, blur = false) {
+        // Clear any existing dialogue
+        this.clearDialogue();
+        
+        // Convert single string to array for consistency
+        this.currentDialogueQueue = Array.isArray(dialogueText) ? dialogueText : [dialogueText];
+        this.currentDialogueIndex = 0;
+        
+        // Show overlay with optional blur
+        const overlay = document.getElementById('npcDialogueOverlay');
+        overlay.style.display = 'block';
+        if (blur) {
+            overlay.classList.add('blurred');
+        } else {
+            overlay.classList.remove('blurred');
+        }
+        
+        // Set NPC portrait
+        const validNPCs = ['skypper', 'bob', 'arnold', 'squeaky'];
+        const npcNameLower = npcName.toLowerCase();
+        if (validNPCs.includes(npcNameLower)) {
+            const portraitImg = document.getElementById('npcPortraitImage');
+            portraitImg.src = `https://puzzle-drops.github.io/TEVE/img/npc/${npcNameLower}_dialogue.png`;
+        }
+        
+        // Add click handler
+        overlay.addEventListener('click', this.handleDialogueClick);
+        
+        // Start first dialogue
+        this.showNextDialogue();
+    }
+    
+    showNextDialogue() {
+        if (this.currentDialogueIndex >= this.currentDialogueQueue.length) {
+            this.closeDialogue();
+            return;
+        }
+        
+        const text = this.currentDialogueQueue[this.currentDialogueIndex];
+        this.typewriterEffect(text);
+        this.currentDialogueIndex++;
+    }
+    
+    typewriterEffect(text) {
+        this.isTyping = true;
+        this.canContinue = false;
+        
+        const textElement = document.getElementById('npcDialogueText');
+        const continueElement = document.getElementById('npcDialogueContinue');
+        
+        textElement.textContent = '';
+        continueElement.style.display = 'none';
+        
+        let charIndex = 0;
+        const typeSpeed = 30; // milliseconds per character
+        
+        const typeNextChar = () => {
+            if (charIndex < text.length) {
+                textElement.textContent += text[charIndex];
+                charIndex++;
+                this.typewriterTimeout = setTimeout(typeNextChar, typeSpeed);
+            } else {
+                // Typing complete
+                this.isTyping = false;
+                // Wait 2 seconds before allowing continue
+                this.continueTimeout = setTimeout(() => {
+                    this.canContinue = true;
+                    continueElement.style.display = 'block';
+                }, 2000);
+            }
+        };
+        
+        typeNextChar();
+    }
+    
+    handleDialogueClick(event) {
+        // Prevent clicking through to game elements
+        event.stopPropagation();
+        
+        if (this.isTyping) {
+            // Skip typewriter effect
+            clearTimeout(this.typewriterTimeout);
+            const textElement = document.getElementById('npcDialogueText');
+            const currentText = this.currentDialogueQueue[this.currentDialogueIndex - 1];
+            textElement.textContent = currentText;
+            this.isTyping = false;
+            
+            // Still wait before allowing continue
+            clearTimeout(this.continueTimeout);
+            this.continueTimeout = setTimeout(() => {
+                this.canContinue = true;
+                document.getElementById('npcDialogueContinue').style.display = 'block';
+            }, 2000);
+        } else if (this.canContinue) {
+            this.showNextDialogue();
+        }
+    }
+    
+    closeDialogue() {
+        const overlay = document.getElementById('npcDialogueOverlay');
+        overlay.style.display = 'none';
+        overlay.classList.remove('blurred');
+        overlay.removeEventListener('click', this.handleDialogueClick);
+        
+        // Clear timeouts
+        clearTimeout(this.typewriterTimeout);
+        clearTimeout(this.continueTimeout);
+        
+        // Reset state
+        this.currentDialogueQueue = [];
+        this.currentDialogueIndex = 0;
+        this.isTyping = false;
+        this.canContinue = false;
+    }
+    
+    clearDialogue() {
+        // Force clear any existing dialogue
+        this.closeDialogue();
+        document.getElementById('npcDialogueText').textContent = '';
+        document.getElementById('npcDialogueContinue').style.display = 'none';
+    }
+    
+    // Test function for console
+    testDialogue() {
+        // Example with array of strings
+        this.npcDialogue('Arnold', [
+            "Hello there, adventurer! My name is Arnold.",
+            "I've been waiting for someone like you to arrive.",
+            "The City of New Lights needs heroes now more than ever.",
+            "Are you ready to begin your journey?"
+        ], true);
+    }
+    
+    // Another test with different NPC
+    testBobDialogue() {
+        this.npcDialogue('Bob', "Welcome to the Arena! I'm Bob, the arena master. Come find me when you're ready for a real challenge!", false);
     }
 
     showNewHeroCreation() {
