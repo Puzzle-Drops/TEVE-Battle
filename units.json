@@ -8,30 +8,30 @@
         "str": 1.0,
         "agi": 1.0,
         "int": 1.0,
-        "hp": 1.0,
-        "attack": 1.0,
-        "armor": 1.0,
-        "resist": 1.0
-    },
+        "hp": 100.0,
+        "attack": 10.0,
+        "armor": 10.0,
+        "resist": 10.0
+      },
       "initial": {
-        "str": 1,
-        "agi": 1,
-        "int": 1,
+        "str": 1000000,
+        "agi": 1000000,
+        "int": 1000000,
         "hp": 1000000000,
         "hpRegen": 1000000000,
         "attack": 1000000000,
         "attackSpeed": 1000000000,
         "armor": 1000000000,
         "resist": 1000000000
-    },
+      },
       "spells": ["lose", "win"],
       "promotesTo": []
     },
     "villager_male": {
-    "name": "Villager",
-    "tier": 0,
-    "mainstat": "str",
-    "modifiers": { 
+      "name": "Villager",
+      "tier": 0,
+      "mainstat": "str",
+      "modifiers": { 
         "str": 1.0,
         "agi": 1.0,
         "int": 1.0,
@@ -39,8 +39,8 @@
         "attack": 0.2,
         "armor": 0.11,
         "resist": 0.08
-    },
-    "initial": {
+      },
+      "initial": {
         "str": 5,
         "agi": 4,
         "int": 3,
@@ -48,17 +48,17 @@
         "hpRegen": 0.5,
         "attack": 2,
         "attackSpeed": 0,
-        "armor": 6.5,
+        "armor": 7,
         "resist": 4
+      },
+      "spells": ["punch", "fury"],
+      "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
     },
-    "spells": ["punch", "fury"],
-    "promotesTo": ["acolyte_male", "archer_male", "druid_male", "initiate_male", "swordsman_male", "templar_male", "thief_male", "witch_hunter_male"]
-},
-"villager_female": {
-    "name": "Villager",
-    "tier": 0,
-    "mainstat": "str",
-    "modifiers": { 
+    "villager_female": {
+      "name": "Villager",
+      "tier": 0,
+      "mainstat": "str",
+      "modifiers": { 
         "str": 1.0,
         "agi": 1.0,
         "int": 1.0,
@@ -66,8 +66,8 @@
         "attack": 0.2,
         "armor": 0.11,
         "resist": 0.08
-    },
-    "initial": {
+      },
+      "initial": {
         "str": 5,
         "agi": 4,
         "int": 3,
@@ -75,25 +75,33 @@
         "hpRegen": 0.5,
         "attack": 2,
         "attackSpeed": 0,
-        "armor": 6.5,
+        "armor": 7,
         "resist": 4
+      },
+      "spells": ["punch", "throw_rock"],
+      "promotesTo": ["acolyte_female", "archer_female", "druid_female", "initiate_female", "swordsman_female", "templar_female", "thief_female", "witch_hunter_female"]
     },
-    "spells": ["punch", "throw_rock"],
-    "promotesTo": ["acolyte_female", "archer_female", "druid_female", "initiate_female", "swordsman_female", "templar_female", "thief_female", "witch_hunter_female"]
-},
     "acolyte_male": {
       "name": "Acolyte",
       "tier": 1,
-      "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.25,
+        "agi": 1.35,
+        "int": 1.4,
+        "hp": 3.1,
+        "attack": 0.16,
+        "armor": 0.11,
+        "resist": 0.33
+      },
       "initial": {
+        "str": 4,
+        "agi": 5,
+        "int": 7,
         "hp": 40,
         "hpRegen": 1,
         "attack": 3,
         "attackSpeed": 0,
-        "str": 4,
-        "agi": 5,
-        "int": 7,
         "armor": 6,
         "resist": 6
       },
@@ -103,16 +111,24 @@
     "acolyte_female": {
       "name": "Acolyte",
       "tier": 1,
-      "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.25,
+        "agi": 1.35,
+        "int": 1.4,
+        "hp": 3.1,
+        "attack": 0.16,
+        "armor": 0.11,
+        "resist": 0.33
+      },
       "initial": {
+        "str": 4,
+        "agi": 5,
+        "int": 7,
         "hp": 40,
         "hpRegen": 1,
         "attack": 3,
         "attackSpeed": 0,
-        "str": 4,
-        "agi": 5,
-        "int": 7,
         "armor": 6,
         "resist": 6
       },
@@ -122,16 +138,24 @@
     "cleric_male": {
       "name": "Cleric",
       "tier": 2,
-      "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.55,
+        "agi": 1.9,
+        "int": 2.55,
+        "hp": 3.2,
+        "attack": 0.18,
+        "armor": 0.16,
+        "resist": 0.355
+      },
       "initial": {
+        "str": 5,
+        "agi": 7,
+        "int": 12,
         "hp": 60,
         "hpRegen": 1.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 7,
-        "int": 12,
         "armor": 10,
         "resist": 10
       },
@@ -141,16 +165,24 @@
     "cleric_female": {
       "name": "Cleric",
       "tier": 2,
-      "modifiers": { "str": 1.55, "agi": 1.9, "int": 2.55 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.55,
+        "agi": 1.9,
+        "int": 2.55,
+        "hp": 3.2,
+        "attack": 0.18,
+        "armor": 0.16,
+        "resist": 0.355
+      },
       "initial": {
+        "str": 5,
+        "agi": 7,
+        "int": 12,
         "hp": 60,
         "hpRegen": 1.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 7,
-        "int": 12,
         "armor": 10,
         "resist": 10
       },
@@ -160,16 +192,24 @@
     "priest_male": {
       "name": "Priest",
       "tier": 3,
-      "modifiers": { "str": 2.15, "agi": 2.95, "int": 3.9 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.15,
+        "agi": 2.95,
+        "int": 3.9,
+        "hp": 3.3,
+        "attack": 0.18,
+        "armor": 0.16,
+        "resist": 0.43
+      },
       "initial": {
+        "str": 6,
+        "agi": 10,
+        "int": 20,
         "hp": 90,
         "hpRegen": 2.5,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 6,
-        "agi": 10,
-        "int": 20,
         "armor": 15,
         "resist": 18
       },
@@ -179,16 +219,24 @@
     "priestess_female": {
       "name": "Priestess",
       "tier": 3,
-      "modifiers": { "str": 2.15, "agi": 2.95, "int": 3.9 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.15,
+        "agi": 2.95,
+        "int": 3.9,
+        "hp": 3.3,
+        "attack": 0.18,
+        "armor": 0.16,
+        "resist": 0.43
+      },
       "initial": {
+        "str": 6,
+        "agi": 10,
+        "int": 20,
         "hp": 90,
         "hpRegen": 2.5,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 6,
-        "agi": 10,
-        "int": 20,
         "armor": 15,
         "resist": 18
       },
@@ -198,16 +246,24 @@
     "hierophant_male": {
       "name": "Hierophant",
       "tier": 4,
-      "modifiers": { "str": 2.5, "agi": 3.95, "int": 5.55 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.5,
+        "agi": 3.95,
+        "int": 5.55,
+        "hp": 3.4,
+        "attack": 0.18,
+        "armor": 0.21,
+        "resist": 0.48
+      },
       "initial": {
+        "str": 8,
+        "agi": 13,
+        "int": 27,
         "hp": 120,
         "hpRegen": 3.5,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 13,
-        "int": 27,
         "armor": 20,
         "resist": 28
       },
@@ -217,16 +273,24 @@
     "hierophant_female": {
       "name": "Hierophant",
       "tier": 4,
-      "modifiers": { "str": 2.5, "agi": 3.95, "int": 5.55 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.5,
+        "agi": 3.95,
+        "int": 5.55,
+        "hp": 3.4,
+        "attack": 0.18,
+        "armor": 0.21,
+        "resist": 0.48
+      },
       "initial": {
+        "str": 8,
+        "agi": 13,
+        "int": 27,
         "hp": 120,
         "hpRegen": 3.5,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 13,
-        "int": 27,
         "armor": 20,
         "resist": 28
       },
@@ -236,16 +300,24 @@
     "patriarch_male": {
       "name": "Patriarch",
       "tier": 3,
-      "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.65,
+        "agi": 2.0,
+        "int": 4.35,
+        "hp": 3.4,
+        "attack": 0.16,
+        "armor": 0.16,
+        "resist": 0.43
+      },
       "initial": {
+        "str": 8,
+        "agi": 6,
+        "int": 22,
         "hp": 100,
         "hpRegen": 3,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 6,
-        "int": 22,
         "armor": 18,
         "resist": 16
       },
@@ -255,16 +327,24 @@
     "matriarch_female": {
       "name": "Matriarch",
       "tier": 3,
-      "modifiers": { "str": 2.65, "agi": 2.0, "int": 4.35 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.65,
+        "agi": 2.0,
+        "int": 4.35,
+        "hp": 3.4,
+        "attack": 0.16,
+        "armor": 0.16,
+        "resist": 0.43
+      },
       "initial": {
+        "str": 8,
+        "agi": 6,
+        "int": 22,
         "hp": 100,
         "hpRegen": 3,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 6,
-        "int": 22,
         "armor": 18,
         "resist": 16
       },
@@ -274,16 +354,24 @@
     "prophet_male": {
       "name": "Prophet",
       "tier": 4,
-      "modifiers": { "str": 3.55, "agi": 2.85, "int": 5.6 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 3.55,
+        "agi": 2.85,
+        "int": 5.6,
+        "hp": 3.5,
+        "attack": 0.16,
+        "armor": 0.21,
+        "resist": 0.48
+      },
       "initial": {
+        "str": 10,
+        "agi": 8,
+        "int": 30,
         "hp": 140,
         "hpRegen": 4,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 8,
-        "int": 30,
         "armor": 24,
         "resist": 24
       },
@@ -293,16 +381,24 @@
     "prophetess_female": {
       "name": "Prophetess",
       "tier": 4,
-      "modifiers": { "str": 3.55, "agi": 2.85, "int": 5.6 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 3.55,
+        "agi": 2.85,
+        "int": 5.6,
+        "hp": 3.5,
+        "attack": 0.16,
+        "armor": 0.21,
+        "resist": 0.48
+      },
       "initial": {
+        "str": 10,
+        "agi": 8,
+        "int": 30,
         "hp": 140,
         "hpRegen": 4,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 8,
-        "int": 30,
         "armor": 24,
         "resist": 24
       },
@@ -312,16 +408,24 @@
     "archer_male": {
       "name": "Archer",
       "tier": 1,
-      "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.25,
+        "agi": 1.45,
+        "int": 1.3,
+        "hp": 3.0,
+        "attack": 0.4,
+        "armor": 0.11,
+        "resist": 0.055
+      },
       "initial": {
+        "str": 5,
+        "agi": 7,
+        "int": 4,
         "hp": 35,
         "hpRegen": 0.5,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 7,
-        "int": 4,
         "armor": 8,
         "resist": 4
       },
@@ -331,16 +435,24 @@
     "archer_female": {
       "name": "Archer",
       "tier": 1,
-      "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.25,
+        "agi": 1.45,
+        "int": 1.3,
+        "hp": 3.0,
+        "attack": 0.4,
+        "armor": 0.11,
+        "resist": 0.055
+      },
       "initial": {
+        "str": 5,
+        "agi": 7,
+        "int": 4,
         "hp": 35,
         "hpRegen": 0.5,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 7,
-        "int": 4,
         "armor": 8,
         "resist": 4
       },
@@ -350,16 +462,24 @@
     "ranger_male": {
       "name": "Ranger",
       "tier": 2,
-      "modifiers": { "str": 1.5, "agi": 2.9, "int": 1.6 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 2.9,
+        "int": 1.6,
+        "hp": 3.0,
+        "attack": 0.44,
+        "armor": 0.16,
+        "resist": 0.08
+      },
       "initial": {
+        "str": 7,
+        "agi": 12,
+        "int": 5,
         "hp": 50,
         "hpRegen": 1,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 12,
-        "int": 5,
         "armor": 12,
         "resist": 6
       },
@@ -369,16 +489,24 @@
     "ranger_female": {
       "name": "Ranger",
       "tier": 2,
-      "modifiers": { "str": 1.5, "agi": 2.9, "int": 1.6 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 2.9,
+        "int": 1.6,
+        "hp": 3.0,
+        "attack": 0.44,
+        "armor": 0.16,
+        "resist": 0.08
+      },
       "initial": {
+        "str": 7,
+        "agi": 12,
+        "int": 5,
         "hp": 50,
         "hpRegen": 1,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 12,
-        "int": 5,
         "armor": 12,
         "resist": 6
       },
@@ -388,16 +516,24 @@
     "marksman_male": {
       "name": "Marksman",
       "tier": 3,
-      "modifiers": { "str": 2.05, "agi": 4.6, "int": 2.35 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.05,
+        "agi": 4.6,
+        "int": 2.35,
+        "hp": 3.0,
+        "attack": 0.5,
+        "armor": 0.16,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 10,
+        "agi": 20,
+        "int": 6,
         "hp": 80,
         "hpRegen": 1.5,
         "attack": 12,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 20,
-        "int": 6,
         "armor": 18,
         "resist": 10
       },
@@ -407,16 +543,24 @@
     "marksman_female": {
       "name": "Marksman",
       "tier": 3,
-      "modifiers": { "str": 2.05, "agi": 4.6, "int": 2.35 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.05,
+        "agi": 4.6,
+        "int": 2.35,
+        "hp": 3.0,
+        "attack": 0.5,
+        "armor": 0.16,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 10,
+        "agi": 20,
+        "int": 6,
         "hp": 80,
         "hpRegen": 1.5,
         "attack": 12,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 20,
-        "int": 6,
         "armor": 18,
         "resist": 10
       },
@@ -426,16 +570,24 @@
     "sniper_male": {
       "name": "Sniper",
       "tier": 4,
-      "modifiers": { "str": 2.55, "agi": 6.7, "int": 2.75 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.55,
+        "agi": 6.7,
+        "int": 2.75,
+        "hp": 3.0,
+        "attack": 0.58,
+        "armor": 0.16,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 13,
+        "agi": 27,
+        "int": 8,
         "hp": 100,
         "hpRegen": 2,
         "attack": 16,
         "attackSpeed": 0,
-        "str": 13,
-        "agi": 27,
-        "int": 8,
         "armor": 24,
         "resist": 14
       },
@@ -445,16 +597,24 @@
     "sniper_female": {
       "name": "Sniper",
       "tier": 4,
-      "modifiers": { "str": 2.55, "agi": 6.7, "int": 2.75 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.55,
+        "agi": 6.7,
+        "int": 2.75,
+        "hp": 3.0,
+        "attack": 0.58,
+        "armor": 0.16,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 13,
+        "agi": 27,
+        "int": 8,
         "hp": 100,
         "hpRegen": 2,
         "attack": 16,
         "attackSpeed": 0,
-        "str": 13,
-        "agi": 27,
-        "int": 8,
         "armor": 24,
         "resist": 14
       },
@@ -464,16 +624,24 @@
     "tracker_male": {
       "name": "Tracker",
       "tier": 3,
-      "modifiers": { "str": 2.5, "agi": 4.25, "int": 2.25 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.5,
+        "agi": 4.25,
+        "int": 2.25,
+        "hp": 3.1,
+        "attack": 0.46,
+        "armor": 0.21,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 12,
+        "agi": 18,
+        "int": 6,
         "hp": 90,
         "hpRegen": 2,
         "attack": 10,
         "attackSpeed": 0,
-        "str": 12,
-        "agi": 18,
-        "int": 6,
         "armor": 20,
         "resist": 8
       },
@@ -483,16 +651,24 @@
     "tracker_female": {
       "name": "Tracker",
       "tier": 3,
-      "modifiers": { "str": 2.5, "agi": 4.25, "int": 2.25 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.5,
+        "agi": 4.25,
+        "int": 2.25,
+        "hp": 3.1,
+        "attack": 0.46,
+        "armor": 0.21,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 12,
+        "agi": 18,
+        "int": 6,
         "hp": 90,
         "hpRegen": 2,
         "attack": 10,
         "attackSpeed": 0,
-        "str": 12,
-        "agi": 18,
-        "int": 6,
         "armor": 20,
         "resist": 8
       },
@@ -502,16 +678,24 @@
     "monster_hunter_male": {
       "name": "Monster Hunter",
       "tier": 4,
-      "modifiers": { "str": 3.35, "agi": 6.1, "int": 2.55 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.35,
+        "agi": 6.1,
+        "int": 2.55,
+        "hp": 3.2,
+        "attack": 0.52,
+        "armor": 0.21,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 16,
+        "agi": 24,
+        "int": 8,
         "hp": 120,
         "hpRegen": 2.5,
         "attack": 14,
         "attackSpeed": 0,
-        "str": 16,
-        "agi": 24,
-        "int": 8,
         "armor": 28,
         "resist": 12
       },
@@ -521,16 +705,24 @@
     "monster_hunter_female": {
       "name": "Monster Hunter",
       "tier": 4,
-      "modifiers": { "str": 3.35, "agi": 6.1, "int": 2.55 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.35,
+        "agi": 6.1,
+        "int": 2.55,
+        "hp": 3.2,
+        "attack": 0.52,
+        "armor": 0.21,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 16,
+        "agi": 24,
+        "int": 8,
         "hp": 120,
         "hpRegen": 2.5,
         "attack": 14,
         "attackSpeed": 0,
-        "str": 16,
-        "agi": 24,
-        "int": 8,
         "armor": 28,
         "resist": 12
       },
@@ -540,16 +732,24 @@
     "druid_male": {
       "name": "Druid",
       "tier": 1,
-      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 1.25,
+        "int": 1.25,
+        "hp": 3.5,
+        "attack": 0.18,
+        "armor": 0.26,
+        "resist": 0.13
+      },
       "initial": {
+        "str": 6,
+        "agi": 4,
+        "int": 6,
         "hp": 45,
         "hpRegen": 0.5,
         "attack": 3,
         "attackSpeed": 0,
-        "str": 6,
-        "agi": 4,
-        "int": 6,
         "armor": 10,
         "resist": 4
       },
@@ -559,16 +759,24 @@
     "druid_female": {
       "name": "Druid",
       "tier": 1,
-      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 1.25,
+        "int": 1.25,
+        "hp": 3.5,
+        "attack": 0.18,
+        "armor": 0.26,
+        "resist": 0.13
+      },
       "initial": {
+        "str": 6,
+        "agi": 4,
+        "int": 6,
         "hp": 45,
         "hpRegen": 0.5,
         "attack": 3,
         "attackSpeed": 0,
-        "str": 6,
-        "agi": 4,
-        "int": 6,
         "armor": 10,
         "resist": 4
       },
@@ -578,16 +786,24 @@
     "arch_druid_male": {
       "name": "Arch Druid",
       "tier": 2,
-      "modifiers": { "str": 2.0, "agi": 1.5, "int": 2.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.0,
+        "agi": 1.5,
+        "int": 2.5,
+        "hp": 3.6,
+        "attack": 0.2,
+        "armor": 0.31,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 9,
+        "agi": 5,
+        "int": 10,
         "hp": 70,
         "hpRegen": 1,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 9,
-        "agi": 5,
-        "int": 10,
         "armor": 16,
         "resist": 8
       },
@@ -597,16 +813,24 @@
     "arch_druid_female": {
       "name": "Arch Druid",
       "tier": 2,
-      "modifiers": { "str": 2.0, "agi": 1.5, "int": 2.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.0,
+        "agi": 1.5,
+        "int": 2.5,
+        "hp": 3.6,
+        "attack": 0.2,
+        "armor": 0.31,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 9,
+        "agi": 5,
+        "int": 10,
         "hp": 70,
         "hpRegen": 1,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 9,
-        "agi": 5,
-        "int": 10,
         "armor": 16,
         "resist": 8
       },
@@ -616,16 +840,24 @@
     "shapeshifter_male": {
       "name": "Shapeshifter",
       "tier": 3,
-      "modifiers": { "str": 4.0, "agi": 2.0, "int": 3.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 4.0,
+        "agi": 2.0,
+        "int": 3.0,
+        "hp": 3.8,
+        "attack": 0.2,
+        "armor": 0.36,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 18,
+        "agi": 6,
+        "int": 12,
         "hp": 120,
         "hpRegen": 1.5,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 18,
-        "agi": 6,
-        "int": 12,
         "armor": 28,
         "resist": 10
       },
@@ -635,16 +867,24 @@
     "shapeshifter_female": {
       "name": "Shapeshifter",
       "tier": 3,
-      "modifiers": { "str": 4.0, "agi": 2.0, "int": 3.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 4.0,
+        "agi": 2.0,
+        "int": 3.0,
+        "hp": 3.8,
+        "attack": 0.2,
+        "armor": 0.36,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 18,
+        "agi": 6,
+        "int": 12,
         "hp": 120,
         "hpRegen": 1.5,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 18,
-        "agi": 6,
-        "int": 12,
         "armor": 28,
         "resist": 10
       },
@@ -654,16 +894,24 @@
     "runemaster_male": {
       "name": "Runemaster",
       "tier": 4,
-      "modifiers": { "str": 5.0, "agi": 3.0, "int": 4.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 5.0,
+        "agi": 3.0,
+        "int": 4.0,
+        "hp": 4.0,
+        "attack": 0.2,
+        "armor": 0.41,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 24,
+        "agi": 8,
+        "int": 16,
         "hp": 160,
         "hpRegen": 2,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 24,
-        "agi": 8,
-        "int": 16,
         "armor": 38,
         "resist": 16
       },
@@ -673,16 +921,24 @@
     "runemaster_female": {
       "name": "Runemaster",
       "tier": 4,
-      "modifiers": { "str": 5.0, "agi": 3.0, "int": 4.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 5.0,
+        "agi": 3.0,
+        "int": 4.0,
+        "hp": 4.0,
+        "attack": 0.2,
+        "armor": 0.41,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 24,
+        "agi": 8,
+        "int": 16,
         "hp": 160,
         "hpRegen": 2,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 24,
-        "agi": 8,
-        "int": 16,
         "armor": 38,
         "resist": 16
       },
@@ -692,16 +948,24 @@
     "shaman_male": {
       "name": "Shaman",
       "tier": 3,
-      "modifiers": { "str": 2.5, "agi": 2.0, "int": 4.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.5,
+        "agi": 2.0,
+        "int": 4.5,
+        "hp": 3.7,
+        "attack": 0.22,
+        "armor": 0.31,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 10,
+        "agi": 8,
+        "int": 18,
         "hp": 80,
         "hpRegen": 2.5,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 8,
-        "int": 18,
         "armor": 16,
         "resist": 16
       },
@@ -711,16 +975,24 @@
     "shaman_female": {
       "name": "Shaman",
       "tier": 3,
-      "modifiers": { "str": 2.5, "agi": 2.0, "int": 4.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.5,
+        "agi": 2.0,
+        "int": 4.5,
+        "hp": 3.7,
+        "attack": 0.22,
+        "armor": 0.31,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 10,
+        "agi": 8,
+        "int": 18,
         "hp": 80,
         "hpRegen": 2.5,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 8,
-        "int": 18,
         "armor": 16,
         "resist": 16
       },
@@ -730,16 +1002,24 @@
     "summoner_male": {
       "name": "Summoner",
       "tier": 4,
-      "modifiers": { "str": 3.0, "agi": 2.5, "int": 6.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 2.5,
+        "int": 6.5,
+        "hp": 3.8,
+        "attack": 0.24,
+        "armor": 0.36,
+        "resist": 0.23
+      },
       "initial": {
+        "str": 13,
+        "agi": 10,
+        "int": 25,
         "hp": 110,
         "hpRegen": 3.5,
         "attack": 7,
         "attackSpeed": 0,
-        "str": 13,
-        "agi": 10,
-        "int": 25,
         "armor": 22,
         "resist": 24
       },
@@ -749,16 +1029,24 @@
     "summoner_female": {
       "name": "Summoner",
       "tier": 4,
-      "modifiers": { "str": 3.0, "agi": 2.5, "int": 6.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 2.5,
+        "int": 6.5,
+        "hp": 3.8,
+        "attack": 0.24,
+        "armor": 0.36,
+        "resist": 0.23
+      },
       "initial": {
+        "str": 13,
+        "agi": 10,
+        "int": 25,
         "hp": 110,
         "hpRegen": 3.5,
         "attack": 7,
         "attackSpeed": 0,
-        "str": 13,
-        "agi": 10,
-        "int": 25,
         "armor": 22,
         "resist": 24
       },
@@ -768,16 +1056,24 @@
     "initiate_male": {
       "name": "Initiate",
       "tier": 1,
-      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.3,
+        "agi": 1.4,
+        "int": 1.3,
+        "hp": 3.0,
+        "attack": 0.34,
+        "armor": 0.11,
+        "resist": 0.13
+      },
       "initial": {
+        "str": 4,
+        "agi": 6,
+        "int": 6,
         "hp": 30,
         "hpRegen": 0.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 4,
-        "agi": 6,
-        "int": 6,
         "armor": 6,
         "resist": 8
       },
@@ -787,16 +1083,24 @@
     "initiate_female": {
       "name": "Initiate",
       "tier": 1,
-      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.3,
+        "agi": 1.4,
+        "int": 1.3,
+        "hp": 3.0,
+        "attack": 0.34,
+        "armor": 0.11,
+        "resist": 0.13
+      },
       "initial": {
+        "str": 4,
+        "agi": 6,
+        "int": 6,
         "hp": 30,
         "hpRegen": 0.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 4,
-        "agi": 6,
-        "int": 6,
         "armor": 6,
         "resist": 8
       },
@@ -806,16 +1110,24 @@
     "mage_male": {
       "name": "Mage",
       "tier": 2,
-      "modifiers": { "str": 1.6, "agi": 1.8, "int": 2.6 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.6,
+        "agi": 1.8,
+        "int": 2.6,
+        "hp": 3.1,
+        "attack": 0.36,
+        "armor": 0.16,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 5,
+        "agi": 8,
+        "int": 11,
         "hp": 45,
         "hpRegen": 1,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 8,
-        "int": 11,
         "armor": 9,
         "resist": 14
       },
@@ -825,16 +1137,24 @@
     "mage_female": {
       "name": "Mage",
       "tier": 2,
-      "modifiers": { "str": 1.6, "agi": 1.8, "int": 2.6 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.6,
+        "agi": 1.8,
+        "int": 2.6,
+        "hp": 3.1,
+        "attack": 0.36,
+        "armor": 0.16,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 5,
+        "agi": 8,
+        "int": 11,
         "hp": 45,
         "hpRegen": 1,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 8,
-        "int": 11,
         "armor": 9,
         "resist": 14
       },
@@ -844,16 +1164,24 @@
     "wizard_male": {
       "name": "Wizard",
       "tier": 3,
-      "modifiers": { "str": 2.3, "agi": 2.6, "int": 4.1 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.3,
+        "agi": 2.6,
+        "int": 4.1,
+        "hp": 3.1,
+        "attack": 0.4,
+        "armor": 0.16,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 7,
+        "agi": 11,
+        "int": 18,
         "hp": 70,
         "hpRegen": 1.5,
         "attack": 9,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 11,
-        "int": 18,
         "armor": 13,
         "resist": 22
       },
@@ -863,16 +1191,24 @@
     "witch_female": {
       "name": "Witch",
       "tier": 3,
-      "modifiers": { "str": 2.3, "agi": 2.6, "int": 4.1 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.3,
+        "agi": 2.6,
+        "int": 4.1,
+        "hp": 3.1,
+        "attack": 0.4,
+        "armor": 0.16,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 7,
+        "agi": 11,
+        "int": 18,
         "hp": 70,
         "hpRegen": 1.5,
         "attack": 9,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 11,
-        "int": 18,
         "armor": 13,
         "resist": 22
       },
@@ -882,16 +1218,24 @@
     "white_wizard_male": {
       "name": "White Wizard",
       "tier": 4,
-      "modifiers": { "str": 3.5, "agi": 3.0, "int": 5.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 3.5,
+        "agi": 3.0,
+        "int": 5.5,
+        "hp": 3.2,
+        "attack": 0.44,
+        "armor": 0.21,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 10,
+        "agi": 14,
+        "int": 24,
         "hp": 90,
         "hpRegen": 2,
         "attack": 12,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 14,
-        "int": 24,
         "armor": 18,
         "resist": 32
       },
@@ -901,16 +1245,24 @@
     "white_witch_female": {
       "name": "White Witch",
       "tier": 4,
-      "modifiers": { "str": 3.5, "agi": 3.0, "int": 5.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 3.5,
+        "agi": 3.0,
+        "int": 5.5,
+        "hp": 3.2,
+        "attack": 0.44,
+        "armor": 0.21,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 10,
+        "agi": 14,
+        "int": 24,
         "hp": 90,
         "hpRegen": 2,
         "attack": 12,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 14,
-        "int": 24,
         "armor": 18,
         "resist": 32
       },
@@ -920,16 +1272,24 @@
     "sage_male": {
       "name": "Sage",
       "tier": 3,
-      "modifiers": { "str": 2.0, "agi": 2.8, "int": 4.2 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.0,
+        "agi": 2.8,
+        "int": 4.2,
+        "hp": 3.0,
+        "attack": 0.44,
+        "armor": 0.16,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 6,
+        "agi": 12,
+        "int": 18,
         "hp": 60,
         "hpRegen": 2,
         "attack": 10,
         "attackSpeed": 0,
-        "str": 6,
-        "agi": 12,
-        "int": 18,
         "armor": 12,
         "resist": 20
       },
@@ -939,16 +1299,24 @@
     "sage_female": {
       "name": "Sage",
       "tier": 3,
-      "modifiers": { "str": 2.0, "agi": 2.8, "int": 4.2 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.0,
+        "agi": 2.8,
+        "int": 4.2,
+        "hp": 3.0,
+        "attack": 0.44,
+        "armor": 0.16,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 6,
+        "agi": 12,
+        "int": 18,
         "hp": 60,
         "hpRegen": 2,
         "attack": 10,
         "attackSpeed": 0,
-        "str": 6,
-        "agi": 12,
-        "int": 18,
         "armor": 12,
         "resist": 20
       },
@@ -958,16 +1326,24 @@
     "arch_sage_male": {
       "name": "Arch Sage",
       "tier": 4,
-      "modifiers": { "str": 3.0, "agi": 3.5, "int": 5.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 3.5,
+        "int": 5.5,
+        "hp": 3.1,
+        "attack": 0.5,
+        "armor": 0.16,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 8,
+        "agi": 16,
+        "int": 24,
         "hp": 80,
         "hpRegen": 3,
         "attack": 13,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 16,
-        "int": 24,
         "armor": 16,
         "resist": 30
       },
@@ -977,16 +1353,24 @@
     "arch_sage_female": {
       "name": "Arch Sage",
       "tier": 4,
-      "modifiers": { "str": 3.0, "agi": 3.5, "int": 5.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 3.5,
+        "int": 5.5,
+        "hp": 3.1,
+        "attack": 0.5,
+        "armor": 0.16,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 8,
+        "agi": 16,
+        "int": 24,
         "hp": 80,
         "hpRegen": 3,
         "attack": 13,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 16,
-        "int": 24,
         "armor": 16,
         "resist": 30
       },
@@ -996,16 +1380,24 @@
     "swordsman_male": {
       "name": "Swordsman",
       "tier": 1,
-      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 1.25,
+        "int": 1.25,
+        "hp": 4.0,
+        "attack": 0.22,
+        "armor": 0.16,
+        "resist": 0.01
+      },
       "initial": {
+        "str": 7,
+        "agi": 5,
+        "int": 4,
         "hp": 50,
         "hpRegen": 0.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 5,
-        "int": 4,
         "armor": 10,
         "resist": 2
       },
@@ -1015,16 +1407,24 @@
     "swordsman_female": {
       "name": "Swordsman",
       "tier": 1,
-      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 1.25,
+        "int": 1.25,
+        "hp": 4.0,
+        "attack": 0.22,
+        "armor": 0.16,
+        "resist": 0.01
+      },
       "initial": {
+        "str": 7,
+        "agi": 5,
+        "int": 4,
         "hp": 50,
         "hpRegen": 0.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 5,
-        "int": 4,
         "armor": 10,
         "resist": 2
       },
@@ -1034,16 +1434,24 @@
     "knight_male": {
       "name": "Knight",
       "tier": 2,
-      "modifiers": { "str": 2.75, "agi": 1.75, "int": 1.5 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 2.75,
+        "agi": 1.75,
+        "int": 1.5,
+        "hp": 4.2,
+        "attack": 0.24,
+        "armor": 0.21,
+        "resist": 0.01
+      },
       "initial": {
+        "str": 11,
+        "agi": 8,
+        "int": 5,
         "hp": 80,
         "hpRegen": 1,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 11,
-        "agi": 8,
-        "int": 5,
         "armor": 16,
         "resist": 4
       },
@@ -1053,16 +1461,24 @@
     "knight_female": {
       "name": "Knight",
       "tier": 2,
-      "modifiers": { "str": 2.75, "agi": 1.75, "int": 1.5 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 2.75,
+        "agi": 1.75,
+        "int": 1.5,
+        "hp": 4.2,
+        "attack": 0.24,
+        "armor": 0.21,
+        "resist": 0.01
+      },
       "initial": {
+        "str": 11,
+        "agi": 8,
+        "int": 5,
         "hp": 80,
         "hpRegen": 1,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 11,
-        "agi": 8,
-        "int": 5,
         "armor": 16,
         "resist": 4
       },
@@ -1072,16 +1488,24 @@
     "imperial_knight_male": {
       "name": "Imperial Knight",
       "tier": 3,
-      "modifiers": { "str": 4.0, "agi": 3.0, "int": 2.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 4.0,
+        "agi": 3.0,
+        "int": 2.0,
+        "hp": 4.3,
+        "attack": 0.24,
+        "armor": 0.31,
+        "resist": 0.035
+      },
       "initial": {
+        "str": 16,
+        "agi": 14,
+        "int": 6,
         "hp": 130,
         "hpRegen": 1.5,
         "attack": 9,
         "attackSpeed": 0,
-        "str": 16,
-        "agi": 14,
-        "int": 6,
         "armor": 26,
         "resist": 6
       },
@@ -1091,16 +1515,24 @@
     "imperial_knight_female": {
       "name": "Imperial Knight",
       "tier": 3,
-      "modifiers": { "str": 4.0, "agi": 3.0, "int": 2.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 4.0,
+        "agi": 3.0,
+        "int": 2.0,
+        "hp": 4.3,
+        "attack": 0.24,
+        "armor": 0.31,
+        "resist": 0.035
+      },
       "initial": {
+        "str": 16,
+        "agi": 14,
+        "int": 6,
         "hp": 130,
         "hpRegen": 1.5,
         "attack": 9,
         "attackSpeed": 0,
-        "str": 16,
-        "agi": 14,
-        "int": 6,
         "armor": 26,
         "resist": 6
       },
@@ -1110,16 +1542,24 @@
     "champion_male": {
       "name": "Champion",
       "tier": 4,
-      "modifiers": { "str": 6.0, "agi": 3.5, "int": 2.5 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 6.0,
+        "agi": 3.5,
+        "int": 2.5,
+        "hp": 4.5,
+        "attack": 0.2,
+        "armor": 0.51,
+        "resist": 0.035
+      },
       "initial": {
+        "str": 22,
+        "agi": 18,
+        "int": 8,
         "hp": 180,
         "hpRegen": 2,
         "attack": 12,
         "attackSpeed": 0,
-        "str": 22,
-        "agi": 18,
-        "int": 8,
         "armor": 36,
         "resist": 10
       },
@@ -1129,16 +1569,24 @@
     "champion_female": {
       "name": "Champion",
       "tier": 4,
-      "modifiers": { "str": 6.0, "agi": 3.5, "int": 2.5 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 6.0,
+        "agi": 3.5,
+        "int": 2.5,
+        "hp": 4.5,
+        "attack": 0.2,
+        "armor": 0.51,
+        "resist": 0.035
+      },
       "initial": {
+        "str": 22,
+        "agi": 18,
+        "int": 8,
         "hp": 180,
         "hpRegen": 2,
         "attack": 12,
         "attackSpeed": 0,
-        "str": 22,
-        "agi": 18,
-        "int": 8,
         "armor": 36,
         "resist": 10
       },
@@ -1148,16 +1596,24 @@
     "crusader_male": {
       "name": "Crusader",
       "tier": 3,
-      "modifiers": { "str": 4.85, "agi": 2.0, "int": 2.15 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 4.85,
+        "agi": 2.0,
+        "int": 2.15,
+        "hp": 4.5,
+        "attack": 0.2,
+        "armor": 0.31,
+        "resist": 0.035
+      },
       "initial": {
+        "str": 20,
+        "agi": 10,
+        "int": 6,
         "hp": 140,
         "hpRegen": 2,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 20,
-        "agi": 10,
-        "int": 6,
         "armor": 30,
         "resist": 4
       },
@@ -1167,16 +1623,24 @@
     "crusader_female": {
       "name": "Crusader",
       "tier": 3,
-      "modifiers": { "str": 4.85, "agi": 2.0, "int": 2.15 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 4.85,
+        "agi": 2.0,
+        "int": 2.15,
+        "hp": 4.5,
+        "attack": 0.2,
+        "armor": 0.31,
+        "resist": 0.035
+      },
       "initial": {
+        "str": 20,
+        "agi": 10,
+        "int": 6,
         "hp": 140,
         "hpRegen": 2,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 20,
-        "agi": 10,
-        "int": 6,
         "armor": 30,
         "resist": 4
       },
@@ -1186,16 +1650,24 @@
     "avenger_male": {
       "name": "Avenger",
       "tier": 4,
-      "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 6.75,
+        "agi": 2.55,
+        "int": 2.7,
+        "hp": 4.7,
+        "attack": 0.18,
+        "armor": 0.46,
+        "resist": 0.035
+      },
       "initial": {
+        "str": 28,
+        "agi": 12,
+        "int": 8,
         "hp": 200,
         "hpRegen": 2.5,
         "attack": 10,
         "attackSpeed": 0,
-        "str": 28,
-        "agi": 12,
-        "int": 8,
         "armor": 42,
         "resist": 6
       },
@@ -1205,16 +1677,24 @@
     "avenger_female": {
       "name": "Avenger",
       "tier": 4,
-      "modifiers": { "str": 6.75, "agi": 2.55, "int": 2.7 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 6.75,
+        "agi": 2.55,
+        "int": 2.7,
+        "hp": 4.7,
+        "attack": 0.18,
+        "armor": 0.46,
+        "resist": 0.035
+      },
       "initial": {
+        "str": 28,
+        "agi": 12,
+        "int": 8,
         "hp": 200,
         "hpRegen": 2.5,
         "attack": 10,
         "attackSpeed": 0,
-        "str": 28,
-        "agi": 12,
-        "int": 8,
         "armor": 42,
         "resist": 6
       },
@@ -1224,16 +1704,24 @@
     "templar_male": {
       "name": "Templar",
       "tier": 1,
-      "modifiers": { "str": 1.3, "agi": 1.35, "int": 1.35 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.3,
+        "agi": 1.35,
+        "int": 1.35,
+        "hp": 3.3,
+        "attack": 0.28,
+        "armor": 0.21,
+        "resist": 0.08
+      },
       "initial": {
+        "str": 5,
+        "agi": 5,
+        "int": 6,
         "hp": 35,
         "hpRegen": 0.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 5,
-        "int": 6,
         "armor": 7,
         "resist": 6
       },
@@ -1243,16 +1731,24 @@
     "templar_female": {
       "name": "Templar",
       "tier": 1,
-      "modifiers": { "str": 1.3, "agi": 1.35, "int": 1.35 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.3,
+        "agi": 1.35,
+        "int": 1.35,
+        "hp": 3.3,
+        "attack": 0.28,
+        "armor": 0.21,
+        "resist": 0.08
+      },
       "initial": {
+        "str": 5,
+        "agi": 5,
+        "int": 6,
         "hp": 35,
         "hpRegen": 0.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 5,
-        "int": 6,
         "armor": 7,
         "resist": 6
       },
@@ -1262,16 +1758,24 @@
     "arch_templar_male": {
       "name": "Arch Templar",
       "tier": 2,
-      "modifiers": { "str": 1.6, "agi": 2.2, "int": 2.2 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.6,
+        "agi": 2.2,
+        "int": 2.2,
+        "hp": 3.4,
+        "attack": 0.3,
+        "armor": 0.26,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 7,
+        "agi": 8,
+        "int": 9,
         "hp": 55,
         "hpRegen": 1,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 8,
-        "int": 9,
         "armor": 11,
         "resist": 10
       },
@@ -1281,16 +1785,24 @@
     "arch_templar_female": {
       "name": "Arch Templar",
       "tier": 2,
-      "modifiers": { "str": 1.6, "agi": 2.2, "int": 2.2 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.6,
+        "agi": 2.2,
+        "int": 2.2,
+        "hp": 3.4,
+        "attack": 0.3,
+        "armor": 0.26,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 7,
+        "agi": 8,
+        "int": 9,
         "hp": 55,
         "hpRegen": 1,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 8,
-        "int": 9,
         "armor": 11,
         "resist": 10
       },
@@ -1300,16 +1812,24 @@
     "dark_templar_male": {
       "name": "Dark Templar",
       "tier": 3,
-      "modifiers": { "str": 2.35, "agi": 4.4, "int": 2.25 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.35,
+        "agi": 4.4,
+        "int": 2.25,
+        "hp": 3.4,
+        "attack": 0.34,
+        "armor": 0.26,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 8,
+        "agi": 18,
+        "int": 10,
         "hp": 75,
         "hpRegen": 2,
         "attack": 11,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 18,
-        "int": 10,
         "armor": 17,
         "resist": 12
       },
@@ -1319,16 +1839,24 @@
     "dark_templar_female": {
       "name": "Dark Templar",
       "tier": 3,
-      "modifiers": { "str": 2.35, "agi": 4.4, "int": 2.25 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.35,
+        "agi": 4.4,
+        "int": 2.25,
+        "hp": 3.4,
+        "attack": 0.34,
+        "armor": 0.26,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 8,
+        "agi": 18,
+        "int": 10,
         "hp": 75,
         "hpRegen": 2,
         "attack": 11,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 18,
-        "int": 10,
         "armor": 17,
         "resist": 12
       },
@@ -1338,16 +1866,24 @@
     "dark_arch_templar_male": {
       "name": "Dark Arch Templar",
       "tier": 4,
-      "modifiers": { "str": 3.0, "agi": 6.25, "int": 2.75 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 6.25,
+        "int": 2.75,
+        "hp": 3.5,
+        "attack": 0.38,
+        "armor": 0.31,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 11,
+        "agi": 25,
+        "int": 12,
         "hp": 105,
         "hpRegen": 2.5,
         "attack": 15,
         "attackSpeed": 0,
-        "str": 11,
-        "agi": 25,
-        "int": 12,
         "armor": 23,
         "resist": 18
       },
@@ -1357,16 +1893,24 @@
     "dark_arch_templar_female": {
       "name": "Dark Arch Templar",
       "tier": 4,
-      "modifiers": { "str": 3.0, "agi": 6.25, "int": 2.75 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 6.25,
+        "int": 2.75,
+        "hp": 3.5,
+        "attack": 0.38,
+        "armor": 0.31,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 11,
+        "agi": 25,
+        "int": 12,
         "hp": 105,
         "hpRegen": 2.5,
         "attack": 15,
         "attackSpeed": 0,
-        "str": 11,
-        "agi": 25,
-        "int": 12,
         "armor": 23,
         "resist": 18
       },
@@ -1376,16 +1920,24 @@
     "high_templar_male": {
       "name": "High Templar",
       "tier": 3,
-      "modifiers": { "str": 2.35, "agi": 2.25, "int": 4.4 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.35,
+        "agi": 2.25,
+        "int": 4.4,
+        "hp": 3.5,
+        "attack": 0.3,
+        "armor": 0.26,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 8,
+        "agi": 10,
+        "int": 18,
         "hp": 75,
         "hpRegen": 2,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 10,
-        "int": 18,
         "armor": 14,
         "resist": 18
       },
@@ -1395,16 +1947,24 @@
     "high_templar_female": {
       "name": "High Templar",
       "tier": 3,
-      "modifiers": { "str": 2.35, "agi": 2.25, "int": 4.4 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.35,
+        "agi": 2.25,
+        "int": 4.4,
+        "hp": 3.5,
+        "attack": 0.3,
+        "armor": 0.26,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 8,
+        "agi": 10,
+        "int": 18,
         "hp": 75,
         "hpRegen": 2,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 10,
-        "int": 18,
         "armor": 14,
         "resist": 18
       },
@@ -1414,16 +1974,24 @@
     "grand_templar_male": {
       "name": "Grand Templar",
       "tier": 4,
-      "modifiers": { "str": 2.75, "agi": 3.0, "int": 6.25 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.75,
+        "agi": 3.0,
+        "int": 6.25,
+        "hp": 3.6,
+        "attack": 0.32,
+        "armor": 0.31,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 10,
+        "agi": 13,
+        "int": 25,
         "hp": 105,
         "hpRegen": 2.5,
         "attack": 11,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 13,
-        "int": 25,
         "armor": 19,
         "resist": 26
       },
@@ -1433,16 +2001,24 @@
     "grand_templar_female": {
       "name": "Grand Templar",
       "tier": 4,
-      "modifiers": { "str": 2.75, "agi": 3.0, "int": 6.25 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.75,
+        "agi": 3.0,
+        "int": 6.25,
+        "hp": 3.6,
+        "attack": 0.32,
+        "armor": 0.31,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 10,
+        "agi": 13,
+        "int": 25,
         "hp": 105,
         "hpRegen": 2.5,
         "attack": 11,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 13,
-        "int": 25,
         "armor": 19,
         "resist": 26
       },
@@ -1452,16 +2028,24 @@
     "thief_male": {
       "name": "Thief",
       "tier": 1,
-      "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.3,
+        "agi": 1.45,
+        "int": 1.25,
+        "hp": 3.1,
+        "attack": 0.36,
+        "armor": 0.16,
+        "resist": 0.055
+      },
       "initial": {
+        "str": 4,
+        "agi": 7,
+        "int": 5,
         "hp": 30,
         "hpRegen": 0.5,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 4,
-        "agi": 7,
-        "int": 5,
         "armor": 7,
         "resist": 6
       },
@@ -1471,16 +2055,24 @@
     "thief_female": {
       "name": "Thief",
       "tier": 1,
-      "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.3,
+        "agi": 1.45,
+        "int": 1.25,
+        "hp": 3.1,
+        "attack": 0.36,
+        "armor": 0.16,
+        "resist": 0.055
+      },
       "initial": {
+        "str": 4,
+        "agi": 7,
+        "int": 5,
         "hp": 30,
         "hpRegen": 0.5,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 4,
-        "agi": 7,
-        "int": 5,
         "armor": 7,
         "resist": 6
       },
@@ -1490,16 +2082,24 @@
     "rogue_male": {
       "name": "Rogue",
       "tier": 2,
-      "modifiers": { "str": 1.65, "agi": 2.75, "int": 1.6 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.65,
+        "agi": 2.75,
+        "int": 1.6,
+        "hp": 3.2,
+        "attack": 0.38,
+        "armor": 0.21,
+        "resist": 0.08
+      },
       "initial": {
+        "str": 6,
+        "agi": 12,
+        "int": 6,
         "hp": 45,
         "hpRegen": 1,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 6,
-        "agi": 12,
-        "int": 6,
         "armor": 11,
         "resist": 10
       },
@@ -1509,16 +2109,24 @@
     "rogue_female": {
       "name": "Rogue",
       "tier": 2,
-      "modifiers": { "str": 1.65, "agi": 2.75, "int": 1.6 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.65,
+        "agi": 2.75,
+        "int": 1.6,
+        "hp": 3.2,
+        "attack": 0.38,
+        "armor": 0.21,
+        "resist": 0.08
+      },
       "initial": {
+        "str": 6,
+        "agi": 12,
+        "int": 6,
         "hp": 45,
         "hpRegen": 1,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 6,
-        "agi": 12,
-        "int": 6,
         "armor": 11,
         "resist": 10
       },
@@ -1528,16 +2136,24 @@
     "assassin_male": {
       "name": "Assassin",
       "tier": 3,
-      "modifiers": { "str": 2.25, "agi": 4.55, "int": 2.2 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.25,
+        "agi": 4.55,
+        "int": 2.2,
+        "hp": 3.2,
+        "attack": 0.44,
+        "armor": 0.21,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 8,
+        "agi": 20,
+        "int": 8,
         "hp": 70,
         "hpRegen": 1.5,
         "attack": 13,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 20,
-        "int": 8,
         "armor": 16,
         "resist": 14
       },
@@ -1547,16 +2163,24 @@
     "assassin_female": {
       "name": "Assassin",
       "tier": 3,
-      "modifiers": { "str": 2.25, "agi": 4.55, "int": 2.2 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.25,
+        "agi": 4.55,
+        "int": 2.2,
+        "hp": 3.2,
+        "attack": 0.44,
+        "armor": 0.21,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 8,
+        "agi": 20,
+        "int": 8,
         "hp": 70,
         "hpRegen": 1.5,
         "attack": 13,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 20,
-        "int": 8,
         "armor": 16,
         "resist": 14
       },
@@ -1566,16 +2190,24 @@
     "phantom_assassin_male": {
       "name": "Phantom Assassin",
       "tier": 4,
-      "modifiers": { "str": 3.0, "agi": 6.2, "int": 2.8 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 6.2,
+        "int": 2.8,
+        "hp": 3.3,
+        "attack": 0.5,
+        "armor": 0.21,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 11,
+        "agi": 27,
+        "int": 10,
         "hp": 95,
         "hpRegen": 2,
         "attack": 17,
         "attackSpeed": 0,
-        "str": 11,
-        "agi": 27,
-        "int": 10,
         "armor": 22,
         "resist": 20
       },
@@ -1585,16 +2217,24 @@
     "phantom_assassin_female": {
       "name": "Phantom Assassin",
       "tier": 4,
-      "modifiers": { "str": 3.0, "agi": 6.2, "int": 2.8 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 6.2,
+        "int": 2.8,
+        "hp": 3.3,
+        "attack": 0.5,
+        "armor": 0.21,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 11,
+        "agi": 27,
+        "int": 10,
         "hp": 95,
         "hpRegen": 2,
         "attack": 17,
         "attackSpeed": 0,
-        "str": 11,
-        "agi": 27,
-        "int": 10,
         "armor": 22,
         "resist": 20
       },
@@ -1604,16 +2244,24 @@
     "stalker_male": {
       "name": "Stalker",
       "tier": 3,
-      "modifiers": { "str": 2.35, "agi": 3.8, "int": 2.85 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.35,
+        "agi": 3.8,
+        "int": 2.85,
+        "hp": 3.4,
+        "attack": 0.38,
+        "armor": 0.26,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 10,
+        "agi": 16,
+        "int": 10,
         "hp": 85,
         "hpRegen": 2,
         "attack": 10,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 16,
-        "int": 10,
         "armor": 19,
         "resist": 12
       },
@@ -1623,16 +2271,24 @@
     "stalker_female": {
       "name": "Stalker",
       "tier": 3,
-      "modifiers": { "str": 2.35, "agi": 3.8, "int": 2.85 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.35,
+        "agi": 3.8,
+        "int": 2.85,
+        "hp": 3.4,
+        "attack": 0.38,
+        "armor": 0.26,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 10,
+        "agi": 16,
+        "int": 10,
         "hp": 85,
         "hpRegen": 2,
         "attack": 10,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 16,
-        "int": 10,
         "armor": 19,
         "resist": 12
       },
@@ -1642,16 +2298,24 @@
     "master_stalker_male": {
       "name": "Master Stalker",
       "tier": 4,
-      "modifiers": { "str": 3.2, "agi": 5.8, "int": 3.0 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.2,
+        "agi": 5.8,
+        "int": 3.0,
+        "hp": 3.5,
+        "attack": 0.42,
+        "armor": 0.31,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 14,
+        "agi": 22,
+        "int": 12,
         "hp": 115,
         "hpRegen": 3,
         "attack": 13,
         "attackSpeed": 0,
-        "str": 14,
-        "agi": 22,
-        "int": 12,
         "armor": 26,
         "resist": 16
       },
@@ -1661,16 +2325,24 @@
     "master_stalker_female": {
       "name": "Master Stalker",
       "tier": 4,
-      "modifiers": { "str": 3.2, "agi": 5.8, "int": 3.0 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.2,
+        "agi": 5.8,
+        "int": 3.0,
+        "hp": 3.5,
+        "attack": 0.42,
+        "armor": 0.31,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 14,
+        "agi": 22,
+        "int": 12,
         "hp": 115,
         "hpRegen": 3,
         "attack": 13,
         "attackSpeed": 0,
-        "str": 14,
-        "agi": 22,
-        "int": 12,
         "armor": 26,
         "resist": 16
       },
@@ -1680,16 +2352,24 @@
     "witch_hunter_male": {
       "name": "Witch Hunter",
       "tier": 1,
-      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.3,
+        "agi": 1.4,
+        "int": 1.3,
+        "hp": 3.3,
+        "attack": 0.28,
+        "armor": 0.21,
+        "resist": 0.08
+      },
       "initial": {
+        "str": 5,
+        "agi": 6,
+        "int": 5,
         "hp": 35,
         "hpRegen": 0.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 6,
-        "int": 5,
         "armor": 8,
         "resist": 6
       },
@@ -1699,16 +2379,24 @@
     "witch_hunter_female": {
       "name": "Witch Hunter",
       "tier": 1,
-      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.3,
+        "agi": 1.4,
+        "int": 1.3,
+        "hp": 3.3,
+        "attack": 0.28,
+        "armor": 0.21,
+        "resist": 0.08
+      },
       "initial": {
+        "str": 5,
+        "agi": 6,
+        "int": 5,
         "hp": 35,
         "hpRegen": 0.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 6,
-        "int": 5,
         "armor": 8,
         "resist": 6
       },
@@ -1718,16 +2406,24 @@
     "slayer_male": {
       "name": "Slayer",
       "tier": 2,
-      "modifiers": { "str": 1.65, "agi": 2.7, "int": 1.65 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.65,
+        "agi": 2.7,
+        "int": 1.65,
+        "hp": 3.4,
+        "attack": 0.3,
+        "armor": 0.26,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 7,
+        "agi": 11,
+        "int": 6,
         "hp": 55,
         "hpRegen": 1,
         "attack": 7,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 11,
-        "int": 6,
         "armor": 13,
         "resist": 8
       },
@@ -1737,16 +2433,24 @@
     "slayer_female": {
       "name": "Slayer",
       "tier": 2,
-      "modifiers": { "str": 1.65, "agi": 2.7, "int": 1.65 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.65,
+        "agi": 2.7,
+        "int": 1.65,
+        "hp": 3.4,
+        "attack": 0.3,
+        "armor": 0.26,
+        "resist": 0.105
+      },
       "initial": {
+        "str": 7,
+        "agi": 11,
+        "int": 6,
         "hp": 55,
         "hpRegen": 1,
         "attack": 7,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 11,
-        "int": 6,
         "armor": 13,
         "resist": 8
       },
@@ -1756,16 +2460,24 @@
     "inquisitor_male": {
       "name": "Inquisitor",
       "tier": 3,
-      "modifiers": { "str": 2.7, "agi": 2.8, "int": 3.5 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.7,
+        "agi": 2.8,
+        "int": 3.5,
+        "hp": 3.5,
+        "attack": 0.3,
+        "armor": 0.26,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 11,
+        "agi": 12,
+        "int": 13,
         "hp": 95,
         "hpRegen": 2,
         "attack": 9,
         "attackSpeed": 0,
-        "str": 11,
-        "agi": 12,
-        "int": 13,
         "armor": 20,
         "resist": 14
       },
@@ -1775,16 +2487,24 @@
     "inquisitor_female": {
       "name": "Inquisitor",
       "tier": 3,
-      "modifiers": { "str": 2.7, "agi": 2.8, "int": 3.5 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.7,
+        "agi": 2.8,
+        "int": 3.5,
+        "hp": 3.5,
+        "attack": 0.3,
+        "armor": 0.26,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 11,
+        "agi": 12,
+        "int": 13,
         "hp": 95,
         "hpRegen": 2,
         "attack": 9,
         "attackSpeed": 0,
-        "str": 11,
-        "agi": 12,
-        "int": 13,
         "armor": 20,
         "resist": 14
       },
@@ -1794,16 +2514,24 @@
     "grand_inquisitor_male": {
       "name": "Grand Inquisitor",
       "tier": 4,
-      "modifiers": { "str": 3.45, "agi": 3.65, "int": 4.9 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.45,
+        "agi": 3.65,
+        "int": 4.9,
+        "hp": 3.6,
+        "attack": 0.32,
+        "armor": 0.31,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 15,
+        "agi": 16,
+        "int": 17,
         "hp": 130,
         "hpRegen": 3,
         "attack": 12,
         "attackSpeed": 0,
-        "str": 15,
-        "agi": 16,
-        "int": 17,
         "armor": 28,
         "resist": 20
       },
@@ -1813,16 +2541,24 @@
     "grand_inquisitor_female": {
       "name": "Grand Inquisitor",
       "tier": 4,
-      "modifiers": { "str": 3.45, "agi": 3.65, "int": 4.9 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.45,
+        "agi": 3.65,
+        "int": 4.9,
+        "hp": 3.6,
+        "attack": 0.32,
+        "armor": 0.31,
+        "resist": 0.205
+      },
       "initial": {
+        "str": 15,
+        "agi": 16,
+        "int": 17,
         "hp": 130,
         "hpRegen": 3,
         "attack": 12,
         "attackSpeed": 0,
-        "str": 15,
-        "agi": 16,
-        "int": 17,
         "armor": 28,
         "resist": 20
       },
@@ -1832,16 +2568,24 @@
     "witcher_male": {
       "name": "Witcher",
       "tier": 3,
-      "modifiers": { "str": 2.6, "agi": 4.0, "int": 2.4 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.6,
+        "agi": 4.0,
+        "int": 2.4,
+        "hp": 3.4,
+        "attack": 0.34,
+        "armor": 0.26,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 10,
+        "agi": 17,
+        "int": 9,
         "hp": 85,
         "hpRegen": 1.5,
         "attack": 11,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 17,
-        "int": 9,
         "armor": 18,
         "resist": 12
       },
@@ -1851,16 +2595,24 @@
     "witcher_female": {
       "name": "Witcher",
       "tier": 3,
-      "modifiers": { "str": 2.6, "agi": 4.0, "int": 2.4 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.6,
+        "agi": 4.0,
+        "int": 2.4,
+        "hp": 3.4,
+        "attack": 0.34,
+        "armor": 0.26,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 10,
+        "agi": 17,
+        "int": 9,
         "hp": 85,
         "hpRegen": 1.5,
         "attack": 11,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 17,
-        "int": 9,
         "armor": 18,
         "resist": 12
       },
@@ -1870,16 +2622,24 @@
     "professional_witcher_male": {
       "name": "Professional Witcher",
       "tier": 4,
-      "modifiers": { "str": 3.25, "agi": 5.8, "int": 2.95 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.25,
+        "agi": 5.8,
+        "int": 2.95,
+        "hp": 3.5,
+        "attack": 0.38,
+        "armor": 0.31,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 13,
+        "agi": 23,
+        "int": 12,
         "hp": 115,
         "hpRegen": 2,
         "attack": 15,
         "attackSpeed": 0,
-        "str": 13,
-        "agi": 23,
-        "int": 12,
         "armor": 25,
         "resist": 18
       },
@@ -1889,16 +2649,24 @@
     "professional_witcher_female": {
       "name": "Professional Witcher",
       "tier": 4,
-      "modifiers": { "str": 3.25, "agi": 5.8, "int": 2.95 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.25,
+        "agi": 5.8,
+        "int": 2.95,
+        "hp": 3.5,
+        "attack": 0.38,
+        "armor": 0.31,
+        "resist": 0.155
+      },
       "initial": {
+        "str": 13,
+        "agi": 23,
+        "int": 12,
         "hp": 115,
         "hpRegen": 2,
         "attack": 15,
         "attackSpeed": 0,
-        "str": 13,
-        "agi": 23,
-        "int": 12,
         "armor": 25,
         "resist": 18
       },
@@ -1910,16 +2678,24 @@
     "satyr_youth": {
       "name": "Satyr Youth",
       "boss": false,
-      "modifiers": { "str": 1.25, "agi": 1.45, "int": 1.3 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.25,
+        "agi": 1.45,
+        "int": 1.3,
+        "hp": 3.2,
+        "attack": 0.35,
+        "armor": 0.12,
+        "resist": 0.06
+      },
       "initial": {
+        "str": 4,
+        "agi": 7,
+        "int": 5,
         "hp": 30,
         "hpRegen": 1,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 4,
-        "agi": 7,
-        "int": 5,
         "armor": 6,
         "resist": 6
       },
@@ -1928,16 +2704,24 @@
     "aggressive_satyr": {
       "name": "Aggressive Satyr",
       "boss": false,
-      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 1.25,
+        "int": 1.25,
+        "hp": 3.5,
+        "attack": 0.25,
+        "armor": 0.15,
+        "resist": 0.01
+      },
       "initial": {
+        "str": 7,
+        "agi": 5,
+        "int": 4,
         "hp": 40,
         "hpRegen": 0.5,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 5,
-        "int": 4,
         "armor": 7,
         "resist": 4
       },
@@ -1946,16 +2730,24 @@
     "satyr_instigator": {
       "name": "Satyr Instigator",
       "boss": true,
-      "modifiers": { "str": 2.2, "agi": 2.0, "int": 1.8 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 2.2,
+        "agi": 2.0,
+        "int": 1.8,
+        "hp": 4.0,
+        "attack": 0.3,
+        "armor": 0.25,
+        "resist": 0.08
+      },
       "initial": {
+        "str": 10,
+        "agi": 7,
+        "int": 5,
         "hp": 55,
         "hpRegen": 1,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 10,
-        "agi": 7,
-        "int": 5,
         "armor": 13,
         "resist": 2
       },
@@ -1964,16 +2756,24 @@
     "murkin_warrior": {
       "name": "Murkin Warrior",
       "boss": false,
-      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 1.25,
+        "int": 1.25,
+        "hp": 3.8,
+        "attack": 0.22,
+        "armor": 0.18,
+        "resist": 0.01
+      },
       "initial": {
+        "str": 8,
+        "agi": 4,
+        "int": 4,
         "hp": 50,
         "hpRegen": 0,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 4,
-        "int": 4,
         "armor": 12,
         "resist": 2
       },
@@ -1982,16 +2782,24 @@
     "murkin_brawler": {
       "name": "Murkin Brawler",
       "boss": false,
-      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 1.25,
+        "int": 1.25,
+        "hp": 3.9,
+        "attack": 0.24,
+        "armor": 0.19,
+        "resist": 0.01
+      },
       "initial": {
+        "str": 8,
+        "agi": 4,
+        "int": 4,
         "hp": 55,
         "hpRegen": 0,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 4,
-        "int": 4,
         "armor": 13,
         "resist": 0
       },
@@ -2000,16 +2808,24 @@
     "murkin_initiate": {
       "name": "Murkin Initiate",
       "boss": false,
-      "modifiers": { "str": 1.25, "agi": 1.35, "int": 1.4 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.25,
+        "agi": 1.35,
+        "int": 1.4,
+        "hp": 2.8,
+        "attack": 0.3,
+        "armor": 0.08,
+        "resist": 0.15
+      },
       "initial": {
+        "str": 4,
+        "agi": 5,
+        "int": 7,
         "hp": 25,
         "hpRegen": 1,
         "attack": 3,
         "attackSpeed": 0,
-        "str": 4,
-        "agi": 5,
-        "int": 7,
         "armor": 4,
         "resist": 12
       },
@@ -2018,16 +2834,24 @@
     "murkin_elder": {
       "name": "Murkin Elder",
       "boss": false,
-      "modifiers": { "str": 1.3, "agi": 1.4, "int": 1.3 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.3,
+        "agi": 1.4,
+        "int": 1.3,
+        "hp": 3.2,
+        "attack": 0.26,
+        "armor": 0.14,
+        "resist": 0.1
+      },
       "initial": {
+        "str": 5,
+        "agi": 6,
+        "int": 5,
         "hp": 35,
         "hpRegen": 1,
         "attack": 3,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 6,
-        "int": 5,
         "armor": 7,
         "resist": 8
       },
@@ -2036,16 +2860,24 @@
     "murkin_chieftain": {
       "name": "Murkin Chieftain",
       "boss": true,
-      "modifiers": { "str": 2.5, "agi": 1.8, "int": 1.7 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 2.5,
+        "agi": 1.8,
+        "int": 1.7,
+        "hp": 4.2,
+        "attack": 0.28,
+        "armor": 0.3,
+        "resist": 0.05
+      },
       "initial": {
+        "str": 12,
+        "agi": 6,
+        "int": 6,
         "hp": 75,
         "hpRegen": 1,
         "attack": 8,
         "attackSpeed": 0,
-        "str": 12,
-        "agi": 6,
-        "int": 6,
         "armor": 16,
         "resist": 0
       },
@@ -2054,16 +2886,24 @@
     "ice_troll": {
       "name": "Ice Troll",
       "boss": false,
-      "modifiers": { "str": 1.3, "agi": 1.45, "int": 1.25 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.3,
+        "agi": 1.45,
+        "int": 1.25,
+        "hp": 3.1,
+        "attack": 0.38,
+        "armor": 0.12,
+        "resist": 0.06
+      },
       "initial": {
+        "str": 5,
+        "agi": 8,
+        "int": 4,
         "hp": 30,
         "hpRegen": 0,
         "attack": 6,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 8,
-        "int": 4,
         "armor": 7,
         "resist": 6
       },
@@ -2072,16 +2912,24 @@
     "ice_troll_king": {
       "name": "Ice Troll King",
       "boss": true,
-      "modifiers": { "str": 1.7, "agi": 2.3, "int": 2.0 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.7,
+        "agi": 2.3,
+        "int": 2.0,
+        "hp": 3.3,
+        "attack": 0.42,
+        "armor": 0.18,
+        "resist": 0.12
+      },
       "initial": {
+        "str": 7,
+        "agi": 11,
+        "int": 6,
         "hp": 45,
         "hpRegen": 0.5,
         "attack": 9,
         "attackSpeed": 0,
-        "str": 7,
-        "agi": 11,
-        "int": 6,
         "armor": 10,
         "resist": 10
       },
@@ -2090,16 +2938,24 @@
     "water_elemental": {
       "name": "Water Elemental",
       "boss": false,
-      "modifiers": { "str": 1.25, "agi": 1.3, "int": 1.45 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.25,
+        "agi": 1.3,
+        "int": 1.45,
+        "hp": 2.8,
+        "attack": 0.28,
+        "armor": 0.06,
+        "resist": 0.18
+      },
       "initial": {
+        "str": 4,
+        "agi": 5,
+        "int": 7,
         "hp": 20,
         "hpRegen": 1.5,
         "attack": 3,
         "attackSpeed": 0,
-        "str": 4,
-        "agi": 5,
-        "int": 7,
         "armor": 3,
         "resist": 14
       },
@@ -2108,16 +2964,24 @@
     "frost_wolf": {
       "name": "Frost Wolf",
       "boss": false,
-      "modifiers": { "str": 1.35, "agi": 1.4, "int": 1.25 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.35,
+        "agi": 1.4,
+        "int": 1.25,
+        "hp": 3.2,
+        "attack": 0.35,
+        "armor": 0.14,
+        "resist": 0.05
+      },
       "initial": {
+        "str": 5,
+        "agi": 7,
+        "int": 4,
         "hp": 35,
         "hpRegen": 0.5,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 5,
-        "agi": 7,
-        "int": 4,
         "armor": 8,
         "resist": 4
       },
@@ -2126,16 +2990,24 @@
     "frostfang": {
       "name": "Frostfang",
       "boss": true,
-      "modifiers": { "str": 1.9, "agi": 2.5, "int": 1.6 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.9,
+        "agi": 2.5,
+        "int": 1.6,
+        "hp": 3.5,
+        "attack": 0.4,
+        "armor": 0.2,
+        "resist": 0.08
+      },
       "initial": {
+        "str": 8,
+        "agi": 12,
+        "int": 5,
         "hp": 50,
         "hpRegen": 0.5,
         "attack": 10,
         "attackSpeed": 0,
-        "str": 8,
-        "agi": 12,
-        "int": 5,
         "armor": 12,
         "resist": 4
       },
@@ -2144,16 +3016,24 @@
     "ice_bear": {
       "name": "Ice Bear",
       "boss": false,
-      "modifiers": { "str": 1.5, "agi": 1.25, "int": 1.25 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 1.25,
+        "int": 1.25,
+        "hp": 4.0,
+        "attack": 0.22,
+        "armor": 0.22,
+        "resist": 0.01
+      },
       "initial": {
+        "str": 9,
+        "agi": 4,
+        "int": 4,
         "hp": 60,
         "hpRegen": 0,
         "attack": 4,
         "attackSpeed": 0,
-        "str": 9,
-        "agi": 4,
-        "int": 4,
         "armor": 14,
         "resist": 0
       },
@@ -2162,16 +3042,24 @@
     "grizzly_ice_bear": {
       "name": "Grizzly Ice Bear",
       "boss": true,
-      "modifiers": { "str": 2.7, "agi": 1.6, "int": 1.7 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 2.7,
+        "agi": 1.6,
+        "int": 1.7,
+        "hp": 4.3,
+        "attack": 0.24,
+        "armor": 0.35,
+        "resist": 0.05
+      },
       "initial": {
+        "str": 13,
+        "agi": 5,
+        "int": 6,
         "hp": 70,
         "hpRegen": 0.5,
         "attack": 5,
         "attackSpeed": 0,
-        "str": 13,
-        "agi": 5,
-        "int": 6,
         "armor": 16,
         "resist": 0
       },
@@ -2180,155 +3068,573 @@
     "stitch": {
       "name": "Stitch",
       "boss": true,
-      "modifiers": { "str": 2.2, "agi": 1.0, "int": 1.5 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 2.2,
+        "agi": 1.0,
+        "int": 1.5,
+        "hp": 4.5,
+        "attack": 0.3,
+        "armor": 0.4,
+        "resist": 0.1
+      },
+      "initial": {
+        "str": 15,
+        "agi": 5,
+        "int": 8,
+        "hp": 100,
+        "hpRegen": 2,
+        "attack": 10,
+        "attackSpeed": 0,
+        "armor": 20,
+        "resist": 5
+      },
       "spells": []
     },
     "goblin_king": {
       "name": "Goblin King",
       "boss": true,
-      "modifiers": { "str": 1.8, "agi": 1.8, "int": 4.2 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.8,
+        "agi": 1.8,
+        "int": 4.2,
+        "hp": 3.8,
+        "attack": 0.45,
+        "armor": 0.15,
+        "resist": 0.35
+      },
+      "initial": {
+        "str": 10,
+        "agi": 10,
+        "int": 20,
+        "hp": 90,
+        "hpRegen": 3,
+        "attack": 12,
+        "attackSpeed": 0,
+        "armor": 15,
+        "resist": 20
+      },
       "spells": []
     },
     "centaur_bloodhorn": {
       "name": "Centaur Bloodhorn",
       "boss": true,
-      "modifiers": { "str": 2.5, "agi": 1.8, "int": 1.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 2.5,
+        "agi": 1.8,
+        "int": 1.0,
+        "hp": 4.8,
+        "attack": 0.35,
+        "armor": 0.45,
+        "resist": 0.05
+      },
+      "initial": {
+        "str": 18,
+        "agi": 12,
+        "int": 6,
+        "hp": 120,
+        "hpRegen": 1,
+        "attack": 15,
+        "attackSpeed": 0,
+        "armor": 25,
+        "resist": 5
+      },
       "spells": []
     },
     "lich_queen": {
       "name": "Lich Queen",
       "boss": true,
-      "modifiers": { "str": 1.0, "agi": 1.0, "int": 3.0 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.0,
+        "agi": 1.0,
+        "int": 3.0,
+        "hp": 3.5,
+        "attack": 0.5,
+        "armor": 0.1,
+        "resist": 0.5
+      },
+      "initial": {
+        "str": 8,
+        "agi": 8,
+        "int": 25,
+        "hp": 100,
+        "hpRegen": 5,
+        "attack": 16,
+        "attackSpeed": 0,
+        "armor": 10,
+        "resist": 30
+      },
       "spells": []
     },
     "naga_ranger": {
       "name": "Naga Ranger",
       "boss": true,
-      "modifiers": { "str": 1.5, "agi": 2.5, "int": 1.5 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 1.5,
+        "agi": 2.5,
+        "int": 1.5,
+        "hp": 3.8,
+        "attack": 0.55,
+        "armor": 0.2,
+        "resist": 0.15
+      },
+      "initial": {
+        "str": 12,
+        "agi": 22,
+        "int": 12,
+        "hp": 110,
+        "hpRegen": 2,
+        "attack": 18,
+        "attackSpeed": 0,
+        "armor": 18,
+        "resist": 12
+      },
       "spells": []
     },
     "devourer": {
       "name": "Devourer",
       "boss": true,
-      "modifiers": { "str": 3.0, "agi": 0.8, "int": 1.2 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 0.8,
+        "int": 1.2,
+        "hp": 5.0,
+        "attack": 0.4,
+        "armor": 0.5,
+        "resist": 0.08
+      },
+      "initial": {
+        "str": 25,
+        "agi": 8,
+        "int": 10,
+        "hp": 150,
+        "hpRegen": 3,
+        "attack": 20,
+        "attackSpeed": 0,
+        "armor": 30,
+        "resist": 8
+      },
       "spells": []
     },
     "rotwood_horror": {
       "name": "Rotwood Horror",
       "boss": true,
-      "modifiers": { "str": 2.8, "agi": 0.5, "int": 2.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 2.8,
+        "agi": 0.5,
+        "int": 2.0,
+        "hp": 5.2,
+        "attack": 0.35,
+        "armor": 0.55,
+        "resist": 0.2
+      },
+      "initial": {
+        "str": 24,
+        "agi": 5,
+        "int": 16,
+        "hp": 140,
+        "hpRegen": 4,
+        "attack": 18,
+        "attackSpeed": 0,
+        "armor": 32,
+        "resist": 15
+      },
       "spells": []
     },
     "hades": {
       "name": "Hades",
       "boss": true,
-      "modifiers": { "str": 2.5, "agi": 2.0, "int": 2.5 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 2.5,
+        "agi": 2.0,
+        "int": 2.5,
+        "hp": 4.5,
+        "attack": 0.4,
+        "armor": 0.4,
+        "resist": 0.25
+      },
+      "initial": {
+        "str": 20,
+        "agi": 16,
+        "int": 20,
+        "hp": 130,
+        "hpRegen": 3,
+        "attack": 22,
+        "attackSpeed": 0,
+        "armor": 28,
+        "resist": 20
+      },
       "spells": []
     },
     "mindreaver": {
       "name": "Mindreaver",
       "boss": true,
-      "modifiers": { "str": 1.0, "agi": 1.5, "int": 4.0 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 1.0,
+        "agi": 1.5,
+        "int": 4.0,
+        "hp": 4.0,
+        "attack": 0.6,
+        "armor": 0.15,
+        "resist": 0.6
+      },
+      "initial": {
+        "str": 10,
+        "agi": 15,
+        "int": 35,
+        "hp": 120,
+        "hpRegen": 6,
+        "attack": 24,
+        "attackSpeed": 0,
+        "armor": 15,
+        "resist": 35
+      },
       "spells": []
     },
     "flame_revenant": {
       "name": "Flame Revenant",
       "boss": true,
-      "modifiers": { "str": 2.0, "agi": 1.5, "int": 3.0 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.0,
+        "agi": 1.5,
+        "int": 3.0,
+        "hp": 4.2,
+        "attack": 0.5,
+        "armor": 0.25,
+        "resist": 0.4
+      },
+      "initial": {
+        "str": 16,
+        "agi": 14,
+        "int": 28,
+        "hp": 125,
+        "hpRegen": 4,
+        "attack": 22,
+        "attackSpeed": 0,
+        "armor": 20,
+        "resist": 25
+      },
       "spells": []
     },
     "unknown_entity": {
       "name": "???",
       "boss": true,
-      "modifiers": { "str": 3.0, "agi": 3.0, "int": 3.0 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 3.0,
+        "int": 3.0,
+        "hp": 4.5,
+        "attack": 0.5,
+        "armor": 0.35,
+        "resist": 0.35
+      },
+      "initial": {
+        "str": 22,
+        "agi": 22,
+        "int": 22,
+        "hp": 135,
+        "hpRegen": 5,
+        "attack": 25,
+        "attackSpeed": 0,
+        "armor": 25,
+        "resist": 25
+      },
       "spells": []
     },
     "mirage": {
       "name": "Mirage",
       "boss": true,
-      "modifiers": { "str": 2.0, "agi": 4.0, "int": 2.5 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 2.0,
+        "agi": 4.0,
+        "int": 2.5,
+        "hp": 4.0,
+        "attack": 0.65,
+        "armor": 0.25,
+        "resist": 0.25
+      },
+      "initial": {
+        "str": 18,
+        "agi": 32,
+        "int": 20,
+        "hp": 130,
+        "hpRegen": 3,
+        "attack": 26,
+        "attackSpeed": 0,
+        "armor": 22,
+        "resist": 20
+      },
       "spells": []
     },
     "ancient_hydra": {
       "name": "Ancient Hydra",
       "boss": true,
-      "modifiers": { "str": 4.0, "agi": 2.0, "int": 2.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 4.0,
+        "agi": 2.0,
+        "int": 2.0,
+        "hp": 5.5,
+        "attack": 0.45,
+        "armor": 0.6,
+        "resist": 0.15
+      },
+      "initial": {
+        "str": 30,
+        "agi": 18,
+        "int": 18,
+        "hp": 160,
+        "hpRegen": 5,
+        "attack": 28,
+        "attackSpeed": 0,
+        "armor": 35,
+        "resist": 15
+      },
       "spells": []
     },
     "pugs": {
       "name": "Pugs",
       "boss": true,
-      "modifiers": { "str": 3.5, "agi": 3.5, "int": 3.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 3.5,
+        "agi": 3.5,
+        "int": 3.0,
+        "hp": 5.0,
+        "attack": 0.5,
+        "armor": 0.5,
+        "resist": 0.3
+      },
+      "initial": {
+        "str": 28,
+        "agi": 28,
+        "int": 24,
+        "hp": 150,
+        "hpRegen": 5,
+        "attack": 30,
+        "attackSpeed": 0,
+        "armor": 32,
+        "resist": 22
+      },
       "spells": []
     },
     "starweaver": {
       "name": "Starweaver",
       "boss": true,
-      "modifiers": { "str": 2.0, "agi": 3.0, "int": 4.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 2.0,
+        "agi": 3.0,
+        "int": 4.5,
+        "hp": 4.5,
+        "attack": 0.7,
+        "armor": 0.2,
+        "resist": 0.65
+      },
+      "initial": {
+        "str": 20,
+        "agi": 26,
+        "int": 36,
+        "hp": 140,
+        "hpRegen": 7,
+        "attack": 32,
+        "attackSpeed": 0,
+        "armor": 20,
+        "resist": 38
+      },
       "spells": []
     },
     "chronarch": {
       "name": "Chronarch",
       "boss": true,
-      "modifiers": { "str": 3.0, "agi": 3.0, "int": 4.0 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 3.0,
+        "agi": 3.0,
+        "int": 4.0,
+        "hp": 4.8,
+        "attack": 0.6,
+        "armor": 0.3,
+        "resist": 0.5
+      },
+      "initial": {
+        "str": 24,
+        "agi": 24,
+        "int": 32,
+        "hp": 145,
+        "hpRegen": 6,
+        "attack": 30,
+        "attackSpeed": 0,
+        "armor": 25,
+        "resist": 30
+      },
       "spells": []
     },
     "elysian_watcher": {
       "name": "Elysian Watcher",
       "boss": true,
-      "modifiers": { "str": 3.5, "agi": 3.5, "int": 3.5 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 3.5,
+        "agi": 3.5,
+        "int": 3.5,
+        "hp": 5.0,
+        "attack": 0.55,
+        "armor": 0.4,
+        "resist": 0.4
+      },
+      "initial": {
+        "str": 26,
+        "agi": 26,
+        "int": 26,
+        "hp": 150,
+        "hpRegen": 5,
+        "attack": 32,
+        "attackSpeed": 0,
+        "armor": 28,
+        "resist": 28
+      },
       "spells": []
     },
     "sovereign": {
       "name": "Sovereign",
       "boss": true,
-      "modifiers": { "str": 4.0, "agi": 3.0, "int": 4.0 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 4.0,
+        "agi": 3.0,
+        "int": 4.0,
+        "hp": 5.2,
+        "attack": 0.6,
+        "armor": 0.35,
+        "resist": 0.55
+      },
+      "initial": {
+        "str": 30,
+        "agi": 24,
+        "int": 30,
+        "hp": 155,
+        "hpRegen": 6,
+        "attack": 34,
+        "attackSpeed": 0,
+        "armor": 30,
+        "resist": 32
+      },
       "spells": []
     },
     "worldshaper": {
       "name": "Worldshaper",
       "boss": true,
-      "modifiers": { "str": 4.5, "agi": 3.5, "int": 4.5 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 4.5,
+        "agi": 3.5,
+        "int": 4.5,
+        "hp": 5.5,
+        "attack": 0.55,
+        "armor": 0.55,
+        "resist": 0.35
+      },
+      "initial": {
+        "str": 32,
+        "agi": 26,
+        "int": 32,
+        "hp": 160,
+        "hpRegen": 7,
+        "attack": 36,
+        "attackSpeed": 0,
+        "armor": 35,
+        "resist": 30
+      },
       "spells": []
     },
     "cosmic_archon": {
       "name": "Cosmic Archon",
       "boss": true,
-      "modifiers": { "str": 5.0, "agi": 5.0, "int": 5.0 },
       "mainstat": "agi",
+      "modifiers": { 
+        "str": 5.0,
+        "agi": 5.0,
+        "int": 5.0,
+        "hp": 5.5,
+        "attack": 0.75,
+        "armor": 0.45,
+        "resist": 0.45
+      },
+      "initial": {
+        "str": 35,
+        "agi": 35,
+        "int": 35,
+        "hp": 170,
+        "hpRegen": 8,
+        "attack": 40,
+        "attackSpeed": 0,
+        "armor": 38,
+        "resist": 38
+      },
       "spells": []
     },
     "primeval_entity": {
       "name": "Primeval Entity",
       "boss": true,
-      "modifiers": { "str": 5.5, "agi": 4.5, "int": 5.5 },
       "mainstat": "int",
+      "modifiers": { 
+        "str": 5.5,
+        "agi": 4.5,
+        "int": 5.5,
+        "hp": 5.8,
+        "attack": 0.7,
+        "armor": 0.5,
+        "resist": 0.6
+      },
+      "initial": {
+        "str": 38,
+        "agi": 32,
+        "int": 38,
+        "hp": 175,
+        "hpRegen": 9,
+        "attack": 42,
+        "attackSpeed": 0,
+        "armor": 40,
+        "resist": 40
+      },
       "spells": []
     },
     "eternal_singularity": {
       "name": "Eternal Singularity",
       "boss": true,
-      "modifiers": { "str": 6.0, "agi": 6.0, "int": 6.0 },
       "mainstat": "str",
+      "modifiers": { 
+        "str": 6.0,
+        "agi": 6.0,
+        "int": 6.0,
+        "hp": 6.0,
+        "attack": 0.8,
+        "armor": 0.6,
+        "resist": 0.6
+      },
+      "initial": {
+        "str": 40,
+        "agi": 40,
+        "int": 40,
+        "hp": 180,
+        "hpRegen": 10,
+        "attack": 45,
+        "attackSpeed": 0,
+        "armor": 45,
+        "resist": 45
+      },
       "spells": []
     }
   },
