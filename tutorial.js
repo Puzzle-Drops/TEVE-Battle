@@ -213,7 +213,7 @@ showHeroClasses(gender) {
         const villagerY = startY;
         const villagerDiv = this.createHeroThumb(villagerClass, villagerData, villagerX, villagerY);
         container.appendChild(villagerDiv);
-        positions[villagerClass] = { x: villagerX + 80, y: villagerY + 80 };
+        positions[villagerClass] = { x: villagerX + 64, y: villagerY + 64 };
     }
     
     // Define class layout with specific positions
@@ -304,7 +304,7 @@ showHeroClasses(gender) {
             
             const div = this.createHeroThumb(className, classData, x, y);
             container.appendChild(div);
-            positions[className] = { x: x + 80, y: y + 80 };
+            positions[className] = { x: x + 64, y: y + 64 };
             
             // Draw path from parent
             const parentClass = classInfo.parent.includes('_') ? classInfo.parent : classInfo.parent + '_' + gender;
@@ -502,7 +502,6 @@ processFamilyPaths(container, svg, family, positions, startCol, startX, startY, 
                  style="width: 90%; height: 90%; image-rendering: pixelated; z-index: 1;"
                  onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 256 256\\'><rect fill=\\'%23666\\' width=\\'256\\' height=\\'256\\'/><text x=\\'128\\' y=\\'128\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${unitData.name}</text></svg>'">
         </div>
-        <div style="font-size: 20px; color: #6a9aaa; margin-bottom: 10px;">Tier ${unitData.tier + 1}</div>
         <div style="font-size: 36px; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">${'★'.repeat(unitData.tier + 1)}</div>
     </div>
 `;
