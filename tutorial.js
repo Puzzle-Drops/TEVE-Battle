@@ -196,6 +196,7 @@ showHeroClasses(gender) {
     // Render hero tree for specified gender
     this.renderHeroTrees(treeContainer, svg, gender);
 }
+    
    renderHeroTrees(container, svg, gender) {
     const cellWidth = 120;
     const cellHeight = 140;
@@ -213,13 +214,13 @@ showHeroClasses(gender) {
         const villagerY = startY;
         const villagerDiv = this.createHeroThumb(villagerClass, villagerData, villagerX, villagerY);
         container.appendChild(villagerDiv);
-        positions[villagerClass] = { x: villagerX + 76, y: villagerY + 76 };
+        positions[villagerClass] = { x: villagerX + 60, y: villagerY + 60 }; // Changed from 76 to 60 for better centering
     }
     
     // Define class layout with specific positions
     const classLayout = [
         // Acolyte family (columns 0-1)
-        { name: 'acolyte', row: 1, col: 0, parent: villagerClass },
+        { name: 'acolyte', row: 1, col: 0, parent: 'villager' },
         { name: 'cleric', row: 2, col: 0, parent: 'acolyte' },
         { name: 'priest', row: 3, col: 0, parent: 'cleric', gender: 'male' },
         { name: 'priestess', row: 3, col: 0, parent: 'cleric', gender: 'female' },
@@ -230,7 +231,7 @@ showHeroClasses(gender) {
         { name: 'prophetess', row: 4, col: 1, parent: 'matriarch', gender: 'female' },
         
         // Archer family (columns 2-3)
-        { name: 'archer', row: 1, col: 2, parent: villagerClass },
+        { name: 'archer', row: 1, col: 2, parent: 'villager' },
         { name: 'ranger', row: 2, col: 2, parent: 'archer' },
         { name: 'marksman', row: 3, col: 2, parent: 'ranger' },
         { name: 'sniper', row: 4, col: 2, parent: 'marksman' },
@@ -238,7 +239,7 @@ showHeroClasses(gender) {
         { name: 'monster_hunter', row: 4, col: 3, parent: 'tracker' },
         
         // Druid family (columns 4-5)
-        { name: 'druid', row: 1, col: 4, parent: villagerClass },
+        { name: 'druid', row: 1, col: 4, parent: 'villager' },
         { name: 'arch_druid', row: 2, col: 4, parent: 'druid' },
         { name: 'shapeshifter', row: 3, col: 4, parent: 'arch_druid' },
         { name: 'runemaster', row: 4, col: 4, parent: 'shapeshifter' },
@@ -246,7 +247,7 @@ showHeroClasses(gender) {
         { name: 'summoner', row: 4, col: 5, parent: 'shaman' },
         
         // Initiate family (columns 6-7)
-        { name: 'initiate', row: 1, col: 6, parent: villagerClass },
+        { name: 'initiate', row: 1, col: 6, parent: 'villager' },
         { name: 'mage', row: 2, col: 6, parent: 'initiate' },
         { name: 'wizard', row: 3, col: 6, parent: 'mage', gender: 'male' },
         { name: 'witch', row: 3, col: 6, parent: 'mage', gender: 'female' },
@@ -256,7 +257,7 @@ showHeroClasses(gender) {
         { name: 'arch_sage', row: 4, col: 7, parent: 'sage' },
         
         // Swordsman family (columns 8-9)
-        { name: 'swordsman', row: 1, col: 8, parent: villagerClass },
+        { name: 'swordsman', row: 1, col: 8, parent: 'villager' },
         { name: 'knight', row: 2, col: 8, parent: 'swordsman' },
         { name: 'imperial_knight', row: 3, col: 8, parent: 'knight' },
         { name: 'champion', row: 4, col: 8, parent: 'imperial_knight' },
@@ -264,7 +265,7 @@ showHeroClasses(gender) {
         { name: 'avenger', row: 4, col: 9, parent: 'crusader' },
         
         // Templar family (columns 10-11)
-        { name: 'templar', row: 1, col: 10, parent: villagerClass },
+        { name: 'templar', row: 1, col: 10, parent: 'villager' },
         { name: 'arch_templar', row: 2, col: 10, parent: 'templar' },
         { name: 'dark_templar', row: 3, col: 10, parent: 'arch_templar' },
         { name: 'dark_arch_templar', row: 4, col: 10, parent: 'dark_templar' },
@@ -272,7 +273,7 @@ showHeroClasses(gender) {
         { name: 'grand_templar', row: 4, col: 11, parent: 'high_templar' },
         
         // Thief family (columns 12-13)
-        { name: 'thief', row: 1, col: 12, parent: villagerClass },
+        { name: 'thief', row: 1, col: 12, parent: 'villager' },
         { name: 'rogue', row: 2, col: 12, parent: 'thief' },
         { name: 'assassin', row: 3, col: 12, parent: 'rogue' },
         { name: 'phantom_assassin', row: 4, col: 12, parent: 'assassin' },
@@ -280,7 +281,7 @@ showHeroClasses(gender) {
         { name: 'master_stalker', row: 4, col: 13, parent: 'stalker' },
         
         // Witch Hunter family (columns 14-15)
-        { name: 'witch_hunter', row: 1, col: 14, parent: villagerClass },
+        { name: 'witch_hunter', row: 1, col: 14, parent: 'villager' },
         { name: 'slayer', row: 2, col: 14, parent: 'witch_hunter' },
         { name: 'inquisitor', row: 3, col: 14, parent: 'slayer' },
         { name: 'grand_inquisitor', row: 4, col: 14, parent: 'inquisitor' },
@@ -304,12 +305,12 @@ showHeroClasses(gender) {
             
             const div = this.createHeroThumb(className, classData, x, y);
             container.appendChild(div);
-            positions[className] = { x: x + 76, y: y + 76 };
+            positions[className] = { x: x + 60, y: y + 60 }; // Changed from 76 to 60
             
             // Draw path from parent
-            const parentClass = classInfo.parent.includes('_') ? classInfo.parent : classInfo.parent + '_' + gender;
-            if (positions[parentClass]) {
-                this.drawPath(svg, positions[parentClass], positions[className]);
+            const parentName = classInfo.parent + '_' + gender;
+            if (positions[parentName]) {
+                this.drawPath(svg, positions[parentName], positions[className]);
             }
         }
     });
@@ -522,102 +523,134 @@ processFamilyPaths(container, svg, family, positions, startCol, startX, startY, 
     mainContent += `</div>`;
 
     // Column 2: Stats
-    mainContent += `<div style="flex: 1; min-width: 300px;">`;
-    
-    // Boss indicator
-    if (unitType === 'enemy' && unitData.boss) {
-        mainContent += `<div style="color: #ff4444; font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center;">BOSS</div>`;
-    }
+mainContent += `<div style="flex: 1; min-width: 300px;">`;
 
-    // Stat Modifiers
-    mainContent += `
-        <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h3 style="color: #4dd0e1; margin-top: 0;">Stat Growth Modifiers (per level)</h3>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-size: 18px;">
-                <div>STR: <span style="color: ${unitData.mainstat === 'str' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.str}x</span></div>
-                <div>AGI: <span style="color: ${unitData.mainstat === 'agi' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.agi}x</span></div>
-                <div>INT: <span style="color: ${unitData.mainstat === 'int' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.int}x</span></div>
-            </div>
+// Boss indicator
+if (unitType === 'enemy' && unitData.boss) {
+    mainContent += `<div style="color: #ff4444; font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center;">BOSS</div>`;
+}
+
+// Stat Modifiers
+mainContent += `
+    <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h3 style="color: #4dd0e1; margin-top: 0;">Stat Growth Modifiers (per level)</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-size: 18px;">
+            <div>STR: <span style="color: ${unitData.mainstat === 'str' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.str}x</span></div>
+            <div>AGI: <span style="color: ${unitData.mainstat === 'agi' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.agi}x</span></div>
+            <div>INT: <span style="color: ${unitData.mainstat === 'int' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.int}x</span></div>
         </div>
-    `;
+    </div>
+`;
 
-    // Initial Stats
+// Initial Stats with proper alignment
 mainContent += `
     <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
         <h3 style="color: #4dd0e1; margin-top: 0;">Base Stats (Level 1)</h3>
-        <div style="display: flex; gap: 40px;">
-            <div style="flex: 1;">
-                <div style="margin-bottom: 10px;">Health: <span style="color: #b0e0f0;">${unitData.initial.hp}</span></div>
-                <div style="margin-bottom: 10px;">Attack: <span style="color: #b0e0f0;">${unitData.initial.attack}</span></div>
-                <div style="margin-bottom: 10px;">Strength: <span style="color: #b0e0f0;">${unitData.initial.str}</span></div>
-                <div style="margin-bottom: 10px;">Agility: <span style="color: #b0e0f0;">${unitData.initial.agi}</span></div>
-                <div>Intelligence: <span style="color: #b0e0f0;">${unitData.initial.int}</span></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="height: 28px;">
+                        <td style="color: #b0e0f0; padding-right: 15px;">Health:</td>
+                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.hp}</td>
+                    </tr>
+                    <tr style="height: 28px;">
+                        <td style="color: #b0e0f0; padding-right: 15px;">Attack:</td>
+                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.attack}</td>
+                    </tr>
+                    <tr style="height: 28px;">
+                        <td style="color: #b0e0f0; padding-right: 15px;">Strength:</td>
+                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.str}</td>
+                    </tr>
+                    <tr style="height: 28px;">
+                        <td style="color: #b0e0f0; padding-right: 15px;">Agility:</td>
+                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.agi}</td>
+                    </tr>
+                    <tr style="height: 28px;">
+                        <td style="color: #b0e0f0; padding-right: 15px;">Intelligence:</td>
+                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.int}</td>
+                    </tr>
+                </table>
             </div>
-            <div style="flex: 1;">
-                <div style="margin-bottom: 10px;">HP Regen: <span style="color: #b0e0f0;">${unitData.initial.hpRegen}</span></div>
-                <div style="margin-bottom: 10px;">Attack Speed: <span style="color: #b0e0f0;">${unitData.initial.attackSpeed}%</span></div>
-                <div style="margin-bottom: 10px;">Armor: <span style="color: #b0e0f0;">${unitData.initial.armor}</span></div>
-                <div>Resistance: <span style="color: #b0e0f0;">${unitData.initial.resist}</span></div>
+            <div>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="height: 28px;">
+                        <td style="color: #b0e0f0; padding-right: 15px;">HP Regen:</td>
+                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.hpRegen}</td>
+                    </tr>
+                    <tr style="height: 28px;">
+                        <td style="color: #b0e0f0; padding-right: 15px;">Attack Speed:</td>
+                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.attackSpeed}%</td>
+                    </tr>
+                    <tr style="height: 28px;">
+                        <td style="color: #b0e0f0; padding-right: 15px;">Armor:</td>
+                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.armor}</td>
+                    </tr>
+                    <tr style="height: 28px;">
+                        <td style="color: #b0e0f0; padding-right: 15px;">Resistance:</td>
+                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.resist}</td>
+                    </tr>
+                </table>
             </div>
         </div>
+    </div>
 `;
 
-    // Promotion paths (heroes only)
-    if (unitType === 'hero') {
-        // Promotes from
-        const promotesFrom = [];
-        if (window.unitData && window.unitData.classes) {
-            Object.entries(window.unitData.classes).forEach(([className, classData]) => {
-                if (classData.promotesTo && classData.promotesTo.includes(unitId)) {
-                    promotesFrom.push({ id: className, data: classData });
-                }
-            });
-        }
-        
-        if (promotesFrom.length > 0) {
+// Promotion paths (heroes only) - MOVED INSIDE COLUMN 2
+if (unitType === 'hero') {
+    // Promotes from
+    const promotesFrom = [];
+    if (window.unitData && window.unitData.classes) {
+        Object.entries(window.unitData.classes).forEach(([className, classData]) => {
+            if (classData.promotesTo && classData.promotesTo.includes(unitId)) {
+                promotesFrom.push({ id: className, data: classData });
+            }
+        });
+    }
+    
+    if (promotesFrom.length > 0) {
+        mainContent += `
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="color: #4dd0e1; margin-top: 0;">Promotes From</h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+        `;
+        promotesFrom.forEach(parent => {
             mainContent += `
-                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                    <h3 style="color: #4dd0e1; margin-top: 0;">Promotes From</h3>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${parent.id}', unitData.classes['${parent.id}'], 'hero')">
+                    <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${parent.id}_portrait.png"
+                         style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
+                         onerror="this.style.display='none'">
+                    <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${parent.data.name}</div>
+                </div>
             `;
-            promotesFrom.forEach(parent => {
-                mainContent += `
-                    <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${parent.id}', unitData.classes['${parent.id}'], 'hero')">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${parent.id}_portrait.png"
-                             style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
-                             onerror="this.style.display='none'">
-                        <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${parent.data.name}</div>
-                    </div>
-                `;
-            });
-            mainContent += '</div></div>';
-        }
-
-        // Promotes to
-        if (unitData.promotesTo && unitData.promotesTo.length > 0 && window.unitData && window.unitData.classes) {
-            mainContent += `
-                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px;">
-                    <h3 style="color: #4dd0e1; margin-top: 0;">Promotes To</h3>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-            `;
-            unitData.promotesTo.forEach(childId => {
-                const childData = window.unitData.classes[childId];
-                if (childData) {
-                    mainContent += `
-                        <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${childId}', unitData.classes['${childId}'], 'hero')">
-                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${childId}_portrait.png"
-                                 style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
-                                 onerror="this.style.display='none'">
-                            <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${childData.name}</div>
-                        </div>
-                    `;
-                }
-            });
-            mainContent += '</div></div>';
-        }
+        });
+        mainContent += '</div></div>';
     }
 
-    mainContent += `</div></div>`;
+    // Promotes to
+    if (unitData.promotesTo && unitData.promotesTo.length > 0 && window.unitData && window.unitData.classes) {
+        mainContent += `
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px;">
+                <h3 style="color: #4dd0e1; margin-top: 0;">Promotes To</h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+        `;
+        unitData.promotesTo.forEach(childId => {
+            const childData = window.unitData.classes[childId];
+            if (childData) {
+                mainContent += `
+                    <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${childId}', unitData.classes['${childId}'], 'hero')">
+                        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${childId}_portrait.png"
+                             style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
+                             onerror="this.style.display='none'">
+                        <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${childData.name}</div>
+                    </div>
+                `;
+            }
+        });
+        mainContent += '</div></div>';
+    }
+}
+
+mainContent += `</div>`; // Close column 2
 
     // Column 3: Abilities
     mainContent += `<div style="flex: 1; min-width: 400px;">`;
