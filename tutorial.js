@@ -213,7 +213,7 @@ showHeroClasses(gender) {
         const villagerY = startY;
         const villagerDiv = this.createHeroThumb(villagerClass, villagerData, villagerX, villagerY);
         container.appendChild(villagerDiv);
-        positions[villagerClass] = { x: villagerX + 96, y: villagerY + 96 };
+        positions[villagerClass] = { x: villagerX + 80, y: villagerY + 80 };
     }
     
     // Define class layout with specific positions
@@ -304,7 +304,7 @@ showHeroClasses(gender) {
             
             const div = this.createHeroThumb(className, classData, x, y);
             container.appendChild(div);
-            positions[className] = { x: x + 96, y: y + 96 };
+            positions[className] = { x: x + 80, y: y + 80 };
             
             // Draw path from parent
             const parentClass = classInfo.parent.includes('_') ? classInfo.parent : classInfo.parent + '_' + gender;
