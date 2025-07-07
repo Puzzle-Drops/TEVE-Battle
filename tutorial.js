@@ -197,7 +197,7 @@ showHeroClasses(gender) {
     this.renderHeroTrees(treeContainer, svg, gender);
 }
     
-   renderHeroTrees(container, svg, gender) {
+renderHeroTrees(container, svg, gender) {
     const cellWidth = 120;
     const cellHeight = 140;
     const startX = 50;
@@ -214,7 +214,7 @@ showHeroClasses(gender) {
         const villagerY = startY;
         const villagerDiv = this.createHeroThumb(villagerClass, villagerData, villagerX, villagerY);
         container.appendChild(villagerDiv);
-        positions[villagerClass] = { x: villagerX + 76, y: villagerY + 76 }; // 76 is better and I don't know why, but it actually is cenetered at 76
+        positions['villager'] = { x: villagerX + 60, y: villagerY + 60 }; // Store without gender suffix for parent lookup
     }
     
     // Define class layout with specific positions
@@ -305,66 +305,16 @@ showHeroClasses(gender) {
             
             const div = this.createHeroThumb(className, classData, x, y);
             container.appendChild(div);
-            positions[className] = { x: x + 76, y: y + 76 }; // Changed from 60 to 76
+            
+            // Store position with simple name for parent lookup
+            positions[classInfo.name] = { x: x + 60, y: y + 60 };
             
             // Draw path from parent
-            const parentName = classInfo.parent + '_' + gender;
-            if (positions[parentName]) {
-                this.drawPath(svg, positions[parentName], positions[className]);
+            if (positions[classInfo.parent]) {
+                this.drawPath(svg, positions[classInfo.parent], positions[classInfo.name]);
             }
         }
     });
-}
-    
-processFamilyPaths(container, svg, family, positions, startCol, startX, startY, cellWidth, cellHeight, gender) {
-    // Helper function to place a class
-    const placeClass = (className, row, col) => {
-        const fullClassName = className.toLowerCase().replace(/ /g, '_') + '_' + gender;
-        const classData = unitData.classes[fullClassName];
-        if (classData) {
-            const x = startX + ((startCol + col) * cellWidth);
-            const y = startY + (row * cellHeight);
-            const div = this.createHeroThumb(fullClassName, classData, x, y);
-            container.appendChild(div);
-            positions[className] = { x: x + 48, y: y + 48, id: fullClassName };
-        }
-    };
-    
-    // Process tier 2
-    if (family.paths[family.name]) {
-        const tier2Classes = family.paths[family.name][0];
-        tier2Classes.forEach((className, index) => {
-            placeClass(className, 1, index);
-            // Draw path from tier 1
-            if (positions[family.name] && positions[className]) {
-                this.drawPath(svg, positions[family.name], positions[className]);
-            }
-        });
-        
-        // Process tier 3 and 4
-        Object.entries(family.paths).forEach(([parentName, children]) => {
-            if (parentName !== family.name) {
-                children.forEach((childGroup, groupIndex) => {
-                    childGroup.forEach((childName, childIndex) => {
-                        // Determine row based on class tier
-                        const fullChildName = childName.toLowerCase().replace(/ /g, '_') + '_' + gender;
-                        const childData = unitData.classes[fullChildName];
-                        if (childData) {
-                            const row = childData.tier - 1; // tier 3 = row 2, tier 4 = row 3
-                            const col = groupIndex; // 0 for left branch, 1 for right branch
-                            
-                            placeClass(childName, row, col);
-                            
-                            // Draw path from parent
-                            if (positions[parentName] && positions[childName]) {
-                                this.drawPath(svg, positions[parentName], positions[childName]);
-                            }
-                        }
-                    });
-                });
-            }
-        });
-    }
 }
     
     createHeroThumb(className, classData, x, y) {
@@ -522,135 +472,144 @@ processFamilyPaths(container, svg, family, positions, startCol, startX, startY, 
     
     mainContent += `</div>`;
 
-    // Column 2: Stats
-mainContent += `<div style="flex: 1; min-width: 300px;">`;
+    // Column 2: Stats and Promotion paths
+    mainContent += `<div style="flex: 1; min-width: 300px;">`;
 
-// Boss indicator
-if (unitType === 'enemy' && unitData.boss) {
-    mainContent += `<div style="color: #ff4444; font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center;">BOSS</div>`;
-}
-
-// Stat Modifiers
-mainContent += `
-    <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-        <h3 style="color: #4dd0e1; margin-top: 0;">Stat Growth Modifiers (per level)</h3>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-size: 18px;">
-            <div>STR: <span style="color: ${unitData.mainstat === 'str' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.str}x</span></div>
-            <div>AGI: <span style="color: ${unitData.mainstat === 'agi' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.agi}x</span></div>
-            <div>INT: <span style="color: ${unitData.mainstat === 'int' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.int}x</span></div>
-        </div>
-    </div>
-`;
-
-// Initial Stats with proper alignment
-mainContent += `
-    <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-        <h3 style="color: #4dd0e1; margin-top: 0;">Base Stats (Level 1)</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr style="height: 28px;">
-                        <td style="color: #b0e0f0; padding-right: 15px;">Health:</td>
-                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.hp}</td>
-                    </tr>
-                    <tr style="height: 28px;">
-                        <td style="color: #b0e0f0; padding-right: 15px;">Attack:</td>
-                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.attack}</td>
-                    </tr>
-                    <tr style="height: 28px;">
-                        <td style="color: #b0e0f0; padding-right: 15px;">Strength:</td>
-                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.str}</td>
-                    </tr>
-                    <tr style="height: 28px;">
-                        <td style="color: #b0e0f0; padding-right: 15px;">Agility:</td>
-                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.agi}</td>
-                    </tr>
-                    <tr style="height: 28px;">
-                        <td style="color: #b0e0f0; padding-right: 15px;">Intelligence:</td>
-                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.int}</td>
-                    </tr>
-                </table>
-            </div>
-            <div>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr style="height: 28px;">
-                        <td style="color: #b0e0f0; padding-right: 15px;">HP Regen:</td>
-                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.hpRegen}</td>
-                    </tr>
-                    <tr style="height: 28px;">
-                        <td style="color: #b0e0f0; padding-right: 15px;">Attack Speed:</td>
-                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.attackSpeed}%</td>
-                    </tr>
-                    <tr style="height: 28px;">
-                        <td style="color: #b0e0f0; padding-right: 15px;">Armor:</td>
-                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.armor}</td>
-                    </tr>
-                    <tr style="height: 28px;">
-                        <td style="color: #b0e0f0; padding-right: 15px;">Resistance:</td>
-                        <td style="color: #b0e0f0; text-align: right;">${unitData.initial.resist}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-`;
-
-// Promotion paths (heroes only) - MOVED INSIDE COLUMN 2
-if (unitType === 'hero') {
-    // Promotes from
-    const promotesFrom = [];
-    if (window.unitData && window.unitData.classes) {
-        Object.entries(window.unitData.classes).forEach(([className, classData]) => {
-            if (classData.promotesTo && classData.promotesTo.includes(unitId)) {
-                promotesFrom.push({ id: className, data: classData });
-            }
-        });
+    // Boss indicator
+    if (unitType === 'enemy' && unitData.boss) {
+        mainContent += `<div style="color: #ff4444; font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center;">BOSS</div>`;
     }
-    
-    if (promotesFrom.length > 0) {
-        mainContent += `
-            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                <h3 style="color: #4dd0e1; margin-top: 0;">Promotes From</h3>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
-        `;
-        promotesFrom.forEach(parent => {
+
+    // Stat Modifiers
+    mainContent += `
+        <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="color: #4dd0e1; margin-top: 0;">Stat Growth Modifiers (per level)</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-size: 18px;">
+                <div>STR: <span style="color: ${unitData.mainstat === 'str' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.str}x</span></div>
+                <div>AGI: <span style="color: ${unitData.mainstat === 'agi' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.agi}x</span></div>
+                <div>INT: <span style="color: ${unitData.mainstat === 'int' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.int}x</span></div>
+            </div>
+        </div>
+    `;
+
+    // Initial Stats with proper alignment using tables
+    mainContent += `
+        <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="color: #4dd0e1; margin-top: 0;">Base Stats (Level 1)</h3>
+            <div style="display: flex; gap: 40px;">
+                <table style="border-collapse: collapse;">
+                    <tr>
+                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Health:</td>
+                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.hp}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Attack:</td>
+                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.attack}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Strength:</td>
+                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.str}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Agility:</td>
+                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.agi}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Intelligence:</td>
+                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.int}</td>
+                    </tr>
+                </table>
+                <table style="border-collapse: collapse;">
+                    <tr>
+                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">HP Regen:</td>
+                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.hpRegen}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Attack Speed:</td>
+                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.attackSpeed}%</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Armor:</td>
+                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.armor}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Resistance:</td>
+                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.resist}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    `;
+
+    // Promotion paths (heroes only) - MOVED INSIDE COLUMN 2
+    if (unitType === 'hero') {
+        // Get the base unit ID without gender suffix
+        const baseUnitId = unitId.replace(/_male$|_female$/, '');
+        const gender = unitId.includes('_male') ? 'male' : 'female';
+        
+        // Promotes from
+        const promotesFrom = [];
+        if (window.unitData && window.unitData.classes) {
+            Object.entries(window.unitData.classes).forEach(([className, classData]) => {
+                if (classData.promotesTo) {
+                    // Check if this class promotes to our base unit
+                    const promotesToBase = classData.promotesTo.some(promo => {
+                        const promoWithGender = promo + '_' + gender;
+                        return promoWithGender === unitId;
+                    });
+                    
+                    if (promotesToBase) {
+                        promotesFrom.push({ id: className, data: classData });
+                    }
+                }
+            });
+        }
+        
+        if (promotesFrom.length > 0) {
             mainContent += `
-                <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${parent.id}', unitData.classes['${parent.id}'], 'hero')">
-                    <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${parent.id}_portrait.png"
-                         style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
-                         onerror="this.style.display='none'">
-                    <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${parent.data.name}</div>
-                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h3 style="color: #4dd0e1; margin-top: 0;">Promotes From</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
             `;
-        });
-        mainContent += '</div></div>';
-    }
-
-    // Promotes to
-    if (unitData.promotesTo && unitData.promotesTo.length > 0 && window.unitData && window.unitData.classes) {
-        mainContent += `
-            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px;">
-                <h3 style="color: #4dd0e1; margin-top: 0;">Promotes To</h3>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
-        `;
-        unitData.promotesTo.forEach(childId => {
-            const childData = window.unitData.classes[childId];
-            if (childData) {
+            promotesFrom.forEach(parent => {
                 mainContent += `
-                    <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${childId}', unitData.classes['${childId}'], 'hero')">
-                        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${childId}_portrait.png"
+                    <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${parent.id}', unitData.classes['${parent.id}'], 'hero')">
+                        <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${parent.id}_portrait.png"
                              style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
                              onerror="this.style.display='none'">
-                        <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${childData.name}</div>
+                        <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${parent.data.name}</div>
                     </div>
                 `;
-            }
-        });
-        mainContent += '</div></div>';
-    }
-}
+            });
+            mainContent += '</div></div>';
+        }
 
-mainContent += `</div>`; // Close column 2
+        // Promotes to
+        if (unitData.promotesTo && unitData.promotesTo.length > 0 && window.unitData && window.unitData.classes) {
+            mainContent += `
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px;">
+                    <h3 style="color: #4dd0e1; margin-top: 0;">Promotes To</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+            `;
+            unitData.promotesTo.forEach(childId => {
+                const childIdWithGender = childId + '_' + gender;
+                const childData = window.unitData.classes[childIdWithGender];
+                if (childData) {
+                    mainContent += `
+                        <div style="cursor: pointer; text-align: center;" onclick="window.game.tutorial.showUnitDetails('${childIdWithGender}', unitData.classes['${childIdWithGender}'], 'hero')">
+                            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${childIdWithGender}_portrait.png"
+                                 style="width: 64px; height: 64px; image-rendering: pixelated; border: 1px solid #2a6a8a;"
+                                 onerror="this.style.display='none'">
+                            <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${childData.name}</div>
+                        </div>
+                    `;
+                }
+            });
+            mainContent += '</div></div>';
+        }
+    }
+
+    mainContent += `</div>`; // Close column 2
 
     // Column 3: Abilities
     mainContent += `<div style="flex: 1; min-width: 400px;">`;
