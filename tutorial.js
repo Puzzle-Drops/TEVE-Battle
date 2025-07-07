@@ -23,7 +23,7 @@ class Tutorial {
             justify-content: center;
         `;
 
-        // Create dialog container
+        // Create select container
         const dialog = document.createElement('div');
         dialog.id = 'newHeroDialog';
         dialog.style.cssText = `
@@ -35,12 +35,11 @@ class Tutorial {
             box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
         `;
 
-// Build selection content
+// Build select content
         dialog.innerHTML = `
             <h2 style="color: #4dd0e1; text-align: center; margin-bottom: 20px; font-size: 28px;">Create New Hero</h2>
             
             <div style="display: flex; gap: 20px; margin-bottom: 30px;">
-                <!-- Male Option -->
                 <div id="maleOption" class="genderOption" style="flex: 1; border: 2px solid #2a6a8a; border-radius: 8px; cursor: pointer; transition: all 0.3s; overflow: hidden;">
                     <div style="position: relative; height: 200px; background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/villager_backdrop.png'); background-size: cover; background-position: center;">
                         <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/villager_male_battle.png" 
@@ -51,7 +50,6 @@ class Tutorial {
                     </div>
                 </div>
                 
-                <!-- Female Option -->
                 <div id="femaleOption" class="genderOption" style="flex: 1; border: 2px solid #2a6a8a; border-radius: 8px; cursor: pointer; transition: all 0.3s; overflow: hidden;">
                     <div style="position: relative; height: 200px; background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/villager_backdrop.png'); background-size: cover; background-position: center;">
                         <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/villager_female_battle.png" 
