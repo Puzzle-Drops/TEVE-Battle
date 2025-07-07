@@ -19,29 +19,31 @@ class DevConsole {
         };
         
         // Helper commands
-        this.helpers = {
-            heroes: () => this.showHeroes(),
-            hero: (index) => this.showHero(index),
-            setLevel: (heroIndex, level) => this.setHeroLevel(heroIndex, level),
-            setAllLevels: (level) => this.setAllHeroLevels(level),
-            addGold: (family, amount) => this.addGold(family, amount),
-            addAllGold: (amount) => this.addAllGold(amount),
-            addItem: (itemId, heroIndex) => this.addItem(itemId, heroIndex),
-            promoteHero: (heroIndex, className) => this.promoteHero(heroIndex, className),
-            maxHero: (heroIndex) => this.maxOutHero(heroIndex),
-            unlockAll: () => this.unlockAllContent(),
-            battle: () => this.showBattleInfo(),
-            stash: (family) => this.showStash(family),
-            givePerfectItem: (itemId, heroIndex) => this.givePerfectItem(itemId, heroIndex),
-            generateItems: (stashFamily, dungeonName, count) => this.generateItems(stashFamily, dungeonName, count),
-            setSpellLevel: (level) => this.setCurrentUnitSpellLevel(level),
-            buff: (unitIndex, buffName, duration) => this.applyBuffToUnit(unitIndex, buffName, duration),
-            debuff: (unitIndex, debuffName, duration) => this.applyDebuffToUnit(unitIndex, debuffName, duration),
-            shield: (unitIndex, amount) => this.applyShieldToUnit(unitIndex, amount),
-            listUnits: () => this.listBattleUnits(),
-            unlock: () => this.unlockEverything(),
-            party: (level) => this.setupParty(level)
-        };
+this.helpers = {
+    heroes: () => this.showHeroes(),
+    hero: (index) => this.showHero(index),
+    setLevel: (heroIndex, level) => this.setHeroLevel(heroIndex, level),
+    setAllLevels: (level) => this.setAllHeroLevels(level),
+    addGold: (family, amount) => this.addGold(family, amount),
+    addAllGold: (amount) => this.addAllGold(amount),
+    addItem: (itemId, heroIndex) => this.addItem(itemId, heroIndex),
+    promoteHero: (heroIndex, className) => this.promoteHero(heroIndex, className),
+    maxHero: (heroIndex) => this.maxOutHero(heroIndex),
+    unlockAll: () => this.unlockAllContent(),
+    battle: () => this.showBattleInfo(),
+    stash: (family) => this.showStash(family),
+    givePerfectItem: (itemId, heroIndex) => this.givePerfectItem(itemId, heroIndex),
+    generateItems: (stashFamily, dungeonName, count) => this.generateItems(stashFamily, dungeonName, count),
+    setSpellLevel: (level) => this.setCurrentUnitSpellLevel(level),
+    buff: (unitIndex, buffName, duration) => this.applyBuffToUnit(unitIndex, buffName, duration),
+    debuff: (unitIndex, debuffName, duration) => this.applyDebuffToUnit(unitIndex, debuffName, duration),
+    shield: (unitIndex, amount) => this.applyShieldToUnit(unitIndex, amount),
+    listUnits: () => this.listBattleUnits(),
+    unlock: () => this.unlockEverything(),
+    u: () => this.unlockEverything(),
+    party: (level) => this.setupParty(level),
+    newHero: () => this.createNewHero()
+};
         
         this.init();
     }
@@ -367,8 +369,9 @@ window.addEventListener('unhandledrejection', (event) => {
 - stash(family) - Show stash contents
 
 <span style="color: #ffd700;">Game State:</span>
-- unlock() - Unlock ALL progression (dungeons, tiers, features)
+- unlock() or u() - Unlock ALL progression (dungeons, tiers, features, arena)
 - unlockAll() - Unlock all content + max gold + level 300 heroes
+- newHero() - Create a new hero
 - game - Access game instance
 - game.currentBattle - Current battle state
 
@@ -759,47 +762,73 @@ Press \` to toggle console</span>`;
     }
     
     unlockEverything() {
-        if (!window.game) {
-            this.addLog('error', 'Game not initialized');
-            return;
+    if (!window.game) {
+        this.addLog('error', 'Game not initialized');
+        return;
+    }
+    
+    // Unlock all features
+    game.progression.unlockedFeatures = {
+        party: true,
+        stash: true,
+        arena: true
+    };
+    
+    // Unlock all tiers
+    const allTiers = Object.keys(game.dungeonTiers);
+    game.progression.unlockedTiers = [...allTiers];
+    
+    // Complete all dungeons (1 completion each)
+    Object.keys(dungeonData.dungeons).forEach(dungeonId => {
+        if (!game.progression.completedDungeons[dungeonId]) {
+            game.progression.completedDungeons[dungeonId] = {
+                completions: 1,
+                bestTime: '00:00'
+            };
+        } else {
+            game.progression.completedDungeons[dungeonId].completions++;
         }
-        
-        // Unlock all features
-        game.progression.unlockedFeatures = {
-            party: true,
-            stash: true,
-            arena: true
-        };
-        
-        // Unlock all tiers
-        const allTiers = Object.keys(game.dungeonTiers);
-        game.progression.unlockedTiers = [...allTiers];
-        
-        // Complete all dungeons (1 completion each)
-        Object.keys(dungeonData.dungeons).forEach(dungeonId => {
-            if (!game.progression.completedDungeons[dungeonId]) {
-                game.progression.completedDungeons[dungeonId] = {
-                    completions: 1,
-                    bestTime: '00:00'
-                };
-            } else {
-                game.progression.completedDungeons[dungeonId].completions++;
-            }
-        });
-        
-        // Save progression
-        game.saveProgression();
-        
-        this.addLog('info', `<span style="color: #ffd700;">✨ ALL PROGRESSION UNLOCKED! ✨</span>`, true);
-        this.addLog('info', `- All features unlocked`);
-        this.addLog('info', `- All ${allTiers.length} tiers unlocked`);
-        this.addLog('info', `- All ${Object.keys(dungeonData.dungeons).length} dungeons completed`);
-        
-        // Update UI if on main menu
-        if (game.currentScreen === 'mainMenuScreen') {
-            game.uiManager.showMainMenu();
+    });
+    
+    // Complete all arena teams (1 completion each with 0 deaths)
+    // Assuming there are 10 arena teams (0-9)
+    for (let i = 0; i < 10; i++) {
+        const teamId = `team_${i}`;
+        if (!game.progression.completedArenas[teamId]) {
+            game.progression.completedArenas[teamId] = {
+                completions: 1,
+                bestTime: '00:00',
+                lowestDeaths: 0
+            };
+        } else {
+            game.progression.completedArenas[teamId].completions++;
         }
     }
+    
+    // Save progression
+    game.saveProgression();
+    
+    this.addLog('info', `<span style="color: #ffd700;">✨ ALL PROGRESSION UNLOCKED! ✨</span>`, true);
+    this.addLog('info', `- All features unlocked`);
+    this.addLog('info', `- All ${allTiers.length} tiers unlocked`);
+    this.addLog('info', `- All ${Object.keys(dungeonData.dungeons).length} dungeons completed`);
+    this.addLog('info', `- All 10 arena teams completed`);
+    
+    // Update UI if on main menu
+    if (game.currentScreen === 'mainMenuScreen') {
+        game.uiManager.showMainMenu();
+    }
+}
+    
+    createNewHero() {
+    if (!window.game || !game.tutorial) {
+        this.addLog('error', 'Game or tutorial system not initialized');
+        return;
+    }
+    
+    game.tutorial.showNewHeroCreation();
+    this.addLog('info', 'Opening new hero creation dialog...');
+}
     
     setupParty(targetLevel) {
     if (!window.game) {
