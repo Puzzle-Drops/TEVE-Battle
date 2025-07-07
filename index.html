@@ -953,19 +953,19 @@ if (refinementPopup && refinementPopup.style.display === 'block') {
                     e.preventDefault();
                     return;
                 }
-
-		    // Close bestiary if open
-const bestiaryOverlay = document.getElementById('bestiaryOverlay');
-if (bestiaryOverlay) {
-    game.tutorial.closeBestiary();
-    e.preventDefault();
-    return;
-}
-
+		    
 // Close unit details popup if open
 const unitDetailsPopup = document.getElementById('unitDetailsPopup');
 if (unitDetailsPopup) {
     unitDetailsPopup.remove();
+    e.preventDefault();
+    return;
+}
+		    
+		    // Close bestiary if open
+const bestiaryOverlay = document.getElementById('bestiaryOverlay');
+if (bestiaryOverlay) {
+    game.tutorial.closeBestiary();
     e.preventDefault();
     return;
 }
