@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-	
+
 <!-- Loading Screen -->
 <div id="loadingScreen">
     <div class="loadingContent">
@@ -25,7 +25,7 @@
         </div>
     </div>
 </div>
-	
+
 	<!-- Developer Console -->
 <div id="devConsole" style="display: none;">
     <div class="devConsoleHeader">
@@ -40,6 +40,7 @@
 </div>
 
     <div id="gameContainer" style="display: none;">
+	    
         <!-- Splash Screen -->
 <div id="splashScreen">
     <div class="gameTitle">TEVE</div>
@@ -54,10 +55,10 @@
 
     <!-- Trail System Canvas -->
     <canvas id="progressionTrailCanvas"></canvas>
-    
+
     <!-- Menu Navigation Buttons -->
     <div class="menuNavigation">
-	    
+
         <!-- Stashes Button (top middle) -->
 <div class="menuNavButton stashesButton">
     <button class="menuNavPlaceholder" onclick="game.uiManager.showStash()">
@@ -73,7 +74,7 @@
          onclick="game.uiManager.showStash()"
          onerror="this.style.display='none'">
 </div>
-        
+
         <!-- Arena Button (center) -->
 <div class="menuNavButton arenaButton">
     <button class="menuNavPlaceholder" onclick="game.uiManager.showArena()">
@@ -791,6 +792,19 @@
     
     <div class="refinementButtons" id="refinementCloseButton" style="display: none;">
         <button class="refinementButton closeBtn" onclick="game.uiManager.closeRefinementPopup()">Close</button>
+    </div>
+</div>
+
+<!-- NPC Dialogue System -->
+<div id="npcDialogueOverlay" class="npcDialogueOverlay" style="display: none;">
+    <div class="npcDialogueContainer">
+        <div class="npcPortrait">
+            <img id="npcPortraitImage" src="" alt="NPC">
+        </div>
+        <div class="npcDialogueBox">
+            <div class="npcDialogueText" id="npcDialogueText"></div>
+            <div class="npcDialogueContinue" id="npcDialogueContinue" style="display: none;">Click to continue...</div>
+        </div>
     </div>
 </div>
 
