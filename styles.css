@@ -5909,6 +5909,61 @@ body {
     50% { opacity: 1; }
 }
 
+/* Bestiary Styles */
+#bestiaryOverlay {
+    animation: fadeIn 0.3s ease-out;
+}
+
+#bestiaryContainer {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.bestiaryTab {
+    transition: all 0.2s ease;
+}
+
+.bestiaryTab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#bestiaryContent::-webkit-scrollbar {
+    width: 10px;
+}
+
+#bestiaryContent::-webkit-scrollbar-track {
+    background: rgba(10, 25, 41, 0.5);
+    border-radius: 5px;
+}
+
+#bestiaryContent::-webkit-scrollbar-thumb {
+    background: #2a6a8a;
+    border-radius: 5px;
+}
+
+#bestiaryContent::-webkit-scrollbar-thumb:hover {
+    background: #4dd0e1;
+}
+
+#unitDetailsPopup {
+    animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes scaleIn {
+    from { transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
 /* END end EnD eNd ENd eND enD bottom document/*
 
 /* Directional lunge animations */
