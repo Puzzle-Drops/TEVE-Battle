@@ -5873,6 +5873,7 @@ body {
     height: 100%;
     object-fit: contain;
     image-rendering: pixelated;
+    filter: drop-shadow(0 0 4px #4dd0e1);
 }
 
 .npcDialogueBox {
@@ -5887,6 +5888,7 @@ body {
     min-height: 180px;
     box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
     pointer-events: all;
+    filter: drop-shadow(0 0 10px #4dd0e1);
 }
 
 .npcDialogueText {
