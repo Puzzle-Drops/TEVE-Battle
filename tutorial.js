@@ -36,141 +36,150 @@ class Tutorial {
                 console.log(`NPC ${npcName} clicked - not yet implemented`);
         }
     }
+    
+showBestiary() {
+    // Create bestiary overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'bestiaryOverlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
 
-    // Bestiary System
-    showBestiary() {
-        // Create bestiary overlay
-        const overlay = document.createElement('div');
-        overlay.id = 'bestiaryOverlay';
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        `;
+    // Create bestiary container
+    const container = document.createElement('div');
+    container.id = 'bestiaryContainer';
+    container.style.cssText = `
+        background: rgba(10, 25, 41, 0.98);
+        border: 2px solid #2a6a8a;
+        border-radius: 8px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
+    `;
 
-        // Create bestiary container
-        const container = document.createElement('div');
-        container.id = 'bestiaryContainer';
-        container.style.cssText = `
-            background: rgba(10, 25, 41, 0.98);
-            border: 2px solid #2a6a8a;
-            border-radius: 8px;
-            width: 90%;
-            height: 90%;
-            max-width: 1400px;
-            max-height: 900px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
-        `;
+    // Create header
+    const header = document.createElement('div');
+    header.style.cssText = `
+        padding: 20px;
+        border-bottom: 2px solid #2a6a8a;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    `;
+    header.innerHTML = `
+        <h1 style="color: #4dd0e1; margin: 0; font-size: 28px;">Squeaky's Unit Compendium</h1>
+        <button id="closeBestiaryBtn" style="
+            background: #cc0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+        ">✕ Close</button>
+    `;
 
-        // Create header
-        const header = document.createElement('div');
-        header.style.cssText = `
-            padding: 20px;
-            border-bottom: 2px solid #2a6a8a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        `;
-        header.innerHTML = `
-            <h1 style="color: #4dd0e1; margin: 0; font-size: 28px;">Squeaky's Unit Compendium</h1>
-            <button id="closeBestiaryBtn" style="
-                background: #cc0000;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                font-size: 18px;
-                cursor: pointer;
-                border-radius: 4px;
-            ">✕ Close</button>
-        `;
+    // Create tabs
+    const tabContainer = document.createElement('div');
+    tabContainer.style.cssText = `
+        display: flex;
+        gap: 10px;
+        padding: 20px 20px 0 20px;
+    `;
+    tabContainer.innerHTML = `
+        <button class="bestiaryTab active" data-tab="heroes-male" style="
+            padding: 10px 30px;
+            font-size: 18px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+        ">Hero Classes <span class="gender-male">♂</span></button>
+        <button class="bestiaryTab" data-tab="heroes-female" style="
+            padding: 10px 30px;
+            font-size: 18px;
+            background: #004499;
+            color: white;
+            border: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+        ">Hero Classes <span class="gender-female">♀</span></button>
+        <button class="bestiaryTab" data-tab="enemies" style="
+            padding: 10px 30px;
+            font-size: 18px;
+            background: #004499;
+            color: white;
+            border: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+        ">Enemy Units</button>
+    `;
 
-        // Create tabs
-        const tabContainer = document.createElement('div');
-        tabContainer.style.cssText = `
-            display: flex;
-            gap: 10px;
-            padding: 20px 20px 0 20px;
-        `;
-        tabContainer.innerHTML = `
-            <button class="bestiaryTab active" data-tab="heroes" style="
-                padding: 10px 30px;
-                font-size: 18px;
-                background: #0066cc;
-                color: white;
-                border: none;
-                border-radius: 4px 4px 0 0;
-                cursor: pointer;
-            ">Hero Classes</button>
-            <button class="bestiaryTab" data-tab="enemies" style="
-                padding: 10px 30px;
-                font-size: 18px;
-                background: #004499;
-                color: white;
-                border: none;
-                border-radius: 4px 4px 0 0;
-                cursor: pointer;
-            ">Enemy Units</button>
-        `;
+    // Create content area
+    const content = document.createElement('div');
+    content.id = 'bestiaryContent';
+    content.style.cssText = `
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: rgba(10, 15, 26, 0.5);
+        position: relative;
+    `;
 
-        // Create content area
-        const content = document.createElement('div');
-        content.id = 'bestiaryContent';
-        content.style.cssText = `
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: rgba(10, 15, 26, 0.5);
-        `;
+    // Assemble container
+    container.appendChild(header);
+    container.appendChild(tabContainer);
+    container.appendChild(content);
+    overlay.appendChild(container);
+    document.body.appendChild(overlay);
 
-        // Assemble container
-        container.appendChild(header);
-        container.appendChild(tabContainer);
-        container.appendChild(content);
-        overlay.appendChild(container);
-        document.body.appendChild(overlay);
+    // Event listeners
+    document.getElementById('closeBestiaryBtn').onclick = () => this.closeBestiary();
+    
+    const tabs = tabContainer.querySelectorAll('.bestiaryTab');
+    tabs.forEach(tab => {
+        tab.onclick = () => {
+            tabs.forEach(t => {
+                t.classList.remove('active');
+                t.style.background = '#004499';
+            });
+            tab.classList.add('active');
+            tab.style.background = '#0066cc';
+            
+            if (tab.dataset.tab === 'heroes-male') {
+                this.showHeroClasses('male');
+            } else if (tab.dataset.tab === 'heroes-female') {
+                this.showHeroClasses('female');
+            } else {
+                this.showEnemyUnits();
+            }
+        };
+    });
 
-        // Event listeners
-        document.getElementById('closeBestiaryBtn').onclick = () => this.closeBestiary();
-        
-        const tabs = tabContainer.querySelectorAll('.bestiaryTab');
-        tabs.forEach(tab => {
-            tab.onclick = () => {
-                tabs.forEach(t => {
-                    t.classList.remove('active');
-                    t.style.background = '#004499';
-                });
-                tab.classList.add('active');
-                tab.style.background = '#0066cc';
-                
-                if (tab.dataset.tab === 'heroes') {
-                    this.showHeroClasses();
-                } else {
-                    this.showEnemyUnits();
-                }
-            };
-        });
-
-        // Show heroes by default
-        this.showHeroClasses();
-    }
-
+    // Show male heroes by default
+    this.showHeroClasses('male');
+}
+    
     closeBestiary() {
         const overlay = document.getElementById('bestiaryOverlay');
         if (overlay) {
             overlay.remove();
         }
     }
-
-    showHeroClasses() {
+    
+showHeroClasses(gender) {
     const content = document.getElementById('bestiaryContent');
     content.innerHTML = '';
 
@@ -181,152 +190,131 @@ class Tutorial {
 
     // Create hero tree container
     const treeContainer = document.createElement('div');
-    treeContainer.style.cssText = 'position: relative; min-height: 2000px;';
+    treeContainer.style.cssText = 'position: relative; width: 100%; height: 100%;';
     content.appendChild(treeContainer);
 
-    // Process male heroes (rows 1-4)
-    this.renderHeroTrees(treeContainer, svg, 'male', 0);
-    
-    // Add spacing
-    const spacer = document.createElement('div');
-    spacer.style.cssText = 'height: 100px;';
-    treeContainer.appendChild(spacer);
-    
-    // Process female heroes (rows 6-9)
-    this.renderHeroTrees(treeContainer, svg, 'female', 1100);
+    // Render hero tree for specified gender
+    this.renderHeroTrees(treeContainer, svg, gender);
 }
-    
-   renderHeroTrees(container, svg, gender, startY) {
+   renderHeroTrees(container, svg, gender) {
     const cellWidth = 120;
     const cellHeight = 140;
     const startX = 50;
+    const startY = 50;
     
-    // Define class families and their positions
-    const classFamilies = [
-        {
-            name: 'Acolyte',
-            startCol: 1,
-            tier1: gender === 'male' ? 'acolyte_male' : 'acolyte_female',
-            paths: {
-                'Acolyte': [['Cleric']],
-                'Cleric': [['Priest', 'Priestess'], ['Patriarch', 'Matriarch']],
-                'Priest': [['Hierophant']],
-                'Priestess': [['Hierophant']],
-                'Patriarch': [['Prophet']],
-                'Matriarch': [['Prophetess']]
-            }
-        },
-        {
-            name: 'Archer',
-            startCol: 3,
-            tier1: gender === 'male' ? 'archer_male' : 'archer_female',
-            paths: {
-                'Archer': [['Ranger']],
-                'Ranger': [['Marksman'], ['Tracker']],
-                'Marksman': [['Sniper']],
-                'Tracker': [['Monster Hunter']]
-            }
-        },
-        {
-            name: 'Druid',
-            startCol: 5,
-            tier1: gender === 'male' ? 'druid_male' : 'druid_female',
-            paths: {
-                'Druid': [['Arch Druid']],
-                'Arch Druid': [['Shapeshifter'], ['Shaman']],
-                'Shapeshifter': [['Runemaster']],
-                'Shaman': [['Summoner']]
-            }
-        },
-        {
-            name: 'Initiate',
-            startCol: 7,
-            tier1: gender === 'male' ? 'initiate_male' : 'initiate_female',
-            paths: {
-                'Initiate': [['Mage']],
-                'Mage': gender === 'male' ? [['Wizard'], ['Sage']] : [['Witch'], ['Sage']],
-                'Wizard': [['White Wizard']],
-                'Witch': [['White Witch']],
-                'Sage': [['Arch Sage']]
-            }
-        },
-        {
-            name: 'Swordsman',
-            startCol: 9,
-            tier1: gender === 'male' ? 'swordsman_male' : 'swordsman_female',
-            paths: {
-                'Swordsman': [['Knight']],
-                'Knight': [['Imperial Knight'], ['Crusader']],
-                'Imperial Knight': [['Champion']],
-                'Crusader': [['Avenger']]
-            }
-        },
-        {
-            name: 'Templar',
-            startCol: 11,
-            tier1: gender === 'male' ? 'templar_male' : 'templar_female',
-            paths: {
-                'Templar': [['Arch Templar']],
-                'Arch Templar': [['Dark Templar'], ['High Templar']],
-                'Dark Templar': [['Dark Arch Templar']],
-                'High Templar': [['Grand Templar']]
-            }
-        },
-        {
-            name: 'Thief',
-            startCol: 13,
-            tier1: gender === 'male' ? 'thief_male' : 'thief_female',
-            paths: {
-                'Thief': [['Rogue']],
-                'Rogue': [['Assassin'], ['Stalker']],
-                'Assassin': [['Phantom Assassin']],
-                'Stalker': [['Master Stalker']]
-            }
-        },
-        {
-            name: 'Witch Hunter',
-            startCol: 15,
-            tier1: gender === 'male' ? 'witch_hunter_male' : 'witch_hunter_female',
-            paths: {
-                'Witch Hunter': [['Slayer']],
-                'Slayer': [['Inquisitor'], ['Witcher']],
-                'Inquisitor': [['Grand Inquisitor']],
-                'Witcher': [['Professional Witcher']]
-            }
-        }
-    ];
-    
-    // Track positions for drawing paths
+    // Track all positions for drawing paths
     const positions = {};
     
-    // Place villager at 0,0
+    // Place villager at row 0, centered (between columns 8 and 9)
     const villagerClass = gender === 'male' ? 'villager_male' : 'villager_female';
     const villagerData = unitData.classes[villagerClass];
     if (villagerData) {
-        const villagerDiv = this.createHeroThumb(villagerClass, villagerData, startX, startY);
+        const villagerX = startX + (8 * cellWidth); // Centered between columns 8 and 9
+        const villagerY = startY;
+        const villagerDiv = this.createHeroThumb(villagerClass, villagerData, villagerX, villagerY);
         container.appendChild(villagerDiv);
-        positions[villagerClass] = { x: startX + 48, y: startY + 48 };
+        positions[villagerClass] = { x: villagerX + 48, y: villagerY + 48 };
     }
     
-    // Process each class family
-    classFamilies.forEach(family => {
-        const familyPositions = {};
+    // Define class layout with specific positions
+    const classLayout = [
+        // Acolyte family (columns 0-1)
+        { name: 'acolyte', row: 1, col: 0, parent: villagerClass },
+        { name: 'cleric', row: 2, col: 0, parent: 'acolyte' },
+        { name: 'priest', row: 3, col: 0, parent: 'cleric', gender: 'male' },
+        { name: 'priestess', row: 3, col: 0, parent: 'cleric', gender: 'female' },
+        { name: 'hierophant', row: 4, col: 0, parent: gender === 'male' ? 'priest' : 'priestess' },
+        { name: 'patriarch', row: 3, col: 1, parent: 'cleric', gender: 'male' },
+        { name: 'matriarch', row: 3, col: 1, parent: 'cleric', gender: 'female' },
+        { name: 'prophet', row: 4, col: 1, parent: 'patriarch', gender: 'male' },
+        { name: 'prophetess', row: 4, col: 1, parent: 'matriarch', gender: 'female' },
         
-        // Place tier 1 class
-        const tier1Data = unitData.classes[family.tier1];
-        if (tier1Data) {
-            const x = startX + (family.startCol * cellWidth);
-            const y = startY;
-            const div = this.createHeroThumb(family.tier1, tier1Data, x, y);
-            container.appendChild(div);
-            familyPositions[tier1Data.name] = { x: x + 48, y: y + 48, id: family.tier1 };
+        // Archer family (columns 2-3)
+        { name: 'archer', row: 1, col: 2, parent: villagerClass },
+        { name: 'ranger', row: 2, col: 2, parent: 'archer' },
+        { name: 'marksman', row: 3, col: 2, parent: 'ranger' },
+        { name: 'sniper', row: 4, col: 2, parent: 'marksman' },
+        { name: 'tracker', row: 3, col: 3, parent: 'ranger' },
+        { name: 'monster_hunter', row: 4, col: 3, parent: 'tracker' },
+        
+        // Druid family (columns 4-5)
+        { name: 'druid', row: 1, col: 4, parent: villagerClass },
+        { name: 'arch_druid', row: 2, col: 4, parent: 'druid' },
+        { name: 'shapeshifter', row: 3, col: 4, parent: 'arch_druid' },
+        { name: 'runemaster', row: 4, col: 4, parent: 'shapeshifter' },
+        { name: 'shaman', row: 3, col: 5, parent: 'arch_druid' },
+        { name: 'summoner', row: 4, col: 5, parent: 'shaman' },
+        
+        // Initiate family (columns 6-7)
+        { name: 'initiate', row: 1, col: 6, parent: villagerClass },
+        { name: 'mage', row: 2, col: 6, parent: 'initiate' },
+        { name: 'wizard', row: 3, col: 6, parent: 'mage', gender: 'male' },
+        { name: 'witch', row: 3, col: 6, parent: 'mage', gender: 'female' },
+        { name: 'white_wizard', row: 4, col: 6, parent: 'wizard', gender: 'male' },
+        { name: 'white_witch', row: 4, col: 6, parent: 'witch', gender: 'female' },
+        { name: 'sage', row: 3, col: 7, parent: 'mage' },
+        { name: 'arch_sage', row: 4, col: 7, parent: 'sage' },
+        
+        // Swordsman family (columns 8-9)
+        { name: 'swordsman', row: 1, col: 8, parent: villagerClass },
+        { name: 'knight', row: 2, col: 8, parent: 'swordsman' },
+        { name: 'imperial_knight', row: 3, col: 8, parent: 'knight' },
+        { name: 'champion', row: 4, col: 8, parent: 'imperial_knight' },
+        { name: 'crusader', row: 3, col: 9, parent: 'knight' },
+        { name: 'avenger', row: 4, col: 9, parent: 'crusader' },
+        
+        // Templar family (columns 10-11)
+        { name: 'templar', row: 1, col: 10, parent: villagerClass },
+        { name: 'arch_templar', row: 2, col: 10, parent: 'templar' },
+        { name: 'dark_templar', row: 3, col: 10, parent: 'arch_templar' },
+        { name: 'dark_arch_templar', row: 4, col: 10, parent: 'dark_templar' },
+        { name: 'high_templar', row: 3, col: 11, parent: 'arch_templar' },
+        { name: 'grand_templar', row: 4, col: 11, parent: 'high_templar' },
+        
+        // Thief family (columns 12-13)
+        { name: 'thief', row: 1, col: 12, parent: villagerClass },
+        { name: 'rogue', row: 2, col: 12, parent: 'thief' },
+        { name: 'assassin', row: 3, col: 12, parent: 'rogue' },
+        { name: 'phantom_assassin', row: 4, col: 12, parent: 'assassin' },
+        { name: 'stalker', row: 3, col: 13, parent: 'rogue' },
+        { name: 'master_stalker', row: 4, col: 13, parent: 'stalker' },
+        
+        // Witch Hunter family (columns 14-15)
+        { name: 'witch_hunter', row: 1, col: 14, parent: villagerClass },
+        { name: 'slayer', row: 2, col: 14, parent: 'witch_hunter' },
+        { name: 'inquisitor', row: 3, col: 14, parent: 'slayer' },
+        { name: 'grand_inquisitor', row: 4, col: 14, parent: 'inquisitor' },
+        { name: 'witcher', row: 3, col: 15, parent: 'slayer' },
+        { name: 'professional_witcher', row: 4, col: 15, parent: 'witcher' }
+    ];
+    
+    // Process and place each class
+    classLayout.forEach(classInfo => {
+        // Skip gender-specific classes that don't match current gender
+        if (classInfo.gender && classInfo.gender !== gender) {
+            return;
         }
         
-        // Process promotion paths within this family
-        this.processFamilyPaths(container, svg, family, familyPositions, family.startCol, startX, startY, cellWidth, cellHeight, gender);
+        const className = classInfo.name + '_' + gender;
+        const classData = unitData.classes[className];
+        
+        if (classData) {
+            const x = startX + (classInfo.col * cellWidth);
+            const y = startY + (classInfo.row * cellHeight);
+            
+            const div = this.createHeroThumb(className, classData, x, y);
+            container.appendChild(div);
+            positions[className] = { x: x + 48, y: y + 48 };
+            
+            // Draw path from parent
+            const parentClass = classInfo.parent.includes('_') ? classInfo.parent : classInfo.parent + '_' + gender;
+            if (positions[parentClass]) {
+                this.drawPath(svg, positions[parentClass], positions[className]);
+            }
+        }
     });
 }
-
+    
 processFamilyPaths(container, svg, family, positions, startCol, startX, startY, cellWidth, cellHeight, gender) {
     // Helper function to place a class
     const placeClass = (className, row, col) => {
