@@ -31,14 +31,14 @@ npcDialogue(npcName, dialogueText, blur = false) {
     this.currentDialogueQueue = dialogueArray.map(text => `${formattedNPCName}: ${text}`);
     this.currentDialogueIndex = 0;
     
-    // Show overlay with optional blur
-    const overlay = document.getElementById('npcDialogueOverlay');
-    overlay.style.display = 'block';
-    if (blur) {
-        overlay.classList.add('blurred');
-    } else {
-        overlay.classList.remove('blurred');
-    }
+// Show overlay with optional blocking
+const overlay = document.getElementById('npcDialogueOverlay');
+overlay.style.display = 'block';
+if (blur) {
+    overlay.classList.add('blocking');
+} else {
+    overlay.classList.remove('blocking');
+}
     
     // Set NPC portrait
     const validNPCs = ['skypper', 'bob', 'arnold', 'squeaky'];
@@ -124,7 +124,7 @@ npcDialogue(npcName, dialogueText, blur = false) {
     closeDialogue() {
         const overlay = document.getElementById('npcDialogueOverlay');
         overlay.style.display = 'none';
-        overlay.classList.remove('blurred');
+        overlay.classList.remove('blocking');
         overlay.removeEventListener('click', this.handleDialogueClick);
         
         // Clear timeouts
