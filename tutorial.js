@@ -197,7 +197,7 @@ class Tutorial {
     }
 
     renderHeroTrees(container, svg, gender, startY) {
-        const tiers = [[], [], [], []]; // 4 tiers
+        const tiers = [[], [], [], [], []]; // 5 tiers
         const startClass = gender === 'male' ? 'villager_male' : 'villager_female';
         
         // Organize classes by tier
