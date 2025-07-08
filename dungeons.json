@@ -60,49 +60,37 @@
       "waves": [
         {
           "enemies": [
-            { "id": "satyr_youth", "level": 2 },
-            { "id": "satyr_youth", "level": 2 },
-            { "id": "satyr_youth", "level": 2 }
+            { "id": "satyr_youth", "level": 1 },
+            { "id": "satyr_youth", "level": 1 },
+            { "id": "satyr_youth", "level": 1 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "aggressive_satyr", "level": 2 },
+            { "id": "satyr_youth", "level": 1 },
+            { "id": "satyr_youth", "level": 1 }
           ]
         },
         {
           "enemies": [
             { "id": "aggressive_satyr", "level": 3 },
-            { "id": "satyr_youth", "level": 2 },
-            { "id": "satyr_youth", "level": 2 }
+            { "id": "aggressive_satyr", "level": 3 }
           ]
         },
         {
           "enemies": [
-            { "id": "satyr_youth", "level": 3 },
-            { "id": "satyr_youth", "level": 3 },
-            { "id": "satyr_youth", "level": 3 },
-            { "id": "satyr_youth", "level": 2 },
-            { "id": "satyr_youth", "level": 2 }
-          ]
-        },
-        {
-          "enemies": [
-            { "id": "aggressive_satyr", "level": 4 },
-            { "id": "satyr_youth", "level": 3 },
-            { "id": "satyr_youth", "level": 3 },
-            { "id": "satyr_youth", "level": 2 },
-            { "id": "satyr_youth", "level": 2 }
-          ]
-        },
-        {
-          "enemies": [
-            { "id": "satyr_instigator", "level": 6 },
-            { "id": "aggressive_satyr", "level": 4 },
-            { "id": "aggressive_satyr", "level": 4 },
-            { "id": "satyr_youth", "level": 3 },
-            { "id": "satyr_youth", "level": 3 }
+            { "id": "satyr_instigator", "level": 5 },
+            { "id": "aggressive_satyr", "level": 3 },
+            { "id": "aggressive_satyr", "level": 3 },
+            { "id": "satyr_youth", "level": 1 },
+            { "id": "satyr_youth", "level": 1 }
           ]
         }
       ],
       "rewards": {
         "gold": 350,
-        "exp": 500,
+        "exp": 800,
         "items": ["glade_horncap", "glade_hidewrap", "glade_stepbinds", "glade_fangblade", "glade_wicker_guard", "glade_focus", "glade_shadowfang"]
       }
     },
