@@ -332,17 +332,46 @@ init() {
         }
         
         // Unlock features based on specific dungeons
-        if (completedDungeonId === 'satyrs_glade') {
-            this.progression.unlockedFeatures.arena = true;
-            
-        }
-        if (completedDungeonId === 'murkin_wetlands') {
-            this.progression.unlockedFeatures.stash = true;
-        }
+if (completedDungeonId === 'satyrs_glade' && !this.progression.unlockedFeatures.arena) {
+    this.progression.unlockedFeatures.arena = true;
+    
+    // Bob announces the arena is open
+    setTimeout(() => {
+        this.tutorial.npcDialogue('Bob', [
+            "Hey there, champion! Bob here.",
+            "Word travels fast. I hear you cleared the Satyr's Glade!",
+            "That means you're ready for the real action. The Arena is now OPEN!",
+            "Come find me at the Arena when you want to test your mettle against some real warriors!"
+        ], true);
+    }, 1000);
+}
+if (completedDungeonId === 'murkin_wetlands' && !this.progression.unlockedFeatures.stash) {
+    this.progression.unlockedFeatures.stash = true;
+    
+    // Arnold and Squeaky introduce themselves
+    setTimeout(() => {
+        this.tutorial.npcDialogue('Arnold', [
+            "Well well, look who made it through the Murkin Wetlands!",
+            "Name's Arnold. I run the storage facilities here in the city.",
+            "I've just opened up the Class Stashes for business. Each class family gets their own secure vault.",
+            "Come visit me when you need to store your gear and gold!"
+        ], true, () => {
+            // Chain Squeaky's dialogue after Arnold's
+            setTimeout(() => {
+                this.tutorial.npcDialogue('Squeaky', [
+                    "Oh my, a new hero emerges from the wetlands!",
+                    "I'm Squeaky, the city's... information specialist.",
+                    "I keep track of all the creatures and heroes in these lands.",
+                    "Visit me anytime to browse my Unit Compendium. Knowledge is power!"
+                ], true);
+            }, 500);
+        });
+    }, 1000);
+}
 
-        if (this.uiManager) {
-            this.uiManager.drawProgressionTrails();
-        }
+if (this.uiManager) {
+    this.uiManager.drawProgressionTrails();
+}
         
     }
 
