@@ -20,7 +20,8 @@ class Game {
         this.collectionPopupQueue = [];
         this.collectionPopupActive = false;
         this.maxPartySize = 3; // Start with 3 party slots
-        this.tutorialCompleted = false; // Track tutorial completion
+        this.tutorialCompleted1 = false; // Track tutorial completion
+        this.tutorialCompleted2 = false;
 
         // Arena system
         this.arena = new Arena(this);
@@ -30,7 +31,7 @@ class Game {
         // Progression tracking
         this.progression = {
             unlockedFeatures: {
-                party: true,
+                party: false,
                 stash: false,
                 arena: false
             },
