@@ -810,8 +810,8 @@
     "logicKey": "biteLogic",
     "scaling": {
         "type": "hpPercentMaxFloor",
-        "percent": [0.06, 0.08, 0.10, 0.12, 0.14],
-        "floor": [12, 40, 80, 160, 280]
+        "percent": [0.05, 0.08, 0.10, 0.12, 0.14],
+        "floor": [5, 40, 80, 160, 280]
     }
 },
 "spear_thrust": {
