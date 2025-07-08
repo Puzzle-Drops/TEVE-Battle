@@ -224,33 +224,15 @@ class Game {
     }
 
     init() {
-        
-        /* init init init
-        // Create 8 starting villagers
+    // Check if this is a new game (no tutorial completed)
+    if (!this.tutorialCompleted1) {
+        // Don't create any heroes - tutorial will handle it
         this.heroes = [];
-        for (let i = 0; i < 16; i++) {
-            this.heroes.push(new Hero());
-        }
-                
-        // Hero 0: Tester (Level 50 with godlike stats)
-        this.heroes[0] = new Hero('tester_male');
-        this.heroes[0].gender = 'male';
-        this.heroes[0].level = 50;
-        this.heroes[0].exp = 0;
-        this.heroes[0].expToNext = this.heroes[0].calculateExpToNext();
-
-        this.heroes[1].level = 50;
-        this.heroes[1].expToNext = this.heroes[1].calculateExpToNext();
-        this.heroes[2].level = 50;
-        this.heroes[2].expToNext = this.heroes[2].calculateExpToNext();
-        this.heroes[3].level = 50;
-        this.heroes[3].expToNext = this.heroes[3].calculateExpToNext();
-        this.heroes[4].level = 50;
-        this.heroes[4].expToNext = this.heroes[4].calculateExpToNext();
-        this.heroes[5].level = 50;
-        this.heroes[5].expToNext = this.heroes[5].calculateExpToNext();
-        */
+    } else {
+        // Normal game initialization (if you have save/load system)
+        // Load saved heroes or create default ones
     }
+}
 
     // Progression Methods
     loadProgression() {
