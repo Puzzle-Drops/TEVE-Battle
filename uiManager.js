@@ -49,6 +49,9 @@ hideAllScreens() {
     }
 
     showMainMenu() {
+
+
+
         this.hideAllScreens();
         this.closeHeroInfo();
         this.game.currentScreen = 'mainMenuScreen';
@@ -81,7 +84,17 @@ hideAllScreens() {
         
         // Resize canvas to match window
         this.resizeTrailCanvas();
+
+        // Check if this is first time showing main menu and player needs tutorial
+    if (!this.game.hasCheckedForTutorial) {
+        this.game.hasCheckedForTutorial = true;
         
+        // Check if this is a new game (no heroes)
+        if (this.game.heroes.length === 0) {
+            // Start new game tutorial
+            this.game.tutorial.newGameStart();
+        }
+    }
         
     }
 
