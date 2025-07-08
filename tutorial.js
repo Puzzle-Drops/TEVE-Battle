@@ -414,7 +414,7 @@ renderHeroTrees(container, svg, gender) {
             int: int,
             hp: Math.floor(initial.hp + (str * mods.hp)),
             attack: Math.floor(initial.attack + (mainstatValue * mods.attack)),
-            attackSpeed: Math.floor((100 + 100 * (agi / (agi + 1000)))),
+            attackSpeed: Math.floor(initial.attackSpeed + (95 + 100 * (agi / (agi + 1000)))),
             armor: Math.floor(initial.armor + (mods.armor * level) + (0.05 * str) + (0.01 * agi)),
             resist: Math.floor(initial.resist + (mods.resist * level) + (0.05 * int))
         };
@@ -445,14 +445,24 @@ renderHeroTrees(container, svg, gender) {
             int: maxPrimaryStat,
             hp: Math.floor(maxHP),
             attack: Math.floor(maxAttack),
-            attackSpeed: 200, // Attack speed caps around 200
+            attackSpeed: 205, // Max attack speed
             armor: Math.floor(maxArmor),
             resist: Math.floor(maxResist)
         };
     }
 
-    createStatBar(value, maxValue, label, color) {
-        const percentage = Math.min((value / maxValue) * 100, 100);
+    createStatBar(value, maxValue, label, color, isAttackSpeed = false) {
+        let percentage;
+        
+        if (isAttackSpeed) {
+            // For attack speed, 95 is 0% and 205 is 100%
+            const adjustedValue = value - 95;
+            const adjustedMax = 110; // 205 - 95
+            percentage = Math.min((adjustedValue / adjustedMax) * 100, 100);
+            percentage = Math.max(0, percentage); // Ensure it's not negative
+        } else {
+            percentage = Math.min((value / maxValue) * 100, 100);
+        }
         
         return `
             <div style="margin-bottom: 10px;">
@@ -577,7 +587,7 @@ renderHeroTrees(container, svg, gender) {
             ${this.createStatBar(stats.int, maxValues.int, 'Intelligence', '#bd93f9')}
             ${this.createStatBar(stats.hp, maxValues.hp, 'Health', '#50fa7b')}
             ${this.createStatBar(stats.attack, maxValues.attack, 'Attack', '#ffb86c')}
-            ${this.createStatBar(stats.attackSpeed, maxValues.attackSpeed, 'Attack Speed', '#f1fa8c')}
+            ${this.createStatBar(stats.attackSpeed, maxValues.attackSpeed, 'Attack Speed', '#f1fa8c', true)}
             ${this.createStatBar(stats.armor, maxValues.armor, 'Armor', '#8be9fd')}
             ${this.createStatBar(stats.resist, maxValues.resist, 'Resistance', '#ff79c6')}
         </div>
