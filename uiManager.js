@@ -389,6 +389,7 @@ if (this.game.maxPartySize > this.game.heroes.length) {
         });
     }
 }
+}
 
     showDungeonBladeScreen(tierName) {
         this.hideAllScreens();
