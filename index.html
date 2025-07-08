@@ -90,7 +90,23 @@
          onclick="game.uiManager.showArena()"
          onerror="this.style.display='none'">
 </div>
-        
+	    
+        <!-- Tutorial Button (shown instead of heroes button during tutorial) -->
+<div class="menuNavButton tutorialButton" style="display: none;">
+    <button class="menuNavPlaceholder" onclick="game.tutorial.startTutorial1()">
+        <div class="dungeonTierStarsStatic icon">📚</div>
+        <div class="dungeonTierContent">
+            <div class="dungeonTierName">Tutorial</div>
+            <div class="dungeonTierLevel"></div>
+        </div>
+    </button>
+    <img src="https://puzzle-drops.github.io/TEVE/img/menu/tutorial_button.png" 
+         alt="Tutorial" 
+         class="menuNavImage"
+         onclick="game.tutorial.startTutorial1()"
+         onerror="this.style.display='none'">
+</div>
+	    
         <!-- Heroes Button (bottom middle) -->
 <div class="menuNavButton heroesButton">
     <button class="menuNavPlaceholder" onclick="game.uiManager.showHeroes()">
