@@ -12,8 +12,202 @@ class Tutorial {
         this.typewriterTimeout = null;
         this.continueTimeout = null;
         
+        // Tutorial state
+        this.tutorialHeroesCreated = 0;
+        this.isInTutorialBattle = false;
+        
         // Bind the click handler
         this.handleDialogueClick = this.handleDialogueClick.bind(this);
+    }
+
+    // Start Tutorial 1
+    startTutorial1() {
+        // Clear any existing heroes
+        this.game.heroes = [];
+        this.tutorialHeroesCreated = 0;
+        
+        // Start Skypper's introduction dialogue
+        this.npcDialogue('Skypper', [
+            "By the stars! Look at the village! Those blasted satyrs struck in the night while our best fighters are away at the Arena!",
+            "We can't wait for them to return. Who will step forward to drive off these raiders?",
+            "Ah! Three brave villagers have stepped forward! What are your names?"
+        ], true, () => {
+            // After initial dialogue, start recruiting first hero
+            this.skypperAdditionalRecruit("You there, with the determined look!");
+        });
+    }
+
+    // Handle tutorial progression after each hero creation
+    handleTutorialHeroCreation() {
+        this.tutorialHeroesCreated++;
+        
+        if (this.tutorialHeroesCreated === 1) {
+            // Recruit second hero
+            this.skypperAdditionalRecruit("And you, ready to fight?");
+        } else if (this.tutorialHeroesCreated === 2) {
+            // Recruit third hero
+            this.skypperAdditionalRecruit("One more brave soul! Speak up!");
+        } else if (this.tutorialHeroesCreated === 3) {
+            // All heroes recruited, continue with tutorial
+            const heroNames = this.game.heroes.map(h => h.name).join(', ');
+            this.npcDialogue('Skypper', 
+                `Excellent! ${heroNames} - you three are the only hope we have right now!`,
+                true, () => {
+                    // Transition to battle
+                    this.startTutorialBattle();
+                }
+            );
+        }
+    }
+
+    // Start the tutorial battle
+    startTutorialBattle() {
+        this.isInTutorialBattle = true;
+        
+        // Set up the tutorial dungeon (Satyrs)
+        this.game.currentDungeon = {
+            id: 'satyrs_glade',
+            name: "Satyr's Glade",
+            level: 1
+        };
+        
+        // Load tutorial battle waves (only wave 1)
+        const tutorialWave = [new Enemy('satyr_conscript', 1)];
+        this.game.dungeonWaves = [tutorialWave];
+        
+        // Set current dungeon data for rewards
+        this.game.currentDungeonData = dungeonData.dungeons['satyrs_glade'];
+        
+        // Auto-select the three heroes
+        this.game.selectedParty = [0, 1, 2, null, null];
+        
+        // Start battle directly
+        this.game.uiManager.showBattle();
+        this.game.startBattle();
+        
+        // Show battle guidance after a delay
+        setTimeout(() => {
+            this.npcDialogue('Skypper', [
+                "When the blue action bar above your hero is filled, it will be your turn to act.",
+                "Select an ability from the bottom right, and then select a valid target."
+            ], false);
+        }, 1000);
+    }
+
+    // Handle tutorial battle victory
+    handleTutorialVictory() {
+        if (!this.isInTutorialBattle) return;
+        
+        this.isInTutorialBattle = false;
+        
+        // Show victory dialogue
+        this.npcDialogue('Skypper', [
+            "Incredible work! You saved what's left of the village! Word of your heroism will spread quickly.",
+            "Other villagers will want to join a team like you. I'll help recruit them as you clear out more dangerous areas.",
+            "I see you got some loot! I'll introduce you to Bob at the arena! He'll teach you all about gear."
+        ], true, () => {
+            // Transition to arena introduction
+            this.startArenaIntroduction();
+        });
+    }
+
+    // Arena introduction with Bob
+    startArenaIntroduction() {
+        // Move to arena screen
+        this.game.uiManager.showArena();
+        
+        // Start dialogue sequence
+        setTimeout(() => {
+            this.npcDialogue('Skypper', 
+                "Bob! These are some new heroes - they just saved us from some satyrs!",
+                true, () => {
+                    this.npcDialogue('Bob', [
+                        "Ah, new heroes! Welcome to the Arena, friend. I'm Bob - item specialist, appraiser, and occasional referee.",
+                        "I see you've already got some gear from those satyrs. Not bad for starter equipment!",
+                        "I can help refine your items to unlock their true potential... for a price, of course. Quality work isn't free!",
+                        "Want to test your mettle? You can spar against other heroes here. But be warned - you'll need to climb the ranks. Can't challenge the champions without proving yourself first!",
+                        "That first team just returned from their own satyr hunt. They're itching for a fight, but I'd suggest getting better gear before facing them.",
+                        "Come have a chat anytime! I'll be here at the arena, and I'll answer any questions you have on items."
+                    ], true, () => {
+                        this.npcDialogue('Skypper', 
+                            "Feel free to explore at your own pace now! I'll be around to help recruit new villagers whenever you clear a new area. Good luck out there!",
+                            true, () => {
+                                // Complete tutorial 1
+                                this.completeTutorial1();
+                            }
+                        );
+                    });
+                }
+            );
+        }, 500);
+    }
+
+    // Complete Tutorial 1
+    completeTutorial1() {
+        this.game.tutorialCompleted1 = true;
+        
+        // Update UI visibility
+        this.game.uiManager.updateTutorialUIVisibility();
+        
+        // Return to main menu
+        this.game.uiManager.showMainMenu();
+        
+        // Save game state (if you have save functionality)
+        // this.game.saveGame();
+    }
+
+    // Check and start Tutorial 2 if conditions are met
+    checkTutorial2() {
+        if (this.game.tutorialCompleted2) return;
+        
+        // Check if Murkin Wetlands is defeated
+        if (!this.game.isDungeonCompleted('murkin_wetlands')) return;
+        
+        // Start Tutorial 2
+        this.startTutorial2();
+    }
+
+    // Start Tutorial 2 (Arnold and Squeaky introduction)
+    startTutorial2() {
+        this.npcDialogue('Skypper', 
+            "Ah, perfect timing! Two old friends just arrived in town. Let me introduce you to Arnold first.",
+            true, () => {
+                this.npcDialogue('Arnold', [
+                    "Oho! Another treasure seeker, I presume? I'm Arnold, Arnold the treasure hunter and collector extraordinaire!",
+                    "See this book? It's my Collection Log - tracks every rare item from every dangerous locale. Complete a collection and... well, let's just say the rewards are worth the effort!",
+                    "I'll keep track of everything you find. Who knows? You might discover something even I haven't seen!"
+                ], true, () => {
+                    this.npcDialogue('Skypper', 
+                        "And this is Squeaky. Don't let the name fool you. He's traveled more than anyone I know!",
+                        true, () => {
+                            this.npcDialogue('Squeaky', [
+                                "Hello there! Skypper isn't wrong, I have been everywhere from the Twilight Peaks to the Abyssal Depths!",
+                                "Need to know about classes? Promotions? Secret techniques? I've seen it all! Even witnessed a villager become a legendary Archmage once!",
+                                "Come chat anytime. Knowledge shared is knowledge doubled, as my old mentor used to say!"
+                            ], true, () => {
+                                this.npcDialogue('Skypper', [
+                                    "Arnold and Squeaky both reside in the City of New Lights up north. I've shown you the Arena, just go a bit further north and you'll find them alright.",
+                                    "Between Bob, Arnold, and Squeaky you should have all the information you lot need to make smart choices! Good luck, and stop by anytime you clear out a new area, word of your party has spread!"
+                                ], true, () => {
+                                    this.completeTutorial2();
+                                });
+                            });
+                        }
+                    );
+                });
+            }
+        );
+    }
+
+    // Complete Tutorial 2
+    completeTutorial2() {
+        this.game.tutorialCompleted2 = true;
+        
+        // Update UI visibility
+        this.game.uiManager.updateTutorialUIVisibility();
+        
+        // Save game state
+        // this.game.saveGame();
     }
 
     // NPC Click Handler
@@ -1060,14 +1254,14 @@ renderHeroTrees(container, svg, gender) {
 
         // Cancel button
 cancelBtn.onclick = () => {
-    // Only allow cancel if we have at least 3 heroes
-    if (this.game.heroes.length >= 3) {
+    // Only allow cancel if we have at least 3 heroes OR if we're not in tutorial
+    if (this.game.heroes.length >= 3 || this.game.tutorialCompleted1) {
         this.closeNewHeroDialog();
     }
 };
 
-// Disable cancel button if less than 3 heroes
-if (this.game.heroes.length < 3) {
+// Disable cancel button if less than 3 heroes during tutorial
+if (this.game.heroes.length < 3 && !this.game.tutorialCompleted1) {
     cancelBtn.disabled = true;
     cancelBtn.style.opacity = '0.5';
     cancelBtn.style.cursor = 'default';
@@ -1122,14 +1316,19 @@ if (this.game.heroes.length < 3) {
         }
         
         console.log(`Created new hero: ${name} (${gender} villager, level 5)`);
+        
+        // If this is during tutorial, handle progression
+        if (!this.game.tutorialCompleted1) {
+            this.handleTutorialHeroCreation();
+        }
     }
     
     skypperAdditionalRecruit(dialogueText = null) {
     // Check if we need to create more heroes
-    if (this.game.maxPartySize > this.game.heroes.length) {
+    if (this.game.maxPartySize > this.game.heroes.length || !this.game.tutorialCompleted1) {
         if (dialogueText) {
             // If dialogue text is provided, show dialogue first
-            this.npcDialogue('Skypper', dialogueText, false, () => {
+            this.npcDialogue('Skypper', dialogueText, true, () => {
                 this.showNewHeroCreation();
             });
         } else {
