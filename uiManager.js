@@ -380,7 +380,7 @@ showHeroes() {
     if (sortedHeroes.length > 0) {
     this.game.selectHero(this.game.heroes.indexOf(sortedHeroes[0]));
 }
-
+/*
 // Check if we need to create more heroes
 if (this.game.maxPartySize > this.game.heroes.length) {
     if (this.game.tutorial) {
@@ -389,6 +389,7 @@ if (this.game.maxPartySize > this.game.heroes.length) {
         });
     }
 }
+*/
 }
 
     showDungeonBladeScreen(tierName) {
