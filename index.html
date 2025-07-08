@@ -90,23 +90,7 @@
          onclick="game.uiManager.showArena()"
          onerror="this.style.display='none'">
 </div>
-	    
-        <!-- Tutorial Button (shown instead of heroes button during tutorial) -->
-<div class="menuNavButton tutorialButton" style="display: none;">
-    <button class="menuNavPlaceholder" onclick="game.tutorial.startTutorial1()">
-        <div class="dungeonTierStarsStatic icon">📚</div>
-        <div class="dungeonTierContent">
-            <div class="dungeonTierName">Tutorial</div>
-            <div class="dungeonTierLevel"></div>
-        </div>
-    </button>
-    <img src="https://puzzle-drops.github.io/TEVE/img/menu/tutorial_button.png" 
-         alt="Tutorial" 
-         class="menuNavImage"
-         onclick="game.tutorial.startTutorial1()"
-         onerror="this.style.display='none'">
-</div>
-	    
+        
         <!-- Heroes Button (bottom middle) -->
 <div class="menuNavButton heroesButton">
     <button class="menuNavPlaceholder" onclick="game.uiManager.showHeroes()">
@@ -871,16 +855,8 @@
             // Initialize dev console after scripts are loaded
             window.devConsole = new DevConsole();
             
-// Create game instance
-window.game = new Game();
-
-// Initialize UI visibility based on tutorial state
-game.uiManager.updateTutorialUIVisibility();
-
-// Check for tutorial 2 on main menu load
-if (game.tutorialCompleted1 && !game.tutorialCompleted2) {
-    game.tutorial.checkTutorial2();
-}
+            // Create game instance
+            window.game = new Game();
 
 		// Add splash screen handler
     const splashHandler = (e) => {
