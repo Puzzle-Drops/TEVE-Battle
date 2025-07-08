@@ -3,6 +3,10 @@ class Tutorial {
     constructor(game) {
         this.game = game;
         this.selectedGender = null;
+
+        // New game tutorial state
+        this.isNewGameTutorial = false;
+        this.newGameHeroCount = 0;
         
         // Dialogue system properties
         this.currentDialogueQueue = [];
@@ -36,6 +40,46 @@ class Tutorial {
                 console.log(`NPC ${npcName} clicked - not yet implemented`);
         }
     }
+    
+    // New Game Tutorial
+newGameStart() {
+    this.isNewGameTutorial = true;
+    this.newGameHeroCount = 0;
+    
+    // Initial Skypper dialogue
+    this.npcDialogue('Skypper', [
+        "Ahh, there you are. I wasn't sure anyone would answer the call.",
+        "Name's Skypper. I was a hero, once... Now I help spot the next ones.",
+        "You won't start with legends. You start with potential. Raw, restless, and real.",
+        "You three will do. Give me your names, one day, folk'll know those names. Maybe even fear 'em."
+    ], true, () => {
+        // After initial dialogue, create first hero
+        this.continueNewGameTutorial();
+    });
+}
+
+continueNewGameTutorial() {
+    if (this.newGameHeroCount === 0) {
+        // First hero
+        this.skypperAdditionalRecruit("You! You've got a spark to yeh. Don't lose that. What's your name?");
+    } else if (this.newGameHeroCount === 1) {
+        // Second hero
+        this.skypperAdditionalRecruit("What about you? Seem quiet now, but sometimes storms start in silence. Name?");
+    } else if (this.newGameHeroCount === 2) {
+        // Third hero
+        this.skypperAdditionalRecruit("A steady gaze. A stubborn fire. Yeah, you'll go far, once you've got a name.");
+    } else if (this.newGameHeroCount === 3) {
+        // All heroes created, final dialogue
+        this.npcDialogue('Skypper', [
+            "Alright then. That's your squad. Might not look like much, yet. But there's fire there. Let's use that.",
+            "The Satyrs've gotten bold just past the gate. Let's see what this crew can do."
+        ], true, () => {
+            // Tutorial complete, go to main menu
+            this.isNewGameTutorial = false;
+            this.game.uiManager.showMainMenu();
+        });
+    }
+}
     
 showBestiary() {
     // Create bestiary overlay
@@ -1067,7 +1111,7 @@ cancelBtn.onclick = () => {
 };
 
 // Disable cancel button if less than 3 heroes
-if (this.game.heroes.length < 3) {
+if (this.game.heroes.length < 3 || this.isNewGameTutorial) {
     cancelBtn.disabled = true;
     cancelBtn.style.opacity = '0.5';
     cancelBtn.style.cursor = 'default';
@@ -1105,24 +1149,33 @@ if (this.game.heroes.length < 3) {
     }
 
     createNewHero(name, gender) {
-        // Create new hero
-        const newHero = new Hero(`villager_${gender}`);
-        newHero.name = name;
-        newHero.gender = gender;
-        newHero.level = 5;
-        newHero.exp = 0;
-        newHero.expToNext = newHero.calculateExpToNext();
-        
-        // Add to game's hero array
-        this.game.heroes.push(newHero);
-        
-        // If on heroes screen, update the display
-        if (this.game.currentScreen === 'heroesScreen') {
-            this.game.uiManager.updateHeroList();
-        }
-        
-        console.log(`Created new hero: ${name} (${gender} villager, level 5)`);
+    // Create new hero
+    const newHero = new Hero(`villager_${gender}`);
+    newHero.name = name;
+    newHero.gender = gender;
+    newHero.level = 5;
+    newHero.exp = 0;
+    newHero.expToNext = newHero.calculateExpToNext();
+    
+    // Add to game's hero array
+    this.game.heroes.push(newHero);
+    
+    // If on heroes screen, update the display
+    if (this.game.currentScreen === 'heroesScreen') {
+        this.game.uiManager.updateHeroList();
     }
+    
+    console.log(`Created new hero: ${name} (${gender} villager, level 5)`);
+    
+    // If this is part of new game tutorial, continue the sequence
+    if (this.isNewGameTutorial) {
+        this.newGameHeroCount++;
+        // Small delay before continuing to next hero
+        setTimeout(() => {
+            this.continueNewGameTutorial();
+        }, 500);
+    }
+}
     
     skypperAdditionalRecruit(dialogueText = null) {
     // Check if we need to create more heroes
@@ -1138,7 +1191,6 @@ if (this.game.heroes.length < 3) {
         }
     }
 }
-
 
 
     
