@@ -414,10 +414,71 @@ renderHeroTrees(container, svg, gender) {
             int: int,
             hp: Math.floor(initial.hp + (str * mods.hp)),
             attack: Math.floor(initial.attack + (mainstatValue * mods.attack)),
-            attackSpeed: initial.attackSpeed + (100 + 100 * (agi / (agi + 1000))),
+            attackSpeed: Math.floor((100 + 100 * (agi / (agi + 1000)))),
             armor: Math.floor(initial.armor + (mods.armor * level) + (0.05 * str) + (0.01 * agi)),
             resist: Math.floor(initial.resist + (mods.resist * level) + (0.05 * int))
         };
+    }
+
+    getMaxValuesForTier(tier, level) {
+        // Calculate max values based on tier and level
+        // These are approximations based on the user's feedback
+        if (level <= 50) {
+            return {
+                str: 100,
+                agi: 100,
+                int: 100,
+                hp: 400,
+                attack: 30,
+                attackSpeed: 200,
+                armor: 80,
+                resist: 80
+            };
+        } else if (level <= 100) {
+            return {
+                str: 200,
+                agi: 200,
+                int: 200,
+                hp: 800,
+                attack: 60,
+                attackSpeed: 200,
+                armor: 150,
+                resist: 150
+            };
+        } else if (level <= 200) {
+            return {
+                str: 500,
+                agi: 500,
+                int: 500,
+                hp: 3000,
+                attack: 150,
+                attackSpeed: 200,
+                armor: 300,
+                resist: 300
+            };
+        } else if (level <= 300) {
+            return {
+                str: 800,
+                agi: 800,
+                int: 800,
+                hp: 6000,
+                attack: 250,
+                attackSpeed: 200,
+                armor: 500,
+                resist: 500
+            };
+        } else { // level 500
+            return {
+                str: 1500,
+                agi: 1500,
+                int: 1500,
+                hp: 12000,
+                attack: 500,
+                attackSpeed: 200,
+                armor: 1000,
+                resist: 1000
+            };
+        }
     }
 
     createStatBar(value, maxValue, label, color) {
@@ -534,17 +595,8 @@ renderHeroTrees(container, svg, gender) {
     // Calculate stats at the appropriate level
     const stats = this.calculateStatsAtLevel(unitData, statLevel, unitType);
 
-    // Find max values for scaling (reasonable approximations)
-    const maxValues = {
-        str: 300,
-        agi: 300,
-        int: 300,
-        hp: 2000,
-        attack: 200,
-        attackSpeed: 250,
-        armor: 200,
-        resist: 200
-    };
+    // Get max values based on tier/level
+    const maxValues = this.getMaxValuesForTier(unitData.tier || 0, statLevel);
 
     // Stats Bar Graph
     mainContent += `
@@ -555,7 +607,7 @@ renderHeroTrees(container, svg, gender) {
             ${this.createStatBar(stats.int, maxValues.int, 'Intelligence', '#bd93f9')}
             ${this.createStatBar(stats.hp, maxValues.hp, 'Health', '#50fa7b')}
             ${this.createStatBar(stats.attack, maxValues.attack, 'Attack', '#ffb86c')}
-            ${this.createStatBar(Math.floor(stats.attackSpeed), maxValues.attackSpeed, 'Attack Speed', '#f1fa8c')}
+            ${this.createStatBar(stats.attackSpeed, maxValues.attackSpeed, 'Attack Speed', '#f1fa8c')}
             ${this.createStatBar(stats.armor, maxValues.armor, 'Armor', '#8be9fd')}
             ${this.createStatBar(stats.resist, maxValues.resist, 'Resistance', '#ff79c6')}
         </div>
