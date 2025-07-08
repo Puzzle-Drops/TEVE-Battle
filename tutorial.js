@@ -1123,6 +1123,19 @@ if (this.game.heroes.length < 3) {
         
         console.log(`Created new hero: ${name} (${gender} villager, level 5)`);
     }
+    
+    skypperAdditionalRecruit() {
+        // Check if we need to create more heroes
+        if (this.game.maxPartySize > this.game.heroes.length) {
+            this.npcDialogue('Skypper', "A new soul wishes to join your party! Come forth, brave one.", false, () => {
+                this.showNewHeroCreation();
+            });
+        }
+    }
+
+
+
+    
 }
 
 // Initialize tutorial system when game loads
