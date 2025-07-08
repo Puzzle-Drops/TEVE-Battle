@@ -395,6 +395,47 @@ renderHeroTrees(container, svg, gender) {
         content.appendChild(grid);
     }
 
+    calculateStatsAtLevel(unitData, level, unitType) {
+        const mods = unitData.modifiers;
+        const initial = unitData.initial;
+        
+        // Calculate base stats
+        const str = Math.floor(initial.str + (level * mods.str));
+        const agi = Math.floor(initial.agi + (level * mods.agi));
+        const int = Math.floor(initial.int + (level * mods.int));
+        
+        // Get mainstat value for attack calculation
+        const mainstat = unitData.mainstat || 'str';
+        const mainstatValue = mainstat === 'str' ? str : (mainstat === 'agi' ? agi : int);
+        
+        return {
+            str: str,
+            agi: agi,
+            int: int,
+            hp: Math.floor(initial.hp + (str * mods.hp)),
+            attack: Math.floor(initial.attack + (mainstatValue * mods.attack)),
+            attackSpeed: initial.attackSpeed + (100 + 100 * (agi / (agi + 1000))),
+            armor: Math.floor(initial.armor + (mods.armor * level) + (0.05 * str) + (0.01 * agi)),
+            resist: Math.floor(initial.resist + (mods.resist * level) + (0.05 * int))
+        };
+    }
+
+    createStatBar(value, maxValue, label, color) {
+        const percentage = Math.min((value / maxValue) * 100, 100);
+        
+        return `
+            <div style="margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                    <span style="color: #b0e0f0; font-size: 14px;">${label}</span>
+                    <span style="color: #b0e0f0; font-size: 14px;">${value}</span>
+                </div>
+                <div style="width: 100%; height: 20px; background: rgba(0, 0, 0, 0.5); border: 1px solid #2a6a8a; border-radius: 3px;">
+                    <div style="width: ${percentage}%; height: 100%; background: ${color}; border-radius: 2px; transition: width 0.3s;"></div>
+                </div>
+            </div>
+        `;
+    }
+
     showUnitDetails(unitId, unitData, unitType) {
     // Create popup overlay
     const popup = document.createElement('div');
@@ -459,90 +500,68 @@ renderHeroTrees(container, svg, gender) {
     } else {
     // Enemy portrait with universal enemy backdrop
     mainContent += `
-        <div style="width: 256px; height: 256px; 
-                    background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/enemy_backdrop.png');
-                    background-size: cover; background-position: center;
-                    border: 2px solid #2a6a8a; border-radius: 8px;
-                    display: flex; align-items: center; justify-content: center;">
-            <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${unitId}.png"
-                 style="width: 90%; height: 90%; image-rendering: pixelated;"
-                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 256 256\\'><rect fill=\\'%23666\\' width=\\'256\\' height=\\'256\\'/><text x=\\'128\\' y=\\'128\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${unitData.name}</text></svg>'">
+        <div style="text-align: center;">
+            <div style="width: 256px; height: 256px; 
+                        background-image: url('https://puzzle-drops.github.io/TEVE/img/backdrops/enemy_backdrop.png');
+                        background-size: cover; background-position: center;
+                        border: 2px solid #2a6a8a; border-radius: 8px;
+                        display: flex; align-items: center; justify-content: center;
+                        margin-bottom: 15px;">
+                <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${unitId}.png"
+                     style="width: 90%; height: 90%; image-rendering: pixelated;"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 256 256\\'><rect fill=\\'%23666\\' width=\\'256\\' height=\\'256\\'/><text x=\\'128\\' y=\\'128\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${unitData.name}</text></svg>'">
+            </div>
+            ${unitData.boss ? '<div style="color: #ff4444; font-size: 24px; font-weight: bold; text-align: center;">BOSS</div>' : ''}
         </div>
     `;
 }
     
     mainContent += `</div>`;
 
-    // Column 2: Stats and Promotion paths
-    mainContent += `<div style="flex: 1; min-width: 300px;">`;
+    // Column 2: Stats Bar Graph
+    mainContent += `<div style="flex: 1; min-width: 400px;">`;
 
-    // Boss indicator
-    if (unitType === 'enemy' && unitData.boss) {
-        mainContent += `<div style="color: #ff4444; font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center;">BOSS</div>`;
+    // Determine the level to show stats at
+    let statLevel;
+    if (unitType === 'hero') {
+        const promoteLevels = { 0: 50, 1: 100, 2: 200, 3: 300, 4: 500 };
+        statLevel = promoteLevels[unitData.tier] || 500;
+    } else {
+        // For enemies, show stats at level 100 as a reasonable comparison
+        statLevel = 100;
     }
 
-    // Stat Modifiers
+    // Calculate stats at the appropriate level
+    const stats = this.calculateStatsAtLevel(unitData, statLevel, unitType);
+
+    // Find max values for scaling (reasonable approximations)
+    const maxValues = {
+        str: 300,
+        agi: 300,
+        int: 300,
+        hp: 2000,
+        attack: 200,
+        attackSpeed: 250,
+        armor: 200,
+        resist: 200
+    };
+
+    // Stats Bar Graph
     mainContent += `
         <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h3 style="color: #4dd0e1; margin-top: 0;">Stat Growth Modifiers (per level)</h3>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-size: 18px;">
-                <div>STR: <span style="color: ${unitData.mainstat === 'str' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.str}x</span></div>
-                <div>AGI: <span style="color: ${unitData.mainstat === 'agi' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.agi}x</span></div>
-                <div>INT: <span style="color: ${unitData.mainstat === 'int' ? '#ffd700' : '#b0e0f0'};">${unitData.modifiers.int}x</span></div>
-            </div>
+            <h3 style="color: #4dd0e1; margin-top: 0; margin-bottom: 20px;">Stats (Level ${statLevel})</h3>
+            ${this.createStatBar(stats.str, maxValues.str, 'Strength', '#ff6b6b')}
+            ${this.createStatBar(stats.agi, maxValues.agi, 'Agility', '#66d9ef')}
+            ${this.createStatBar(stats.int, maxValues.int, 'Intelligence', '#bd93f9')}
+            ${this.createStatBar(stats.hp, maxValues.hp, 'Health', '#50fa7b')}
+            ${this.createStatBar(stats.attack, maxValues.attack, 'Attack', '#ffb86c')}
+            ${this.createStatBar(Math.floor(stats.attackSpeed), maxValues.attackSpeed, 'Attack Speed', '#f1fa8c')}
+            ${this.createStatBar(stats.armor, maxValues.armor, 'Armor', '#8be9fd')}
+            ${this.createStatBar(stats.resist, maxValues.resist, 'Resistance', '#ff79c6')}
         </div>
     `;
 
-    // Initial Stats with proper alignment using tables
-    mainContent += `
-        <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h3 style="color: #4dd0e1; margin-top: 0;">Base Stats (Level 1)</h3>
-            <div style="display: flex; gap: 40px;">
-                <table style="border-collapse: collapse;">
-                    <tr>
-                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Health:</td>
-                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.hp}</td>
-                    </tr>
-                    <tr>
-                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Attack:</td>
-                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.attack}</td>
-                    </tr>
-                    <tr>
-                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Strength:</td>
-                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.str}</td>
-                    </tr>
-                    <tr>
-                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Agility:</td>
-                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.agi}</td>
-                    </tr>
-                    <tr>
-                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Intelligence:</td>
-                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.int}</td>
-                    </tr>
-                </table>
-                <table style="border-collapse: collapse;">
-                    <tr>
-                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">HP Regen:</td>
-                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.hpRegen}</td>
-                    </tr>
-                    <tr>
-                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Attack Speed:</td>
-                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.attackSpeed}%</td>
-                    </tr>
-                    <tr>
-                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Armor:</td>
-                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.armor}</td>
-                    </tr>
-                    <tr>
-                        <td style="color: #b0e0f0; padding: 4px 20px 4px 0;">Resistance:</td>
-                        <td style="color: #b0e0f0; text-align: right; padding: 4px 0;">${unitData.initial.resist}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    `;
-
-    // Promotion paths (heroes only) - MOVED INSIDE COLUMN 2
+    // Promotion paths (heroes only)
     if (unitType === 'hero') {
         // Get the base unit ID without gender suffix
         const baseUnitId = unitId.replace(/_male$|_female$/, '');
