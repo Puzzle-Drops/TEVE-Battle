@@ -701,7 +701,8 @@ renderHeroTrees(container, svg, gender) {
             return match;
         });
         
-        //bracket cleanup if needed later
+        // Bracket cleanup - remove double brackets
+        description = description.replace(/\[\[+/g, '[').replace(/\]\]+/g, ']');
         description = description.replace(/\[(?![^\]]*[/%x])/g, '').replace(/(?<![/%\d])\]/g, '');
         
         return description;
