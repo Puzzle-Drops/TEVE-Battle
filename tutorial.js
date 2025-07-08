@@ -421,64 +421,34 @@ renderHeroTrees(container, svg, gender) {
     }
 
     getMaxValuesForTier(tier, level) {
-        // Calculate max values based on tier and level
-        // These are approximations based on the user's feedback
-        if (level <= 50) {
-            return {
-                str: 100,
-                agi: 100,
-                int: 100,
-                hp: 400,
-                attack: 30,
-                attackSpeed: 200,
-                armor: 80,
-                resist: 80
-            };
-        } else if (level <= 100) {
-            return {
-                str: 200,
-                agi: 200,
-                int: 200,
-                hp: 800,
-                attack: 60,
-                attackSpeed: 200,
-                armor: 150,
-                resist: 150
-            };
-        } else if (level <= 200) {
-            return {
-                str: 500,
-                agi: 500,
-                int: 500,
-                hp: 3000,
-                attack: 150,
-                attackSpeed: 200,
-                armor: 300,
-                resist: 300
-            };
-        } else if (level <= 300) {
-            return {
-                str: 800,
-                agi: 800,
-                int: 800,
-                hp: 6000,
-                attack: 250,
-                attackSpeed: 200,
-                armor: 500,
-                resist: 500
-            };
-        } else { // level 500
-            return {
-                str: 1500,
-                agi: 1500,
-                int: 1500,
-                hp: 12000,
-                attack: 500,
-                attackSpeed: 200,
-                armor: 1000,
-                resist: 1000
-            };
-        }
+        // Calculate max values based on the modifier ranges provided:
+        // STR/AGI/INT: 2.5 to 8 per level
+        // HP: 2.5 to 6.1 per str point
+        // Attack: 0.1 to 0.82 per mainstat
+        
+        const maxStatModifier = 8;
+        const maxHPModifier = 6.1;
+        const maxAttackModifier = 0.82;
+        
+        // Calculate theoretical max stats at each level
+        const maxPrimaryStat = level * maxStatModifier;
+        const maxHP = maxPrimaryStat * maxHPModifier;
+        const maxAttack = maxPrimaryStat * maxAttackModifier;
+        
+        // For armor and resist, use approximate scaling
+        const maxArmor = level * 1.5 + (maxPrimaryStat * 0.05);
+        const maxResist = level * 1.5 + (maxPrimaryStat * 0.05);
+        
+        return {
+            str: maxPrimaryStat,
+            agi: maxPrimaryStat,
+            int: maxPrimaryStat,
+            hp: Math.floor(maxHP),
+            attack: Math.floor(maxAttack),
+            attackSpeed: 200, // Attack speed caps around 200
+            armor: Math.floor(maxArmor),
+            resist: Math.floor(maxResist)
+        };
     }
 
     createStatBar(value, maxValue, label, color) {
