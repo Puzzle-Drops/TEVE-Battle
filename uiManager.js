@@ -49,24 +49,21 @@ hideAllScreens() {
     }
 
     showMainMenu() {
-    this.hideAllScreens();
-    this.closeHeroInfo();
-    this.game.currentScreen = 'mainMenuScreen';
-    document.getElementById('mainMenuScreen').style.display = 'block';
-    
-    // Update visibility based on tutorial state
-    this.updateTutorialUIVisibility();
-    
-    // Update visibility based on progression (existing code)
-    const stashButton = document.querySelector('.stashesButton');
-    if (stashButton && this.game.progression.unlockedFeatures.stash) {
-        stashButton.style.display = '';
-    }
-    
-    const arenaButton = document.querySelector('.arenaButton');
-    if (arenaButton && this.game.progression.unlockedFeatures.arena) {
-        arenaButton.style.display = '';
-    }
+        this.hideAllScreens();
+        this.closeHeroInfo();
+        this.game.currentScreen = 'mainMenuScreen';
+        document.getElementById('mainMenuScreen').style.display = 'block';
+        
+        // Update visibility based on progression
+        const stashButton = document.querySelector('.stashesButton');
+        if (stashButton) {
+            stashButton.style.display = this.game.progression.unlockedFeatures.stash ? '' : 'none';
+        }
+        
+        const arenaButton = document.querySelector('.arenaButton');
+        if (arenaButton) {
+            arenaButton.style.display = this.game.progression.unlockedFeatures.arena ? '' : 'none';
+        }
         
         // Dungeon tier orbs
         const tierOrder = this.game.getTierOrder();
@@ -87,38 +84,6 @@ hideAllScreens() {
         
         
     }
-    
-    updateTutorialUIVisibility() {
-    // Tutorial button visibility
-    const tutorialButton = document.querySelector('.tutorialButton');
-    if (tutorialButton) {
-        tutorialButton.style.display = !this.game.tutorialCompleted1 ? '' : 'none';
-    }
-    
-    // Heroes button visibility
-    const heroesButton = document.querySelector('.heroesButton');
-    if (heroesButton) {
-        heroesButton.style.display = this.game.tutorialCompleted1 ? '' : 'none';
-    }
-    
-    // Arena button visibility  
-    const arenaButton = document.querySelector('.arenaButton');
-    if (arenaButton) {
-        arenaButton.style.display = this.game.tutorialCompleted1 ? '' : 'none';
-    }
-    
-    // Stashes button visibility
-    const stashButton = document.querySelector('.stashesButton');
-    if (stashButton) {
-        stashButton.style.display = this.game.tutorialCompleted2 ? '' : 'none';
-    }
-    
-    // Easy dungeon tier visibility
-    const easyDungeon = document.querySelector('.dungeonOrb0');
-    if (easyDungeon) {
-        easyDungeon.style.display = this.game.tutorialCompleted1 ? '' : 'none';
-    }
-}
 
     // Trail System Methods
     initializeTrailSystem() {
