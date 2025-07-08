@@ -200,7 +200,7 @@ showHeroClasses(gender) {
 renderHeroTrees(container, svg, gender) {
     const cellWidth = 120;
     const cellHeight = 140;
-    const startX = -14;
+    const startX = -20;
     const startY = 50;
     
     // Track all positions for drawing paths
