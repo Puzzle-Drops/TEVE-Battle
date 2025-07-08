@@ -221,9 +221,13 @@ class Game {
         };
     }
 
-    init() {
-        
+init() {
+    // Check if this is a new game (no heroes)
+    if (this.heroes.length === 0) {
+        // Start new game tutorial
+        this.tutorial.newGameStart();
     }
+}
 
     // Progression Methods
     loadProgression() {
