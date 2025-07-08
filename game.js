@@ -221,6 +221,8 @@ this.arenaOpponents = null; // array of Enemy objects
     }
 
     init() {
+        
+        /* init init init
         // Create 8 starting villagers
         this.heroes = [];
         for (let i = 0; i < 16; i++) {
@@ -244,6 +246,7 @@ this.arenaOpponents = null; // array of Enemy objects
         this.heroes[4].expToNext = this.heroes[4].calculateExpToNext();
         this.heroes[5].level = 50;
         this.heroes[5].expToNext = this.heroes[5].calculateExpToNext();
+        */
     }
 
     // Progression Methods
