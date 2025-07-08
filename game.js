@@ -20,7 +20,9 @@ class Game {
         this.collectionPopupQueue = [];
         this.collectionPopupActive = false;
         this.maxPartySize = 3; // Start with 3 party slots
+        this.hasCheckedForTutorial = false; // Track if we've checked for new game tutorial
         this.startFresh = true; // Set false for easier testing
+        
 
         // Arena system
         this.arena = new Arena(this);
@@ -249,12 +251,6 @@ init() {
         this.heroes[4].expToNext = this.heroes[4].calculateExpToNext();
         this.heroes[5].level = 50;
         this.heroes[5].expToNext = this.heroes[5].calculateExpToNext();
-    }
-
-    // Check if this is a new game (no heroes)
-    if (this.heroes.length === 0) {
-        // Start new game tutorial
-        this.tutorial.newGameStart();
     }
 
 }
