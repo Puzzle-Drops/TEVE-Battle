@@ -1,5 +1,32 @@
 {
   "classes": {
+    "tester_male": {
+      "name": "Tester",
+      "tier": 0,
+      "mainstat": "str",
+      "modifiers": { 
+        "str": 1.0,
+        "agi": 1.0,
+        "int": 1.0,
+        "hp": 3.5,
+        "attack": 0.2,
+        "armor": 0.11,
+        "resist": 0.08
+      },
+      "initial": {
+        "str": 1000000,
+        "agi": 1000000,
+        "int": 1000000,
+        "hp": 1000000,
+        "hpRegen": 0.67,
+        "attack": 1000000,
+        "attackSpeed": 1000,
+        "armor": 1000000,
+        "resist": 1000000
+      },
+      "spells": ["lose", "win"],
+      "promotesTo": []
+    },
     "villager_male": {
       "name": "Villager",
       "tier": 0,
