@@ -1124,14 +1124,20 @@ if (this.game.heroes.length < 3) {
         console.log(`Created new hero: ${name} (${gender} villager, level 5)`);
     }
     
-    skypperAdditionalRecruit() {
-        // Check if we need to create more heroes
-        if (this.game.maxPartySize > this.game.heroes.length) {
-            this.npcDialogue('Skypper', "A new soul wishes to join your party! Come forth, brave one.", false, () => {
+    skypperAdditionalRecruit(dialogueText = null) {
+    // Check if we need to create more heroes
+    if (this.game.maxPartySize > this.game.heroes.length) {
+        if (dialogueText) {
+            // If dialogue text is provided, show dialogue first
+            this.npcDialogue('Skypper', dialogueText, false, () => {
                 this.showNewHeroCreation();
             });
+        } else {
+            // If no dialogue text, go straight to hero creation
+            this.showNewHeroCreation();
         }
     }
+}
 
 
 
