@@ -123,12 +123,12 @@ get baseStats() {
         str: str,
         agi: agi,
         int: int,
-        hp: this.initial.hp + (str * this.modifiers.hp),
+        hp: Math.floor(this.initial.hp + (str * this.modifiers.hp)),
         hpRegen: this.initial.hpRegen + (str * 0.01),
-        attack: this.initial.attack + (mainstatValue * this.modifiers.attack),
+        attack: Math.floor(this.initial.attack + (mainstatValue * this.modifiers.attack)),
         attackSpeed: this.initial.attackSpeed + (100 + 100 * (agi / (agi + 1000))),
-        armor: this.initial.armor + (this.modifiers.armor * this.level) + (0.05 * str) + (0.01 * agi),
-        resist: this.initial.resist + (this.modifiers.resist * this.level) + (0.05 * int)
+        armor: Math.floor(this.initial.armor + (this.modifiers.armor * this.level) + (0.05 * str) + (0.01 * agi)),
+        resist: Math.floor(this.initial.resist + (this.modifiers.resist * this.level) + (0.05 * int))
     };
 }
 
@@ -146,19 +146,19 @@ get mainstat() {
 }
 
 	get hp() {
-    return this.baseStats.hp + this.gearStats.hp;
+    return Math.floor(this.baseStats.hp + this.gearStats.hp);
 }
 
 get attack() {
-    return this.baseStats.attack + this.gearStats.attack;
+    return Math.floor(this.baseStats.attack + this.gearStats.attack);
 }
 		
 get armor() {
-    return this.baseStats.armor + this.gearStats.armor;
+    return Math.floor(this.baseStats.armor + this.gearStats.armor);
 }
 
 get resist() {
-    return this.baseStats.resist + this.gearStats.resist;
+    return Math.floor(this.baseStats.resist + this.gearStats.resist);
 }
 
 get hpRegen() {
