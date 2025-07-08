@@ -833,31 +833,32 @@ Press \` to toggle console</span>`;
         this.addLog('info', 'Opening new hero creation dialog...');
     }
     
-    spawnTester() {
-        if (!window.game) {
-            this.addLog('error', 'Game not initialized');
-            return;
-        }
-        
-        // Create a new hero with tester class
-        const testerHero = new Hero(`Tester_${game.heroes.length + 1}`, 'male');
-        testerHero.className = 'tester_male';
-        testerHero.level = 5;
-        testerHero.exp = 0;
-        testerHero.expToNext = testerHero.calculateExpToNext();
-        testerHero.abilities = testerHero.getClassAbilities();
-        
-        // Add to heroes array
-        game.heroes.push(testerHero);
-        
-        this.addLog('info', `<span style="color: #ffd700;">Spawned level 5 Tester unit: ${testerHero.name}</span>`, true);
-        
-        // Update UI if on heroes screen
-        if (game.currentScreen === 'heroesScreen') {
-            game.uiManager.updateHeroList();
-            game.uiManager.showHeroTab(game.uiManager.currentTab);
-        }
+spawnTester() {
+    if (!window.game) {
+        this.addLog('error', 'Game not initialized');
+        return;
     }
+    
+    // Create a new hero with tester class (matching the pattern from game.js)
+    const testerHero = new Hero('tester_male');
+    testerHero.name = `Tester_${game.heroes.length + 1}`; // Set custom name
+    testerHero.gender = 'male';
+    testerHero.level = 5;
+    testerHero.exp = 0;
+    testerHero.expToNext = testerHero.calculateExpToNext();
+    //testerHero.abilities = testerHero.getClassAbilities();
+    
+    // Add to heroes array
+    game.heroes.push(testerHero);
+    
+    this.addLog('info', `<span style="color: #ffd700;">Spawned level 5 Tester unit: ${testerHero.name}</span>`, true);
+    
+    // Update UI if on heroes screen
+    if (game.currentScreen === 'heroesScreen') {
+        game.uiManager.updateHeroList();
+        game.uiManager.showHeroTab(game.uiManager.currentTab);
+    }
+}
     
     setupParty(targetLevel) {
         if (!window.game) {
