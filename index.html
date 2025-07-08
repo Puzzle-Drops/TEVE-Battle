@@ -871,8 +871,16 @@
             // Initialize dev console after scripts are loaded
             window.devConsole = new DevConsole();
             
-            // Create game instance
-            window.game = new Game();
+// Create game instance
+window.game = new Game();
+
+// Initialize UI visibility based on tutorial state
+game.uiManager.updateTutorialUIVisibility();
+
+// Check for tutorial 2 on main menu load
+if (game.tutorialCompleted1 && !game.tutorialCompleted2) {
+    game.tutorial.checkTutorial2();
+}
 
 		// Add splash screen handler
     const splashHandler = (e) => {
