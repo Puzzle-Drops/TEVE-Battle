@@ -1,7 +1,7 @@
 // Loading manager
 class LoadingManager {
     constructor() {
-        this.totalAssets = 5; // spells.json, units.json, dungeons.json, items.json, arena.json
+        this.totalAssets = 15; // 5 JSON files + 10 JS files
         this.loadedAssets = 0;
         this.failedAssets = []; // Track which assets failed
         this.loadingScreen = document.getElementById('loadingScreen');
@@ -37,6 +37,22 @@ class LoadingManager {
         this.loadingError.innerHTML = errorMessage;
         this.loadingError.style.display = 'block';
     }
+    
+    async loadScript(src, name) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = () => {
+                this.updateProgress(name);
+                resolve();
+            };
+            script.onerror = () => {
+                this.failedAssets.push(name);
+                reject(new Error(`Failed to load ${name}`));
+            };
+            document.head.appendChild(script);
+        });
+    }
 
     hideLoadingScreen() {
         this.loadingScreen.style.display = 'none';
@@ -48,6 +64,32 @@ const loadingManager = new LoadingManager();
 
 // Initialize data loading
 async function loadGameData() {
+    // First load all JavaScript files
+    const scriptLoaders = [
+        { src: 'spellLogic.js', name: 'Spell Logic' },
+        { src: 'battle.js', name: 'Battle System' },
+        { src: 'devConsole.js', name: 'Dev Console' },
+        { src: 'item.js', name: 'Item System' },
+        { src: 'uiManager.js', name: 'UI Manager' },
+        { src: 'hero.js', name: 'Hero System' },
+        { src: 'enemy.js', name: 'Enemy System' },
+        { src: 'arena.js', name: 'Arena System' },
+        { src: 'tutorial.js', name: 'Tutorial System' },
+        { src: 'game.js', name: 'Game Core' }
+    ];
+    
+    // Load scripts sequentially to maintain dependencies
+    for (const script of scriptLoaders) {
+        try {
+            loadingManager.loadingText.textContent = `Loading ${script.name}...`;
+            await loadingManager.loadScript(script.src, script.name);
+        } catch (error) {
+            console.error(`Failed to load ${script.name}:`, error);
+            loadingManager.failedAssets.push(script.name);
+        }
+    }
+    
+    // Then load data files
     const assetLoaders = [
         {
             name: 'spells.json',
@@ -106,6 +148,12 @@ async function loadGameData() {
     
     let hasErrors = false;
     
+    // Check if we had script loading errors
+    if (loadingManager.failedAssets.length > 0) {
+        hasErrors = true;
+    }
+    
+    // Load data assets
     for (const asset of assetLoaders) {
         try {
             await asset.load();
@@ -120,6 +168,9 @@ async function loadGameData() {
         loadingManager.showError(new Error('Some assets failed to load'));
         return false;
     }
+    
+    // Add a small delay to ensure all classes are fully initialized
+    await new Promise(resolve => setTimeout(resolve, 100));
     
     return true;
 }
