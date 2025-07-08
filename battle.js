@@ -320,6 +320,17 @@ this.debugAI = true; // AI decision making shown in console
         // Force complete UI update
         this.updateUI();
 
+        // Apply boss buff to boss enemies
+this.enemies.forEach(enemy => {
+    if (enemy.source.isBoss) {
+        this.applyBuff(enemy, 'Boss', -1, {
+            damageReduction: 0.25,
+            stunResistance: 0.5
+        });
+        this.log(`${enemy.name} is a boss gaining stun resistance and damage reduction!`);
+    }
+});
+
         // Initialize battle stats for new wave enemies
 this.enemies.forEach(enemy => {
     if (!this.battleStats[enemy.name]) {
@@ -1720,7 +1731,7 @@ this.trackBattleStat(unit.name, 'turnsTaken', 1);
 
     debugLogAllPossibleActions(unit) {
         if (!this.debugAI) return;
-        console.log(`\n=========================================================================`);
+        console.log(`\n=======================`);
         console.log(`\n========== AI Debug for ${unit.source.className} - ${unit.name}==========`);
         
         // Pre-calculate sorted lists once
@@ -2683,13 +2694,24 @@ if (this.currentUnit && this.currentUnit.isAlive) {
     }
     
     applyDebuff(target, debuffName, duration, effects) {
-        if (!target.isAlive) return;
-        
-        // Check for immunity
-        if (target.buffs.some(b => b.name === 'Immune' || b.immunity)) {
-            this.log(`${target.name} is immune to debuffs!`);
-            return;
+    if (!target.isAlive) return;
+    
+    // Check for immunity
+    if (target.buffs.some(b => b.name === 'Immune' || b.immunity)) {
+        this.log(`${target.name} is immune to debuffs!`);
+        return;
+    }
+    
+    // Check for boss stun resistance
+    if (debuffName === 'Stun') {
+        const bossBuff = target.buffs.find(b => b.name === 'Boss');
+        if (bossBuff && bossBuff.stunResistance) {
+            if (Math.random() < bossBuff.stunResistance) {
+                this.log(`${target.name} is a boss and shrugged off your stun attempt!`);
+                return;
+            }
         }
+    }
         
         // Check if caster is debuffing themselves during their turn
         let adjustedDuration = duration;
@@ -3537,6 +3559,7 @@ exitBattle() {
 
     getBuffIconName(buffName) {
     const iconMap = {
+        'Boss': 'buff_boss',
         'Increase Attack': 'increase_attack',
         'Increase Speed': 'increase_speed',
         'Increase Defense': 'increase_defense',
@@ -3589,6 +3612,7 @@ exitBattle() {
         
         const descriptions = {
     // Buffs
+    'Boss': '50% stun resistance, 25% damage reduction',
     'Increase Attack': '+50% attack damage',
     'Increase Speed': '+33% action bar progress',
     'Increase Defense': '+25% damage reduction, and -25% damage taken',
