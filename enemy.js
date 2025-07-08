@@ -123,12 +123,12 @@ get baseStats() {
         str: str,
         agi: agi,
         int: int,
-        hp: (str * 5) + this.initial.hp,
-        hpRegen: (str * 0.05) + this.initial.hpRegen,
-        attack: mainstatValue + this.initial.attack,
-        attackSpeed: (100 + 100 * (agi / (agi + 1000))) + this.initial.attackSpeed,
-        armor: (0.25 * str) + (0.05 * agi) + this.initial.armor,
-        resist: (0.25 * int) + this.initial.resist
+        hp: this.initial.hp + (str * this.modifiers.hp),
+        hpRegen: this.initial.hpRegen + (str * 0.01),
+        attack: this.initial.attack + (mainstatValue * this.modifiers.attack),
+        attackSpeed: this.initial.attackSpeed + (100 + 100 * (agi / (agi + 1000))),
+        armor: this.initial.armor + (this.modifiers.armor * this.level) + (0.05 * str) + (0.01 * agi),
+        resist: this.initial.resist + (this.modifiers.resist * this.level) + (0.05 * int)
     };
 }
 
@@ -150,8 +150,7 @@ get mainstat() {
 }
 
 get attack() {
-    const mainstatValue = this.totalStats[this.mainstat];
-    return mainstatValue + (this.gearStats.attack || 0) + this.initial.attack;
+    return this.baseStats.attack + this.gearStats.attack;
 }
 		
 get armor() {
