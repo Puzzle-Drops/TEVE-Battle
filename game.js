@@ -19,11 +19,13 @@ class Game {
         this.collectionLog = this.loadCollectionLog();
         this.collectionPopupQueue = [];
         this.collectionPopupActive = false;
+        this.maxPartySize = 3; // Start with 3 party slots
+        this.tutorialCompleted = false; // Track tutorial completion
 
         // Arena system
-this.arena = new Arena(this);
-this.arenaMode = null; // 'spar' or 'pvp'
-this.arenaOpponents = null; // array of Enemy objects
+        this.arena = new Arena(this);
+        this.arenaMode = null; // 'spar' or 'pvp'
+        this.arenaOpponents = null; // array of Enemy objects
 
         // Progression tracking
         this.progression = {
@@ -266,25 +268,35 @@ this.arenaOpponents = null; // array of Enemy objects
     }
 
     markDungeonComplete(dungeonId, timeString) {
-        if (!this.progression.completedDungeons[dungeonId]) {
-            this.progression.completedDungeons[dungeonId] = {
-                completions: 0,
-                bestTime: null
-            };
-        }
-        
-        const dungeonData = this.progression.completedDungeons[dungeonId];
-        dungeonData.completions++;
-        
-        // Update best time if better
-        if (!dungeonData.bestTime || timeString < dungeonData.bestTime) {
-            dungeonData.bestTime = timeString;
-        }
-        
-        // Check for unlocks
-        this.checkProgressionUnlocks(dungeonId);
-        this.saveProgression();
+    // Check if this is a first-time completion BEFORE updating
+    const isFirstCompletion = !this.progression.completedDungeons[dungeonId] || 
+                             this.progression.completedDungeons[dungeonId].completions === 0;
+    
+    if (!this.progression.completedDungeons[dungeonId]) {
+        this.progression.completedDungeons[dungeonId] = {
+            completions: 0,
+            bestTime: null
+        };
     }
+    
+    const dungeonData = this.progression.completedDungeons[dungeonId];
+    dungeonData.completions++;
+    
+    // Update best time if better
+    if (!dungeonData.bestTime || timeString < dungeonData.bestTime) {
+        dungeonData.bestTime = timeString;
+    }
+    
+    // Increase max party size on first completion
+    if (isFirstCompletion) {
+        this.maxPartySize++;
+        console.log(`First time completing ${dungeonId}! Max party size increased to ${this.maxPartySize}`);
+    }
+    
+    // Check for unlocks
+    this.checkProgressionUnlocks(dungeonId);
+    this.saveProgression();
+}
 
     checkProgressionUnlocks(completedDungeonId) {
         // Get dungeon info
