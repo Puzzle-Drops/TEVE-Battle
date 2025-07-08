@@ -843,7 +843,7 @@ spawnTester() {
     const testerHero = new Hero('tester_male');
     testerHero.name = `Tester_${game.heroes.length + 1}`; // Set custom name
     testerHero.gender = 'male';
-    testerHero.level = 5;
+    testerHero.level = 500;
     testerHero.exp = 0;
     testerHero.expToNext = testerHero.calculateExpToNext();
     //testerHero.abilities = testerHero.getClassAbilities();
