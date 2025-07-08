@@ -702,7 +702,7 @@ renderHeroTrees(container, svg, gender) {
         });
         
         //bracket cleanup if needed later
-        //description = description.replace(/\[(?![^\]]*[/%x])/g, '').replace(/(?<![/%\d])\]/g, '');
+        description = description.replace(/\[(?![^\]]*[/%x])/g, '').replace(/(?<![/%\d])\]/g, '');
         
         return description;
     }
