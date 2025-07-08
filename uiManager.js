@@ -2962,16 +2962,16 @@ updateAutoReplayText(countdown) {
             "Agility": `<b>Agility${mainStatText}</b><br>Increases Attack Speed and slightly boosts Armor.<br>Boosts Agility-based abilities.`,
             "Intelligence": `<b>Intelligence${mainStatText}</b><br>Increases Resistance (magic defense).<br>Boosts Intelligence-based abilities.`,
 
-            "Health Points": "<b>Health Points</b><br>Scales with STR.<br><code>5 × STR</code>",
-            "HP Regeneration": "<b>HP Regeneration</b><br>Scales with STR. Regain HP after your turn.<br><code>0.05 × STR</code>",
-            "Attack": "<b>Attack</b><br>Your total offensive power.<br>Equals your main stat + gear bonuses.",
-            "Attack Speed": "<b>Attack Speed</b><br>Increases how fast you attack. Scales with Agility.<br><code>100 + 100 × (AGI / (AGI + 1000))</code>",
+            "Health Points": "<b>Health Points</b><br>Your health pool. Increased by Strength.",
+            "HP Regeneration": "<b>HP Regeneration</b><br>Your health regeneration. Increased by Strength.",
+            "Attack": "<b>Attack</b><br>Your total offensive power.<br>Increases with your mainstat.",
+            "Attack Speed": "<b>Attack Speed</b><br>Increases how fast you attack. Scales with Agility.",
 
-            "Armor": `<b>Armor</b><br>Reduces incoming physical damage.<br><code>(0.25 × STR) + (0.05 × AGI)</code><br><br>
-    Physical Damage Reduction: Percentage of physical damage blocked.<br><code>(0.9 × Armor) / (Armor + 500)</code>`,
+            "Armor": `<b>Armor</b><br>Reduces incoming physical damage.<br><br>
+    Physical Damage Reduction: Percentage of physical damage blocked.`,
 
-            "Resistance": `<b>Resistance</b><br>Reduces magical damage taken.<br><code>0.25 × INT</code><br><br>
-    Magical Damage Reduction: Percentage of magical damage blocked.<br><code>(0.3 × Resist) / (Resist + 1000)</code>`
+            "Resistance": `<b>Resistance</b><br>Reduces magical damage taken.<br><br>
+    Magical Damage Reduction: Percentage of magical damage blocked.`
         };
 
         // Create or get stat tooltip element
