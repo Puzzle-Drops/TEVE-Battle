@@ -760,12 +760,15 @@ renderHeroTrees(container, svg, gender) {
     }
 
     // NPC Dialogue System
-    npcDialogue(npcName, dialogueText, blur = false) {
-        // Clear any existing dialogue
-        this.clearDialogue();
-        
-        // Convert single string to array for consistency
-        let dialogueArray = Array.isArray(dialogueText) ? dialogueText : [dialogueText];
+    npcDialogue(npcName, dialogueText, blur = false, onComplete = null) {
+    // Clear any existing dialogue
+    this.clearDialogue();
+    
+    // Store the callback
+    this.dialogueCompleteCallback = onComplete;
+    
+    // Convert single string to array for consistency
+    let dialogueArray = Array.isArray(dialogueText) ? dialogueText : [dialogueText];
         
         // Format NPC name properly (capitalize first letter)
         const formattedNPCName = npcName.charAt(0).toUpperCase() + npcName.slice(1).toLowerCase();
@@ -858,28 +861,35 @@ renderHeroTrees(container, svg, gender) {
             this.continueTimeout = setTimeout(() => {
                 this.canContinue = true;
                 document.getElementById('npcDialogueContinue').style.display = 'block';
-            }, 1000);
+            }, 250);
         } else if (this.canContinue) {
             this.showNextDialogue();
         }
     }
     
     closeDialogue() {
-        const overlay = document.getElementById('npcDialogueOverlay');
-        overlay.style.display = 'none';
-        overlay.classList.remove('blocking');
-        overlay.removeEventListener('click', this.handleDialogueClick);
-        
-        // Clear timeouts
-        clearTimeout(this.typewriterTimeout);
-        clearTimeout(this.continueTimeout);
-        
-        // Reset state
-        this.currentDialogueQueue = [];
-        this.currentDialogueIndex = 0;
-        this.isTyping = false;
-        this.canContinue = false;
+    const overlay = document.getElementById('npcDialogueOverlay');
+    overlay.style.display = 'none';
+    overlay.classList.remove('blocking');
+    overlay.removeEventListener('click', this.handleDialogueClick);
+    
+    // Clear timeouts
+    clearTimeout(this.typewriterTimeout);
+    clearTimeout(this.continueTimeout);
+    
+    // Reset state
+    this.currentDialogueQueue = [];
+    this.currentDialogueIndex = 0;
+    this.isTyping = false;
+    this.canContinue = false;
+    
+    // Execute callback if provided
+    if (this.dialogueCompleteCallback) {
+        const callback = this.dialogueCompleteCallback;
+        this.dialogueCompleteCallback = null; // Clear it
+        setTimeout(() => callback(), 100); // Small delay for smooth transition
     }
+}
     
     clearDialogue() {
         // Force clear any existing dialogue
