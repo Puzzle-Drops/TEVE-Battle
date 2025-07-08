@@ -2861,9 +2861,6 @@ removeDebuffs(target) {
                 
                 // Calculate exp for this wave before transitioning
                 const waveExp = this.calculateWaveExp();
-                if (this.game.tutorial && this.game.tutorial.isInTutorialBattle) {
-                    waveExp *= 10;
-                }
                 console.log(`Wave ${this.currentWave + 1} cleared, exp calculated: ${waveExp}`);
                 this.waveExpEarned.push(waveExp);
                 
@@ -3193,15 +3190,6 @@ setTimeout(() => {
         this.game.uiManager.showBattleResults();
     }
 }, 1000);
-
-
-// Handle tutorial victory
-if (this.game.tutorial && this.game.tutorial.isInTutorialBattle) {
-    setTimeout(() => {
-        this.game.tutorial.handleTutorialVictory();
-    }, 1000);
-}
-        
 }
 
 exitBattle() {
