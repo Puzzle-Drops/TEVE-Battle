@@ -384,12 +384,7 @@ showHeroes() {
     // Check if we need to create more heroes
     if (this.game.maxPartySize > this.game.heroes.length) {
         //this.game.tutorial.npcDialogue('Skypper', ["Hello there, adventurer! I've got a new recruit for you! Don't be shy, introduce yourself."], false);
-        this.game.tutorial.npcDialogue('Squeaky', [
-            "Squeak squeak! Oh, I mean... Hello there!",
-            "I'm Squeaky, the city's... um... information broker.",
-            "I hear things. Lots of things. Tiny mouse ears, you know?",
-            "If you need to know something, just ask! *squeak*"
-        ], false);
+        this.game.tutorial.npcDialogue('Skypper', ["Hello there, adventurer! I've got a new recruit for you! Don't be shy, introduce yourself."], false);
         this.game.tutorial.showNewHeroCreation();
     }
     
