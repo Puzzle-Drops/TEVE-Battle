@@ -3545,6 +3545,7 @@ hideArenaStatTooltip() {
             { key: 'support', display: 'Support' },
 
             // Buffs
+            { key: 'buff_boss', display: 'Boss' },
             { key: 'buff_increase_attack', display: 'Increase Attack' },
             { key: 'buff_increase_speed', display: 'Increase Speed' },
             { key: 'buff_increase_defense', display: 'Increase Defense' },
