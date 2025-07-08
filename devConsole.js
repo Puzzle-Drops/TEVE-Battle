@@ -19,31 +19,33 @@ class DevConsole {
         };
         
         // Helper commands
-this.helpers = {
-    heroes: () => this.showHeroes(),
-    hero: (index) => this.showHero(index),
-    setLevel: (heroIndex, level) => this.setHeroLevel(heroIndex, level),
-    setAllLevels: (level) => this.setAllHeroLevels(level),
-    addGold: (family, amount) => this.addGold(family, amount),
-    addAllGold: (amount) => this.addAllGold(amount),
-    addItem: (itemId, heroIndex) => this.addItem(itemId, heroIndex),
-    promoteHero: (heroIndex, className) => this.promoteHero(heroIndex, className),
-    maxHero: (heroIndex) => this.maxOutHero(heroIndex),
-    unlockAll: () => this.unlockAllContent(),
-    battle: () => this.showBattleInfo(),
-    stash: (family) => this.showStash(family),
-    givePerfectItem: (itemId, heroIndex) => this.givePerfectItem(itemId, heroIndex),
-    generateItems: (stashFamily, dungeonName, count) => this.generateItems(stashFamily, dungeonName, count),
-    setSpellLevel: (level) => this.setCurrentUnitSpellLevel(level),
-    buff: (unitIndex, buffName, duration) => this.applyBuffToUnit(unitIndex, buffName, duration),
-    debuff: (unitIndex, debuffName, duration) => this.applyDebuffToUnit(unitIndex, debuffName, duration),
-    shield: (unitIndex, amount) => this.applyShieldToUnit(unitIndex, amount),
-    listUnits: () => this.listBattleUnits(),
-    unlock: () => this.unlockEverything(),
-    u: () => this.unlockEverything(),
-    party: (level) => this.setupParty(level),
-    newHero: () => this.createNewHero()
-};
+        this.helpers = {
+            heroes: () => this.showHeroes(),
+            hero: (index) => this.showHero(index),
+            setLevel: (heroIndex, level) => this.setHeroLevel(heroIndex, level),
+            setAllLevels: (level) => this.setAllHeroLevels(level),
+            addGold: (family, amount) => this.addGold(family, amount),
+            addAllGold: (amount) => this.addAllGold(amount),
+            addItem: (itemId, heroIndex) => this.addItem(itemId, heroIndex),
+            promoteHero: (heroIndex, className) => this.promoteHero(heroIndex, className),
+            maxHero: (heroIndex) => this.maxOutHero(heroIndex),
+            unlockAll: () => this.unlockAllContent(),
+            battle: () => this.showBattleInfo(),
+            stash: (family) => this.showStash(family),
+            givePerfectItem: (itemId, heroIndex) => this.givePerfectItem(itemId, heroIndex),
+            generateItems: (stashFamily, dungeonName, count) => this.generateItems(stashFamily, dungeonName, count),
+            setSpellLevel: (level) => this.setCurrentUnitSpellLevel(level),
+            buff: (unitIndex, buffName, duration) => this.applyBuffToUnit(unitIndex, buffName, duration),
+            debuff: (unitIndex, debuffName, duration) => this.applyDebuffToUnit(unitIndex, debuffName, duration),
+            shield: (unitIndex, amount) => this.applyShieldToUnit(unitIndex, amount),
+            listUnits: () => this.listBattleUnits(),
+            unlock: () => this.unlockEverything(),
+            u: () => this.unlockEverything(),
+            party: (level) => this.setupParty(level),
+            newHero: () => this.createNewHero(),
+            t: () => this.spawnTester(),
+            tester: () => this.spawnTester()
+        };
         
         this.init();
     }
@@ -54,32 +56,32 @@ this.helpers = {
         
         // Replace these two event listeners in the init() method (around lines 47-56)
 
-// Capture uncaught errors
-window.addEventListener('error', (event) => {
-    let errorMsg = `Uncaught Error: ${event.message} at ${event.filename}:${event.lineno}:${event.colno}`;
-    if (event.error && event.error.stack) {
-        errorMsg += '\n' + event.error.stack;
-    }
-    this.addLog('error', errorMsg);
-});
+        // Capture uncaught errors
+        window.addEventListener('error', (event) => {
+            let errorMsg = `Uncaught Error: ${event.message} at ${event.filename}:${event.lineno}:${event.colno}`;
+            if (event.error && event.error.stack) {
+                errorMsg += '\n' + event.error.stack;
+            }
+            this.addLog('error', errorMsg);
+        });
 
-// Capture unhandled promise rejections
-window.addEventListener('unhandledrejection', (event) => {
-    let errorMsg = 'Unhandled Promise Rejection: ';
-    
-    if (event.reason instanceof Error) {
-        errorMsg += event.reason.message;
-        if (event.reason.stack) {
-            errorMsg += '\n' + event.reason.stack;
-        }
-    } else if (typeof event.reason === 'object' && event.reason !== null) {
-        errorMsg += JSON.stringify(event.reason, null, 2);
-    } else {
-        errorMsg += String(event.reason);
-    }
-    
-    this.addLog('error', errorMsg);
-});
+        // Capture unhandled promise rejections
+        window.addEventListener('unhandledrejection', (event) => {
+            let errorMsg = 'Unhandled Promise Rejection: ';
+            
+            if (event.reason instanceof Error) {
+                errorMsg += event.reason.message;
+                if (event.reason.stack) {
+                    errorMsg += '\n' + event.reason.stack;
+                }
+            } else if (typeof event.reason === 'object' && event.reason !== null) {
+                errorMsg += JSON.stringify(event.reason, null, 2);
+            } else {
+                errorMsg += String(event.reason);
+            }
+            
+            this.addLog('error', errorMsg);
+        });
         
         // Setup input handlers
         const input = document.getElementById('devConsoleInput');
@@ -351,6 +353,7 @@ window.addEventListener('unhandledrejection', (event) => {
 - promoteHero(heroIndex, className) - Promote a hero
 - maxHero(heroIndex) - Max out a hero (level 500, awakened)
 - party(level) - Setup full party at specific level with promotions
+- t() or tester() - Spawn a level 5 tester unit
 
 <span style="color: #ffd700;">Battle Commands:</span>
 - battle() - Show current battle info
@@ -762,236 +765,262 @@ Press \` to toggle console</span>`;
     }
     
     unlockEverything() {
-    if (!window.game) {
-        this.addLog('error', 'Game not initialized');
-        return;
-    }
-    
-    // Unlock all features
-    game.progression.unlockedFeatures = {
-        party: true,
-        stash: true,
-        arena: true
-    };
-    
-    // Unlock all tiers
-    const allTiers = Object.keys(game.dungeonTiers);
-    game.progression.unlockedTiers = [...allTiers];
-    
-    // Complete all dungeons (1 completion each)
-    Object.keys(dungeonData.dungeons).forEach(dungeonId => {
-        if (!game.progression.completedDungeons[dungeonId]) {
-            game.progression.completedDungeons[dungeonId] = {
-                completions: 1,
-                bestTime: '00:00'
-            };
-        } else {
-            game.progression.completedDungeons[dungeonId].completions++;
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
         }
-    });
-    
-    // Complete all arena teams (1 completion each with 0 deaths)
-    // Assuming there are 10 arena teams (0-9)
-    for (let i = 0; i < 10; i++) {
-        const teamId = `team_${i}`;
-        if (!game.progression.completedArenas[teamId]) {
-            game.progression.completedArenas[teamId] = {
-                completions: 1,
-                bestTime: '00:00',
-                lowestDeaths: 0
-            };
-        } else {
-            game.progression.completedArenas[teamId].completions++;
+        
+        // Unlock all features
+        game.progression.unlockedFeatures = {
+            party: true,
+            stash: true,
+            arena: true
+        };
+        
+        // Unlock all tiers
+        const allTiers = Object.keys(game.dungeonTiers);
+        game.progression.unlockedTiers = [...allTiers];
+        
+        // Complete all dungeons (1 completion each)
+        Object.keys(dungeonData.dungeons).forEach(dungeonId => {
+            if (!game.progression.completedDungeons[dungeonId]) {
+                game.progression.completedDungeons[dungeonId] = {
+                    completions: 1,
+                    bestTime: '00:00'
+                };
+            } else {
+                game.progression.completedDungeons[dungeonId].completions++;
+            }
+        });
+        
+        // Complete all arena teams (1 completion each with 0 deaths)
+        // Completing 60 arena teams (0-59)
+        for (let i = 0; i < 60; i++) {
+            const teamId = `team_${i}`;
+            if (!game.progression.completedArenas[teamId]) {
+                game.progression.completedArenas[teamId] = {
+                    completions: 1,
+                    bestTime: '00:00',
+                    lowestDeaths: 0
+                };
+            } else {
+                game.progression.completedArenas[teamId].completions++;
+            }
+        }
+        
+        // Save progression
+        game.saveProgression();
+        
+        this.addLog('info', `<span style="color: #ffd700;">✨ ALL PROGRESSION UNLOCKED! ✨</span>`, true);
+        this.addLog('info', `- All features unlocked`);
+        this.addLog('info', `- All ${allTiers.length} tiers unlocked`);
+        this.addLog('info', `- All ${Object.keys(dungeonData.dungeons).length} dungeons completed`);
+        this.addLog('info', `- All 60 arena teams completed`);
+        
+        // Update UI if on main menu
+        if (game.currentScreen === 'mainMenuScreen') {
+            game.uiManager.showMainMenu();
         }
     }
-    
-    // Save progression
-    game.saveProgression();
-    
-    this.addLog('info', `<span style="color: #ffd700;">✨ ALL PROGRESSION UNLOCKED! ✨</span>`, true);
-    this.addLog('info', `- All features unlocked`);
-    this.addLog('info', `- All ${allTiers.length} tiers unlocked`);
-    this.addLog('info', `- All ${Object.keys(dungeonData.dungeons).length} dungeons completed`);
-    this.addLog('info', `- All 10 arena teams completed`);
-    
-    // Update UI if on main menu
-    if (game.currentScreen === 'mainMenuScreen') {
-        game.uiManager.showMainMenu();
-    }
-}
     
     createNewHero() {
-    if (!window.game || !game.tutorial) {
-        this.addLog('error', 'Game or tutorial system not initialized');
-        return;
+        if (!window.game || !game.tutorial) {
+            this.addLog('error', 'Game or tutorial system not initialized');
+            return;
+        }
+        
+        game.tutorial.showNewHeroCreation();
+        this.addLog('info', 'Opening new hero creation dialog...');
     }
     
-    game.tutorial.showNewHeroCreation();
-    this.addLog('info', 'Opening new hero creation dialog...');
-}
+    spawnTester() {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        // Create a new hero with tester class
+        const testerHero = new Hero(`Tester_${game.heroes.length + 1}`, 'male');
+        testerHero.className = 'tester_male';
+        testerHero.level = 5;
+        testerHero.exp = 0;
+        testerHero.expToNext = testerHero.calculateExpToNext();
+        testerHero.abilities = testerHero.getClassAbilities();
+        
+        // Add to heroes array
+        game.heroes.push(testerHero);
+        
+        this.addLog('info', `<span style="color: #ffd700;">Spawned level 5 Tester unit: ${testerHero.name}</span>`, true);
+        
+        // Update UI if on heroes screen
+        if (game.currentScreen === 'heroesScreen') {
+            game.uiManager.updateHeroList();
+            game.uiManager.showHeroTab(game.uiManager.currentTab);
+        }
+    }
     
     setupParty(targetLevel) {
-    if (!window.game) {
-        this.addLog('error', 'Game not initialized');
-        return;
-    }
-    
-    targetLevel = parseInt(targetLevel);
-    if (isNaN(targetLevel) || targetLevel < 1 || targetLevel > 500) {
-        this.addLog('error', 'Level must be between 1 and 500');
-        return;
-    }
-    
-    this.addLog('info', `<span style="color: #4dd0e1;">Setting up party at level ${targetLevel}...</span>`, true);
-    
-    const classFamilies = [
-        'Acolyte', 'Archer', 'Druid', 'Initiate', 'Swordsman', 'Templar', 'Thief', 'Witch Hunter'
-    ];
-    
-    const promotionCosts = { 0: 1000, 1: 10000, 2: 100000, 3: 1000000, 4: 10000000 };
-    
-    // Process first 8 heroes (one of each family)
-    for (let i = 0; i < 8 && i < game.heroes.length; i++) {
-        const hero = game.heroes[i];
-        const familyName = classFamilies[i];
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
         
-        // Reset hero to villager state
-        hero.className = `villager_${hero.gender}`;
-        hero.level = 1;
-        hero.exp = 0;
-        hero.awakened = false;
-        hero.abilities = hero.getClassAbilities();
+        targetLevel = parseInt(targetLevel);
+        if (isNaN(targetLevel) || targetLevel < 1 || targetLevel > 500) {
+            this.addLog('error', 'Level must be between 1 and 500');
+            return;
+        }
         
-        // Keep promoting until no more promotions are possible
-        let promoted = true;
-        while (promoted) {
-            promoted = false;
+        this.addLog('info', `<span style="color: #4dd0e1;">Setting up party at level ${targetLevel}...</span>`, true);
+        
+        const classFamilies = [
+            'Acolyte', 'Archer', 'Druid', 'Initiate', 'Swordsman', 'Templar', 'Thief', 'Witch Hunter'
+        ];
+        
+        const promotionCosts = { 0: 1000, 1: 10000, 2: 100000, 3: 1000000, 4: 10000000 };
+        
+        // Process first 8 heroes (one of each family)
+        for (let i = 0; i < 8 && i < game.heroes.length; i++) {
+            const hero = game.heroes[i];
+            const familyName = classFamilies[i];
             
-            // Set to target level
+            // Reset hero to villager state
+            hero.className = `villager_${hero.gender}`;
+            hero.level = 1;
+            hero.exp = 0;
+            hero.awakened = false;
+            hero.abilities = hero.getClassAbilities();
+            
+            // Keep promoting until no more promotions are possible
+            let promoted = true;
+            while (promoted) {
+                promoted = false;
+                
+                // Set to target level
+                hero.level = targetLevel;
+                hero.exp = 0;
+                hero.expToNext = hero.calculateExpToNext();
+                
+                // Check if we can promote
+                if (hero.canPromote()) {
+                    const promotions = hero.getPromotionOptions();
+                    
+                    if (promotions.length > 0) {
+                        // Check for awakening
+                        if (promotions.includes('Awaken')) {
+                            // Add gold for awakening
+                            const family = game.getClassFamily(hero.className, hero.classTier);
+                            game.stashes[family].gold += 10000000;
+                            
+                            // Awaken
+                            hero.promote('Awaken');
+                            this.addLog('info', `  ${hero.name}: <span style="color: #d896ff;">Awakened!</span>`, true);
+                            promoted = true;
+                        } else {
+                            // Add gold for promotion
+                            const cost = promotionCosts[hero.classTier];
+                            const currentFamily = game.getClassFamily(hero.className, hero.classTier);
+                            game.stashes[currentFamily].gold += cost;
+                            
+                            // Find the promotion that matches our target family for tier 0
+                            let targetPromotion = null;
+                            
+                            if (hero.classTier === 0) {
+                                // For tier 0, find the promotion that leads to our target family
+                                targetPromotion = promotions.find(p => {
+                                    const classData = unitData.classes[p];
+                                    return classData && game.classFamilies.some(f => 
+                                        f.name === familyName && f.classes.some(c => c.toLowerCase() === classData.name.toLowerCase())
+                                    );
+                                });
+                            } else {
+                                // For higher tiers, pick randomly
+                                targetPromotion = promotions[Math.floor(Math.random() * promotions.length)];
+                            }
+                            
+                            if (targetPromotion) {
+                                hero.promote(targetPromotion);
+                                this.addLog('info', `  ${hero.name}: Promoted to ${hero.displayClassName}`);
+                                promoted = true;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Final level set
             hero.level = targetLevel;
             hero.exp = 0;
             hero.expToNext = hero.calculateExpToNext();
+            hero.abilities = hero.getClassAbilities();
+        }
+        
+        // Process remaining heroes randomly
+        for (let i = 8; i < game.heroes.length; i++) {
+            const hero = game.heroes[i];
             
-            // Check if we can promote
-            if (hero.canPromote()) {
-                const promotions = hero.getPromotionOptions();
+            // Reset hero
+            hero.className = `villager_${hero.gender}`;
+            hero.level = 1;
+            hero.exp = 0;
+            hero.awakened = false;
+            hero.abilities = hero.getClassAbilities();
+            
+            // Keep promoting until no more promotions are possible
+            let promoted = true;
+            while (promoted) {
+                promoted = false;
                 
-                if (promotions.length > 0) {
-                    // Check for awakening
-                    if (promotions.includes('Awaken')) {
-                        // Add gold for awakening
-                        const family = game.getClassFamily(hero.className, hero.classTier);
-                        game.stashes[family].gold += 10000000;
-                        
-                        // Awaken
-                        hero.promote('Awaken');
-                        this.addLog('info', `  ${hero.name}: <span style="color: #d896ff;">Awakened!</span>`, true);
-                        promoted = true;
-                    } else {
-                        // Add gold for promotion
-                        const cost = promotionCosts[hero.classTier];
-                        const currentFamily = game.getClassFamily(hero.className, hero.classTier);
-                        game.stashes[currentFamily].gold += cost;
-                        
-                        // Find the promotion that matches our target family for tier 0
-                        let targetPromotion = null;
-                        
-                        if (hero.classTier === 0) {
-                            // For tier 0, find the promotion that leads to our target family
-                            targetPromotion = promotions.find(p => {
-                                const classData = unitData.classes[p];
-                                return classData && game.classFamilies.some(f => 
-                                    f.name === familyName && f.classes.some(c => c.toLowerCase() === classData.name.toLowerCase())
-                                );
-                            });
+                // Set to target level
+                hero.level = targetLevel;
+                hero.exp = 0;
+                hero.expToNext = hero.calculateExpToNext();
+                
+                // Check if we can promote
+                if (hero.canPromote()) {
+                    const promotions = hero.getPromotionOptions();
+                    
+                    if (promotions.length > 0) {
+                        // Check for awakening
+                        if (promotions.includes('Awaken')) {
+                            // Add gold for awakening
+                            const family = game.getClassFamily(hero.className, hero.classTier);
+                            game.stashes[family].gold += 10000000;
+                            
+                            // Awaken
+                            hero.promote('Awaken');
+                            promoted = true;
                         } else {
-                            // For higher tiers, pick randomly
-                            targetPromotion = promotions[Math.floor(Math.random() * promotions.length)];
-                        }
-                        
-                        if (targetPromotion) {
+                            // Add gold for promotion
+                            const cost = promotionCosts[hero.classTier];
+                            const currentFamily = game.getClassFamily(hero.className, hero.classTier);
+                            game.stashes[currentFamily].gold += cost;
+                            
+                            // Random promotion
+                            const targetPromotion = promotions[Math.floor(Math.random() * promotions.length)];
                             hero.promote(targetPromotion);
-                            this.addLog('info', `  ${hero.name}: Promoted to ${hero.displayClassName}`);
                             promoted = true;
                         }
                     }
                 }
             }
-        }
-        
-        // Final level set
-        hero.level = targetLevel;
-        hero.exp = 0;
-        hero.expToNext = hero.calculateExpToNext();
-        hero.abilities = hero.getClassAbilities();
-    }
-    
-    // Process remaining heroes randomly
-    for (let i = 8; i < game.heroes.length; i++) {
-        const hero = game.heroes[i];
-        
-        // Reset hero
-        hero.className = `villager_${hero.gender}`;
-        hero.level = 1;
-        hero.exp = 0;
-        hero.awakened = false;
-        hero.abilities = hero.getClassAbilities();
-        
-        // Keep promoting until no more promotions are possible
-        let promoted = true;
-        while (promoted) {
-            promoted = false;
             
-            // Set to target level
+            // Final level set
             hero.level = targetLevel;
             hero.exp = 0;
             hero.expToNext = hero.calculateExpToNext();
-            
-            // Check if we can promote
-            if (hero.canPromote()) {
-                const promotions = hero.getPromotionOptions();
-                
-                if (promotions.length > 0) {
-                    // Check for awakening
-                    if (promotions.includes('Awaken')) {
-                        // Add gold for awakening
-                        const family = game.getClassFamily(hero.className, hero.classTier);
-                        game.stashes[family].gold += 10000000;
-                        
-                        // Awaken
-                        hero.promote('Awaken');
-                        promoted = true;
-                    } else {
-                        // Add gold for promotion
-                        const cost = promotionCosts[hero.classTier];
-                        const currentFamily = game.getClassFamily(hero.className, hero.classTier);
-                        game.stashes[currentFamily].gold += cost;
-                        
-                        // Random promotion
-                        const targetPromotion = promotions[Math.floor(Math.random() * promotions.length)];
-                        hero.promote(targetPromotion);
-                        promoted = true;
-                    }
-                }
-            }
+            hero.abilities = hero.getClassAbilities();
         }
         
-        // Final level set
-        hero.level = targetLevel;
-        hero.exp = 0;
-        hero.expToNext = hero.calculateExpToNext();
-        hero.abilities = hero.getClassAbilities();
+        this.addLog('info', `<span style="color: #00ff88;">✓ Party setup complete!</span>`, true);
+        this.addLog('info', `All heroes are now level ${targetLevel} with appropriate promotions`);
+        
+        // Update UI if on heroes screen
+        if (game.currentScreen === 'heroesScreen') {
+            game.uiManager.updateHeroList();
+            game.uiManager.showHeroTab(game.uiManager.currentTab);
+        }
     }
-    
-    this.addLog('info', `<span style="color: #00ff88;">✓ Party setup complete!</span>`, true);
-    this.addLog('info', `All heroes are now level ${targetLevel} with appropriate promotions`);
-    
-    // Update UI if on heroes screen
-    if (game.currentScreen === 'heroesScreen') {
-        game.uiManager.updateHeroList();
-        game.uiManager.showHeroTab(game.uiManager.currentTab);
-    }
-}
     
     setCurrentUnitSpellLevel(level) {
         if (!window.game || !game.currentBattle) {
@@ -1050,7 +1079,7 @@ Press \` to toggle console</span>`;
         }
         
         // Validate buff name
-        const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield', 'Frost Armor'];
+        const validBuffs = ['Increase Attack', 'Increase Speed', 'Increase Defense', 'Immune', 'Shield', 'Frost Armor', 'Boss'];
         if (!validBuffs.includes(buffName)) {
             this.addLog('error', `Invalid buff name. Valid buffs: ${validBuffs.join(', ')}`);
             return;
