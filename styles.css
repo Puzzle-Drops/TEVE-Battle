@@ -5964,6 +5964,26 @@ body {
     to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 }
 
+/* Tutorial Button */
+.tutorialButton {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+}
+
+/* NPC Dialogue Overlay */
+.npcDialogueOverlay.blocking {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* Tutorial-specific styling */
+.menuNavButton.tutorialButton .dungeonTierStarsStatic.icon {
+    font-size: 36px;
+}
+
 /* END end EnD eNd ENd eND enD bottom document/*
 
 /* Directional lunge animations */
