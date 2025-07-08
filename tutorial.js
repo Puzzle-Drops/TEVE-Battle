@@ -30,11 +30,11 @@ class Tutorial {
                 break;
             case 'arnold':
                 // Future implementation for Arnold's shop/services
-                console.log('Arnold clicked - shop not yet implemented');
+                console.log('Arnold clicked - not yet implemented');
                 break;
             case 'bob':
                 // Future implementation for Bob's arena services
-                console.log('Bob clicked - arena services not yet implemented');
+                console.log('Bob clicked - not yet implemented');
                 break;
             default:
                 console.log(`NPC ${npcName} clicked - not yet implemented`);
@@ -61,18 +61,18 @@ newGameStart() {
 continueNewGameTutorial() {
     if (this.newGameHeroCount === 0) {
         // First hero
-        this.skypperAdditionalRecruit("You! You've got a spark to yeh. Don't lose that. What's your name?");
+        this.skypperAdditionalRecruit();
     } else if (this.newGameHeroCount === 1) {
         // Second hero
-        this.skypperAdditionalRecruit("What about you? Seem quiet now, but sometimes storms start in silence. Name?");
+        this.skypperAdditionalRecruit();
     } else if (this.newGameHeroCount === 2) {
         // Third hero
-        this.skypperAdditionalRecruit("A steady gaze. A stubborn fire. Yeah, you'll go far, once you've got a name.");
+        this.skypperAdditionalRecruit();
     } else if (this.newGameHeroCount === 3) {
         // All heroes created, final dialogue
         this.npcDialogue('Skypper', [
             "Alright then. That's your squad. Might not look like much, yet. But there's fire there. Let's use that.",
-            "The Satyrs've gotten bold just past the gate. Let's see what this crew can do."
+            "The Satyrs have gotten bold just past the gate. Let's see what this crew can do."
         ], true, () => {
             // Tutorial complete, go to main menu
             this.isNewGameTutorial = false;
