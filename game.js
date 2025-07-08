@@ -340,8 +340,9 @@ init() {
         // Unlock features based on specific dungeons
         if (completedDungeonId === 'satyrs_glade') {
             this.progression.unlockedFeatures.arena = true;
+            
         }
-        if (completedDungeonId === 'icy_highland') {
+        if (completedDungeonId === 'murkin_wetlands') {
             this.progression.unlockedFeatures.stash = true;
         }
 
