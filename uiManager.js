@@ -383,8 +383,8 @@ showHeroes() {
     
     // Check if we need to create more heroes
     if (this.game.maxPartySize > this.game.heroes.length) {
-        this.npcDialogue('Skypper', ["Hello there, adventurer! I've got a new recruit for you! Don't be shy, introduce yourself."], false);
-        this.game.tutorial.showNewHeroCreation();
+        this.tutorial.npcDialogue('Skypper', ["Hello there, adventurer! I've got a new recruit for you! Don't be shy, introduce yourself."], false);
+        this.tutorial.showNewHeroCreation();
     }
     
 }
