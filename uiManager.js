@@ -383,7 +383,7 @@ showHeroes() {
 
 // Check if we need to create more heroes
 if (this.game.tutorial) {
-    this.game.tutorial.skypperAdditionalRecruit();
+    this.game.tutorial.skypperAdditionalRecruit("A new soul wishes to join your party! Come forth, brave one.");
 }
     
 }
