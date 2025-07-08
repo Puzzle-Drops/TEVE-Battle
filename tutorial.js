@@ -1049,9 +1049,19 @@ renderHeroTrees(container, svg, gender) {
         };
 
         // Cancel button
-        cancelBtn.onclick = () => {
-            this.closeNewHeroDialog();
-        };
+cancelBtn.onclick = () => {
+    // Only allow cancel if we have at least 3 heroes
+    if (this.game.heroes.length >= 3) {
+        this.closeNewHeroDialog();
+    }
+};
+
+// Disable cancel button if less than 3 heroes
+if (this.game.heroes.length < 3) {
+    cancelBtn.disabled = true;
+    cancelBtn.style.opacity = '0.5';
+    cancelBtn.style.cursor = 'default';
+}
 
         // Enter key support
         nameInput.onkeypress = (e) => {
