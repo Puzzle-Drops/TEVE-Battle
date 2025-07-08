@@ -867,7 +867,7 @@ renderHeroTrees(container, svg, gender) {
         continueElement.style.display = 'none';
         
         let charIndex = 0;
-        const typeSpeed = 30; // milliseconds per character
+        const typeSpeed = 10; // milliseconds per character
         
         const typeNextChar = () => {
             if (charIndex < text.length) {
@@ -877,11 +877,11 @@ renderHeroTrees(container, svg, gender) {
             } else {
                 // Typing complete
                 this.isTyping = false;
-                // Wait 2 seconds before allowing continue
+                // Wait .3 seconds before allowing continue
                 this.continueTimeout = setTimeout(() => {
                     this.canContinue = true;
                     continueElement.style.display = 'block';
-                }, 2000);
+                }, 300);
             }
         };
         
