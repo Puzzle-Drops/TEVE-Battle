@@ -835,19 +835,9 @@
             </div>
         </div>
     </div>
-
-    <!-- Load JavaScript files in correct order -->
-<script src="spellLogic.js"></script>
-<script src="battle.js"></script>
-<script src="devConsole.js"></script>
+	
+<!-- Load only the loading manager initially -->
 <script src="loadingManager.js"></script>
-<script src="item.js"></script>
-<script src="uiManager.js"></script>
-<script src="hero.js"></script>
-<script src="enemy.js"></script>
-<script src="arena.js"></script>
-<script src="tutorial.js"></script>
-<script src="game.js"></script>
 <script>
 	
     // Global managers
@@ -857,14 +847,15 @@
     let itemData;
     let arenaData;
 
-    // Initialize dev console globally
-    window.devConsole = new DevConsole();
-
     // Initialize game after loading data
     window.addEventListener('DOMContentLoaded', async () => {
         const loadSuccess = await loadGameData();
         
         if (loadSuccess) {
+            // Initialize dev console after scripts are loaded
+            window.devConsole = new DevConsole();
+            
+            // Create game instance
             window.game = new Game();
 
 		// Add splash screen handler
