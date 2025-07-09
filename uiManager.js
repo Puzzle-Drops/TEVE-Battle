@@ -77,39 +77,72 @@ hideAllScreens() {
             }
         });
 
-        // Disable heroes button and Easy tier if tutorial not completed
+        // Handle heroes button and Easy tier based on tutorial completion
+const heroesButton = document.querySelector('.heroesButton');
+const easyOrb = document.querySelector('.dungeonOrb0');
+
 if (!this.game.tutorialCompleted) {
     // Disable heroes button
-    const heroesButton = document.querySelector('.heroesButton');
     if (heroesButton) {
         //heroesButton.style.opacity = '0.5';
         heroesButton.style.pointerEvents = 'none';
         const heroesImg = heroesButton.querySelector('.menuNavImage');
         if (heroesImg) {
             heroesImg.style.cursor = 'default';
-            heroesImg.onclick = null;
+            heroesImg.onclick = (e) => { e.preventDefault(); };
         }
         const heroesPlaceholder = heroesButton.querySelector('.menuNavPlaceholder');
         if (heroesPlaceholder) {
-            heroesPlaceholder.onclick = null;
+            heroesPlaceholder.onclick = (e) => { e.preventDefault(); };
             heroesPlaceholder.style.cursor = 'default';
         }
     }
     
     // Disable Easy dungeon orb
-    const easyOrb = document.querySelector('.dungeonOrb0');
     if (easyOrb) {
         //easyOrb.style.opacity = '0.5';
         easyOrb.style.pointerEvents = 'none';
         const easyImg = easyOrb.querySelector('.menuNavImage');
         if (easyImg) {
             easyImg.style.cursor = 'default';
-            easyImg.onclick = null;
+            easyImg.onclick = (e) => { e.preventDefault(); };
         }
         const easyPlaceholder = easyOrb.querySelector('.menuNavPlaceholder');
         if (easyPlaceholder) {
-            easyPlaceholder.onclick = null;
+            easyPlaceholder.onclick = (e) => { e.preventDefault(); };
             easyPlaceholder.style.cursor = 'default';
+        }
+    }
+} else {
+    // Re-enable heroes button after tutorial
+    if (heroesButton) {
+        //heroesButton.style.opacity = '1';
+        heroesButton.style.pointerEvents = 'auto';
+        const heroesImg = heroesButton.querySelector('.menuNavImage');
+        if (heroesImg) {
+            heroesImg.style.cursor = 'pointer';
+            heroesImg.onclick = () => this.showHeroes();
+        }
+        const heroesPlaceholder = heroesButton.querySelector('.menuNavPlaceholder');
+        if (heroesPlaceholder) {
+            heroesPlaceholder.onclick = () => this.showHeroes();
+            heroesPlaceholder.style.cursor = 'pointer';
+        }
+    }
+    
+    // Re-enable Easy dungeon orb after tutorial
+    if (easyOrb) {
+        //easyOrb.style.opacity = '1';
+        easyOrb.style.pointerEvents = 'auto';
+        const easyImg = easyOrb.querySelector('.menuNavImage');
+        if (easyImg) {
+            easyImg.style.cursor = 'pointer';
+            easyImg.onclick = () => this.showDungeonBladeScreen('Easy');
+        }
+        const easyPlaceholder = easyOrb.querySelector('.menuNavPlaceholder');
+        if (easyPlaceholder) {
+            easyPlaceholder.onclick = () => this.showDungeonBladeScreen('Easy');
+            easyPlaceholder.style.cursor = 'pointer';
         }
     }
 }
