@@ -86,16 +86,17 @@ continueNewGameTutorial() {
         // Third hero
         this.skypperAdditionalRecruit();
     } else if (this.newGameHeroCount === 3) {
-        // All heroes created, final dialogue
-        this.npcDialogue('Skypper', [
-            "Alright then. That's your squad. Might not look like much, yet. But there's fire there. Let's use that.",
-            "The Satyrs have gotten bold just past the gate. Let's see what this crew can do."
-        ], true, () => {
-            // Tutorial complete, go to main menu
-            this.isNewGameTutorial = false;
-            this.game.uiManager.showMainMenu();
-        });
-    }
+    // All heroes created, final dialogue
+    this.npcDialogue('Skypper', [
+        "Alright then. That's your squad. Might not look like much, yet. But there's fire there. Let's use that.",
+        "The Satyrs have gotten bold just past the gate. Let's see what this crew can do."
+    ], true, () => {
+        // Tutorial complete, go to main menu
+        this.isNewGameTutorial = false;
+        this.game.tutorialCompleted = true; // Mark tutorial as complete
+        this.game.uiManager.showMainMenu();
+    });
+}
 }
     
 showBestiary() {
@@ -1085,23 +1086,33 @@ renderHeroTrees(container, svg, gender) {
         const cancelBtn = document.getElementById('cancelHeroBtn');
 
         // Gender selection
-        maleOption.onclick = () => {
-            this.selectedGender = 'male';
-            maleOption.style.borderColor = '#4dd0e1';
-            maleOption.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
-            femaleOption.style.borderColor = '#2a6a8a';
-            femaleOption.style.boxShadow = 'none';
-            this.checkFormValidity();
-        };
+maleOption.onclick = () => {
+    this.selectedGender = 'male';
+    maleOption.style.borderColor = '#4dd0e1';
+    maleOption.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
+    femaleOption.style.borderColor = '#2a6a8a';
+    femaleOption.style.boxShadow = 'none';
+    
+    // Auto-fill random male name
+    const randomName = this.maleNames[Math.floor(Math.random() * this.maleNames.length)];
+    nameInput.value = randomName;
+    
+    this.checkFormValidity();
+};
 
-        femaleOption.onclick = () => {
-            this.selectedGender = 'female';
-            femaleOption.style.borderColor = '#4dd0e1';
-            femaleOption.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
-            maleOption.style.borderColor = '#2a6a8a';
-            maleOption.style.boxShadow = 'none';
-            this.checkFormValidity();
-        };
+femaleOption.onclick = () => {
+    this.selectedGender = 'female';
+    femaleOption.style.borderColor = '#4dd0e1';
+    femaleOption.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
+    maleOption.style.borderColor = '#2a6a8a';
+    maleOption.style.boxShadow = 'none';
+    
+    // Auto-fill random female name
+    const randomName = this.femaleNames[Math.floor(Math.random() * this.femaleNames.length)];
+    nameInput.value = randomName;
+    
+    this.checkFormValidity();
+};
 
         // Name input
         nameInput.oninput = () => {
