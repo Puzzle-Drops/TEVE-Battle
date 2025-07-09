@@ -4,6 +4,7 @@ class LoadingManager {
         this.totalAssets = 15; // 5 JSON files + 10 JS files
         this.loadedAssets = 0;
         this.failedAssets = []; // Track which assets failed
+        this.preloadedImages = {}; // Store preloaded images
         this.loadingScreen = document.getElementById('loadingScreen');
         this.loadingFill = document.querySelector('.loadingFill');
         this.loadingText = document.querySelector('.loadingText');
@@ -53,6 +54,22 @@ class LoadingManager {
             document.head.appendChild(script);
         });
     }
+    
+    async loadImage(src, name) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            this.preloadedImages[name] = img;
+            this.updateProgress(name);
+            resolve(img);
+        };
+        img.onerror = () => {
+            this.failedAssets.push(name);
+            reject(new Error(`Failed to load ${name}`));
+        };
+        img.src = src;
+    });
+}
 
     hideLoadingScreen() {
         this.loadingScreen.style.display = 'none';
@@ -88,6 +105,15 @@ async function loadGameData() {
             loadingManager.failedAssets.push(script.name);
         }
     }
+    
+    // Preload critical images
+try {
+    loadingManager.loadingText.textContent = 'Loading map background...';
+    await loadingManager.loadImage('https://puzzle-drops.github.io/TEVE/img/menu/map.png', 'Map Background');
+} catch (error) {
+    console.error('Failed to load map background:', error);
+    // Don't treat this as critical - game can still work without preloaded image
+}
     
     // Then load data files
     const assetLoaders = [
@@ -174,3 +200,6 @@ async function loadGameData() {
     
     return true;
 }
+
+// Make preloaded images globally accessible
+window.preloadedImages = loadingManager.preloadedImages;
