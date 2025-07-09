@@ -2692,9 +2692,9 @@
         "str": 4,
         "agi": 7,
         "int": 5,
-        "hp": 3,
-        "hpRegen": 1,
-        "attack": 4,
+        "hp": 0,
+        "hpRegen": 0,
+        "attack": 0,
         "attackSpeed": 0,
         "armor": 0,
         "resist": 6
@@ -2718,12 +2718,12 @@
         "str": 7,
         "agi": 5,
         "int": 4,
-        "hp": 6,
-        "hpRegen": 0.5,
-        "attack": 4,
+        "hp": 0,
+        "hpRegen": 0,
+        "attack": 3,
         "attackSpeed": 0,
         "armor": 0,
-        "resist": 4
+        "resist": 8
       },
       "spells": ["slash", "bite"]
     },
@@ -2744,12 +2744,12 @@
         "str": 10,
         "agi": 7,
         "int": 7,
-        "hp": 12,
-        "hpRegen": 1,
-        "attack": 6,
+        "hp": 0,
+        "hpRegen": 0,
+        "attack": 5,
         "attackSpeed": 0,
         "armor": 0,
-        "resist": 6
+        "resist": 10
       },
       "spells": ["slash", "bite", "fury"]
     },
