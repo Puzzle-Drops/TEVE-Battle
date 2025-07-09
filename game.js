@@ -21,6 +21,7 @@ class Game {
         this.collectionPopupActive = false;
         this.maxPartySize = 3; // Start with 3 party slots
         this.hasCheckedForTutorial = false; // Track if we've checked for new game tutorial
+        this.tutorialCompleted = false; // Track if tutorial has been completed
         this.startFresh = true; // Set false for easier testing
         
 
