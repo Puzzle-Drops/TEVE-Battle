@@ -1173,20 +1173,30 @@ getDungeonCollectionStats(dungeonId) {
         }
         
         // Mark as refined
-        item.refined = true;
-        
-        // Apply divine roll if needed
-        if (context.refinementType === 'divine') {
-            item.roll5 = 'allstats';
-            item.quality5 = 5;
-        }
-        
-        const newRarity = item.getRarity();
-        
-        // Show floating text with delayed timing
-        setTimeout(() => {
-            this.showRefinementRollText(statText, qualityText);
-        }, 600);
+item.refined = true;
+
+// Apply divine roll if needed
+if (context.refinementType === 'divine') {
+    item.roll5 = 'allstats';
+    item.quality5 = 5;
+}
+
+const newRarity = item.getRarity();
+
+// If item is equipped, force hero to recalculate stats
+if (context.isEquipped) {
+    const hero = this.heroes[this.uiManager.selectedHero];
+    if (hero) {
+        // Force recalculation of gear stats
+        hero.calculateGearStats();
+        hero.calculateTotalStats();
+    }
+}
+
+// Show floating text with delayed timing
+setTimeout(() => {
+    this.showRefinementRollText(statText, qualityText);
+}, 600);
 
         // Update display after floating texts are done
         setTimeout(() => {
@@ -1416,9 +1426,12 @@ getDungeonCollectionStats(dungeonId) {
         // Equip the refined item
         hero.equipItem(item, slot);
         
-        // Close popup and refresh
-        this.uiManager.closeRefinementPopup();
-        this.uiManager.showGearTab(hero, document.getElementById('heroContent'));
+        // Force hero to recalculate stats with new item
+hero.calculateGearStats();
+hero.calculateTotalStats();
+
+// Close popup and refresh
+this.uiManager.closeRefinementPopup();
     }
 
     sellRefinedItem() {
