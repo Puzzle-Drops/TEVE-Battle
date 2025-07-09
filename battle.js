@@ -1693,6 +1693,7 @@ if ((spell.id === 'bite' || spell.id === 'slash') && target !== 'all') {
         }
     }
 }
+        }
         
         // Multi-effect ability synergies
         if (spell.id === 'rally_banner') {
