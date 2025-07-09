@@ -1188,8 +1188,7 @@ if (context.isEquipped) {
     const hero = this.heroes[this.uiManager.selectedHero];
     if (hero) {
         // Force recalculation of gear stats
-        hero.calculateGearStats();
-        hero.calculateTotalStats();
+        hero.updateGearStats();
     }
 }
 
