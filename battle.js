@@ -94,6 +94,10 @@ class BattleUnit {
         return this.source.abilities || [];
     }
     
+    get countableBuffs() {
+    return this.buffs.filter(b => b.name !== 'Boss');
+}
+    
 get spellLevel() {
     return this.source.spellLevel || 1;
 }
@@ -1109,7 +1113,7 @@ this.trackBattleStat(unit.name, 'turnsTaken', 1);
             enemiesByAttack: [...aliveEnemies].sort((a, b) => b.source.attack - a.source.attack),
             enemiesByHealth: [...aliveEnemies].sort((a, b) => a.currentHp - b.currentHp),
             enemiesByActionBar: [...aliveEnemies].sort((a, b) => b.actionBar - a.actionBar),
-            enemiesByBuffCount: [...aliveEnemies].sort((a, b) => b.buffs.length - a.buffs.length),
+            enemiesByBuffCount: [...aliveEnemies].sort((a, b) => b.countableBuffs.length - a.countableBuffs.length),
             
             // Ally sorted lists
             alliesByTotalDefense: [...aliveAllies].sort((a, b) => (a.armor + a.resist) - (b.armor + b.resist)),
@@ -1441,10 +1445,11 @@ this.trackBattleStat(unit.name, 'turnsTaken', 1);
                         if (!hasDebuff) {
                             effectScore += 35 * spellDuration; // Good to apply new debuff, scaled by duration
                             
-                            // Bonus for debuffing buffed enemies
-                            if (currentTarget.buffs.length > 0) {
-                                effectScore += currentTarget.buffs.length * 3 * spellDuration; // +3 per buff they have, scaled by duration
-                            }
+                            // Bonus for debuffing buffed enemies (excluding Boss buff)
+const countableBuffCount = currentTarget.countableBuffs.length;
+if (countableBuffCount > 0) {
+    effectScore += countableBuffCount * 3 * spellDuration; // +3 per buff they have, scaled by duration
+}
                             
                             // Special high-value debuffs
                             if (effect === 'debuff_stun') {
@@ -1515,23 +1520,24 @@ this.trackBattleStat(unit.name, 'turnsTaken', 1);
                 }
                 
                 // Dispel effects (remove buffs from enemies)
-                if (effect === 'dispel') {
-                    if (currentTarget && currentTarget !== 'all') {
-                        effectScore += currentTarget.buffs.length * 20; // High value per buff removed
-                        // Extra value for removing powerful buffs
-                        if (currentTarget.buffs.some(b => b.name === 'Immune')) effectScore += 30;
-                        if (currentTarget.buffs.some(b => b.name === 'Shield')) effectScore += 20;
-                        if (currentTarget.buffs.some(b => b.name === 'Increase Attack')) effectScore += 15;
-                        
-                        // Slight preference for enemies with more buffs
-                        if (sortedLists.aliveEnemiesCount > 1) {
-                            const buffRank = sortedLists.enemiesByBuffCount.indexOf(currentTarget);
-                            if (buffRank !== -1) {
-                                effectScore += rankBonus[buffRank] || 0;
-                            }
-                        }
-                    }
-                }
+if (effect === 'dispel') {
+    if (currentTarget && currentTarget !== 'all') {
+        const countableBuffCount = currentTarget.countableBuffs.length;
+        effectScore += countableBuffCount * 20; // High value per buff removed (excluding Boss)
+        // Extra value for removing powerful buffs
+        if (currentTarget.buffs.some(b => b.name === 'Immune')) effectScore += 30;
+        if (currentTarget.buffs.some(b => b.name === 'Shield')) effectScore += 20;
+        if (currentTarget.buffs.some(b => b.name === 'Increase Attack')) effectScore += 15;
+        
+        // Slight preference for enemies with more buffs
+        if (sortedLists.aliveEnemiesCount > 1) {
+            const buffRank = sortedLists.enemiesByBuffCount.indexOf(currentTarget);
+            if (buffRank !== -1) {
+                effectScore += rankBonus[buffRank] || 0;
+            }
+        }
+    }
+}
                 
                 // Shield break effects
                 if (effect === 'shield_break') {
@@ -1656,11 +1662,12 @@ this.trackBattleStat(unit.name, 'turnsTaken', 1);
             }
             
             // NEW: Steal Magic - buff transfer is very powerful
-            if (spell.id === 'steal_magic' && target !== 'all') {
-                // Extra points for quality buffs to steal
-                if (target.buffs.some(b => b.name === 'Increase Attack')) score += 10;
-                if (target.buffs.some(b => b.name === 'Increase Speed')) score += 8;
-            }
+if (spell.id === 'steal_magic' && target !== 'all') {
+    // Extra points for quality buffs to steal (excluding Boss buff)
+    const stealableBuffs = target.countableBuffs;
+    if (stealableBuffs.some(b => b.name === 'Increase Attack')) score += 10;
+    if (stealableBuffs.some(b => b.name === 'Increase Speed')) score += 8;
+}
             
             // NEW: Shadowstep - triple debuff application
             if (spell.id === 'shadowstep' && target !== 'all') {
@@ -2783,8 +2790,15 @@ if (this.currentUnit && this.currentUnit.isAlive) {
     }
     
 removeBuffs(target) {
-    const removedCount = target.buffs.filter(buff => buff.duration !== -1).length;
-    target.buffs = target.buffs.filter(buff => buff.duration === -1);
+    // Count buffs that will be removed (excluding permanent buffs and Boss buff)
+    const removedCount = target.buffs.filter(buff => 
+        buff.duration !== -1 && buff.name !== 'Boss'
+    ).length;
+    
+    // Remove all buffs except permanent ones and Boss buff
+    target.buffs = target.buffs.filter(buff => 
+        buff.duration === -1 || buff.name === 'Boss'
+    );
     
     // Track buffs dispelled
     if (this.currentUnit && removedCount > 0) {
