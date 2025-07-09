@@ -254,7 +254,7 @@ updateGearStats() {
         attackSpeed: 0,
     };
     
-    // Add stats from all equipped items
+    // First pass: Add direct stats from all equipped items
     Object.values(this.gear).forEach(item => {
         if (item) {
             const itemStats = item.getStats();
@@ -263,6 +263,33 @@ updateGearStats() {
             });
         }
     });
+    
+    // Second pass: Add derived stats from gear STR/AGI/INT
+    const mods = this.modifiers;
+    const mainstat = this.mainstat;
+    
+    // Store the direct stat values before adding derived bonuses
+    const gearStr = this.gearStats.str;
+    const gearAgi = this.gearStats.agi;
+    const gearInt = this.gearStats.int;
+    
+    // Add derived bonuses from gear primary stats
+    this.gearStats.hp += Math.floor(gearStr * mods.hp);
+    this.gearStats.hpRegen += gearStr * 0.01;
+    this.gearStats.armor += Math.floor((gearStr * 0.05) + (gearAgi * 0.01));
+    this.gearStats.resist += Math.floor(gearInt * 0.05);
+    
+    // Add attack bonus from gear mainstat
+    if (mainstat === 'str') {
+        this.gearStats.attack += Math.floor(gearStr * mods.attack);
+    } else if (mainstat === 'agi') {
+        this.gearStats.attack += Math.floor(gearAgi * mods.attack);
+    } else if (mainstat === 'int') {
+        this.gearStats.attack += Math.floor(gearInt * mods.attack);
+    }
+    
+    // Add attack speed bonus from gear AGI (using the same formula as baseStats)
+    this.gearStats.attackSpeed += 100 * (gearAgi / (gearAgi + 1000));
 }
 
 getClassAbilities(spellIds) {
