@@ -49,13 +49,19 @@ hideAllScreens() {
     }
 
     showMainMenu() {
-
-
-
         this.hideAllScreens();
         this.closeHeroInfo();
         this.game.currentScreen = 'mainMenuScreen';
         document.getElementById('mainMenuScreen').style.display = 'block';
+        
+        // Apply preloaded map image if available
+    if (window.preloadedImages && window.preloadedImages['Map Background']) {
+        const worldMap = document.querySelector('.worldMap');
+        if (worldMap) {
+            // The image is already loaded, so setting the background-image will be instant
+            worldMap.style.backgroundImage = `url('${window.preloadedImages['Map Background'].src}')`;
+        }
+    }
         
         // Update visibility based on progression
         const stashButton = document.querySelector('.stashesButton');
