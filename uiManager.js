@@ -77,6 +77,43 @@ hideAllScreens() {
             }
         });
 
+        // Disable heroes button and Easy tier if tutorial not completed
+if (!this.game.tutorialCompleted) {
+    // Disable heroes button
+    const heroesButton = document.querySelector('.heroesButton');
+    if (heroesButton) {
+        //heroesButton.style.opacity = '0.5';
+        heroesButton.style.pointerEvents = 'none';
+        const heroesImg = heroesButton.querySelector('.menuNavImage');
+        if (heroesImg) {
+            heroesImg.style.cursor = 'default';
+            heroesImg.onclick = null;
+        }
+        const heroesPlaceholder = heroesButton.querySelector('.menuNavPlaceholder');
+        if (heroesPlaceholder) {
+            heroesPlaceholder.onclick = null;
+            heroesPlaceholder.style.cursor = 'default';
+        }
+    }
+    
+    // Disable Easy dungeon orb
+    const easyOrb = document.querySelector('.dungeonOrb0');
+    if (easyOrb) {
+        //easyOrb.style.opacity = '0.5';
+        easyOrb.style.pointerEvents = 'none';
+        const easyImg = easyOrb.querySelector('.menuNavImage');
+        if (easyImg) {
+            easyImg.style.cursor = 'default';
+            easyImg.onclick = null;
+        }
+        const easyPlaceholder = easyOrb.querySelector('.menuNavPlaceholder');
+        if (easyPlaceholder) {
+            easyPlaceholder.onclick = null;
+            easyPlaceholder.style.cursor = 'default';
+        }
+    }
+}
+
         // Initialize trail system if not already done
         if (!this.trailCanvas) {
             this.initializeTrailSystem();
