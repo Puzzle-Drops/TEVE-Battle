@@ -46,8 +46,8 @@
         "int": 3,
         "hp": 30,
         "hpRegen": 0.67,
-        "attack": 2,
-        "attackSpeed": 0,
+        "attack": 4,
+        "attackSpeed": 2,
         "armor": 5.32,
         "resist": 4
       },
@@ -73,8 +73,8 @@
         "int": 3,
         "hp": 30,
         "hpRegen": 0.67,
-        "attack": 2,
-        "attackSpeed": 0,
+        "attack": 4,
+        "attackSpeed": 2,
         "armor": 5.32,
         "resist": 4
       },
