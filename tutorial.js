@@ -18,6 +18,23 @@ class Tutorial {
         
         // Bind the click handler
         this.handleDialogueClick = this.handleDialogueClick.bind(this);
+
+        // Male and female name lists for random selection
+        this.maleNames = [
+            'Marcus', 'Felix', 'Darius', 'Cassius', 'Maximus', 'Lucius', 'Gaius', 
+            'Titus', 'Julius', 'Augustus', 'Claudius', 'Nero', 'Hadrian', 'Trajan',
+            'Valen', 'Dorian', 'Lysander', 'Theron', 'Orion', 'Atlas', 'Phoenix',
+            'Zephyr', 'Cyrus', 'Atticus', 'Evander', 'Leander', 'Xander', 'Caius'
+        ];
+        
+        this.femaleNames = [
+            'Luna', 'Aurora', 'Diana', 'Minerva', 'Victoria', 'Livia', 'Julia',
+            'Claudia', 'Valeria', 'Flavia', 'Octavia', 'Aurelia', 'Cassia', 'Lyra',
+            'Selene', 'Athena', 'Iris', 'Cora', 'Delia', 'Thalia', 'Nyx', 'Aria',
+            'Seraphina', 'Lydia', 'Celeste', 'Nova', 'Stella', 'Vera', 'Elara'
+        ];
+
+        
     }
 
     // NPC Click Handler
