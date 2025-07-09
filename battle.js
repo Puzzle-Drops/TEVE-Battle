@@ -1795,8 +1795,10 @@ calculateAbilityScore(caster, abilityIndex, target, spell, sortedLists) {
     if (effects.includes('cleanse') && (caster.whiteWizardMalePassive || caster.whiteWitchFemalePassive)) {
         score += 10; // Their cleanses apply buffs
     }
-    
-    return score;
+
+    // Add small random noise (-1.5 to +1.5)
+    const noise = (Math.random() - 0.5) * 3;
+    return score + noise;
 }
 
     debugLogAllPossibleActions(unit) {
