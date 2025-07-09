@@ -3559,7 +3559,7 @@ exitBattle() {
 
     getBuffIconName(buffName) {
     const iconMap = {
-        'Boss': 'buff_boss',
+        'Boss': 'boss',
         'Increase Attack': 'increase_attack',
         'Increase Speed': 'increase_speed',
         'Increase Defense': 'increase_defense',
