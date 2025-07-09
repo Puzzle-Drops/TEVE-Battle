@@ -3779,15 +3779,21 @@ hideArenaStatTooltip() {
         popup.style.display = 'none';
         
         // Update UI based on current screen
-        if (this.game.refinementContext) {
-            if (this.game.currentScreen === 'heroesScreen') {
-                // Refresh gear tab to show updated gold
-                this.showGearTab(this.game.heroes[this.selectedHero], document.getElementById('heroContent'));
-            } else if (this.game.currentScreen === 'individualStashScreen') {
-                // Refresh stash to show updated gold
-                this.showIndividualStash(this.game.refinementContext.family);
-            }
+if (this.game.refinementContext) {
+    if (this.game.currentScreen === 'heroesScreen') {
+        // If the item was equipped, refresh the current tab to show updated stats
+        if (this.game.refinementContext.isEquipped) {
+            // Refresh whatever tab is currently active
+            this.showHeroTab(this.currentTab);
+        } else {
+            // Just refresh gear tab to show updated gold
+            this.showGearTab(this.game.heroes[this.selectedHero], document.getElementById('heroContent'));
         }
+    } else if (this.game.currentScreen === 'individualStashScreen') {
+        // Refresh stash to show updated gold
+        this.showIndividualStash(this.game.refinementContext.family);
+    }
+}
         
         // Clean up context
         this.game.refinementContext = null;
