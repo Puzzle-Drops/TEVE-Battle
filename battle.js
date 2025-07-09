@@ -1670,13 +1670,29 @@ if (spell.id === 'steal_magic' && target !== 'all') {
 }
             
             // NEW: Shadowstep - triple debuff application
-            if (spell.id === 'shadowstep' && target !== 'all') {
-                // Bonus for applying 3 debuffs at once
-                if (!target.debuffs.some(d => ['Taunt', 'Mark', 'Bleed'].includes(d.name))) {
-                    score += 15; // Extra value for fresh target
-                }
-            }
+if (spell.id === 'shadowstep' && target !== 'all') {
+    // Bonus for applying 3 debuffs at once
+    if (!target.debuffs.some(d => ['Taunt', 'Mark', 'Bleed'].includes(d.name))) {
+        score += 15; // Extra value for fresh target
+    }
+}
+
+// ADD THIS NEW CODE:
+// Force bite and slash to target highest HP enemy
+if ((spell.id === 'bite' || spell.id === 'slash') && target !== 'all') {
+    // Find highest HP enemy
+    const highestHpEnemy = sortedLists.enemiesByHealth[sortedLists.enemiesByHealth.length - 1];
+    
+    if (highestHpEnemy) {
+        if (target === highestHpEnemy) {
+            // Massive bonus for targeting highest HP
+            score += 1000;
+        } else {
+            // Massive penalty for any other target
+            score -= 1000;
         }
+    }
+}
         
         // Multi-effect ability synergies
         if (spell.id === 'rally_banner') {
