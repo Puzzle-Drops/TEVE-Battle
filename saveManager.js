@@ -36,27 +36,26 @@ setDefaultSlot(slot) {
 
 // Check for default save and auto-load
 autoLoadDefaultSave() {
-    // If no default slot set, check if slot 1 has a valid save
+    // If no default slot set, always default to slot 1
     if (!this.defaultSlot) {
-        const slots = this.getSaveSlots();
-        const slot1 = slots.find(s => s.slot === 1);
-        if (slot1 && slot1.exists && !slot1.corrupted) {
-            this.setDefaultSlot(1);
-        }
+        this.setDefaultSlot(1);
+        console.log('No default slot set, defaulting to slot 1');
     }
     
-    // If we have a default slot, try to load it
-    if (this.defaultSlot) {
-        const slots = this.getSaveSlots();
-        const defaultSlotInfo = slots.find(s => s.slot === this.defaultSlot);
-        
-        if (defaultSlotInfo && defaultSlotInfo.exists && !defaultSlotInfo.corrupted) {
-            console.log(`Auto-loading save from default slot ${this.defaultSlot}`);
-            return this.loadFromSlot(this.defaultSlot);
-        }
-    }
+    // Always set current slot to default slot for new games
+    this.currentSlot = this.defaultSlot;
     
-    return false;
+    // Try to load from default slot if it has a save
+    const slots = this.getSaveSlots();
+    const defaultSlotInfo = slots.find(s => s.slot === this.defaultSlot);
+    
+    if (defaultSlotInfo && defaultSlotInfo.exists && !defaultSlotInfo.corrupted) {
+        console.log(`Auto-loading save from default slot ${this.defaultSlot}`);
+        return this.loadFromSlot(this.defaultSlot);
+    } else {
+        console.log(`Default slot ${this.defaultSlot} is empty or corrupted, starting fresh`);
+        return false;
+    }
 }
 
 // Update the deleteSlot method to handle default slot
