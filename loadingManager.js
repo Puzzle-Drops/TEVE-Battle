@@ -92,6 +92,7 @@ async function loadGameData() {
         { src: 'enemy.js', name: 'Enemy System' },
         { src: 'arena.js', name: 'Arena System' },
         { src: 'tutorial.js', name: 'Tutorial System' },
+        { src: 'saveManager.js', name: 'Save Manager' },
         { src: 'game.js', name: 'Game Core' }
     ];
     
