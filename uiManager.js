@@ -42,7 +42,6 @@ hideAllScreens() {
     document.getElementById('saveLoadScreen').style.display = 'none';  // ADD THIS LINE
 }
 
-// ADD THESE NEW METHODS AFTER hideAllScreens:
 showSaveLoad() {
     this.hideAllScreens();
     this.closeHeroInfo();
@@ -100,12 +99,15 @@ if (saveManager.currentSlot === slotInfo.slot) {
             exportBtn.disabled = true;
             defaultBtn.disabled = true;
         } else {
-            infoDiv.innerHTML = '<div class="slotEmpty">Empty</div>';
-            loadBtn.disabled = true;
-            deleteBtn.disabled = true;
-            exportBtn.disabled = true;
-            defaultBtn.disabled = true;
-        }
+    infoDiv.innerHTML = `
+        <div class="slotEmpty">Empty</div>
+        <button class="newGameSlotButton" onclick="game.uiManager.startNewGameInSlot(${slotInfo.slot})">New Game</button>
+    `;
+    loadBtn.disabled = true;
+    deleteBtn.disabled = true;
+    exportBtn.disabled = true;
+    defaultBtn.disabled = true;
+}
     });
 }
 
@@ -175,6 +177,68 @@ confirmNewGame() {
         
         // Clear current save slot
         saveManager.currentSlot = null;
+        
+        // Show splash screen
+        this.showSplashScreen();
+        
+        // Set up splash screen handler that will start tutorial after
+        const splashHandler = (e) => {
+            if (this.game.currentScreen === 'splashScreen') {
+                e.preventDefault();
+                document.removeEventListener('keydown', splashHandler);
+                document.removeEventListener('click', splashHandler);
+                
+                // Mark that we're starting fresh
+                this.game.isNewGameStart = true;
+                
+                // Show main menu (which will trigger tutorial)
+                this.showMainMenu();
+            }
+        };
+        
+        // Add event listeners for splash screen
+        setTimeout(() => {
+            document.addEventListener('keydown', splashHandler);
+            document.addEventListener('click', splashHandler);
+        }, 100);
+    }
+}
+
+    startNewGameInSlot(slot) {
+    if (confirm(`Start a new game in Slot ${slot}? This will reset all progress but won't affect other save files.`)) {
+        // Store the target slot for the new game
+        this.newGameTargetSlot = slot;
+        
+        // Reset game state
+        this.game.heroes = [];
+        this.game.stashes = {
+            'Villager': { gold: 0, items: [] },
+            'Acolyte': { gold: 0, items: [] },
+            'Archer': { gold: 0, items: [] },
+            'Druid': { gold: 0, items: [] },
+            'Initiate': { gold: 0, items: [] },
+            'Swordsman': { gold: 0, items: [] },
+            'Templar': { gold: 0, items: [] },
+            'Thief': { gold: 0, items: [] },
+            'Witch Hunter': { gold: 0, items: [] }
+        };
+        this.game.progression = {
+            unlockedFeatures: {
+                party: true,
+                stash: false,
+                arena: false
+            },
+            unlockedTiers: ['Easy'],
+            completedDungeons: {},
+            completedArenas: {}
+        };
+        this.game.collectionLog = {};
+        this.game.maxPartySize = 3;
+        this.game.tutorialCompleted = false;
+        this.game.hasCheckedForTutorial = false;
+        
+        // Set current slot to the target slot
+        saveManager.currentSlot = slot;
         
         // Show splash screen
         this.showSplashScreen();
