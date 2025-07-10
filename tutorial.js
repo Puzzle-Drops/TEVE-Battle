@@ -97,7 +97,7 @@ continueNewGameTutorial() {
             
             // Auto-save to first available slot
             const slots = saveManager.getSaveSlots();
-            let targetSlot = 1; // Default to slot 1
+            let targetSlot = null;
             
             // Find first empty slot
             for (let i = 1; i <= 3; i++) {
@@ -108,15 +108,21 @@ continueNewGameTutorial() {
                 }
             }
             
-            // Save to the slot
-            console.log(`Tutorial complete, auto-saving to slot ${targetSlot}`);
-            saveManager.saveToSlot(targetSlot, true); // Silent save
-            
-            // Set as default slot so it auto-loads next time
-            saveManager.setDefaultSlot(targetSlot);
-            
-            // Show a notification
-            this.game.uiManager.showSaveNotification(`Game saved to Slot ${targetSlot}`);
+            if (targetSlot) {
+                // Save to the empty slot
+                console.log(`Tutorial complete, auto-saving to slot ${targetSlot}`);
+                saveManager.saveToSlot(targetSlot, true); // Silent save
+                
+                // Set as default slot so it auto-loads next time
+                saveManager.setDefaultSlot(targetSlot);
+                
+                // Show a notification
+                this.game.uiManager.showSaveNotification(`Game saved to Slot ${targetSlot}`);
+            } else {
+                // No empty slots available
+                console.warn('No empty save slots available');
+                this.game.uiManager.showSaveNotification('Warning: No save slots available! Please manually save or delete an existing save.');
+            }
             
             this.game.uiManager.showMainMenu();
         });
