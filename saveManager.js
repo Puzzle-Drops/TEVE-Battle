@@ -378,8 +378,24 @@ if (this.game.uiManager) {
         // Mark tutorial as checked so it doesn't restart
         game.hasCheckedForTutorial = true;
         
-        // Go to main menu
+        // Go to splash screen
+game.uiManager.showSplashScreen();
+
+// Set up splash screen handler
+const splashHandler = (e) => {
+    if (game.currentScreen === 'splashScreen') {
+        e.preventDefault();
+        document.removeEventListener('keydown', splashHandler);
+        document.removeEventListener('click', splashHandler);
         game.uiManager.showMainMenu();
+    }
+};
+
+// Add event listeners after a short delay
+setTimeout(() => {
+    document.addEventListener('keydown', splashHandler);
+    document.addEventListener('click', splashHandler);
+}, 100);
     }
 
     // Serialize item for saving
