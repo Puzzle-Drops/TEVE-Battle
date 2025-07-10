@@ -927,6 +927,9 @@
             
             // Create game instance
             window.game = new Game();
+		
+	    // Initialize save manager
+            saveManager.init(game);
 
 		// Add splash screen handler
     const splashHandler = (e) => {
@@ -1065,8 +1068,8 @@ switch(game.currentScreen) {
         break;
     case 'partySelectScreen':
         game.closePartySelect();
-    e.preventDefault();
-    break;
+        e.preventDefault();
+        break;
     case 'stashScreen':
         game.uiManager.showMainMenu();
         e.preventDefault();
@@ -1082,10 +1085,30 @@ switch(game.currentScreen) {
     case 'arenaScreen':
         game.uiManager.showMainMenu();
         e.preventDefault();
-    break;
+        break;
+    case 'saveLoadScreen':
+        game.uiManager.showMainMenu();
+        e.preventDefault();
+        break;
 }
             }
         });
+
+	    // Add this after the escape key handler
+document.addEventListener('keydown', (e) => {
+    // Ctrl+S or Cmd+S for quick save
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        
+        // Only allow saving if not in battle and game is initialized
+        if (game && game.currentScreen !== 'battleScene' && saveManager.currentSlot) {
+            saveManager.saveToSlot(saveManager.currentSlot);
+        } else if (game && !saveManager.currentSlot) {
+            // If no current slot, go to save screen
+            game.uiManager.showSaveLoad();
+        }
+    }
+});
         
         // Global Alt key handler for both item and ability tooltips
         let altKeyPressed = false;
