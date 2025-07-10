@@ -6,6 +6,7 @@ class SaveManager {
         this.currentSlot = null;
         this.autoSaveInterval = 60000; // Auto-save every 60 seconds
         this.autoSaveTimer = null;
+        this.defaultSlot = this.loadDefaultSlot();
         
         // Encryption key - in production, this should be more secure
         this.encryptionKey = 'TEVE_2025_TWILIGHT';
@@ -16,6 +17,67 @@ class SaveManager {
         this.game = game;
         this.startAutoSave();
     }
+
+    // Load default slot preference
+loadDefaultSlot() {
+    const saved = localStorage.getItem('teveDefaultSlot');
+    return saved ? parseInt(saved) : null;
+}
+
+// Set default slot
+setDefaultSlot(slot) {
+    this.defaultSlot = slot;
+    if (slot) {
+        localStorage.setItem('teveDefaultSlot', slot.toString());
+    } else {
+        localStorage.removeItem('teveDefaultSlot');
+    }
+}
+
+// Check for default save and auto-load
+autoLoadDefaultSave() {
+    // If no default slot set, check if slot 1 has a valid save
+    if (!this.defaultSlot) {
+        const slots = this.getSaveSlots();
+        const slot1 = slots.find(s => s.slot === 1);
+        if (slot1 && slot1.exists && !slot1.corrupted) {
+            this.setDefaultSlot(1);
+        }
+    }
+    
+    // If we have a default slot, try to load it
+    if (this.defaultSlot) {
+        const slots = this.getSaveSlots();
+        const defaultSlotInfo = slots.find(s => s.slot === this.defaultSlot);
+        
+        if (defaultSlotInfo && defaultSlotInfo.exists && !defaultSlotInfo.corrupted) {
+            console.log(`Auto-loading save from default slot ${this.defaultSlot}`);
+            return this.loadFromSlot(this.defaultSlot);
+        }
+    }
+    
+    return false;
+}
+
+// Update the deleteSlot method to handle default slot
+deleteSlot(slot) {
+    if (confirm(`Are you sure you want to delete Save Slot ${slot}? This cannot be undone!`)) {
+        localStorage.removeItem(`teveSave_slot${slot}`);
+        
+        // If deleting current slot, clear it
+        if (this.currentSlot === slot) {
+            this.currentSlot = null;
+        }
+        
+        // If deleting default slot, clear default
+        if (this.defaultSlot === slot) {
+            this.setDefaultSlot(null);
+        }
+        
+        return true;
+    }
+    return false;
+}
 
     // Start auto-save timer
     startAutoSave() {
