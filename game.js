@@ -101,8 +101,16 @@ class Game {
         this.init();
     }
 
-    // Add these helper methods after the constructor in game.js
-
+calculateMaxPartySize() {
+    // Base size of 3 + 1 for each unique dungeon completed
+    const uniqueDungeonsCompleted = Object.keys(this.progression.completedDungeons).filter(
+        dungeonId => this.progression.completedDungeons[dungeonId].completions > 0
+    ).length;
+    
+    this.maxPartySize = 3 + uniqueDungeonsCompleted;
+    return this.maxPartySize;
+}
+    
     getTierOrder() {
         // Get tier order from loaded data, sorted by tier number
         return Object.keys(this.dungeonTiers)
@@ -272,7 +280,7 @@ init() {
                this.progression.completedDungeons[dungeonId].completions > 0;
     }
 
-    markDungeonComplete(dungeonId, timeString) {
+markDungeonComplete(dungeonId, timeString) {
     // Check if this is a first-time completion BEFORE updating
     const isFirstCompletion = !this.progression.completedDungeons[dungeonId] || 
                              this.progression.completedDungeons[dungeonId].completions === 0;
@@ -292,15 +300,21 @@ init() {
         dungeonData.bestTime = timeString;
     }
     
-    // Increase max party size on first completion
-    if (isFirstCompletion) {
-        this.maxPartySize++;
+    // Recalculate max party size
+    const oldSize = this.maxPartySize;
+    this.calculateMaxPartySize();
+    
+    // Log if party size increased
+    if (this.maxPartySize > oldSize) {
         console.log(`First time completing ${dungeonId}! Max party size increased to ${this.maxPartySize}`);
     }
     
     // Check for unlocks
     this.checkProgressionUnlocks(dungeonId);
     this.saveProgression();
+    
+    // Save the game state after dungeon completion
+    saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save
 }
 
     checkProgressionUnlocks(completedDungeonId) {
