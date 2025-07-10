@@ -152,6 +152,11 @@ deleteSlot(slot) {
             
             // Update current slot
             this.currentSlot = slot;
+
+            // Update UI to show current slot if save/load screen is open
+if (this.game.currentScreen === 'saveLoadScreen') {
+    this.game.uiManager.updateSaveSlots();
+}
             
             if (!silent) {
                 this.game.uiManager.showSaveNotification(`Game saved to Slot ${slot}`);
@@ -198,6 +203,11 @@ deleteSlot(slot) {
             
             // Update current slot
             this.currentSlot = slot;
+
+            // Update UI to show current slot if save/load screen is open
+if (this.game.uiManager && this.game.currentScreen === 'saveLoadScreen') {
+    this.game.uiManager.updateSaveSlots();
+}
             
             // Show success message
 if (this.game.uiManager) {
