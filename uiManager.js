@@ -745,6 +745,7 @@ if (this.game.tutorial) {
     showStash() {
         this.hideAllScreens();
         this.closeHeroInfo();
+        this.currentGearFilter = null;
         this.game.currentScreen = 'stashScreen';
         document.getElementById('stashScreen').style.display = 'block';
         this.renderStashList();
@@ -2187,6 +2188,7 @@ updateHeroSelection() {
         // Hide any existing tooltips before DOM manipulation
         this.hideItemTooltip();
         this.hideAbilityTooltip();
+        this.currentGearFilter = null;
 
         // Get the stash for this hero's class family
         const familyName = this.game.getClassFamily(hero.className, hero.classTier);
