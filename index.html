@@ -945,29 +945,22 @@ window.addEventListener('DOMContentLoaded', async () => {
         // Try to auto-load default save
         const autoLoaded = saveManager.autoLoadDefaultSave();
 
-        if (autoLoaded) {
-            // If successfully auto-loaded, go directly to main menu
-            setTimeout(() => {
-                game.uiManager.showMainMenu();
-            }, 100);
-        } else {
-            // No auto-load, show splash screen as normal
-            const splashHandler = (e) => {
-                if (game.currentScreen === 'splashScreen') {
-                    e.preventDefault();
-                    document.removeEventListener('keydown', splashHandler);
-                    document.removeEventListener('click', splashHandler);
-                    game.uiManager.showMainMenu();
-                }
-            };
-            
-            // Show splash screen on start
-            setTimeout(() => {
-                game.uiManager.showSplashScreen();
-                document.addEventListener('keydown', splashHandler);
-                document.addEventListener('click', splashHandler);
-            }, 100);
-        }
+       // Always show splash screen, whether auto-loaded or not
+const splashHandler = (e) => {
+    if (game.currentScreen === 'splashScreen') {
+        e.preventDefault();
+        document.removeEventListener('keydown', splashHandler);
+        document.removeEventListener('click', splashHandler);
+        game.uiManager.showMainMenu();
+    }
+};
+
+// Show splash screen on start
+setTimeout(() => {
+    game.uiManager.showSplashScreen();
+    document.addEventListener('keydown', splashHandler);
+    document.addEventListener('click', splashHandler);
+}, 100);
             
         }
         
