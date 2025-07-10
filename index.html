@@ -939,12 +939,21 @@ window.addEventListener('DOMContentLoaded', async () => {
         window.game = new Game();
 
         // Initialize save manager
-        saveManager.init(game);
+saveManager.init(game);
 
-        // Try to auto-load default save
-        const autoLoaded = saveManager.autoLoadDefaultSave();
+// Try to auto-load default save (will always set a default slot)
+const autoLoaded = saveManager.autoLoadDefaultSave();
 
-       // Always show splash screen, whether auto-loaded or not
+// If we auto-loaded, show notification
+if (autoLoaded) {
+    // The notification is already handled in loadFromSlot
+    console.log('Successfully auto-loaded save');
+} else {
+    // No save was loaded, but we now have a default slot set
+    console.log(`Ready for new game in slot ${saveManager.currentSlot}`);
+}
+
+// Always show splash screen, whether auto-loaded or not
 const splashHandler = (e) => {
     if (game.currentScreen === 'splashScreen') {
         e.preventDefault();
