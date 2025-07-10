@@ -137,7 +137,7 @@ confirmNewGame() {
         this.game.collectionLog = {};
         this.game.maxPartySize = 3;
         this.game.tutorialCompleted = false;
-        this.game.hasCheckedForTutorial = false;
+        this.game.hasCheckedForTutorial = true;
         
         // Clear current save slot
         saveManager.currentSlot = null;
@@ -145,8 +145,10 @@ confirmNewGame() {
         // Go to main menu
         this.showMainMenu();
         
-        // Start tutorial
-        this.game.tutorial.newGameStart();
+        // THEN start tutorial with a small delay
+        setTimeout(() => {
+            this.game.tutorial.newGameStart();
+        }, 100);
     }
 }
 
