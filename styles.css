@@ -6222,6 +6222,11 @@ body {
     cursor: not-allowed;
 }
 
+.currentSlot {
+    border: 2px solid #ffd700 !important;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5) !important;
+}
+
 /* END end EnD eNd ENd eND enD bottom document/*
 
 /* Directional lunge animations */
