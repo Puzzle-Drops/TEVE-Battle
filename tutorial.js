@@ -86,17 +86,41 @@ continueNewGameTutorial() {
         // Third hero
         this.skypperAdditionalRecruit();
     } else if (this.newGameHeroCount === 3) {
-    // All heroes created, final dialogue
-    this.npcDialogue('Skypper', [
-        "Alright then. That's your squad. Might not look like much, yet. But there's fire there. Let's use that.",
-        "The Satyrs have gotten bold just past the gate. Let's see what this crew can do."
-    ], true, () => {
-        // Tutorial complete, go to main menu
-        this.isNewGameTutorial = false;
-        this.game.tutorialCompleted = true; // Mark tutorial as complete
-        this.game.uiManager.showMainMenu();
-    });
-}
+        // All heroes created, final dialogue
+        this.npcDialogue('Skypper', [
+            "Alright then. That's your squad. Might not look like much, yet. But there's fire there. Let's use that.",
+            "The Satyrs have gotten bold just past the gate. Let's see what this crew can do."
+        ], true, () => {
+            // Tutorial complete, go to main menu
+            this.isNewGameTutorial = false;
+            this.game.tutorialCompleted = true; // Mark tutorial as complete
+            
+            // Auto-save to first available slot
+            const slots = saveManager.getSaveSlots();
+            let targetSlot = 1; // Default to slot 1
+            
+            // Find first empty slot
+            for (let i = 1; i <= 3; i++) {
+                const slot = slots.find(s => s.slot === i);
+                if (!slot || !slot.exists) {
+                    targetSlot = i;
+                    break;
+                }
+            }
+            
+            // Save to the slot
+            console.log(`Tutorial complete, auto-saving to slot ${targetSlot}`);
+            saveManager.saveToSlot(targetSlot, true); // Silent save
+            
+            // Set as default slot so it auto-loads next time
+            saveManager.setDefaultSlot(targetSlot);
+            
+            // Show a notification
+            this.game.uiManager.showSaveNotification(`Game saved to Slot ${targetSlot}`);
+            
+            this.game.uiManager.showMainMenu();
+        });
+    }
 }
     
 showBestiary() {
