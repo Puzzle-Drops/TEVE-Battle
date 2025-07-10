@@ -658,6 +658,7 @@ getDungeonCollectionStats(dungeonId) {
                 
                 // Add gold
                 stash.gold += item.sellcost;
+                saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after selling
                 
                 // Refresh display based on current screen
                 if (this.currentScreen === 'heroesScreen') {
@@ -1110,6 +1111,7 @@ getDungeonCollectionStats(dungeonId) {
         
         // Deduct gold
         stash.gold -= context.cost;
+        saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after gold deduction
         
         // Hide preview elements
         document.getElementById('refinementArrow').style.display = 'none';
@@ -1180,6 +1182,8 @@ if (context.refinementType === 'divine') {
     item.roll5 = 'allstats';
     item.quality5 = 5;
 }
+
+        saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after refinement
 
 const newRarity = item.getRarity();
 
@@ -1428,6 +1432,7 @@ setTimeout(() => {
         // Force hero to recalculate stats with new item
 hero.calculateGearStats();
 hero.calculateTotalStats();
+saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after equipping refined item
 
 // Close popup and refresh
 this.uiManager.closeRefinementPopup();
@@ -1450,6 +1455,8 @@ this.uiManager.closeRefinementPopup();
             this.stashes[familyName].items.splice(context.itemIndex, 1);
         }
         
+        saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after selling refined item
+
         // Close popup and refresh
         this.uiManager.closeRefinementPopup();
         if (this.currentScreen === 'heroesScreen') {
@@ -1478,7 +1485,8 @@ this.uiManager.closeRefinementPopup();
         
         // Equip the new item
         hero.equipItem(item, slot);
-        
+        saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after equipping
+
         // Refresh display
         this.uiManager.showHeroTab(this.uiManager.currentTab);
     }
@@ -1511,7 +1519,8 @@ this.uiManager.closeRefinementPopup();
         
         // Add gold
         this.stashes[family.name].gold += item.sellcost;
-        
+        saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after selling
+
         // Refresh display
         this.uiManager.showIndividualStash(family);
     }
@@ -1934,6 +1943,7 @@ closePartySelect() {
             // Add to stash
             const familyName = this.getClassFamily(hero.className, hero.classTier);
             this.stashes[familyName].items.push(item);
+            saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after unequipping
             
             // Refresh gear tab
             this.uiManager.showGearTab(hero, document.getElementById('heroContent'));
@@ -1967,7 +1977,8 @@ closePartySelect() {
             
             // Equip the new item
             hero.equipItem(item, slot);
-            
+            saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after equipping
+
             // Refresh gear tab
             this.uiManager.showGearTab(hero, document.getElementById('heroContent'));
         }
@@ -2045,6 +2056,7 @@ closePartySelect() {
                     
                     this.uiManager.showHeroTab('info');
                     this.uiManager.updateHeroList();
+                    saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after awakening
                 }
             } else {
                 alert('Not enough gold!');
@@ -2071,6 +2083,7 @@ closePartySelect() {
                     
                     this.uiManager.showHeroTab('info');
                     this.uiManager.updateHeroList();
+                    saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after promotion
                 }
             } else {
                 alert('Not enough gold!');
@@ -2115,6 +2128,7 @@ closePartySelect() {
                 hero.name = newName;
                 this.uiManager.updateHeroList();
             }
+            saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after name change
             
             // Recreate the span
             const newSpan = document.createElement('span');
@@ -2388,6 +2402,8 @@ if (results.victory) {
         // Dungeon completion
         this.markDungeonComplete(this.currentDungeon.id, results.time);
     }
+        saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after battle completion
+
 }
 }
 
