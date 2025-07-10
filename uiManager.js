@@ -205,6 +205,23 @@ showSaveNotification(message) {
     }, 3000);
 }
 
+    showAutoLoadNotification(slot) {
+    const notification = document.getElementById('saveNotification');
+    notification.textContent = `Auto-loaded from Slot ${slot}`;
+    notification.style.borderColor = '#4dd0e1';
+    notification.style.color = '#4dd0e1';
+    notification.style.boxShadow = '0 0 20px rgba(77, 208, 225, 0.5)';
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+        // Reset styles
+        notification.style.borderColor = '';
+        notification.style.color = '';
+        notification.style.boxShadow = '';
+    }, 3000);
+}
+
     showSplashScreen() {
         this.hideAllScreens();
         this.closeHeroInfo();
