@@ -92,22 +92,25 @@ continueNewGameTutorial() {
             "The Satyrs have gotten bold just past the gate. Let's see what this crew can do."
         ], true, () => {
             // Tutorial complete, go to main menu
-            this.isNewGameTutorial = false;
-            this.game.tutorialCompleted = true; // Mark tutorial as complete
-            
-            // Save to the current slot (which was set when they clicked New Game)
-            if (saveManager.currentSlot) {
-                console.log(`Tutorial complete, saving to slot ${saveManager.currentSlot}`);
-                saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save
-                
-                // Set as default slot so it auto-loads next time
-                saveManager.setDefaultSlot(saveManager.currentSlot);
-                
-                // Show a notification
-                this.game.uiManager.showSaveNotification(`Game saved to Slot ${saveManager.currentSlot}`);
-            }
-            
-            this.game.uiManager.showMainMenu();
+this.isNewGameTutorial = false;
+this.game.tutorialCompleted = true; // Mark tutorial as complete
+
+// Save to the current slot (which should always be set now)
+if (!saveManager.currentSlot) {
+    // Fallback: ensure we have a current slot
+    saveManager.currentSlot = saveManager.defaultSlot || 1;
+}
+
+console.log(`Tutorial complete, saving to slot ${saveManager.currentSlot}`);
+saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save
+
+// Ensure this slot remains the default
+saveManager.setDefaultSlot(saveManager.currentSlot);
+
+// Show a notification
+this.game.uiManager.showSaveNotification(`Game saved to Slot ${saveManager.currentSlot}`);
+
+this.game.uiManager.showMainMenu();
         });
     }
 }
