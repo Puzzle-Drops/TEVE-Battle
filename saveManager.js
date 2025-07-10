@@ -200,7 +200,17 @@ deleteSlot(slot) {
             this.currentSlot = slot;
             
             // Show success message
-            this.game.uiManager.showSaveNotification(`Game loaded from Slot ${slot}`);
+if (this.game.uiManager) {
+    // Check if this is an auto-load (no UI manager means we're still loading)
+    if (!document.getElementById('gameContainer') || document.getElementById('gameContainer').style.display === 'none') {
+        // Queue notification for after UI is ready
+        setTimeout(() => {
+            this.game.uiManager.showAutoLoadNotification(slot);
+        }, 500);
+    } else {
+        this.game.uiManager.showSaveNotification(`Game loaded from Slot ${slot}`);
+    }
+}
             
             return true;
         } catch (e) {
