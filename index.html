@@ -748,7 +748,7 @@
     <div class="saveSlotContainer">
     <div id="saveSlot1" class="saveSlot">
         <div class="slotNumber">
-            Slot 1
+            <div>Slot 1</div>
             <span class="defaultIndicator" style="display: none;">[Default]</span>
         </div>
         <div class="slotInfo">
@@ -765,7 +765,7 @@
     
     <div id="saveSlot2" class="saveSlot">
         <div class="slotNumber">
-            Slot 2
+            <div>Slot 2</div>
             <span class="defaultIndicator" style="display: none;">[Default]</span>
         </div>
         <div class="slotInfo">
@@ -782,7 +782,7 @@
     
     <div id="saveSlot3" class="saveSlot">
         <div class="slotNumber">
-            Slot 3
+            <div>Slot 3</div>
             <span class="defaultIndicator" style="display: none;">[Default]</span>
         </div>
         <div class="slotInfo">
@@ -969,24 +969,6 @@ window.addEventListener('DOMContentLoaded', async () => {
             }, 100);
         }
             
-            // Generate items from first three dungeons after game is initialized
-            if (window.devConsole && dungeonData && dungeonData.dungeons) {
-                
-                // First three dungeons in order
-                const firstThreeDungeons = [
-                    'satyrs_glade',
-                    'murkin_wetlands', 
-                    'icy_highland'
-                ];
-                
-                // Generate 200 items from each dungeon
-                firstThreeDungeons.forEach((dungeonId, index) => {
-                    if (dungeonData.dungeons[dungeonId]) {
-                        window.devConsole.generateItems('Villager', dungeonId, 200);
-                    }
-                });
-                console.log(`Total items in Villager stash: ${window.game.stashes['Villager'].items.length}`);
-            }
         }
         
         // Add global escape key handler
