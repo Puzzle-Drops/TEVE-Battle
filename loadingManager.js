@@ -1,7 +1,7 @@
 // Loading manager
 class LoadingManager {
     constructor() {
-        this.totalAssets = 15; // 5 JSON files + 10 JS files
+        this.totalAssets = 17; // 5 JSON files + 10 JS files
         this.loadedAssets = 0;
         this.failedAssets = []; // Track which assets failed
         this.preloadedImages = {}; // Store preloaded images
