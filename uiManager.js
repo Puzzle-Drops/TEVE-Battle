@@ -145,65 +145,6 @@ handleImportSave(event) {
     });
 }
 
-confirmNewGame() {
-    if (confirm('Start a new game? This will reset all progress but won\'t delete your save files.')) {
-        // Reset game state
-        this.game.heroes = [];
-        this.game.stashes = {
-            'Villager': { gold: 0, items: [] },
-            'Acolyte': { gold: 0, items: [] },
-            'Archer': { gold: 0, items: [] },
-            'Druid': { gold: 0, items: [] },
-            'Initiate': { gold: 0, items: [] },
-            'Swordsman': { gold: 0, items: [] },
-            'Templar': { gold: 0, items: [] },
-            'Thief': { gold: 0, items: [] },
-            'Witch Hunter': { gold: 0, items: [] }
-        };
-        this.game.progression = {
-            unlockedFeatures: {
-                party: true,
-                stash: false,
-                arena: false
-            },
-            unlockedTiers: ['Easy'],
-            completedDungeons: {},
-            completedArenas: {}
-        };
-        this.game.collectionLog = {};
-        this.game.maxPartySize = 3;
-        this.game.tutorialCompleted = false;
-        this.game.hasCheckedForTutorial = false;
-        
-        // Clear current save slot
-        saveManager.currentSlot = null;
-        
-        // Show splash screen
-        this.showSplashScreen();
-        
-        // Set up splash screen handler that will start tutorial after
-        const splashHandler = (e) => {
-            if (this.game.currentScreen === 'splashScreen') {
-                e.preventDefault();
-                document.removeEventListener('keydown', splashHandler);
-                document.removeEventListener('click', splashHandler);
-                
-                // Mark that we're starting fresh
-                this.game.isNewGameStart = true;
-                
-                // Show main menu (which will trigger tutorial)
-                this.showMainMenu();
-            }
-        };
-        
-        // Add event listeners for splash screen
-        setTimeout(() => {
-            document.addEventListener('keydown', splashHandler);
-            document.addEventListener('click', splashHandler);
-        }, 100);
-    }
-}
-
     startNewGameInSlot(slot) {
     if (confirm(`Start a new game in Slot ${slot}? This will reset all progress but won't affect other save files.`)) {
         // Store the target slot for the new game
