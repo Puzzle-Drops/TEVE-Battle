@@ -316,8 +316,7 @@ if (this.game.uiManager) {
                 sortSettings: game.sortSettings,
                 autoBattle: game.autoBattle,
                 autoReplay: game.autoReplay,
-                tutorialCompleted: game.tutorialCompleted,
-                maxPartySize: game.maxPartySize
+                tutorialCompleted: game.tutorialCompleted
             },
             
             // Current state (optional)
@@ -373,6 +372,8 @@ if (this.game.uiManager) {
         
         // Load progression
         game.progression = saveData.progression;
+
+        game.calculateMaxPartySize(); // Recalculate based on actual completions
         
         // Load collection log
         game.collectionLog = saveData.collectionLog || {};
@@ -383,7 +384,6 @@ if (this.game.uiManager) {
             game.autoBattle = saveData.settings.autoBattle || false;
             game.autoReplay = saveData.settings.autoReplay || false;
             game.tutorialCompleted = saveData.settings.tutorialCompleted || false;
-            game.maxPartySize = saveData.settings.maxPartySize || 3;
         }
         
         // Update UI toggles
