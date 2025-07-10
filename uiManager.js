@@ -64,15 +64,22 @@ updateSaveSlots() {
         const defaultIndicator = slotElement.querySelector('.defaultIndicator');
         
         // Update default indicator
-        if (saveManager.defaultSlot === slotInfo.slot) {
-            defaultIndicator.style.display = 'inline';
-            defaultBtn.textContent = 'Remove Default';
-            slotElement.classList.add('defaultSlot');
-        } else {
-            defaultIndicator.style.display = 'none';
-            defaultBtn.textContent = 'Set Default';
-            slotElement.classList.remove('defaultSlot');
-        }
+if (saveManager.defaultSlot === slotInfo.slot) {
+    defaultIndicator.style.display = 'inline';
+    defaultBtn.textContent = 'Remove Default';
+} else {
+    defaultIndicator.style.display = 'none';
+    defaultBtn.textContent = 'Set Default';
+}
+
+// Remove both classes first
+slotElement.classList.remove('defaultSlot');
+slotElement.classList.remove('currentSlot');
+
+// Add currentSlot class to the currently loaded slot
+if (saveManager.currentSlot === slotInfo.slot) {
+    slotElement.classList.add('currentSlot');
+}
         
         if (slotInfo.exists && !slotInfo.corrupted) {
             const date = new Date(slotInfo.lastSaved);
