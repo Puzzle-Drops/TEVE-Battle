@@ -143,32 +143,6 @@ handleImportSave(event) {
     });
 }
 
-    loadSlot(slot) {
-    if (saveManager.loadFromSlot(slot)) {
-        // Successfully loaded - applySaveData was already called
-        // Now we can navigate to splash screen since save/load screen will be closed
-        
-        // Go to splash screen
-        this.showSplashScreen();
-        
-        // Set up splash screen handler
-        const splashHandler = (e) => {
-            if (this.game.currentScreen === 'splashScreen') {
-                e.preventDefault();
-                document.removeEventListener('keydown', splashHandler);
-                document.removeEventListener('click', splashHandler);
-                this.showMainMenu();
-            }
-        };
-        
-        // Add event listeners after a short delay
-        setTimeout(() => {
-            document.addEventListener('keydown', splashHandler);
-            document.addEventListener('click', splashHandler);
-        }, 100);
-    }
-}
-
 confirmNewGame() {
     if (confirm('Start a new game? This will reset all progress but won\'t delete your save files.')) {
         // Reset game state
