@@ -60,6 +60,19 @@ updateSaveSlots() {
         const loadBtn = slotElement.querySelector('.loadButton');
         const deleteBtn = slotElement.querySelector('.deleteButton');
         const exportBtn = slotElement.querySelector('.exportButton');
+        const defaultBtn = slotElement.querySelector('.defaultButton');
+        const defaultIndicator = slotElement.querySelector('.defaultIndicator');
+        
+        // Update default indicator
+        if (saveManager.defaultSlot === slotInfo.slot) {
+            defaultIndicator.style.display = 'inline';
+            defaultBtn.textContent = 'Remove Default';
+            slotElement.classList.add('defaultSlot');
+        } else {
+            defaultIndicator.style.display = 'none';
+            defaultBtn.textContent = 'Set Default';
+            slotElement.classList.remove('defaultSlot');
+        }
         
         if (slotInfo.exists && !slotInfo.corrupted) {
             const date = new Date(slotInfo.lastSaved);
@@ -72,18 +85,32 @@ updateSaveSlots() {
             loadBtn.disabled = false;
             deleteBtn.disabled = false;
             exportBtn.disabled = false;
+            defaultBtn.disabled = false;
         } else if (slotInfo.corrupted) {
             infoDiv.innerHTML = '<div class="slotCorrupted">Corrupted Save</div>';
             loadBtn.disabled = true;
             deleteBtn.disabled = false;
             exportBtn.disabled = true;
+            defaultBtn.disabled = true;
         } else {
             infoDiv.innerHTML = '<div class="slotEmpty">Empty</div>';
             loadBtn.disabled = true;
             deleteBtn.disabled = true;
             exportBtn.disabled = true;
+            defaultBtn.disabled = true;
         }
     });
+}
+
+toggleDefaultSlot(slot) {
+    if (saveManager.defaultSlot === slot) {
+        // Remove default
+        saveManager.setDefaultSlot(null);
+    } else {
+        // Set as default
+        saveManager.setDefaultSlot(slot);
+    }
+    this.updateSaveSlots();
 }
 
 deleteSaveSlot(slot) {
