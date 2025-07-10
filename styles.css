@@ -6195,6 +6195,33 @@ body {
     transform: translateY(0);
 }
 
+/* Default slot indicator */
+.defaultIndicator {
+    color: #ffd700;
+    font-size: 14px;
+    margin-left: 10px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.saveSlot.defaultSlot {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.defaultButton {
+    background: #6a4c93;
+    color: white;
+}
+
+.defaultButton:hover:not(:disabled) {
+    background: #8b6bb1;
+}
+
+.defaultButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* END end EnD eNd ENd eND enD bottom document/*
 
 /* Directional lunge animations */
