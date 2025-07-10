@@ -137,17 +137,33 @@ confirmNewGame() {
         this.game.collectionLog = {};
         this.game.maxPartySize = 3;
         this.game.tutorialCompleted = false;
-        this.game.hasCheckedForTutorial = true;
+        this.game.hasCheckedForTutorial = false;
         
         // Clear current save slot
         saveManager.currentSlot = null;
         
-        // Go to main menu
-        this.showMainMenu();
+        // Show splash screen
+        this.showSplashScreen();
         
-        // THEN start tutorial with a small delay
+        // Set up splash screen handler that will start tutorial after
+        const splashHandler = (e) => {
+            if (this.game.currentScreen === 'splashScreen') {
+                e.preventDefault();
+                document.removeEventListener('keydown', splashHandler);
+                document.removeEventListener('click', splashHandler);
+                
+                // Mark that we're starting fresh
+                this.game.isNewGameStart = true;
+                
+                // Show main menu (which will trigger tutorial)
+                this.showMainMenu();
+            }
+        };
+        
+        // Add event listeners for splash screen
         setTimeout(() => {
-            this.game.tutorial.newGameStart();
+            document.addEventListener('keydown', splashHandler);
+            document.addEventListener('click', splashHandler);
         }, 100);
     }
 }
