@@ -36,24 +36,42 @@ setDefaultSlot(slot) {
 
 // Check for default save and auto-load
 autoLoadDefaultSave() {
-    // If no default slot set, always default to slot 1
-    if (!this.defaultSlot) {
-        this.setDefaultSlot(1);
-        console.log('No default slot set, defaulting to slot 1');
+    const slots = this.getSaveSlots();
+    
+    // Check if current default slot has a valid save
+    let defaultHasValidSave = false;
+    if (this.defaultSlot) {
+        const defaultSlotInfo = slots.find(s => s.slot === this.defaultSlot);
+        defaultHasValidSave = defaultSlotInfo && defaultSlotInfo.exists && !defaultSlotInfo.corrupted;
     }
     
-    // Always set current slot to default slot for new games
+    // If no default set OR default doesn't have a valid save, find the best slot
+    if (!this.defaultSlot || !defaultHasValidSave) {
+        // Find the first slot with a valid save
+        const firstValidSlot = slots.find(s => s.exists && !s.corrupted);
+        
+        if (firstValidSlot) {
+            // Set the first valid save slot as default
+            this.setDefaultSlot(firstValidSlot.slot);
+            console.log(`Default slot updated to slot ${firstValidSlot.slot} (first valid save)`);
+        } else {
+            // No valid saves found, default to slot 1
+            this.setDefaultSlot(1);
+            console.log('No valid saves found, defaulting to slot 1');
+        }
+    }
+    
+    // Always set current slot to default slot
     this.currentSlot = this.defaultSlot;
     
     // Try to load from default slot if it has a save
-    const slots = this.getSaveSlots();
     const defaultSlotInfo = slots.find(s => s.slot === this.defaultSlot);
     
     if (defaultSlotInfo && defaultSlotInfo.exists && !defaultSlotInfo.corrupted) {
         console.log(`Auto-loading save from default slot ${this.defaultSlot}`);
         return this.loadFromSlot(this.defaultSlot);
     } else {
-        console.log(`Default slot ${this.defaultSlot} is empty or corrupted, starting fresh`);
+        console.log(`Default slot ${this.defaultSlot} is empty, starting fresh`);
         return false;
     }
 }
