@@ -219,6 +219,12 @@ if (this.game.uiManager) {
         }, 500);
     } else {
         this.game.uiManager.showSaveNotification(`Game loaded from Slot ${slot}`);
+        
+        // If we're on the save/load screen, we need to handle navigation differently
+        if (this.game.currentScreen === 'saveLoadScreen') {
+            // Don't let applySaveData navigate - we'll do it here
+            return true;
+        }
     }
 }
             
