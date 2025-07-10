@@ -27,7 +27,7 @@ class UIManager {
         this.hideAbilityTooltip = this.hideAbilityTooltip.bind(this);
     }
 
-    // Screen Management
+// Screen Management
 hideAllScreens() {
     document.getElementById('splashScreen').style.display = 'none';
     document.getElementById('mainMenuScreen').style.display = 'none';
@@ -39,6 +39,125 @@ hideAllScreens() {
     document.getElementById('collectionLogScreen').style.display = 'none';
     document.getElementById('dungeonSelectScreen').style.display = 'none';
     document.getElementById('arenaScreen').style.display = 'none';
+    document.getElementById('saveLoadScreen').style.display = 'none';  // ADD THIS LINE
+}
+
+// ADD THESE NEW METHODS AFTER hideAllScreens:
+showSaveLoad() {
+    this.hideAllScreens();
+    this.closeHeroInfo();
+    this.game.currentScreen = 'saveLoadScreen';
+    document.getElementById('saveLoadScreen').style.display = 'block';
+    this.updateSaveSlots();
+}
+
+updateSaveSlots() {
+    const slots = saveManager.getSaveSlots();
+    
+    slots.forEach(slotInfo => {
+        const slotElement = document.getElementById(`saveSlot${slotInfo.slot}`);
+        const infoDiv = slotElement.querySelector('.slotInfo');
+        const loadBtn = slotElement.querySelector('.loadButton');
+        const deleteBtn = slotElement.querySelector('.deleteButton');
+        const exportBtn = slotElement.querySelector('.exportButton');
+        
+        if (slotInfo.exists && !slotInfo.corrupted) {
+            const date = new Date(slotInfo.lastSaved);
+            infoDiv.innerHTML = `
+                <div class="slotDetails">
+                    <div>Heroes: ${slotInfo.heroCount} | Max Level: ${slotInfo.highestLevel}</div>
+                    <div class="slotDate">Last saved: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}</div>
+                </div>
+            `;
+            loadBtn.disabled = false;
+            deleteBtn.disabled = false;
+            exportBtn.disabled = false;
+        } else if (slotInfo.corrupted) {
+            infoDiv.innerHTML = '<div class="slotCorrupted">Corrupted Save</div>';
+            loadBtn.disabled = true;
+            deleteBtn.disabled = false;
+            exportBtn.disabled = true;
+        } else {
+            infoDiv.innerHTML = '<div class="slotEmpty">Empty</div>';
+            loadBtn.disabled = true;
+            deleteBtn.disabled = true;
+            exportBtn.disabled = true;
+        }
+    });
+}
+
+deleteSaveSlot(slot) {
+    if (saveManager.deleteSlot(slot)) {
+        this.updateSaveSlots();
+    }
+}
+
+handleImportSave(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Ask which slot to import to
+    const slot = prompt('Import to which slot? (1-3)');
+    if (!slot || slot < 1 || slot > 3) {
+        alert('Invalid slot number!');
+        return;
+    }
+    
+    saveManager.importSave(file, parseInt(slot)).then(() => {
+        this.updateSaveSlots();
+        event.target.value = ''; // Clear file input
+    });
+}
+
+confirmNewGame() {
+    if (confirm('Start a new game? This will reset all progress but won\'t delete your save files.')) {
+        // Reset game state
+        this.game.heroes = [];
+        this.game.stashes = {
+            'Villager': { gold: 0, items: [] },
+            'Acolyte': { gold: 0, items: [] },
+            'Archer': { gold: 0, items: [] },
+            'Druid': { gold: 0, items: [] },
+            'Initiate': { gold: 0, items: [] },
+            'Swordsman': { gold: 0, items: [] },
+            'Templar': { gold: 0, items: [] },
+            'Thief': { gold: 0, items: [] },
+            'Witch Hunter': { gold: 0, items: [] }
+        };
+        this.game.progression = {
+            unlockedFeatures: {
+                party: true,
+                stash: false,
+                arena: false
+            },
+            unlockedTiers: ['Easy'],
+            completedDungeons: {},
+            completedArenas: {}
+        };
+        this.game.collectionLog = {};
+        this.game.maxPartySize = 3;
+        this.game.tutorialCompleted = false;
+        this.game.hasCheckedForTutorial = false;
+        
+        // Clear current save slot
+        saveManager.currentSlot = null;
+        
+        // Go to main menu
+        this.showMainMenu();
+        
+        // Start tutorial
+        this.game.tutorial.newGameStart();
+    }
+}
+
+showSaveNotification(message) {
+    const notification = document.getElementById('saveNotification');
+    notification.textContent = message;
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
 }
 
     showSplashScreen() {
