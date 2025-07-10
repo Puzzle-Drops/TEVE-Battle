@@ -384,25 +384,29 @@ if (this.game.uiManager) {
         // Mark tutorial as checked so it doesn't restart
         game.hasCheckedForTutorial = true;
         
-        // Go to splash screen
-game.uiManager.showSplashScreen();
+        // Only navigate if we're not on the save/load screen
+// (save/load screen will handle navigation itself)
+if (game.currentScreen !== 'saveLoadScreen') {
+    // Go to splash screen
+    game.uiManager.showSplashScreen();
 
-// Set up splash screen handler
-const splashHandler = (e) => {
-    if (game.currentScreen === 'splashScreen') {
-        e.preventDefault();
-        document.removeEventListener('keydown', splashHandler);
-        document.removeEventListener('click', splashHandler);
-        game.uiManager.showMainMenu();
-    }
-};
+    // Set up splash screen handler
+    const splashHandler = (e) => {
+        if (game.currentScreen === 'splashScreen') {
+            e.preventDefault();
+            document.removeEventListener('keydown', splashHandler);
+            document.removeEventListener('click', splashHandler);
+            game.uiManager.showMainMenu();
+        }
+    };
 
-// Add event listeners after a short delay
-setTimeout(() => {
-    document.addEventListener('keydown', splashHandler);
-    document.addEventListener('click', splashHandler);
-}, 100);
-    }
+    // Add event listeners after a short delay
+    setTimeout(() => {
+        document.addEventListener('keydown', splashHandler);
+        document.addEventListener('click', splashHandler);
+    }, 100);
+}
+    
 
     // Serialize item for saving
     serializeItem(item) {
