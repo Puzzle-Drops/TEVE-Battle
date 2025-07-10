@@ -7,7 +7,7 @@ class UIManager {
         this.selectedHero = 0;
         this.currentTab = 'info';
         this.expandedDungeon = null;
-        this.currentGearFilter = 'trinket';
+        this.currentGearFilter = null;
         this.currentStashFilter = null;
         this.currentSkillIndex = undefined;
         this.currentPreviewWave = 0;
