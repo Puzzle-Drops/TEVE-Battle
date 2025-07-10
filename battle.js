@@ -3232,17 +3232,17 @@ this.party.forEach(unit => {
 });
 
 // Store battle results
-this.game.pendingBattleResults = {
-    victory: victory,
-    dungeonName: this.mode === 'arena' ? 'Arena Battle' : (this.game.currentDungeon ? this.game.currentDungeon.name : 'Unknown'),
-    time: timeString,
-    goldChange: 0, // No longer used at this level
-    dungeonBonusExp: victory ? rewards.exp : 0,
-    battleStats: this.battleStats, // Add this line here
-    partyDeaths: partyDeaths, // Add calculated party deaths
-    currentArenaTeam: this.mode === 'arena' ? this.game.currentArenaTeam : null, // Add this line
-    // In endBattle method, when creating heroResults:
-    heroResults: this.party.map((unit, index) => {
+    this.game.pendingBattleResults = {
+        victory: victory,
+        dungeonName: this.mode === 'arena' ? 'Arena Battle' : (this.game.currentDungeon ? this.game.currentDungeon.name : 'Unknown'),
+        time: timeString,
+        goldChange: 0, // No longer used at this level
+        dungeonBonusExp: victory ? rewards.exp : 0,
+        battleStats: this.battleStats, // Add this line here
+        partyDeaths: partyDeaths, // Add calculated party deaths
+        currentArenaTeam: this.mode === 'arena' ? this.game.currentArenaTeam : null, // Add this line
+        // In endBattle method, when creating heroResults:
+        heroResults: this.party.map((unit, index) => {
             if (!unit) return null;
             const hero = unit.source;
             const waveExp = hero.pendingExp;
@@ -3260,6 +3260,16 @@ this.game.pendingBattleResults = {
             };
         }).filter(r => r !== null)
     };
+    
+    // Apply battle results immediately (both victory and defeat)
+    console.log('Applying battle results immediately');
+    this.game.applyBattleResults();
+    
+    // Save game immediately after applying results
+    if (this.game && saveManager && saveManager.currentSlot) {
+        console.log('Saving game after battle results applied');
+        saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save
+    }
     
 // Show results popup - use arena results for arena mode
 setTimeout(() => {
