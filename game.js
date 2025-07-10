@@ -1693,11 +1693,8 @@ rematchArena() {
     // Close results popup
     document.getElementById('arenaResultsPopup').style.display = 'none';
     
-    // Apply battle results before rematch
-    if (this.pendingBattleResults) {
-        this.applyBattleResults();
-        this.pendingBattleResults = null;
-    }
+    // Results already applied in endBattle, just clear pending results
+    this.pendingBattleResults = null;
     
     // Restore last compositions
     this.selectedParty = [...this.lastArenaParty];
@@ -1710,12 +1707,8 @@ continueFromArena() {
     // Close results popup
     document.getElementById('arenaResultsPopup').style.display = 'none';
     
-    // Apply battle results (this was missing!)
-    if (this.pendingBattleResults) {
-        console.log('Applying arena battle results');
-        this.applyBattleResults();
-        this.pendingBattleResults = null;
-    }
+    // Results already applied in endBattle, just clear pending results
+    this.pendingBattleResults = null;
     
     // Just return to party select
     this.uiManager.showPartySelect('arena');
@@ -2256,9 +2249,8 @@ closePartySelect() {
         }
         
         if (this.pendingBattleResults) {
-            // Apply the results (gold and items)
-            this.applyBattleResults();
-
+            // Results already applied in endBattle, just handle auto-replay logic
+            
             // Increment completions counter if victory and automatic mode
             if (this.pendingBattleResults.victory && this.autoReplay) {
                 this.automaticModeCompletions = (this.automaticModeCompletions || 0) + 1;
@@ -2311,9 +2303,8 @@ replayBattle() {
     }
     
     if (this.pendingBattleResults) {
-        // Apply the results (gold and items)
-        this.applyBattleResults();
-
+        // Results already applied in endBattle
+        
         // Increment completions counter if victory and automatic mode
         if (this.pendingBattleResults.victory && this.autoReplay) {
             this.automaticModeCompletions = (this.automaticModeCompletions || 0) + 1;
@@ -2348,13 +2339,8 @@ returnToMap() {
     this.automaticModeStartTime = null;
     this.automaticModeCompletions = 0;
     
-    if (this.pendingBattleResults) {
-        // Apply the results (gold and items)
-        this.applyBattleResults();
-        
-        // Clear pending results
-        this.pendingBattleResults = null;
-    }
+    // Results already applied in endBattle, just clear pending results
+    this.pendingBattleResults = null;
     
     // Return to main menu
     this.uiManager.showMainMenu();
