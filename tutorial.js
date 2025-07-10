@@ -95,33 +95,16 @@ continueNewGameTutorial() {
             this.isNewGameTutorial = false;
             this.game.tutorialCompleted = true; // Mark tutorial as complete
             
-            // Auto-save to first available slot
-            const slots = saveManager.getSaveSlots();
-            let targetSlot = null;
-            
-            // Find first empty slot
-            for (let i = 1; i <= 3; i++) {
-                const slot = slots.find(s => s.slot === i);
-                if (!slot || !slot.exists) {
-                    targetSlot = i;
-                    break;
-                }
-            }
-            
-            if (targetSlot) {
-                // Save to the empty slot
-                console.log(`Tutorial complete, auto-saving to slot ${targetSlot}`);
-                saveManager.saveToSlot(targetSlot, true); // Silent save
+            // Save to the current slot (which was set when they clicked New Game)
+            if (saveManager.currentSlot) {
+                console.log(`Tutorial complete, saving to slot ${saveManager.currentSlot}`);
+                saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save
                 
                 // Set as default slot so it auto-loads next time
-                saveManager.setDefaultSlot(targetSlot);
+                saveManager.setDefaultSlot(saveManager.currentSlot);
                 
                 // Show a notification
-                this.game.uiManager.showSaveNotification(`Game saved to Slot ${targetSlot}`);
-            } else {
-                // No empty slots available
-                console.warn('No empty save slots available');
-                this.game.uiManager.showSaveNotification('Warning: No save slots available! Please manually save or delete an existing save.');
+                this.game.uiManager.showSaveNotification(`Game saved to Slot ${saveManager.currentSlot}`);
             }
             
             this.game.uiManager.showMainMenu();
