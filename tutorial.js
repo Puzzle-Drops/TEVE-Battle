@@ -1203,7 +1203,8 @@ if (this.game.heroes.length < 3 || this.isNewGameTutorial) {
     
     // Add to game's hero array
     this.game.heroes.push(newHero);
-    
+    saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after creating hero
+
     // If on heroes screen, update the display
     if (this.game.currentScreen === 'heroesScreen') {
         this.game.uiManager.updateHeroList();
