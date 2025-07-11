@@ -904,20 +904,6 @@
     </div>
 </div>
 
-	<!-- Dungeon Items Popup -->
-<div id="dungeonItemsPopup" class="dungeonItemsPopup" style="display: none;">
-    <div class="dungeonItemsContent">
-        <div class="dungeonItemsHeader">
-            <h2 id="dungeonItemsTitle">Dungeon Name</h2>
-            <span class="dungeonItemsProgress" id="dungeonItemsProgress">0/28 Complete</span>
-            <button class="closePopupBtn" onclick="game.uiManager.closeDungeonItemsPopup()">×</button>
-        </div>
-        <div class="dungeonItemsGrid" id="dungeonItemsGrid">
-            <!-- Items will be populated here -->
-        </div>
-    </div>
-</div>
-
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="confirmModal">
         <div class="confirmContent">
@@ -1035,14 +1021,6 @@ if (refinementPopup && refinementPopup.style.display === 'block') {
                     e.preventDefault();
                     return;
                 }
-
-		    // Close dungeon items popup if open
-const dungeonItemsPopup = document.getElementById('dungeonItemsPopup');
-if (dungeonItemsPopup && dungeonItemsPopup.style.display === 'flex') {
-    game.uiManager.closeDungeonItemsPopup();
-    e.preventDefault();
-    return;
-}
 		    
 // Close unit details popup if open
 const unitDetailsPopup = document.getElementById('unitDetailsPopup');
