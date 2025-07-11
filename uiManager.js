@@ -998,6 +998,10 @@ showArena() {
             const dungeon = dungeonData.dungeons[dungeonId];
             const dungeonDiv = document.createElement('div');
             dungeonDiv.className = 'dungeonCollection';
+
+            // Add background image
+            const dungeonName = dungeon.name.toLowerCase().replace(/ /g, '_');
+            dungeonDiv.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
             
             // Count collection for this dungeon
             const collectionStats = this.game.getDungeonCollectionStats(dungeonId);
