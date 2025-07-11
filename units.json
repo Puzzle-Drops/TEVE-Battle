@@ -33,7 +33,7 @@
       "mainstat": "str",
       "modifiers": { 
         "str": 1.0,
-        "agi": 100.0,
+        "agi": 1.0,
         "int": 1.0,
         "hp": 3.5,
         "attack": 0.2,
@@ -46,7 +46,7 @@
         "int": 3,
         "hp": 30,
         "hpRegen": 0.67,
-        "attack": 40,
+        "attack": 4,
         "attackSpeed": 2,
         "armor": 5.32,
         "resist": 4
