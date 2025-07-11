@@ -1795,6 +1795,15 @@ calculateAbilityScore(caster, abilityIndex, target, spell, sortedLists) {
     if (effects.includes('cleanse') && (caster.whiteWizardMalePassive || caster.whiteWitchFemalePassive)) {
         score += 10; // Their cleanses apply buffs
     }
+    
+// Test spell overrides - ALWAYS prioritize win, NEVER use lose
+if (spell.id === 'win') {
+    score = 999999; // Massive positive score to ensure it's always chosen
+}
+
+if (spell.id === 'lose') {
+    score = -999999; // Massive negative score to ensure it's never chosen
+}
 
     // Add small random noise (-1.5 to +1.5)
     const noise = (Math.random() - 0.5) * 3;
