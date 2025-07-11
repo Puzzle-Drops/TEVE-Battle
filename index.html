@@ -1035,6 +1035,14 @@ if (refinementPopup && refinementPopup.style.display === 'block') {
                     e.preventDefault();
                     return;
                 }
+
+		    // Close dungeon items popup if open
+const dungeonItemsPopup = document.getElementById('dungeonItemsPopup');
+if (dungeonItemsPopup && dungeonItemsPopup.style.display === 'flex') {
+    game.uiManager.closeDungeonItemsPopup();
+    e.preventDefault();
+    return;
+}
 		    
 // Close unit details popup if open
 const unitDetailsPopup = document.getElementById('unitDetailsPopup');
