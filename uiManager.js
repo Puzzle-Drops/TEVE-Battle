@@ -909,226 +909,171 @@ showArena() {
     }
 
     renderCollectionLog() {
-    const content = document.getElementById('collectionContent');
-    content.innerHTML = '';
-    
-    // Calculate total progress (keep existing logic)
-    let totalSlots = 0;
-    let collectedSlots = 0;
-    
-    // Get all dungeons that have items
-    const dungeonsWithItems = [];
-    Object.keys(dungeonData.dungeons).forEach(dungeonId => {
-        const dungeon = dungeonData.dungeons[dungeonId];
-        if (dungeon.rewards && dungeon.rewards.items && dungeon.rewards.items.length > 0) {
-            dungeonsWithItems.push({
-                id: dungeonId,
-                name: dungeon.name,
-                tier: dungeon.tier,
-                items: dungeon.rewards.items
-            });
-            // Each item has 4 quality levels to collect
-            totalSlots += dungeon.rewards.items.length * 4;
-        }
-    });
-    
-    // Count collected items
-    Object.values(this.game.collectionLog).forEach(dungeonCollection => {
-        collectedSlots += Object.keys(dungeonCollection).length;
-    });
-    
-    // Update progress display (keep existing)
-    document.getElementById('collectionProgressText').textContent = 
-        `${collectedSlots}/${totalSlots} collected`;
-    const progressPercent = totalSlots > 0 ? (collectedSlots / totalSlots * 100) : 0;
-    document.getElementById('collectionProgressFill').style.width = progressPercent + '%';
-    document.getElementById('collectionProgressPercent').textContent = 
-        Math.floor(progressPercent) + '%';
-    
-    // Group dungeons by tier
-    const dungeonsByTier = {};
-    dungeonsWithItems.forEach(dungeon => {
-        if (!dungeonsByTier[dungeon.tier]) {
-            dungeonsByTier[dungeon.tier] = [];
-        }
-        dungeonsByTier[dungeon.tier].push(dungeon);
-    });
-    
-    // Create grid layout
-    const gridContainer = document.createElement('div');
-    gridContainer.className = 'dungeonCollectionGrid';
-    
-    // Get tier order from game
-    const tierOrder = this.game.getTierOrder();
-    
-    // Render each tier
-    tierOrder.forEach(tierName => {
-        if (!dungeonsByTier[tierName]) return;
+        const content = document.getElementById('collectionContent');
+        content.innerHTML = '';
         
-        const tierSection = document.createElement('div');
-        tierSection.className = 'collectionTierSection';
+        // Calculate total progress
+        let totalSlots = 0;
+        let collectedSlots = 0;
         
-        const tierHeader = document.createElement('div');
-        tierHeader.className = 'collectionTierHeader';
-        tierHeader.textContent = tierName;
-        tierSection.appendChild(tierHeader);
-        
-        const dungeonCards = document.createElement('div');
-        dungeonCards.className = 'collectionDungeonCards';
-        
-        // Create cards for each dungeon in this tier
-        dungeonsByTier[tierName].forEach(dungeonInfo => {
-            const stats = this.game.getDungeonCollectionStats(dungeonInfo.id);
-            const isCompleted = stats.collected === stats.total;
-            
-            const card = document.createElement('div');
-            card.className = `collectionDungeonCard ${isCompleted ? 'completed' : ''}`;
-            
-            // Format dungeon name for backdrop
-            const dungeonNameFormatted = dungeonInfo.name.toLowerCase().replace(/ /g, '_').replace('?', '');
-            card.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/backdrops/${dungeonNameFormatted}_collectionback.png')`;
-            card.style.backgroundSize = 'cover';
-            card.style.backgroundPosition = 'center';
-            
-            // Add overlay for better text readability
-            const overlay = document.createElement('div');
-            overlay.className = 'collectionCardOverlay';
-            
-            const cardName = document.createElement('div');
-            cardName.className = 'collectionCardName';
-            cardName.textContent = dungeonInfo.name;
-            overlay.appendChild(cardName);
-            
-            const cardTier = document.createElement('div');
-            cardTier.className = 'collectionCardTier';
-            cardTier.textContent = tierName;
-            overlay.appendChild(cardTier);
-            
-            const cardProgress = document.createElement('div');
-            cardProgress.className = 'collectionCardProgress';
-            cardProgress.textContent = `${stats.collected}/${stats.total}`;
-            overlay.appendChild(cardProgress);
-            
-            const progressBar = document.createElement('div');
-            progressBar.className = 'collectionCardBar';
-            const progressFill = document.createElement('div');
-            progressFill.className = 'collectionCardFill';
-            progressFill.style.width = `${stats.percentage}%`;
-            progressBar.appendChild(progressFill);
-            overlay.appendChild(progressBar);
-            
-            card.appendChild(overlay);
-            
-            // Click handler to show popup
-            card.onclick = () => this.showDungeonItemsPopup(dungeonInfo);
-            
-            dungeonCards.appendChild(card);
+        // Get all dungeons that have items
+        const dungeonsWithItems = [];
+        Object.keys(dungeonData.dungeons).forEach(dungeonId => {
+            const dungeon = dungeonData.dungeons[dungeonId];
+            if (dungeon.rewards && dungeon.rewards.items && dungeon.rewards.items.length > 0) {
+                dungeonsWithItems.push({
+                    id: dungeonId,
+                    name: dungeon.name,
+                    items: dungeon.rewards.items
+                });
+                // Each item has 4 quality levels to collect
+                totalSlots += dungeon.rewards.items.length * 4;
+            }
         });
         
-        tierSection.appendChild(dungeonCards);
-        gridContainer.appendChild(tierSection);
-    });
-    
-    content.appendChild(gridContainer);
-}
-
-    showDungeonItemsPopup(dungeonInfo) {
-    const popup = document.getElementById('dungeonItemsPopup');
-    const stats = this.game.getDungeonCollectionStats(dungeonInfo.id);
-    
-    // Update header
-    document.getElementById('dungeonItemsTitle').textContent = dungeonInfo.name;
-    document.getElementById('dungeonItemsProgress').textContent = 
-        `${stats.collected}/${stats.total} Complete`;
-    
-    // Build items grid
-    const grid = document.getElementById('dungeonItemsGrid');
-    grid.innerHTML = '';
-    
-    dungeonInfo.items.forEach(itemId => {
-        const itemTemplate = itemData.items[itemId];
-        if (!itemTemplate) return;
+        // Count collected items
+        Object.values(this.game.collectionLog).forEach(dungeonCollection => {
+            collectedSlots += Object.keys(dungeonCollection).length;
+        });
         
-        const row = document.createElement('div');
-        row.className = 'dungeonItemRow';
+        // Update progress display
+        document.getElementById('collectionProgressText').textContent = 
+            `${collectedSlots}/${totalSlots} collected`;
+        const progressPercent = totalSlots > 0 ? (collectedSlots / totalSlots * 100) : 0;
+        document.getElementById('collectionProgressFill').style.width = progressPercent + '%';
+        document.getElementById('collectionProgressPercent').textContent = 
+            Math.floor(progressPercent) + '%';
         
-        // Item image and name
-        const itemInfo = document.createElement('div');
-        itemInfo.className = 'dungeonItemInfo';
-        
-        const itemImage = document.createElement('img');
-        itemImage.src = `https://puzzle-drops.github.io/TEVE/img/items/${itemId}.png`;
-        itemImage.className = 'dungeonItemImage';
-        itemImage.onerror = function() { this.style.display = 'none'; };
-        itemInfo.appendChild(itemImage);
-        
-        const itemName = document.createElement('div');
-        itemName.className = 'dungeonItemName';
-        itemName.textContent = itemTemplate.name;
-        itemInfo.appendChild(itemName);
-        
-        row.appendChild(itemInfo);
-        
-        // Quality variants
-        const variants = document.createElement('div');
-        variants.className = 'dungeonItemVariants';
-        
-        for (let quality = 1; quality <= 4; quality++) {
-            const collectionKey = `${itemId}_${quality}`;
-            const collectionData = this.game.collectionLog[dungeonInfo.id] && 
-                                 this.game.collectionLog[dungeonInfo.id][collectionKey];
-            const isCollected = !!collectionData;
+        // Render each dungeon
+        dungeonsWithItems.forEach((dungeonInfo, index) => {
+            const dungeonDiv = document.createElement('div');
+            dungeonDiv.className = 'dungeonCollection';
             
-            // Create display item for tooltip
-            const displayItem = new Item(itemId, true); // Skip roll
-            displayItem.quality1 = 0;
-            displayItem.quality2 = 0;
-            displayItem.quality3 = 0;
-            displayItem.quality4 = 0;
-            
-            // Set only the exact number of perfect rolls
-            for (let i = 1; i <= quality; i++) {
-                displayItem[`quality${i}`] = 5;
+            // Auto-expand the first dungeon
+            if (index === 0) {
+                dungeonDiv.classList.add('expanded');
             }
             
-            const rarity = displayItem.getRarity();
-            const starData = displayItem.getStars();
+            // Count collection for this dungeon
+const collectionStats = this.game.getDungeonCollectionStats(dungeonInfo.id);
+const dungeonTotal = collectionStats.total;
+const dungeonCollected = collectionStats.collected;
+const isCompleted = dungeonCollected === dungeonTotal;
             
-            const variant = document.createElement('div');
-            variant.className = `dungeonItemVariant ${rarity} ${isCollected ? 'collected' : ''}`;
-            variant.innerHTML = starData.html;
-            
-            // Add tooltip
-            if (isCollected) {
-                variant.onmouseover = (e) => {
-                    this.showCollectionTooltip(e, itemId, quality, collectionData);
-                };
-                variant.onmouseout = () => {
-                    this.hideItemTooltip();
-                };
-            } else {
-                variant.onmouseover = (e) => {
-                    this.showItemTooltip(e, displayItem);
-                };
-                variant.onmouseout = () => {
-                    this.hideItemTooltip();
-                };
+            if (isCompleted) {
+                dungeonDiv.classList.add('completed');
             }
             
-            variants.appendChild(variant);
-        }
-        
-        row.appendChild(variants);
-        grid.appendChild(row);
-    });
-    
-    popup.style.display = 'flex';
-}
-
-closeDungeonItemsPopup() {
-    document.getElementById('dungeonItemsPopup').style.display = 'none';
-    this.hideItemTooltip(); // Hide any open tooltips
-}
+            // Header
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'dungeonCollectionHeader';
+            headerDiv.innerHTML = `
+                <span>${isCompleted ? '[✓]' : `[${dungeonCollected}/${dungeonTotal}]`} ${dungeonInfo.name}</span>
+                <span>${isCompleted ? '✓' : '▼'}</span>
+            `;
+            
+            headerDiv.onclick = () => {
+                dungeonDiv.classList.toggle('expanded');
+            };
+            
+            dungeonDiv.appendChild(headerDiv);
+            
+            // Items
+            const itemsDiv = document.createElement('div');
+            itemsDiv.className = 'dungeonCollectionItems';
+            
+            dungeonInfo.items.forEach(itemId => {
+                const itemTemplate = itemData.items[itemId];
+                if (!itemTemplate) return;
+                
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'itemCollectionRow';
+                
+                const gridDiv = document.createElement('div');
+                gridDiv.className = 'itemQualityGrid';
+                
+                // Create 4 item thumbnails (1-roll green, 2-roll blue, 3-roll purple, 4-roll red)
+                for (let quality = 1; quality <= 4; quality++) {
+                    // Create display item with specific number of rolls
+                    const displayItem = new Item(itemId);
+                    
+                    // First, clear all qualities to 0
+                    displayItem.quality1 = 0;
+                    displayItem.quality2 = 0;
+                    displayItem.quality3 = 0;
+                    displayItem.quality4 = 0;
+                    displayItem.quality5 = 0;
+                    
+                    // Then set only the exact number of perfect rolls
+                    for (let i = 1; i <= quality; i++) {
+                        displayItem[`quality${i}`] = 5;
+                    }
+                    
+                    const starData = displayItem.getStars();
+                    const rarity = displayItem.getRarity();
+                    
+                    // Check if this quality is collected
+                    const collectionKey = `${itemId}_${quality}`;
+                    const collectionData = this.game.collectionLog[dungeonInfo.id] && this.game.collectionLog[dungeonInfo.id][collectionKey];
+                    const isCollected = !!collectionData;
+                    
+                    // Create item thumbnail
+                    const thumbnailDiv = document.createElement('div');
+                    // Use stashItemSlot class for consistent styling
+                    thumbnailDiv.className = `stashItemSlot ${rarity} ${isCollected ? 'collected' : ''}`;
+                    thumbnailDiv.style.opacity = isCollected ? '1' : '0.4';
+                    thumbnailDiv.innerHTML = `
+                        <div class="itemContainer">
+                            <img src="https://puzzle-drops.github.io/TEVE/img/items/${itemId}.png" 
+                                 alt="${itemTemplate.name}"
+                                 onerror="this.style.display='none'">
+                            ${starData.html ? `<div class="itemStars ${starData.colorClass}">${starData.html}</div>` : ''}
+                            <div class="itemLevel">${itemTemplate.level}</div>
+                            <div class="itemQuality">100%</div>
+                            ${isCollected ? '<div class="collectionCheckmark">✓</div>' : ''}
+                        </div>
+                    `;
+                    
+                    // Add hover tooltip
+                    if (isCollected) {
+                        thumbnailDiv.onmouseover = (e) => {
+                            this.showCollectionTooltip(e, itemId, quality, collectionData);
+                        };
+                        thumbnailDiv.onmouseout = () => {
+                            this.hideItemTooltip();
+                        };
+                    } else {
+                        thumbnailDiv.onmouseover = (e) => {
+                            // Create a fresh item for tooltip with proper quality
+                            const hoverItem = new Item(itemId);
+                            // Clear all qualities first
+                            hoverItem.quality1 = 0;
+                            hoverItem.quality2 = 0;
+                            hoverItem.quality3 = 0;
+                            hoverItem.quality4 = 0;
+                            hoverItem.quality5 = 0;
+                            // Set only the exact number of perfect rolls
+                            for (let i = 1; i <= quality; i++) {
+                                hoverItem[`quality${i}`] = 5;
+                            }
+                            this.showItemTooltip(e, hoverItem);
+                        };
+                        thumbnailDiv.onmouseout = () => {
+                            this.hideItemTooltip();
+                        };
+                    }
+                    
+                    gridDiv.appendChild(thumbnailDiv);
+                }
+                
+                rowDiv.appendChild(gridDiv);
+                itemsDiv.appendChild(rowDiv);
+            });
+            
+            dungeonDiv.appendChild(itemsDiv);
+            content.appendChild(dungeonDiv);
+        });
+    }
 
     showBattle() {
     this.hideAllScreens();
