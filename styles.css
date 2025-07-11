@@ -3839,6 +3839,34 @@ body {
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
+/* Dungeon collection background styling */
+.dungeonCollection {
+    position: relative;
+    overflow: hidden;
+    background-size: auto;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+/* Add semi-transparent overlay for better text readability */
+.dungeonCollection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 15, 26, 0.85);
+    z-index: 0;
+}
+
+/* Ensure all content appears above the background overlay */
+.dungeonCollectionHeader,
+.dungeonCollectionItems {
+    position: relative;
+    z-index: 1;
+}
+
 /* Keep all existing item styles exactly as they are */
 .dungeonCollectionItems {
     display: block;
