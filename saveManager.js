@@ -1,7 +1,7 @@
 // saveManager.js - Handles all save/load operations with data validation
 class SaveManager {
     constructor() {
-        this.version = '1.0.0';
+        this.version = '2.0.0'; // Bumped version for new save format
         this.maxSaveSlots = 3;
         this.currentSlot = null;
         this.autoSaveInterval = 60000; // Auto-save every 60 seconds
@@ -215,6 +215,12 @@ if (this.game.currentScreen === 'saveLoadScreen') {
                 return false;
             }
             
+            // Check if this is an old version save that needs migration
+            if (this.needsMigration(saveData)) {
+                console.log('Migrating old save format to new format...');
+                saveData = this.migrateSaveData(saveData);
+            }
+            
             // Apply save data to game
             this.applySaveData(saveData);
             
@@ -262,6 +268,77 @@ if (this.game.uiManager) {
         return false;
     }
 
+    // Check if save data needs migration
+    needsMigration(saveData) {
+        // Check version or look for old format indicators
+        if (!saveData.version || saveData.version < '2.0.0') {
+            return true;
+        }
+        
+        // Check if items have the old format (storing name, level, etc)
+        if (saveData.heroes && saveData.heroes[0] && saveData.heroes[0].gear) {
+            const firstItem = Object.values(saveData.heroes[0].gear).find(item => item !== null);
+            if (firstItem && firstItem.name) {
+                return true; // Old format stores name
+            }
+        }
+        
+        return false;
+    }
+
+    // Migrate old save data to new format
+    migrateSaveData(saveData) {
+        console.log('Migrating save data from old format...');
+        
+        // Migrate items in hero gear
+        if (saveData.heroes) {
+            saveData.heroes.forEach(heroData => {
+                if (heroData.gear) {
+                    Object.keys(heroData.gear).forEach(slot => {
+                        if (heroData.gear[slot]) {
+                            heroData.gear[slot] = this.migrateItem(heroData.gear[slot]);
+                        }
+                    });
+                }
+                
+                // Remove the 'initial' stats if present (let it be recalculated)
+                delete heroData.initial;
+            });
+        }
+        
+        // Migrate items in stashes
+        if (saveData.stashes) {
+            Object.keys(saveData.stashes).forEach(family => {
+                if (saveData.stashes[family].items) {
+                    saveData.stashes[family].items = saveData.stashes[family].items.map(item => 
+                        this.migrateItem(item)
+                    );
+                }
+            });
+        }
+        
+        // Update version
+        saveData.version = this.version;
+        
+        return saveData;
+    }
+
+    // Migrate a single item to new format
+    migrateItem(oldItem) {
+        if (!oldItem) return null;
+        
+        // New format only stores essential data
+        return {
+            id: oldItem.id,
+            quality1: oldItem.quality1 || 0,
+            quality2: oldItem.quality2 || 0,
+            quality3: oldItem.quality3 || 0,
+            quality4: oldItem.quality4 || 0,
+            quality5: oldItem.quality5 || 0,
+            refined: oldItem.refined || false
+        };
+    }
+
     // Create save data object
     createSaveData() {
         const game = this.game;
@@ -271,7 +348,7 @@ if (this.game.uiManager) {
             timestamp: new Date().toISOString(),
             playtime: this.calculatePlaytime(),
             
-            // Heroes
+            // Heroes - now without 'initial' stats
             heroes: game.heroes.map(hero => ({
                 name: hero.name,
                 gender: hero.gender,
@@ -280,7 +357,7 @@ if (this.game.uiManager) {
                 exp: hero.exp,
                 expToNext: hero.expToNext,
                 awakened: hero.awakened,
-                initial: hero.initial,
+                // Remove 'initial' - it will be loaded from class data
                 gear: {
                     head: this.serializeItem(hero.gear.head),
                     chest: this.serializeItem(hero.gear.chest),
@@ -344,7 +421,8 @@ if (this.game.uiManager) {
             hero.exp = heroData.exp;
             hero.expToNext = heroData.expToNext;
             hero.awakened = heroData.awakened || false;
-            hero.initial = heroData.initial || hero.initial;
+            
+            // Don't load 'initial' - let the hero class calculate it from the class data
             
             // Load gear
             Object.entries(heroData.gear).forEach(([slot, itemData]) => {
@@ -415,43 +493,36 @@ setTimeout(() => {
 }, 100);
     }
 
-    // Serialize item for saving
+    // Serialize item for saving - NEW MINIMAL FORMAT
     serializeItem(item) {
         if (!item) return null;
         
+        // Only save the essential data
         return {
             id: item.id,
-            name: item.name,
-            slot: item.slot,
-            level: item.level,
-            sellcost: item.sellcost,
             quality1: item.quality1,
             quality2: item.quality2,
             quality3: item.quality3,
             quality4: item.quality4,
             quality5: item.quality5,
-            roll1: item.roll1,
-            roll2: item.roll2,
-            roll3: item.roll3,
-            roll4: item.roll4,
-            roll5: item.roll5,
-            value1: item.value1,
-            value2: item.value2,
-            value3: item.value3,
-            value4: item.value4,
-            value5: item.value5,
             refined: item.refined
         };
     }
 
-    // Deserialize item from save data
+    // Deserialize item from save data - RECONSTRUCT FROM TEMPLATE
     deserializeItem(itemData) {
         if (!itemData) return null;
         
+        // Create new item from template
         const item = new Item(itemData.id);
         
-        // Restore all properties
-        Object.assign(item, itemData);
+        // Apply only the saved qualities and refined state
+        item.quality1 = itemData.quality1 || 0;
+        item.quality2 = itemData.quality2 || 0;
+        item.quality3 = itemData.quality3 || 0;
+        item.quality4 = itemData.quality4 || 0;
+        item.quality5 = itemData.quality5 || 0;
+        item.refined = itemData.refined || false;
         
         return item;
     }
