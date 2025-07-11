@@ -6242,6 +6242,270 @@ body {
     box-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
 }
 
+/* Collection Log Grid Layout */
+.dungeonCollectionGrid {
+    padding: 20px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.collectionTierSection {
+    margin-bottom: 30px;
+}
+
+.collectionTierHeader {
+    font-size: 24px;
+    color: #4dd0e1;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #2a6a8a;
+    text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
+}
+
+.collectionDungeonCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.collectionDungeonCard {
+    position: relative;
+    background: rgba(20, 35, 51, 0.9);
+    border: 2px solid #2a6a8a;
+    border-radius: 8px;
+    height: 140px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+}
+
+.collectionDungeonCard:hover {
+    border-color: #4dd0e1;
+    box-shadow: 0 0 20px rgba(77, 208, 225, 0.3);
+    transform: translateY(-2px);
+}
+
+.collectionDungeonCard.completed {
+    border-color: #00ff88;
+}
+
+.collectionDungeonCard.completed .collectionCardOverlay {
+    background: rgba(0, 255, 136, 0.15);
+}
+
+.collectionCardOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 25, 41, 0.85);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: background 0.3s ease;
+}
+
+.collectionDungeonCard:hover .collectionCardOverlay {
+    background: rgba(10, 25, 41, 0.75);
+}
+
+.collectionCardName {
+    font-size: 18px;
+    color: #b0e0f0;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.collectionCardTier {
+    font-size: 14px;
+    color: #6a9aaa;
+    margin-top: 4px;
+}
+
+.collectionCardProgress {
+    font-size: 16px;
+    color: #4dd0e1;
+    margin-top: auto;
+    margin-bottom: 8px;
+}
+
+.collectionCardBar {
+    height: 6px;
+    background: rgba(42, 106, 138, 0.5);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.collectionCardFill {
+    height: 100%;
+    background: linear-gradient(90deg, #0066cc 0%, #0099ff 100%);
+    transition: width 0.3s ease;
+}
+
+.collectionDungeonCard.completed .collectionCardFill {
+    background: linear-gradient(90deg, #00cc66 0%, #00ff88 100%);
+}
+
+/* Dungeon Items Popup */
+.dungeonItemsPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.dungeonItemsContent {
+    background: rgba(10, 25, 41, 0.95);
+    border: 2px solid #2a6a8a;
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 900px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+}
+
+.dungeonItemsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #2a6a8a;
+}
+
+.dungeonItemsHeader h2 {
+    font-size: 28px;
+    color: #4dd0e1;
+    margin: 0;
+}
+
+.dungeonItemsProgress {
+    font-size: 18px;
+    color: #6a9aaa;
+}
+
+.closePopupBtn {
+    background: none;
+    border: none;
+    color: #6a9aaa;
+    font-size: 32px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.closePopupBtn:hover {
+    color: #4dd0e1;
+}
+
+.dungeonItemsGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.dungeonItemRow {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: rgba(20, 35, 51, 0.5);
+    border-radius: 6px;
+    border: 1px solid rgba(42, 106, 138, 0.3);
+}
+
+.dungeonItemInfo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.dungeonItemImage {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.dungeonItemName {
+    font-size: 16px;
+    color: #b0e0f0;
+}
+
+.dungeonItemVariants {
+    display: flex;
+    gap: 12px;
+}
+
+.dungeonItemVariant {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #2a6a8a;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    opacity: 0.3;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.dungeonItemVariant.collected {
+    opacity: 1;
+}
+
+.dungeonItemVariant:hover {
+    transform: scale(1.1);
+}
+
+.dungeonItemVariant.green {
+    border-color: #00ff88;
+    color: #00ff88;
+}
+
+.dungeonItemVariant.green.collected {
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.dungeonItemVariant.blue {
+    border-color: #4dd0e1;
+    color: #4dd0e1;
+}
+
+.dungeonItemVariant.blue.collected {
+    background: rgba(77, 208, 225, 0.1);
+}
+
+.dungeonItemVariant.purple {
+    border-color: #d896ff;
+    color: #d896ff;
+}
+
+.dungeonItemVariant.purple.collected {
+    background: rgba(216, 150, 255, 0.1);
+}
+
+.dungeonItemVariant.red {
+    border-color: #ff4444;
+    color: #ff4444;
+}
+
+.dungeonItemVariant.red.collected {
+    background: rgba(255, 68, 68, 0.1);
+}
+
 /* END end EnD eNd ENd eND enD bottom document/*
 
 /* Directional lunge animations */
