@@ -1,6 +1,6 @@
 // Item class
 class Item {
-    constructor(itemId) {
+    constructor(itemId, skipRoll = false) {
         const template = itemData.items[itemId];
         if (!template) {
             console.error(`Item template not found: ${itemId}`);
@@ -10,6 +10,8 @@ class Item {
         //console.log(`Creating item: ${itemId}`);
         
         this.id = itemId;
+        
+        // Always load these from template - never save them
         this.name = template.name;
         this.slot = template.slot;
         this.level = template.level;
@@ -24,22 +26,24 @@ class Item {
 	this.quality5 = 0;
 	this.refined = false; // +5 all stats after refining a perfect item
         
-        // Stats this item can roll
+        // Stats this item can roll - always from template
         this.roll1 = template.roll1;
         this.roll2 = template.roll2;
         this.roll3 = template.roll3;
         this.roll4 = template.roll4;
 	this.roll5 = null; // +5 all stats after refining a perfect item
         
-        // Max values for each roll
+        // Max values for each roll - always from template
         this.value1 = template.value1 || Math.floor(this.level / 2);
         this.value2 = template.value2 || Math.floor(this.level / 2);
         this.value3 = template.value3 || Math.floor(this.level / 2);
         this.value4 = template.value4 || Math.floor(this.level / 2);
 	this.value5 = 5; // + 5 all stats after refining a perfect item
         
-        // Roll the item
-        this.rollItem();
+        // Only roll if not loading from save
+        if (!skipRoll) {
+            this.rollItem();
+        }
         
         //console.log(`Item created: ${this.name} (${this.getRarity()}) - Quality: ${this.getQualityPercent()}%`);
     }
