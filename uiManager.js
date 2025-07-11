@@ -11,6 +11,7 @@ class UIManager {
         this.currentStashFilter = null;
         this.currentSkillIndex = undefined;
         this.currentPreviewWave = 0;
+        this.selectedCollectionTier = 'Easy';
         
         // UI state
         this.currentTooltips = {
@@ -909,56 +910,98 @@ showArena() {
     }
 
     renderCollectionLog() {
+        // First render the tier sidebar
+        this.renderCollectionTierSidebar();
+        
+        // Then render content for selected tier
+        this.renderCollectionContent(this.selectedCollectionTier);
+        
+        // Calculate and display total progress
+        this.updateCollectionProgress();
+    }
+
+    renderCollectionTierSidebar() {
+        const sidebar = document.getElementById('tierSidebar');
+        sidebar.innerHTML = '';
+        
+        // Get all tiers
+        const tierOrder = this.game.getTierOrder();
+        
+        tierOrder.forEach(tierName => {
+            // Calculate tier progress
+            let tierTotal = 0;
+            let tierCollected = 0;
+            
+            // Get dungeons for this tier
+            const tierData = dungeonData.tiers[tierName];
+            if (!tierData) return;
+            
+            const tierDungeons = Object.keys(dungeonData.dungeons).filter(dungeonId => {
+                const dungeon = dungeonData.dungeons[dungeonId];
+                return dungeon.tier === tierName && dungeon.rewards && dungeon.rewards.items && dungeon.rewards.items.length > 0;
+            });
+            
+            tierDungeons.forEach(dungeonId => {
+                const dungeon = dungeonData.dungeons[dungeonId];
+                if (dungeon.rewards && dungeon.rewards.items) {
+                    tierTotal += dungeon.rewards.items.length * 4; // 4 qualities per item
+                    
+                    // Count collected
+                    const dungeonCollection = this.game.collectionLog[dungeonId] || {};
+                    tierCollected += Object.keys(dungeonCollection).length;
+                }
+            });
+            
+            // Create tier button
+            const tierButton = document.createElement('div');
+            tierButton.className = 'tierButton';
+            if (tierName === this.selectedCollectionTier) {
+                tierButton.classList.add('active');
+            }
+            if (tierTotal > 0 && tierCollected === tierTotal) {
+                tierButton.classList.add('completed');
+            }
+            
+            const progressPercent = tierTotal > 0 ? (tierCollected / tierTotal * 100) : 0;
+            
+            tierButton.innerHTML = `
+                <div class="tierButtonContent">
+                    <span class="tierName">${tierName}</span>
+                    <span class="tierProgress">${tierCollected}/${tierTotal}</span>
+                </div>
+                <div class="tierProgressBar">
+                    <div class="tierProgressFill" style="width: ${progressPercent}%"></div>
+                </div>
+            `;
+            
+            tierButton.onclick = () => {
+                this.selectedCollectionTier = tierName;
+                this.renderCollectionLog();
+            };
+            
+            sidebar.appendChild(tierButton);
+        });
+    }
+
+    renderCollectionContent(tierName) {
         const content = document.getElementById('collectionContent');
         content.innerHTML = '';
         
-        // Calculate total progress
-        let totalSlots = 0;
-        let collectedSlots = 0;
-        
-        // Get all dungeons that have items
-        const dungeonsWithItems = [];
-        Object.keys(dungeonData.dungeons).forEach(dungeonId => {
+        // Get dungeons for this tier
+        const tierDungeons = Object.keys(dungeonData.dungeons).filter(dungeonId => {
             const dungeon = dungeonData.dungeons[dungeonId];
-            if (dungeon.rewards && dungeon.rewards.items && dungeon.rewards.items.length > 0) {
-                dungeonsWithItems.push({
-                    id: dungeonId,
-                    name: dungeon.name,
-                    items: dungeon.rewards.items
-                });
-                // Each item has 4 quality levels to collect
-                totalSlots += dungeon.rewards.items.length * 4;
-            }
+            return dungeon.tier === tierName && dungeon.rewards && dungeon.rewards.items && dungeon.rewards.items.length > 0;
         });
-        
-        // Count collected items
-        Object.values(this.game.collectionLog).forEach(dungeonCollection => {
-            collectedSlots += Object.keys(dungeonCollection).length;
-        });
-        
-        // Update progress display
-        document.getElementById('collectionProgressText').textContent = 
-            `${collectedSlots}/${totalSlots} collected`;
-        const progressPercent = totalSlots > 0 ? (collectedSlots / totalSlots * 100) : 0;
-        document.getElementById('collectionProgressFill').style.width = progressPercent + '%';
-        document.getElementById('collectionProgressPercent').textContent = 
-            Math.floor(progressPercent) + '%';
         
         // Render each dungeon
-        dungeonsWithItems.forEach((dungeonInfo, index) => {
+        tierDungeons.forEach(dungeonId => {
+            const dungeon = dungeonData.dungeons[dungeonId];
             const dungeonDiv = document.createElement('div');
             dungeonDiv.className = 'dungeonCollection';
             
-            // Auto-expand the first dungeon
-            if (index === 0) {
-                dungeonDiv.classList.add('expanded');
-            }
-            
             // Count collection for this dungeon
-const collectionStats = this.game.getDungeonCollectionStats(dungeonInfo.id);
-const dungeonTotal = collectionStats.total;
-const dungeonCollected = collectionStats.collected;
-const isCompleted = dungeonCollected === dungeonTotal;
+            const collectionStats = this.game.getDungeonCollectionStats(dungeonId);
+            const isCompleted = collectionStats.collected === collectionStats.total;
             
             if (isCompleted) {
                 dungeonDiv.classList.add('completed');
@@ -967,22 +1010,15 @@ const isCompleted = dungeonCollected === dungeonTotal;
             // Header
             const headerDiv = document.createElement('div');
             headerDiv.className = 'dungeonCollectionHeader';
-            headerDiv.innerHTML = `
-                <span>${isCompleted ? '[✓]' : `[${dungeonCollected}/${dungeonTotal}]`} ${dungeonInfo.name}</span>
-                <span>${isCompleted ? '✓' : '▼'}</span>
-            `;
-            
-            headerDiv.onclick = () => {
-                dungeonDiv.classList.toggle('expanded');
-            };
-            
+            headerDiv.textContent = `[${collectionStats.collected}/${collectionStats.total}] ${dungeon.name}`;
             dungeonDiv.appendChild(headerDiv);
             
-            // Items
+            // Items container
             const itemsDiv = document.createElement('div');
             itemsDiv.className = 'dungeonCollectionItems';
             
-            dungeonInfo.items.forEach(itemId => {
+            // Render items exactly as before
+            dungeon.rewards.items.forEach(itemId => {
                 const itemTemplate = itemData.items[itemId];
                 if (!itemTemplate) return;
                 
@@ -1014,12 +1050,11 @@ const isCompleted = dungeonCollected === dungeonTotal;
                     
                     // Check if this quality is collected
                     const collectionKey = `${itemId}_${quality}`;
-                    const collectionData = this.game.collectionLog[dungeonInfo.id] && this.game.collectionLog[dungeonInfo.id][collectionKey];
+                    const collectionData = this.game.collectionLog[dungeonId] && this.game.collectionLog[dungeonId][collectionKey];
                     const isCollected = !!collectionData;
                     
-                    // Create item thumbnail
+                    // Create item thumbnail using stashItemSlot class
                     const thumbnailDiv = document.createElement('div');
-                    // Use stashItemSlot class for consistent styling
                     thumbnailDiv.className = `stashItemSlot ${rarity} ${isCollected ? 'collected' : ''}`;
                     thumbnailDiv.style.opacity = isCollected ? '1' : '0.4';
                     thumbnailDiv.innerHTML = `
@@ -1073,6 +1108,31 @@ const isCompleted = dungeonCollected === dungeonTotal;
             dungeonDiv.appendChild(itemsDiv);
             content.appendChild(dungeonDiv);
         });
+    }
+
+    updateCollectionProgress() {
+        // Calculate total progress across all tiers
+        let totalSlots = 0;
+        let collectedSlots = 0;
+        
+        // Get all dungeons that have items
+        Object.keys(dungeonData.dungeons).forEach(dungeonId => {
+            const dungeon = dungeonData.dungeons[dungeonId];
+            if (dungeon.rewards && dungeon.rewards.items && dungeon.rewards.items.length > 0) {
+                totalSlots += dungeon.rewards.items.length * 4;
+                
+                const dungeonCollection = this.game.collectionLog[dungeonId] || {};
+                collectedSlots += Object.keys(dungeonCollection).length;
+            }
+        });
+        
+        // Update progress display
+        document.getElementById('collectionProgressText').textContent = 
+            `${collectedSlots}/${totalSlots} collected`;
+        const progressPercent = totalSlots > 0 ? (collectedSlots / totalSlots * 100) : 0;
+        document.getElementById('collectionProgressFill').style.width = progressPercent + '%';
+        document.getElementById('collectionProgressPercent').textContent = 
+            Math.floor(progressPercent) + '%';
     }
 
     showBattle() {
