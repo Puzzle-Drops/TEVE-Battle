@@ -3803,6 +3803,41 @@ body {
     background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
 }
 
+/* Roll Chances Display */
+.collectionRollChances {
+    position: absolute;
+    top: 20px;
+    left: 120px;
+    background: rgba(20, 35, 56, 0.8);
+    padding: 15px 20px;
+    border: 1px solid #2a6a8a;
+    border-radius: 4px;
+}
+
+.rollChancesTitle {
+    font-size: 14px;
+    color: #6a9aaa;
+    margin-bottom: 8px;
+}
+
+.rollChancesList {
+    font-size: 16px;
+}
+
+.rollChanceItem {
+    margin-bottom: 4px;
+}
+
+.rollChanceValue {
+    color: #4dd0e1;
+    font-weight: bold;
+}
+
+.rollChanceBase {
+    color: #6a9aaa;
+    font-size: 14px;
+}
+
 /* Dungeon content area */
 .collectionContent {
     width: 75%;
