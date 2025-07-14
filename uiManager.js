@@ -918,6 +918,45 @@ showArena() {
         
         // Calculate and display total progress
         this.updateCollectionProgress();
+        
+        // Display roll chances
+        this.updateRollChancesDisplay();
+    }
+
+    updateRollChancesDisplay() {
+        // Get the collection drop bonus
+        const bonusChance = this.game.getCollectionDropBonus();
+        const bonusPercent = bonusChance * 100; // Convert to percentage
+        
+        // Calculate current chances
+        const roll2Chance = (0.45 + bonusChance) * 100;
+        const roll3Chance = (0.40 + bonusChance) * 100;
+        const roll4Chance = (0.35 + bonusChance) * 100;
+        
+        // Check if element already exists
+        let rollChancesDiv = document.getElementById('collectionRollChances');
+        if (!rollChancesDiv) {
+            // Create the element
+            rollChancesDiv = document.createElement('div');
+            rollChancesDiv.id = 'collectionRollChances';
+            rollChancesDiv.className = 'collectionRollChances';
+            
+            // Find the back button and insert after it
+            const backButton = document.querySelector('#collectionLogScreen .backButton');
+            if (backButton && backButton.parentNode) {
+                backButton.parentNode.insertBefore(rollChancesDiv, backButton.nextSibling);
+            }
+        }
+        
+        // Update the content
+        rollChancesDiv.innerHTML = `
+            <div class="rollChancesTitle">Chances at additional item rolls (+${bonusPercent.toFixed(2)}% per slot unlocked):</div>
+            <div class="rollChancesList">
+                <div class="rollChanceItem">Roll 2: <span class="rollChanceValue">${roll2Chance.toFixed(2)}%</span> <span class="rollChanceBase">(Base 45%)</span></div>
+                <div class="rollChanceItem">Roll 3: <span class="rollChanceValue">${roll3Chance.toFixed(2)}%</span> <span class="rollChanceBase">(Base 40%)</span></div>
+                <div class="rollChanceItem">Roll 4: <span class="rollChanceValue">${roll4Chance.toFixed(2)}%</span> <span class="rollChanceBase">(Base 35%)</span></div>
+            </div>
+        `;
     }
 
     renderCollectionTierSidebar() {
