@@ -1336,15 +1336,15 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
     },
 
     corrosiveSplashLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const attackerCount = spell.attackerCount[levelIndex] || spell.attackerCount[0];
-        const duration = spell.duration[levelIndex] || spell.duration[0];
-        
-        // Set up a counter effect
-        caster.corrosiveSplashCounter = attackerCount;
-        caster.corrosiveSplashDuration = duration;
-        battle.log(`${caster.name} prepares corrosive splash!`);
-    },
+    const levelIndex = spellLevel - 1;
+    const procChance = spell.procChance[levelIndex] || spell.procChance[0];
+    const duration = spell.duration[levelIndex] || spell.duration[0];
+    
+    // This passive is handled when taking damage
+    caster.corrosiveSplashPassive = true;
+    caster.corrosiveSplashChance = procChance;
+    caster.corrosiveSplashDuration = duration;
+},
 
     shadowBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
