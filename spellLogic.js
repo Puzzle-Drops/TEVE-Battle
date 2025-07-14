@@ -1246,7 +1246,6 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
             }
         });
     },
-,
     // Sorrowshade Hollow Spells
     spiritTouchLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
