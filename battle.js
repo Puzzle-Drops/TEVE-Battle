@@ -2279,20 +2279,27 @@ if (damageType !== 'pure') {
             }
         });
         
-// Apply passive damage reduction (like Thick Hide) - skip for pure damage
-if (target.damageReduction && damageType !== 'pure') {
-    damage *= (1 - target.damageReduction);
+// Apply passive damage reduction (like Thick Hide and Patchwork Body) - skip for pure damage
+if (damageType !== 'pure') {
+    if (target.damageReduction) {
+        damage *= (1 - target.damageReduction);
+    }
+    if (target.globalDamageReduction) {
+        damage *= (1 - target.globalDamageReduction);
+    }
 }
 
-
-        // DEAL THE DAMAGE
+// DEAL THE DAMAGE
         damage = Math.round(damage);
         const previousHp = target.currentHp;
         target.currentHp = Math.max(0, target.currentHp - damage);
+        
+        // Calculate actual damage dealt (for life drain calculations)
+        const actualDamage = previousHp - target.currentHp;
 
 // Track damage stats
-this.trackBattleStat(attacker.name, 'damageDealt', damage);
-this.trackBattleStat(target.name, 'damageTaken', damage);
+this.trackBattleStat(attacker.name, 'damageDealt', actualDamage);
+this.trackBattleStat(target.name, 'damageTaken', actualDamage);
 
         // AFTER DAMAGE TAKEN EFFECTS BELOW
 
@@ -2338,6 +2345,14 @@ if (target.avengerBlightOnTauntedAttack && target.isAlive && damage > 0) {
     }
 }
 
+// Corrosive Splash passive - chance to reduce attacker's attack
+if (target.corrosiveSplashPassive && target.isAlive && damage > 0) {
+    if (Math.random() < target.corrosiveSplashChance) {
+        this.applyDebuff(attacker, 'Reduce Attack', target.corrosiveSplashDuration, {});
+        this.log(`${attacker.name} is weakened by ${target.name}'s corrosive splash!`);
+    }
+}
+        
         // Check for Frost Armor retaliation
 if (target.isAlive && damage > 0 && hasFrostArmor) {
     // Apply or stack reduce speed on the attacker
@@ -2366,7 +2381,7 @@ if (target.isAlive && damage > 0 && hasFrostArmor) {
             this.handleUnitDeath(target, attacker);
         }
         
-        return damage;
+        return actualDamage;
     }
     
     showDamageAnimation(attacker, target, damage, damageType) {
@@ -2516,6 +2531,20 @@ showDodgeAnimation(target) {
 if (killer && killer.isAlive) {
     // Track kill for ANY killer
     this.trackBattleStat(killer.name, 'kills', 1);
+
+// Check for Queen's Lament passive on any living unit
+    this.allUnits.forEach(otherUnit => {
+        if (otherUnit.isAlive && otherUnit.queensLamentPassive) {
+            // Heal 10% HP
+            const healAmount = Math.floor(otherUnit.maxHp * otherUnit.queensLamentHealPercent);
+            this.healUnit(otherUnit, healAmount);
+            
+            // Apply Increase Attack buff
+            this.applyBuff(otherUnit, 'Increase Attack', otherUnit.queensLamentBuffDuration, { damageMultiplier: 1.5 });
+            
+            this.log(`${otherUnit.name} gains power from ${unit.name}'s death!`);
+        }
+    });
     
     // Sniper Female passive - speed buff on kill
     if (killer.onKillEffects) {
