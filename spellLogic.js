@@ -1870,10 +1870,12 @@ volatileOverloadLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const selfDamage = spell.selfDamage[levelIndex] || spell.selfDamage[0];
     const duration = spell.duration[levelIndex] || spell.duration[0];
     
-    battle.applyBuff(caster, 'Increase Attack', duration, { damageMultiplier: damageBonus });
-    
-    // Needs special implementation for self-damage per turn
-    battle.log(`Volatile Overload needs self-damage per turn implementation!`);
+    // Apply damage buff with self-damage property
+    battle.applyBuff(caster, 'Volatile Overload', duration, { 
+        damageMultiplier: damageBonus,
+        selfDamagePerTurn: selfDamage
+    });
+    battle.log(`${caster.name} overloads their systems!`);
 },
 
 grindingGearsLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -1899,9 +1901,10 @@ scrapArmorLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const duration = spell.duration[levelIndex] || spell.duration[0];
     
     battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
-    
-    // Needs special implementation for damage reflection
-    battle.log(`Scrap Armor needs damage reflection implementation!`);
+    battle.applyBuff(caster, 'Damage Reflection', duration, { 
+        reflectPercent: reflectPercent 
+    });
+    battle.log(`${caster.name} constructs reflective scrap armor!`);
 },
 
 industrialRevolutionLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -1931,8 +1934,16 @@ piercingShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 naturesGuidanceLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    // Needs special implementation for critical strike chance on next attacks
-    battle.log(`Nature's Guidance needs critical strike implementation!`);
+    const levelIndex = spellLevel - 1;
+    const attackCount = spell.attackCount[levelIndex] || spell.attackCount[0];
+    const critChance = spell.critChance[levelIndex] || spell.critChance[0];
+    
+    battle.applyBuff(caster, 'Nature\'s Guidance', attackCount, { 
+        criticalChance: critChance,
+        attacksRemaining: attackCount,
+        isAttackCounter: true
+    });
+    battle.log(`${caster.name} gains nature's guidance for critical strikes!`);
 },
 
 thunderingChargeLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -1979,8 +1990,14 @@ ancestralVigorLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 earthBlessingLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    // Needs special implementation for regeneration effect
-    battle.log(`Earth Blessing needs regeneration implementation!`);
+    const levelIndex = spellLevel - 1;
+    const regenAmount = spell.regenAmount[levelIndex] || spell.regenAmount[0];
+    const duration = spell.duration[levelIndex] || spell.duration[0];
+    
+    battle.applyBuff(target, 'Regeneration', duration, { 
+        regenAmount: regenAmount 
+    });
+    battle.log(`${target.name} receives earth's blessing!`);
 },
 
 trampleLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -2132,8 +2149,14 @@ orcishResilienceLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 berserkerFuryLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    // Passive ability - needs special implementation
-    battle.log(`Berserker Fury needs damage scaling based on missing HP implementation!`);
+    const levelIndex = spellLevel - 1;
+    const maxBonus = spell.maxBonus[levelIndex] || spell.maxBonus[0];
+    
+    // This is a passive ability - apply permanent damage scaling
+    if (!caster.berserkerFuryApplied) {
+        caster.berserkerFuryApplied = true;
+        caster.berserkerFuryMaxBonus = maxBonus;
+    }
 },
 
 bloodFrenzyOrcLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -2230,8 +2253,15 @@ bladeStormLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 counterStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    // Needs special implementation for counter-attack mechanic
-    battle.log(`Counter Strike needs counter-attack implementation!`);
+    const levelIndex = spellLevel - 1;
+    const counterCount = spell.counterCount[levelIndex] || spell.counterCount[0];
+    const damagePercent = spell.damagePercent[levelIndex] || spell.damagePercent[0];
+    
+    battle.applyBuff(caster, 'Counter Strike', -1, { 
+        countersRemaining: counterCount,
+        counterDamagePercent: damagePercent
+    });
+    battle.log(`${caster.name} prepares to counter-attack!`);
 },
 
 windWalkLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -2273,9 +2303,80 @@ bloodRageLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 callOfWarLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    // Needs special implementation for summoning units mid-battle
-    battle.log(`Call of War needs summoning implementation!`);
+    const levelIndex = spellLevel - 1;
+    const summonCount = spell.summonCount[levelIndex] || spell.summonCount[0];
+    const summonLevel = spell.summonLevel[levelIndex] || spell.summonLevel[0];
+    
+    // Check available slots
+    const team = caster.isEnemy ? battle.enemies : battle.party;
+    const maxSlots = 5;
+    const usedSlots = team.filter(u => u && u.isAlive).length;
+    const availableSlots = maxSlots - usedSlots;
+    
+    if (availableSlots <= 0) {
+        battle.log(`${caster.name} tries to summon warriors but there's no room!`);
+        return;
+    }
+    
+    const summonsToCreate = Math.min(summonCount, availableSlots);
+    
+    // Create orc warrior data
+    for (let i = 0; i < summonsToCreate; i++) {
+        const nextPosition = team.filter(u => u).length;
+        if (nextPosition >= maxSlots) break;
+        
+        const orcWarrior = {
+            enemyId: 46, // Orc Warrior ID
+            name: `Summoned Orc Warrior`,
+            level: summonLevel,
+            hp: 500 + (summonLevel * 10),
+            baseStats: {
+                str: 100 + summonLevel,
+                int: 20 + Math.floor(summonLevel * 0.2),
+                agi: 50 + Math.floor(summonLevel * 0.5)
+            },
+            attack: 100 + summonLevel * 2,
+            armor: 100 + summonLevel,
+            resist: 50 + Math.floor(summonLevel * 0.5),
+            abilities: [
+                { id: 'axe_throw', name: 'Axe Throw', level: 1 }
+            ]
+        };
+        
+        // Create battle unit
+        const summonedUnit = new BattleUnit(orcWarrior, caster.isEnemy, nextPosition);
+        summonedUnit.currentHp = summonedUnit.maxHp;
+        summonedUnit.actionBar = 0;
+        summonedUnit.battle = battle;
+        
+        // Add to appropriate team
+        if (caster.isEnemy) {
+            battle.enemies.push(summonedUnit);
+        } else {
+            battle.party.push(summonedUnit);
+        }
+        
+        // Update all units list
+        battle.allUnits.push(summonedUnit);
+        
+        // Create UI for summoned unit
+        battle.createUnitUI(summonedUnit);
+        summonedUnit.uiInitialized = true;
+        
+        // Show the unit
+        const elementId = caster.isEnemy ? `enemy${nextPosition + 1}` : `party${nextPosition + 1}`;
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.style.display = 'block';
+        }
+        
+        battle.log(`${caster.name} summons an Orc Warrior!`);
+    }
+    
+    // Force UI update
+    battle.updateUI();
 },
+    
     // Test Spells
     winLogic: function(battle, caster, targets, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
