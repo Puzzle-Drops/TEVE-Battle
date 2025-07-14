@@ -1611,6 +1611,547 @@
     "target": "enemy",
     "logicKey": "plunderLogic"
 },
+"pickaxe_swing": {
+    "id": "pickaxe_swing",
+    "name": "Pickaxe Swing",
+    "description": "Heavy swing dealing [{base} + {attack} + {str}] physical damage with {armorBreakChance} chance to reduce defense",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_reduce_defense"],
+    "scaling": {
+        "base": [60, 120, 240, 420, 600],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.25, 0.27, 0.29, 0.31, 0.33]
+    },
+    "armorBreakChance": [0.3, 0.35, 0.4, 0.45, 0.5],
+    "debuffDuration": [2, 2, 3, 3, 4],
+    "target": "enemy",
+    "logicKey": "pickaxeSwingLogic"
+},
+"reinforce_plating": {
+    "id": "reinforce_plating",
+    "name": "Reinforce Plating",
+    "description": "Grant {shieldAmount} shield to all mechanical allies and Increase Defense for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["buff_shield", "buff_increase_defense"],
+    "shieldAmount": [60, 120, 240, 420, 600],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "all_allies",
+    "logicKey": "reinforcePlatingLogic"
+},
+"blast_charge": {
+    "id": "blast_charge",
+    "name": "Blast Charge",
+    "description": "Throw explosive dealing [{base} + {attack} + {agi}] physical damage to target and {splashPercent} to adjacent enemies",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "aoe"],
+    "scaling": {
+        "base": [55, 110, 220, 385, 550],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.4, 0.42, 0.44, 0.46, 0.48]
+    },
+    "splashPercent": [0.3, 0.35, 0.4, 0.45, 0.5],
+    "target": "enemy",
+    "logicKey": "blastChargeLogic"
+},
+"shrapnel_storm": {
+    "id": "shrapnel_storm",
+    "name": "Shrapnel Storm",
+    "description": "AOE attack dealing [{base} + {attack} + {agi}] physical damage and applying Bleed for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "physical", "debuff_bleed"],
+    "scaling": {
+        "base": [40, 80, 160, 280, 400],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.35, 0.37, 0.39, 0.41, 0.43]
+    },
+    "duration": [2, 2, 3, 3, 4],
+    "target": "all_enemies",
+    "logicKey": "shrapnelStormLogic"
+},
+"mechanical_repair": {
+    "id": "mechanical_repair",
+    "name": "Mechanical Repair",
+    "description": "Heal ally for [{base} + {int}] HP and grant {shieldAmount} shield",
+    "cooldown": [3, 3, 3, 2, 2],
+    "effects": ["heal", "buff_shield"],
+    "scaling": {
+        "base": [50, 100, 200, 350, 500],
+        "int": [0.8, 0.85, 0.9, 0.95, 1.0]
+    },
+    "shieldAmount": [30, 60, 120, 210, 300],
+    "target": "ally",
+    "logicKey": "mechanicalRepairLogic"
+},
+"overclock": {
+    "id": "overclock",
+    "name": "Overclock",
+    "description": "All allies gain Increase Speed and 20% action bar but take {hpCost} damage",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "buff_increase_speed", "support"],
+    "duration": [2, 2, 3, 3, 4],
+    "actionBarGrant": 0.2,
+    "hpCost": [20, 40, 60, 80, 100],
+    "target": "all_allies",
+    "logicKey": "overclockLogic"
+},
+"demolish": {
+    "id": "demolish",
+    "name": "Demolish",
+    "description": "Crushing blow dealing [{base} + {attack} + {str}] physical damage with {stunChance} chance to stun",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_stun"],
+    "scaling": {
+        "base": [70, 140, 280, 490, 700],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.3, 0.32, 0.34, 0.36, 0.38]
+    },
+    "stunChance": [0.2, 0.25, 0.3, 0.35, 0.4],
+    "stunDuration": [1, 1, 1, 1, 2],
+    "target": "enemy",
+    "logicKey": "demolishLogic"
+},
+"detonate": {
+    "id": "detonate",
+    "name": "Detonate",
+    "description": "Self-destruct dealing [{base} + {attack} + {str}] physical damage to all enemies",
+    "cooldown": [8, 8, 7, 7, 6],
+    "effects": ["aoe", "physical"],
+    "scaling": {
+        "base": [150, 300, 600, 1050, 1500],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.5, 0.52, 0.54, 0.56, 0.58]
+    },
+    "target": "all_enemies",
+    "logicKey": "detonateLogic"
+},
+"plant_explosive": {
+    "id": "plant_explosive",
+    "name": "Plant Explosive",
+    "description": "Plant bomb that explodes next turn for [{base} + {attack} + {agi}] physical damage",
+    "cooldown": [3, 3, 3, 2, 2],
+    "effects": ["physical", "delayed"],
+    "scaling": {
+        "base": [100, 200, 400, 700, 1000],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.5, 0.52, 0.54, 0.56, 0.58]
+    },
+    "target": "enemy",
+    "logicKey": "plantExplosiveLogic"
+},
+"chain_detonation": {
+    "id": "chain_detonation",
+    "name": "Chain Detonation",
+    "description": "Multiple explosions dealing [{base} + {attack} + {int}] physical damage, hitting {hitCount} times",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "physical"],
+    "scaling": {
+        "base": [60, 120, 240, 420, 600],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.4, 0.42, 0.44, 0.46, 0.48]
+    },
+    "hitCount": [3, 3, 4, 4, 5],
+    "target": "all_enemies",
+    "logicKey": "chainDetonationLogic"
+},
+"volatile_overload": {
+    "id": "volatile_overload",
+    "name": "Volatile Overload",
+    "description": "Become unstable, gaining {damageBonus} damage but taking {selfDamage} per turn for {duration} turns",
+    "cooldown": [6, 6, 5, 5, 4],
+    "effects": ["buff_increase_attack"],
+    "damageBonus": [1.5, 1.6, 1.7, 1.8, 2.0],
+    "selfDamage": [50, 100, 150, 200, 250],
+    "duration": [3, 3, 3, 4, 4],
+    "target": "self",
+    "logicKey": "volatileOverloadLogic"
+},
+"grinding_gears": {
+    "id": "grinding_gears",
+    "name": "Grinding Gears",
+    "description": "Shred enemy dealing [{base} + {attack} + {str}] physical damage and applying 2 stacks of Bleed",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_bleed"],
+    "scaling": {
+        "base": [90, 180, 360, 630, 900],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.35, 0.37, 0.39, 0.41, 0.43]
+    },
+    "bleedStacks": 2,
+    "bleedDuration": [3, 3, 4, 4, 5],
+    "target": "enemy",
+    "logicKey": "grindingGearsLogic"
+},
+"scrap_armor": {
+    "id": "scrap_armor",
+    "name": "Scrap Armor",
+    "description": "Grant {shieldAmount} shield and reflect {reflectPercent} damage for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["buff_shield"],
+    "shieldAmount": [100, 200, 400, 700, 1000],
+    "reflectPercent": [0.2, 0.25, 0.3, 0.35, 0.4],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "self",
+    "logicKey": "scrapArmorLogic"
+},
+"industrial_revolution": {
+    "id": "industrial_revolution",
+    "name": "Industrial Revolution",
+    "description": "All mechanical allies gain {damageBonus} damage and {speedBonus} speed for {duration} turns",
+    "cooldown": [6, 6, 5, 5, 4],
+    "effects": ["aoe", "buff_increase_attack", "buff_increase_speed"],
+    "damageBonus": 1.5,
+    "speedBonus": 1.5,
+    "duration": [2, 2, 3, 3, 4],
+    "target": "all_allies",
+    "logicKey": "industrialRevolutionLogic"
+},
+"piercing_shot": {
+    "id": "piercing_shot",
+    "name": "Piercing Shot",
+    "description": "Arrow that pierces dealing [{base} + {attack} + {agi}] physical damage ignoring {armorPierce} armor",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical"],
+    "scaling": {
+        "base": [65, 130, 260, 455, 650],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.45, 0.47, 0.49, 0.51, 0.53]
+    },
+    "armorPierce": 0.3,
+    "target": "enemy",
+    "logicKey": "piercingShotLogic"
+},
+"natures_guidance": {
+    "id": "natures_guidance",
+    "name": "Nature's Guidance",
+    "description": "Next {attackCount} attacks have {critChance} chance to deal double damage",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["buff"],
+    "attackCount": [2, 2, 3, 3, 4],
+    "critChance": [0.5, 0.55, 0.6, 0.65, 0.7],
+    "target": "self",
+    "logicKey": "naturesGuidanceLogic"
+},
+"thundering_charge": {
+    "id": "thundering_charge",
+    "name": "Thundering Charge",
+    "description": "Charge dealing [{base} + {attack} + {str}] physical damage and stunning for {stunDuration} turn",
+    "cooldown": [3, 3, 3, 2, 2],
+    "effects": ["physical", "debuff_stun"],
+    "scaling": {
+        "base": [80, 160, 320, 560, 800],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.4, 0.42, 0.44, 0.46, 0.48]
+    },
+    "stunDuration": [1, 1, 1, 1, 2],
+    "target": "enemy",
+    "logicKey": "thunderingChargeLogic"
+},
+"defensive_stance": {
+    "id": "defensive_stance",
+    "name": "Defensive Stance",
+    "description": "Gain Increase Defense and taunt target for {duration} turns",
+    "cooldown": [3, 3, 3, 2, 2],
+    "effects": ["buff_increase_defense", "debuff_taunt"],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "enemy",
+    "logicKey": "defensiveStanceLogic"
+},
+"ancestral_vigor": {
+    "id": "ancestral_vigor",
+    "name": "Ancestral Vigor",
+    "description": "Heal all allies for [{base} + {int}] HP and cleanse 1 debuff",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "heal", "cleanse"],
+    "scaling": {
+        "base": [40, 80, 160, 280, 400],
+        "int": [0.9, 0.92, 0.94, 0.96, 0.98]
+    },
+    "target": "all_allies",
+    "logicKey": "ancestralVigorLogic"
+},
+"earth_blessing": {
+    "id": "earth_blessing",
+    "name": "Earth Blessing",
+    "description": "Grant regeneration to ally healing {regenAmount} HP per turn for {duration} turns",
+    "cooldown": [3, 3, 3, 2, 2],
+    "effects": ["heal", "buff"],
+    "regenAmount": [30, 60, 120, 210, 300],
+    "duration": [3, 3, 4, 4, 5],
+    "target": "ally",
+    "logicKey": "earthBlessingLogic"
+},
+"trample": {
+    "id": "trample",
+    "name": "Trample",
+    "description": "AOE trample dealing [{base} + {attack} + {str}] physical damage and reducing speed",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "physical", "debuff_reduce_speed"],
+    "scaling": {
+        "base": [50, 100, 200, 350, 500],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.3, 0.32, 0.34, 0.36, 0.38]
+    },
+    "duration": [2, 2, 2, 3, 3],
+    "target": "all_enemies",
+    "logicKey": "trampleLogic"
+},
+"war_stomp": {
+    "id": "war_stomp",
+    "name": "War Stomp",
+    "description": "Massive stomp dealing [{base} + {attack} + {str}] physical damage to all enemies",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["aoe", "physical"],
+    "scaling": {
+        "base": [100, 200, 400, 700, 1000],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.45, 0.47, 0.49, 0.51, 0.53]
+    },
+    "target": "all_enemies",
+    "logicKey": "warStompLogic"
+},
+"rallying_horn": {
+    "id": "rallying_horn",
+    "name": "Rallying Horn",
+    "description": "All allies gain Increase Attack and {actionBarGrant} action bar",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "buff_increase_attack", "support"],
+    "duration": [2, 2, 3, 3, 4],
+    "actionBarGrant": 0.25,
+    "target": "all_allies",
+    "logicKey": "rallyingHornLogic"
+},
+"honor_charge": {
+    "id": "honor_charge",
+    "name": "Honor Charge",
+    "description": "Devastating charge dealing [{base} + {attack} + {str}] physical damage and knocking back action bar by {knockback}",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["physical", "support"],
+    "scaling": {
+        "base": [120, 240, 480, 840, 1200],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.5, 0.52, 0.54, 0.56, 0.58]
+    },
+    "knockback": [0.3, 0.35, 0.4, 0.45, 0.5],
+    "target": "enemy",
+    "logicKey": "honorChargeLogic"
+},
+"earthquake": {
+    "id": "earthquake",
+    "name": "Earthquake",
+    "description": "Shake the earth dealing [{base} + {attack} + {str}] physical damage and reducing defense",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "physical", "debuff_reduce_defense"],
+    "scaling": {
+        "base": [80, 160, 320, 560, 800],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.4, 0.42, 0.44, 0.46, 0.48]
+    },
+    "duration": [3, 3, 3, 4, 4],
+    "target": "all_enemies",
+    "logicKey": "earthquakeLogic"
+},
+"primal_spirits": {
+    "id": "primal_spirits",
+    "name": "Primal Spirits",
+    "description": "Summon ancestral spirits to grant all allies {shieldAmount} shield and Immune for {immuneDuration} turn",
+    "cooldown": [6, 6, 5, 5, 4],
+    "effects": ["aoe", "buff_shield", "buff_immune"],
+    "shieldAmount": [80, 160, 320, 560, 800],
+    "immuneDuration": [1, 1, 1, 1, 1],
+    "target": "all_allies",
+    "logicKey": "primalSpiritsLogic"
+},
+"bloodhorn_rampage": {
+    "id": "bloodhorn_rampage",
+    "name": "Bloodhorn Rampage",
+    "description": "Enter rampage dealing [{base} + {attack} + {int}] mixed damage and gaining {damageBonus} damage",
+    "cooldown": [7, 7, 6, 6, 5],
+    "effects": ["aoe", "physical", "magical", "buff_increase_attack"],
+    "scaling": {
+        "base": [150, 300, 600, 1050, 1500],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.6, 0.62, 0.64, 0.66, 0.68]
+    },
+    "damageBonus": 2.0,
+    "duration": [3, 3, 3, 4, 4],
+    "target": "all_enemies",
+    "logicKey": "bloodhornRampageLogic"
+},
+"brutal_cleave": {
+    "id": "brutal_cleave",
+    "name": "Brutal Cleave",
+    "description": "Cleaving attack dealing [{base} + {attack} + {str}] physical damage to target and adjacent enemies",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical"],
+    "scaling": {
+        "base": [85, 170, 340, 595, 850],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.35, 0.37, 0.39, 0.41, 0.43]
+    },
+    "target": "enemy",
+    "logicKey": "brutalCleaveLogic"
+},
+"orcish_resilience": {
+    "id": "orcish_resilience",
+    "name": "Orcish Resilience",
+    "description": "Remove all debuffs and gain Increase Defense for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["cleanse", "buff_increase_defense"],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "self",
+    "logicKey": "orcishResilienceLogic"
+},
+"berserker_fury": {
+    "id": "berserker_fury",
+    "name": "Berserker Fury",
+    "description": "Gain damage based on missing HP, up to {maxBonus} at 25% HP",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["passive"],
+    "passive": true,
+    "maxBonus": [1.5, 1.6, 1.7, 1.8, 2.0],
+    "target": "self",
+    "logicKey": "berserkerFuryLogic"
+},
+"blood_frenzy_orc": {
+    "id": "blood_frenzy_orc",
+    "name": "Blood Frenzy",
+    "description": "Sacrifice {hpCost} HP to deal [{base} + {attack} + {str}] physical damage and gain Speed",
+    "cooldown": [3, 3, 3, 2, 2],
+    "effects": ["physical", "buff_increase_speed"],
+    "hpCost": [0.1, 0.12, 0.14, 0.16, 0.18],
+    "scaling": {
+        "base": [100, 200, 400, 700, 1000],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.5, 0.52, 0.54, 0.56, 0.58]
+    },
+    "duration": [2, 2, 2, 3, 3],
+    "target": "enemy",
+    "logicKey": "bloodFrenzyOrcLogic"
+},
+"blood_ritual": {
+    "id": "blood_ritual",
+    "name": "Blood Ritual",
+    "description": "Deal [{base} + {attack} + {int}] magical damage and heal self for {healPercent} of damage dealt",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["magical", "heal"],
+    "scaling": {
+        "base": [70, 140, 280, 490, 700],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.7, 0.72, 0.74, 0.76, 0.78]
+    },
+    "healPercent": [0.5, 0.55, 0.6, 0.65, 0.7],
+    "target": "enemy",
+    "logicKey": "bloodRitualLogic"
+},
+"ancestral_curse": {
+    "id": "ancestral_curse",
+    "name": "Ancestral Curse",
+    "description": "Curse all enemies with Reduce Attack and Blight for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "debuff_reduce_attack", "debuff_blight"],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "all_enemies",
+    "logicKey": "ancestralCurseLogic"
+},
+"wolf_bite": {
+    "id": "wolf_bite",
+    "name": "Wolf Bite",
+    "description": "Savage bite dealing [{base} + {attack} + {agi}] physical damage with {bleedChance} bleed chance",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_bleed"],
+    "scaling": {
+        "base": [75, 150, 300, 525, 750],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.5, 0.52, 0.54, 0.56, 0.58]
+    },
+    "bleedChance": [0.4, 0.45, 0.5, 0.55, 0.6],
+    "bleedDuration": [2, 2, 3, 3, 4],
+    "target": "enemy",
+    "logicKey": "wolfBiteLogic"
+},
+"pack_tactics": {
+    "id": "pack_tactics",
+    "name": "Pack Tactics",
+    "description": "All allies gain {speedBonus} speed and {actionBarGrant} action bar",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "buff_increase_speed", "support"],
+    "duration": [2, 2, 3, 3, 4],
+    "speedBonus": 1.3,
+    "actionBarGrant": 0.15,
+    "target": "all_allies",
+    "logicKey": "packTacticsLogic"
+},
+"blade_storm": {
+    "id": "blade_storm",
+    "name": "Blade Storm",
+    "description": "Whirling blades hit all enemies {hitCount} times for [{base} + {attack} + {agi}] damage each",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "physical"],
+    "scaling": {
+        "base": [60, 120, 240, 420, 600],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.4, 0.42, 0.44, 0.46, 0.48]
+    },
+    "hitCount": [3, 3, 3, 4, 4],
+    "target": "all_enemies",
+    "logicKey": "bladeStormLogic"
+},
+"counter_strike": {
+    "id": "counter_strike",
+    "name": "Counter Strike",
+    "description": "Next {counterCount} attacks are countered for {damagePercent} damage",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["buff"],
+    "counterCount": [2, 2, 3, 3, 4],
+    "damagePercent": [0.5, 0.6, 0.7, 0.8, 0.9],
+    "target": "self",
+    "logicKey": "counterStrikeLogic"
+},
+"wind_walk": {
+    "id": "wind_walk",
+    "name": "Wind Walk",
+    "description": "Become invisible gaining Immune and {speedBonus} speed for {duration} turn",
+    "cooldown": [6, 6, 5, 5, 4],
+    "effects": ["buff_immune", "buff_increase_speed"],
+    "duration": [1, 1, 1, 1, 1],
+    "speedBonus": 2.0,
+    "target": "self",
+    "logicKey": "windWalkLogic"
+},
+"warlords_command": {
+    "id": "warlords_command",
+    "name": "Warlord's Command",
+    "description": "All allies gain {damageBonus} damage and become immune to debuffs for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "buff_increase_attack"],
+    "damageBonus": 1.75,
+    "duration": [2, 2, 2, 3, 3],
+    "target": "all_allies",
+    "logicKey": "warlordsCommandLogic"
+},
+"blood_rage": {
+    "id": "blood_rage",
+    "name": "Blood Rage",
+    "description": "Enter blood rage gaining {damageBonus} damage and {speedBonus} speed for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["buff_increase_attack", "buff_increase_speed"],
+    "damageBonus": 2.0,
+    "speedBonus": 1.5,
+    "duration": [3, 3, 3, 4, 4],
+    "target": "self",
+    "logicKey": "bloodRageLogic"
+},
+"call_of_war": {
+    "id": "call_of_war",
+    "name": "Call of War",
+    "description": "Summon {summonCount} Orc Warriors to fight",
+    "cooldown": [7, 7, 6, 6, 5],
+    "effects": ["summon"],
+    "summonCount": [2, 2, 2, 3, 3],
+    "summonLevel": [180, 185, 190, 195, 200],
+    "target": "self",
+    "logicKey": "callOfWarLogic"
+},
 "win": {
     "id": "win",
     "name": "Win",
