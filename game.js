@@ -591,6 +591,48 @@ getDungeonCollectionStats(dungeonId) {
     };
 }
 
+    getTotalCollectionCount() {
+    let totalCollected = 0;
+    Object.keys(this.collectionLog).forEach(dungeonId => {
+        const dungeonCollection = this.collectionLog[dungeonId] || {};
+        totalCollected += Object.keys(dungeonCollection).length;
+    });
+    return totalCollected;
+}
+
+getCollectionDropBonus() {
+    // Each collection slot adds 0.03% chance, capped at 90%
+    const totalSlots = this.getTotalCollectionCount();
+    const bonusChance = Math.min(totalSlots * 0.0003, 0.9); // 0.03% = 0.0003
+    return bonusChance;
+}
+
+getItemCollectionBonuses(itemId) {
+    // Check all dungeons for this item's collection status
+    const bonuses = {
+        quality1Bonus: 0,
+        quality2Bonus: 0,
+        quality3Bonus: 0,
+        quality4Bonus: 0
+    };
+    
+    // Search through all dungeon collections
+    Object.keys(this.collectionLog).forEach(dungeonId => {
+        const dungeonCollection = this.collectionLog[dungeonId] || {};
+        
+        // Check each quality level (1-4 stars)
+        for (let stars = 1; stars <= 4; stars++) {
+            const collectionKey = `${itemId}_${stars}`;
+            if (dungeonCollection[collectionKey]) {
+                // Apply +2 bonus to the corresponding quality slot
+                bonuses[`quality${stars}Bonus`] = 2;
+            }
+        }
+    });
+    
+    return bonuses;
+}
+
     openStash(family) {
         console.log(`Opening ${family.name} stash`);
         this.currentStashFamily = family;
