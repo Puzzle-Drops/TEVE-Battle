@@ -445,65 +445,221 @@
       }
     },
     "gold_mine": {
-      "id": "gold_mine",
-      "name": "Gold Mine",
-      "boss": "Goblin King",
-      "tier": "Hard",
-      "subtitle": "Hard 1",
-      "level": 150,
-      "waves": [
-        {
-          "enemies": [
-            { "id": "goblin_king", "level": 150 }
-          ]
-        }
-      ],
-      "rewards": {
-        "gold": 38400,
-        "exp": 92000,
-        "items": ["gold_greedhelm", "gold_vaultplate", "gold_minerstrides", "gold_pickaxe", "gold_coinshield", "gold_nugget", "gold_kingsbane"]
-      }
+  "id": "gold_mine",
+  "name": "Gold Mine",
+  "boss": "Mining Devastator",
+  "tier": "Hard",
+  "subtitle": "Hard 1",
+  "level": 150,
+  "waves": [
+    {
+      "enemies": [
+        { "id": "miner_foreman", "level": 130 },
+        { "id": "miner_foreman", "level": 130 },
+        { "id": "demolitions_technician", "level": 132 }
+      ]
     },
-    "centaur_cliffs": {
-      "id": "centaur_cliffs",
-      "name": "Centaur Cliffs",
-      "boss": "Centaur Bloodhorn",
-      "tier": "Hard",
-      "subtitle": "Hard 2",
-      "level": 175,
-      "waves": [
-        {
-          "enemies": [
-            { "id": "centaur_bloodhorn", "level": 175 }
-          ]
-        }
-      ],
-      "rewards": {
-        "gold": 76800,
-        "exp": 184000,
-        "items": ["cliff_warhelm", "cliff_stampmail", "cliff_hoofguards", "cliff_lance", "cliff_tribeguard", "cliff_warhorn", "cliff_bloodspear"]
-      }
+    {
+      "enemies": [
+        { "id": "repair_engineer", "level": 135 },
+        { "id": "blast_miner", "level": 136 },
+        { "id": "miner_foreman", "level": 134 }
+      ]
     },
-    "orc_warlands": {
-      "id": "orc_warlands",
-      "name": "Orc Warlands",
-      "boss": "Orc Shaman",
-      "tier": "Hard",
-      "subtitle": "Hard 3",
-      "level": 200,
-      "waves": [
-        {
-          "enemies": [
-            { "id": "orc_shaman", "level": 200 }
-          ]
-        }
-      ],
-      "rewards": {
-        "gold": 153600,
-        "exp": 368000,
-        "items": ["orc_skullcap", "orc_warplate", "orc_battlegrieves", "orc_cleaver", "orc_bulwark", "orc_totem", "orc_doomhammer"]
-      }
+    {
+      "enemies": [
+        { "id": "demolitions_technician", "level": 140 },
+        { "id": "demolitions_technician", "level": 140 },
+        { "id": "repair_engineer", "level": 138 }
+      ]
     },
+    {
+      "enemies": [
+        { "id": "powder_keg_specialist", "level": 150 },
+        { "id": "repair_engineer", "level": 145 },
+        { "id": "miner_foreman", "level": 143 },
+        { "id": "blast_miner", "level": 144 },
+        { "id": "demolitions_technician", "level": 142 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "blast_miner", "level": 148 },
+        { "id": "blast_miner", "level": 148 },
+        { "id": "demolitions_technician", "level": 145 },
+        { "id": "repair_engineer", "level": 144 },
+        { "id": "miner_foreman", "level": 146 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "miner_foreman", "level": 148 },
+        { "id": "demolitions_technician", "level": 150 },
+        { "id": "demolitions_technician", "level": 150 },
+        { "id": "blast_miner", "level": 149 },
+        { "id": "repair_engineer", "level": 147 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "mining_devastator", "level": 150 },
+        { "id": "repair_engineer", "level": 148 },
+        { "id": "repair_engineer", "level": 148 },
+        { "id": "miner_foreman", "level": 149 },
+        { "id": "blast_miner", "level": 149 }
+      ]
+    }
+  ],
+  "rewards": {
+    "gold": 38400,
+    "exp": 92000,
+    "items": ["gold_greedhelm", "gold_vaultplate", "gold_minerstrides", "gold_pickaxe", "gold_coinshield", "gold_nugget", "gold_kingsbane"]
+  }
+},
+"centaur_cliffs": {
+  "id": "centaur_cliffs",
+  "name": "Centaur Cliffs",
+  "boss": "Centaur Bloodhorn",
+  "tier": "Hard",
+  "subtitle": "Hard 2",
+  "level": 175,
+  "waves": [
+    {
+      "enemies": [
+        { "id": "centaur_ranger", "level": 155 },
+        { "id": "centaur_ranger", "level": 155 },
+        { "id": "centaur_lancer", "level": 157 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "centaur_mystic", "level": 160 },
+        { "id": "centaur_lancer", "level": 162 },
+        { "id": "centaur_stampeder", "level": 161 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "centaur_ranger", "level": 165 },
+        { "id": "centaur_stampeder", "level": 166 },
+        { "id": "centaur_mystic", "level": 163 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "centaur_warmaster", "level": 175 },
+        { "id": "centaur_mystic", "level": 170 },
+        { "id": "centaur_lancer", "level": 168 },
+        { "id": "centaur_stampeder", "level": 169 },
+        { "id": "centaur_ranger", "level": 167 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "centaur_stampeder", "level": 173 },
+        { "id": "centaur_stampeder", "level": 173 },
+        { "id": "centaur_ranger", "level": 170 },
+        { "id": "centaur_mystic", "level": 169 },
+        { "id": "centaur_lancer", "level": 171 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "centaur_lancer", "level": 174 },
+        { "id": "centaur_lancer", "level": 174 },
+        { "id": "centaur_ranger", "level": 175 },
+        { "id": "centaur_stampeder", "level": 175 },
+        { "id": "centaur_mystic", "level": 172 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "centaur_bloodhorn", "level": 175 },
+        { "id": "centaur_mystic", "level": 173 },
+        { "id": "centaur_mystic", "level": 173 },
+        { "id": "centaur_lancer", "level": 174 },
+        { "id": "centaur_stampeder", "level": 174 }
+      ]
+    }
+  ],
+  "rewards": {
+    "gold": 76800,
+    "exp": 184000,
+    "items": ["cliff_warhelm", "cliff_stampmail", "cliff_hoofguards", "cliff_lance", "cliff_tribeguard", "cliff_warhorn", "cliff_bloodspear"]
+  }
+},
+"orc_warlands": {
+  "id": "orc_warlands",
+  "name": "Orc Warlands",
+  "boss": "Orc Warlord",
+  "tier": "Hard",
+  "subtitle": "Hard 3",
+  "level": 200,
+  "waves": [
+    {
+      "enemies": [
+        { "id": "orc_warrior", "level": 180 },
+        { "id": "orc_warrior", "level": 180 },
+        { "id": "orc_berserker", "level": 182 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "orc_blood_shaman", "level": 185 },
+        { "id": "orc_wolf_rider", "level": 186 },
+        { "id": "orc_warrior", "level": 184 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "orc_berserker", "level": 190 },
+        { "id": "orc_berserker", "level": 190 },
+        { "id": "orc_blood_shaman", "level": 188 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "orc_blademaster", "level": 200 },
+        { "id": "orc_blood_shaman", "level": 195 },
+        { "id": "orc_warrior", "level": 193 },
+        { "id": "orc_wolf_rider", "level": 194 },
+        { "id": "orc_berserker", "level": 196 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "orc_wolf_rider", "level": 198 },
+        { "id": "orc_wolf_rider", "level": 198 },
+        { "id": "orc_berserker", "level": 196 },
+        { "id": "orc_blood_shaman", "level": 194 },
+        { "id": "orc_warrior", "level": 197 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "orc_warrior", "level": 199 },
+        { "id": "orc_berserker", "level": 200 },
+        { "id": "orc_berserker", "level": 200 },
+        { "id": "orc_wolf_rider", "level": 199 },
+        { "id": "orc_blood_shaman", "level": 197 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "orc_warlord", "level": 200 },
+        { "id": "orc_blood_shaman", "level": 198 },
+        { "id": "orc_warrior", "level": 198 },
+        { "id": "orc_berserker", "level": 199 },
+        { "id": "orc_wolf_rider", "level": 199 }
+      ]
+    }
+  ],
+  "rewards": {
+    "gold": 153600,
+    "exp": 368000,
+    "items": ["orc_skullcap", "orc_warplate", "orc_battlegrieves", "orc_cleaver", "orc_bulwark", "orc_totem", "orc_doomhammer"]
+  }
+},
     "snapdragon_swamp": {
       "id": "snapdragon_swamp",
       "name": "Snapdragon Swamp",
