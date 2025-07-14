@@ -40,32 +40,71 @@ class Item {
         this.value4 = template.value4 || Math.floor(this.level / 2);
 	this.value5 = 5; // + 5 all stats after refining a perfect item
         
-        // Only roll if not loading from save
-        if (!skipRoll) {
-            this.rollItem();
-        }
+// Store collection bonuses if provided (only for new drops)
+this.collectionBonuses = null;
+
+// Only roll if not loading from save
+if (!skipRoll) {
+    this.rollItem();
+}
         
         //console.log(`Item created: ${this.name} (${this.getRarity()}) - Quality: ${this.getQualityPercent()}%`);
     }
     
-rollItem() {
+rollItem(collectionBonuses = null) {
+    // Store collection bonuses if provided
+    if (collectionBonuses) {
+        this.collectionBonuses = collectionBonuses;
+    }
+    
     // First roll is guaranteed, rolls 1-5 quality
     this.quality1 = Math.floor(Math.random() * 5) + 1;
-    //console.log(`  Roll 1 (${this.roll1}): ${this.quality1}/5`);
+    console.log(`  Roll 1 (${this.roll1}): ${this.quality1}/5`);
+	
+    // Apply collection bonus to quality1 if available
+    if (this.collectionBonuses && this.collectionBonuses.quality1Bonus) {
+        this.quality1 = Math.min(5, this.quality1 + this.collectionBonuses.quality1Bonus);
+    }
     
-    // Second roll has 45% chance, but only if roll2 stat exists
-    if (this.roll2 && Math.random() < 0.45) {
+    console.log(`  Roll 1 (${this.roll1}): ${this.quality1}/5`);
+    
+    // Check for additional roll chance from collection
+    let bonusRollChance = 0;
+    if (this.collectionBonuses && this.collectionBonuses.globalDropBonus) {
+        bonusRollChance = this.collectionBonuses.globalDropBonus;
+    }
+    
+    // Second roll has 45% chance + collection bonus
+    if (this.roll2 && Math.random() < (0.45 + bonusRollChance)) {
         this.quality2 = Math.floor(Math.random() * 5) + 1;
+        
+        // Apply collection bonus to quality2 if available
+        if (this.collectionBonuses && this.collectionBonuses.quality2Bonus) {
+            this.quality2 = Math.min(5, this.quality2 + this.collectionBonuses.quality2Bonus);
+        }
+        
         //console.log(`  Roll 2 (${this.roll2}): ${this.quality2}/5`);
         
-        // Third roll has 40% chance (only if got second and roll3 exists)
-        if (this.roll3 && Math.random() < 0.4) {
+        // Third roll has 40% chance + collection bonus (only if got second and roll3 exists)
+        if (this.roll3 && Math.random() < (0.4 + bonusRollChance)) {
             this.quality3 = Math.floor(Math.random() * 5) + 1;
+            
+            // Apply collection bonus to quality3 if available
+            if (this.collectionBonuses && this.collectionBonuses.quality3Bonus) {
+                this.quality3 = Math.min(5, this.quality3 + this.collectionBonuses.quality3Bonus);
+            }
+            
             //console.log(`  Roll 3 (${this.roll3}): ${this.quality3}/5`);
             
-            // Fourth roll has 35% chance (only if third and roll4 exists)
-            if (this.roll4 && Math.random() < 0.35) {
+            // Fourth roll has 35% chance + collection bonus (only if third and roll4 exists)
+            if (this.roll4 && Math.random() < (0.35 + bonusRollChance)) {
                 this.quality4 = Math.floor(Math.random() * 5) + 1;
+                
+                // Apply collection bonus to quality4 if available
+                if (this.collectionBonuses && this.collectionBonuses.quality4Bonus) {
+                    this.quality4 = Math.min(5, this.quality4 + this.collectionBonuses.quality4Bonus);
+                }
+                
                 //console.log(`  Roll 4 (${this.roll4}): ${this.quality4}/5`);
             }
         }
