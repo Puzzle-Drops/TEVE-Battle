@@ -229,7 +229,60 @@
       "waves": [
         {
           "enemies": [
-            { "id": "banshee_queen", "level": 75 }
+            { "id": "mourning_banshee", "level": 60 },
+            { "id": "mourning_banshee", "level": 60 },
+            { "id": "bog_sludge", "level": 66 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "corrupted_ent", "level": 68 },
+            { "id": "corrupted_ent", "level": 68 },
+            { "id": "shadow_wraith", "level": 70 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "bog_sludge", "level": 68 },
+            { "id": "shadow_wraith", "level": 71 },
+            { "id": "shadow_wraith", "level": 71 },
+            { "id": "mourning_banshee", "level": 70 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "corrupted_ent", "level": 68 },
+            { "id": "corrupted_ent", "level": 68 },
+            { "id": "bog_sludge", "level": 66 },
+            { "id": "bog_sludge", "level": 66 },
+            { "id": "mourning_banshee", "level": 70 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "mourning_banshee", "level": 73 },
+            { "id": "mourning_banshee", "level": 71 },
+            { "id": "mourning_banshee", "level": 71 },
+            { "id": "corrupted_ent", "level": 70 },
+            { "id": "shadow_wraith", "level": 73 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "shadow_wraith", "level": 73 },
+            { "id": "shadow_wraith", "level": 73 },
+            { "id": "bog_sludge", "level": 68 },
+            { "id": "bog_sludge", "level": 68 },
+            { "id": "corrupted_ent", "level": 72 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "banshee_queen", "level": 75 },
+            { "id": "mourning_banshee", "level": 73 },
+            { "id": "mourning_banshee", "level": 73 },
+            { "id": "shadow_wraith", "level": 74 },
+            { "id": "shadow_wraith", "level": 74 }
           ]
         }
       ],
@@ -249,7 +302,63 @@
       "waves": [
         {
           "enemies": [
-            { "id": "stitch", "level": 100 }
+            { "id": "skeleton_warrior", "level": 85 },
+            { "id": "skeleton_warrior", "level": 85 },
+            { "id": "skeleton_warrior", "level": 85 },
+            { "id": "skeleton_archer", "level": 85 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "skeleton_archer", "level": 88 },
+            { "id": "skeleton_archer", "level": 88 },
+            { "id": "skeleton_mage", "level": 88 },
+            { "id": "skeleton_mage", "level": 88 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "necromancer", "level": 90 },
+            { "id": "skeleton_warrior", "level": 88 },
+            { "id": "skeleton_warrior", "level": 88 },
+            { "id": "skeleton_archer", "level": 88 },
+            { "id": "skeleton_archer", "level": 88 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "vampire_lord", "level": 95 },
+            { "id": "skeleton_mage", "level": 90 },
+            { "id": "skeleton_mage", "level": 90 },
+            { "id": "necromancer", "level": 92 },
+            { "id": "skeleton_warrior", "level": 90 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "necromancer", "level": 94 },
+            { "id": "necromancer", "level": 94 },
+            { "id": "skeleton_warrior", "level": 92 },
+            { "id": "skeleton_warrior", "level": 92 },
+            { "id": "skeleton_mage", "level": 92 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "skeleton_archer", "level": 93 },
+            { "id": "skeleton_archer", "level": 93 },
+            { "id": "skeleton_archer", "level": 93 },
+            { "id": "necromancer", "level": 95 },
+            { "id": "skeleton_mage", "level": 93 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "stitch", "level": 100 },
+            { "id": "necromancer", "level": 98 },
+            { "id": "necromancer", "level": 98 },
+            { "id": "skeleton_warrior", "level": 95 },
+            { "id": "skeleton_mage", "level": 95 }
           ]
         }
       ],
@@ -269,7 +378,63 @@
       "waves": [
         {
           "enemies": [
-            { "id": "bandit_lord", "level": 125 }
+            { "id": "bandit_bruiser", "level": 105 },
+            { "id": "bandit_bruiser", "level": 105 },
+            { "id": "bandit_assassin", "level": 108 },
+            { "id": "bandit_assassin", "level": 108 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "bandit_mage", "level": 115 },
+            { "id": "bandit_mage", "level": 115 },
+            { "id": "bandit_enforcer", "level": 118 },
+            { "id": "bandit_bruiser", "level": 110 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "bandit_assassin", "level": 110 },
+            { "id": "bandit_assassin", "level": 110 },
+            { "id": "bandit_mage", "level": 115 },
+            { "id": "bandit_enforcer", "level": 118 },
+            { "id": "bandit_enforcer", "level": 118 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "bandit_captain", "level": 120 },
+            { "id": "bandit_bruiser", "level": 112 },
+            { "id": "bandit_bruiser", "level": 112 },
+            { "id": "bandit_assassin", "level": 115 },
+            { "id": "bandit_mage", "level": 118 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "bandit_enforcer", "level": 120 },
+            { "id": "bandit_enforcer", "level": 120 },
+            { "id": "bandit_enforcer", "level": 120 },
+            { "id": "bandit_mage", "level": 123 },
+            { "id": "bandit_assassin", "level": 122 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "bandit_mage", "level": 123 },
+            { "id": "bandit_mage", "level": 123 },
+            { "id": "bandit_assassin", "level": 122 },
+            { "id": "bandit_assassin", "level": 122 },
+            { "id": "bandit_bruiser", "level": 120 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "bandit_lord", "level": 125 },
+            { "id": "bandit_enforcer", "level": 122 },
+            { "id": "bandit_enforcer", "level": 122 },
+            { "id": "bandit_mage", "level": 125 },
+            { "id": "bandit_bruiser", "level": 123 }
           ]
         }
       ],
