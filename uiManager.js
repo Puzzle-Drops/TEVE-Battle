@@ -639,6 +639,7 @@ animateTrails() {
 showHeroes() {
     this.hideAllScreens();
     this.closeHeroInfo();
+    this.currentGearFilter = null;
     this.game.currentScreen = 'heroesScreen';
     document.getElementById('heroesScreen').style.display = 'block';
     
@@ -747,6 +748,7 @@ if (this.game.tutorial) {
         this.hideAllScreens();
         this.closeHeroInfo();
         this.currentGearFilter = null;
+        this.currentStashFilter = null;
         this.game.currentScreen = 'stashScreen';
         document.getElementById('stashScreen').style.display = 'block';
         this.renderStashList();
@@ -799,17 +801,14 @@ if (this.game.tutorial) {
         const items = this.game.stashes[family.name].items;
         const goldAmount = this.game.stashes[family.name].gold.toLocaleString();
         
-        // Always show filter, but default based on item count
-        let filterValue = 'all';
-        if (items.length > 250) {
-            // Check if we already have a filter value for this stash
-            if (!this.currentStashFilter) {
-                this.currentStashFilter = 'trinket'; // Only set default on first open
-            }
+        // Always show filter, but default based on item count only if no filter is set
+        let filterValue;
+        if (this.currentStashFilter) {
+            // User has selected a filter, always use it
             filterValue = this.currentStashFilter;
         } else {
-            // For smaller stashes, default to all unless user has already selected something
-            filterValue = this.currentStashFilter || 'all';
+            // No filter selected yet, use smart defaults
+            filterValue = items.length > 250 ? 'trinket' : 'all';
         }
         
         // Build header HTML with filter (always show)
@@ -950,7 +949,7 @@ showArena() {
         
         // Update the content
         rollChancesDiv.innerHTML = `
-            <div class="rollChancesTitle">Chances at additional item rolls (+${bonusPercent.toFixed(2)}% per slot unlocked):</div>
+            <div class="rollChancesTitle">Chances at additional item rolls: +${bonusPercent.toFixed(2)}% (.03% per slot unlocked):</div>
             <div class="rollChancesList">
                 <div class="rollChanceItem">Roll 2: <span class="rollChanceValue">${roll2Chance.toFixed(2)}%</span> <span class="rollChanceBase">(Base 45%)</span></div>
                 <div class="rollChanceItem">Roll 3: <span class="rollChanceValue">${roll3Chance.toFixed(2)}%</span> <span class="rollChanceBase">(Base 40%)</span></div>
@@ -2308,12 +2307,14 @@ updateHeroSelection() {
         const stash = this.game.stashes[familyName];
         const items = stash.items;
         
-        // Always show filter, but default based on item count
-        let filterValue = 'all';
-        if (items.length > 100) {
-            filterValue = this.currentGearFilter || 'trinket';
+        // Always show filter, but default based on item count only if no filter is set
+        let filterValue;
+        if (this.currentGearFilter) {
+            // User has selected a filter, always use it
+            filterValue = this.currentGearFilter;
         } else {
-            filterValue = this.currentGearFilter || 'all';
+            // No filter selected yet, use smart defaults
+            filterValue = items.length > 100 ? 'trinket' : 'all';
         }
         
         // Filter items based on selection
