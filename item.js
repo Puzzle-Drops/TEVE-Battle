@@ -59,14 +59,13 @@ rollItem(collectionBonuses = null) {
     
     // First roll is guaranteed, rolls 1-5 quality
     this.quality1 = Math.floor(Math.random() * 5) + 1;
-    console.log(`  Roll 1 (${this.roll1}): ${this.quality1}/5`);
 	
     // Apply collection bonus to quality1 if available
     if (this.collectionBonuses && this.collectionBonuses.quality1Bonus) {
         this.quality1 = Math.min(5, this.quality1 + this.collectionBonuses.quality1Bonus);
     }
     
-    console.log(`  Roll 1 (${this.roll1}): ${this.quality1}/5`);
+    //console.log(`  Roll 1 (${this.roll1}): ${this.quality1}/5`);
     
     // Check for additional roll chance from collection
     let bonusRollChance = 0;
