@@ -74,12 +74,6 @@
         },
         {
           "enemies": [
-            { "id": "aggressive_satyr", "level": 3 },
-            { "id": "aggressive_satyr", "level": 3 }
-          ]
-        },
-        {
-          "enemies": [
             { "id": "satyr_instigator", "level": 5 },
             { "id": "aggressive_satyr", "level": 3 },
             { "id": "aggressive_satyr", "level": 3 },
@@ -90,7 +84,7 @@
       ],
       "rewards": {
         "gold": 350,
-        "exp": 2000,
+        "exp": 1000,
         "items": ["glade_horncap", "glade_hidewrap", "glade_stepbinds", "glade_fangblade", "glade_wicker_guard", "glade_focus", "glade_shadowfang"]
       }
     },
@@ -104,14 +98,9 @@
       "waves": [
         {
           "enemies": [
-            { "id": "murkin_warrior", "level": 10 },
-            { "id": "murkin_warrior", "level": 10 }
-          ]
-        },
-        {
-          "enemies": [
             { "id": "murkin_warrior", "level": 11 },
-            { "id": "murkin_brawler", "level": 14 }
+            { "id": "murkin_brawler", "level": 14 },
+            { "id": "murkin_initiate", "level": 12 }
           ]
         },
         {
@@ -149,7 +138,7 @@
       ],
       "rewards": {
         "gold": 800,
-        "exp": 4000,
+        "exp": 2200,
         "items": ["wetland_miretooth", "wetland_soddenwrap", "wetland_fenstompers", "wetland_blightmaul", "wetland_brackenguard", "wetland_mirecharm", "wetland_murkspire"]
       }
     },
@@ -177,45 +166,35 @@
         },
         {
           "enemies": [
-            { "id": "ice_troll_king", "level": 40 },
+            { "id": "ice_troll_king", "level": 45 },
             { "id": "ice_troll", "level": 38 },
-            { "id": "ice_troll", "level": 38 }
-          ]
-        },
-        {
-          "enemies": [
-            { "id": "water_elemental", "level": 40 },
-            { "id": "water_elemental", "level": 40 },
-            { "id": "water_elemental", "level": 40 },
-            { "id": "ice_bear", "level": 42 }
+            { "id": "ice_troll", "level": 38 },
+            { "id": "water_elemental", "level": 38 },
+            { "id": "water_elemental", "level": 38 }
           ]
         },
         {
           "enemies": [
             { "id": "frostfang", "level": 45 },
             { "id": "frost_wolf", "level": 40 },
-            { "id": "frost_wolf", "level": 40 }
-          ]
-        },
-        {
-          "enemies": [
-            { "id": "ice_bear", "level": 43 },
-            { "id": "ice_bear", "level": 43 },
-            { "id": "water_elemental", "level": 42 },
-            { "id": "ice_troll", "level": 41 }
+            { "id": "frost_wolf", "level": 40 },
+            { "id": "water_elemental", "level": 38 },
+            { "id": "water_elemental", "level": 38 }
           ]
         },
         {
           "enemies": [
             { "id": "grizzly_ice_bear", "level": 50 },
             { "id": "ice_bear", "level": 45 },
-            { "id": "ice_bear", "level": 45 }
+            { "id": "frost_wolf", "level": 45 },
+            { "id": "water_elemental", "level": 42 },
+            { "id": "ice_troll", "level": 41 }
           ]
         }
       ],
       "rewards": {
         "gold": 2400,
-        "exp": 8000,
+        "exp": 4400,
         "items": ["icy_wolfhood", "icy_mauler_plate", "icy_tundrastride", "icy_howler", "icy_fangguard", "icy_shardcore", "icy_frostfang"]
       }
     },
