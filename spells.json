@@ -1641,15 +1641,15 @@
 "blast_charge": {
     "id": "blast_charge",
     "name": "Blast Charge",
-    "description": "Throw explosive dealing [{base} + {attack} + {agi}] physical damage to target and {splashPercent} to adjacent enemies",
+    "description": "Explosive dealing [{base} + {attack} + {agi}] damage to target and {splashPercent} damage to all other enemies",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical", "aoe"],
     "scaling": {
-        "base": [55, 110, 220, 385, 550],
+        "base": [45, 90, 180, 315, 450],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
-        "agi": [0.4, 0.42, 0.44, 0.46, 0.48]
+        "agi": [0.35, 0.37, 0.39, 0.41, 0.43]
     },
-    "splashPercent": [0.3, 0.35, 0.4, 0.45, 0.5],
+    "splashPercent": [0.5, 0.5, 0.5, 0.5, 0.5],
     "target": "enemy",
     "logicKey": "blastChargeLogic"
 },
@@ -1980,14 +1980,15 @@
 "brutal_cleave": {
     "id": "brutal_cleave",
     "name": "Brutal Cleave",
-    "description": "Cleaving attack dealing [{base} + {attack} + {str}] physical damage to target and adjacent enemies",
+    "description": "Cleaving attack dealing [{base} + {attack} + {str}] damage to target and {cleavePercent} damage to all other enemies",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical"],
     "scaling": {
-        "base": [85, 170, 340, 595, 850],
+        "base": [70, 140, 280, 490, 700],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
-        "str": [0.35, 0.37, 0.39, 0.41, 0.43]
+        "str": [0.3, 0.32, 0.34, 0.36, 0.38]
     },
+    "cleavePercent": [0.5, 0.5, 0.5, 0.5, 0.5],
     "target": "enemy",
     "logicKey": "brutalCleaveLogic"
 },
@@ -2121,14 +2122,14 @@
 "warlords_command": {
     "id": "warlords_command",
     "name": "Warlord's Command",
-    "description": "All allies gain {damageBonus} damage and become immune to debuffs for {duration} turns",
+    "description": "Cleanse all allies, grant {damageBonus} damage and Immune buff for {duration} turns",
     "cooldown": [5, 5, 4, 4, 3],
-    "effects": ["aoe", "buff_increase_attack"],
+    "effects": ["aoe", "buff_increase_attack", "buff_immune", "cleanse"],
     "damageBonus": 1.75,
     "duration": [2, 2, 2, 3, 3],
     "target": "all_allies",
     "logicKey": "warlordsCommandLogic"
-},
+}
 "blood_rage": {
     "id": "blood_rage",
     "name": "Blood Rage",
