@@ -1733,10 +1733,17 @@ blastChargeLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const splashPercent = spell.splashPercent[levelIndex] || spell.splashPercent[0];
     
     const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.agi * agiScaling);
+    
+    // Full damage to primary target
     battle.dealDamage(caster, target, damage, 'physical');
     
-    // Needs special implementation for splash damage to adjacent enemies
-    battle.log(`Blast Charge needs splash damage implementation!`);
+    // Splash damage to all other enemies
+    const enemies = battle.getEnemies(caster);
+    enemies.forEach(enemy => {
+        if (enemy.isAlive && enemy !== target) {
+            battle.dealDamage(caster, enemy, damage * splashPercent, 'physical');
+        }
+    });
 },
 
 shrapnelStormLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -2086,12 +2093,20 @@ brutalCleaveLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
     const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
     const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0];
+    const cleavePercent = spell.cleavePercent[levelIndex] || spell.cleavePercent[0];
     
     const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.str * strScaling);
+    
+    // Full damage to primary target
     battle.dealDamage(caster, target, damage, 'physical');
     
-    // Needs special implementation for cleave to adjacent enemies
-    battle.log(`Brutal Cleave needs adjacent enemy damage implementation!`);
+    // Cleave damage to all other enemies
+    const enemies = battle.getEnemies(caster);
+    enemies.forEach(enemy => {
+        if (enemy.isAlive && enemy !== target) {
+            battle.dealDamage(caster, enemy, damage * cleavePercent, 'physical');
+        }
+    });
 },
 
 orcishResilienceLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -2223,9 +2238,13 @@ warlordsCommandLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const allies = battle.getParty(caster);
     allies.forEach(ally => {
         if (ally.isAlive) {
+            // Cleanse all debuffs
+            ally.debuffs = [];
+            battle.log(`${ally.name} cleansed of all debuffs!`);
+            
+            // Apply buffs
             battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: damageBonus });
-            // Needs special implementation for debuff immunity
-            battle.log(`Warlord's Command needs debuff immunity implementation!`);
+            battle.applyBuff(ally, 'Immune', duration, { immunity: true });
         }
     });
 },
