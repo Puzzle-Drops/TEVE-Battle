@@ -3066,32 +3066,552 @@
       },
       "spells": ["maul", "rampage"]
     },
-    "stitch": {
-      "name": "Stitch",
-      "boss": true,
-      "mainstat": "str",
-      "modifiers": { 
+    "wailing_banshee": {
+    "name": "Wailing Banshee",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 1.25,
+        "agi": 1.35,
+        "int": 1.4,
+        "hp": 2.9,
+        "attack": 0.34,
+        "armor": 0.06,
+        "resist": 0.18
+    },
+    "initial": {
+        "str": 4,
+        "agi": 5,
+        "int": 7,
+        "hp": 30,
+        "hpRegen": 1.34,
+        "attack": 4,
+        "attackSpeed": 0,
+        "armor": 4,
+        "resist": 8
+    },
+    "spells": ["spirit_touch", "banshee_wail", "phase_shift"]
+},
+"corrupted_ent": {
+    "name": "Corrupted Ent",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 1.5,
+        "agi": 1.25,
+        "int": 1.25,
+        "hp": 3.9,
+        "attack": 0.2,
+        "armor": 0.21,
+        "resist": 0.035
+    },
+    "initial": {
+        "str": 7,
+        "agi": 4,
+        "int": 5,
+        "hp": 50,
+        "hpRegen": 0,
+        "attack": 3,
+        "attackSpeed": 0,
+        "armor": 10,
+        "resist": 3
+    },
+    "spells": ["root_slam", "barkskin", "entangling_roots"]
+},
+"toxic_sludge": {
+    "name": "Toxic Sludge",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 1.3,
+        "agi": 1.25,
+        "int": 1.45,
+        "hp": 3.6,
+        "attack": 0.26,
+        "armor": 0.11,
+        "resist": 0.23
+    },
+    "initial": {
+        "str": 5,
+        "agi": 4,
+        "int": 7,
+        "hp": 40,
+        "hpRegen": 0.67,
+        "attack": 3,
+        "attackSpeed": 0,
+        "armor": 6,
+        "resist": 10
+    },
+    "spells": ["sludge_bolt", "toxic_pool", "corrosive_splash"]
+},
+"shadow_wisp": {
+    "name": "Shadow Wisp",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 1.25,
+        "agi": 1.4,
+        "int": 1.35,
+        "hp": 2.7,
+        "attack": 0.3,
+        "armor": 0.06,
+        "resist": 0.155
+    },
+    "initial": {
+        "str": 4,
+        "agi": 6,
+        "int": 6,
+        "hp": 20,
+        "hpRegen": 1.34,
+        "attack": 3,
+        "attackSpeed": 0,
+        "armor": 3,
+        "resist": 7
+    },
+    "spells": ["shadow_bolt", "shadow_veil", "dark_blessing"]
+},
+"banshee_matriarch": {
+    "name": "Banshee Matriarch",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 1.5,
+        "agi": 1.8,
+        "int": 2.7,
+        "hp": 3.2,
+        "attack": 0.36,
+        "armor": 0.11,
+        "resist": 0.33
+    },
+    "initial": {
+        "str": 5,
+        "agi": 7,
+        "int": 12,
+        "hp": 60,
+        "hpRegen": 2,
+        "attack": 5,
+        "attackSpeed": 0,
+        "armor": 7,
+        "resist": 15
+    },
+    "spells": ["spectral_slash", "death_shriek", "mournful_presence"]
+},
+"twisted_treant": {
+    "name": "Twisted Treant",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 1.55,
+        "agi": 1.25,
+        "int": 1.2,
+        "hp": 3.8,
+        "attack": 0.24,
+        "armor": 0.21,
+        "resist": 0.055
+    },
+    "initial": {
+        "str": 8,
+        "agi": 4,
+        "int": 4,
+        "hp": 45,
+        "hpRegen": 0,
+        "attack": 4,
+        "attackSpeed": 0,
+        "armor": 11,
+        "resist": 4
+    },
+    "spells": ["branch_whip", "natures_corruption", "thorned_embrace"]
+},
+"banshee_queen": {
+    "name": "Banshee Queen",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 1.6,
+        "agi": 1.9,
+        "int": 2.5,
+        "hp": 3.4,
+        "attack": 0.4,
+        "armor": 0.16,
+        "resist": 0.355
+    },
+    "initial": {
+        "str": 6,
+        "agi": 8,
+        "int": 10,
+        "hp": 70,
+        "hpRegen": 2,
+        "attack": 6,
+        "attackSpeed": 0,
+        "armor": 9,
+        "resist": 16
+    },
+    "spells": ["phantom_strike", "wailing_chorus", "spiritual_drain", "queens_lament_passive"]
+},
+"undead_swordsman": {
+    "name": "Undead Swordsman",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 1.5,
+        "agi": 1.3,
+        "int": 1.2,
+        "hp": 3.7,
+        "attack": 0.28,
+        "armor": 0.16,
+        "resist": 0.08
+    },
+    "initial": {
+        "str": 7,
+        "agi": 5,
+        "int": 4,
+        "hp": 40,
+        "hpRegen": 0,
+        "attack": 4,
+        "attackSpeed": 0,
+        "armor": 8,
+        "resist": 6
+    },
+    "spells": ["bone_strike", "necrotic_strike", "deaths_advance"]
+},
+"undead_archer": {
+    "name": "Undead Archer",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 1.25,
+        "agi": 1.45,
+        "int": 1.3,
+        "hp": 3.1,
+        "attack": 0.38,
+        "armor": 0.11,
+        "resist": 0.08
+    },
+    "initial": {
+        "str": 4,
+        "agi": 7,
+        "int": 5,
+        "hp": 35,
+        "hpRegen": 0,
+        "attack": 5,
+        "attackSpeed": 0,
+        "armor": 6,
+        "resist": 6
+    },
+    "spells": ["cursed_arrow", "volley_of_decay", "piercing_shot"]
+},
+"undead_mage": {
+    "name": "Undead Mage",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 1.25,
+        "agi": 1.3,
+        "int": 1.45,
+        "hp": 2.9,
+        "attack": 0.32,
+        "armor": 0.06,
+        "resist": 0.205
+    },
+    "initial": {
+        "str": 4,
+        "agi": 5,
+        "int": 7,
+        "hp": 25,
+        "hpRegen": 1.34,
+        "attack": 4,
+        "attackSpeed": 0,
+        "armor": 3,
+        "resist": 9
+    },
+    "spells": ["death_bolt", "dark_ritual", "corpse_shield"]
+},
+"necromancer": {
+    "name": "Necromancer",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 1.3,
+        "agi": 1.25,
+        "int": 1.45,
+        "hp": 3.2,
+        "attack": 0.3,
+        "armor": 0.11,
+        "resist": 0.23
+    },
+    "initial": {
+        "str": 5,
+        "agi": 4,
+        "int": 7,
+        "hp": 35,
+        "hpRegen": 1.34,
+        "attack": 4,
+        "attackSpeed": 0,
+        "armor": 5,
+        "resist": 10
+    },
+    "spells": ["drain_life", "unholy_presence", "curse_of_weakness"]
+},
+"vampire": {
+    "name": "Vampire",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 1.35,
+        "agi": 1.4,
+        "int": 1.25,
+        "hp": 3.4,
+        "attack": 0.36,
+        "armor": 0.16,
+        "resist": 0.105
+    },
+    "initial": {
+        "str": 6,
+        "agi": 6,
+        "int": 4,
+        "hp": 40,
+        "hpRegen": 0.67,
+        "attack": 5,
+        "attackSpeed": 0,
+        "armor": 8,
+        "resist": 7
+    },
+    "spells": ["blood_fang", "crimson_thirst", "bat_form"]
+},
+"death_knight": {
+    "name": "Death Knight",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": { 
         "str": 2.5,
         "agi": 1.5,
         "int": 2.0,
-        "hp": 4.5,
+        "hp": 3.6,
         "attack": 0.3,
-        "armor": 0.35,
-        "resist": 0.1
-      },
-      "initial": {
-        "str": 14,
+        "armor": 0.36,
+        "resist": 0.105
+    },
+    "initial": {
+        "str": 10,
         "agi": 6,
         "int": 8,
-        "hp": 100,
-        "hpRegen": 2,
+        "hp": 80,
+        "hpRegen": 0.67,
+        "attack": 6,
+        "attackSpeed": 0,
+        "armor": 14,
+        "resist": 8
+    },
+    "spells": ["frost_strike", "death_grip", "unholy_shield", "death_pact"]
+},
+"stitched_horror": {
+    "name": "The Stitched Horror",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 2.7,
+        "agi": 1.6,
+        "int": 1.7,
+        "hp": 3.8,
+        "attack": 0.34,
+        "armor": 0.41,
+        "resist": 0.13
+    },
+    "initial": {
+        "str": 11,
+        "agi": 6,
+        "int": 7,
+        "hp": 90,
+        "hpRegen": 1.34,
+        "attack": 7,
+        "attackSpeed": 0,
+        "armor": 16,
+        "resist": 10
+    },
+    "spells": ["flesh_rend", "corpse_explosion", "unholy_frenzy", "patchwork_body_passive"]
+},
+"bandit_thug": {
+    "name": "Bandit Thug",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 1.45,
+        "agi": 1.3,
+        "int": 1.25,
+        "hp": 3.5,
+        "attack": 0.32,
+        "armor": 0.16,
+        "resist": 0.055
+    },
+    "initial": {
+        "str": 7,
+        "agi": 5,
+        "int": 4,
+        "hp": 40,
+        "hpRegen": 0,
+        "attack": 5,
+        "attackSpeed": 0,
+        "armor": 8,
+        "resist": 5
+    },
+    "spells": ["dirty_strike", "sucker_punch"]
+},
+"bandit_cutthroat": {
+    "name": "Bandit Cutthroat",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 1.3,
+        "agi": 1.45,
+        "int": 1.25,
+        "hp": 3.2,
+        "attack": 0.4,
+        "armor": 0.11,
+        "resist": 0.055
+    },
+    "initial": {
+        "str": 5,
+        "agi": 7,
+        "int": 4,
+        "hp": 35,
+        "hpRegen": 0,
+        "attack": 6,
+        "attackSpeed": 0,
+        "armor": 6,
+        "resist": 5
+    },
+    "spells": ["serrated_blade", "cripple", "lacerate"]
+},
+"bandit_archer": {
+    "name": "Bandit Archer",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 1.25,
+        "agi": 1.5,
+        "int": 1.25,
+        "hp": 3.0,
+        "attack": 0.44,
+        "armor": 0.11,
+        "resist": 0.08
+    },
+    "initial": {
+        "str": 4,
+        "agi": 8,
+        "int": 4,
+        "hp": 30,
+        "hpRegen": 0,
+        "attack": 7,
+        "attackSpeed": 0,
+        "armor": 5,
+        "resist": 6
+    },
+    "spells": ["poison_arrow", "suppressing_fire", "aimed_shot"]
+},
+"bandit_enforcer": {
+    "name": "Bandit Enforcer",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 1.5,
+        "agi": 1.25,
+        "int": 1.25,
+        "hp": 3.9,
+        "attack": 0.24,
+        "armor": 0.26,
+        "resist": 0.055
+    },
+    "initial": {
+        "str": 8,
+        "agi": 4,
+        "int": 4,
+        "hp": 50,
+        "hpRegen": 0,
+        "attack": 3,
+        "attackSpeed": 0,
+        "armor": 12,
+        "resist": 4
+    },
+    "spells": ["heavy_strike", "shield_bash", "intimidate"]
+},
+"bandit_captain": {
+    "name": "Bandit Captain",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 2.4,
+        "agi": 1.9,
+        "int": 1.7,
+        "hp": 3.5,
+        "attack": 0.38,
+        "armor": 0.31,
+        "resist": 0.08
+    },
+    "initial": {
+        "str": 10,
+        "agi": 8,
+        "int": 6,
+        "hp": 75,
+        "hpRegen": 0.67,
+        "attack": 8,
+        "attackSpeed": 0,
+        "armor": 12,
+        "resist": 6
+    },
+    "spells": ["captains_strike", "rally_thieves", "dirty_fighting", "execute"]
+},
+"bandit_assassin": {
+    "name": "Bandit Assassin",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 1.3,
+        "agi": 1.55,
+        "int": 1.15,
+        "hp": 2.9,
+        "attack": 0.48,
+        "armor": 0.06,
+        "resist": 0.08
+    },
+    "initial": {
+        "str": 5,
+        "agi": 8,
+        "int": 3,
+        "hp": 25,
+        "hpRegen": 0,
+        "attack": 8,
+        "attackSpeed": 0,
+        "armor": 3,
+        "resist": 6
+    },
+    "spells": ["shadow_strike", "smoke_bomb", "cheap_shot"]
+},
+"bandit_lord": {
+    "name": "Bandit Lord",
+    "boss": true,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 2.0,
+        "agi": 2.5,
+        "int": 1.5,
+        "hp": 3.6,
+        "attack": 0.42,
+        "armor": 0.26,
+        "resist": 0.13
+    },
+    "initial": {
+        "str": 8,
+        "agi": 10,
+        "int": 6,
+        "hp": 85,
+        "hpRegen": 1.34,
         "attack": 10,
         "attackSpeed": 0,
-        "armor": 18,
-        "resist": 8
-      },
-      "spells": []
+        "armor": 10,
+        "resist": 10
     },
+    "spells": ["lords_blade", "bandits_gambit", "plunder", "call_to_arms"]
+},
     "goblin_king": {
       "name": "Goblin King",
       "boss": true,
