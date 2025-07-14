@@ -723,7 +723,7 @@
     },
     "buffBonus": [10, 30, 60, 120, 210],
     "target": "all_enemies",
-    "logicKey": "purifyingFlameLogic"
+    "logicKey": "nullbladeCleaveLogic"
 },
 "steal_magic": {
     "id": "steal_magic",
