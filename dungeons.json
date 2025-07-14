@@ -199,65 +199,173 @@
       }
     },
     "sorrowshade_hollow": {
-      "id": "sorrowshade_hollow",
-      "name": "Sorrowshade Hollow",
-      "boss": "Banshee Queen",
-      "tier": "Medium",
-      "subtitle": "Medium 1",
-      "level": 75,
-      "waves": [
+    "id": "sorrowshade_hollow",
+    "name": "Sorrowshade Hollow",
+    "boss": "Banshee Queen",
+    "tier": "Medium",
+    "subtitle": "Medium 1",
+    "level": 75,
+    "waves": [
         {
-          "enemies": [
-            { "id": "banshee_queen", "level": 75 }
-          ]
+            "enemies": [
+                { "id": "wailing_banshee", "level": 55 },
+                { "id": "corrupted_ent", "level": 58 },
+                { "id": "toxic_sludge", "level": 60 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "shadow_wisp", "level": 62 },
+                { "id": "wailing_banshee", "level": 63 },
+                { "id": "corrupted_ent", "level": 65 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "banshee_matriarch", "level": 75 },
+                { "id": "wailing_banshee", "level": 68 },
+                { "id": "toxic_sludge", "level": 68 },
+                { "id": "twisted_treant", "level": 70 },
+                { "id": "shadow_wisp", "level": 66 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "twisted_treant", "level": 72 },
+                { "id": "twisted_treant", "level": 73 },
+                { "id": "toxic_sludge", "level": 71 },
+                { "id": "corrupted_ent", "level": 74 },
+                { "id": "wailing_banshee", "level": 70 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "banshee_queen", "level": 75 },
+                { "id": "banshee_matriarch", "level": 74 },
+                { "id": "twisted_treant", "level": 74 },
+                { "id": "shadow_wisp", "level": 72 },
+                { "id": "toxic_sludge", "level": 73 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 4800,
         "exp": 11500,
         "items": ["hollow_wailcrown", "hollow_shroudmail", "hollow_gloomsteps", "hollow_whisperstaff", "hollow_sorrowshield", "hollow_tearstone", "hollow_banshee_edge"]
-      }
-    },
-    "forgotten_crypt": {
-      "id": "forgotten_crypt",
-      "name": "Forgotten Crypt",
-      "boss": "Stitch",
-      "tier": "Medium",
-      "subtitle": "Medium 2",
-      "level": 100,
-      "waves": [
+    }
+},
+"forgotten_crypt": {
+    "id": "forgotten_crypt",
+    "name": "Forgotten Crypt",
+    "boss": "The Stitched Horror",
+    "tier": "Medium",
+    "subtitle": "Medium 2",
+    "level": 100,
+    "waves": [
         {
-          "enemies": [
-            { "id": "stitch", "level": 100 }
-          ]
+            "enemies": [
+                { "id": "undead_swordsman", "level": 80 },
+                { "id": "undead_archer", "level": 82 },
+                { "id": "undead_mage", "level": 85 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "necromancer", "level": 88 },
+                { "id": "undead_swordsman", "level": 86 },
+                { "id": "vampire", "level": 90 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "death_knight", "level": 100 },
+                { "id": "necromancer", "level": 93 },
+                { "id": "vampire", "level": 94 },
+                { "id": "undead_archer", "level": 91 },
+                { "id": "undead_mage", "level": 92 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "vampire", "level": 97 },
+                { "id": "vampire", "level": 98 },
+                { "id": "necromancer", "level": 96 },
+                { "id": "undead_swordsman", "level": 95 },
+                { "id": "undead_archer", "level": 96 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "stitched_horror", "level": 100 },
+                { "id": "death_knight", "level": 99 },
+                { "id": "necromancer", "level": 98 },
+                { "id": "vampire", "level": 99 },
+                { "id": "undead_mage", "level": 97 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 9600,
         "exp": 23000,
         "items": ["crypt_bonecrown", "crypt_stitchplate", "crypt_tombwalkers", "crypt_bonecleaver", "crypt_graveguard", "crypt_phylactery", "crypt_stitchblade"]
-      }
-    },
-    "bandit_den": {
-      "id": "bandit_den",
-      "name": "Bandit Den",
-      "boss": "Bandit Lord",
-      "tier": "Medium",
-      "subtitle": "Medium 3",
-      "level": 125,
-      "waves": [
+    }
+},
+"bandit_den": {
+    "id": "bandit_den",
+    "name": "Bandit Den",
+    "boss": "Bandit Lord",
+    "tier": "Medium",
+    "subtitle": "Medium 3",
+    "level": 125,
+    "waves": [
         {
-          "enemies": [
-            { "id": "bandit_lord", "level": 125 }
-          ]
+            "enemies": [
+                { "id": "bandit_thug", "level": 105 },
+                { "id": "bandit_cutthroat", "level": 108 },
+                { "id": "bandit_archer", "level": 110 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "bandit_enforcer", "level": 113 },
+                { "id": "bandit_assassin", "level": 115 },
+                { "id": "bandit_thug", "level": 112 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "bandit_captain", "level": 125 },
+                { "id": "bandit_enforcer", "level": 118 },
+                { "id": "bandit_assassin", "level": 119 },
+                { "id": "bandit_cutthroat", "level": 117 },
+                { "id": "bandit_archer", "level": 116 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "bandit_assassin", "level": 122 },
+                { "id": "bandit_assassin", "level": 123 },
+                { "id": "bandit_enforcer", "level": 121 },
+                { "id": "bandit_cutthroat", "level": 120 },
+                { "id": "bandit_archer", "level": 121 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "bandit_lord", "level": 125 },
+                { "id": "bandit_captain", "level": 124 },
+                { "id": "bandit_assassin", "level": 124 },
+                { "id": "bandit_enforcer", "level": 123 },
+                { "id": "bandit_cutthroat", "level": 122 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 19200,
         "exp": 46000,
         "items": ["bandit_shadowhood", "bandit_leathercoat", "bandit_prowlpants", "bandit_dagger", "bandit_parryguard", "bandit_lockpick", "bandit_shadowfang"]
-      }
-    },
+    }
+},
     "gold_mine": {
       "id": "gold_mine",
       "name": "Gold Mine",
