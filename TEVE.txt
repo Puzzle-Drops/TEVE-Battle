@@ -149,7 +149,7 @@ Tier 1: 16 pts (min 4/stat)    Tier 4: 48 pts (min 8/stat)
 Tier 2: 24 pts (min 5/stat)
 
 Attribute costs: 1 point = 1 STR/AGI/INT
-Non-attribute costs (max 50% in any stat):
+Non-attribute costs (max 50% in any stat) - (Tier 1 gets 16 points for attributes, and an additional 16 points for non attributes, point pools are separate):
 - 1 point = 10 HP | 0.67 Regen | 1 Attack | 0.67 Speed | 1.33 Armor | 2 Resist
 
 ## 2. MODIFIERS (Per-Level Scaling)
