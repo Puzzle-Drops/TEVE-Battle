@@ -1133,6 +1133,784 @@
     "target": "all_enemies",
     "logicKey": "rampageLogic"
 },
+"spirit_touch": {
+    "id": "spirit_touch",
+    "name": "Spirit Touch",
+    "description": "Ethereal touch dealing [{base} + {attack} + {int}] magical damage",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["magical"],
+    "scaling": {
+        "base": [20, 80, 160, 280, 400],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.6, 0.63, 0.66, 0.69, 0.72]
+    },
+    "target": "enemy",
+    "logicKey": "spiritTouchLogic"
+},
+"banshee_wail": {
+    "id": "banshee_wail",
+    "name": "Banshee Wail",
+    "description": "Terrifying wail dealing [{base} + {int}] magical damage to all enemies with {silenceChance} chance to silence for {silenceDuration} turn",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "magical", "debuff_silence"],
+    "scaling": {
+        "base": [15, 60, 120, 210, 300],
+        "int": [0.5, 0.52, 0.54, 0.56, 0.58]
+    },
+    "silenceChance": [0.3, 0.35, 0.4, 0.45, 0.5],
+    "silenceDuration": [1, 1, 1, 2, 2],
+    "target": "all_enemies",
+    "logicKey": "bansheeWailLogic"
+},
+"phase_shift": {
+    "id": "phase_shift",
+    "name": "Phase Shift",
+    "description": "Become ethereal, removing all debuffs and gaining Increase Speed for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["cleanse", "buff_increase_speed"],
+    "duration": [2, 2, 2, 3, 3],
+    "target": "self",
+    "logicKey": "phaseShiftLogic"
+},
+"root_slam": {
+    "id": "root_slam",
+    "name": "Root Slam",
+    "description": "Slam with roots dealing [{base} + {attack} + {str}] physical damage",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical"],
+    "scaling": {
+        "base": [25, 100, 200, 350, 500],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.2, 0.22, 0.24, 0.26, 0.28]
+    },
+    "target": "enemy",
+    "logicKey": "rootSlamLogic"
+},
+"entangling_roots": {
+    "id": "entangling_roots",
+    "name": "Entangling Roots",
+    "description": "Roots entangle target, applying Taunt and Reduce Speed for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["debuff_taunt", "debuff_reduce_speed"],
+    "duration": [2, 2, 2, 3, 3],
+    "target": "enemy",
+    "logicKey": "entanglingRootsLogic"
+},
+"sludge_bolt": {
+    "id": "sludge_bolt",
+    "name": "Sludge Bolt",
+    "description": "Toxic bolt dealing [{base} + {attack} + {int}] magical damage",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["magical"],
+    "scaling": {
+        "base": [18, 72, 144, 252, 360],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.55, 0.58, 0.61, 0.64, 0.67]
+    },
+    "target": "enemy",
+    "logicKey": "sludgeBoltLogic"
+},
+"toxic_pool": {
+    "id": "toxic_pool",
+    "name": "Toxic Pool",
+    "description": "Create toxic pool that applies Blight and Reduce Defense to all enemies for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "debuff_blight", "debuff_reduce_defense"],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "all_enemies",
+    "logicKey": "toxicPoolLogic"
+},
+"corrosive_splash": {
+    "id": "corrosive_splash",
+    "name": "Corrosive Splash",
+    "description": "Next {attackerCount} attackers receive Reduce Attack for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["support", "debuff_reduce_attack"],
+    "attackerCount": [3, 3, 3, 4, 4],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "self",
+    "logicKey": "corrosiveSplashLogic"
+},
+"shadow_bolt": {
+    "id": "shadow_bolt",
+    "name": "Shadow Bolt",
+    "description": "Dark bolt dealing [{base} + {attack} + {int}] magical damage",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["magical"],
+    "scaling": {
+        "base": [16, 64, 128, 224, 320],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.65, 0.68, 0.71, 0.74, 0.77]
+    },
+    "target": "enemy",
+    "logicKey": "shadowBoltLogic"
+},
+"shadow_veil": {
+    "id": "shadow_veil",
+    "name": "Shadow Veil",
+    "description": "Grant ally Increase Speed for {duration} turns",
+    "cooldown": [3, 3, 3, 2, 2],
+    "effects": ["buff_increase_speed"],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "ally",
+    "logicKey": "shadowVeilLogic"
+},
+"dark_blessing": {
+    "id": "dark_blessing",
+    "name": "Dark Blessing",
+    "description": "Grant ally Increase Attack for {duration} turns and remove 1 debuff",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["buff_increase_attack", "cleanse"],
+    "duration": [2, 2, 2, 3, 3],
+    "target": "ally",
+    "logicKey": "darkBlessingLogic"
+},
+"spectral_slash": {
+    "id": "spectral_slash",
+    "name": "Spectral Slash",
+    "description": "Ghostly slash dealing [{base} + {attack} + {int}] magical damage and draining {actionBarDrain} action bar",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["magical", "support"],
+    "scaling": {
+        "base": [30, 120, 240, 420, 600],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.7, 0.73, 0.76, 0.79, 0.82]
+    },
+    "actionBarDrain": [0.1, 0.12, 0.14, 0.16, 0.18],
+    "target": "enemy",
+    "logicKey": "spectralSlashLogic"
+},
+"death_shriek": {
+    "id": "death_shriek",
+    "name": "Death Shriek",
+    "description": "Devastating shriek dealing [{base} + {int}] magical damage to all enemies and silencing for {silenceDuration} turn",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "magical", "debuff_silence"],
+    "scaling": {
+        "base": [25, 100, 200, 350, 500],
+        "int": [0.6, 0.63, 0.66, 0.69, 0.72]
+    },
+    "silenceDuration": [1, 1, 1, 2, 2],
+    "target": "all_enemies",
+    "logicKey": "deathShriekLogic"
+},
+"mournful_presence": {
+    "id": "mournful_presence",
+    "name": "Mournful Presence",
+    "description": "All enemies lose {actionBarDrain} action bar and gain Reduce Speed for {duration} turns",
+    "cooldown": [6, 6, 5, 5, 4],
+    "effects": ["aoe", "support", "debuff_reduce_speed"],
+    "actionBarDrain": [0.2, 0.22, 0.24, 0.26, 0.28],
+    "duration": [2, 2, 2, 3, 3],
+    "target": "all_enemies",
+    "logicKey": "mournfulPresenceLogic"
+},
+"branch_whip": {
+    "id": "branch_whip",
+    "name": "Branch Whip",
+    "description": "Whip with branches dealing [{base} + {attack} + {str}] physical damage with {bleedChance} chance to cause Bleed",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_bleed"],
+    "scaling": {
+        "base": [28, 112, 224, 392, 560],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.22, 0.24, 0.26, 0.28, 0.30]
+    },
+    "bleedChance": [0.4, 0.45, 0.5, 0.55, 0.6],
+    "bleedDuration": [2, 2, 3, 3, 4],
+    "target": "enemy",
+    "logicKey": "branchWhipLogic"
+},
+"natures_corruption": {
+    "id": "natures_corruption",
+    "name": "Nature's Corruption",
+    "description": "Convert all enemy buffs into random debuffs",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["dispel", "support"],
+    "target": "enemy",
+    "logicKey": "naturesCorruptionLogic"
+},
+"thorned_embrace": {
+    "id": "thorned_embrace",
+    "name": "Thorned Embrace",
+    "description": "Embrace target with thorns, applying Taunt for {tauntDuration} turns and 2 stacks of Bleed for {bleedDuration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["debuff_taunt", "debuff_bleed"],
+    "tauntDuration": [1, 1, 1, 2, 2],
+    "bleedDuration": [3, 3, 3, 4, 4],
+    "bleedStacks": 2,
+    "target": "enemy",
+    "logicKey": "thornedEmbraceLogic"
+},
+"phantom_strike": {
+    "id": "phantom_strike",
+    "name": "Phantom Strike",
+    "description": "Ghostly strike dealing [{base} + {attack} + {int}] magical damage, double damage if target is silenced",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["magical"],
+    "scaling": {
+        "base": [35, 140, 280, 490, 700],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.75, 0.78, 0.81, 0.84, 0.87]
+    },
+    "silencedMultiplier": 2.0,
+    "target": "enemy",
+    "logicKey": "phantomStrikeLogic"
+},
+"wailing_chorus": {
+    "id": "wailing_chorus",
+    "name": "Wailing Chorus",
+    "description": "Chorus of wails dealing [{base} + {int}] magical damage to all enemies and applying Mark for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "magical", "debuff_mark"],
+    "scaling": {
+        "base": [30, 120, 240, 420, 600],
+        "int": [0.65, 0.68, 0.71, 0.74, 0.77]
+    },
+    "duration": [3, 3, 4, 4, 5],
+    "target": "all_enemies",
+    "logicKey": "wailingChorusLogic"
+},
+"spiritual_drain": {
+    "id": "spiritual_drain",
+    "name": "Spiritual Drain",
+    "description": "Drain target's essence, stealing all buffs and action bar",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["dispel", "support"],
+    "target": "enemy",
+    "logicKey": "spiritualDrainLogic"
+},
+"queens_lament_passive": {
+    "id": "queens_lament_passive",
+    "name": "Queen's Lament",
+    "description": "When any unit dies, heal 10% HP and gain Increase Attack for 2 turns",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["passive"],
+    "passive": true,
+    "healPercent": 0.1,
+    "buffDuration": 2,
+    "target": "self",
+    "logicKey": "queensLamentPassiveLogic"
+},
+"bone_strike": {
+    "id": "bone_strike",
+    "name": "Bone Strike",
+    "description": "Strike with bone weapon dealing [{base} + {attack} + {str}] physical damage, ignores shields",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "shield_break"],
+    "scaling": {
+        "base": [22, 88, 176, 308, 440],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.18, 0.20, 0.22, 0.24, 0.26]
+    },
+    "target": "enemy",
+    "logicKey": "boneStrikeLogic"
+},
+"necrotic_strike": {
+    "id": "necrotic_strike",
+    "name": "Necrotic Strike",
+    "description": "Decaying strike dealing [{base} + {attack} + {str}] physical damage and applying Blight for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["physical", "debuff_blight"],
+    "scaling": {
+        "base": [18, 72, 144, 252, 360],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.15, 0.17, 0.19, 0.21, 0.23]
+    },
+    "duration": [3, 3, 4, 4, 5],
+    "target": "enemy",
+    "logicKey": "necroticStrikeLogic"
+},
+"deaths_advance": {
+    "id": "deaths_advance",
+    "name": "Death's Advance",
+    "description": "Gain Increase Speed and Immune for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["buff_increase_speed", "buff_immune"],
+    "duration": [1, 1, 1, 2, 2],
+    "target": "self",
+    "logicKey": "deathsAdvanceLogic"
+},
+"cursed_arrow": {
+    "id": "cursed_arrow",
+    "name": "Cursed Arrow",
+    "description": "Cursed shot dealing [{base} + {attack} + {agi}] physical damage with {markChance} chance to apply Mark for {markDuration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_mark"],
+    "scaling": {
+        "base": [20, 80, 160, 280, 400],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.4, 0.42, 0.44, 0.46, 0.48]
+    },
+    "markChance": [0.5, 0.55, 0.6, 0.65, 0.7],
+    "markDuration": [2, 2, 3, 3, 4],
+    "target": "enemy",
+    "logicKey": "cursedArrowLogic"
+},
+"volley_of_decay": {
+    "id": "volley_of_decay",
+    "name": "Volley of Decay",
+    "description": "Rain of arrows hitting all enemies for [{base} + {attack} + {agi}] physical damage and applying Reduce Defense for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "physical", "debuff_reduce_defense"],
+    "scaling": {
+        "base": [15, 60, 120, 210, 300],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.35, 0.37, 0.39, 0.41, 0.43]
+    },
+    "duration": [2, 2, 2, 3, 3],
+    "target": "all_enemies",
+    "logicKey": "volleyOfDecayLogic"
+},
+"piercing_shot": {
+    "id": "piercing_shot",
+    "name": "Piercing Shot",
+    "description": "Piercing arrow dealing [{base} + {attack} + {agi}] physical damage and removing 1 buff",
+    "cooldown": [3, 3, 3, 2, 2],
+    "effects": ["physical", "dispel"],
+    "scaling": {
+        "base": [18, 72, 144, 252, 360],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.38, 0.40, 0.42, 0.44, 0.46]
+    },
+    "target": "enemy",
+    "logicKey": "piercingShotLogic"
+},
+"death_bolt": {
+    "id": "death_bolt",
+    "name": "Death Bolt",
+    "description": "Necrotic bolt dealing [{base} + {attack} + {int}] magical damage",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["magical"],
+    "scaling": {
+        "base": [24, 96, 192, 336, 480],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.7, 0.73, 0.76, 0.79, 0.82]
+    },
+    "target": "enemy",
+    "logicKey": "deathBoltLogic"
+},
+"dark_ritual": {
+    "id": "dark_ritual",
+    "name": "Dark Ritual",
+    "description": "Dark magic heals all undead allies for {healPercent} of their max HP",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "heal"],
+    "healPercent": [0.2, 0.22, 0.24, 0.26, 0.28],
+    "target": "all_allies",
+    "logicKey": "darkRitualLogic"
+},
+"corpse_shield": {
+    "id": "corpse_shield",
+    "name": "Corpse Shield",
+    "description": "Grant shields to {targetCount} lowest HP allies absorbing {shieldAmount} damage",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["buff_shield"],
+    "targetCount": [2, 2, 2, 3, 3],
+    "shieldAmount": [30, 120, 240, 420, 600],
+    "target": "ally",
+    "logicKey": "corpseShieldLogic"
+},
+"drain_life": {
+    "id": "drain_life",
+    "name": "Drain Life",
+    "description": "Drain life dealing [{base} + {attack} + {int}] magical damage and healing self for {healPercent} of damage dealt",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["magical", "heal"],
+    "scaling": {
+        "base": [26, 104, 208, 364, 520],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.65, 0.68, 0.71, 0.74, 0.77]
+    },
+    "healPercent": [0.3, 0.32, 0.34, 0.36, 0.38],
+    "target": "enemy",
+    "logicKey": "drainLifeLogic"
+},
+"unholy_presence": {
+    "id": "unholy_presence",
+    "name": "Unholy Presence",
+    "description": "Dark aura grants all allies Increase Attack for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "buff_increase_attack"],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "all_allies",
+    "logicKey": "unholyPresenceLogic"
+},
+"curse_of_weakness": {
+    "id": "curse_of_weakness",
+    "name": "Curse of Weakness",
+    "description": "Curse all enemies with Reduce Attack and Reduce Defense for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "debuff_reduce_attack", "debuff_reduce_defense"],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "all_enemies",
+    "logicKey": "curseOfWeaknessLogic"
+},
+"blood_fang": {
+    "id": "blood_fang",
+    "name": "Blood Fang",
+    "description": "Vampiric bite dealing [{base} + {attack} + {agi}] physical damage and healing for {healPercent} of damage dealt",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "heal"],
+    "scaling": {
+        "base": [28, 112, 224, 392, 560],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.45, 0.48, 0.51, 0.54, 0.57]
+    },
+    "healPercent": [0.5, 0.52, 0.54, 0.56, 0.58],
+    "target": "enemy",
+    "logicKey": "bloodFangLogic"
+},
+"crimson_thirst": {
+    "id": "crimson_thirst",
+    "name": "Crimson Thirst",
+    "description": "Apply {bleedStacks} stacks of Bleed to target for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["debuff_bleed"],
+    "bleedStacks": [2, 2, 2, 3, 3],
+    "duration": [3, 3, 4, 4, 5],
+    "target": "enemy",
+    "logicKey": "crimsonThirstLogic"
+},
+"bat_form": {
+    "id": "bat_form",
+    "name": "Bat Form",
+    "description": "Transform into bat form, gaining Increase Speed and Frost Armor for {duration} turns",
+    "cooldown": [6, 6, 5, 5, 4],
+    "effects": ["buff_increase_speed", "buff_frost_armor"],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "self",
+    "logicKey": "batFormLogic"
+},
+"frost_strike": {
+    "id": "frost_strike",
+    "name": "Frost Strike",
+    "description": "Icy strike dealing [{base} + {attack} + {str}] physical damage and applying Reduce Speed for {duration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_reduce_speed"],
+    "scaling": {
+        "base": [32, 128, 256, 448, 640],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.25, 0.27, 0.29, 0.31, 0.33]
+    },
+    "duration": [2, 2, 3, 3, 4],
+    "target": "enemy",
+    "logicKey": "frostStrikeLogic"
+},
+"death_grip": {
+    "id": "death_grip",
+    "name": "Death Grip",
+    "description": "Dark magic taunts all enemies for {duration} turns",
+    "cooldown": [3, 3, 3, 2, 2],
+    "effects": ["aoe", "debuff_taunt"],
+    "duration": [1, 1, 1, 2, 2],
+    "target": "all_enemies",
+    "logicKey": "deathGripLogic"
+},
+"unholy_shield": {
+    "id": "unholy_shield",
+    "name": "Unholy Shield",
+    "description": "Grant self {shieldAmount} shield and Increase Defense for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["buff_shield", "buff_increase_defense"],
+    "shieldAmount": [40, 160, 320, 560, 800],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "self",
+    "logicKey": "unholyShieldLogic"
+},
+"death_pact": {
+    "id": "death_pact",
+    "name": "Death Pact",
+    "description": "Sacrifice 20% current HP to grant all allies Increase Attack for {duration} turns",
+    "cooldown": [6, 6, 5, 5, 4],
+    "effects": ["aoe", "buff_increase_attack"],
+    "hpCost": 0.2,
+    "duration": [3, 3, 3, 4, 4],
+    "target": "all_allies",
+    "logicKey": "deathPactLogic"
+},
+"flesh_rend": {
+    "id": "flesh_rend",
+    "name": "Flesh Rend",
+    "description": "Rend flesh dealing [{base} + {attack} + {str}] physical damage, +50% damage vs bleeding targets",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical"],
+    "scaling": {
+        "base": [40, 160, 320, 560, 800],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.28, 0.30, 0.32, 0.34, 0.36]
+    },
+    "bleedBonus": 1.5,
+    "target": "enemy",
+    "logicKey": "fleshRendLogic"
+},
+"corpse_explosion": {
+    "id": "corpse_explosion",
+    "name": "Corpse Explosion",
+    "description": "Explode corpses dealing magical damage to all enemies based on their missing HP",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "magical"],
+    "missingHpPercent": [0.2, 0.25, 0.3, 0.35, 0.4],
+    "baseDamage": [50, 100, 150, 200, 250],
+    "target": "all_enemies",
+    "logicKey": "corpseExplosionLogic"
+},
+"unholy_frenzy": {
+    "id": "unholy_frenzy",
+    "name": "Unholy Frenzy",
+    "description": "Enter frenzy, gaining 2 stacks each of Increase Attack and Increase Speed for {duration} turns",
+    "cooldown": [6, 6, 5, 5, 4],
+    "effects": ["buff_increase_attack", "buff_increase_speed"],
+    "duration": [2, 2, 3, 3, 4],
+    "stackCount": 2,
+    "target": "self",
+    "logicKey": "unholyFrenzyLogic"
+},
+"patchwork_body_passive": {
+    "id": "patchwork_body_passive",
+    "name": "Patchwork Body",
+    "description": "Takes 25% less damage from all sources",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["passive"],
+    "passive": true,
+    "damageReduction": 0.25,
+    "target": "self",
+    "logicKey": "patchworkBodyPassiveLogic"
+},
+"dirty_strike": {
+    "id": "dirty_strike",
+    "name": "Dirty Strike",
+    "description": "Underhanded strike dealing [{base} + {attack} + {str}] physical damage with {debuffChance} chance to apply Reduce Defense for {duration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_reduce_defense"],
+    "scaling": {
+        "base": [24, 96, 192, 336, 480],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.2, 0.22, 0.24, 0.26, 0.28]
+    },
+    "debuffChance": [0.4, 0.45, 0.5, 0.55, 0.6],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "enemy",
+    "logicKey": "dirtyStrikeLogic"
+},
+"sucker_punch": {
+    "id": "sucker_punch",
+    "name": "Sucker Punch",
+    "description": "Cheap shot dealing [{base} + {attack} + {str}] physical damage with {stunChance} chance to Stun for {stunDuration} turn",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["physical", "debuff_stun"],
+    "scaling": {
+        "base": [20, 80, 160, 280, 400],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.18, 0.20, 0.22, 0.24, 0.26]
+    },
+    "stunChance": [0.3, 0.35, 0.4, 0.45, 0.5],
+    "stunDuration": [1, 1, 1, 1, 2],
+    "target": "enemy",
+    "logicKey": "suckerPunchLogic"
+},
+"serrated_blade": {
+    "id": "serrated_blade",
+    "name": "Serrated Blade",
+    "description": "Jagged strike dealing [{base} + {attack} + {agi}] physical damage and applying Bleed for {duration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_bleed"],
+    "scaling": {
+        "base": [26, 104, 208, 364, 520],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.42, 0.44, 0.46, 0.48, 0.50]
+    },
+    "duration": [3, 3, 4, 4, 5],
+    "target": "enemy",
+    "logicKey": "serratedBladeLogic"
+},
+"lacerate": {
+    "id": "lacerate",
+    "name": "Lacerate",
+    "description": "Deep cuts apply {bleedStacks} stacks of Bleed for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["debuff_bleed"],
+    "bleedStacks": [3, 3, 3, 4, 4],
+    "duration": [3, 3, 4, 4, 5],
+    "target": "enemy",
+    "logicKey": "lacerateLogic"
+},
+"poison_arrow": {
+    "id": "poison_arrow",
+    "name": "Poison Arrow",
+    "description": "Poisoned shot dealing [{base} + {attack} + {agi}] physical damage with {blightChance} chance to apply Blight for {duration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_blight"],
+    "scaling": {
+        "base": [22, 88, 176, 308, 440],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.38, 0.40, 0.42, 0.44, 0.46]
+    },
+    "blightChance": [0.4, 0.45, 0.5, 0.55, 0.6],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "enemy",
+    "logicKey": "poisonArrowLogic"
+},
+"suppressing_fire": {
+    "id": "suppressing_fire",
+    "name": "Suppressing Fire",
+    "description": "Barrage dealing [{base} + {attack} + {agi}] physical damage to all enemies and applying Reduce Speed for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "physical", "debuff_reduce_speed"],
+    "scaling": {
+        "base": [18, 72, 144, 252, 360],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.35, 0.37, 0.39, 0.41, 0.43]
+    },
+    "duration": [2, 2, 2, 3, 3],
+    "target": "all_enemies",
+    "logicKey": "suppressingFireLogic"
+},
+"heavy_strike": {
+    "id": "heavy_strike",
+    "name": "Heavy Strike",
+    "description": "Powerful blow dealing [{base} + {attack} + {str}] physical damage and applying Reduce Attack for {duration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_reduce_attack"],
+    "scaling": {
+        "base": [30, 120, 240, 420, 600],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.24, 0.26, 0.28, 0.30, 0.32]
+    },
+    "duration": [2, 2, 3, 3, 4],
+    "target": "enemy",
+    "logicKey": "heavyStrikeLogic"
+},
+"intimidate": {
+    "id": "intimidate",
+    "name": "Intimidate",
+    "description": "Intimidating presence taunts all enemies for {duration} turns",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "debuff_taunt"],
+    "duration": [1, 1, 1, 2, 2],
+    "target": "all_enemies",
+    "logicKey": "intimidateLogic"
+},
+"captains_strike": {
+    "id": "captains_strike",
+    "name": "Captain's Strike",
+    "description": "Commanding strike dealing [{base} + {attack} + {str}] physical damage, all allies gain {actionBarGrant} action bar",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "support"],
+    "scaling": {
+        "base": [35, 140, 280, 490, 700],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.26, 0.28, 0.30, 0.32, 0.34]
+    },
+    "actionBarGrant": [0.1, 0.11, 0.12, 0.13, 0.14],
+    "target": "enemy",
+    "logicKey": "captainsStrikeLogic"
+},
+"rally_thieves": {
+    "id": "rally_thieves",
+    "name": "Rally Thieves",
+    "description": "Rally cry grants all allies Increase Attack and Increase Speed for {duration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "buff_increase_attack", "buff_increase_speed"],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "all_allies",
+    "logicKey": "rallyThievesLogic"
+},
+"dirty_fighting": {
+    "id": "dirty_fighting",
+    "name": "Dirty Fighting",
+    "description": "Apply 3 random debuffs to random enemies",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["support"],
+    "debuffCount": 3,
+    "target": "all_enemies",
+    "logicKey": "dirtyFightingLogic"
+},
+"execute": {
+    "id": "execute",
+    "name": "Execute",
+    "description": "Instant kill if enemy below 25% HP, otherwise deal [{base} + {attack} + {str}] pure damage",
+    "cooldown": [6, 6, 5, 5, 4],
+    "effects": ["pure"],
+    "scaling": {
+        "base": [100, 400, 800, 1400, 2000],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "str": [0.3, 0.32, 0.34, 0.36, 0.38]
+    },
+    "executeThreshold": 0.25,
+    "target": "enemy",
+    "logicKey": "executeLogic"
+},
+"shadow_strike": {
+    "id": "shadow_strike",
+    "name": "Shadow Strike",
+    "description": "Strike from shadows dealing [{base} + {attack} + {agi}] physical damage and applying Mark for {duration} turns",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "debuff_mark"],
+    "scaling": {
+        "base": [28, 112, 224, 392, 560],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.48, 0.50, 0.52, 0.54, 0.56]
+    },
+    "duration": [2, 2, 3, 3, 4],
+    "target": "enemy",
+    "logicKey": "shadowStrikeLogic"
+},
+"smoke_bomb": {
+    "id": "smoke_bomb",
+    "name": "Smoke Bomb",
+    "description": "Throw smoke bomb, gain Increase Speed for {buffDuration} turns, all enemies gain Reduce Attack for {debuffDuration} turns",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "buff_increase_speed", "debuff_reduce_attack"],
+    "buffDuration": [3, 3, 3, 4, 4],
+    "debuffDuration": [2, 2, 2, 3, 3],
+    "target": "all",
+    "logicKey": "smokeBombLogic"
+},
+"lords_blade": {
+    "id": "lords_blade",
+    "name": "Lord's Blade",
+    "description": "Masterful strike dealing [{base} + {attack} + {agi}] physical damage and stealing 1 buff",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["physical", "dispel"],
+    "scaling": {
+        "base": [38, 152, 304, 532, 760],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "agi": [0.5, 0.52, 0.54, 0.56, 0.58]
+    },
+    "target": "enemy",
+    "logicKey": "lordsBladeLogic"
+},
+"bandits_gambit": {
+    "id": "bandits_gambit",
+    "name": "Bandit's Gambit",
+    "description": "Steal all buffs from enemies and distribute randomly among bandits",
+    "cooldown": [4, 4, 3, 3, 2],
+    "effects": ["aoe", "dispel", "support"],
+    "target": "all",
+    "logicKey": "banditsGambitLogic"
+},
+"plunder": {
+    "id": "plunder",
+    "name": "Plunder",
+    "description": "Steal {actionBarSteal} action bar from all enemies",
+    "cooldown": [5, 5, 4, 4, 3],
+    "effects": ["aoe", "support"],
+    "actionBarSteal": [0.3, 0.32, 0.34, 0.36, 0.38],
+    "target": "all_enemies",
+    "logicKey": "plunderLogic"
+},
+"call_to_arms": {
+    "id": "call_to_arms",
+    "name": "Call to Arms",
+    "description": "Rally call grants all allies {shieldAmount} shield and Increase Defense for {duration} turns",
+    "cooldown": [6, 6, 5, 5, 4],
+    "effects": ["aoe", "buff_shield", "buff_increase_defense"],
+    "shieldAmount": [50, 200, 400, 700, 1000],
+    "duration": [2, 2, 3, 3, 4],
+    "target": "all_allies",
+    "logicKey": "callToArmsLogic"
+},
 "win": {
     "id": "win",
     "name": "Win",
