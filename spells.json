@@ -1223,10 +1223,11 @@
 "corrosive_splash": {
     "id": "corrosive_splash",
     "name": "Corrosive Splash",
-    "description": "Next {attackerCount} attackers receive Reduce Attack for {duration} turns",
-    "cooldown": [5, 5, 4, 4, 3],
-    "effects": ["support", "debuff_reduce_attack"],
-    "attackerCount": [3, 3, 3, 4, 4],
+    "description": "When attacked, apply Reduce Attack to attacker for {duration} turns (30% chance)",
+    "cooldown": [0, 0, 0, 0, 0],
+    "effects": ["passive", "debuff_reduce_attack"],
+    "passive": true,
+    "procChance": [0.3, 0.35, 0.4, 0.45, 0.5],
     "duration": [2, 2, 3, 3, 4],
     "target": "self",
     "logicKey": "corrosiveSplashLogic"
