@@ -1822,14 +1822,27 @@ detonateLogic: function(battle, caster, target, spell, spellLevel = 1) {
         }
     });
     
-    // Kill self - needs special implementation
-    battle.log(`Detonate needs self-destruct implementation!`);
+    // Kill self after dealing damage
+    battle.log(`${caster.name} self-destructs!`);
     caster.currentHp = 0;
+    battle.handleUnitDeath(caster);
 },
 
 plantExplosiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    // Needs special implementation for delayed damage
-    battle.log(`Plant Explosive needs delayed damage implementation!`);
+    const levelIndex = spellLevel - 1;
+    const baseDamage = spell.scaling.base[levelIndex] || spell.scaling.base[0];
+    const attackScaling = spell.scaling.attack[levelIndex] || spell.scaling.attack[0];
+    const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0];
+    
+    const damage = baseDamage + (caster.source.attack * attackScaling) + (caster.stats.agi * agiScaling);
+    
+    // Apply a special "bomb" debuff that will explode next turn
+    battle.applyDebuff(target, 'Explosive', 1, { 
+        bombDamage: damage,
+        bombCaster: caster,
+        isExplosive: true
+    });
+    battle.log(`${caster.name} plants an explosive on ${target.name}!`);
 },
 
 chainDetonationLogic: function(battle, caster, target, spell, spellLevel = 1) {
