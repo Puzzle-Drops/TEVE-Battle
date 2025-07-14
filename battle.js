@@ -2929,6 +2929,24 @@ removeDebuffs(target) {
                     this.handleUnitDeath(unit);
                 }
             }
+
+            // Add this right after the bleed damage check
+else if (debuff.name === 'Explosive' && debuff.isExplosive && unit.isAlive) {
+    // Bomb explodes
+    const damage = Math.floor(debuff.bombDamage);
+    const previousHp = unit.currentHp;
+    unit.currentHp = Math.max(0, unit.currentHp - damage);
+    this.log(`The explosive on ${unit.name} detonates for ${damage} damage!`);
+    
+    // Show damage animation
+    this.showDamageAnimation(debuff.bombCaster || unit, unit, damage, 'physical');
+    
+    // Check if unit died from explosion
+    if (previousHp > 0 && unit.currentHp <= 0) {
+        this.handleUnitDeath(unit, debuff.bombCaster);
+    }
+}
+            
         });
     }
 
@@ -3694,19 +3712,20 @@ exitBattle() {
 }
 
     getDebuffIconName(debuffName) {
-        const iconMap = {
-            'Reduce Attack': 'reduce_attack',
-            'Reduce Speed': 'reduce_speed',
-            'Reduce Defense': 'reduce_defense',
-            'Blight': 'blight',
-            'Bleed': 'bleed',
-            'Stun': 'stun',
-            'Taunt': 'taunt',
-            'Silence': 'silence',
-            'Mark': 'mark'
-        };
-        return iconMap[debuffName] || 'debuff';
-    }
+    const iconMap = {
+        'Reduce Attack': 'reduce_attack',
+        'Reduce Speed': 'reduce_speed',
+        'Reduce Defense': 'reduce_defense',
+        'Blight': 'blight',
+        'Bleed': 'bleed',
+        'Stun': 'stun',
+        'Taunt': 'taunt',
+        'Silence': 'silence',
+        'Mark': 'mark',
+        'Explosive': 'explosive'
+    };
+    return iconMap[debuffName] || 'debuff';
+}
 
     showBuffDebuffTooltip(event, buffDebuff, isBuff) {
         // Ensure we have valid buff/debuff data
