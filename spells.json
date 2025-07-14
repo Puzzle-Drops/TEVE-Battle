@@ -2129,7 +2129,7 @@
     "duration": [2, 2, 2, 3, 3],
     "target": "all_allies",
     "logicKey": "warlordsCommandLogic"
-}
+},
 "blood_rage": {
     "id": "blood_rage",
     "name": "Blood Rage",
