@@ -3123,49 +3123,104 @@ this.party.forEach((unit, index) => {
     }
     
 // Process items only on victory and in dungeon mode
-    const itemRolls = [];
-    if (victory && this.mode === 'dungeon' && dungeonConfig) {
-        // Only roll items if we won
-        this.party.forEach(unit => {
-            if (!unit || !unit.source) return;
-            
-            const hero = unit.source;
-            
-// Check if villager (they only get items from first 3 dungeons and only gold after that)
-            const isVillager = hero.className.includes('villager') || hero.className.includes('tester');
-            const dungeonLevel = dungeonConfig ? dungeonConfig.level : 0;
-            
-            if (isVillager) {
-                // Villagers only get items from dungeons level 50 and below (first 3 easy dungeons)
-                if (dungeonLevel > 50 || !unit.isAlive) {
-                    // Only gold for villagers in harder dungeons or if dead
+const itemRolls = [];
+if (victory && this.mode === 'dungeon' && dungeonConfig) {
+    // Get global collection drop bonus once
+    const globalDropBonus = this.game.getCollectionDropBonus();
+    
+    // Only roll items if we won
+    this.party.forEach(unit => {
+        if (!unit || !unit.source) return;
+        
+        const hero = unit.source;
+        
+        // Check if villager (they only get items from first 3 dungeons and only gold after that)
+        const isVillager = hero.className.includes('villager') || hero.className.includes('tester');
+        const dungeonLevel = dungeonConfig ? dungeonConfig.level : 0;
+        
+        if (isVillager) {
+            // Villagers only get items from dungeons level 50 and below (first 3 easy dungeons)
+            if (dungeonLevel > 50 || !unit.isAlive) {
+                // Only gold for villagers in harder dungeons or if dead
+                itemRolls.push({
+                    hero: hero,
+                    gold: Math.floor(rewards.gold / this.party.length),
+                    item: null
+                });
+            } else if (unit.isAlive) {
+                // 50% chance for item in easy dungeons
+                if (Math.random() < 0.5) {
+                    // Get item from dungeon rewards
+                    if (rewards.items && rewards.items.length > 0) {
+                        const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
+                        
+                        // Get collection bonuses for this item
+                        const itemBonuses = this.game.getItemCollectionBonuses(itemId);
+                        const collectionBonuses = {
+                            globalDropBonus: globalDropBonus,
+                            ...itemBonuses
+                        };
+                        
+                        // Create item with collection bonuses
+                        const item = new Item(itemId);
+                        item.rollItem(collectionBonuses);
+                        
+                        itemRolls.push({
+                            hero: hero,
+                            gold: 0,
+                            item: item
+                        });
+                    } else {
+                        // No items available, give gold instead
+                        itemRolls.push({
+                            hero: hero,
+                            gold: Math.floor(rewards.gold / this.party.length),
+                            item: null
+                        });
+                    }
+                } else {
+                    // Failed item roll, get gold
                     itemRolls.push({
                         hero: hero,
                         gold: Math.floor(rewards.gold / this.party.length),
                         item: null
                     });
-                } else if (unit.isAlive) {
-                    // 50% chance for item in easy dungeons
-                    if (Math.random() < 0.5) {
-                        // Get item from dungeon rewards
-                        if (rewards.items && rewards.items.length > 0) {
-                            const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
-                            const item = new Item(itemId);
-                            itemRolls.push({
-                                hero: hero,
-                                gold: 0,
-                                item: item
-                            });
-                        } else {
-                            // No items available, give gold instead
-                            itemRolls.push({
-                                hero: hero,
-                                gold: Math.floor(rewards.gold / this.party.length),
-                                item: null
-                            });
-                        }
+                }
+            } else {
+                // Dead villagers get nothing
+                itemRolls.push({
+                    hero: hero,
+                    gold: 0,
+                    item: null
+                });
+            }
+        } else {
+            // Non-villager heroes - original logic
+            if (unit.isAlive) {
+                // 50% chance for item
+                if (Math.random() < 0.5) {
+                    // Get item from dungeon rewards
+                    if (rewards.items && rewards.items.length > 0) {
+                        const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
+                        
+                        // Get collection bonuses for this item
+                        const itemBonuses = this.game.getItemCollectionBonuses(itemId);
+                        const collectionBonuses = {
+                            globalDropBonus: globalDropBonus,
+                            ...itemBonuses
+                        };
+                        
+                        // Create item with collection bonuses
+                        const item = new Item(itemId);
+                        item.rollItem(collectionBonuses);
+                        
+                        itemRolls.push({
+                            hero: hero,
+                            gold: 0,
+                            item: item
+                        });
                     } else {
-                        // Failed item roll, get gold
+                        // No items available, give gold instead
                         itemRolls.push({
                             hero: hero,
                             gold: Math.floor(rewards.gold / this.party.length),
@@ -3173,64 +3228,34 @@ this.party.forEach((unit, index) => {
                         });
                     }
                 } else {
-                    // Dead villagers get nothing
+                    // Failed item roll, get gold
                     itemRolls.push({
                         hero: hero,
-                        gold: 0,
+                        gold: Math.floor(rewards.gold / this.party.length),
                         item: null
                     });
                 }
             } else {
-                // Non-villager heroes - original logic
-                if (unit.isAlive) {
-                    // 50% chance for item
-                    if (Math.random() < 0.5) {
-                        // Get item from dungeon rewards
-                        if (rewards.items && rewards.items.length > 0) {
-                            const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
-                            const item = new Item(itemId);
-                            itemRolls.push({
-                                hero: hero,
-                                gold: 0,
-                                item: item
-                            });
-                        } else {
-                            // No items available, give gold instead
-                            itemRolls.push({
-                                hero: hero,
-                                gold: Math.floor(rewards.gold / this.party.length),
-                                item: null
-                            });
-                        }
-                    } else {
-                        // Failed item roll, get gold
-                        itemRolls.push({
-                            hero: hero,
-                            gold: Math.floor(rewards.gold / this.party.length),
-                            item: null
-                        });
-                    }
-                } else {
-                    // Dead heroes get nothing
-                    itemRolls.push({
-                        hero: hero,
-                        gold: 0,
-                        item: null
-                    });
-                }
+                // Dead heroes get nothing
+                itemRolls.push({
+                    hero: hero,
+                    gold: 0,
+                    item: null
+                });
             }
+        }
+    });
+} else {
+    // On defeat, no items are rolled - just empty entries
+    this.party.forEach(unit => {
+        if (!unit || !unit.source) return;
+        itemRolls.push({
+            hero: unit.source,
+            gold: 0,
+            item: null
         });
-    } else {
-        // On defeat, no items are rolled - just empty entries
-        this.party.forEach(unit => {
-            if (!unit || !unit.source) return;
-            itemRolls.push({
-                hero: unit.source,
-                gold: 0,
-                item: null
-            });
-        });
-    }
+    });
+}
     
 // Calculate party deaths from battleStats
 let partyDeaths = 0;
