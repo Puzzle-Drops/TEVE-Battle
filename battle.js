@@ -1795,6 +1795,82 @@ calculateAbilityScore(caster, abilityIndex, target, spell, sortedLists) {
     if (effects.includes('cleanse') && (caster.whiteWizardMalePassive || caster.whiteWitchFemalePassive)) {
         score += 10; // Their cleanses apply buffs
     }
+
+// Detonate - only use when low HP or many enemies
+if (spell.id === 'detonate') {
+    const casterHpPercent = caster.currentHp / caster.maxHp;
+    if (casterHpPercent > 0.3) {
+        score -= 100; // Don't self-destruct when healthy
+    } else {
+        score += sortedLists.aliveEnemiesCount * 20; // More value with more enemies
+    }
+}
+
+// Plant Explosive - prefer high-value targets
+if (spell.id === 'plant_explosive' && target !== 'all') {
+    // Bonus for high HP enemies (they're likely to survive until explosion)
+    const targetHpPercent = target.currentHp / target.maxHp;
+    score += targetHpPercent * 20;
+    
+    // Bonus for high threat enemies
+    const attackRank = sortedLists.enemiesByAttack.indexOf(target);
+    if (attackRank === 0) score += 15;
+}
+
+// Volatile Overload - only use when healthy enough to survive
+if (spell.id === 'volatile_overload') {
+    const turnsCanSurvive = Math.floor(caster.currentHp / spell.selfDamage[0]);
+    if (turnsCanSurvive < 2) {
+        score -= 50; // Don't use if it would kill us too quickly
+    }
+}
+
+// Call of War - check if there's room for summons
+if (spell.id === 'call_of_war') {
+    const team = caster.isEnemy ? battle.enemies : battle.party;
+    const availableSlots = 5 - team.filter(u => u && u.isAlive).length;
+    
+    if (availableSlots === 0) {
+        score = -100; // Can't summon if no room
+    } else {
+        score += availableSlots * 15; // More value with more open slots
+        
+        // Extra value if outnumbered
+        const allyCount = caster.isEnemy ? sortedLists.aliveEnemiesCount : sortedLists.aliveAlliesCount;
+        const enemyCount = caster.isEnemy ? sortedLists.aliveAlliesCount : sortedLists.aliveEnemiesCount;
+        if (enemyCount > allyCount) {
+            score += (enemyCount - allyCount) * 10;
+        }
+    }
+}
+
+// Nature's Guidance - prefer when about to use damaging abilities
+if (spell.id === 'natures_guidance') {
+    // Higher value if caster has low cooldowns on damage abilities
+    let damagingAbilitiesReady = 0;
+    caster.abilities.forEach((ability, idx) => {
+        if (!ability.passive && caster.cooldowns[idx] <= 1) {
+            const abilitySpell = spellManager.getSpell(ability.id);
+            if (abilitySpell && abilitySpell.effects.some(e => ['physical', 'magical', 'pure'].includes(e))) {
+                damagingAbilitiesReady++;
+            }
+        }
+    });
+    score += damagingAbilitiesReady * 10;
+}
+
+// Counter Strike - prefer when being focused
+if (spell.id === 'counter_strike') {
+    // Count how many enemies might attack us
+    const tauntingEnemies = sortedLists.aliveEnemiesCount;
+    const casterHpPercent = caster.currentHp / caster.maxHp;
+    
+    if (casterHpPercent > 0.5) {
+        score += tauntingEnemies * 8; // More enemies = more counter value
+    } else {
+        score -= 20; // Less valuable when low HP
+    }
+}
     
 // Test spell overrides - ALWAYS prioritize win, NEVER use lose
 if (spell.id === 'win') {
@@ -2119,6 +2195,37 @@ if (effects.includes('physical')) {
                 }
             }
 
+// Apply regeneration buffs
+if (this.currentUnit.isAlive && !this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
+    this.currentUnit.buffs.forEach(buff => {
+        if (buff.regenAmount && this.currentUnit.isAlive) {
+            const healAmount = buff.regenAmount;
+            const actualHeal = Math.min(healAmount, this.currentUnit.maxHp - this.currentUnit.currentHp);
+            if (actualHeal > 0) {
+                this.currentUnit.currentHp += actualHeal;
+                this.log(`${this.currentUnit.name} regenerates ${actualHeal} HP from ${buff.name}.`);
+            }
+        }
+    });
+}
+
+// Check for self-damage buffs
+if (this.currentUnit.isAlive) {
+    this.currentUnit.buffs.forEach(buff => {
+        if (buff.selfDamagePerTurn && this.currentUnit.isAlive) {
+            const damage = buff.selfDamagePerTurn;
+            const previousHp = this.currentUnit.currentHp;
+            this.currentUnit.currentHp = Math.max(0, this.currentUnit.currentHp - damage);
+            this.log(`${this.currentUnit.name} takes ${damage} damage from ${buff.name}!`);
+            
+            // Check if unit died from self-damage
+            if (previousHp > 0 && this.currentUnit.currentHp <= 0) {
+                this.handleUnitDeath(this.currentUnit);
+            }
+        }
+    });
+}
+
             // Apply DOT effects first (before buff/debuff duration update)
             this.applyDotEffects(this.currentUnit);
             // Then update buff/debuff durations
@@ -2160,6 +2267,15 @@ if (effects.includes('physical')) {
             });
         }
 
+// Check for berserker fury passive
+if (attacker.berserkerFuryApplied && attacker.berserkerFuryMaxBonus) {
+    const missingHpPercent = 1 - (attacker.currentHp / attacker.maxHp);
+    // Scale linearly from 1.0 at full HP to maxBonus at 25% HP
+    const scaleFactor = Math.min(missingHpPercent / 0.75, 1.0);
+    const damageMultiplier = 1 + ((attacker.berserkerFuryMaxBonus - 1) * scaleFactor);
+    damage *= damageMultiplier;
+}
+
         // Check if target can dodge (Marked prevents all dodging)
         const isMarked = target.debuffs.some(d => d.name === 'Mark');
         
@@ -2180,7 +2296,20 @@ if (effects.includes('physical')) {
                 return 0;
             }
         }
-        
+
+// Check for critical strike
+const critBuff = attacker.buffs.find(b => b.name === 'Nature\'s Guidance' && b.attacksRemaining > 0);
+if (critBuff && critBuff.criticalChance && Math.random() < critBuff.criticalChance) {
+    damage *= 2;
+    this.log(`Critical strike!`);
+    
+    // Reduce attacks remaining
+    critBuff.attacksRemaining--;
+    if (critBuff.attacksRemaining <= 0) {
+        // Remove the buff
+        attacker.buffs = attacker.buffs.filter(b => b !== critBuff);
+    }
+}
         // Apply attacker's damage modifiers from buffs
         attacker.buffs.forEach(buff => {
             if (buff.name === 'Increase Attack' || buff.damageMultiplier) {
@@ -2289,6 +2418,52 @@ if (target.damageReduction && damageType !== 'pure') {
         damage = Math.round(damage);
         const previousHp = target.currentHp;
         target.currentHp = Math.max(0, target.currentHp - damage);
+
+// Check for damage reflection AFTER damage is dealt
+if (damage > 0 && target.isAlive && attacker.isAlive && attacker !== target) {
+    const reflectionBuff = target.buffs.find(b => b.name === 'Damage Reflection');
+    if (reflectionBuff && reflectionBuff.reflectPercent) {
+        const reflectedDamage = Math.floor(damage * reflectionBuff.reflectPercent);
+        if (reflectedDamage > 0) {
+            const previousAttackerHp = attacker.currentHp;
+            attacker.currentHp = Math.max(0, attacker.currentHp - reflectedDamage);
+            this.log(`${attacker.name} takes ${reflectedDamage} reflected damage!`);
+            
+            // Show reflected damage animation
+            this.showDamageAnimation(target, attacker, reflectedDamage, 'pure');
+            
+            // Check if attacker died from reflection
+            if (previousAttackerHp > 0 && attacker.currentHp <= 0) {
+                this.handleUnitDeath(attacker, target);
+            }
+        }
+    }
+}
+
+// Check for counter-attack
+if (damage > 0 && target.isAlive && attacker.isAlive && attacker !== target) {
+    const counterBuff = target.buffs.find(b => b.name === 'Counter Strike' && b.countersRemaining > 0);
+    if (counterBuff && counterBuff.counterDamagePercent) {
+        const counterDamage = Math.floor(damage * counterBuff.counterDamagePercent);
+        if (counterDamage > 0) {
+            this.log(`${target.name} counter-attacks!`);
+            
+            // Reduce counters remaining
+            counterBuff.countersRemaining--;
+            if (counterBuff.countersRemaining <= 0) {
+                // Remove the buff
+                target.buffs = target.buffs.filter(b => b !== counterBuff);
+            }
+            
+            // Deal counter damage (use a flag to prevent infinite counter loops)
+            if (!attacker._beingCountered) {
+                attacker._beingCountered = true;
+                this.dealDamage(target, attacker, counterDamage, 'physical');
+                delete attacker._beingCountered;
+            }
+        }
+    }
+}
 
 // Track damage stats
 this.trackBattleStat(attacker.name, 'damageDealt', damage);
@@ -3706,7 +3881,8 @@ exitBattle() {
         'Increase Defense': 'increase_defense',
         'Immune': 'immune',
         'Shield': 'shield',
-        'Frost Armor': 'frost_armor'
+        'Frost Armor': 'frost_armor',
+        'Volatile Overload': 'volatile_overload'
     };
     return iconMap[buffName] || 'buff';
 }
@@ -3752,7 +3928,7 @@ exitBattle() {
             document.body.appendChild(tooltip);
         }
         
-        const descriptions = {
+const descriptions = {
     // Buffs
     'Boss': '50% stun resistance, 25% damage reduction',
     'Increase Attack': '+50% attack damage',
@@ -3761,18 +3937,24 @@ exitBattle() {
     'Immune': 'Cannot gain debuffs',
     'Shield': `Absorbs ${Math.round(buffDebuff.shieldAmount || 0)} damage`,
     'Frost Armor': '+25% damage reduction, attackers are slowed',
-            
-            // Debuffs
-            'Reduce Attack': '-50% attack damage',
-            'Reduce Speed': '-33% action bar progress',
-            'Reduce Defense': '-25% damage reduction, and +25% damage taken',
-            'Blight': 'No health regen, cannot be healed',
-            'Bleed': 'Takes 5% max HP damage each turn',
-            'Stun': 'Cannot act on next turn',
-            'Taunt': 'Must attack the unit that taunted',
-            'Silence': 'Forces skill 1 attack on random enemy',
-            'Mark': '+25% damage taken, cannot gain buffs or evade'
-        };
+    'Volatile Overload': `+${Math.round((buffDebuff.damageMultiplier - 1) * 100)}% damage, ${buffDebuff.selfDamagePerTurn || 0} self-damage/turn`,
+    'Damage Reflection': `Reflects ${Math.round((buffDebuff.reflectPercent || 0) * 100)}% damage`,
+    'Nature\'s Guidance': `${Math.round((buffDebuff.criticalChance || 0) * 100)}% crit chance (${buffDebuff.attacksRemaining || 0} attacks left)`,
+    'Regeneration': `Heals ${buffDebuff.regenAmount || 0} HP per turn`,
+    'Counter Strike': `Counter for ${Math.round((buffDebuff.counterDamagePercent || 0) * 100)}% damage (${buffDebuff.countersRemaining || 0} left)`,
+    
+    // Debuffs
+    'Reduce Attack': '-50% attack damage',
+    'Reduce Speed': '-33% action bar progress',
+    'Reduce Defense': '-25% damage reduction, and +25% damage taken',
+    'Blight': 'No health regen, cannot be healed',
+    'Bleed': 'Takes 5% max HP damage each turn',
+    'Stun': 'Cannot act on next turn',
+    'Taunt': 'Must attack the unit that taunted',
+    'Silence': 'Forces skill 1 attack on random enemy',
+    'Mark': '+25% damage taken, cannot gain buffs or evade',
+    'Explosive': `Explodes next turn for ${Math.round(buffDebuff.bombDamage || 0)} damage`
+};
         
         tooltip.className = isBuff ? 'buff' : 'debuff';
         tooltip.innerHTML = `
