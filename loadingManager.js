@@ -1,7 +1,7 @@
 // Loading manager
 class LoadingManager {
     constructor() {
-        this.totalAssets = 17; // 5 JSON files + 10 JS files
+        this.totalAssets = 18; // 6 JSON files + 10 JS files + 2 images
         this.loadedAssets = 0;
         this.failedAssets = []; // Track which assets failed
         this.preloadedImages = {}; // Store preloaded images
@@ -128,7 +128,18 @@ try {
             }
         },
         {
-            name: 'units.json',
+            name: 'heroes.json',
+            load: async () => {
+                loadingManager.loadingText.textContent = 'Loading units...';
+                const unitsResponse = await fetch('units.json');
+                if (!unitsResponse.ok) throw new Error('Failed to load units.json');
+                unitData = await unitsResponse.json();
+                console.log('Unit data loaded');
+                loadingManager.updateProgress('units');
+            }
+        },
+        {
+            name: 'enemies.json',
             load: async () => {
                 loadingManager.loadingText.textContent = 'Loading units...';
                 const unitsResponse = await fetch('units.json');
