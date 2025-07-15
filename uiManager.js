@@ -1684,7 +1684,7 @@ updateArenaEnemyFormation() {
                 const slot = slots[index];
                 
                 // Generate stars based on class tier
-                const classData = heroData?.classes[enemy.className];
+                const classData = unitData?.classes[enemy.className];
                 const classTier = classData?.tier || 0;
                 const starData = this.game.generateStars({ 
                     type: 'hero', 
@@ -1740,7 +1740,7 @@ showArenaEnemyInfoPopup(enemy) {
     popup._currentHero = enemy;
     
     // Show full format like heroes
-    const classData = heroData?.classes[enemy.className];
+    const classData = unitData?.classes[enemy.className];
     const displayClassName = classData?.name || enemy.className;
     document.getElementById('popupHeroName').innerHTML = `Lv.${enemy.level} ${displayClassName} <span class="gender-${enemy.gender}">${enemy.gender === 'male' ? '♂' : '♀'}</span> | ${enemy.name}`;
     
@@ -2248,7 +2248,7 @@ updateHeroSelection() {
             <div class="promoteContent">
                 <div class="${promoteClass}">
                     ${promotions.map(promo => {
-                        const promoClass = heroData?.classes[promo];
+                        const promoClass = unitData?.classes[promo];
                         if (!promoClass) return '';
                         
                         // Generate stars for promotion class
@@ -2601,7 +2601,7 @@ updateHeroSelection() {
         // Check if this is an arena enemy (has className)
         if (enemy.className) {
             // Arena enemy - show full format like heroes
-            const classData = heroData?.classes[enemy.className];
+            const classData = unitData?.classes[enemy.className];
             const displayClassName = classData?.name || enemy.className;
             document.getElementById('popupHeroName').innerHTML = `Lv.${enemy.level} ${displayClassName} <span class="gender-${enemy.gender}">${enemy.gender === 'male' ? '♂' : '♀'}</span> | ${enemy.name}`;
         } else {
@@ -2737,7 +2737,7 @@ updateHeroSelection() {
             confirmText.textContent = `Awaken ${hero.name} the ${hero.displayClassName}?`;
             confirmCost.innerHTML = `💰 -10000000`;
         } else {
-            const promoClass = heroData?.classes[newClass];
+            const promoClass = unitData?.classes[newClass];
             const displayName = promoClass ? promoClass.name : newClass;
             confirmText.textContent = `Promote ${hero.name} the ${hero.displayClassName} to ${displayName}?`;
             const cost = 1000 * Math.pow(10, hero.classTier);
@@ -2920,7 +2920,7 @@ const createStatRow = (unit, stats) => {
         portraitUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unit.source.className}_portrait.png`;
         className = unit.source.className;
         // Get display class name
-        const classData = heroData?.classes[className];
+        const classData = unitData?.classes[className];
         displayClassName = classData?.name || className;
     }
     
@@ -4136,7 +4136,7 @@ showPromotionConfirm(newClass) {
         confirmText.textContent = `Awaken ${hero.name} the ${hero.displayClassName}?`;
         confirmCost.innerHTML = `💰 -10000000`;
     } else {
-        const promoClass = heroData?.classes[newClass];
+        const promoClass = unitData?.classes[newClass];
         const displayName = promoClass ? promoClass.name : newClass;
         confirmText.textContent = `Promote ${hero.name} the ${hero.displayClassName} to ${displayName}?`;
         const cost = 1000 * Math.pow(10, hero.classTier);
