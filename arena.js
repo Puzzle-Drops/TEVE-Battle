@@ -61,7 +61,7 @@ generateArenaTeamOpponents(teamData) {
         enemy.gender = heroData.gender;
 
         // Set spell level based on class tier
-        const classData = heroData.classes[heroData.className];
+        const classData = unitData.classes[heroData.className];
         if (classData) {
             enemy.spellLevel = Math.min(4, classData.tier || 1);
         }
