@@ -6353,6 +6353,46 @@ body {
     box-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
 }
 
+/* Collection Complete Popup */
+.collectionCompletePopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
+    border: 3px solid #00ff88;
+    padding: 30px;
+    z-index: 10002;
+    box-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+    min-width: 400px;
+    max-width: 600px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.collectionCompleteContent {
+    text-align: center;
+}
+
+.collectionCompleteTitle {
+    font-size: 28px;
+    font-weight: bold;
+    color: #00ff88;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    margin-bottom: 20px;
+}
+
+.collectionCompleteItem {
+    margin: 20px 0;
+}
+
+.collectionCompleteInfo {
+    font-size: 16px;
+    color: #b0e0f0;
+    line-height: 1.5;
+}
+
 /* END end EnD eNd ENd eND enD bottom document/*
 
 /* Directional lunge animations */
