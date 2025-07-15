@@ -4002,32 +4002,474 @@
     },
     "spells": ["blade_flurry", "mirror_image", "wind_walk", "blade_mastery_passive"]
 },
-    "lich_queen": {
-      "name": "Lich Queen",
-      "boss": true,
-      "mainstat": "int",
-      "modifiers": { 
-        "str": 1.0,
-        "agi": 1.0,
-        "int": 3.0,
-        "hp": 3.5,
-        "attack": 0.5,
-        "armor": 0.1,
-        "resist": 0.5
-      },
-      "initial": {
-        "str": 8,
-        "agi": 8,
-        "int": 25,
-        "hp": 100,
-        "hpRegen": 5,
-        "attack": 16,
-        "attackSpeed": 0,
-        "armor": 10,
-        "resist": 30
-      },
-      "spells": []
+"snapdragon_spitter": {
+    "name": "Snapdragon Spitter",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.0,
+        "agi": 2.5,
+        "int": 4.5,
+        "hp": 3.3,
+        "attack": 0.32,
+        "armor": 0.11,
+        "resist": 0.405
     },
+    "initial": {
+        "str": 6,
+        "agi": 10,
+        "int": 20,
+        "hp": 80,
+        "hpRegen": 2.01,
+        "attack": 6,
+        "attackSpeed": 0,
+        "armor": 7.98,
+        "resist": 14
+    },
+    "spells": ["venom_spit", "toxic_spores", "regenerative_roots_passive"]
+},
+"ogre_bruiser": {
+    "name": "Ogre Bruiser",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 4.5,
+        "agi": 2.0,
+        "int": 2.5,
+        "hp": 3.8,
+        "attack": 0.24,
+        "armor": 0.36,
+        "resist": 0.08
+    },
+    "initial": {
+        "str": 20,
+        "agi": 6,
+        "int": 10,
+        "hp": 110,
+        "hpRegen": 1.34,
+        "attack": 5,
+        "attackSpeed": 0,
+        "armor": 18,
+        "resist": 5
+    },
+    "spells": ["brutal_club", "intimidating_roar", "thick_skull"]
+},
+"ogre_witch": {
+    "name": "Ogre Witch",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 2.0,
+        "int": 4.5,
+        "hp": 3.4,
+        "attack": 0.3,
+        "armor": 0.16,
+        "resist": 0.33
+    },
+    "initial": {
+        "str": 10,
+        "agi": 6,
+        "int": 20,
+        "hp": 85,
+        "hpRegen": 2.68,
+        "attack": 5,
+        "attackSpeed": 0,
+        "armor": 10.64,
+        "resist": 12
+    },
+    "spells": ["hex_bolt", "swamp_curse", "dark_ritual_swamp"]
+},
+"swamp_lurker": {
+    "name": "Swamp Lurker",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 4.5,
+        "int": 2.0,
+        "hp": 3.1,
+        "attack": 0.44,
+        "armor": 0.16,
+        "resist": 0.105
+    },
+    "initial": {
+        "str": 10,
+        "agi": 20,
+        "int": 6,
+        "hp": 70,
+        "hpRegen": 0.67,
+        "attack": 11,
+        "attackSpeed": 0,
+        "armor": 9.31,
+        "resist": 8
+    },
+    "spells": ["ambush_strike", "murky_disappearance", "stalkers_mark_passive"]
+},
+"bog_beast": {
+    "name": "Bog Beast",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 5.5,
+        "agi": 2.5,
+        "int": 4.0,
+        "hp": 4.2,
+        "attack": 0.26,
+        "armor": 0.46,
+        "resist": 0.155
+    },
+    "initial": {
+        "str": 26,
+        "agi": 8,
+        "int": 14,
+        "hp": 135,
+        "hpRegen": 2.01,
+        "attack": 8,
+        "attackSpeed": 0,
+        "armor": 25,
+        "resist": 10
+    },
+    "spells": ["crushing_tendrils", "bog_armor", "swamps_embrace", "natures_vengeance_passive"]
+},
+"owlkin_king": {
+    "name": "Owlkin King",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 3.0,
+        "agi": 3.5,
+        "int": 5.5,
+        "hp": 3.8,
+        "attack": 0.32,
+        "armor": 0.21,
+        "resist": 0.43
+    },
+    "initial": {
+        "str": 12,
+        "agi": 14,
+        "int": 22,
+        "hp": 120,
+        "hpRegen": 3.35,
+        "attack": 10,
+        "attackSpeed": 0,
+        "armor": 15.96,
+        "resist": 16
+    },
+    "spells": ["rending_talons", "wisdoms_call", "moonlit_barrier", "ancient_knowledge"]
+},
+"lizardman_warrior": {
+    "name": "Lizardman Warrior",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 4.5,
+        "agi": 2.5,
+        "int": 2.0,
+        "hp": 3.7,
+        "attack": 0.34,
+        "armor": 0.26,
+        "resist": 0.055
+    },
+    "initial": {
+        "str": 20,
+        "agi": 10,
+        "int": 6,
+        "hp": 100,
+        "hpRegen": 0.67,
+        "attack": 9,
+        "attackSpeed": 0,
+        "armor": 13.3,
+        "resist": 4
+    },
+    "spells": ["scale_slash", "battle_frenzy", "warriors_challenge"]
+},
+"lizardman_shaman": {
+    "name": "Lizardman Shaman",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.0,
+        "agi": 2.5,
+        "int": 4.5,
+        "hp": 3.2,
+        "attack": 0.28,
+        "armor": 0.16,
+        "resist": 0.38
+    },
+    "initial": {
+        "str": 6,
+        "agi": 10,
+        "int": 20,
+        "hp": 75,
+        "hpRegen": 3.35,
+        "attack": 5,
+        "attackSpeed": 0,
+        "armor": 9.31,
+        "resist": 14
+    },
+    "spells": ["spirit_flame", "ancestral_ward", "tribal_chant"]
+},
+"owlkin_hunter": {
+    "name": "Owlkin Hunter",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 2.0,
+        "agi": 5.0,
+        "int": 2.0,
+        "hp": 3.0,
+        "attack": 0.5,
+        "armor": 0.11,
+        "resist": 0.105
+    },
+    "initial": {
+        "str": 6,
+        "agi": 24,
+        "int": 6,
+        "hp": 65,
+        "hpRegen": 0.67,
+        "attack": 13,
+        "attackSpeed": 0,
+        "armor": 6.65,
+        "resist": 8
+    },
+    "spells": ["precision_shot", "hunters_focus", "predators_instinct_passive"]
+},
+"lava_elemental": {
+    "name": "Lava Elemental",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 2.0,
+        "int": 4.5,
+        "hp": 3.5,
+        "attack": 0.32,
+        "armor": 0.06,
+        "resist": 0.48
+    },
+    "initial": {
+        "str": 10,
+        "agi": 6,
+        "int": 20,
+        "hp": 90,
+        "hpRegen": 2.01,
+        "attack": 6,
+        "attackSpeed": 0,
+        "armor": 3.99,
+        "resist": 18
+    },
+    "spells": ["molten_strike", "lava_shield", "burning_aura_passive"]
+},
+"owlkin_warchief": {
+    "name": "Owlkin Warchief",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 4.5,
+        "agi": 4.0,
+        "int": 3.5,
+        "hp": 4.0,
+        "attack": 0.38,
+        "armor": 0.31,
+        "resist": 0.13
+    },
+    "initial": {
+        "str": 18,
+        "agi": 16,
+        "int": 14,
+        "hp": 125,
+        "hpRegen": 1.34,
+        "attack": 12,
+        "attackSpeed": 0,
+        "armor": 19.95,
+        "resist": 8
+    },
+    "spells": ["warchiefs_blade", "rally_the_tribe", "feathered_fury", "commanders_presence_passive"]
+},
+"lizardman_trickster": {
+    "name": "Lizardman Trickster",
+    "boss": true,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 6.0,
+        "int": 3.5,
+        "hp": 3.6,
+        "attack": 0.46,
+        "armor": 0.21,
+        "resist": 0.205
+    },
+    "initial": {
+        "str": 8,
+        "agi": 26,
+        "int": 14,
+        "hp": 110,
+        "hpRegen": 2.01,
+        "attack": 14,
+        "attackSpeed": 0,
+        "armor": 13.3,
+        "resist": 14
+    },
+    "spells": ["trick_strike", "smoke_and_mirrors", "chaos_toxin", "master_of_deception"]
+},
+"ice_revenant": {
+    "name": "Ice Revenant",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.0,
+        "agi": 2.5,
+        "int": 4.5,
+        "hp": 3.3,
+        "attack": 0.34,
+        "armor": 0.11,
+        "resist": 0.38
+    },
+    "initial": {
+        "str": 6,
+        "agi": 10,
+        "int": 20,
+        "hp": 80,
+        "hpRegen": 2.01,
+        "attack": 7,
+        "attackSpeed": 0,
+        "armor": 7.98,
+        "resist": 14
+    },
+    "spells": ["frost_strike_revenant", "icy_grasp", "frozen_soul_passive"]
+},
+"frost_specter": {
+    "name": "Frost Specter",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.0,
+        "agi": 3.0,
+        "int": 4.0,
+        "hp": 3.0,
+        "attack": 0.26,
+        "armor": 0.06,
+        "resist": 0.43
+    },
+    "initial": {
+        "str": 6,
+        "agi": 12,
+        "int": 18,
+        "hp": 60,
+        "hpRegen": 2.68,
+        "attack": 4,
+        "attackSpeed": 0,
+        "armor": 3.99,
+        "resist": 16
+    },
+    "spells": ["chill_touch", "spectral_wail", "phase_walk"]
+},
+"frozen_gargoyle": {
+    "name": "Frozen Gargoyle",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 5.0,
+        "agi": 2.0,
+        "int": 2.0,
+        "hp": 4.0,
+        "attack": 0.2,
+        "armor": 0.51,
+        "resist": 0.03
+    },
+    "initial": {
+        "str": 22,
+        "agi": 6,
+        "int": 8,
+        "hp": 120,
+        "hpRegen": 0,
+        "attack": 4,
+        "attackSpeed": 0,
+        "armor": 23.94,
+        "resist": 2
+    },
+    "spells": ["stone_slam", "crystalline_shield", "shatter_passive"]
+},
+"soul_wraith": {
+    "name": "Soul Wraith",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 2.0,
+        "int": 4.5,
+        "hp": 3.1,
+        "attack": 0.38,
+        "armor": 0.06,
+        "resist": 0.43
+    },
+    "initial": {
+        "str": 10,
+        "agi": 6,
+        "int": 20,
+        "hp": 70,
+        "hpRegen": 3.35,
+        "attack": 8,
+        "attackSpeed": 0,
+        "armor": 3.99,
+        "resist": 16
+    },
+    "spells": ["soul_drain", "wraith_form", "life_tap"]
+},
+"crypt_king": {
+    "name": "Crypt King",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 6.0,
+        "agi": 3.0,
+        "int": 3.0,
+        "hp": 4.4,
+        "attack": 0.3,
+        "armor": 0.41,
+        "resist": 0.18
+    },
+    "initial": {
+        "str": 28,
+        "agi": 12,
+        "int": 8,
+        "hp": 145,
+        "hpRegen": 1.34,
+        "attack": 10,
+        "attackSpeed": 0,
+        "armor": 23.94,
+        "resist": 12
+    },
+    "spells": ["tomb_strike", "eternal_guard", "deaths_door", "undying_will_passive"]
+},
+"lich_queen": {
+    "name": "Lich Queen",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 3.0,
+        "int": 6.5,
+        "hp": 3.8,
+        "attack": 0.34,
+        "armor": 0.21,
+        "resist": 0.48
+    },
+    "initial": {
+        "str": 8,
+        "agi": 12,
+        "int": 28,
+        "hp": 120,
+        "hpRegen": 4.02,
+        "attack": 10,
+        "attackSpeed": 0,
+        "armor": 13.3,
+        "resist": 18
+    },
+    "spells": ["frozen_soul_blast", "lichs_phylactery", "death_and_decay", "eternal_winter"]
+},
     "naga_ranger": {
       "name": "Naga Ranger",
       "boss": true,
