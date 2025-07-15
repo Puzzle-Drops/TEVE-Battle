@@ -184,6 +184,179 @@ const buffDebuffHelpers = {
     }
 };
 
+// Debuff configurations
+const debuffConfigs = {
+    'Bleed': { bleedDamage: true },
+    'Blight': { noHeal: true },
+    'Stun': { stunned: true },
+    'Taunt': (caster) => ({ 
+        tauntTarget: caster,
+        forcedTarget: caster.position,
+        forcedTargetIsEnemy: caster.isEnemy
+    }),
+    'Reduce Attack': { attackMultiplier: 0.5 },
+    'Silence': {},
+    'Mark': {},
+    'Reduce Speed': {},
+    'Reduce Defense': {}
+};
+
+// Apply configured debuff
+function applyConfiguredDebuff(battle, target, debuffName, duration, caster = null) {
+    const config = debuffConfigs[debuffName];
+    const props = typeof config === 'function' ? config(caster) : (config || {});
+    battle.applyDebuff(target, debuffName, duration, props);
+}
+
+// Action bar manipulation helpers
+const actionBarHelpers = {
+    drain: function(target, percent, battle = null) {
+        const oldActionBar = target.actionBar;
+        const drain = oldActionBar * percent;
+        target.actionBar = Math.max(0, oldActionBar - drain);
+        if (battle) {
+            battle.log(`${target.name}'s action bar drained by ${Math.floor(percent * 100)}%!`);
+        }
+        return drain;
+    },
+    
+    grant: function(target, percent, battle = null) {
+        const oldActionBar = target.actionBar;
+        const amount = percent * 10000;
+        target.actionBar = Math.min(10000, oldActionBar + amount);
+        if (battle && amount > 0) {
+            battle.log(`${target.name} gains ${Math.floor(percent * 100)}% action bar!`);
+        }
+        return amount;
+    },
+    
+    steal: function(from, to, percent = 1.0, battle = null) {
+        const stolen = from.actionBar * percent;
+        from.actionBar = Math.max(0, from.actionBar - stolen);
+        to.actionBar = Math.min(10000, to.actionBar + stolen);
+        if (battle && stolen > 0) {
+            battle.log(`${to.name} steals ${Math.floor(percent * 100)}% action bar from ${from.name}!`);
+        }
+        return stolen;
+    },
+    
+    fill: function(target, battle = null) {
+        target.actionBar = 10000;
+        if (battle) {
+            battle.log(`${target.name}'s action bar filled to 100%!`);
+        }
+    },
+    
+    reduce: function(target, percent, battle = null) {
+        const oldActionBar = target.actionBar;
+        target.actionBar = Math.floor(oldActionBar * (1 - percent));
+        if (battle) {
+            battle.log(`${target.name}'s action bar reduced by ${Math.floor(percent * 100)}%!`);
+        }
+    }
+};
+
+// HP-based calculations
+const hpHelpers = {
+    missingHp: (unit) => unit.maxHp - unit.currentHp,
+    hpPercent: (unit) => unit.currentHp / unit.maxHp,
+    isBelowThreshold: (unit, threshold) => (unit.currentHp / unit.maxHp) < threshold,
+    percentOfMaxHp: (unit, percent) => Math.floor(unit.maxHp * percent),
+    
+    drainHpPercent: function(unit, percent, minHp = 1) {
+        const drainAmount = Math.floor(unit.maxHp * percent);
+        const actualDrain = Math.min(drainAmount, unit.currentHp - minHp);
+        unit.currentHp -= actualDrain;
+        return actualDrain;
+    }
+};
+
+// Conditional damage helpers
+const conditionalDamageHelpers = {
+    ifDebuffed: function(target, debuffName, multiplier, battle, logMessage) {
+        if (buffDebuffHelpers.hasDebuff(target, debuffName)) {
+            if (logMessage && battle) battle.log(logMessage);
+            return multiplier;
+        }
+        return 1;
+    },
+    
+    ifBelowHp: function(target, threshold, multiplier, battle, logMessage) {
+        if (hpHelpers.isBelowThreshold(target, threshold)) {
+            if (logMessage && battle) battle.log(logMessage);
+            return multiplier;
+        }
+        return 1;
+    }
+};
+
+// Passive ability helpers
+const passiveHelpers = {
+    addOnHitEffect: function(caster, effect) {
+        caster.onHitEffects = caster.onHitEffects || [];
+        caster.onHitEffects.push(effect);
+    },
+    
+    addOnDamageTaken: function(caster, effect) {
+        caster.onDamageTaken = caster.onDamageTaken || [];
+        caster.onDamageTaken.push(effect);
+    },
+    
+    addOnKillEffect: function(caster, effect) {
+        caster.onKillEffects = caster.onKillEffects || [];
+        caster.onKillEffects.push(effect);
+    },
+    
+    addDamageCalculation: function(caster, calculation) {
+        caster.onDamageCalculation = caster.onDamageCalculation || [];
+        caster.onDamageCalculation.push(calculation);
+    }
+};
+
+// Multi-application helpers
+const multiApplyHelpers = {
+    applyDebuffStacks: function(battle, target, debuffName, count, duration, caster = null) {
+        for (let i = 0; i < count; i++) {
+            applyConfiguredDebuff(battle, target, debuffName, duration, caster);
+        }
+    },
+    
+    applyRandomDebuffs: function(battle, targets, debuffTypes, count, duration) {
+        for (let i = 0; i < count && targets.length > 0; i++) {
+            const target = targets[Math.floor(Math.random() * targets.length)];
+            const debuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
+            applyConfiguredDebuff(battle, target, debuff, duration);
+        }
+    },
+    
+    convertBuffsToDebuffs: function(battle, target, duration) {
+        const buffCount = buffDebuffHelpers.countBuffs(target, ['Boss']);
+        buffDebuffHelpers.clearBuffs(target, ['Boss']);
+        
+        const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Mark'];
+        this.applyRandomDebuffs(battle, [target], debuffTypes, buffCount, duration);
+    }
+};
+
+// Resource stealing and redistribution
+function stealAndRedistribute(battle, enemies, allies, extractFn, applyFn, logMessage) {
+    const collected = [];
+    enemies.forEach(enemy => {
+        if (enemy.isAlive) {
+            collected.push(...extractFn(enemy));
+        }
+    });
+    
+    while (collected.length > 0 && allies.length > 0) {
+        const ally = allies[Math.floor(Math.random() * allies.length)];
+        applyFn(ally, collected.shift());
+    }
+    
+    if (logMessage && battle) {
+        battle.log(logMessage);
+    }
+}
+
 // Spell Logic Functions
 const spellLogic = {
     // Villager Spells
@@ -207,8 +380,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, int: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Stun', stunDuration, { stunned: true });
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
             }
         });
     },
@@ -297,16 +470,13 @@ const spellLogic = {
         });
         
         if (caster.aimedShotAppliesBleed && target.isAlive) {
-            battle.applyDebuff(target, 'Bleed', caster.aimedShotBleedDuration || 1, { bleedDamage: true });
+            applyConfiguredDebuff(battle, target, 'Bleed', caster.aimedShotBleedDuration || 1);
         }
         
         if (caster.aimedShotActionBarPerDebuff) {
             const debuffCount = buffDebuffHelpers.countDebuffs(target);
-            const actionBarGain = debuffCount * caster.aimedShotActionBarPerDebuff * 10000;
-            caster.actionBar += actionBarGain;
-            if (actionBarGain > 0) {
-                battle.log(`${caster.name} gains ${Math.floor(actionBarGain / 100)}% action bar!`);
-            }
+            const actionBarGainPercent = debuffCount * caster.aimedShotActionBarPerDebuff;
+            actionBarHelpers.grant(caster, actionBarGainPercent, battle);
         }
     },
 
@@ -314,8 +484,8 @@ const spellLogic = {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
         
-        battle.applyDebuff(target, 'Mark', duration, {});
-        battle.applyDebuff(target, 'Blight', duration, { noHeal: true });
+        applyConfiguredDebuff(battle, target, 'Mark', duration);
+        applyConfiguredDebuff(battle, target, 'Blight', duration);
     },
 
     doubleShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -324,14 +494,14 @@ const spellLogic = {
         const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, agi: true});
         
         battle.dealDamage(caster, target, damage, 'physical');
-        battle.applyDebuff(target, 'Reduce Defense', debuffDuration, {});
+        applyConfiguredDebuff(battle, target, 'Reduce Defense', debuffDuration);
         
         const enemies = battle.getEnemies(caster);
         const aliveEnemies = enemies.filter(e => e && e.isAlive);
         if (aliveEnemies.length > 0) {
             const randomTarget = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
             battle.dealDamage(caster, randomTarget, damage, 'physical');
-            battle.applyDebuff(randomTarget, 'Bleed', debuffDuration, { bleedDamage: true });
+            applyConfiguredDebuff(battle, randomTarget, 'Bleed', debuffDuration);
         }
     },
 
@@ -351,8 +521,7 @@ const spellLogic = {
     },
 
     sniperMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.onDamageCalculation = caster.onDamageCalculation || [];
-        caster.onDamageCalculation.push({
+        passiveHelpers.addDamageCalculation(caster, {
             type: 'executioner',
             damageBonus: 1.5,
             hpThreshold: 0.3
@@ -360,8 +529,7 @@ const spellLogic = {
     },
 
     sniperFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.onKillEffects = caster.onKillEffects || [];
-        caster.onKillEffects.push({
+        passiveHelpers.addOnKillEffect(caster, {
             type: 'buff',
             buffName: 'Increase Speed',
             duration: 2
@@ -385,11 +553,10 @@ const spellLogic = {
         
         const lowestHpAlly = spellHelpers.getLowestHpAlly(battle, caster);
         if (lowestHpAlly) {
-            lowestHpAlly.actionBar += 1000;
-            battle.log(`${lowestHpAlly.name} gained 10% action bar!`);
+            actionBarHelpers.grant(lowestHpAlly, 0.1, battle);
             
             if (caster.summonerFemalePassive) {
-                const healAmount = Math.floor(lowestHpAlly.maxHp * 0.05);
+                const healAmount = hpHelpers.percentOfMaxHp(lowestHpAlly, 0.05);
                 battle.healUnit(lowestHpAlly, healAmount);
             }
         }
@@ -399,11 +566,9 @@ const spellLogic = {
             const aliveEnemies = enemies.filter(e => e && e.isAlive);
             
             if (aliveEnemies.length > 0) {
-                aliveEnemies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+                aliveEnemies.sort((a, b) => hpHelpers.hpPercent(a) - hpHelpers.hpPercent(b));
                 const lowestHpEnemy = aliveEnemies[0];
-                const drain = lowestHpEnemy.actionBar * 0.05;
-                lowestHpEnemy.actionBar = Math.max(0, lowestHpEnemy.actionBar - drain);
-                battle.log(`${lowestHpEnemy.name}'s action bar drained by 5%!`);
+                actionBarHelpers.drain(lowestHpEnemy, 0.05, battle);
             }
         }
     },
@@ -414,10 +579,10 @@ const spellLogic = {
         
         battle.applyBuff(target, 'Increase Defense', duration, {});
         
-        const healAmount = target.maxHp * spell.healPercent;
+        const healAmount = hpHelpers.percentOfMaxHp(target, spell.healPercent);
         battle.healUnit(target, healAmount);
         
-        const shieldAmount = target.maxHp * spell.shieldPercent;
+        const shieldAmount = hpHelpers.percentOfMaxHp(target, spell.shieldPercent);
         battle.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
     },
 
@@ -429,14 +594,10 @@ const spellLogic = {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
             perEnemyEffect: (battle, caster, enemy) => {
-                battle.applyDebuff(enemy, 'Reduce Attack', duration, {});
+                applyConfiguredDebuff(battle, enemy, 'Reduce Attack', duration);
                 
                 if (caster.runemasterMalePassive) {
-                    battle.applyDebuff(enemy, 'Taunt', 1, { 
-                        tauntTarget: caster,
-                        forcedTarget: caster.position,
-                        forcedTargetIsEnemy: caster.isEnemy
-                    });
+                    applyConfiguredDebuff(battle, enemy, 'Taunt', 1, caster);
                 }
             }
         });
@@ -501,13 +662,12 @@ const spellLogic = {
         buffDebuffHelpers.clearDebuffs(target);
         battle.log(`All debuffs removed from ${target.name}!`);
         
-        target.actionBar = 10000;
-        battle.log(`${target.name}'s action bar filled to 100%!`);
+        actionBarHelpers.fill(target, battle);
     },
 
     twilightsPromiseLogic: function(battle, caster, target, spell, spellLevel = 1) {
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            ally.actionBar = Math.max(0, ally.actionBar - 1000);
+            actionBarHelpers.reduce(ally, 0.1);
         });
         
         caster.twilightsEndPending = true;
@@ -521,7 +681,7 @@ const spellLogic = {
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
             battle.dealDamage(caster, enemy, damage, 'magical');
-            enemy.actionBar = Math.floor(enemy.actionBar * 0.5);
+            actionBarHelpers.reduce(enemy, 0.5);
         });
     },
 
@@ -543,11 +703,7 @@ const spellLogic = {
 
     // Swordsman Family Spells
     bladeStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const bleedBonus = buffDebuffHelpers.hasDebuff(target, 'Bleed') ? spell.bleedBonus : 1;
-        
-        if (bleedBonus > 1) {
-            battle.log(`Critical strike on bleeding target!`);
-        }
+        const bleedBonus = conditionalDamageHelpers.ifDebuffed(target, 'Bleed', spell.bleedBonus, battle, 'Critical strike on bleeding target!');
         
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
@@ -561,12 +717,7 @@ const spellLogic = {
         const tauntDuration = spellHelpers.getParam(spell, 'tauntDuration', levelIndex, 1);
         const shieldAmount = spellHelpers.getParam(spell, 'shieldAmount', levelIndex, 25);
         
-        battle.applyDebuff(target, 'Taunt', tauntDuration, { 
-            tauntTarget: caster,
-            forcedTarget: caster.position,
-            forcedTargetIsEnemy: caster.isEnemy
-        });
-        
+        applyConfiguredDebuff(battle, target, 'Taunt', tauntDuration, caster);
         battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
     },
 
@@ -575,16 +726,12 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Taunt', duration, { 
-                tauntTarget: caster,
-                forcedTarget: caster.position,
-                forcedTargetIsEnemy: caster.isEnemy
-            });
+            applyConfiguredDebuff(battle, enemy, 'Taunt', duration, caster);
         });
         
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
             battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
-            ally.actionBar += 3000;
+            actionBarHelpers.grant(ally, 0.3);
         });
     },
 
@@ -592,26 +739,16 @@ const spellLogic = {
         const levelIndex = spellLevel - 1;
         const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 2);
         
-        for (let i = 0; i < spell.bleedStacks; i++) {
-            battle.applyDebuff(caster, 'Bleed', bleedDuration, { bleedDamage: true });
-        }
+        multiApplyHelpers.applyDebuffStacks(battle, caster, 'Bleed', spell.bleedStacks, bleedDuration);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Taunt', bleedDuration, { 
-                tauntTarget: caster,
-                forcedTarget: caster.position,
-                forcedTargetIsEnemy: caster.isEnemy
-            });
-            
-            for (let i = 0; i < spell.bleedStacks; i++) {
-                battle.applyDebuff(enemy, 'Bleed', bleedDuration, { bleedDamage: true });
-            }
+            applyConfiguredDebuff(battle, enemy, 'Taunt', bleedDuration, caster);
+            multiApplyHelpers.applyDebuffStacks(battle, enemy, 'Bleed', spell.bleedStacks, bleedDuration);
         });
     },
 
     championMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.onDamageTaken = caster.onDamageTaken || [];
-        caster.onDamageTaken.push({
+        passiveHelpers.addOnDamageTaken(caster, {
             type: 'stun_counter',
             chance: 0.2,
             duration: 1
@@ -619,7 +756,7 @@ const spellLogic = {
     },
 
     championFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const shieldAmount = Math.floor(caster.maxHp * 0.2);
+        const shieldAmount = hpHelpers.percentOfMaxHp(caster, 0.2);
         battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
         caster.shieldRegenTimer = 0;
         caster.shieldRegenTurns = 4;
@@ -641,7 +778,7 @@ const spellLogic = {
         
         if (target.actionBar >= 3000) {
             battle.dealDamage(caster, target, damage, 'physical');
-            target.actionBar = Math.max(0, target.actionBar - 500);
+            actionBarHelpers.drain(target, 0.05);
         } else {
             battle.dealDamage(caster, target, damage, 'pure');
         }
@@ -651,11 +788,11 @@ const spellLogic = {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
         
-        battle.applyDebuff(target, 'Mark', duration, {});
-        battle.applyDebuff(target, 'Reduce Speed', duration, {});
+        applyConfiguredDebuff(battle, target, 'Mark', duration);
+        applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
         
         if (caster.darkArchTemplarFemalePassive) {
-            battle.applyDebuff(target, 'Blight', duration, { noHeal: true });
+            applyConfiguredDebuff(battle, target, 'Blight', duration);
         }
     },
 
@@ -679,8 +816,7 @@ const spellLogic = {
     },
 
     psiShiftLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const stolenActionBar = target.actionBar;
-        caster.actionBar = Math.min(10000, caster.actionBar + stolenActionBar);
+        actionBarHelpers.steal(target, caster, 1.0, battle);
         
         const damage = spellHelpers.calculateDamage(spell, spellLevel - 1, caster, {attack: true, int: true});
         battle.dealDamage(caster, target, damage, 'magical');
@@ -714,7 +850,7 @@ const spellLogic = {
         
         let damageType = 'physical';
         if (caster.phantomAssassinFemalePassive && caster.cheapShotPureThreshold) {
-            if ((target.currentHp / target.maxHp) < caster.cheapShotPureThreshold) {
+            if (hpHelpers.isBelowThreshold(target, caster.cheapShotPureThreshold)) {
                 damageType = 'pure';
             }
         }
@@ -724,7 +860,7 @@ const spellLogic = {
             damageType: damageType,
             afterDamage: (battle, caster, target) => {
                 if (caster.cheapShotAddsBleed && target.isAlive) {
-                    battle.applyDebuff(target, 'Bleed', 2, { bleedDamage: true });
+                    applyConfiguredDebuff(battle, target, 'Bleed', 2);
                 }
             }
         });
@@ -734,13 +870,13 @@ const spellLogic = {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
-        battle.applyDebuff(target, 'Reduce Speed', duration, {});
-        battle.applyDebuff(target, 'Reduce Attack', duration, {});
-        battle.applyDebuff(target, 'Bleed', duration, { bleedDamage: true });
+        applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
+        applyConfiguredDebuff(battle, target, 'Reduce Attack', duration);
+        applyConfiguredDebuff(battle, target, 'Bleed', duration);
     },
 
     assassinateLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        if ((target.currentHp / target.maxHp) < spell.hpThreshold && buffDebuffHelpers.countDebuffs(target) > 0) {
+        if (hpHelpers.isBelowThreshold(target, spell.hpThreshold) && buffDebuffHelpers.countDebuffs(target) > 0) {
             spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
                 scalingTypes: {attack: true, agi: true},
                 damageType: 'pure'
@@ -754,13 +890,9 @@ const spellLogic = {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
-        battle.applyDebuff(target, 'Taunt', duration, { 
-            tauntTarget: caster,
-            forcedTarget: caster.position,
-            forcedTargetIsEnemy: caster.isEnemy
-        });
-        battle.applyDebuff(target, 'Mark', duration, {});
-        battle.applyDebuff(target, 'Bleed', duration, { bleedDamage: true });
+        applyConfiguredDebuff(battle, target, 'Taunt', duration, caster);
+        applyConfiguredDebuff(battle, target, 'Mark', duration);
+        applyConfiguredDebuff(battle, target, 'Bleed', duration);
     },
 
     phantomAssassinMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -852,14 +984,14 @@ const spellLogic = {
                 battle.log(`${buff.name} stolen and given to ${randomAlly.name}!`);
             }
         } else {
-            battle.applyDebuff(target, 'Reduce Defense', duration, {});
+            applyConfiguredDebuff(battle, target, 'Reduce Defense', duration);
         }
     },
 
     hexLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyDebuff(target, 'Silence', duration, {});
+        applyConfiguredDebuff(battle, target, 'Silence', duration);
     },
 
     grandInquisitorMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -885,7 +1017,7 @@ const spellLogic = {
         const percent = spellHelpers.getParam(spell, 'scaling.percent', levelIndex, 0.01);
         const cap = spellHelpers.getParam(spell, 'scaling.cap', levelIndex, 5);
         
-        const damage = Math.min(target.maxHp * percent, cap);
+        const damage = Math.min(hpHelpers.percentOfMaxHp(target, percent), cap);
         battle.dealDamage(caster, target, damage, 'physical');
     },
 
@@ -894,7 +1026,7 @@ const spellLogic = {
         const percent = spellHelpers.getParam(spell, 'scaling.percent', levelIndex, 0.05);
         const floor = spellHelpers.getParam(spell, 'scaling.floor', levelIndex, 5);
         
-        const damage = Math.max(target.maxHp * percent, floor);
+        const damage = Math.max(hpHelpers.percentOfMaxHp(target, percent), floor);
         battle.dealDamage(caster, target, damage, 'physical');
     },
 
@@ -908,7 +1040,7 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < bleedChance) {
-                    battle.applyDebuff(target, 'Bleed', bleedDuration, { bleedDamage: true });
+                    applyConfiguredDebuff(battle, target, 'Bleed', bleedDuration);
                 }
             }
         });
@@ -934,8 +1066,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Reduce Defense', debuffDuration, {});
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Reduce Defense', debuffDuration);
             }
         });
     },
@@ -977,11 +1109,7 @@ const spellLogic = {
         const tauntDuration = spellHelpers.getParam(spell, 'tauntDuration', levelIndex, 1);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Taunt', tauntDuration, { 
-                tauntTarget: caster,
-                forcedTarget: caster.position,
-                forcedTargetIsEnemy: caster.isEnemy
-            });
+            applyConfiguredDebuff(battle, enemy, 'Taunt', tauntDuration, caster);
         });
     },
 
@@ -995,7 +1123,7 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < stunChance) {
-                    battle.applyDebuff(target, 'Stun', stunDuration, { stunned: true });
+                    applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
                 }
             }
         });
@@ -1023,7 +1151,7 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < bleedChance) {
-                    battle.applyDebuff(target, 'Bleed', bleedDuration, { bleedDamage: true });
+                    applyConfiguredDebuff(battle, target, 'Bleed', bleedDuration);
                 }
             }
         });
@@ -1047,7 +1175,7 @@ const spellLogic = {
                 damageType: 'physical',
                 afterDamage: (battle, caster, target) => {
                     if (Math.random() < bleedChance) {
-                        battle.applyDebuff(target, 'Bleed', bleedDuration, { bleedDamage: true });
+                        applyConfiguredDebuff(battle, target, 'Bleed', bleedDuration);
                     }
                 }
             });
@@ -1072,9 +1200,7 @@ const spellLogic = {
             damageType: 'magical',
             afterDamage: (battle, caster, target) => {
                 if (target.isAlive) {
-                    const drain = target.actionBar * actionBarDrain;
-                    target.actionBar = Math.max(0, target.actionBar - drain);
-                    battle.log(`${target.name}'s action bar drained by ${Math.floor(drain)}!`);
+                    actionBarHelpers.drain(target, actionBarDrain, battle);
                 }
             }
         });
@@ -1087,8 +1213,7 @@ const spellLogic = {
             const slowChance = spellHelpers.getParam(spell, 'slowChance', levelIndex, 0.3);
             const slowDuration = spellHelpers.getParam(spell, 'slowDuration', levelIndex, 2);
             
-            caster.onHitEffects = caster.onHitEffects || [];
-            caster.onHitEffects.push({
+            passiveHelpers.addOnHitEffect(caster, {
                 type: 'debuff',
                 debuffName: 'Reduce Speed',
                 chance: slowChance,
@@ -1110,8 +1235,7 @@ const spellLogic = {
             const levelIndex = spellLevel - 1;
             const buffDuration = spellHelpers.getParam(spell, 'buffDuration', levelIndex, 2);
             
-            caster.onDamageTaken = caster.onDamageTaken || [];
-            caster.onDamageTaken.push({
+            passiveHelpers.addOnDamageTaken(caster, {
                 type: 'buff',
                 buffName: 'Increase Attack',
                 duration: buffDuration
@@ -1124,8 +1248,8 @@ const spellLogic = {
         const debuffDuration = spellHelpers.getParam(spell, 'debuffDuration', levelIndex, 3);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Reduce Attack', debuffDuration, {});
-            battle.applyDebuff(enemy, 'Reduce Speed', debuffDuration, {});
+            applyConfiguredDebuff(battle, enemy, 'Reduce Attack', debuffDuration);
+            applyConfiguredDebuff(battle, enemy, 'Reduce Speed', debuffDuration);
         });
     },
 
@@ -1152,8 +1276,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Bleed', bleedDuration, { bleedDamage: true });
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Bleed', bleedDuration);
             }
         });
     },
@@ -1163,7 +1287,7 @@ const spellLogic = {
         const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 4);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Bleed', bleedDuration, { bleedDamage: true });
+            applyConfiguredDebuff(battle, enemy, 'Bleed', bleedDuration);
         });
         battle.log(`${caster.name} goes on a rampage, causing all enemies to bleed!`);
     },
@@ -1176,7 +1300,7 @@ const spellLogic = {
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
             const damage = caster.stats.str * strScaling;
             battle.dealDamage(caster, enemy, damage, 'magical');
-            battle.applyDebuff(enemy, 'Reduce Speed', slowDuration, {});
+            applyConfiguredDebuff(battle, enemy, 'Reduce Speed', slowDuration);
         });
     },
 
@@ -1198,7 +1322,7 @@ const spellLogic = {
             damageType: 'magical',
             perEnemyEffect: (battle, caster, enemy) => {
                 if (Math.random() < silenceChance) {
-                    battle.applyDebuff(enemy, 'Silence', silenceDuration, {});
+                    applyConfiguredDebuff(battle, enemy, 'Silence', silenceDuration);
                 }
             }
         });
@@ -1225,12 +1349,8 @@ const spellLogic = {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
-        battle.applyDebuff(target, 'Taunt', duration, { 
-            tauntTarget: caster,
-            forcedTarget: caster.position,
-            forcedTargetIsEnemy: caster.isEnemy
-        });
-        battle.applyDebuff(target, 'Reduce Speed', duration, {});
+        applyConfiguredDebuff(battle, target, 'Taunt', duration, caster);
+        applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
     },
 
     sludgeBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -1245,8 +1365,8 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Blight', duration, { noHeal: true });
-            battle.applyDebuff(enemy, 'Reduce Defense', duration, {});
+            applyConfiguredDebuff(battle, enemy, 'Blight', duration);
+            applyConfiguredDebuff(battle, enemy, 'Reduce Defense', duration);
         });
     },
 
@@ -1288,10 +1408,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, int: true},
             damageType: 'magical',
-            afterDamage: (battle, caster, target) => {
-                const drain = target.actionBar * actionBarDrain;
-                target.actionBar = Math.max(0, target.actionBar - drain);
-                battle.log(`${target.name}'s action bar drained by ${Math.floor(actionBarDrain * 100)}%!`);
+            afterDamage: () => {
+                actionBarHelpers.drain(target, actionBarDrain, battle);
             }
         });
     },
@@ -1304,7 +1422,7 @@ const spellLogic = {
             scalingTypes: {attack: false, int: true},
             damageType: 'magical',
             perEnemyEffect: (battle, caster, enemy) => {
-                battle.applyDebuff(enemy, 'Silence', silenceDuration, {});
+                applyConfiguredDebuff(battle, enemy, 'Silence', silenceDuration);
             }
         });
     },
@@ -1315,9 +1433,8 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            const drain = enemy.actionBar * actionBarDrain;
-            enemy.actionBar = Math.max(0, enemy.actionBar - drain);
-            battle.applyDebuff(enemy, 'Reduce Speed', duration, {});
+            actionBarHelpers.drain(enemy, actionBarDrain);
+            applyConfiguredDebuff(battle, enemy, 'Reduce Speed', duration);
         });
         battle.log(`Mournful presence drains action bars and slows enemies!`);
     },
@@ -1332,33 +1449,15 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < bleedChance) {
-                    battle.applyDebuff(target, 'Bleed', bleedDuration, { bleedDamage: true });
+                    applyConfiguredDebuff(battle, target, 'Bleed', bleedDuration);
                 }
             }
         });
     },
 
     naturesCorruptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Mark'];
-        
-        const buffCount = buffDebuffHelpers.countBuffs(target);
-        if (buffCount > 0) {
-            buffDebuffHelpers.clearBuffs(target);
-            
-            for (let i = 0; i < buffCount; i++) {
-                const randomDebuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
-                const duration = 2;
-                
-                if (randomDebuff === 'Bleed') {
-                    battle.applyDebuff(target, randomDebuff, duration, { bleedDamage: true });
-                } else if (randomDebuff === 'Blight') {
-                    battle.applyDebuff(target, randomDebuff, duration, { noHeal: true });
-                } else {
-                    battle.applyDebuff(target, randomDebuff, duration, {});
-                }
-            }
-            battle.log(`${target.name}'s buffs corrupted into debuffs!`);
-        }
+        multiApplyHelpers.convertBuffsToDebuffs(battle, target, 2);
+        battle.log(`${target.name}'s buffs corrupted into debuffs!`);
     },
 
     thornedEmbraceLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -1367,29 +1466,19 @@ const spellLogic = {
         const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 3);
         const bleedStacks = spell.bleedStacks || 2;
         
-        battle.applyDebuff(target, 'Taunt', tauntDuration, { 
-            tauntTarget: caster,
-            forcedTarget: caster.position,
-            forcedTargetIsEnemy: caster.isEnemy
-        });
-        
-        for (let i = 0; i < bleedStacks; i++) {
-            battle.applyDebuff(target, 'Bleed', bleedDuration, { bleedDamage: true });
-        }
+        applyConfiguredDebuff(battle, target, 'Taunt', tauntDuration, caster);
+        multiApplyHelpers.applyDebuffStacks(battle, target, 'Bleed', bleedStacks, bleedDuration);
     },
 
     phantomStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const silencedMultiplier = spell.silencedMultiplier || 2.0;
-        const multiplier = buffDebuffHelpers.hasDebuff(target, 'Silence') ? silencedMultiplier : 1;
-        
-        if (multiplier > 1) {
-            battle.log(`Phantom strike critical on silenced target!`);
-        }
+        const silencedMultiplier = conditionalDamageHelpers.ifDebuffed(
+            target, 'Silence', spell.silencedMultiplier || 2.0, battle, 'Phantom strike critical on silenced target!'
+        );
         
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, int: true},
             damageType: 'magical',
-            damageModifier: multiplier
+            damageModifier: silencedMultiplier
         });
     },
 
@@ -1401,7 +1490,7 @@ const spellLogic = {
             scalingTypes: {attack: false, int: true},
             damageType: 'magical',
             perEnemyEffect: (battle, caster, enemy) => {
-                battle.applyDebuff(enemy, 'Mark', duration, {});
+                applyConfiguredDebuff(battle, enemy, 'Mark', duration);
             }
         });
     },
@@ -1414,9 +1503,7 @@ const spellLogic = {
             battle.log(`${caster.name} steals all buffs from ${target.name}!`);
         }
         
-        const stolenActionBar = target.actionBar;
-        target.actionBar = 0;
-        caster.actionBar = Math.min(10000, caster.actionBar + stolenActionBar);
+        actionBarHelpers.steal(target, caster);
         battle.log(`${caster.name} drains ${target.name}'s action bar!`);
     },
 
@@ -1445,8 +1532,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Blight', duration, { noHeal: true });
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Blight', duration);
             }
         });
     },
@@ -1469,7 +1556,7 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < markChance) {
-                    battle.applyDebuff(target, 'Mark', markDuration, {});
+                    applyConfiguredDebuff(battle, target, 'Mark', markDuration);
                 }
             }
         });
@@ -1483,7 +1570,7 @@ const spellLogic = {
             scalingTypes: {attack: true, agi: true},
             damageType: 'physical',
             perEnemyEffect: (battle, caster, enemy) => {
-                battle.applyDebuff(enemy, 'Reduce Defense', duration, {});
+                applyConfiguredDebuff(battle, enemy, 'Reduce Defense', duration);
             }
         });
     },
@@ -1513,7 +1600,7 @@ const spellLogic = {
         const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.2);
         
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            const healAmount = ally.maxHp * healPercent;
+            const healAmount = hpHelpers.percentOfMaxHp(ally, healPercent);
             battle.healUnit(ally, healAmount);
         });
     },
@@ -1527,7 +1614,7 @@ const spellLogic = {
         const aliveAllies = allies.filter(a => a && a.isAlive);
         
         if (aliveAllies.length > 0) {
-            aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+            aliveAllies.sort((a, b) => hpHelpers.hpPercent(a) - hpHelpers.hpPercent(b));
             
             const targetsToShield = Math.min(targetCount, aliveAllies.length);
             for (let i = 0; i < targetsToShield; i++) {
@@ -1561,8 +1648,8 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Reduce Attack', duration, { attackMultiplier: 0.5 });
-            battle.applyDebuff(enemy, 'Reduce Defense', duration, {});
+            applyConfiguredDebuff(battle, enemy, 'Reduce Attack', duration);
+            applyConfiguredDebuff(battle, enemy, 'Reduce Defense', duration);
         });
     },
 
@@ -1582,9 +1669,7 @@ const spellLogic = {
         const bleedStacks = spellHelpers.getParam(spell, 'bleedStacks', levelIndex, 2);
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
         
-        for (let i = 0; i < bleedStacks; i++) {
-            battle.applyDebuff(target, 'Bleed', duration, { bleedDamage: true });
-        }
+        multiApplyHelpers.applyDebuffStacks(battle, target, 'Bleed', bleedStacks, duration);
     },
 
     batFormLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -1602,8 +1687,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Reduce Speed', duration, {});
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
             }
         });
     },
@@ -1613,11 +1698,7 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Taunt', duration, { 
-                tauntTarget: caster,
-                forcedTarget: caster.position,
-                forcedTargetIsEnemy: caster.isEnemy
-            });
+            applyConfiguredDebuff(battle, enemy, 'Taunt', duration, caster);
         });
     },
 
@@ -1635,8 +1716,7 @@ const spellLogic = {
         const hpCost = spell.hpCost || 0.2;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
         
-        const hpSacrifice = Math.floor(caster.currentHp * hpCost);
-        caster.currentHp -= hpSacrifice;
+        const hpSacrifice = hpHelpers.drainHpPercent(caster, hpCost);
         battle.log(`${caster.name} sacrifices ${hpSacrifice} HP!`);
         
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
@@ -1645,17 +1725,14 @@ const spellLogic = {
     },
 
     fleshRendLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const bleedBonus = spell.bleedBonus || 1.5;
-        const multiplier = buffDebuffHelpers.hasDebuff(target, 'Bleed') ? bleedBonus : 1;
-        
-        if (multiplier > 1) {
-            battle.log(`Flesh rend tears into bleeding wounds!`);
-        }
+        const bleedBonus = conditionalDamageHelpers.ifDebuffed(
+            target, 'Bleed', spell.bleedBonus || 1.5, battle, 'Flesh rend tears into bleeding wounds!'
+        );
         
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            damageModifier: multiplier
+            damageModifier: bleedBonus
         });
     },
 
@@ -1665,7 +1742,7 @@ const spellLogic = {
         const baseDamage = spellHelpers.getParam(spell, 'baseDamage', levelIndex, 50);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            const missingHp = enemy.maxHp - enemy.currentHp;
+            const missingHp = hpHelpers.missingHp(enemy);
             const damage = baseDamage + (missingHp * missingHpPercent);
             battle.dealDamage(caster, enemy, damage, 'magical');
         });
@@ -1698,7 +1775,7 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < debuffChance) {
-                    battle.applyDebuff(target, 'Reduce Defense', duration, {});
+                    applyConfiguredDebuff(battle, target, 'Reduce Defense', duration);
                 }
             }
         });
@@ -1714,7 +1791,7 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < stunChance) {
-                    battle.applyDebuff(target, 'Stun', stunDuration, { stunned: true });
+                    applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
                 }
             }
         });
@@ -1727,8 +1804,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, agi: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Bleed', duration, { bleedDamage: true });
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Bleed', duration);
             }
         });
     },
@@ -1738,9 +1815,7 @@ const spellLogic = {
         const bleedStacks = spellHelpers.getParam(spell, 'bleedStacks', levelIndex, 3);
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
         
-        for (let i = 0; i < bleedStacks; i++) {
-            battle.applyDebuff(target, 'Bleed', duration, { bleedDamage: true });
-        }
+        multiApplyHelpers.applyDebuffStacks(battle, target, 'Bleed', bleedStacks, duration);
     },
 
     poisonArrowLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -1753,7 +1828,7 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < blightChance) {
-                    battle.applyDebuff(target, 'Blight', duration, { noHeal: true });
+                    applyConfiguredDebuff(battle, target, 'Blight', duration);
                 }
             }
         });
@@ -1767,7 +1842,7 @@ const spellLogic = {
             scalingTypes: {attack: true, agi: true},
             damageType: 'physical',
             perEnemyEffect: (battle, caster, enemy) => {
-                battle.applyDebuff(enemy, 'Reduce Speed', duration, {});
+                applyConfiguredDebuff(battle, enemy, 'Reduce Speed', duration);
             }
         });
     },
@@ -1779,8 +1854,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Reduce Attack', duration, { attackMultiplier: 0.5 });
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Reduce Attack', duration);
             }
         });
     },
@@ -1790,11 +1865,7 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Taunt', duration, { 
-                tauntTarget: caster,
-                forcedTarget: caster.position,
-                forcedTargetIsEnemy: caster.isEnemy
-            });
+            applyConfiguredDebuff(battle, enemy, 'Taunt', duration, caster);
         });
     },
 
@@ -1805,12 +1876,11 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
+            afterDamage: (battle, caster) => {
                 const allies = battle.getParty(caster);
                 allies.forEach(ally => {
                     if (ally.isAlive && ally !== caster) {
-                        ally.actionBar += actionBarGrant * 10000;
-                        if (ally.actionBar > 10000) ally.actionBar = 10000;
+                        actionBarHelpers.grant(ally, actionBarGrant);
                     }
                 });
                 battle.log(`Captain's strike rallies the troops!`);
@@ -1836,25 +1906,14 @@ const spellLogic = {
         const enemies = battle.getEnemies(caster);
         const aliveEnemies = enemies.filter(e => e && e.isAlive);
         
-        for (let i = 0; i < debuffCount && aliveEnemies.length > 0; i++) {
-            const randomEnemy = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
-            const randomDebuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
-            
-            if (randomDebuff === 'Bleed') {
-                battle.applyDebuff(randomEnemy, randomDebuff, duration, { bleedDamage: true });
-            } else if (randomDebuff === 'Stun') {
-                battle.applyDebuff(randomEnemy, randomDebuff, 1, { stunned: true });
-            } else {
-                battle.applyDebuff(randomEnemy, randomDebuff, duration, {});
-            }
-        }
+        multiApplyHelpers.applyRandomDebuffs(battle, aliveEnemies, debuffTypes, debuffCount, duration);
         battle.log(`Dirty fighting afflicts enemies with random debuffs!`);
     },
 
     executeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const executeThreshold = spell.executeThreshold || 0.25;
         
-        if ((target.currentHp / target.maxHp) <= executeThreshold) {
+        if (hpHelpers.isBelowThreshold(target, executeThreshold)) {
             target.currentHp = 0;
             battle.log(`${caster.name} executes ${target.name}!`);
         } else {
@@ -1872,8 +1931,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, agi: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Mark', duration, {});
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Mark', duration);
             }
         });
     },
@@ -1886,7 +1945,7 @@ const spellLogic = {
         battle.applyBuff(caster, 'Increase Speed', buffDuration, {});
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Reduce Attack', debuffDuration, { attackMultiplier: 0.5 });
+            applyConfiguredDebuff(battle, enemy, 'Reduce Attack', debuffDuration);
         });
     },
 
@@ -1907,43 +1966,37 @@ const spellLogic = {
 
     banditsGambitLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const enemies = battle.getEnemies(caster);
-        const allies = battle.getParty(caster);
-        const aliveAllies = allies.filter(a => a && a.isAlive);
-        const stolenBuffs = [];
+        const allies = battle.getParty(caster).filter(a => a && a.isAlive);
         
-        enemies.forEach(enemy => {
-            if (enemy.isAlive) {
-                const stolen = buffDebuffHelpers.clearBuffs(enemy);
-                stolenBuffs.push(...stolen);
-            }
-        });
-        
-        while (stolenBuffs.length > 0 && aliveAllies.length > 0) {
-            const randomAlly = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
-            randomAlly.buffs = randomAlly.buffs || [];
-            randomAlly.buffs.push(stolenBuffs.shift());
-        }
-        
-        battle.log(`Bandit's gambit redistributes the wealth!`);
+        stealAndRedistribute(
+            battle,
+            enemies,
+            allies,
+            (enemy) => buffDebuffHelpers.clearBuffs(enemy),
+            (ally, buff) => {
+                ally.buffs = ally.buffs || [];
+                ally.buffs.push(buff);
+            },
+            `Bandit's gambit redistributes the wealth!`
+        );
     },
 
     plunderLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const actionBarSteal = spellHelpers.getParam(spell, 'actionBarSteal', levelIndex, 0.3);
         
-        let totalStolen = 0;
+        let totalStolenPercent = 0;
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            const stolen = enemy.actionBar * actionBarSteal;
-            enemy.actionBar = Math.max(0, enemy.actionBar - stolen);
-            totalStolen += stolen;
+            actionBarHelpers.drain(enemy, actionBarSteal);
+            totalStolenPercent += actionBarSteal;
         });
         
         const allies = battle.getParty(caster);
         const aliveAllies = allies.filter(a => a && a.isAlive);
         if (aliveAllies.length > 0) {
-            const perAlly = totalStolen / aliveAllies.length;
+            const perAllyPercent = totalStolenPercent / aliveAllies.length;
             aliveAllies.forEach(ally => {
-                ally.actionBar = Math.min(10000, ally.actionBar + perAlly);
+                actionBarHelpers.grant(ally, perAllyPercent);
             });
         }
         
@@ -1969,8 +2022,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Reduce Defense', duration, {});
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Reduce Defense', duration);
             }
         });
     },
@@ -1982,17 +2035,14 @@ const spellLogic = {
     },
 
     grenadeLobLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const reducedDefenseBonus = spell.reducedDefenseBonus || 1.5;
-        const multiplier = buffDebuffHelpers.hasDebuff(target, 'Reduce Defense') ? reducedDefenseBonus : 1;
-        
-        if (multiplier > 1) {
-            battle.log(`Grenade explodes on weakened armor!`);
-        }
+        const reducedDefenseBonus = conditionalDamageHelpers.ifDebuffed(
+            target, 'Reduce Defense', spell.reducedDefenseBonus || 1.5, battle, 'Grenade explodes on weakened armor!'
+        );
         
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, int: true},
             damageType: 'physical',
-            damageModifier: multiplier
+            damageModifier: reducedDefenseBonus
         });
     },
 
@@ -2001,7 +2051,7 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Reduce Attack', duration, { attackMultiplier: 0.5 });
+            applyConfiguredDebuff(battle, enemy, 'Reduce Attack', duration);
         });
     },
 
@@ -2012,7 +2062,7 @@ const spellLogic = {
         
         const lowestHpAlly = spellHelpers.getLowestHpAlly(battle, caster);
         if (lowestHpAlly) {
-            const healAmount = lowestHpAlly.maxHp * healPercent;
+            const healAmount = hpHelpers.percentOfMaxHp(lowestHpAlly, healPercent);
             battle.healUnit(lowestHpAlly, healAmount);
             battle.applyBuff(lowestHpAlly, 'Shield', -1, { shieldAmount: shieldAmount });
         }
@@ -2034,10 +2084,9 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                const selfDamage = caster.maxHp * selfDamagePercent;
-                caster.currentHp = Math.max(1, caster.currentHp - selfDamage);
-                battle.log(`${caster.name} takes ${Math.floor(selfDamage)} explosive damage!`);
+            afterDamage: (battle, caster) => {
+                const selfDamage = hpHelpers.drainHpPercent(caster, selfDamagePercent);
+                battle.log(`${caster.name} takes ${selfDamage} explosive damage!`);
             }
         });
     },
@@ -2047,8 +2096,8 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Reduce Defense', duration, {});
-            battle.applyDebuff(enemy, 'Stun', 1, { stunned: true });
+            applyConfiguredDebuff(battle, enemy, 'Reduce Defense', duration);
+            applyConfiguredDebuff(battle, enemy, 'Stun', 1);
         });
     },
 
@@ -2060,15 +2109,14 @@ const spellLogic = {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
             perEnemyEffect: (battle, caster, enemy) => {
-                battle.applyDebuff(enemy, 'Bleed', bleedDuration, { bleedDamage: true });
+                applyConfiguredDebuff(battle, enemy, 'Bleed', bleedDuration);
             }
         });
     },
 
     demolitionExpertPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.demolitionExpertPassive = true;
-        caster.onDamageTaken = caster.onDamageTaken || [];
-        caster.onDamageTaken.push({
+        passiveHelpers.addOnDamageTaken(caster, {
             type: 'aoe_retaliation',
             damagePercent: 0.3
         });
@@ -2087,10 +2135,8 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
         const stackCount = spell.stackCount || 2;
         
-        for (let i = 0; i < stackCount; i++) {
-            battle.applyDebuff(target, 'Reduce Defense', duration, {});
-        }
-        battle.applyDebuff(target, 'Mark', duration, {});
+        multiApplyHelpers.applyDebuffStacks(battle, target, 'Reduce Defense', stackCount, duration);
+        applyConfiguredDebuff(battle, target, 'Mark', duration);
     },
 
     scrapCannonLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -2123,8 +2169,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, agi: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Mark', markDuration, {});
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Mark', markDuration);
             }
         });
     },
@@ -2135,7 +2181,7 @@ const spellLogic = {
         const actionBarGain = spell.actionBarGain || 0.25;
         
         battle.applyBuff(caster, 'Increase Speed', duration, {});
-        caster.actionBar = Math.min(10000, caster.actionBar + (actionBarGain * 10000));
+        actionBarHelpers.grant(caster, actionBarGain);
     },
 
     hoofStompLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -2147,7 +2193,7 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < stunChance) {
-                    battle.applyDebuff(target, 'Stun', 1, { stunned: true });
+                    applyConfiguredDebuff(battle, target, 'Stun', 1);
                 }
             }
         });
@@ -2157,12 +2203,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Taunt', 1, { 
-                    tauntTarget: caster,
-                    forcedTarget: caster.position,
-                    forcedTargetIsEnemy: caster.isEnemy
-                });
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Taunt', 1, caster);
             }
         });
     },
@@ -2198,7 +2240,7 @@ const spellLogic = {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
             perEnemyEffect: (battle, caster, enemy) => {
-                enemy.actionBar = Math.max(0, enemy.actionBar - (enemy.actionBar * knockbackPercent));
+                actionBarHelpers.reduce(enemy, knockbackPercent);
             }
         });
     },
@@ -2208,7 +2250,7 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Reduce Speed', duration, {});
+            applyConfiguredDebuff(battle, enemy, 'Reduce Speed', duration);
         });
         
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
@@ -2222,7 +2264,7 @@ const spellLogic = {
         const actionBarGrant = spell.actionBarGrant || 0.2;
         
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            ally.actionBar = Math.min(10000, ally.actionBar + (actionBarGrant * 10000));
+            actionBarHelpers.grant(ally, actionBarGrant);
             battle.applyBuff(ally, 'Increase Speed', duration, {});
         });
     },
@@ -2242,10 +2284,8 @@ const spellLogic = {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
             damageOptions: { armorPierce: 0.3 },
-            afterDamage: (battle, caster, target) => {
-                for (let i = 0; i < bleedStacks; i++) {
-                    battle.applyDebuff(target, 'Bleed', bleedDuration, { bleedDamage: true });
-                }
+            afterDamage: () => {
+                multiApplyHelpers.applyDebuffStacks(battle, target, 'Bleed', bleedStacks, bleedDuration);
             }
         });
     },
@@ -2269,7 +2309,7 @@ const spellLogic = {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
             damageModifier: damageMultiplier,
-            afterDamage: (battle, caster, target) => {
+            afterDamage: () => {
                 caster.actionBar = 0;
             }
         });
@@ -2277,8 +2317,7 @@ const spellLogic = {
 
     savageMomentumPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.savageMomentumPassive = true;
-        caster.onDamageCalculation = caster.onDamageCalculation || [];
-        caster.onDamageCalculation.push({
+        passiveHelpers.addDamageCalculation(caster, {
             type: 'missing_hp_damage',
             maxBonus: 0.5
         });
@@ -2297,8 +2336,7 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         const hpCost = spell.hpCost || 0.1;
         
-        const hpSacrifice = Math.floor(caster.maxHp * hpCost);
-        caster.currentHp = Math.max(1, caster.currentHp - hpSacrifice);
+        const hpSacrifice = hpHelpers.drainHpPercent(caster, hpCost);
         
         battle.applyBuff(caster, 'Increase Attack', duration, { damageMultiplier: 1.5 });
         battle.applyBuff(caster, 'Increase Speed', duration, {});
@@ -2310,8 +2348,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(caster, 'Reduce Defense', selfDebuffDuration, {});
+            afterDamage: (battle, caster) => {
+                applyConfiguredDebuff(battle, caster, 'Reduce Defense', selfDebuffDuration);
             }
         });
     },
@@ -2342,17 +2380,15 @@ const spellLogic = {
         
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
             battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
-            battle.applyDebuff(ally, 'Bleed', 1, { bleedDamage: true });
+            applyConfiguredDebuff(battle, ally, 'Bleed', 1);
         });
     },
 
     executeSwingLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const executeThreshold = spell.executeThreshold || 0.35;
-        const multiplier = (target.currentHp / target.maxHp) <= executeThreshold ? 3 : 1;
-        
-        if (multiplier > 1) {
-            battle.log(`Execute swing devastates the wounded target!`);
-        }
+        const multiplier = conditionalDamageHelpers.ifBelowHp(
+            target, executeThreshold, 3, battle, 'Execute swing devastates the wounded target!'
+        );
         
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
@@ -2366,8 +2402,8 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Reduce Attack', duration, { attackMultiplier: 0.5 });
-            battle.applyDebuff(enemy, 'Reduce Speed', duration, {});
+            applyConfiguredDebuff(battle, enemy, 'Reduce Attack', duration);
+            applyConfiguredDebuff(battle, enemy, 'Reduce Speed', duration);
         });
     },
 
@@ -2383,11 +2419,7 @@ const spellLogic = {
         const aliveEnemies = enemies.filter(e => e && e.isAlive);
         if (aliveEnemies.length > 0) {
             aliveEnemies.sort((a, b) => b.source.attack - a.source.attack);
-            battle.applyDebuff(aliveEnemies[0], 'Taunt', duration, { 
-                tauntTarget: caster,
-                forcedTarget: caster.position,
-                forcedTargetIsEnemy: caster.isEnemy
-            });
+            applyConfiguredDebuff(battle, aliveEnemies[0], 'Taunt', duration, caster);
         }
     },
 
@@ -2441,8 +2473,7 @@ const spellLogic = {
 
     bladeMasteryPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.bladeMasteryPassive = true;
-        caster.onAttackEffects = caster.onAttackEffects || [];
-        caster.onAttackEffects.push({
+        passiveHelpers.addOnHitEffect(caster, {
             type: 'extra_attack_chance',
             chance: 0.3
         });
@@ -2459,7 +2490,7 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < blightChance) {
-                    battle.applyDebuff(target, 'Blight', duration, { noHeal: true });
+                    applyConfiguredDebuff(battle, target, 'Blight', duration);
                 }
             }
         });
@@ -2470,8 +2501,8 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Blight', duration, { noHeal: true });
-            battle.applyDebuff(enemy, 'Reduce Defense', duration, {});
+            applyConfiguredDebuff(battle, enemy, 'Blight', duration);
+            applyConfiguredDebuff(battle, enemy, 'Reduce Defense', duration);
         });
     },
 
@@ -2482,17 +2513,14 @@ const spellLogic = {
     },
 
     brutalClubLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const markBonus = spell.markBonus || 1.5;
-        const multiplier = buffDebuffHelpers.hasDebuff(target, 'Mark') ? markBonus : 1;
-        
-        if (multiplier > 1) {
-            battle.log(`Brutal club crushes the marked target!`);
-        }
+        const markBonus = conditionalDamageHelpers.ifDebuffed(
+            target, 'Mark', spell.markBonus || 1.5, battle, 'Brutal club crushes the marked target!'
+        );
         
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            damageModifier: multiplier
+            damageModifier: markBonus
         });
     },
 
@@ -2501,12 +2529,8 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Reduce Attack', duration, { attackMultiplier: 0.5 });
-            battle.applyDebuff(enemy, 'Taunt', duration, { 
-                tauntTarget: caster,
-                forcedTarget: caster.position,
-                forcedTargetIsEnemy: caster.isEnemy
-            });
+            applyConfiguredDebuff(battle, enemy, 'Reduce Attack', duration);
+            applyConfiguredDebuff(battle, enemy, 'Taunt', duration, caster);
         });
     },
 
@@ -2529,7 +2553,7 @@ const spellLogic = {
             damageType: 'magical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < silenceChance) {
-                    battle.applyDebuff(target, 'Silence', silenceDuration, {});
+                    applyConfiguredDebuff(battle, target, 'Silence', silenceDuration);
                 }
             }
         });
@@ -2539,9 +2563,9 @@ const spellLogic = {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
         
-        battle.applyDebuff(target, 'Mark', duration, {});
-        battle.applyDebuff(target, 'Blight', duration, { noHeal: true });
-        battle.applyDebuff(target, 'Reduce Speed', duration, {});
+        applyConfiguredDebuff(battle, target, 'Mark', duration);
+        applyConfiguredDebuff(battle, target, 'Blight', duration);
+        applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
     },
 
     darkRitualSwampLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -2595,7 +2619,7 @@ const spellLogic = {
             damageType: 'physical',
             afterDamage: (battle, caster, target) => {
                 if (Math.random() < stunChance) {
-                    battle.applyDebuff(target, 'Stun', stunDuration, { stunned: true });
+                    applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
                 }
             }
         });
@@ -2616,12 +2640,8 @@ const spellLogic = {
         const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 3);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Taunt', tauntDuration, { 
-                tauntTarget: caster,
-                forcedTarget: caster.position,
-                forcedTargetIsEnemy: caster.isEnemy
-            });
-            battle.applyDebuff(enemy, 'Bleed', bleedDuration, { bleedDamage: true });
+            applyConfiguredDebuff(battle, enemy, 'Taunt', tauntDuration, caster);
+            applyConfiguredDebuff(battle, enemy, 'Bleed', bleedDuration);
         });
     },
 
@@ -2642,8 +2662,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, int: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Bleed', duration, { bleedDamage: true });
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Bleed', duration);
             }
         });
     },
@@ -2667,7 +2687,7 @@ const spellLogic = {
         const aliveAllies = allies.filter(a => a && a.isAlive);
         
         if (aliveAllies.length > 0) {
-            aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+            aliveAllies.sort((a, b) => hpHelpers.hpPercent(a) - hpHelpers.hpPercent(b));
             
             const targetsToShield = Math.min(targetCount, aliveAllies.length);
             for (let i = 0; i < targetsToShield; i++) {
@@ -2678,25 +2698,19 @@ const spellLogic = {
 
     ancientKnowledgeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const enemies = battle.getEnemies(caster);
-        const allies = battle.getParty(caster);
-        const aliveAllies = allies.filter(a => a && a.isAlive);
-        const stolenBuffs = [];
+        const allies = battle.getParty(caster).filter(a => a && a.isAlive);
         
-        enemies.forEach(enemy => {
-            if (enemy.isAlive) {
-                const stolen = buffDebuffHelpers.clearBuffs(enemy, ['Boss']);
-                stolenBuffs.push(...stolen);
-            }
-        });
-        
-        while (stolenBuffs.length > 0 && aliveAllies.length > 0) {
-            const randomAlly = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
-            const buff = stolenBuffs.shift();
-            randomAlly.buffs = randomAlly.buffs || [];
-            randomAlly.buffs.push(buff);
-        }
-        
-        battle.log(`${caster.name} steals enemy knowledge and shares it with allies!`);
+        stealAndRedistribute(
+            battle,
+            enemies,
+            allies,
+            (enemy) => buffDebuffHelpers.clearBuffs(enemy, ['Boss']),
+            (ally, buff) => {
+                ally.buffs = ally.buffs || [];
+                ally.buffs.push(buff);
+            },
+            `${caster.name} steals enemy knowledge and shares it with allies!`
+        );
     },
 
     // Lizardman Volcano Spells
@@ -2707,8 +2721,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Bleed', duration, { bleedDamage: true });
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Bleed', duration);
             }
         });
     },
@@ -2720,19 +2734,15 @@ const spellLogic = {
         
         battle.applyBuff(caster, 'Increase Attack', duration, { damageMultiplier: 1.5 });
         battle.applyBuff(caster, 'Increase Speed', duration, {});
-        battle.applyDebuff(caster, 'Reduce Defense', debuffDuration, {});
+        applyConfiguredDebuff(battle, caster, 'Reduce Defense', debuffDuration);
     },
 
     warriorsChallengeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
-        battle.applyDebuff(target, 'Taunt', duration, { 
-            tauntTarget: caster,
-            forcedTarget: caster.position,
-            forcedTargetIsEnemy: caster.isEnemy
-        });
-        battle.applyDebuff(target, 'Mark', duration, {});
+        applyConfiguredDebuff(battle, target, 'Taunt', duration, caster);
+        applyConfiguredDebuff(battle, target, 'Mark', duration);
     },
 
     spiritFlameLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -2781,10 +2791,8 @@ const spellLogic = {
             scalingTypes: {attack: true, agi: true},
             damageType: 'physical',
             damageOptions: { armorPierce: armorPierce },
-            afterDamage: (battle, caster, target) => {
-                const drain = target.actionBar * actionBarDrain;
-                target.actionBar = Math.max(0, target.actionBar - drain);
-                battle.log(`${target.name}'s action bar drained!`);
+            afterDamage: () => {
+                actionBarHelpers.drain(target, actionBarDrain, battle);
             }
         });
     },
@@ -2807,8 +2815,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, int: true},
             damageType: 'magical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Reduce Defense', duration, {});
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Reduce Defense', duration);
             }
         });
     },
@@ -2817,8 +2825,8 @@ const spellLogic = {
         const levelIndex = spellLevel - 1;
         const maxPercent = spellHelpers.getParam(spell, 'maxPercent', levelIndex, 0.3);
         
-        const missingHp = caster.maxHp - caster.currentHp;
-        const shieldAmount = Math.min(missingHp, caster.maxHp * maxPercent);
+        const missingHp = hpHelpers.missingHp(caster);
+        const shieldAmount = Math.min(missingHp, hpHelpers.percentOfMaxHp(caster, maxPercent));
         
         battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
     },
@@ -2843,7 +2851,7 @@ const spellLogic = {
         
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
             battle.applyBuff(ally, 'Increase Defense', duration, {});
-            ally.actionBar = Math.min(10000, ally.actionBar + (actionBarGrant * 10000));
+            actionBarHelpers.grant(ally, actionBarGrant);
         });
     },
 
@@ -2856,17 +2864,9 @@ const spellLogic = {
                 spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
                     scalingTypes: {attack: true, str: true},
                     damageType: 'physical',
-                    afterDamage: (battle, caster, target) => {
+                    afterDamage: () => {
                         const randomDebuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
-                        const duration = 2;
-                        
-                        if (randomDebuff === 'Bleed') {
-                            battle.applyDebuff(target, randomDebuff, duration, { bleedDamage: true });
-                        } else if (randomDebuff === 'Blight') {
-                            battle.applyDebuff(target, randomDebuff, duration, { noHeal: true });
-                        } else {
-                            battle.applyDebuff(target, randomDebuff, duration, {});
-                        }
+                        applyConfiguredDebuff(battle, target, randomDebuff, 2);
                     }
                 });
             }
@@ -2915,10 +2915,10 @@ const spellLogic = {
     },
 
     chaosToxtinLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Blight', 'Mark', 'Stun', 'Silence'];
         const debuffCount = spell.debuffCount || 3;
         const targetCount = spell.targetCount || 3;
         const duration = spell.duration || 2;
-        const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Blight', 'Mark', 'Stun', 'Silence'];
         
         const enemies = battle.getEnemies(caster);
         const aliveEnemies = enemies.filter(e => e && e.isAlive);
@@ -2928,46 +2928,14 @@ const spellLogic = {
             
             for (let j = 0; j < debuffCount; j++) {
                 const randomDebuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
-                
-                if (randomDebuff === 'Bleed') {
-                    battle.applyDebuff(randomEnemy, randomDebuff, duration, { bleedDamage: true });
-                } else if (randomDebuff === 'Blight') {
-                    battle.applyDebuff(randomEnemy, randomDebuff, duration, { noHeal: true });
-                } else if (randomDebuff === 'Stun' || randomDebuff === 'Silence') {
-                    battle.applyDebuff(randomEnemy, randomDebuff, 1, randomDebuff === 'Stun' ? { stunned: true } : {});
-                } else {
-                    battle.applyDebuff(randomEnemy, randomDebuff, duration, {});
-                }
+                applyConfiguredDebuff(battle, randomEnemy, randomDebuff, randomDebuff === 'Stun' || randomDebuff === 'Silence' ? 1 : duration);
             }
         }
     },
 
     masterOfDeceptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Mark', 'Stun', 'Silence'];
-        const duration = 2;
-        
-        const buffCount = buffDebuffHelpers.countBuffs(target, ['Boss']);
-        if (buffCount > 0) {
-            buffDebuffHelpers.clearBuffs(target, ['Boss']);
-            
-            for (let i = 0; i < buffCount; i++) {
-                const randomDebuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
-                
-                if (randomDebuff === 'Bleed') {
-                    battle.applyDebuff(target, randomDebuff, duration, { bleedDamage: true });
-                } else if (randomDebuff === 'Blight') {
-                    battle.applyDebuff(target, randomDebuff, duration, { noHeal: true });
-                } else if (randomDebuff === 'Stun' || randomDebuff === 'Silence') {
-                    battle.applyDebuff(target, randomDebuff, 1, randomDebuff === 'Stun' ? { stunned: true } : {});
-                } else {
-                    battle.applyDebuff(target, randomDebuff, duration, {});
-                }
-            }
-            
-            battle.log(`${caster.name} twists ${target.name}'s buffs into debuffs!`);
-        } else {
-            battle.log(`${target.name} has no buffs to twist!`);
-        }
+        multiApplyHelpers.convertBuffsToDebuffs(battle, target, 2);
+        battle.log(`${caster.name} twists ${target.name}'s buffs into debuffs!`);
     },
 
     // Puzzle Sanctuary Spells
@@ -2978,8 +2946,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, int: true},
             damageType: 'magical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Reduce Speed', duration, {});
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
             }
         });
     },
@@ -2989,10 +2957,8 @@ const spellLogic = {
         const stunDuration = spellHelpers.getParam(spell, 'stunDuration', levelIndex, 1);
         const actionBarDrain = spell.actionBarDrain || 0.2;
         
-        battle.applyDebuff(target, 'Stun', stunDuration, { stunned: true });
-        
-        const drain = target.actionBar * actionBarDrain;
-        target.actionBar = Math.max(0, target.actionBar - drain);
+        applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
+        actionBarHelpers.drain(target, actionBarDrain);
         battle.log(`${target.name} is frozen in place!`);
     },
 
@@ -3008,7 +2974,7 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, int: true},
             damageType: 'magical',
-            afterDamage: (battle, caster, target) => {
+            afterDamage: () => {
                 const lowestHpAlly = spellHelpers.getLowestHpAlly(battle, caster);
                 if (lowestHpAlly) {
                     battle.applyBuff(lowestHpAlly, 'Frost Armor', frostArmorDuration, {});
@@ -3022,7 +2988,7 @@ const spellLogic = {
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Silence', duration, {});
+            applyConfiguredDebuff(battle, enemy, 'Silence', duration);
         });
     },
 
@@ -3032,7 +2998,7 @@ const spellLogic = {
         buffDebuffHelpers.clearDebuffs(target);
         battle.log(`${target.name} phases through reality!`);
         
-        target.actionBar = Math.min(10000, target.actionBar + (actionBarGrant * 10000));
+        actionBarHelpers.grant(target, actionBarGrant);
     },
 
     stoneSlamLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -3042,8 +3008,8 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Stun', stunDuration, { stunned: true });
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
             }
         });
     },
@@ -3056,11 +3022,7 @@ const spellLogic = {
         battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Taunt', tauntDuration, { 
-                tauntTarget: caster,
-                forcedTarget: caster.position,
-                forcedTargetIsEnemy: caster.isEnemy
-            });
+            applyConfiguredDebuff(battle, enemy, 'Taunt', tauntDuration, caster);
         });
     },
 
@@ -3093,8 +3055,7 @@ const spellLogic = {
         const hpCost = spell.hpCost || 0.2;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
         
-        const hpSacrifice = Math.floor(caster.currentHp * hpCost);
-        caster.currentHp = Math.max(1, caster.currentHp - hpSacrifice);
+        const hpSacrifice = hpHelpers.drainHpPercent(caster, hpCost);
         battle.log(`${caster.name} sacrifices ${hpSacrifice} HP!`);
         
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
@@ -3109,9 +3070,9 @@ const spellLogic = {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                battle.applyDebuff(target, 'Mark', duration, {});
-                battle.applyDebuff(target, 'Blight', duration, { noHeal: true });
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Mark', duration);
+                applyConfiguredDebuff(battle, target, 'Blight', duration);
             }
         });
     },
@@ -3134,7 +3095,7 @@ const spellLogic = {
         const baseDamage = spellHelpers.getParam(spell, 'baseDamage', levelIndex, 100);
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            const missingHp = enemy.maxHp - enemy.currentHp;
+            const missingHp = hpHelpers.missingHp(enemy);
             const damage = baseDamage + (missingHp * missingHpPercent);
             battle.dealDamage(caster, enemy, damage, 'magical');
         });
@@ -3153,8 +3114,8 @@ const spellLogic = {
             scalingTypes: {attack: true, int: true},
             damageType: 'magical',
             perEnemyEffect: (battle, caster, enemy) => {
-                battle.applyDebuff(enemy, 'Reduce Speed', duration, {});
-                battle.applyDebuff(enemy, 'Reduce Attack', duration, { attackMultiplier: 0.5 });
+                applyConfiguredDebuff(battle, enemy, 'Reduce Speed', duration);
+                applyConfiguredDebuff(battle, enemy, 'Reduce Attack', duration);
             }
         });
     },
@@ -3171,7 +3132,7 @@ const spellLogic = {
             }
         });
         
-        const shieldAmount = caster.maxHp * shieldPercent;
+        const shieldAmount = hpHelpers.percentOfMaxHp(caster, shieldPercent);
         battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
     },
 
@@ -3181,11 +3142,9 @@ const spellLogic = {
         const actionBarDrain = spell.actionBarDrain || 0.3;
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.applyDebuff(enemy, 'Blight', duration, { noHeal: true });
-            battle.applyDebuff(enemy, 'Bleed', duration, { bleedDamage: true });
-            
-            const drain = enemy.actionBar * actionBarDrain;
-            enemy.actionBar = Math.max(0, enemy.actionBar - drain);
+            applyConfiguredDebuff(battle, enemy, 'Blight', duration);
+            applyConfiguredDebuff(battle, enemy, 'Bleed', duration);
+            actionBarHelpers.drain(enemy, actionBarDrain);
         });
     },
 
@@ -3194,11 +3153,9 @@ const spellLogic = {
         let totalDrained = 0;
         
         spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            const drainAmount = Math.floor(enemy.maxHp * hpDrainPercent);
-            const actualDrain = Math.min(drainAmount, enemy.currentHp - 1);
-            enemy.currentHp -= actualDrain;
-            totalDrained += actualDrain;
-            battle.log(`${enemy.name} loses ${actualDrain} HP to eternal winter!`);
+            const drained = hpHelpers.drainHpPercent(enemy, hpDrainPercent);
+            totalDrained += drained;
+            battle.log(`${enemy.name} loses ${drained} HP to eternal winter!`);
         });
         
         const allies = battle.getParty(caster);
@@ -3277,59 +3234,55 @@ const spellLogic = {
     reduceAttackTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyDebuff(target, 'Reduce Attack', duration, { attackMultiplier: 0.5 });
+        applyConfiguredDebuff(battle, target, 'Reduce Attack', duration);
     },
 
     reduceSpeedTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyDebuff(target, 'Reduce Speed', duration, {});
+        applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
     },
 
     reduceDefenseTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyDebuff(target, 'Reduce Defense', duration, {});
+        applyConfiguredDebuff(battle, target, 'Reduce Defense', duration);
     },
     
     blightTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyDebuff(target, 'Blight', duration, { noHeal: true });
+        applyConfiguredDebuff(battle, target, 'Blight', duration);
     },
 
     bleedTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyDebuff(target, 'Bleed', duration, { bleedDamage: true });
+        applyConfiguredDebuff(battle, target, 'Bleed', duration);
     },
 
     stunTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
-        battle.applyDebuff(target, 'Stun', duration, { stunned: true });
+        applyConfiguredDebuff(battle, target, 'Stun', duration);
     },
 
     tauntTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyDebuff(target, 'Taunt', duration, { 
-            tauntTarget: caster,
-            forcedTarget: caster.position,
-            forcedTargetIsEnemy: caster.isEnemy
-        });
+        applyConfiguredDebuff(battle, target, 'Taunt', duration, caster);
     },
 
     silenceTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyDebuff(target, 'Silence', duration, {});
+        applyConfiguredDebuff(battle, target, 'Silence', duration);
     },
 
     markTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyDebuff(target, 'Mark', duration, {});
+        applyConfiguredDebuff(battle, target, 'Mark', duration);
     }
 };
 
