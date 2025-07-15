@@ -2043,6 +2043,8 @@ if (spell.id === 'lose') {
     
     const spell = spellManager.getSpell(ability.id);
     if (!spell) return;
+
+    caster.lastAbilityUsed = ability.id;
     
     // Check for Grand Templar Male passive stun chance
     if (caster.grandTemplarMalePassive && caster.globalStunChance && target && target !== 'all' && target.isAlive) {
@@ -2340,25 +2342,30 @@ if (attacker.onDamageCalculation) {
 }
 
         // Check if target can dodge (Marked prevents all dodging)
-        const isMarked = target.debuffs.some(d => d.name === 'Mark');
-        
-        // Check for dodge chances from Master Stalker passives
-        let dodgeChance = 0;
-        if (!isMarked) {
-            if (damageType === 'physical') {
-                dodgeChance = target.physicalDodgeChance || target.dodgePhysical || 0;
-            } else if (damageType === 'magical') {
-                dodgeChance = target.magicalDodgeChance || target.dodgeMagical || 0;
-            } else if (damageType === 'pure') {
-                dodgeChance = target.dodgePure || 0;
-            }
-            
-            if (dodgeChance > 0 && Math.random() < dodgeChance) {
-                this.log(`${target.name} dodges the attack!`);
-                this.showDodgeAnimation(target);
-                return 0;
-            }
-        }
+const isMarked = target.debuffs.some(d => d.name === 'Mark');
+
+// Check for Professional Witcher Female passive - Unavoidable Strike against silenced enemies
+const isPurgeSlashAgainstSilenced = attacker.professionalWitcherFemalePassive && 
+                                   attacker.lastAbilityUsed === 'purge_slash' && 
+                                   target.debuffs.some(d => d.name === 'Silence');
+
+// Check for dodge chances from Master Stalker passives
+let dodgeChance = 0;
+if (!isMarked && !isPurgeSlashAgainstSilenced) {
+    if (damageType === 'physical') {
+        dodgeChance = target.physicalDodgeChance || target.dodgePhysical || 0;
+    } else if (damageType === 'magical') {
+        dodgeChance = target.magicalDodgeChance || target.dodgeMagical || 0;
+    } else if (damageType === 'pure') {
+        dodgeChance = target.dodgePure || 0;
+    }
+    
+    if (dodgeChance > 0 && Math.random() < dodgeChance) {
+        this.log(`${target.name} dodges the attack!`);
+        this.showDodgeAnimation(target);
+        return 0;
+    }
+}
         
         // Apply attacker's damage modifiers from buffs
         attacker.buffs.forEach(buff => {
@@ -2496,6 +2503,23 @@ this.trackBattleStat(target.name, 'damageTaken', actualDamage);
 
         // AFTER DAMAGE TAKEN EFFECTS BELOW
 
+        // Runemaster Female passive - retaliate with Nature's Blessing when taking magical damage
+if (target.runemasterFemalePassive && target.isAlive && actualDamage > 0 && damageType === 'magical') {
+    // Find lowest HP ally
+    const allies = this.getParty(target);
+    const aliveAllies = allies.filter(a => a && a.isAlive);
+    
+    if (aliveAllies.length > 0) {
+        aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+        const lowestHpAlly = aliveAllies[0];
+        
+        // Grant 10% action bar to lowest HP ally
+        const actionBarGain = 0.1 * 10000;
+        lowestHpAlly.actionBar = Math.min(10000, lowestHpAlly.actionBar + actionBarGain);
+        this.log(`${target.name}'s Nature's Revenge grants action bar to ${lowestHpAlly.name}!`);
+    }
+}
+        
 // Check for on-hit effects from attacker
 if (attacker.onHitEffects && target.isAlive) {
     attacker.onHitEffects.forEach(effect => {
@@ -3149,6 +3173,18 @@ removeDebuffs(target) {
     // Track debuffs cleansed
     if (this.currentUnit && removedCount > 0) {
         this.trackBattleStat(this.currentUnit.name, 'debuffsCleansed', removedCount);
+        
+        // White Wizard Male passive - Empowering Cleanse
+        if (this.currentUnit.whiteWizardMalePassive) {
+            this.applyBuff(target, 'Increase Attack', 1, { damageMultiplier: 1.5 });
+            this.log(`${target.name} gains attack power from empowering cleanse!`);
+        }
+        
+        // White Witch Female passive - Hastening Cleanse
+        if (this.currentUnit.whiteWitchFemalePassive) {
+            this.applyBuff(target, 'Increase Speed', 1, {});
+            this.log(`${target.name} gains speed from hastening cleanse!`);
+        }
     }
 }
     
@@ -3158,11 +3194,6 @@ removeDebuffs(target) {
     
     getEnemies(unit) {
         return unit.isEnemy ? this.party : this.enemies;
-    }
-    
-    summonUnit(summoner, unitData) {
-        // TODO: Implement summon logic
-        this.log(`${summoner.name} summons ${unitData.name}!`);
     }
     
     applyDotEffects(unit) {
