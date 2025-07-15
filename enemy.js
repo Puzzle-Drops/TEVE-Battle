@@ -28,21 +28,21 @@ class Enemy {
         };
                 
         // Try to load from enemies first, then classes
-        let enemyData = unitData?.enemies[enemyId];
+        let enemyInfo = enemyData?.[enemyId];
         let isHeroLike = false;
         
         if (!enemyData) {
             // Try loading from classes (for arena enemies)
-            enemyData = unitData?.classes[enemyId];
+            enemyInfo = heroData?.classes[enemyId];
             isHeroLike = true;
         }
         
-        if (enemyData) {
-            this.name = enemyData.name;
-            this.isBoss = enemyData.boss || false;
-            this.modifiers = enemyData.modifiers;
-            this._mainstat = enemyData.mainstat || 'str';
-            this.className = isHeroLike ? enemyId : null;
+        if (enemyInfo) {
+    this.name = enemyInfo.name;
+    this.isBoss = enemyInfo.boss || false;
+    this.modifiers = enemyInfo.modifiers;
+    this._mainstat = enemyInfo.mainstat || 'str';
+    this.className = isHeroLike ? enemyId : null;
             
             // Add default initial values
             this.initial = {
@@ -58,16 +58,16 @@ class Enemy {
             };
 
             // Override with enemy-specific initial values if they exist
-            if (enemyData && enemyData.initial) {
-                Object.assign(this.initial, enemyData.initial);
-            }
-            
-            // Get abilities based on type
-            if (isHeroLike) {
-                this.abilities = this.getClassAbilities(enemyData.spells);
-            } else {
-                this.abilities = this.getAbilities(enemyData.spells);
-            }
+if (enemyInfo && enemyInfo.initial) {
+    Object.assign(this.initial, enemyInfo.initial);
+}
+
+// Get abilities based on type
+if (isHeroLike) {
+    this.abilities = this.getClassAbilities(enemyInfo.spells);
+} else {
+    this.abilities = this.getAbilities(enemyInfo.spells);
+}
         } else {
             // Fallback values
             this.name = enemyId;
