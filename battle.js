@@ -1811,7 +1811,7 @@ if (spell.id === 'thunderous_charge') {
         score += Math.max(debuffedAllies.length * 15, buffedEnemies.length * 15);
     }
     
-    // NEW: Sanctuary - debuff conversion is unique
+    // Sanctuary - debuff conversion is unique
     if (spell.id === 'sanctuary') {
         const debuffedAllies = sortedLists.alliesByDebuffCount.filter(a => a.debuffs.length > 0);
         score += debuffedAllies.length * 20; // High value per ally that will get converted buffs
@@ -1843,6 +1843,44 @@ if (spell.id === 'thunderous_charge') {
     
     if (effects.includes('cleanse') && (caster.whiteWizardMalePassive || caster.whiteWitchFemalePassive)) {
         score += 10; // Their cleanses apply buffs
+    }
+
+// Ancient Knowledge - very powerful buff steal
+    if (spell.id === 'ancient_knowledge') {
+        const buffedEnemies = sortedLists.enemiesByBuffCount.filter(e => e.countableBuffs.length > 0);
+        score += buffedEnemies.length * 20; // High value per enemy with buffs
+        // Extra value if allies need buffs
+        const unbuffedAllies = sortedLists.alliesByHealth.filter(a => a.buffs.length === 0);
+        score += unbuffedAllies.length * 10;
+    }
+    
+    // Tribal Chant - cleanse and regen is powerful
+    if (spell.id === 'tribal_chant') {
+        const debuffedAllies = sortedLists.alliesByDebuffCount.filter(a => a.debuffs.length > 0);
+        const injuredAllies = sortedLists.alliesByHealth.filter(a => a.currentHp < a.maxHp * 0.8);
+        score += debuffedAllies.length * 15 + injuredAllies.length * 10;
+    }
+    
+    // Master of Deception - single target buff reversal
+    if (spell.id === 'master_of_deception' && target !== 'all') {
+        const buffCount = target.countableBuffs ? target.countableBuffs.length : 0;
+        score += buffCount * 25; // Very high value per buff to convert
+    }
+    
+    // Eternal Winter - powerful AoE drain and shield
+    if (spell.id === 'eternal_winter') {
+        // Value based on enemy current HP
+        let totalDrainable = 0;
+        sortedLists.enemiesByHealth.forEach(enemy => {
+            totalDrainable += Math.floor(enemy.maxHp * 0.1);
+        });
+        score += (totalDrainable / 100) * 2; // 2 points per 100 HP drained
+        
+        // Extra value if allies need shields
+        const unshieldedAllies = sortedLists.alliesByHealth.filter(a => 
+            !a.buffs || !a.buffs.some(b => b.name === 'Shield')
+        );
+        score += unshieldedAllies.length * 10;
     }
     
 // Test spell overrides - ALWAYS prioritize win, NEVER use lose
@@ -2205,6 +2243,26 @@ if (this.currentUnit.ancestralVigorRegen && this.currentUnit.isAlive) {
         if (this.currentUnit.ancestralVigorDuration <= 0) {
             this.currentUnit.ancestralVigorRegen = null;
             this.currentUnit.ancestralVigorDuration = null;
+        }
+    }
+}
+
+            // Tribal Chant healing effect
+if (this.currentUnit.tribalChantRegen && this.currentUnit.isAlive) {
+    if (this.currentUnit.tribalChantDuration > 0) {
+        this.currentUnit.tribalChantDuration--;
+        if (!this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
+            const regenAmount = Math.floor(this.currentUnit.maxHp * this.currentUnit.tribalChantRegen);
+            const actualRegen = Math.min(regenAmount, this.currentUnit.maxHp - this.currentUnit.currentHp);
+            if (actualRegen > 0) {
+                this.currentUnit.currentHp += actualRegen;
+                this.log(`${this.currentUnit.name} regenerates ${actualRegen} HP from Tribal Chant.`);
+            }
+        }
+        
+        if (this.currentUnit.tribalChantDuration <= 0) {
+            this.currentUnit.tribalChantRegen = null;
+            this.currentUnit.tribalChantDuration = null;
         }
     }
 }
@@ -2673,6 +2731,14 @@ showDodgeAnimation(target) {
     handleUnitDeath(unit, killer = null) {
     // Prevent double death handling
     if (unit.isDead) return;
+
+        // Check for Undying Will passive
+    if (unit.undyingWillPassive && !unit.undyingWillUsed) {
+        unit.undyingWillUsed = true;
+        unit.currentHp = Math.floor(unit.maxHp * unit.undyingWillHealPercent);
+        this.log(`${unit.name}'s undying will prevents death! Healed to ${unit.currentHp} HP!`);
+        return;
+    }
     
     unit.isDead = true;
     // Track death
