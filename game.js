@@ -95,8 +95,9 @@ class Game {
                 }
             });
         }
+        
         // Load class families from JSON data
-this.classFamilies = heroData?.classFamilies || [];
+        this.classFamilies = unitData?.classFamilies || [];                
         this.init();
     }
 
