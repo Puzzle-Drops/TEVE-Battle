@@ -366,66 +366,174 @@
         "items": ["bandit_shadowhood", "bandit_leathercoat", "bandit_prowlpants", "bandit_dagger", "bandit_parryguard", "bandit_lockpick", "bandit_shadowfang"]
     }
 },
-    "gold_mine": {
-      "id": "gold_mine",
-      "name": "Gold Mine",
-      "boss": "Goblin King",
-      "tier": "Hard",
-      "subtitle": "Hard 1",
-      "level": 150,
-      "waves": [
+"gold_mine": {
+    "id": "gold_mine",
+    "name": "Gold Mine",
+    "boss": "Goblin Mining Mech",
+    "tier": "Hard",
+    "subtitle": "Hard 1",
+    "level": 150,
+    "waves": [
         {
-          "enemies": [
-            { "id": "goblin_king", "level": 150 }
-          ]
+            "enemies": [
+                { "id": "goblin_tinkerer", "level": 130 },
+                { "id": "goblin_grenadier", "level": 130 },
+                { "id": "goblin_mechanic", "level": 130 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "goblin_grenadier", "level": 135 },
+                { "id": "goblin_grenadier", "level": 135 },
+                { "id": "goblin_tinkerer", "level": 133 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "goblin_demolitionist", "level": 150 },
+                { "id": "goblin_mechanic", "level": 140 },
+                { "id": "goblin_mechanic", "level": 140 },
+                { "id": "goblin_grenadier", "level": 138 },
+                { "id": "goblin_tinkerer", "level": 138 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "goblin_grenadier", "level": 145 },
+                { "id": "goblin_grenadier", "level": 145 },
+                { "id": "goblin_tinkerer", "level": 143 },
+                { "id": "goblin_tinkerer", "level": 143 },
+                { "id": "goblin_mechanic", "level": 142 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "goblin_mining_mech", "level": 150 },
+                { "id": "goblin_demolitionist", "level": 148 },
+                { "id": "goblin_mechanic", "level": 148 },
+                { "id": "goblin_grenadier", "level": 146 },
+                { "id": "goblin_grenadier", "level": 146 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 38400,
         "exp": 92000,
         "items": ["gold_greedhelm", "gold_vaultplate", "gold_minerstrides", "gold_pickaxe", "gold_coinshield", "gold_nugget", "gold_kingsbane"]
-      }
-    },
-    "centaur_cliffs": {
-      "id": "centaur_cliffs",
-      "name": "Centaur Cliffs",
-      "boss": "Centaur Bloodhorn",
-      "tier": "Hard",
-      "subtitle": "Hard 2",
-      "level": 175,
-      "waves": [
+    }
+},
+"centaur_cliffs": {
+    "id": "centaur_cliffs",
+    "name": "Centaur Cliffs",
+    "boss": "Centaur Chieftain",
+    "tier": "Hard",
+    "subtitle": "Hard 2",
+    "level": 175,
+    "waves": [
         {
-          "enemies": [
-            { "id": "centaur_bloodhorn", "level": 175 }
-          ]
+            "enemies": [
+                { "id": "centaur_scout", "level": 155 },
+                { "id": "centaur_warrior", "level": 155 },
+                { "id": "centaur_mystic", "level": 155 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "centaur_warrior", "level": 160 },
+                { "id": "centaur_warrior", "level": 160 },
+                { "id": "centaur_scout", "level": 158 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "centaur_warchief", "level": 175 },
+                { "id": "centaur_warrior", "level": 165 },
+                { "id": "centaur_mystic", "level": 165 },
+                { "id": "centaur_scout", "level": 163 },
+                { "id": "centaur_scout", "level": 163 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "centaur_warrior", "level": 170 },
+                { "id": "centaur_warrior", "level": 170 },
+                { "id": "centaur_mystic", "level": 168 },
+                { "id": "centaur_mystic", "level": 168 },
+                { "id": "centaur_scout", "level": 167 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "centaur_chieftain", "level": 175 },
+                { "id": "centaur_warchief", "level": 173 },
+                { "id": "centaur_warrior", "level": 173 },
+                { "id": "centaur_mystic", "level": 171 },
+                { "id": "centaur_scout", "level": 171 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 76800,
         "exp": 184000,
         "items": ["cliff_warhelm", "cliff_stampmail", "cliff_hoofguards", "cliff_lance", "cliff_tribeguard", "cliff_warhorn", "cliff_bloodspear"]
-      }
-    },
-    "orc_warlands": {
-      "id": "orc_warlands",
-      "name": "Orc Warlands",
-      "boss": "Orc Shaman",
-      "tier": "Hard",
-      "subtitle": "Hard 3",
-      "level": 200,
-      "waves": [
+    }
+},
+"orc_warlands": {
+    "id": "orc_warlands",
+    "name": "Orc Warlands",
+    "boss": "Orc Blademaster",
+    "tier": "Hard",
+    "subtitle": "Hard 3",
+    "level": 200,
+    "waves": [
         {
-          "enemies": [
-            { "id": "orc_shaman", "level": 200 }
-          ]
+            "enemies": [
+                { "id": "orc_grunt", "level": 180 },
+                { "id": "orc_berserker", "level": 180 },
+                { "id": "orc_bloodshaman", "level": 180 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "orc_berserker", "level": 185 },
+                { "id": "orc_berserker", "level": 185 },
+                { "id": "orc_grunt", "level": 183 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "orc_warlord", "level": 200 },
+                { "id": "orc_berserker", "level": 190 },
+                { "id": "orc_bloodshaman", "level": 190 },
+                { "id": "orc_grunt", "level": 188 },
+                { "id": "orc_grunt", "level": 188 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "orc_berserker", "level": 195 },
+                { "id": "orc_berserker", "level": 195 },
+                { "id": "orc_bloodshaman", "level": 193 },
+                { "id": "orc_bloodshaman", "level": 193 },
+                { "id": "orc_grunt", "level": 192 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "orc_blademaster", "level": 200 },
+                { "id": "orc_warlord", "level": 198 },
+                { "id": "orc_berserker", "level": 198 },
+                { "id": "orc_bloodshaman", "level": 196 },
+                { "id": "orc_grunt", "level": 196 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 153600,
         "exp": 368000,
         "items": ["orc_skullcap", "orc_warplate", "orc_battlegrieves", "orc_cleaver", "orc_bulwark", "orc_totem", "orc_doomhammer"]
-      }
-    },
+    }
+},
     "snapdragon_swamp": {
       "id": "snapdragon_swamp",
       "name": "Snapdragon Swamp",
