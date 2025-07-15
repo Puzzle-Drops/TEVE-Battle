@@ -1,7 +1,7 @@
 // Loading manager
 class LoadingManager {
     constructor() {
-        this.totalAssets = 17; // 5 JSON files + 10 JS files
+        this.totalAssets = 18; // 6 JSON files + 10 JS files + map image
         this.loadedAssets = 0;
         this.failedAssets = []; // Track which assets failed
         this.preloadedImages = {}; // Store preloaded images
@@ -128,16 +128,45 @@ try {
             }
         },
         {
-            name: 'units.json',
-            load: async () => {
-                loadingManager.loadingText.textContent = 'Loading units...';
-                const unitsResponse = await fetch('units.json');
-                if (!unitsResponse.ok) throw new Error('Failed to load units.json');
-                unitData = await unitsResponse.json();
-                console.log('Unit data loaded');
-                loadingManager.updateProgress('units');
-            }
-        },
+    name: 'heroes.json',
+    load: async () => {
+        loadingManager.loadingText.textContent = 'Loading heroes...';
+        const heroesResponse = await fetch('heroes.json');
+        if (!heroesResponse.ok) throw new Error('Failed to load heroes.json');
+        const heroData = await heroesResponse.json();
+        console.log('Hero data loaded');
+        
+        // Initialize unitData with hero data
+        unitData = {
+            classes: heroData.classes,
+            classFamilies: heroData.classFamilies,
+            promotionRequirements: heroData.promotionRequirements,
+            promotionCosts: heroData.promotionCosts,
+            enemies: {} // Will be populated when enemies.json loads
+        };
+        
+        loadingManager.updateProgress('heroes');
+    }
+},
+{
+    name: 'enemies.json',
+    load: async () => {
+        loadingManager.loadingText.textContent = 'Loading enemies...';
+        const enemiesResponse = await fetch('enemies.json');
+        if (!enemiesResponse.ok) throw new Error('Failed to load enemies.json');
+        const enemyData = await enemiesResponse.json();
+        console.log('Enemy data loaded');
+        
+        // Add enemies to existing unitData
+        if (!unitData) {
+            throw new Error('Heroes must be loaded before enemies');
+        }
+        unitData.enemies = enemyData;
+        
+        console.log('Complete unit data assembled');
+        loadingManager.updateProgress('enemies');
+    }
+},
         {
             name: 'dungeons.json',
             load: async () => {
