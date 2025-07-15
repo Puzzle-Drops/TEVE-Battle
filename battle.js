@@ -981,6 +981,22 @@ processTurn() {
     
         // Debug log all possible actions if debugging is enabled
         this.debugLogAllPossibleActions(unit);
+
+    // Tribal Leader passive - apply buffs to all allies at turn start
+if (unit.tribalLeaderPassive && unit.auraBuffs && unit.isAlive) {
+    const allies = this.getParty(unit);
+    allies.forEach(ally => {
+        if (ally.isAlive && ally !== unit) {
+            unit.auraBuffs.forEach(buffName => {
+                // Check if ally already has the buff
+                const hasBuff = ally.buffs.some(b => b.name === buffName);
+                if (!hasBuff) {
+                    this.applyBuff(ally, buffName, unit.auraDuration || 1, {});
+                }
+            });
+        }
+    });
+}
         
         // Check for Twilight's End
         if (unit.twilightsEndPending) {
@@ -1739,6 +1755,39 @@ calculateAbilityScore(caster, abilityIndex, target, spell, sortedLists) {
                 }
             }
         }
+
+        // Mirror Image - high value when debuffed or low HP
+if (spell.id === 'mirror_image') {
+    const debuffCount = caster.debuffs ? caster.debuffs.length : 0;
+    score += debuffCount * 25; // High value for removing debuffs
+    
+    const hpPercent = caster.currentHp / caster.maxHp;
+    if (hpPercent < 0.5) {
+        score += 40; // Extra value when low HP for dodge
+    }
+}
+
+// Ancestral Vigor - prefer low HP allies
+if (spell.id === 'ancestral_vigor' && target !== 'all') {
+    const hpPercent = target.currentHp / target.maxHp;
+    score += (1 - hpPercent) * 30; // Higher value for lower HP allies
+}
+
+// Blood Rage - high value when multiple allies have bleed (for Warmaster synergy)
+if (spell.id === 'blood_rage' && caster.warmasterPassive) {
+    const bleedingAllies = sortedLists.alliesByHealth.filter(ally => 
+        ally.debuffs && ally.debuffs.some(d => d.name === 'Bleed')
+    ).length;
+    score += bleedingAllies * 15;
+}
+
+// Thunderous Charge - bonus based on current action bar
+if (spell.id === 'thunderous_charge') {
+    const actionBarPercent = caster.actionBar / 10000;
+    score += actionBarPercent * 50; // Up to +50 for full action bar
+}
+
+        
     }
     
     // Multi-effect ability synergies
@@ -1978,6 +2027,23 @@ if (spell.id === 'lose') {
             this.log(`${caster.name} failed to use ${ability.name}!`);
         }
     }
+        // Blade Mastery passive - chance for extra attack
+if (caster.bladeMasteryPassive && !ability.passive && spell.effects.includes('physical')) {
+    if (Math.random() < 0.3) { // 30% chance
+        this.log(`${caster.name}'s blade mastery grants an extra strike!`);
+        // Execute the same ability again on the same target if they're still alive
+        if (target && target !== 'all' && target.isAlive) {
+            // Use spell logic directly to avoid cooldown/ability use
+            try {
+                const spellLevel = ability.level || caster.spellLevel || 1;
+                spellLogic[spell.logicKey](this, caster, target, spell, spellLevel);
+            } catch (error) {
+                console.error(`Error executing blade mastery extra attack:`, error);
+            }
+        }
+    }
+}
+        
 }
     
     showSpellAnimation(caster, spellName, effects) {
@@ -2104,6 +2170,44 @@ if (effects.includes('physical')) {
                     }
                 }
             }
+
+            // Reinforced Plating passive shield regeneration
+if (this.currentUnit.reinforcedPlatingPassive && this.currentUnit.shieldRegenPercent) {
+    if (this.currentUnit.shieldRegenTimer === undefined) {
+        this.currentUnit.shieldRegenTimer = 0;
+    }
+    this.currentUnit.shieldRegenTimer++;
+    
+    if (this.currentUnit.shieldRegenTimer >= this.currentUnit.shieldRegenTurns) {
+        this.currentUnit.shieldRegenTimer = 0;
+        const shieldAmount = Math.floor(this.currentUnit.maxHp * this.currentUnit.shieldRegenPercent);
+        const existingShield = this.currentUnit.buffs.find(b => b.name === 'Shield');
+        if (!existingShield) {
+            this.applyBuff(this.currentUnit, 'Shield', -1, { shieldAmount: shieldAmount });
+            this.log(`${this.currentUnit.name}'s reinforced plating generates a shield!`);
+        }
+    }
+}
+
+            // Ancestral Vigor healing effect
+if (this.currentUnit.ancestralVigorRegen && this.currentUnit.isAlive) {
+    if (this.currentUnit.ancestralVigorDuration > 0) {
+        this.currentUnit.ancestralVigorDuration--;
+        if (!this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
+            const regenAmount = Math.floor(this.currentUnit.maxHp * this.currentUnit.ancestralVigorRegen);
+            const actualRegen = Math.min(regenAmount, this.currentUnit.maxHp - this.currentUnit.currentHp);
+            if (actualRegen > 0) {
+                this.currentUnit.currentHp += actualRegen;
+                this.log(`${this.currentUnit.name} regenerates ${actualRegen} HP from Ancestral Vigor.`);
+            }
+        }
+        
+        if (this.currentUnit.ancestralVigorDuration <= 0) {
+            this.currentUnit.ancestralVigorRegen = null;
+            this.currentUnit.ancestralVigorDuration = null;
+        }
+    }
+}
             
             // Apply HP regen after turn
             if (this.currentUnit.isAlive && !this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
@@ -2124,6 +2228,18 @@ if (effects.includes('physical')) {
             // Then update buff/debuff durations
             this.currentUnit.updateBuffsDebuffs();
             this.currentUnit.reduceCooldowns();
+
+            // Mirror Image dodge duration tracking
+if (this.currentUnit.mirrorImageDodge && this.currentUnit.mirrorImageDuration !== undefined) {
+    this.currentUnit.mirrorImageDuration--;
+    if (this.currentUnit.mirrorImageDuration <= 0) {
+        this.currentUnit.dodgePhysical = (this.currentUnit.dodgePhysical || 0) - 0.5;
+        this.currentUnit.mirrorImageDodge = false;
+        this.currentUnit.mirrorImageDuration = undefined;
+        this.log(`${this.currentUnit.name}'s mirror images fade away.`);
+    }
+}
+            
         }
         
         // Clear any active targeting before ending turn
@@ -2151,14 +2267,19 @@ if (effects.includes('physical')) {
         
         let damage = Math.round(amount);
 
-        // Check for executioner passive (Sniper Male)
-        if (attacker.onDamageCalculation) {
-            attacker.onDamageCalculation.forEach(calc => {
-                if (calc.type === 'executioner' && (target.currentHp / target.maxHp) < calc.hpThreshold) {
-                    damage *= calc.damageBonus;
-                }
-            });
+// Check for damage calculation modifiers
+if (attacker.onDamageCalculation) {
+    attacker.onDamageCalculation.forEach(calc => {
+        if (calc.type === 'executioner' && (target.currentHp / target.maxHp) < calc.hpThreshold) {
+            damage *= calc.damageBonus;
+        } else if (calc.type === 'missing_hp_damage' && attacker.savageMomentumPassive) {
+            // Savage Momentum - bonus damage based on missing HP
+            const missingHpPercent = 1 - (attacker.currentHp / attacker.maxHp);
+            const damageBonus = 1 + (missingHpPercent * calc.maxBonus);
+            damage *= damageBonus;
         }
+    });
+}
 
         // Check if target can dodge (Marked prevents all dodging)
         const isMarked = target.debuffs.some(d => d.name === 'Mark');
@@ -2187,6 +2308,20 @@ if (effects.includes('physical')) {
                 damage *= 1.5;
             }
         });
+
+        // Warmaster passive - check if attacker has bleed and if any ally has warmaster passive
+if (attacker.debuffs.some(d => d.name === 'Bleed')) {
+    const allies = this.getParty(attacker);
+    const warmasterAlly = allies.find(ally => ally.isAlive && ally.warmasterPassive);
+    if (warmasterAlly) {
+        damage *= 1.25; // 25% damage bonus
+        // Only log once per turn to avoid spam
+        if (!attacker._warmasterBonusLogged) {
+            this.log(`${attacker.name} gains Warmaster's fury!`);
+            attacker._warmasterBonusLogged = true;
+        }
+    }
+}
         
         // Apply Reduce Defense damage increase (25% more base damage)
         const hasReduceDefense = target.debuffs.some(d => d.name === 'Reduce Defense');
@@ -2327,6 +2462,35 @@ if (target.onDamageTaken && target.isAlive && damage > 0) {
             this.log(`${target.name} stuns ${attacker.name} with a counter!`);
         }
     });
+}
+
+// Demolition Expert passive - AOE retaliation
+if (target.demolitionExpertPassive && target.isAlive && actualDamage > 0) {
+    // Check if target has any debuffs
+    if (!target.debuffs || target.debuffs.length === 0) {
+        const retaliationDamage = actualDamage * 0.3;
+        const enemies = this.getEnemies(target);
+        enemies.forEach(enemy => {
+            if (enemy.isAlive && enemy !== attacker) {
+                enemy.currentHp = Math.max(0, enemy.currentHp - retaliationDamage);
+                this.log(`${target.name}'s demolition expertise deals ${Math.floor(retaliationDamage)} damage to ${enemy.name}!`);
+                
+                // Check if enemy died from retaliation
+                if (enemy.currentHp <= 0 && !enemy.isDead) {
+                    this.handleUnitDeath(enemy, target);
+                }
+            }
+        });
+        // Also damage the original attacker
+        if (attacker.isAlive) {
+            attacker.currentHp = Math.max(0, attacker.currentHp - retaliationDamage);
+            this.log(`${target.name}'s demolition expertise deals ${Math.floor(retaliationDamage)} damage to ${attacker.name}!`);
+            
+            if (attacker.currentHp <= 0 && !attacker.isDead) {
+                this.handleUnitDeath(attacker, target);
+            }
+        }
+    }
 }
 
 // Avenger Female passive - gain action bar when damaged
