@@ -1234,8 +1234,8 @@ calculateAbilityScore(caster, abilityIndex, target, spell, sortedLists) {
     // Base score for using any ability
     score += 10;
     
-    // Prefer abilities with longer cooldowns when scores are close (tiebreaker)
-    score += ability.cooldown * 0.1;
+    // Prefer abilities with longer cooldowns
+    score += ability.cooldown * 3;
     
     // Check if it's an AOE ability
     const isAOE = effects.includes('aoe') || 
