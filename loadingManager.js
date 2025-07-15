@@ -128,27 +128,27 @@ try {
             }
         },
         {
-            name: 'heroes.json',
-            load: async () => {
-                loadingManager.loadingText.textContent = 'Loading units...';
-                const unitsResponse = await fetch('units.json');
-                if (!unitsResponse.ok) throw new Error('Failed to load units.json');
-                unitData = await unitsResponse.json();
-                console.log('Unit data loaded');
-                loadingManager.updateProgress('units');
-            }
-        },
-        {
-            name: 'enemies.json',
-            load: async () => {
-                loadingManager.loadingText.textContent = 'Loading units...';
-                const unitsResponse = await fetch('units.json');
-                if (!unitsResponse.ok) throw new Error('Failed to load units.json');
-                unitData = await unitsResponse.json();
-                console.log('Unit data loaded');
-                loadingManager.updateProgress('units');
-            }
-        },
+    name: 'heroes.json',
+    load: async () => {
+        loadingManager.loadingText.textContent = 'Loading heroes...';
+        const heroesResponse = await fetch('heroes.json');
+        if (!heroesResponse.ok) throw new Error('Failed to load heroes.json');
+        heroData = await heroesResponse.json();
+        console.log('Hero data loaded');
+        loadingManager.updateProgress('heroes');
+    }
+},
+{
+    name: 'enemies.json',
+    load: async () => {
+        loadingManager.loadingText.textContent = 'Loading enemies...';
+        const enemiesResponse = await fetch('enemies.json');
+        if (!enemiesResponse.ok) throw new Error('Failed to load enemies.json');
+        enemyData = await enemiesResponse.json();
+        console.log('Enemy data loaded');
+        loadingManager.updateProgress('enemies');
+    }
+},
         {
             name: 'dungeons.json',
             load: async () => {
