@@ -140,14 +140,13 @@ Scaling should be a mix of linear and parabolic. Getting to level 450 is the sam
 You gain exp for each enemy wave defeated if you are a live upon completing that wave. Additional exp reward upon dungeon completion if alive.
 
 # STAT SYSTEM
-
 ## 1. INITIAL STATS (Level 1 Base Values)
 Points to distribute by tier:
 Tier 0: 12 pts (min 3/stat)    Tier 3: 36 pts (min 6/stat)
 Tier 1: 16 pts (min 4/stat)    Tier 4: 48 pts (min 8/stat)
-Tier 2: 24 pts (min 5/stat)
-
+Tier 2: 24 pts (min 5/stat)    Tier 5+: 48 + tier*2 (min tier+3 per stat)
 Attribute costs: 1 point = 1 STR/AGI/INT
+
 Non-attribute costs (max 50% in any stat) - (Tier 1 gets 16 points for attributes, and an additional 16 points for non attributes, point pools are separate):
 - 1 point = 10 HP | 0.67 Regen | 1 Attack | 0.67 Speed | 1.33 Armor | 2 Resist
 
@@ -155,7 +154,7 @@ Non-attribute costs (max 50% in any stat) - (Tier 1 gets 16 points for attribute
 ### Attributes (Required totals):
 Tier 0: 3.0 (min 1.0/stat)     Tier 3: 9.0 (min 2.0/stat)
 Tier 1: 4.0 (min 1.25/stat)    Tier 4: 12.0 (min 2.5/stat)
-Tier 2: 6.0 (min 1.5/stat)
+Tier 2: 6.0 (min 1.5/stat)     Tier 5+: 12.0 + tier/2 (min tier/2 per stat)
 
 ### Non-Attributes:
 BASELINE (all classes get):
@@ -164,7 +163,7 @@ BASELINE (all classes get):
 - modArmor: 0.01
 - modResist: 0.005
 
-BONUS POINTS by tier: 20/24/28/32/36
+BONUS POINTS by tier: 20/24/28/32/36 (tier 5+: 36 + tier/2)
 - 1 point = 0.1 modHP | 0.02 modAttack | 0.05 modArmor | 0.025 modResist
 
 ## 3. FINAL STAT FORMULAS
