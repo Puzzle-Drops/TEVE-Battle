@@ -79,7 +79,7 @@
             }
 
             get classData() {
-                return heroData?.classes[this.className] || {
+                return unitData?.classes[this.className] || {
                     name: this.className,
                     tier: 0,
                     modifiers: { str: 1, agi: 1, int: 1 },
