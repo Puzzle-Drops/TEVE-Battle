@@ -44,7 +44,8 @@ class DevConsole {
             party: (level) => this.setupParty(level),
             newHero: () => this.createNewHero(),
             t: () => this.spawnTester(),
-            tester: () => this.spawnTester()
+            tester: () => this.spawnTester(),
+            setPartyTest: (tier, level) => this.setPartyTest(tier, level)
         };
         
         this.init();
@@ -353,6 +354,7 @@ class DevConsole {
 - promoteHero(heroIndex, className) - Promote a hero
 - maxHero(heroIndex) - Max out a hero (level 500, awakened)
 - party(level) - Setup full party at specific level with promotions
+- setPartyTest(tier, level) - Create test party of specific tier & level with gear
 - t() or tester() - Spawn a level 5 tester unit
 
 <span style="color: #ffd700;">Battle Commands:</span>
@@ -1021,6 +1023,135 @@ spawnTester() {
             game.uiManager.updateHeroList();
             game.uiManager.showHeroTab(game.uiManager.currentTab);
         }
+    }
+    
+    setPartyTest(tier, level) {
+        if (!window.game) {
+            this.addLog('error', 'Game not initialized');
+            return;
+        }
+        
+        tier = parseInt(tier);
+        level = parseInt(level);
+        
+        if (isNaN(tier) || tier < 0 || tier > 4) {
+            this.addLog('error', 'Tier must be between 0 and 4');
+            return;
+        }
+        
+        if (isNaN(level) || level < 1 || level > 500) {
+            this.addLog('error', 'Level must be between 1 and 500');
+            return;
+        }
+        
+        this.addLog('info', `<span style="color: #4dd0e1;">Creating test party: Tier ${tier}, Level ${level}</span>`, true);
+        
+        // Clear all existing heroes
+        game.heroes = [];
+        
+        // Get all tier-appropriate classes
+        const tierClasses = this.getTierClasses(tier);
+        
+        // Create heroes
+        tierClasses.forEach(className => {
+            const hero = new Hero(className);
+            hero.level = level;
+            hero.exp = 0;
+            hero.expToNext = hero.calculateExpToNext();
+            hero.name = `${hero.displayClassName}_${game.heroes.length + 1}`;
+            hero.abilities = hero.getClassAbilities();
+            
+            // Awaken tier 4 heroes if at appropriate level
+            if (tier === 4 && level >= 400) {
+                hero.awakened = true;
+                hero.abilities = hero.getClassAbilities();
+            }
+            
+            game.heroes.push(hero);
+        });
+        
+        // Find appropriate dungeon for items
+        const dungeonInfo = this.findDungeonForLevel(level);
+        if (dungeonInfo) {
+            this.addLog('info', `Equipping heroes with gear from: ${dungeonInfo.name} (Level ${dungeonInfo.level})`);
+            
+            // Equip each hero
+            game.heroes.forEach(hero => {
+                this.equipHeroWithDungeonGear(hero, dungeonInfo);
+            });
+        } else {
+            this.addLog('warn', 'No suitable dungeon found for item generation');
+        }
+        
+        this.addLog('info', `<span style="color: #00ff88;">✓ Created ${game.heroes.length} heroes!</span>`, true);
+        
+        // Update UI if on heroes screen
+        if (game.currentScreen === 'heroesScreen') {
+            game.uiManager.updateHeroList();
+            game.uiManager.showHeroTab(game.uiManager.currentTab);
+        }
+    }
+    
+    getTierClasses(tier) {
+        const tierClasses = [];
+        
+        // Search through all classes in unitData
+        Object.entries(unitData.classes).forEach(([className, classData]) => {
+            if (classData.tier === tier && !className.includes('tester')) {
+                tierClasses.push(className);
+            }
+        });
+        
+        return tierClasses.sort();
+    }
+    
+    findDungeonForLevel(heroLevel) {
+        let bestDungeon = null;
+        let closestLevel = 0;
+        
+        // Find the highest level dungeon that's below the hero level
+        Object.values(dungeonData.dungeons).forEach(dungeon => {
+            if (dungeon.level < heroLevel && dungeon.level > closestLevel && dungeon.rewards?.items?.length > 0) {
+                bestDungeon = dungeon;
+                closestLevel = dungeon.level;
+            }
+        });
+        
+        return bestDungeon;
+    }
+    
+    equipHeroWithDungeonGear(hero, dungeonInfo) {
+        const itemPool = dungeonInfo.rewards.items;
+        if (!itemPool || itemPool.length === 0) return;
+        
+        const slots = ['head', 'chest', 'legs', 'weapon', 'offhand', 'trinket'];
+        
+        // Create items for each slot
+        slots.forEach(slot => {
+            // Find items that match this slot
+            const slotItems = itemPool.filter(itemId => {
+                const itemTemplate = itemData.items[itemId];
+                return itemTemplate && itemTemplate.slot === slot;
+            });
+            
+            if (slotItems.length > 0) {
+                // Pick a random item from this slot
+                const itemId = slotItems[Math.floor(Math.random() * slotItems.length)];
+                const item = new Item(itemId, true); // Skip automatic rolling
+                
+                // Set up purple quality (3 rolls at 60% quality)
+                item.quality1 = 3; // 60% = 3/5
+                item.quality2 = item.roll2 ? 3 : 0;
+                item.quality3 = item.roll3 ? 3 : 0;
+                item.quality4 = 0; // Purple items have max 3 rolls
+                
+                // Equip the item
+                hero.gear[slot] = item;
+            }
+        });
+        
+        // Update hero's gear stats
+        hero.updateGearStats();
     }
     
     setCurrentUnitSpellLevel(level) {
