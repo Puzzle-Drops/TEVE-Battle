@@ -3003,10 +3003,35 @@ bladeMasteryPassiveLogic: function(battle, caster, target, spell, spellLevel = 1
     },
 
     ancientKnowledgeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This requires special implementation
-        battle.log(`${caster.name} channels ancient knowledge!`);
-        // Implementation will be handled in battle system
-    },
+    // Steal all buffs from all enemies
+    const enemies = battle.getEnemies(caster);
+    const allies = battle.getParty(caster);
+    const aliveAllies = allies.filter(a => a && a.isAlive);
+    const stolenBuffs = [];
+    
+    // Collect all buffs from enemies
+    enemies.forEach(enemy => {
+        if (enemy.isAlive && enemy.buffs && enemy.buffs.length > 0) {
+            // Filter out Boss buff
+            const stealableBuffs = enemy.buffs.filter(b => b.name !== 'Boss');
+            while (stealableBuffs.length > 0) {
+                stolenBuffs.push(stealableBuffs.shift());
+            }
+            // Keep only Boss buff if present
+            enemy.buffs = enemy.buffs.filter(b => b.name === 'Boss');
+        }
+    });
+    
+    // Randomly distribute stolen buffs among allies
+    while (stolenBuffs.length > 0 && aliveAllies.length > 0) {
+        const randomAlly = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
+        const buff = stolenBuffs.shift();
+        randomAlly.buffs = randomAlly.buffs || [];
+        randomAlly.buffs.push(buff);
+    }
+    
+    battle.log(`${caster.name} steals enemy knowledge and shares it with allies!`);
+},
 
     // Lizardman Volcano Spells
     scaleSlashLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -3075,23 +3100,26 @@ bladeMasteryPassiveLogic: function(battle, caster, target, spell, spellLevel = 1
     },
 
     tribalChantLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spell.duration[levelIndex] || spell.duration[0];
-        
-        const allies = battle.getParty(caster);
-        allies.forEach(ally => {
-            if (ally.isAlive) {
-                // Remove one debuff
-                if (ally.debuffs && ally.debuffs.length > 0) {
-                    ally.debuffs.shift();
-                    battle.log(`Cleansed a debuff from ${ally.name}!`);
-                }
-                
-                // Implementation note: Regen will need special handling
-                battle.log(`${ally.name} begins regenerating!`);
+    const levelIndex = spellLevel - 1;
+    const duration = spell.duration[levelIndex] || spell.duration[0];
+    const regenPercent = spell.regenPercent[levelIndex] || spell.regenPercent[0];
+    
+    const allies = battle.getParty(caster);
+    allies.forEach(ally => {
+        if (ally.isAlive) {
+            // Remove one debuff
+            if (ally.debuffs && ally.debuffs.length > 0) {
+                ally.debuffs.shift();
+                battle.log(`Cleansed a debuff from ${ally.name}!`);
             }
-        });
-    },
+            
+            // Add regeneration effect
+            ally.tribalChantRegen = regenPercent;
+            ally.tribalChantDuration = duration;
+            battle.log(`${ally.name} begins regenerating ${Math.floor(regenPercent * 100)}% HP per turn!`);
+        }
+    });
+},
 
     precisionShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
@@ -3286,10 +3314,37 @@ bladeMasteryPassiveLogic: function(battle, caster, target, spell, spellLevel = 1
     },
 
     masterOfDeceptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        // This requires special implementation
-        battle.log(`${caster.name} twists reality!`);
-        // Implementation will be handled in battle system
-    },
+    const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Mark', 'Stun', 'Silence'];
+    const duration = 2;
+    
+    if (target.buffs && target.buffs.length > 0) {
+        // Filter out Boss buff
+        const convertibleBuffs = target.buffs.filter(b => b.name !== 'Boss');
+        const buffCount = convertibleBuffs.length;
+        
+        // Remove all buffs except Boss
+        target.buffs = target.buffs.filter(b => b.name === 'Boss');
+        
+        // Apply random debuffs equal to number of buffs removed
+        for (let i = 0; i < buffCount; i++) {
+            const randomDebuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
+            
+            if (randomDebuff === 'Bleed') {
+                battle.applyDebuff(target, randomDebuff, duration, { bleedDamage: true });
+            } else if (randomDebuff === 'Blight') {
+                battle.applyDebuff(target, randomDebuff, duration, { noHeal: true });
+            } else if (randomDebuff === 'Stun' || randomDebuff === 'Silence') {
+                battle.applyDebuff(target, randomDebuff, 1, randomDebuff === 'Stun' ? { stunned: true } : {});
+            } else {
+                battle.applyDebuff(target, randomDebuff, duration, {});
+            }
+        }
+        
+        battle.log(`${caster.name} twists ${target.name}'s buffs into debuffs!`);
+    } else {
+        battle.log(`${target.name} has no buffs to twist!`);
+    }
+},
 
     // Puzzle Sanctuary Spells
     frostStrikeRevenantLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -3557,12 +3612,34 @@ bladeMasteryPassiveLogic: function(battle, caster, target, spell, spellLevel = 1
     },
 
     eternalWinterLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const hpDrainPercent = spell.hpDrainPercent || 0.1;
-        
-        // This requires special implementation
-        battle.log(`${caster.name} brings eternal winter!`);
-        // Implementation will be handled in battle system
-    },
+    const hpDrainPercent = spell.hpDrainPercent || 0.1;
+    let totalDrained = 0;
+    
+    // Drain HP from all enemies
+    const enemies = battle.getEnemies(caster);
+    enemies.forEach(enemy => {
+        if (enemy.isAlive) {
+            const drainAmount = Math.floor(enemy.maxHp * hpDrainPercent);
+            const actualDrain = Math.min(drainAmount, enemy.currentHp - 1); // Leave at least 1 HP
+            enemy.currentHp -= actualDrain;
+            totalDrained += actualDrain;
+            battle.log(`${enemy.name} loses ${actualDrain} HP to eternal winter!`);
+        }
+    });
+    
+    // Convert drained HP to shields for allies
+    const allies = battle.getParty(caster);
+    const aliveAllies = allies.filter(a => a && a.isAlive);
+    
+    if (aliveAllies.length > 0 && totalDrained > 0) {
+        const shieldPerAlly = Math.floor(totalDrained / aliveAllies.length);
+        aliveAllies.forEach(ally => {
+            battle.applyBuff(ally, 'Shield', -1, { shieldAmount: shieldPerAlly });
+        });
+        battle.log(`Allies gain ${shieldPerAlly} shield from the stolen life force!`);
+    }
+},
+    
     // Test Spells
     winLogic: function(battle, caster, targets, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
