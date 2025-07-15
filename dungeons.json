@@ -241,7 +241,7 @@
         {
             "enemies": [
                 { "id": "banshee_queen", "level": 75 },
-                { "id": "banshee_matriarch", "level": 74 },
+                { "id": "wailing_banshee", "level": 74 },
                 { "id": "twisted_treant", "level": 74 },
                 { "id": "shadow_wisp", "level": 72 },
                 { "id": "toxic_sludge", "level": 73 }
@@ -297,7 +297,7 @@
         {
             "enemies": [
                 { "id": "stitched_horror", "level": 100 },
-                { "id": "death_knight", "level": 99 },
+                { "id": "necromancer", "level": 99 },
                 { "id": "necromancer", "level": 98 },
                 { "id": "vampire", "level": 99 },
                 { "id": "undead_mage", "level": 97 }
@@ -353,7 +353,7 @@
         {
             "enemies": [
                 { "id": "bandit_lord", "level": 125 },
-                { "id": "bandit_captain", "level": 124 },
+                { "id": "bandit_enforcer", "level": 124 },
                 { "id": "bandit_assassin", "level": 124 },
                 { "id": "bandit_enforcer", "level": 123 },
                 { "id": "bandit_cutthroat", "level": 122 }
@@ -409,7 +409,7 @@
         {
             "enemies": [
                 { "id": "goblin_mining_mech", "level": 150 },
-                { "id": "goblin_demolitionist", "level": 148 },
+                { "id": "goblin_tinkerer", "level": 148 },
                 { "id": "goblin_mechanic", "level": 148 },
                 { "id": "goblin_grenadier", "level": 146 },
                 { "id": "goblin_grenadier", "level": 146 }
@@ -534,66 +534,174 @@
         "items": ["orc_skullcap", "orc_warplate", "orc_battlegrieves", "orc_cleaver", "orc_bulwark", "orc_totem", "orc_doomhammer"]
     }
 },
-    "snapdragon_swamp": {
-      "id": "snapdragon_swamp",
-      "name": "Snapdragon Swamp",
-      "boss": "Owlkin King",
-      "tier": "Forsaken",
-      "subtitle": "Forsaken 1",
-      "level": 225,
-      "waves": [
+"snapdragon_swamp": {
+    "id": "snapdragon_swamp",
+    "name": "Snapdragon Swamp",
+    "boss": "Owlkin King",
+    "tier": "Forsaken",
+    "subtitle": "Forsaken 1",
+    "level": 225,
+    "waves": [
         {
-          "enemies": [
-            { "id": "owlkin_king", "level": 225 }
-          ]
+            "enemies": [
+                { "id": "snapdragon_spitter", "level": 205 },
+                { "id": "ogre_bruiser", "level": 208 },
+                { "id": "ogre_witch", "level": 210 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "swamp_lurker", "level": 212 },
+                { "id": "snapdragon_spitter", "level": 214 },
+                { "id": "ogre_bruiser", "level": 215 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "bog_beast", "level": 225 },
+                { "id": "ogre_witch", "level": 218 },
+                { "id": "swamp_lurker", "level": 219 },
+                { "id": "snapdragon_spitter", "level": 220 },
+                { "id": "ogre_bruiser", "level": 220 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "swamp_lurker", "level": 222 },
+                { "id": "ogre_witch", "level": 223 },
+                { "id": "ogre_witch", "level": 223 },
+                { "id": "snapdragon_spitter", "level": 224 },
+                { "id": "ogre_bruiser", "level": 224 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "owlkin_king", "level": 225 },
+                { "id": "bog_beast", "level": 224 },
+                { "id": "ogre_witch", "level": 225 },
+                { "id": "swamp_lurker", "level": 225 },
+                { "id": "snapdragon_spitter", "level": 225 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 307200,
         "exp": 736000,
         "items": ["swamp_wisdomcrest", "swamp_featherrobe", "swamp_talonsteps", "swamp_talonclaw", "swamp_wingguard", "swamp_moonstone", "swamp_kingstaff"]
-      }
-    },
-    "lizardman_volcano": {
-      "id": "lizardman_volcano",
-      "name": "Lizardman Volcano",
-      "boss": "Lizardman Trickster",
-      "tier": "Forsaken",
-      "subtitle": "Forsaken 2",
-      "level": 250,
-      "waves": [
+    }
+},
+"lizardman_volcano": {
+    "id": "lizardman_volcano",
+    "name": "Lizardman Volcano",
+    "boss": "Lizardman Trickster",
+    "tier": "Forsaken",
+    "subtitle": "Forsaken 2",
+    "level": 250,
+    "waves": [
         {
-          "enemies": [
-            { "id": "lizardman_trickster", "level": 250 }
-          ]
+            "enemies": [
+                { "id": "lizardman_warrior", "level": 230 },
+                { "id": "lizardman_shaman", "level": 233 },
+                { "id": "owlkin_hunter", "level": 235 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "lava_elemental", "level": 237 },
+                { "id": "lizardman_warrior", "level": 239 },
+                { "id": "owlkin_hunter", "level": 240 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "owlkin_warchief", "level": 250 },
+                { "id": "lizardman_shaman", "level": 243 },
+                { "id": "lava_elemental", "level": 244 },
+                { "id": "lizardman_warrior", "level": 245 },
+                { "id": "owlkin_hunter", "level": 245 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "lava_elemental", "level": 247 },
+                { "id": "lava_elemental", "level": 248 },
+                { "id": "lizardman_shaman", "level": 248 },
+                { "id": "lizardman_warrior", "level": 249 },
+                { "id": "owlkin_hunter", "level": 249 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "lizardman_trickster", "level": 250 },
+                { "id": "owlkin_warchief", "level": 249 },
+                { "id": "lizardman_shaman", "level": 250 },
+                { "id": "lava_elemental", "level": 250 },
+                { "id": "lizardman_warrior", "level": 250 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 614400,
         "exp": 1472000,
         "items": ["lizardman_scalemask", "lizardman_moltenscale", "lizardman_lavasteps", "lizardman_firedagger", "lizardman_scaleshield", "lizardman_firegem", "lizardman_trickblade"]
-      }
-    },
-    "puzzle_sanctuary": {
-      "id": "puzzle_sanctuary",
-      "name": "Puzzle Sanctuary",
-      "boss": "Lich Queen",
-      "tier": "Forsaken",
-      "subtitle": "Forsaken 3",
-      "level": 275,
-      "waves": [
+    }
+},
+"puzzle_sanctuary": {
+    "id": "puzzle_sanctuary",
+    "name": "Puzzle Sanctuary",
+    "boss": "Lich Queen",
+    "tier": "Forsaken",
+    "subtitle": "Forsaken 3",
+    "level": 275,
+    "waves": [
         {
-          "enemies": [
-            { "id": "lich_queen", "level": 275 }
-          ]
+            "enemies": [
+                { "id": "ice_revenant", "level": 255 },
+                { "id": "frost_specter", "level": 258 },
+                { "id": "frozen_gargoyle", "level": 260 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "soul_wraith", "level": 262 },
+                { "id": "ice_revenant", "level": 264 },
+                { "id": "frost_specter", "level": 265 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "crypt_king", "level": 275 },
+                { "id": "frozen_gargoyle", "level": 268 },
+                { "id": "soul_wraith", "level": 269 },
+                { "id": "ice_revenant", "level": 270 },
+                { "id": "frost_specter", "level": 270 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "soul_wraith", "level": 272 },
+                { "id": "soul_wraith", "level": 273 },
+                { "id": "frozen_gargoyle", "level": 273 },
+                { "id": "ice_revenant", "level": 274 },
+                { "id": "frost_specter", "level": 274 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "lich_queen", "level": 275 },
+                { "id": "crypt_king", "level": 274 },
+                { "id": "soul_wraith", "level": 275 },
+                { "id": "frozen_gargoyle", "level": 275 },
+                { "id": "ice_revenant", "level": 275 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 1228800,
         "exp": 2944000,
         "items": ["puzzle_lichcrown", "puzzle_cryptrobe", "puzzle_bonestrides", "puzzle_soulstaff", "puzzle_undeadward", "puzzle_phylactery", "puzzle_lichbane"]
-      }
-    },
+    }
+},
     "bloodleaf_depths": {
       "id": "bloodleaf_depths",
       "name": "Bloodleaf Depths",
