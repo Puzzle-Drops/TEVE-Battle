@@ -1793,84 +1793,474 @@
     },
     "spells": ["frozen_soul_blast", "lichs_phylactery", "death_and_decay", "eternal_winter"]
 },
-    "naga_ranger": {
-      "name": "Naga Ranger",
-      "boss": true,
-      "mainstat": "agi",
-      "modifiers": { 
-        "str": 1.5,
-        "agi": 2.5,
-        "int": 1.5,
-        "hp": 3.8,
-        "attack": 0.55,
-        "armor": 0.2,
-        "resist": 0.15
-      },
-      "initial": {
-        "str": 12,
+"elven_hunter": {
+    "name": "Elven Hunter",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 4.5,
+        "int": 3.0,
+        "hp": 3.1,
+        "attack": 0.42,
+        "armor": 0.11,
+        "resist": 0.105
+    },
+    "initial": {
+        "str": 10,
         "agi": 22,
+        "int": 16,
+        "hp": 70,
+        "hpRegen": 0.67,
+        "attack": 10,
+        "attackSpeed": 0,
+        "armor": 6,
+        "resist": 8
+    },
+    "spells": ["hunters_shot", "track_prey"]
+},
+"elven_archer": {
+    "name": "Elven Archer",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 2.8,
+        "agi": 5.0,
+        "int": 2.2,
+        "hp": 3.0,
+        "attack": 0.46,
+        "armor": 0.06,
+        "resist": 0.08
+    },
+    "initial": {
+        "str": 12,
+        "agi": 24,
         "int": 12,
+        "hp": 60,
+        "hpRegen": 0,
+        "attack": 12,
+        "attackSpeed": 0,
+        "armor": 3,
+        "resist": 6
+    },
+    "spells": ["swift_arrow", "elven_volley", "elven_swiftness"]
+},
+"swift_wolf": {
+    "name": "Swift Wolf",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 3.2,
+        "agi": 4.8,
+        "int": 2.0,
+        "hp": 3.3,
+        "attack": 0.38,
+        "armor": 0.16,
+        "resist": 0.055
+    },
+    "initial": {
+        "str": 14,
+        "agi": 20,
+        "int": 14,
+        "hp": 80,
+        "hpRegen": 0.67,
+        "attack": 8,
+        "attackSpeed": 0,
+        "armor": 9,
+        "resist": 4
+    },
+    "spells": ["lupine_strike", "pack_howl", "alphas_call_passive"]
+},
+"shadow_assassin": {
+    "name": "Shadow Assassin",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 5.5,
+        "int": 2.0,
+        "hp": 2.8,
+        "attack": 0.5,
+        "armor": 0.06,
+        "resist": 0.105
+    },
+    "initial": {
+        "str": 10,
+        "agi": 26,
+        "int": 12,
+        "hp": 50,
+        "hpRegen": 0,
+        "attack": 14,
+        "attackSpeed": 0,
+        "armor": 3,
+        "resist": 8
+    },
+    "spells": ["shadow_strike_elf", "smoke_screen_elf", "vanish"]
+},
+"elven_bladedancer": {
+    "name": "Elven Bladedancer",
+    "boss": true,
+    "mainstat": "agi",
+    "modifiers": { 
+        "str": 3.0,
+        "agi": 6.0,
+        "int": 3.5,
+        "hp": 3.6,
+        "attack": 0.48,
+        "armor": 0.21,
+        "resist": 0.18
+    },
+    "initial": {
+        "str": 14,
+        "agi": 28,
+        "int": 14,
         "hp": 110,
-        "hpRegen": 2,
-        "attack": 18,
+        "hpRegen": 1.34,
+        "attack": 16,
+        "attackSpeed": 0,
+        "armor": 13,
+        "resist": 12
+    },
+    "spells": ["dancing_blades", "whirling_step", "evasive_maneuvers", "blade_mastery_passive"]
+},
+"elven_queen": {
+    "name": "Elven Queen",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 3.0,
+        "agi": 4.0,
+        "int": 5.5,
+        "hp": 3.8,
+        "attack": 0.36,
+        "armor": 0.26,
+        "resist": 0.305
+    },
+    "initial": {
+        "str": 12,
+        "agi": 18,
+        "int": 20,
+        "hp": 120,
+        "hpRegen": 2.01,
+        "attack": 10,
+        "attackSpeed": 0,
+        "armor": 16,
+        "resist": 18
+    },
+    "spells": ["royal_command", "forests_grace", "natures_wrath", "sovereigns_presence_passive"]
+},
+"naga_warrior": {
+    "name": "Naga Warrior",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 4.5,
+        "agi": 2.5,
+        "int": 3.0,
+        "hp": 3.8,
+        "attack": 0.24,
+        "armor": 0.31,
+        "resist": 0.055
+    },
+    "initial": {
+        "str": 22,
+        "agi": 10,
+        "int": 16,
+        "hp": 100,
+        "hpRegen": 0,
+        "attack": 4,
+        "attackSpeed": 0,
+        "armor": 16,
+        "resist": 4
+    },
+    "spells": ["scale_bash", "coiled_defense", "serpents_resolve"]
+},
+"naga_tidecaller": {
+    "name": "Naga Tidecaller",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 3.0,
+        "int": 4.5,
+        "hp": 3.2,
+        "attack": 0.3,
+        "armor": 0.16,
+        "resist": 0.28
+    },
+    "initial": {
+        "str": 10,
+        "agi": 16,
+        "int": 22,
+        "hp": 80,
+        "hpRegen": 1.34,
+        "attack": 5,
+        "attackSpeed": 0,
+        "armor": 9,
+        "resist": 13
+    },
+    "spells": ["tidal_wave", "oceans_blessing", "ebb_and_flow"]
+},
+"naga_serpent_guard": {
+    "name": "Naga Serpent Guard",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 4.0,
+        "agi": 3.5,
+        "int": 2.5,
+        "hp": 3.5,
+        "attack": 0.32,
+        "armor": 0.21,
+        "resist": 0.105
+    },
+    "initial": {
+        "str": 18,
+        "agi": 18,
+        "int": 12,
+        "hp": 90,
+        "hpRegen": 0.67,
+        "attack": 6,
+        "attackSpeed": 0,
+        "armor": 11,
+        "resist": 8
+    },
+    "spells": ["constrict", "petrifying_gaze", "serpents_coil"]
+},
+"naga_siren": {
+    "name": "Naga Siren",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 2.5,
+        "int": 5.0,
+        "hp": 3.0,
+        "attack": 0.34,
+        "armor": 0.11,
+        "resist": 0.33
+    },
+    "initial": {
+        "str": 10,
+        "agi": 12,
+        "int": 26,
+        "hp": 70,
+        "hpRegen": 2.01,
+        "attack": 6,
+        "attackSpeed": 0,
+        "armor": 6,
+        "resist": 14
+    },
+    "spells": ["sirens_song", "mesmerize", "enchanting_voice"]
+},
+"naga_warlord": {
+    "name": "Naga Warlord",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 5.5,
+        "agi": 3.5,
+        "int": 3.5,
+        "hp": 4.0,
+        "attack": 0.3,
+        "armor": 0.41,
+        "resist": 0.155
+    },
+    "initial": {
+        "str": 24,
+        "agi": 14,
+        "int": 12,
+        "hp": 130,
+        "hpRegen": 1.34,
+        "attack": 8,
+        "attackSpeed": 0,
+        "armor": 20,
+        "resist": 10
+    },
+    "spells": ["trident_strike", "sea_lords_protection", "tidal_surge", "oceanic_resilience_passive"]
+},
+"naga_empress": {
+    "name": "Naga Empress",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 3.0,
+        "agi": 3.0,
+        "int": 6.5,
+        "hp": 3.8,
+        "attack": 0.28,
+        "armor": 0.26,
+        "resist": 0.405
+    },
+    "initial": {
+        "str": 12,
+        "agi": 12,
+        "int": 26,
+        "hp": 120,
+        "hpRegen": 3.35,
+        "attack": 6,
+        "attackSpeed": 0,
+        "armor": 15,
+        "resist": 16
+    },
+    "spells": ["serpents_wrath", "imperial_command", "abyssal_shield", "eternal_tide_passive"]
+},
+"plague_bearer": {
+    "name": "Plague Bearer",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 3.5,
+        "agi": 3.5,
+        "int": 3.0,
+        "hp": 3.4,
+        "attack": 0.34,
+        "armor": 0.16,
+        "resist": 0.155
+    },
+    "initial": {
+        "str": 16,
+        "agi": 18,
+        "int": 14,
+        "hp": 85,
+        "hpRegen": 0.67,
+        "attack": 6,
+        "attackSpeed": 0,
+        "armor": 9,
+        "resist": 10
+    },
+    "spells": ["infected_strike", "spread_disease", "toxic_blood_passive"]
+},
+"toxic_sludge_enemy": {
+    "name": "Toxic Sludge",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 5.0,
+        "agi": 2.5,
+        "int": 2.5,
+        "hp": 4.0,
+        "attack": 0.2,
+        "armor": 0.36,
+        "resist": 0.13
+    },
+    "initial": {
+        "str": 24,
+        "agi": 10,
+        "int": 14,
+        "hp": 110,
+        "hpRegen": 0,
+        "attack": 3,
         "attackSpeed": 0,
         "armor": 18,
-        "resist": 12
-      },
-      "spells": []
+        "resist": 9
     },
-    "devourer": {
-      "name": "Devourer",
-      "boss": true,
-      "mainstat": "str",
-      "modifiers": { 
+    "spells": ["corrosive_touch", "noxious_pool", "acidic_body"]
+},
+"corrupted_alchemist": {
+    "name": "Corrupted Alchemist",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 2.5,
+        "agi": 3.0,
+        "int": 4.5,
+        "hp": 3.1,
+        "attack": 0.32,
+        "armor": 0.11,
+        "resist": 0.305
+    },
+    "initial": {
+        "str": 10,
+        "agi": 16,
+        "int": 22,
+        "hp": 75,
+        "hpRegen": 2.01,
+        "attack": 6,
+        "attackSpeed": 0,
+        "armor": 6,
+        "resist": 14
+    },
+    "spells": ["vial_toss", "mutation", "toxic_remedy"]
+},
+"sewer_lurker": {
+    "name": "Sewer Lurker",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": { 
         "str": 3.0,
-        "agi": 0.8,
-        "int": 1.2,
-        "hp": 5.0,
-        "attack": 0.4,
-        "armor": 0.5,
-        "resist": 0.08
-      },
-      "initial": {
-        "str": 25,
-        "agi": 8,
-        "int": 10,
-        "hp": 150,
-        "hpRegen": 3,
-        "attack": 20,
+        "agi": 5.5,
+        "int": 1.5,
+        "hp": 2.9,
+        "attack": 0.48,
+        "armor": 0.06,
+        "resist": 0.105
+    },
+    "initial": {
+        "str": 14,
+        "agi": 28,
+        "int": 6,
+        "hp": 60,
+        "hpRegen": 0,
+        "attack": 13,
         "attackSpeed": 0,
-        "armor": 30,
+        "armor": 3,
         "resist": 8
-      },
-      "spells": []
     },
-    "rotwood_horror": {
-      "name": "Rotwood Horror",
-      "boss": true,
-      "mainstat": "str",
-      "modifiers": { 
-        "str": 2.8,
-        "agi": 0.5,
-        "int": 2.0,
-        "hp": 5.2,
-        "attack": 0.35,
-        "armor": 0.55,
-        "resist": 0.2
-      },
-      "initial": {
-        "str": 24,
-        "agi": 5,
-        "int": 16,
+    "spells": ["ambush", "festering_wound", "from_the_shadows"]
+},
+"putrid_abomination": {
+    "name": "Putrid Abomination",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 6.0,
+        "agi": 2.5,
+        "int": 4.0,
+        "hp": 4.2,
+        "attack": 0.26,
+        "armor": 0.46,
+        "resist": 0.08
+    },
+    "initial": {
+        "str": 26,
+        "agi": 10,
+        "int": 14,
         "hp": 140,
-        "hpRegen": 4,
-        "attack": 18,
+        "hpRegen": 1.34,
+        "attack": 6,
         "attackSpeed": 0,
-        "armor": 32,
-        "resist": 15
-      },
-      "spells": []
+        "armor": 23,
+        "resist": 6
     },
+    "spells": ["putrid_slam", "toxic_explosion", "regenerate", "rotting_presence_passive"]
+},
+"plague_master": {
+    "name": "The Plague Master",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 3.5,
+        "agi": 3.0,
+        "int": 6.0,
+        "hp": 3.8,
+        "attack": 0.32,
+        "armor": 0.31,
+        "resist": 0.255
+    },
+    "initial": {
+        "str": 14,
+        "agi": 12,
+        "int": 24,
+        "hp": 120,
+        "hpRegen": 2.68,
+        "attack": 8,
+        "attackSpeed": 0,
+        "armor": 17,
+        "resist": 14
+    },
+    "spells": ["epidemic", "quarantine", "black_death", "patient_zero_passive"]
+},
     "hades": {
       "name": "Hades",
       "boss": true,
