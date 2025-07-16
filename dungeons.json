@@ -702,66 +702,174 @@
         "items": ["puzzle_lichcrown", "puzzle_cryptrobe", "puzzle_bonestrides", "puzzle_soulstaff", "puzzle_undeadward", "puzzle_phylactery", "puzzle_lichbane"]
     }
 },
-    "bloodleaf_depths": {
-      "id": "bloodleaf_depths",
-      "name": "Bloodleaf Depths",
-      "boss": "Elven Wolfrider",
-      "tier": "Nightmare",
-      "subtitle": "Nightmare 1",
-      "level": 300,
-      "waves": [
+"bloodleaf_depths": {
+    "id": "bloodleaf_depths",
+    "name": "Bloodleaf Depths",
+    "boss": "Elven Queen",
+    "tier": "Nightmare",
+    "subtitle": "Nightmare 1",
+    "level": 300,
+    "waves": [
         {
-          "enemies": [
-            { "id": "elven_wolfrider", "level": 300 }
-          ]
+            "enemies": [
+                { "id": "elven_hunter", "level": 280 },
+                { "id": "swift_wolf", "level": 282 },
+                { "id": "elven_archer", "level": 285 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "shadow_assassin", "level": 288 },
+                { "id": "elven_hunter", "level": 290 },
+                { "id": "swift_wolf", "level": 292 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "elven_bladedancer", "level": 300 },
+                { "id": "elven_archer", "level": 294 },
+                { "id": "shadow_assassin", "level": 295 },
+                { "id": "swift_wolf", "level": 293 },
+                { "id": "elven_hunter", "level": 292 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "shadow_assassin", "level": 297 },
+                { "id": "shadow_assassin", "level": 298 },
+                { "id": "elven_archer", "level": 296 },
+                { "id": "swift_wolf", "level": 295 },
+                { "id": "swift_wolf", "level": 296 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "elven_queen", "level": 300 },
+                { "id": "elven_bladedancer", "level": 299 },
+                { "id": "shadow_assassin", "level": 299 },
+                { "id": "elven_archer", "level": 298 },
+                { "id": "swift_wolf", "level": 298 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 2457600,
         "exp": 5888000,
         "items": ["bloodleaf_wolfhelm", "bloodleaf_ridervest", "bloodleaf_swiftstrides", "bloodleaf_moonbow", "bloodleaf_natureguard", "bloodleaf_wolfcharm", "bloodleaf_wolfclaw"]
-      }
-    },
-    "naga_ruins": {
-      "id": "naga_ruins",
-      "name": "Naga Ruins",
-      "boss": "Naga Ranger",
-      "tier": "Nightmare",
-      "subtitle": "Nightmare 2",
-      "level": 325,
-      "waves": [
+    }
+},
+"naga_ruins": {
+    "id": "naga_ruins",
+    "name": "Naga Ruins",
+    "boss": "Naga Empress",
+    "tier": "Nightmare",
+    "subtitle": "Nightmare 2",
+    "level": 325,
+    "waves": [
         {
-          "enemies": [
-            { "id": "naga_ranger", "level": 325 }
-          ]
+            "enemies": [
+                { "id": "naga_warrior", "level": 305 },
+                { "id": "naga_tidecaller", "level": 308 },
+                { "id": "naga_serpent_guard", "level": 310 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "naga_siren", "level": 313 },
+                { "id": "naga_warrior", "level": 315 },
+                { "id": "naga_tidecaller", "level": 317 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "naga_warlord", "level": 325 },
+                { "id": "naga_siren", "level": 318 },
+                { "id": "naga_serpent_guard", "level": 319 },
+                { "id": "naga_tidecaller", "level": 320 },
+                { "id": "naga_warrior", "level": 318 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "naga_siren", "level": 322 },
+                { "id": "naga_siren", "level": 323 },
+                { "id": "naga_serpent_guard", "level": 321 },
+                { "id": "naga_tidecaller", "level": 320 },
+                { "id": "naga_warrior", "level": 321 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "naga_empress", "level": 325 },
+                { "id": "naga_warlord", "level": 324 },
+                { "id": "naga_siren", "level": 324 },
+                { "id": "naga_serpent_guard", "level": 323 },
+                { "id": "naga_tidecaller", "level": 323 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 4915200,
         "exp": 11776000,
         "items": ["naga_tidalcrest", "naga_scalemail", "naga_coilguards", "naga_seabow", "naga_tidalshield", "naga_pearlcore", "naga_serpentfang"]
-      }
-    },
-    "forgotten_sewers": {
-      "id": "forgotten_sewers",
-      "name": "Forgotten Sewers",
-      "boss": "Devourer",
-      "tier": "Nightmare",
-      "subtitle": "Nightmare 3",
-      "level": 350,
-      "waves": [
+    }
+},
+"forgotten_sewers": {
+    "id": "forgotten_sewers",
+    "name": "Forgotten Sewers",
+    "boss": "The Plague Master",
+    "tier": "Nightmare",
+    "subtitle": "Nightmare 3",
+    "level": 350,
+    "waves": [
         {
-          "enemies": [
-            { "id": "devourer", "level": 350 }
-          ]
+            "enemies": [
+                { "id": "plague_bearer", "level": 330 },
+                { "id": "toxic_sludge_enemy", "level": 333 },
+                { "id": "corrupted_alchemist", "level": 335 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "sewer_lurker", "level": 338 },
+                { "id": "plague_bearer", "level": 340 },
+                { "id": "toxic_sludge_enemy", "level": 342 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "putrid_abomination", "level": 350 },
+                { "id": "sewer_lurker", "level": 343 },
+                { "id": "corrupted_alchemist", "level": 344 },
+                { "id": "plague_bearer", "level": 345 },
+                { "id": "toxic_sludge_enemy", "level": 343 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "sewer_lurker", "level": 347 },
+                { "id": "sewer_lurker", "level": 348 },
+                { "id": "corrupted_alchemist", "level": 346 },
+                { "id": "plague_bearer", "level": 346 },
+                { "id": "toxic_sludge_enemy", "level": 345 }
+            ]
+        },
+        {
+            "enemies": [
+                { "id": "plague_master", "level": 350 },
+                { "id": "putrid_abomination", "level": 349 },
+                { "id": "sewer_lurker", "level": 349 },
+                { "id": "corrupted_alchemist", "level": 348 },
+                { "id": "plague_bearer", "level": 348 }
+            ]
         }
-      ],
-      "rewards": {
+    ],
+    "rewards": {
         "gold": 9830400,
         "exp": 23552000,
         "items": ["sewer_plaguemask", "sewer_rotplate", "sewer_sludgeboots", "sewer_devourjaw", "sewer_corrodeshield", "sewer_toxicshard", "sewer_plaguebringer"]
-      }
-    },
+    }
+},
     "oblivion": {
       "id": "oblivion",
       "name": "Oblivion",
