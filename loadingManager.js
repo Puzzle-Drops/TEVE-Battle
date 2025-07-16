@@ -1,7 +1,7 @@
 // Loading manager
 class LoadingManager {
     constructor() {
-        this.totalAssets = 19; // 6 JSON files + 11 JS files + map image
+        this.totalAssets = 20; // 6 JSON files + 12 JS files + map image
         this.loadedAssets = 0;
         this.failedAssets = []; // Track which assets failed
         this.preloadedImages = {}; // Store preloaded images
@@ -85,6 +85,7 @@ async function loadGameData() {
     const scriptLoaders = [
         { src: 'spellLogic.js', name: 'Spell Logic' },
         { src: 'battleUnit.js', name: 'Battle Unit' },
+        { src: 'battleAI.js', name: 'Battle AI' },
         { src: 'battle.js', name: 'Battle System' },
         { src: 'devConsole.js', name: 'Dev Console' },
         { src: 'item.js', name: 'Item System' },
