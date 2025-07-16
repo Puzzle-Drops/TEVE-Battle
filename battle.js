@@ -2614,8 +2614,10 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     if (shieldBroken) {
         // Check all allies for Oceanic Resilience passive
         const allies = this.getParty(target);
+        let oceanicTriggered = false; // Flag to track if we've already triggered the effect
+        
         allies.forEach(ally => {
-            if (ally.isAlive && ally.oceanicResiliencePassive) {
+            if (!oceanicTriggered && ally.isAlive && ally.oceanicResiliencePassive) {
                 // Any ally's shield breaking triggers the effect for all allies
                 allies.forEach(beneficiary => {
                     if (beneficiary.isAlive) {
@@ -2624,7 +2626,7 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
                     }
                 });
                 this.log(`${ally.name}'s oceanic resilience protects the team!`);
-                break; // Only trigger once even if multiple allies have the passive
+                oceanicTriggered = true; // Set flag to prevent multiple triggers
             }
         });
     }
