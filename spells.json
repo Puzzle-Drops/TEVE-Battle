@@ -3345,16 +3345,16 @@
     "target": "all_allies",
     "logicKey": "evasiveManeuversLogic"
 },
-"blade_mastery_passive": {
-    "id": "blade_mastery_passive",
-    "name": "Blade Mastery",
+"blade_dancer_passive": {
+    "id": "blade_dancer_passive",
+    "name": "Blade Dancer",
     "description": "+50% damage when under Increase Speed buff",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
     "damageBonus": 1.5,
     "target": "self",
-    "logicKey": "bladeMasteryPassiveLogic"
+    "logicKey": "bladeDancerPassiveLogic"
 },
 "royal_command": {
     "id": "royal_command",
