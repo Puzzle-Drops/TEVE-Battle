@@ -1921,7 +1921,7 @@
         "armor": 13,
         "resist": 12
     },
-    "spells": ["dancing_blades", "whirling_step", "evasive_maneuvers", "blade_mastery_passive"]
+    "spells": ["dancing_blades", "whirling_step", "evasive_maneuvers", "blade_dancer_passive"]
 },
 "elven_queen": {
     "name": "Elven Queen",
