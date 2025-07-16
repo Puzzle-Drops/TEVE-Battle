@@ -1333,47 +1333,46 @@ calculateAbilityScore(caster, abilityIndex, target, spell, sortedLists) {
             let effectScore = 0;
             
             // UPDATED DAMAGE SCORING
-            // UPDATED DAMAGE SCORING
-if (effect === 'physical' || effect === 'magical' || effect === 'pure') {
-    if (currentTarget && currentTarget !== 'all' && currentTarget.isAlive) {
-        let estimatedDamage = 0;
-        
-        // Check if spell has standard scaling
-        if (spell.scaling) {
-            // Calculate estimated damage based on spell scaling
-            const baseDamage = spell.scaling.base ? (spell.scaling.base[levelIndex] || spell.scaling.base[0] || 50) : 50;
-            const attackScaling = spell.scaling.attack ? (spell.scaling.attack[levelIndex] || spell.scaling.attack[0] || 1.0) : 1.0;
-            
-            estimatedDamage = baseDamage + (caster.source.attack * attackScaling);
-        } else {
-            // Handle special damage calculations (like Corpse Explosion)
-            if (spell.missingHpPercent) {
-                // Corpse Explosion style - damage based on missing HP
-                const missingHp = currentTarget.maxHp - currentTarget.currentHp;
-                const missingHpDamage = missingHp * (spell.missingHpPercent[levelIndex] || spell.missingHpPercent[0] || 0.2);
-                const baseDamage = spell.baseDamage ? (spell.baseDamage[levelIndex] || spell.baseDamage[0] || 50) : 50;
-                estimatedDamage = baseDamage + missingHpDamage;
-            } else {
-                // Default fallback damage
-                estimatedDamage = 50 + caster.source.attack;
-            }
-        }
+            if (effect === 'physical' || effect === 'magical' || effect === 'pure') {
+                if (currentTarget && currentTarget !== 'all' && currentTarget.isAlive) {
+                    let estimatedDamage = 0;
+                    
+                    // Check if spell has standard scaling
+                    if (spell.scaling) {
+                        // Calculate estimated damage based on spell scaling
+                        const baseDamage = spell.scaling.base ? (spell.scaling.base[levelIndex] || spell.scaling.base[0] || 50) : 50;
+                        const attackScaling = spell.scaling.attack ? (spell.scaling.attack[levelIndex] || spell.scaling.attack[0] || 1.0) : 1.0;
+                        
+                        estimatedDamage = baseDamage + (caster.source.attack * attackScaling);
+                    } else {
+                        // Handle special damage calculations (like Corpse Explosion)
+                        if (spell.missingHpPercent) {
+                            // Corpse Explosion style - damage based on missing HP
+                            const missingHp = currentTarget.maxHp - currentTarget.currentHp;
+                            const missingHpDamage = missingHp * (spell.missingHpPercent[levelIndex] || spell.missingHpPercent[0] || 0.2);
+                            const baseDamage = spell.baseDamage ? (spell.baseDamage[levelIndex] || spell.baseDamage[0] || 50) : 50;
+                            estimatedDamage = baseDamage + missingHpDamage;
+                        } else {
+                            // Default fallback damage
+                            estimatedDamage = 50 + caster.source.attack;
+                        }
+                    }
                     
                     // Add stat scaling if present
-        if (spell.scaling) {
-            if (spell.scaling.str && caster.stats.str) {
-                const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0] || 0;
-                estimatedDamage += caster.stats.str * strScaling;
-            }
-            if (spell.scaling.int && caster.stats.int) {
-                const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0] || 0;
-                estimatedDamage += caster.stats.int * intScaling;
-            }
-            if (spell.scaling.agi && caster.stats.agi) {
-                const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0] || 0;
-                estimatedDamage += caster.stats.agi * agiScaling;
-            }
-        }
+                    if (spell.scaling) {
+                        if (spell.scaling.str && caster.stats.str) {
+                            const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0] || 0;
+                            estimatedDamage += caster.stats.str * strScaling;
+                        }
+                        if (spell.scaling.int && caster.stats.int) {
+                            const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0] || 0;
+                            estimatedDamage += caster.stats.int * intScaling;
+                        }
+                        if (spell.scaling.agi && caster.stats.agi) {
+                            const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0] || 0;
+                            estimatedDamage += caster.stats.agi * agiScaling;
+                        }
+                    }
                     
                     // Apply damage multipliers
                     estimatedDamage *= damageMultiplier;
@@ -1801,37 +1800,49 @@ if (effect === 'physical' || effect === 'magical' || effect === 'pure') {
         }
 
         // Mirror Image - high value when debuffed or low HP
-if (spell.id === 'mirror_image') {
-    const debuffCount = caster.debuffs ? caster.debuffs.length : 0;
-    score += debuffCount * 25; // High value for removing debuffs
-    
-    const hpPercent = caster.currentHp / caster.maxHp;
-    if (hpPercent < 0.5) {
-        score += 40; // Extra value when low HP for dodge
-    }
-}
+        if (spell.id === 'mirror_image') {
+            const debuffCount = caster.debuffs ? caster.debuffs.length : 0;
+            score += debuffCount * 25; // High value for removing debuffs
+            
+            const hpPercent = caster.currentHp / caster.maxHp;
+            if (hpPercent < 0.5) {
+                score += 40; // Extra value when low HP for dodge
+            }
+        }
 
-// Ancestral Vigor - prefer low HP allies
-if (spell.id === 'ancestral_vigor' && target !== 'all') {
-    const hpPercent = target.currentHp / target.maxHp;
-    score += (1 - hpPercent) * 30; // Higher value for lower HP allies
-}
+        // Ancestral Vigor - prefer low HP allies
+        if (spell.id === 'ancestral_vigor' && target !== 'all') {
+            const hpPercent = target.currentHp / target.maxHp;
+            score += (1 - hpPercent) * 30; // Higher value for lower HP allies
+        }
 
-// Blood Rage - high value when multiple allies have bleed (for Warmaster synergy)
-if (spell.id === 'blood_rage' && caster.warmasterPassive) {
-    const bleedingAllies = sortedLists.alliesByHealth.filter(ally => 
-        ally.debuffs && ally.debuffs.some(d => d.name === 'Bleed')
-    ).length;
-    score += bleedingAllies * 15;
-}
+        // Blood Rage - high value when multiple allies have bleed (for Warmaster synergy)
+        if (spell.id === 'blood_rage' && caster.warmasterPassive) {
+            const bleedingAllies = sortedLists.alliesByHealth.filter(ally => 
+                ally.debuffs && ally.debuffs.some(d => d.name === 'Bleed')
+            ).length;
+            score += bleedingAllies * 15;
+        }
 
-// Thunderous Charge - bonus based on current action bar
-if (spell.id === 'thunderous_charge') {
-    const actionBarPercent = caster.actionBar / 10000;
-    score += actionBarPercent * 50; // Up to +50 for full action bar
-}
+        // Thunderous Charge - bonus based on current action bar
+        if (spell.id === 'thunderous_charge') {
+            const actionBarPercent = caster.actionBar / 10000;
+            score += actionBarPercent * 50; // Up to +50 for full action bar
+        }
 
-        
+        // NEW: Whirling Step - value for speed buff and double attack
+        if (spell.id === 'whirling_step') {
+            // Extra value if caster has high damage attacks
+            if (caster.source.attack > 100) {
+                score += 30; // High value for doubling strong attacks
+            }
+            
+            // Less value if already has speed buffs
+            const currentSpeedStacks = caster.buffs.filter(b => b.name === 'Increase Speed').length;
+            if (currentSpeedStacks >= 2) {
+                score -= 15; // Diminishing returns
+            }
+        }
     }
     
     // Multi-effect ability synergies
@@ -1889,7 +1900,7 @@ if (spell.id === 'thunderous_charge') {
         score += 10; // Their cleanses apply buffs
     }
 
-// Ancient Knowledge - very powerful buff steal
+    // Ancient Knowledge - very powerful buff steal
     if (spell.id === 'ancient_knowledge') {
         const buffedEnemies = sortedLists.enemiesByBuffCount.filter(e => e.countableBuffs.length > 0);
         score += buffedEnemies.length * 20; // High value per enemy with buffs
@@ -1927,14 +1938,14 @@ if (spell.id === 'thunderous_charge') {
         score += unshieldedAllies.length * 10;
     }
     
-// Test spell overrides - ALWAYS prioritize win, NEVER use lose
-if (spell.id === 'win') {
-    score = 999999; // Massive positive score to ensure it's always chosen
-}
+    // Test spell overrides - ALWAYS prioritize win, NEVER use lose
+    if (spell.id === 'win') {
+        score = 999999; // Massive positive score to ensure it's always chosen
+    }
 
-if (spell.id === 'lose') {
-    score = -999999; // Massive negative score to ensure it's never chosen
-}
+    if (spell.id === 'lose') {
+        score = -999999; // Massive negative score to ensure it's never chosen
+    }
 
     // Add small random noise (-1.5 to +1.5)
     const noise = (Math.random() - 0.5) * 3;
