@@ -493,32 +493,6 @@
     },
     "spells": ["shadow_bolt", "shadow_veil", "dark_blessing"]
 },
-"banshee_matriarch": {
-    "name": "Banshee Matriarch",
-    "boss": true,
-    "mainstat": "int",
-    "modifiers": { 
-        "str": 1.5,
-        "agi": 1.8,
-        "int": 2.7,
-        "hp": 3.2,
-        "attack": 0.36,
-        "armor": 0.11,
-        "resist": 0.33
-    },
-    "initial": {
-        "str": 5,
-        "agi": 7,
-        "int": 12,
-        "hp": 60,
-        "hpRegen": 2,
-        "attack": 5,
-        "attackSpeed": 0,
-        "armor": 7,
-        "resist": 15
-    },
-    "spells": ["spectral_slash", "death_shriek", "mournful_presence"]
-},
 "twisted_treant": {
     "name": "Twisted Treant",
     "boss": false,
@@ -544,6 +518,32 @@
         "resist": 4
     },
     "spells": ["branch_whip", "natures_corruption", "thorned_embrace"]
+},
+"banshee_matriarch": {
+    "name": "Banshee Matriarch",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": { 
+        "str": 1.5,
+        "agi": 1.8,
+        "int": 2.7,
+        "hp": 3.2,
+        "attack": 0.36,
+        "armor": 0.11,
+        "resist": 0.33
+    },
+    "initial": {
+        "str": 5,
+        "agi": 7,
+        "int": 12,
+        "hp": 60,
+        "hpRegen": 2,
+        "attack": 5,
+        "attackSpeed": 0,
+        "armor": 7,
+        "resist": 15
+    },
+    "spells": ["spectral_slash", "death_shriek", "mournful_presence"]
 },
 "banshee_queen": {
     "name": "Banshee Queen",
@@ -857,32 +857,6 @@
     },
     "spells": ["heavy_strike", "shield_bash", "intimidate"]
 },
-"bandit_captain": {
-    "name": "Bandit Captain",
-    "boss": true,
-    "mainstat": "str",
-    "modifiers": { 
-        "str": 2.4,
-        "agi": 1.9,
-        "int": 1.7,
-        "hp": 3.5,
-        "attack": 0.38,
-        "armor": 0.31,
-        "resist": 0.08
-    },
-    "initial": {
-        "str": 10,
-        "agi": 8,
-        "int": 6,
-        "hp": 75,
-        "hpRegen": 0.67,
-        "attack": 8,
-        "attackSpeed": 0,
-        "armor": 12,
-        "resist": 6
-    },
-    "spells": ["captains_strike", "rally_thieves", "dirty_fighting", "execute"]
-},
 "bandit_assassin": {
     "name": "Bandit Assassin",
     "boss": false,
@@ -908,6 +882,32 @@
         "resist": 6
     },
     "spells": ["shadow_strike", "smoke_bomb", "cheap_shot"]
+},
+"bandit_captain": {
+    "name": "Bandit Captain",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": { 
+        "str": 2.4,
+        "agi": 1.9,
+        "int": 1.7,
+        "hp": 3.5,
+        "attack": 0.38,
+        "armor": 0.31,
+        "resist": 0.08
+    },
+    "initial": {
+        "str": 10,
+        "agi": 8,
+        "int": 6,
+        "hp": 75,
+        "hpRegen": 0.67,
+        "attack": 8,
+        "attackSpeed": 0,
+        "armor": 12,
+        "resist": 6
+    },
+    "spells": ["captains_strike", "rally_thieves", "dirty_fighting", "execute"]
 },
 "bandit_lord": {
     "name": "Bandit Lord",
