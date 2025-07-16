@@ -935,396 +935,396 @@
     },
     "spells": ["lords_blade", "bandits_gambit", "plunder", "call_to_arms"]
 },
-"goblin_tinkerer": {
+  "goblin_tinkerer": {
     "name": "Goblin Tinkerer",
     "boss": false,
     "mainstat": "str",
     "modifiers": { 
-        "str": 1.5,
-        "agi": 1.3,
-        "int": 1.2,
-        "hp": 3.5,
-        "attack": 0.3,
-        "armor": 0.18,
-        "resist": 0.08
+      "str": 2.25,
+      "agi": 1.95,
+      "int": 1.8,
+      "hp": 3.5,
+      "attack": 0.3,
+      "armor": 0.18,
+      "resist": 0.08
     },
     "initial": {
-        "str": 7,
-        "agi": 5,
-        "int": 4,
-        "hp": 45,
-        "hpRegen": 0,
-        "attack": 5,
-        "attackSpeed": 0,
-        "armor": 9,
-        "resist": 6
+      "str": 11,
+      "agi": 7,
+      "int": 6,
+      "hp": 45,
+      "hpRegen": 0,
+      "attack": 5,
+      "attackSpeed": 0,
+      "armor": 9,
+      "resist": 6
     },
     "spells": ["wrench_toss", "makeshift_shield"]
-},
-"goblin_grenadier": {
+  },
+  "goblin_grenadier": {
     "name": "Goblin Grenadier",
     "boss": false,
     "mainstat": "int",
     "modifiers": { 
-        "str": 1.25,
-        "agi": 1.35,
-        "int": 1.4,
-        "hp": 3.0,
-        "attack": 0.38,
-        "armor": 0.11,
-        "resist": 0.13
+      "str": 1.88,
+      "agi": 2.02,
+      "int": 2.1,
+      "hp": 3.0,
+      "attack": 0.38,
+      "armor": 0.11,
+      "resist": 0.13
     },
     "initial": {
-        "str": 4,
-        "agi": 6,
-        "int": 6,
-        "hp": 30,
-        "hpRegen": 0,
-        "attack": 6,
-        "attackSpeed": 0,
-        "armor": 6,
-        "resist": 8
+      "str": 6,
+      "agi": 9,
+      "int": 9,
+      "hp": 30,
+      "hpRegen": 0,
+      "attack": 6,
+      "attackSpeed": 0,
+      "armor": 6,
+      "resist": 8
     },
     "spells": ["grenade_lob", "smoke_screen"]
-},
-"goblin_mechanic": {
+  },
+  "goblin_mechanic": {
     "name": "Goblin Mechanic",
     "boss": false,
     "mainstat": "int",
     "modifiers": { 
-        "str": 1.3,
-        "agi": 1.25,
-        "int": 1.45,
-        "hp": 3.2,
-        "attack": 0.28,
-        "armor": 0.16,
-        "resist": 0.18
+      "str": 1.95,
+      "agi": 1.88,
+      "int": 2.17,
+      "hp": 3.2,
+      "attack": 0.28,
+      "armor": 0.16,
+      "resist": 0.18
     },
     "initial": {
-        "str": 5,
-        "agi": 4,
-        "int": 7,
-        "hp": 35,
-        "hpRegen": 1.34,
-        "attack": 4,
-        "attackSpeed": 0,
-        "armor": 8,
-        "resist": 10
+      "str": 7,
+      "agi": 6,
+      "int": 11,
+      "hp": 35,
+      "hpRegen": 1.34,
+      "attack": 4,
+      "attackSpeed": 0,
+      "armor": 8,
+      "resist": 10
     },
     "spells": ["repair_bot", "overclock"]
-},
-"goblin_demolitionist": {
+  },
+  "goblin_demolitionist": {
     "name": "Goblin Demolitionist",
     "boss": true,
     "mainstat": "str",
     "modifiers": { 
-        "str": 2.3,
-        "agi": 1.7,
-        "int": 2.0,
-        "hp": 3.5,
-        "attack": 0.4,
-        "armor": 0.26,
-        "resist": 0.13
+      "str": 3.45,
+      "agi": 2.55,
+      "int": 3.0,
+      "hp": 3.5,
+      "attack": 0.4,
+      "armor": 0.26,
+      "resist": 0.13
     },
     "initial": {
-        "str": 10,
-        "agi": 7,
-        "int": 9,
-        "hp": 80,
-        "hpRegen": 0,
-        "attack": 10,
-        "attackSpeed": 0,
-        "armor": 12,
-        "resist": 10
+      "str": 15,
+      "agi": 11,
+      "int": 10,
+      "hp": 80,
+      "hpRegen": 0,
+      "attack": 10,
+      "attackSpeed": 0,
+      "armor": 12,
+      "resist": 10
     },
     "spells": ["bomb_vest", "detonate", "shrapnel_blast", "demolition_expert_passive"]
-},
-"goblin_mining_mech": {
+  },
+  "goblin_mining_mech": {
     "name": "Goblin Mining Mech",
     "boss": true,
     "mainstat": "str",
     "modifiers": { 
-        "str": 2.5,
-        "agi": 1.5,
-        "int": 2.0,
-        "hp": 4.0,
-        "attack": 0.35,
-        "armor": 0.41,
-        "resist": 0.055
+      "str": 3.75,
+      "agi": 2.25,
+      "int": 3.0,
+      "hp": 4.0,
+      "attack": 0.35,
+      "armor": 0.41,
+      "resist": 0.055
     },
     "initial": {
-        "str": 12,
-        "agi": 6,
-        "int": 10,
-        "hp": 100,
-        "hpRegen": 0,
-        "attack": 12,
-        "attackSpeed": 0,
-        "armor": 18,
-        "resist": 5
+      "str": 17,
+      "agi": 9,
+      "int": 10,
+      "hp": 100,
+      "hpRegen": 0,
+      "attack": 12,
+      "attackSpeed": 0,
+      "armor": 18,
+      "resist": 5
     },
     "spells": ["drill_charge", "defense_shredder", "scrap_cannon", "reinforced_plating_passive"]
-},
-"tribal_scout": {
+  },
+  "tribal_scout": {
     "name": "Tribal Scout",
     "boss": false,
     "mainstat": "agi",
     "modifiers": { 
-        "str": 1.3,
-        "agi": 1.5,
-        "int": 1.2,
-        "hp": 3.1,
-        "attack": 0.42,
-        "armor": 0.11,
-        "resist": 0.08
+      "str": 1.95,
+      "agi": 2.25,
+      "int": 1.8,
+      "hp": 3.1,
+      "attack": 0.42,
+      "armor": 0.11,
+      "resist": 0.08
     },
     "initial": {
-        "str": 5,
-        "agi": 8,
-        "int": 4,
-        "hp": 35,
-        "hpRegen": 0,
-        "attack": 7,
-        "attackSpeed": 0,
-        "armor": 6,
-        "resist": 6
+      "str": 7,
+      "agi": 12,
+      "int": 5,
+      "hp": 35,
+      "hpRegen": 0,
+      "attack": 7,
+      "attackSpeed": 0,
+      "armor": 6,
+      "resist": 6
     },
     "spells": ["arrow_volley", "swift_gallop"]
-},
-"tribal_warrior": {
+  },
+  "tribal_warrior": {
     "name": "Tribal Warrior",
     "boss": false,
     "mainstat": "str",
     "modifiers": { 
-        "str": 1.5,
-        "agi": 1.35,
-        "int": 1.15,
-        "hp": 3.6,
-        "attack": 0.32,
-        "armor": 0.21,
-        "resist": 0.055
+      "str": 2.25,
+      "agi": 2.02,
+      "int": 1.73,
+      "hp": 3.6,
+      "attack": 0.32,
+      "armor": 0.21,
+      "resist": 0.055
     },
     "initial": {
-        "str": 8,
-        "agi": 6,
-        "int": 3,
-        "hp": 50,
-        "hpRegen": 0,
-        "attack": 6,
-        "attackSpeed": 0,
-        "armor": 11,
-        "resist": 4
+      "str": 11,
+      "agi": 8,
+      "int": 5,
+      "hp": 50,
+      "hpRegen": 0,
+      "attack": 6,
+      "attackSpeed": 0,
+      "armor": 11,
+      "resist": 4
     },
     "spells": ["hoof_stomp", "battle_charge"]
-},
-"tribal_mystic": {
+  },
+  "tribal_mystic": {
     "name": "Tribal Mystic",
     "boss": false,
     "mainstat": "int",
     "modifiers": { 
-        "str": 1.25,
-        "agi": 1.3,
-        "int": 1.45,
-        "hp": 3.0,
-        "attack": 0.3,
-        "armor": 0.11,
-        "resist": 0.23
+      "str": 1.88,
+      "agi": 1.95,
+      "int": 2.17,
+      "hp": 3.0,
+      "attack": 0.3,
+      "armor": 0.11,
+      "resist": 0.23
     },
     "initial": {
-        "str": 4,
-        "agi": 5,
-        "int": 7,
-        "hp": 28,
-        "hpRegen": 1.34,
-        "attack": 4,
-        "attackSpeed": 0,
-        "armor": 5,
-        "resist": 12
+      "str": 6,
+      "agi": 7,
+      "int": 11,
+      "hp": 28,
+      "hpRegen": 1.34,
+      "attack": 4,
+      "attackSpeed": 0,
+      "armor": 5,
+      "resist": 12
     },
     "spells": ["earthen_blessing", "ancestral_vigor"]
-},
-"tribal_warchief": {
+  },
+  "tribal_warchief": {
     "name": "Tribal Warchief",
     "boss": true,
     "mainstat": "str",
     "modifiers": { 
-        "str": 2.4,
-        "agi": 2.0,
-        "int": 1.6,
-        "hp": 3.8,
-        "attack": 0.38,
-        "armor": 0.31,
-        "resist": 0.105
+      "str": 3.6,
+      "agi": 3.0,
+      "int": 2.4,
+      "hp": 3.8,
+      "attack": 0.38,
+      "armor": 0.31,
+      "resist": 0.105
     },
     "initial": {
-        "str": 11,
-        "agi": 9,
-        "int": 6,
-        "hp": 90,
-        "hpRegen": 0.67,
-        "attack": 11,
-        "attackSpeed": 0,
-        "armor": 14,
-        "resist": 8
+      "str": 16,
+      "agi": 14,
+      "int": 6,
+      "hp": 90,
+      "hpRegen": 0.67,
+      "attack": 11,
+      "attackSpeed": 0,
+      "armor": 14,
+      "resist": 8
     },
     "spells": ["stampede", "war_stomp", "rallying_horn", "tribal_leader_passive"]
-},
-"tribal_chieftain": {
+  },
+  "tribal_chieftain": {
     "name": "Tribal Chieftain",
     "boss": true,
     "mainstat": "str",
     "modifiers": { 
-        "str": 2.6,
-        "agi": 1.8,
-        "int": 1.6,
-        "hp": 4.2,
-        "attack": 0.34,
-        "armor": 0.41,
-        "resist": 0.08
+      "str": 3.9,
+      "agi": 2.7,
+      "int": 2.4,
+      "hp": 4.2,
+      "attack": 0.34,
+      "armor": 0.41,
+      "resist": 0.08
     },
     "initial": {
-        "str": 13,
-        "agi": 8,
-        "int": 8,
-        "hp": 110,
-        "hpRegen": 1,
-        "attack": 13,
-        "attackSpeed": 0,
-        "armor": 20,
-        "resist": 7
+      "str": 18,
+      "agi": 12,
+      "int": 6,
+      "hp": 110,
+      "hpRegen": 1,
+      "attack": 13,
+      "attackSpeed": 0,
+      "armor": 20,
+      "resist": 7
     },
     "spells": ["horn_gore", "blood_rage", "thunderous_charge", "savage_momentum_passive"]
-},
-"orc_grunt": {
+  },
+  "orc_grunt": {
     "name": "Orc Grunt",
     "boss": false,
     "mainstat": "str",
     "modifiers": { 
-        "str": 1.55,
-        "agi": 1.25,
-        "int": 1.2,
-        "hp": 3.8,
-        "attack": 0.34,
-        "armor": 0.16,
-        "resist": 0.035
+      "str": 2.32,
+      "agi": 1.88,
+      "int": 1.8,
+      "hp": 3.8,
+      "attack": 0.34,
+      "armor": 0.16,
+      "resist": 0.035
     },
     "initial": {
-        "str": 8,
-        "agi": 5,
-        "int": 4,
-        "hp": 55,
-        "hpRegen": 0,
-        "attack": 6,
-        "attackSpeed": 0,
-        "armor": 9,
-        "resist": 3
+      "str": 12,
+      "agi": 7,
+      "int": 5,
+      "hp": 55,
+      "hpRegen": 0,
+      "attack": 6,
+      "attackSpeed": 0,
+      "armor": 9,
+      "resist": 3
     },
     "spells": ["brutal_swing", "bloodlust"]
-},
-"orc_berserker": {
+  },
+  "orc_berserker": {
     "name": "Orc Berserker",
     "boss": false,
     "mainstat": "str",
     "modifiers": { 
-        "str": 1.6,
-        "agi": 1.4,
-        "int": 1.0,
-        "hp": 3.3,
-        "attack": 0.48,
-        "armor": 0.06,
-        "resist": 0.035
+      "str": 2.4,
+      "agi": 2.1,
+      "int": 1.5,
+      "hp": 3.3,
+      "attack": 0.48,
+      "armor": 0.06,
+      "resist": 0.035
     },
     "initial": {
-        "str": 9,
-        "agi": 7,
-        "int": 2,
-        "hp": 40,
-        "hpRegen": 0,
-        "attack": 9,
-        "attackSpeed": 0,
-        "armor": 3,
-        "resist": 3
+      "str": 12,
+      "agi": 9,
+      "int": 3,
+      "hp": 40,
+      "hpRegen": 0,
+      "attack": 9,
+      "attackSpeed": 0,
+      "armor": 3,
+      "resist": 3
     },
     "spells": ["reckless_assault", "fury_strike"]
-},
-"orc_bloodshaman": {
+  },
+  "orc_bloodshaman": {
     "name": "Orc Bloodshaman",
     "boss": false,
     "mainstat": "int",
     "modifiers": { 
-        "str": 1.3,
-        "agi": 1.2,
-        "int": 1.5,
-        "hp": 3.2,
-        "attack": 0.36,
-        "armor": 0.11,
-        "resist": 0.18
+      "str": 1.95,
+      "agi": 1.8,
+      "int": 2.25,
+      "hp": 3.2,
+      "attack": 0.36,
+      "armor": 0.11,
+      "resist": 0.18
     },
     "initial": {
-        "str": 5,
-        "agi": 4,
-        "int": 8,
-        "hp": 35,
-        "hpRegen": 1.34,
-        "attack": 5,
-        "attackSpeed": 0,
-        "armor": 6,
-        "resist": 11
+      "str": 7,
+      "agi": 5,
+      "int": 12,
+      "hp": 35,
+      "hpRegen": 1.34,
+      "attack": 5,
+      "attackSpeed": 0,
+      "armor": 6,
+      "resist": 11
     },
     "spells": ["lightning_bolt", "bloodlust_totem"]
-},
-"orc_warlord": {
+  },
+  "orc_warlord": {
     "name": "Orc Warlord",
     "boss": true,
     "mainstat": "str",
     "modifiers": { 
-        "str": 2.5,
-        "agi": 1.7,
-        "int": 1.8,
-        "hp": 3.9,
-        "attack": 0.36,
-        "armor": 0.36,
-        "resist": 0.08
+      "str": 3.75,
+      "agi": 2.55,
+      "int": 2.7,
+      "hp": 3.9,
+      "attack": 0.36,
+      "armor": 0.36,
+      "resist": 0.08
     },
     "initial": {
-        "str": 12,
-        "agi": 7,
-        "int": 8,
-        "hp": 95,
-        "hpRegen": 0.67,
-        "attack": 12,
-        "attackSpeed": 0,
-        "armor": 16,
-        "resist": 6
+      "str": 17,
+      "agi": 11,
+      "int": 8,
+      "hp": 95,
+      "hpRegen": 0.67,
+      "attack": 12,
+      "attackSpeed": 0,
+      "armor": 16,
+      "resist": 6
     },
     "spells": ["execute_swing", "intimidating_shout", "command_presence", "warmaster_passive"]
-},
-"orc_blademaster": {
+  },
+  "orc_blademaster": {
     "name": "Orc Blademaster",
     "boss": true,
     "mainstat": "agi",
     "modifiers": { 
-        "str": 2.0,
-        "agi": 2.8,
-        "int": 1.2,
-        "hp": 3.6,
-        "attack": 0.5,
-        "armor": 0.26,
-        "resist": 0.105
+      "str": 3.0,
+      "agi": 4.2,
+      "int": 1.8,
+      "hp": 3.6,
+      "attack": 0.5,
+      "armor": 0.26,
+      "resist": 0.105
     },
     "initial": {
-        "str": 10,
-        "agi": 14,
-        "int": 6,
-        "hp": 100,
-        "hpRegen": 1,
-        "attack": 16,
-        "attackSpeed": 0,
-        "armor": 13,
-        "resist": 9
+      "str": 14,
+      "agi": 16,
+      "int": 6,
+      "hp": 100,
+      "hpRegen": 1,
+      "attack": 16,
+      "attackSpeed": 0,
+      "armor": 13,
+      "resist": 9
     },
     "spells": ["blade_flurry", "mirror_image", "wind_walk", "blade_mastery_passive"]
-},
+  },
 "snapdragon_spitter": {
     "name": "Snapdragon Spitter",
     "boss": false,
