@@ -2413,6 +2413,8 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
                 const missingHpPercent = 1 - (attacker.currentHp / attacker.maxHp);
                 const damageBonus = 1 + (missingHpPercent * calc.maxBonus);
                 damage *= damageBonus;
+            } else if (calc.type === 'blade_mastery' && attacker.buffs.some(b => b.name === 'Increase Speed')) {
+                damage *= calc.damageBonus;
             }
         });
     }
@@ -2449,11 +2451,6 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
             damage *= 1.5;
         }
     });
-
-    // Blade Mastery passive - +50% damage when under Increase Speed
-    if (attacker.bladeMasteryPassive && attacker.buffs.some(b => b.name === 'Increase Speed')) {
-        damage *= (attacker.bladeMasteryDamageBonus || 1.5);
-    }
 
     // Warmaster passive - check if attacker has bleed and if any ally has warmaster passive
     if (attacker.debuffs.some(d => d.name === 'Bleed')) {
