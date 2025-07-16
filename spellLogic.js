@@ -2473,9 +2473,9 @@ const spellLogic = {
 
     bladeMasteryPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.bladeMasteryPassive = true;
-        passiveHelpers.addOnHitEffect(caster, {
-            type: 'extra_attack_chance',
-            chance: 0.3
+        passiveHelpers.addDamageCalculation(caster, {
+            type: 'blade_mastery',
+            damageBonus: spell.damageBonus || 1.5
         });
     },
 
