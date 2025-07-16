@@ -3320,7 +3320,7 @@ const spellLogic = {
         });
     },
 
-    bladeMasteryPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    bladeDancerPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.bladeMasteryPassive = true;
         caster.bladeMasteryDamageBonus = spell.damageBonus || 1.5;
     },
