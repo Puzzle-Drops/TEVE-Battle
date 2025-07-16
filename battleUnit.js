@@ -165,8 +165,8 @@ class BattleUnit {
         const isStunned = this.debuffs.some(d => d.name === 'Stun' || d.stunned);
         if (wasStunned !== isStunned) {
             // Find the battle instance and update stun visuals
-            if (this.battle) {
-                this.battle.updateStunVisuals(this);
+            if (this.battle && this.battle.animations) {
+                this.battle.animations.updateStunVisuals(this);
             }
         }
     }
