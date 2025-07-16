@@ -1309,27 +1309,47 @@ calculateAbilityScore(caster, abilityIndex, target, spell, sortedLists) {
             let effectScore = 0;
             
             // UPDATED DAMAGE SCORING
-            if (effect === 'physical' || effect === 'magical' || effect === 'pure') {
-                if (currentTarget && currentTarget !== 'all' && currentTarget.isAlive) {
-                    // Calculate estimated damage based on spell scaling
-                    const baseDamage = spell.scaling.base ? (spell.scaling.base[levelIndex] || spell.scaling.base[0] || 50) : 50;
-                    const attackScaling = spell.scaling.attack ? (spell.scaling.attack[levelIndex] || spell.scaling.attack[0] || 1.0) : 1.0;
-                    
-                    let estimatedDamage = baseDamage + (caster.source.attack * attackScaling);
+            // UPDATED DAMAGE SCORING
+if (effect === 'physical' || effect === 'magical' || effect === 'pure') {
+    if (currentTarget && currentTarget !== 'all' && currentTarget.isAlive) {
+        let estimatedDamage = 0;
+        
+        // Check if spell has standard scaling
+        if (spell.scaling) {
+            // Calculate estimated damage based on spell scaling
+            const baseDamage = spell.scaling.base ? (spell.scaling.base[levelIndex] || spell.scaling.base[0] || 50) : 50;
+            const attackScaling = spell.scaling.attack ? (spell.scaling.attack[levelIndex] || spell.scaling.attack[0] || 1.0) : 1.0;
+            
+            estimatedDamage = baseDamage + (caster.source.attack * attackScaling);
+        } else {
+            // Handle special damage calculations (like Corpse Explosion)
+            if (spell.missingHpPercent) {
+                // Corpse Explosion style - damage based on missing HP
+                const missingHp = currentTarget.maxHp - currentTarget.currentHp;
+                const missingHpDamage = missingHp * (spell.missingHpPercent[levelIndex] || spell.missingHpPercent[0] || 0.2);
+                const baseDamage = spell.baseDamage ? (spell.baseDamage[levelIndex] || spell.baseDamage[0] || 50) : 50;
+                estimatedDamage = baseDamage + missingHpDamage;
+            } else {
+                // Default fallback damage
+                estimatedDamage = 50 + caster.source.attack;
+            }
+        }
                     
                     // Add stat scaling if present
-                    if (spell.scaling.str && caster.stats.str) {
-                        const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0] || 0;
-                        estimatedDamage += caster.stats.str * strScaling;
-                    }
-                    if (spell.scaling.int && caster.stats.int) {
-                        const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0] || 0;
-                        estimatedDamage += caster.stats.int * intScaling;
-                    }
-                    if (spell.scaling.agi && caster.stats.agi) {
-                        const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0] || 0;
-                        estimatedDamage += caster.stats.agi * agiScaling;
-                    }
+        if (spell.scaling) {
+            if (spell.scaling.str && caster.stats.str) {
+                const strScaling = spell.scaling.str[levelIndex] || spell.scaling.str[0] || 0;
+                estimatedDamage += caster.stats.str * strScaling;
+            }
+            if (spell.scaling.int && caster.stats.int) {
+                const intScaling = spell.scaling.int[levelIndex] || spell.scaling.int[0] || 0;
+                estimatedDamage += caster.stats.int * intScaling;
+            }
+            if (spell.scaling.agi && caster.stats.agi) {
+                const agiScaling = spell.scaling.agi[levelIndex] || spell.scaling.agi[0] || 0;
+                estimatedDamage += caster.stats.agi * agiScaling;
+            }
+        }
                     
                     // Apply damage multipliers
                     estimatedDamage *= damageMultiplier;
