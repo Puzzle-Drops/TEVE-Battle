@@ -1066,8 +1066,8 @@
     },
     "spells": ["drill_charge", "defense_shredder", "scrap_cannon", "reinforced_plating_passive"]
 },
-"centaur_scout": {
-    "name": "Centaur Scout",
+"tribal_scout": {
+    "name": "Tribal Scout",
     "boss": false,
     "mainstat": "agi",
     "modifiers": { 
@@ -1092,8 +1092,8 @@
     },
     "spells": ["arrow_volley", "swift_gallop"]
 },
-"centaur_warrior": {
-    "name": "Centaur Warrior",
+"tribal": {
+    "name": "Tribal Warrior",
     "boss": false,
     "mainstat": "str",
     "modifiers": { 
@@ -1118,8 +1118,8 @@
     },
     "spells": ["hoof_stomp", "battle_charge"]
 },
-"centaur_mystic": {
-    "name": "Centaur Mystic",
+"tribal_mystic": {
+    "name": "Tribal Mystic",
     "boss": false,
     "mainstat": "int",
     "modifiers": { 
@@ -1144,8 +1144,8 @@
     },
     "spells": ["earthen_blessing", "ancestral_vigor"]
 },
-"centaur_warchief": {
-    "name": "Centaur Warchief",
+"tribal_warchief": {
+    "name": "Tribal Warchief",
     "boss": true,
     "mainstat": "str",
     "modifiers": { 
@@ -1170,8 +1170,8 @@
     },
     "spells": ["stampede", "war_stomp", "rallying_horn", "tribal_leader_passive"]
 },
-"centaur_chieftain": {
-    "name": "Centaur Chieftain",
+"tribal_chieftain": {
+    "name": "Tribal Chieftain",
     "boss": true,
     "mainstat": "str",
     "modifiers": { 
