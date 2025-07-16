@@ -422,53 +422,53 @@
         "items": ["gold_greedhelm", "gold_vaultplate", "gold_minerstrides", "gold_pickaxe", "gold_coinshield", "gold_nugget", "gold_kingsbane"]
     }
 },
-"centaur_cliffs": {
-    "id": "centaur_cliffs",
-    "name": "Centaur Cliffs",
-    "boss": "Centaur Chieftain",
+"tribal_cliffs": {
+    "id": "tribal_cliffs",
+    "name": "Tribal Cliffs",
+    "boss": "Tribal Chieftain",
     "tier": "Hard",
     "subtitle": "Hard 2",
     "level": 175,
     "waves": [
         {
             "enemies": [
-                { "id": "centaur_scout", "level": 155 },
-                { "id": "centaur_warrior", "level": 155 },
-                { "id": "centaur_mystic", "level": 155 }
+                { "id": "tribal_scout", "level": 155 },
+                { "id": "tribal_warrior", "level": 155 },
+                { "id": "tribal_mystic", "level": 155 }
             ]
         },
         {
             "enemies": [
-                { "id": "centaur_warrior", "level": 160 },
-                { "id": "centaur_warrior", "level": 160 },
-                { "id": "centaur_scout", "level": 158 }
+                { "id": "tribal_warrior", "level": 160 },
+                { "id": "tribal_warrior", "level": 160 },
+                { "id": "tribal_scout", "level": 158 }
             ]
         },
         {
             "enemies": [
-                { "id": "centaur_warchief", "level": 175 },
-                { "id": "centaur_warrior", "level": 165 },
-                { "id": "centaur_mystic", "level": 165 },
-                { "id": "centaur_scout", "level": 163 },
-                { "id": "centaur_scout", "level": 163 }
+                { "id": "tribal_warchief", "level": 175 },
+                { "id": "tribal_warrior", "level": 165 },
+                { "id": "tribal_mystic", "level": 165 },
+                { "id": "tribal_scout", "level": 163 },
+                { "id": "tribal_scout", "level": 163 }
             ]
         },
         {
             "enemies": [
-                { "id": "centaur_warrior", "level": 170 },
-                { "id": "centaur_warrior", "level": 170 },
-                { "id": "centaur_mystic", "level": 168 },
-                { "id": "centaur_mystic", "level": 168 },
-                { "id": "centaur_scout", "level": 167 }
+                { "id": "tribal_warrior", "level": 170 },
+                { "id": "tribal_warrior", "level": 170 },
+                { "id": "tribal_mystic", "level": 168 },
+                { "id": "tribal_mystic", "level": 168 },
+                { "id": "tribal_scout", "level": 167 }
             ]
         },
         {
             "enemies": [
-                { "id": "centaur_chieftain", "level": 175 },
-                { "id": "centaur_warchief", "level": 173 },
-                { "id": "centaur_warrior", "level": 173 },
-                { "id": "centaur_mystic", "level": 171 },
-                { "id": "centaur_scout", "level": 171 }
+                { "id": "tribal_chieftain", "level": 175 },
+                { "id": "tribal_warchief", "level": 173 },
+                { "id": "tribal_warrior", "level": 173 },
+                { "id": "tribal_mystic", "level": 171 },
+                { "id": "tribal_scout", "level": 171 }
             ]
         }
     ],
