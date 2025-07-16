@@ -408,12 +408,8 @@ if (unit.isEnemy) {
         
         // Apply stun visuals if unit is already stunned
         if (unit.debuffs.some(d => d.name === 'Stun' || d.stunned)) {
-            this.updateStunVisuals(unit);
+            this.animations.updateStunVisuals(unit);
         }
-    }
-
-updateStunVisuals(unit) {
-        this.animations.updateStunVisuals(unit);
     }
 
     applyInitialPassives() {
@@ -940,7 +936,7 @@ processTurn() {
     }
     
     // Show spell animation
-    this.showSpellAnimation(caster, ability.name, spell.effects);
+    this.animations.showSpellAnimation(caster, ability.name, spell.effects);
     
     // Execute spell logic
     if (spellLogic[spell.logicKey]) {
@@ -991,10 +987,6 @@ processTurn() {
         }
     }
 }
-    
-showSpellAnimation(caster, spellName, effects) {
-        this.animations.showSpellAnimation(caster, spellName, effects);
-    }
     
     endTurn() {
         if (this.currentUnit) {
@@ -1193,7 +1185,7 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
         
         if (dodgeChance > 0 && Math.random() < dodgeChance) {
             this.log(`${target.name} dodges the attack!`);
-            this.showDodgeAnimation(target);
+            this.animations.showDodgeAnimation(target);
             return 0;
         }
     }
@@ -1485,7 +1477,7 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     this.log(`${attacker.name} deals ${damage} ${damageType} damage to ${target.name}!`);
     
     // Show damage animation
-    this.showDamageAnimation(attacker, target, damage, damageType);
+    this.animations.showDamageAnimation(attacker, target, damage, damageType);
 
     // Check if target died
     if (previousHp > 0 && target.currentHp <= 0) {
@@ -1494,16 +1486,6 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     
     return actualDamage;
 }
-
-showDamageAnimation(attacker, target, damage, damageType) {
-        this.animations.showDamageAnimation(attacker, target, damage, damageType);
-    }
-
-showDodgeAnimation(target) {
-        this.animations.showDodgeAnimation(target);
-    }
-
-
 
     handleUnitDeath(unit, killer = null) {
     // Prevent double death handling
@@ -1604,13 +1586,9 @@ if (killer && killer.isAlive) {
     // Trigger death animation only if not already animated
     if (!unit.deathAnimated) {
         unit.deathAnimated = true;
-        this.triggerDeathAnimation(unit);
-    }
-}
-
-triggerDeathAnimation(unit) {
         this.animations.triggerDeathAnimation(unit);
     }
+}
 
     healUnit(target, amount) {
         if (!target.isAlive) return 0;
@@ -1865,7 +1843,7 @@ if (this.currentUnit && this.currentUnit.isAlive) {
         
         // Apply stun visuals if it's a stun debuff
         if (debuffName === 'Stun' || effects.stunned) {
-            this.updateStunVisuals(target);
+            this.animations.updateStunVisuals(target);
         }
     }
     
