@@ -1092,7 +1092,7 @@
     },
     "spells": ["arrow_volley", "swift_gallop"]
 },
-"tribal": {
+"tribal_warrior": {
     "name": "Tribal Warrior",
     "boss": false,
     "mainstat": "str",
