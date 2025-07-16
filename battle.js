@@ -881,8 +881,20 @@ processTurn() {
             const twilightAbility = unit.abilities.find(a => a.id === 'twilights_promise');
             const spellLevel = twilightAbility ? twilightAbility.level : 1;
             
-            // Execute the logic
-            spellLogic.twilightsEndLogic(this, unit, 'all', spellManager.getSpell('twilights_promise'), spellLevel);
+            // Add validation for spell manager
+            if (spellManager && spellManager.getSpell) {
+                const spell = spellManager.getSpell('twilights_promise');
+                if (spell) {
+                    // Execute the logic
+                    spellLogic.twilightsEndLogic(this, unit, 'all', spell, spellLevel);
+                } else {
+                    console.error('Twilight\'s Promise spell not found in spell manager');
+                    this.log(`${unit.name}'s Twilight's End fizzles!`);
+                }
+            } else {
+                console.error('Spell manager not available');
+                this.log(`${unit.name}'s Twilight's End fizzles!`);
+            }
             
             // Continue with rest of turn
         } else {
