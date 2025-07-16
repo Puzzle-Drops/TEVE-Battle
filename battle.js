@@ -443,6 +443,47 @@ if (unit.isEnemy) {
     });
 }
 
+processShieldRegeneration(unit, shieldPercent, regenTurns, passiveName) {
+        // Initialize timer if not exists
+        if (unit.shieldRegenTimer === undefined) {
+            unit.shieldRegenTimer = 0;
+        }
+        
+        unit.shieldRegenTimer++;
+        
+        if (unit.shieldRegenTimer >= regenTurns) {
+            unit.shieldRegenTimer = 0;
+            const shieldAmount = Math.floor(unit.maxHp * shieldPercent);
+            const existingShield = unit.buffs.find(b => b.name === 'Shield');
+            
+            if (!existingShield) {
+                this.applyBuff(unit, 'Shield', -1, { shieldAmount: shieldAmount });
+                this.log(`${unit.name}'s ${passiveName} generates a shield!`);
+            }
+        }
+    }
+    
+    processHealingOverTime(unit, durationProp, regenProp, effectName) {
+        if (unit[regenProp] && unit.isAlive && unit[durationProp] > 0) {
+            unit[durationProp]--;
+            
+            if (!unit.debuffs.some(d => d.name === 'Blight')) {
+                const regenAmount = Math.floor(unit.maxHp * unit[regenProp]);
+                const actualRegen = Math.min(regenAmount, unit.maxHp - unit.currentHp);
+                
+                if (actualRegen > 0) {
+                    unit.currentHp += actualRegen;
+                    this.log(`${unit.name} regenerates ${actualRegen} HP from ${effectName}.`);
+                }
+            }
+            
+            if (unit[durationProp] <= 0) {
+                unit[regenProp] = null;
+                unit[durationProp] = null;
+            }
+        }
+    }
+
 initializeBattleStats() {
     // For each unit in this.allUnits:
     this.allUnits.forEach(unit => {
@@ -1019,76 +1060,45 @@ processTurn() {
             }
             
             // Champion Female passive shield regeneration
-            if (this.currentUnit.shieldRegenTimer !== undefined) {
-                this.currentUnit.shieldRegenTimer++;
-                if (this.currentUnit.shieldRegenTimer >= this.currentUnit.shieldRegenTurns) {
-                    this.currentUnit.shieldRegenTimer = 0;
-                    // Check if shield is already present
-                    const existingShield = this.currentUnit.buffs.find(b => b.name === 'Shield');
-                    if (!existingShield) {
-                        this.applyBuff(this.currentUnit, 'Shield', -1, { shieldAmount: this.currentUnit.shieldRegenAmount });
-                        this.log(`${this.currentUnit.name}'s shield regenerates!`);
-                    }
-                }
+            if (this.currentUnit.shieldRegenTimer !== undefined && this.currentUnit.shieldRegenAmount) {
+                const shieldPercent = this.currentUnit.shieldRegenAmount / this.currentUnit.maxHp;
+                this.processShieldRegeneration(
+                    this.currentUnit, 
+                    shieldPercent, 
+                    this.currentUnit.shieldRegenTurns, 
+                    'shield regenerates'
+                );
             }
 
             // Reinforced Plating passive shield regeneration
-if (this.currentUnit.reinforcedPlatingPassive && this.currentUnit.shieldRegenPercent) {
-    if (this.currentUnit.shieldRegenTimer === undefined) {
-        this.currentUnit.shieldRegenTimer = 0;
-    }
-    this.currentUnit.shieldRegenTimer++;
-    
-    if (this.currentUnit.shieldRegenTimer >= this.currentUnit.shieldRegenTurns) {
-        this.currentUnit.shieldRegenTimer = 0;
-        const shieldAmount = Math.floor(this.currentUnit.maxHp * this.currentUnit.shieldRegenPercent);
-        const existingShield = this.currentUnit.buffs.find(b => b.name === 'Shield');
-        if (!existingShield) {
-            this.applyBuff(this.currentUnit, 'Shield', -1, { shieldAmount: shieldAmount });
-            this.log(`${this.currentUnit.name}'s reinforced plating generates a shield!`);
-        }
-    }
-}
+            if (this.currentUnit.reinforcedPlatingPassive && this.currentUnit.shieldRegenPercent) {
+                this.processShieldRegeneration(
+                    this.currentUnit,
+                    this.currentUnit.shieldRegenPercent,
+                    this.currentUnit.shieldRegenTurns,
+                    'reinforced plating'
+                );
+            }
 
             // Ancestral Vigor healing effect
-if (this.currentUnit.ancestralVigorRegen && this.currentUnit.isAlive) {
-    if (this.currentUnit.ancestralVigorDuration > 0) {
-        this.currentUnit.ancestralVigorDuration--;
-        if (!this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
-            const regenAmount = Math.floor(this.currentUnit.maxHp * this.currentUnit.ancestralVigorRegen);
-            const actualRegen = Math.min(regenAmount, this.currentUnit.maxHp - this.currentUnit.currentHp);
-            if (actualRegen > 0) {
-                this.currentUnit.currentHp += actualRegen;
-                this.log(`${this.currentUnit.name} regenerates ${actualRegen} HP from Ancestral Vigor.`);
+            if (this.currentUnit.ancestralVigorRegen && this.currentUnit.ancestralVigorDuration) {
+                this.processHealingOverTime(
+                    this.currentUnit,
+                    'ancestralVigorDuration',
+                    'ancestralVigorRegen',
+                    'Ancestral Vigor'
+                );
             }
-        }
-        
-        if (this.currentUnit.ancestralVigorDuration <= 0) {
-            this.currentUnit.ancestralVigorRegen = null;
-            this.currentUnit.ancestralVigorDuration = null;
-        }
-    }
-}
 
             // Tribal Chant healing effect
-if (this.currentUnit.tribalChantRegen && this.currentUnit.isAlive) {
-    if (this.currentUnit.tribalChantDuration > 0) {
-        this.currentUnit.tribalChantDuration--;
-        if (!this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
-            const regenAmount = Math.floor(this.currentUnit.maxHp * this.currentUnit.tribalChantRegen);
-            const actualRegen = Math.min(regenAmount, this.currentUnit.maxHp - this.currentUnit.currentHp);
-            if (actualRegen > 0) {
-                this.currentUnit.currentHp += actualRegen;
-                this.log(`${this.currentUnit.name} regenerates ${actualRegen} HP from Tribal Chant.`);
+            if (this.currentUnit.tribalChantRegen && this.currentUnit.tribalChantDuration) {
+                this.processHealingOverTime(
+                    this.currentUnit,
+                    'tribalChantDuration',
+                    'tribalChantRegen',
+                    'Tribal Chant'
+                );
             }
-        }
-        
-        if (this.currentUnit.tribalChantDuration <= 0) {
-            this.currentUnit.tribalChantRegen = null;
-            this.currentUnit.tribalChantDuration = null;
-        }
-    }
-}
             
             // Apply HP regen after turn
             if (this.currentUnit.isAlive && !this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
