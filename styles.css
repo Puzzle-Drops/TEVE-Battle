@@ -6357,7 +6357,7 @@ body {
 .collectionCompletePopup {
     display: none;
     position: fixed;
-    top: 12%;
+    top: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
@@ -6400,6 +6400,8 @@ body {
     transform: scale(1.25);
     transform-origin: center bottom;
     z-index: 10;
+    right: 36%;
+    top: 55%;
 }
 
 /* Unit sprite/image scaling */
@@ -6411,7 +6413,7 @@ body {
 
 /* Unit shadow */
 .unitSlot.boss-wave3 .unitShadow {
-    transform: scale(1.5);
+    transform: scale(1.5) translateX(-33%);
     opacity: 0.4;
 }
 
@@ -6446,12 +6448,19 @@ body {
     line-height: 30px;
 }
 
+/* Health bar container */
+.unitSlot.boss-wave3 .healthBarContainer {
+    transform: scale(1.25);
+    transform-origin: left center;
+    top: -96px;
+}
+
 /* Action bar */
 .unitSlot.boss-wave3 .actionBar {
     width: 81.25%;
     left: 47px;
     height: 12.5px;
-    top: 11px;
+    top: -84px;
 }
 
 /* Action bar fill */
@@ -6482,8 +6491,8 @@ body {
 .unitSlot.boss-wave3 .buffDebuffContainer {
     transform: scale(1.25);
     transform-origin: left center;
-    left: 16px;
-    top: -65px;
+    left: 10px;
+    top: -158px;
 }
 
 /* Individual buff/debuff icons */
@@ -6520,6 +6529,8 @@ body {
     transform: scale(1.5);
     transform-origin: center bottom;
     z-index: 10;
+    right: 38%;
+    top: 54%;
 }
 
 /* Unit sprite/image scaling */
@@ -6531,7 +6542,7 @@ body {
 
 /* Unit shadow */
 .unitSlot.boss-wave5 .unitShadow {
-    transform: scale(2);
+    transform: scale(2) translateX(-50%);
     opacity: 0.5;
 }
 
@@ -6553,6 +6564,13 @@ body {
 /* Health bar fill */
 .unitSlot.boss-wave5 .healthFill {
     height: 36px;
+}
+
+/* Health bar container */
+.unitSlot.boss-wave5 .healthBarContainer {
+    transform: scale(1.25);
+    transform-origin: left center;
+    top: -96px;
 }
 
 /* Shield bar fill */
@@ -6602,8 +6620,8 @@ body {
 .unitSlot.boss-wave5 .buffDebuffContainer {
     transform: scale(1.5);
     transform-origin: left center;
-    left: 8px;
-    top: -78px;
+    left: 10px;
+    top: -158px;
 }
 
 /* Individual buff/debuff icons */
