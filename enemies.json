@@ -5,7 +5,7 @@
     "mainstat": "agi",
     "modifiers": {
       "str": 1,
-      "agi": 1.02,
+      "agi": 1.01,
       "int": 1,
       "hp": 3.03,
       "attack": 0.31,
@@ -107,7 +107,7 @@
       "hpRegen": 0,
       "attack": 3,
       "attackSpeed": 0,
-      "armor": 7,
+      "armor": 6.86,
       "resist": 2
     },
     "spells": [
@@ -136,7 +136,7 @@
       "hpRegen": 0,
       "attack": 3,
       "attackSpeed": 0,
-      "armor": 7,
+      "armor": 7.13,
       "resist": 0
     },
     "spells": [
@@ -165,7 +165,7 @@
       "hpRegen": 0.88,
       "attack": 2,
       "attackSpeed": 0,
-      "armor": 4,
+      "armor": 3.99,
       "resist": 7
     },
     "spells": [
@@ -191,10 +191,10 @@
       "agi": 5,
       "int": 3,
       "hp": 24,
-      "hpRegen": 0.67,
+      "hpRegen": 0.65,
       "attack": 2,
       "attackSpeed": 0,
-      "armor": 5,
+      "armor": 4.89,
       "resist": 6
     },
     "spells": [
@@ -221,10 +221,10 @@
       "agi": 4,
       "int": 4,
       "hp": 40,
-      "hpRegen": 0.56,
+      "hpRegen": 0.57,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 8,
+      "armor": 8.12,
       "resist": 2
     },
     "spells": [
@@ -238,7 +238,7 @@
     "mainstat": "agi",
     "modifiers": {
       "str": 1,
-      "agi": 1.02,
+      "agi": 1.01,
       "int": 1,
       "hp": 2.83,
       "attack": 0.35,
@@ -249,11 +249,11 @@
       "str": 4,
       "agi": 5,
       "int": 3,
-      "hp": 26,
+      "hp": 27,
       "hpRegen": 0,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 4,
+      "armor": 4.21,
       "resist": 4
     },
     "spells": [
@@ -282,7 +282,7 @@
       "hpRegen": 0.28,
       "attack": 5,
       "attackSpeed": 0,
-      "armor": 6,
+      "armor": 6.18,
       "resist": 6
     },
     "spells": [
@@ -311,7 +311,7 @@
       "hpRegen": 1.24,
       "attack": 2,
       "attackSpeed": 0,
-      "armor": 2,
+      "armor": 2.02,
       "resist": 10
     },
     "spells": [
@@ -340,7 +340,7 @@
       "hpRegen": 0.34,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 5,
+      "armor": 4.88,
       "resist": 3
     },
     "spells": [
@@ -354,7 +354,7 @@
     "mainstat": "agi",
     "modifiers": {
       "str": 1.25,
-      "agi": 1.52,
+      "agi": 1.51,
       "int": 1.25,
       "hp": 3.11,
       "attack": 0.34,
@@ -369,7 +369,7 @@
       "hpRegen": 0.27,
       "attack": 6,
       "attackSpeed": 0,
-      "armor": 7,
+      "armor": 6.88,
       "resist": 3
     },
     "spells": [
@@ -399,7 +399,7 @@
       "hpRegen": 0,
       "attack": 3,
       "attackSpeed": 0,
-      "armor": 7,
+      "armor": 7.13,
       "resist": 0
     },
     "spells": [
@@ -428,7 +428,7 @@
       "hpRegen": 0.55,
       "attack": 3,
       "attackSpeed": 0,
-      "armor": 8,
+      "armor": 7.89,
       "resist": 3
     },
     "spells": [
@@ -487,7 +487,7 @@
       "hpRegen": 0,
       "attack": 3,
       "attackSpeed": 0,
-      "armor": 9,
+      "armor": 9.03,
       "resist": 3
     },
     "spells": [
@@ -517,7 +517,7 @@
       "hpRegen": 0.62,
       "attack": 3,
       "attackSpeed": 0,
-      "armor": 5,
+      "armor": 5.07,
       "resist": 9
     },
     "spells": [
@@ -544,10 +544,10 @@
       "agi": 6,
       "int": 6,
       "hp": 24,
-      "hpRegen": 1.55,
+      "hpRegen": 1.52,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 4,
+      "armor": 3.91,
       "resist": 9
     },
     "spells": [
@@ -577,7 +577,7 @@
       "hpRegen": 0,
       "attack": 3,
       "attackSpeed": 0,
-      "armor": 10,
+      "armor": 9.98,
       "resist": 3
     },
     "spells": [
@@ -604,10 +604,10 @@
       "agi": 7,
       "int": 12,
       "hp": 56,
-      "hpRegen": 1.89,
+      "hpRegen": 1.9,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 6,
+      "armor": 6.03,
       "resist": 14
     },
     "spells": [
@@ -637,7 +637,7 @@
       "hpRegen": 1.55,
       "attack": 5,
       "attackSpeed": 0,
-      "armor": 7,
+      "armor": 6.96,
       "resist": 12
     },
     "spells": [
@@ -664,11 +664,11 @@
       "str": 7,
       "agi": 5,
       "int": 4,
-      "hp": 33,
+      "hp": 32,
       "hpRegen": 0,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 8,
+      "armor": 7.8,
       "resist": 6
     },
     "spells": [
@@ -725,10 +725,10 @@
       "agi": 5,
       "int": 7,
       "hp": 28,
-      "hpRegen": 1.53,
+      "hpRegen": 1.56,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 3,
+      "armor": 3.05,
       "resist": 9
     },
     "spells": [
@@ -755,10 +755,10 @@
       "agi": 4,
       "int": 7,
       "hp": 30,
-      "hpRegen": 1.11,
+      "hpRegen": 1.09,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 4,
+      "armor": 3.93,
       "resist": 9
     },
     "spells": [
@@ -788,7 +788,7 @@
       "hpRegen": 0.52,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 7,
+      "armor": 6.9,
       "resist": 6
     },
     "spells": [
@@ -818,7 +818,7 @@
       "hpRegen": 0.54,
       "attack": 5,
       "attackSpeed": 0,
-      "armor": 11,
+      "armor": 10.94,
       "resist": 7
     },
     "spells": [
@@ -849,7 +849,7 @@
       "hpRegen": 0.9,
       "attack": 5,
       "attackSpeed": 0,
-      "armor": 11,
+      "armor": 10.92,
       "resist": 7
     },
     "spells": [
@@ -880,7 +880,7 @@
       "hpRegen": 0,
       "attack": 5,
       "attackSpeed": 0,
-      "armor": 7,
+      "armor": 6.88,
       "resist": 5
     },
     "spells": [
@@ -909,7 +909,7 @@
       "hpRegen": 0,
       "attack": 6,
       "attackSpeed": 0,
-      "armor": 6,
+      "armor": 5.86,
       "resist": 5
     },
     "spells": [
@@ -939,7 +939,7 @@
       "hpRegen": 0,
       "attack": 7,
       "attackSpeed": 0,
-      "armor": 5,
+      "armor": 4.86,
       "resist": 6
     },
     "spells": [
@@ -969,7 +969,7 @@
       "hpRegen": 0,
       "attack": 3,
       "attackSpeed": 0,
-      "armor": 10,
+      "armor": 9.89,
       "resist": 3
     },
     "spells": [
@@ -999,7 +999,7 @@
       "hpRegen": 0,
       "attack": 8,
       "attackSpeed": 0,
-      "armor": 3,
+      "armor": 3.09,
       "resist": 6
     },
     "spells": [
@@ -1029,7 +1029,7 @@
       "hpRegen": 0.56,
       "attack": 7,
       "attackSpeed": 0,
-      "armor": 10,
+      "armor": 9.89,
       "resist": 5
     },
     "spells": [
@@ -1060,7 +1060,7 @@
       "hpRegen": 1.02,
       "attack": 7,
       "attackSpeed": 0,
-      "armor": 7,
+      "armor": 7.06,
       "resist": 7
     },
     "spells": [
@@ -1091,7 +1091,7 @@
       "hpRegen": 0,
       "attack": 6,
       "attackSpeed": 0,
-      "armor": 11,
+      "armor": 11.1,
       "resist": 7
     },
     "spells": [
@@ -1120,7 +1120,7 @@
       "hpRegen": 0,
       "attack": 8,
       "attackSpeed": 0,
-      "armor": 8,
+      "armor": 8.11,
       "resist": 11
     },
     "spells": [
@@ -1146,10 +1146,10 @@
       "agi": 6,
       "int": 11,
       "hp": 41,
-      "hpRegen": 1.53,
+      "hpRegen": 1.51,
       "attack": 5,
       "attackSpeed": 0,
-      "armor": 9,
+      "armor": 8.91,
       "resist": 12
     },
     "spells": [
@@ -1174,11 +1174,11 @@
       "str": 15,
       "agi": 11,
       "int": 10,
-      "hp": 95,
+      "hp": 96,
       "hpRegen": 0,
       "attack": 11,
       "attackSpeed": 0,
-      "armor": 13,
+      "armor": 13.1,
       "resist": 11
     },
     "spells": [
@@ -1209,7 +1209,7 @@
       "hpRegen": 0,
       "attack": 11,
       "attackSpeed": 0,
-      "armor": 17,
+      "armor": 17.09,
       "resist": 5
     },
     "spells": [
@@ -1240,7 +1240,7 @@
       "hpRegen": 0,
       "attack": 9,
       "attackSpeed": 0,
-      "armor": 8,
+      "armor": 8.11,
       "resist": 8
     },
     "spells": [
@@ -1269,7 +1269,7 @@
       "hpRegen": 0,
       "attack": 7,
       "attackSpeed": 0,
-      "armor": 12,
+      "armor": 11.9,
       "resist": 5
     },
     "spells": [
@@ -1295,10 +1295,10 @@
       "agi": 7,
       "int": 11,
       "hp": 36,
-      "hpRegen": 1.81,
+      "hpRegen": 1.83,
       "attack": 5,
       "attackSpeed": 0,
-      "armor": 6,
+      "armor": 6.08,
       "resist": 16
     },
     "spells": [
@@ -1327,7 +1327,7 @@
       "hpRegen": 0.69,
       "attack": 11,
       "attackSpeed": 0,
-      "armor": 14,
+      "armor": 14.1,
       "resist": 8
     },
     "spells": [
@@ -1358,7 +1358,7 @@
       "hpRegen": 0.81,
       "attack": 11,
       "attackSpeed": 0,
-      "armor": 16,
+      "armor": 15.9,
       "resist": 6
     },
     "spells": [
@@ -1389,7 +1389,7 @@
       "hpRegen": 0,
       "attack": 7,
       "attackSpeed": 0,
-      "armor": 11,
+      "armor": 11.02,
       "resist": 4
     },
     "spells": [
@@ -1418,7 +1418,7 @@
       "hpRegen": 0,
       "attack": 13,
       "attackSpeed": 0,
-      "armor": 4,
+      "armor": 4.06,
       "resist": 4
     },
     "spells": [
@@ -1444,10 +1444,10 @@
       "agi": 5,
       "int": 12,
       "hp": 41,
-      "hpRegen": 1.53,
+      "hpRegen": 1.51,
       "attack": 6,
       "attackSpeed": 0,
-      "armor": 7,
+      "armor": 6.93,
       "resist": 13
     },
     "spells": [
@@ -1476,7 +1476,7 @@
       "hpRegen": 0.63,
       "attack": 12,
       "attackSpeed": 0,
-      "armor": 15,
+      "armor": 14.92,
       "resist": 6
     },
     "spells": [
@@ -1507,7 +1507,7 @@
       "hpRegen": 0.86,
       "attack": 14,
       "attackSpeed": 0,
-      "armor": 11,
+      "armor": 10.91,
       "resist": 8
     },
     "spells": [
@@ -1538,7 +1538,7 @@
       "hpRegen": 2.38,
       "attack": 7,
       "attackSpeed": 0,
-      "armor": 10,
+      "armor": 9.96,
       "resist": 17
     },
     "spells": [
@@ -1568,7 +1568,7 @@
       "hpRegen": 1.47,
       "attack": 5,
       "attackSpeed": 0,
-      "armor": 19,
+      "armor": 19.1,
       "resist": 5
     },
     "spells": [
@@ -1595,10 +1595,10 @@
       "agi": 6,
       "int": 20,
       "hp": 96,
-      "hpRegen": 3.01,
+      "hpRegen": 2.99,
       "attack": 6,
       "attackSpeed": 0,
-      "armor": 12,
+      "armor": 11.94,
       "resist": 14
     },
     "spells": [
@@ -1628,7 +1628,7 @@
       "hpRegen": 0.8,
       "attack": 13,
       "attackSpeed": 0,
-      "armor": 11,
+      "armor": 11.07,
       "resist": 10
     },
     "spells": [
@@ -1658,7 +1658,7 @@
       "hpRegen": 1.99,
       "attack": 8,
       "attackSpeed": 0,
-      "armor": 25,
+      "armor": 24.95,
       "resist": 10
     },
     "spells": [
@@ -1686,10 +1686,10 @@
       "agi": 14,
       "int": 22,
       "hp": 126,
-      "hpRegen": 3.52,
+      "hpRegen": 3.54,
       "attack": 10,
       "attackSpeed": 0,
-      "armor": 16,
+      "armor": 16.06,
       "resist": 16
     },
     "spells": [
@@ -1720,7 +1720,7 @@
       "hpRegen": 0.75,
       "attack": 10,
       "attackSpeed": 0,
-      "armor": 15,
+      "armor": 14.93,
       "resist": 5
     },
     "spells": [
@@ -1747,10 +1747,10 @@
       "agi": 10,
       "int": 20,
       "hp": 83,
-      "hpRegen": 3.7,
+      "hpRegen": 3.68,
       "attack": 6,
       "attackSpeed": 0,
-      "armor": 11,
+      "armor": 10.95,
       "resist": 16
     },
     "spells": [
@@ -1780,7 +1780,7 @@
       "hpRegen": 0.82,
       "attack": 16,
       "attackSpeed": 0,
-      "armor": 8,
+      "armor": 7.94,
       "resist": 10
     },
     "spells": [
@@ -1807,10 +1807,10 @@
       "agi": 6,
       "int": 20,
       "hp": 108,
-      "hpRegen": 2.37,
+      "hpRegen": 2.36,
       "attack": 7,
       "attackSpeed": 0,
-      "armor": 5,
+      "armor": 4.98,
       "resist": 22
     },
     "spells": [
@@ -1840,7 +1840,7 @@
       "hpRegen": 1.41,
       "attack": 13,
       "attackSpeed": 0,
-      "armor": 21,
+      "armor": 20.93,
       "resist": 8
     },
     "spells": [
@@ -1871,7 +1871,7 @@
       "hpRegen": 2.14,
       "attack": 15,
       "attackSpeed": 0,
-      "armor": 14,
+      "armor": 14.04,
       "resist": 15
     },
     "spells": [
@@ -1899,10 +1899,10 @@
       "agi": 10,
       "int": 20,
       "hp": 95,
-      "hpRegen": 2.4,
+      "hpRegen": 2.42,
       "attack": 8,
       "attackSpeed": 0,
-      "armor": 9,
+      "armor": 9.07,
       "resist": 16
     },
     "spells": [
@@ -1929,10 +1929,10 @@
       "agi": 12,
       "int": 18,
       "hp": 85,
-      "hpRegen": 3.76,
+      "hpRegen": 3.74,
       "attack": 6,
       "attackSpeed": 0,
-      "armor": 6,
+      "armor": 5.96,
       "resist": 23
     },
     "spells": [
@@ -1962,7 +1962,7 @@
       "hpRegen": 0,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 25,
+      "armor": 24.9,
       "resist": 2
     },
     "spells": [
@@ -1989,10 +1989,10 @@
       "agi": 6,
       "int": 20,
       "hp": 81,
-      "hpRegen": 3.84,
+      "hpRegen": 3.82,
       "attack": 9,
       "attackSpeed": 0,
-      "armor": 5,
+      "armor": 4.98,
       "resist": 19
     },
     "spells": [
@@ -2022,7 +2022,7 @@
       "hpRegen": 1.24,
       "attack": 10,
       "attackSpeed": 0,
-      "armor": 23,
+      "armor": 22.89,
       "resist": 11
     },
     "spells": [
@@ -2053,7 +2053,7 @@
       "hpRegen": 4.11,
       "attack": 10,
       "attackSpeed": 0,
-      "armor": 14,
+      "armor": 14.02,
       "resist": 18
     },
     "spells": [
@@ -2084,7 +2084,7 @@
       "hpRegen": 1.22,
       "attack": 18,
       "attackSpeed": 0,
-      "armor": 11,
+      "armor": 11.04,
       "resist": 14
     },
     "spells": [
@@ -2113,7 +2113,7 @@
       "hpRegen": 0,
       "attack": 25,
       "attackSpeed": 0,
-      "armor": 6,
+      "armor": 6.02,
       "resist": 12
     },
     "spells": [
@@ -2143,7 +2143,7 @@
       "hpRegen": 1.25,
       "attack": 15,
       "attackSpeed": 0,
-      "armor": 17,
+      "armor": 16.97,
       "resist": 7
     },
     "spells": [
@@ -2173,7 +2173,7 @@
       "hpRegen": 0,
       "attack": 27,
       "attackSpeed": 0,
-      "armor": 6,
+      "armor": 5.95,
       "resist": 15
     },
     "spells": [
@@ -2203,7 +2203,7 @@
       "hpRegen": 1.69,
       "attack": 21,
       "attackSpeed": 0,
-      "armor": 17,
+      "armor": 16.95,
       "resist": 16
     },
     "spells": [
@@ -2231,10 +2231,10 @@
       "agi": 21,
       "int": 23,
       "hp": 149,
-      "hpRegen": 2.48,
+      "hpRegen": 2.47,
       "attack": 13,
       "attackSpeed": 0,
-      "armor": 20,
+      "armor": 19.92,
       "resist": 23
     },
     "spells": [
@@ -2265,7 +2265,7 @@
       "hpRegen": 0,
       "attack": 7,
       "attackSpeed": 0,
-      "armor": 27,
+      "armor": 27.09,
       "resist": 7
     },
     "spells": [
@@ -2295,7 +2295,7 @@
       "hpRegen": 2.36,
       "attack": 8,
       "attackSpeed": 0,
-      "armor": 15,
+      "armor": 15.05,
       "resist": 22
     },
     "spells": [
@@ -2325,7 +2325,7 @@
       "hpRegen": 1.13,
       "attack": 10,
       "attackSpeed": 0,
-      "armor": 19,
+      "armor": 18.95,
       "resist": 14
     },
     "spells": [
@@ -2352,10 +2352,10 @@
       "agi": 12,
       "int": 26,
       "hp": 125,
-      "hpRegen": 3.62,
+      "hpRegen": 3.63,
       "attack": 10,
       "attackSpeed": 0,
-      "armor": 10,
+      "armor": 10.03,
       "resist": 25
     },
     "spells": [
@@ -2413,10 +2413,10 @@
       "agi": 14,
       "int": 30,
       "hp": 165,
-      "hpRegen": 4.56,
+      "hpRegen": 4.55,
       "attack": 8,
       "attackSpeed": 0,
-      "armor": 21,
+      "armor": 20.95,
       "resist": 22
     },
     "spells": [
@@ -2447,7 +2447,7 @@
       "hpRegen": 1.13,
       "attack": 11,
       "attackSpeed": 0,
-      "armor": 16,
+      "armor": 15.93,
       "resist": 18
     },
     "spells": [
@@ -2477,7 +2477,7 @@
       "hpRegen": 0,
       "attack": 4,
       "attackSpeed": 0,
-      "armor": 27,
+      "armor": 27.09,
       "resist": 13
     },
     "spells": [
@@ -2504,10 +2504,10 @@
       "agi": 16,
       "int": 22,
       "hp": 131,
-      "hpRegen": 3.51,
+      "hpRegen": 3.53,
       "attack": 10,
       "attackSpeed": 0,
-      "armor": 10,
+      "armor": 10.05,
       "resist": 24
     },
     "spells": [
@@ -2537,7 +2537,7 @@
       "hpRegen": 0,
       "attack": 25,
       "attackSpeed": 0,
-      "armor": 6,
+      "armor": 5.95,
       "resist": 15
     },
     "spells": [
@@ -2595,10 +2595,10 @@
       "agi": 14,
       "int": 28,
       "hp": 152,
-      "hpRegen": 3.42,
+      "hpRegen": 3.41,
       "attack": 11,
       "attackSpeed": 0,
-      "armor": 23,
+      "armor": 22.94,
       "resist": 19
     },
     "spells": [
@@ -2609,550 +2609,550 @@
     ]
   },
   "imp_tormentor": {
-  "name": "Imp Tormentor",
-  "boss": false,
-  "mainstat": "int",
-  "modifiers": {
-    "str": 2.5,
-    "agi": 3,
-    "int": 7,
-    "hp": 3.2,
-    "attack": 0.38,
-    "armor": 0.08,
-    "resist": 0.305
+    "name": "Imp Tormentor",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 2.9,
+      "agi": 3.48,
+      "int": 8.12,
+      "hp": 3.28,
+      "attack": 0.41,
+      "armor": 0.09,
+      "resist": 0.342
+    },
+    "initial": {
+      "str": 9,
+      "agi": 16,
+      "int": 33,
+      "hp": 132,
+      "hpRegen": 4.69,
+      "attack": 17,
+      "attackSpeed": 0,
+      "armor": 8.81,
+      "resist": 28
+    },
+    "spells": [
+      "hellfire_bolt",
+      "torment",
+      "demonic_giggle"
+    ]
   },
-  "initial": {
-    "str": 8,
-    "agi": 14,
-    "int": 28,
-    "hp": 90,
-    "hpRegen": 3.2,
-    "attack": 12,
-    "attackSpeed": 0,
-    "armor": 6,
-    "resist": 19
+  "hell_knight": {
+    "name": "Hell Knight",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 8.12,
+      "agi": 2.9,
+      "int": 3.48,
+      "hp": 4.29,
+      "attack": 0.28,
+      "armor": 0.39,
+      "resist": 0.106
+    },
+    "initial": {
+      "str": 33,
+      "agi": 9,
+      "int": 16,
+      "hp": 176,
+      "hpRegen": 0,
+      "attack": 9,
+      "attackSpeed": 0,
+      "armor": 35.16,
+      "resist": 10
+    },
+    "spells": [
+      "infernal_blade",
+      "hellish_vigor",
+      "damned_charge"
+    ]
   },
-  "spells": [
-    "hellfire_bolt",
-    "torment",
-    "demonic_giggle"
-  ]
-},
-"hell_knight": {
-  "name": "Hell Knight",
-  "boss": false,
-  "mainstat": "str",
-  "modifiers": {
-    "str": 7,
-    "agi": 2.5,
-    "int": 3,
-    "hp": 4.1,
-    "attack": 0.26,
-    "armor": 0.35,
-    "resist": 0.095
+  "succubus": {
+    "name": "Succubus",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 3.48,
+      "agi": 4.64,
+      "int": 6.38,
+      "hp": 3.22,
+      "attack": 0.4,
+      "armor": 0.14,
+      "resist": 0.345
+    },
+    "initial": {
+      "str": 14,
+      "agi": 19,
+      "int": 25,
+      "hp": 131,
+      "hpRegen": 4.3,
+      "attack": 15,
+      "attackSpeed": 0,
+      "armor": 13.82,
+      "resist": 26
+    },
+    "spells": [
+      "draining_kiss",
+      "charm",
+      "life_tap"
+    ]
   },
-  "initial": {
-    "str": 28,
-    "agi": 8,
-    "int": 14,
-    "hp": 120,
-    "hpRegen": 0,
-    "attack": 6,
-    "attackSpeed": 0,
-    "armor": 24,
-    "resist": 7
+  "pit_fiend": {
+    "name": "Pit Fiend",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 6.96,
+      "agi": 4.06,
+      "int": 3.48,
+      "hp": 3.8,
+      "attack": 0.42,
+      "armor": 0.24,
+      "resist": 0.125
+    },
+    "initial": {
+      "str": 28,
+      "agi": 16,
+      "int": 14,
+      "hp": 128,
+      "hpRegen": 1.54,
+      "attack": 21,
+      "attackSpeed": 0,
+      "armor": 20.6,
+      "resist": 13
+    },
+    "spells": [
+      "crushing_blow_demon",
+      "hellfire_aura_passive"
+    ]
   },
-  "spells": [
-    "infernal_blade",
-    "hellish_vigor",
-    "damned_charge"
-  ]
-},
-"succubus": {
-  "name": "Succubus",
-  "boss": false,
-  "mainstat": "int",
-  "modifiers": {
-    "str": 3,
-    "agi": 4,
-    "int": 5.5,
-    "hp": 3.1,
-    "attack": 0.35,
-    "armor": 0.12,
-    "resist": 0.285
+  "demon_lord": {
+    "name": "Demon Lord",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 5.77,
+      "agi": 4.62,
+      "int": 4.61,
+      "hp": 3.91,
+      "attack": 0.35,
+      "armor": 0.28,
+      "resist": 0.179
+    },
+    "initial": {
+      "str": 22,
+      "agi": 18,
+      "int": 20,
+      "hp": 136,
+      "hpRegen": 2.95,
+      "attack": 16,
+      "attackSpeed": 0,
+      "armor": 23.64,
+      "resist": 17
+    },
+    "spells": [
+      "demons_wrath",
+      "summon_hellfire",
+      "infernal_command",
+      "lords_presence_passive"
+    ]
   },
-  "initial": {
-    "str": 12,
-    "agi": 16,
-    "int": 22,
-    "hp": 85,
-    "hpRegen": 2.8,
-    "attack": 10,
-    "attackSpeed": 0,
-    "armor": 9,
-    "resist": 17
+  "hades": {
+    "name": "Hades",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 6.35,
+      "agi": 4.04,
+      "int": 4.61,
+      "hp": 4.16,
+      "attack": 0.31,
+      "armor": 0.31,
+      "resist": 0.152
+    },
+    "initial": {
+      "str": 24,
+      "agi": 16,
+      "int": 20,
+      "hp": 151,
+      "hpRegen": 2.65,
+      "attack": 13,
+      "attackSpeed": 0,
+      "armor": 27.72,
+      "resist": 14
+    },
+    "spells": [
+      "soul_reaper",
+      "underworld_gates",
+      "eternal_torment",
+      "deaths_domain_passive"
+    ]
   },
-  "spells": [
-    "draining_kiss",
-    "charm",
-    "life_tap"
-  ]
-},
-"pit_fiend": {
-  "name": "Pit Fiend",
-  "boss": false,
-  "mainstat": "str",
-  "modifiers": {
-    "str": 6,
-    "agi": 3.5,
-    "int": 3,
-    "hp": 3.8,
-    "attack": 0.42,
-    "armor": 0.24,
-    "resist": 0.125
+  "mind_flayer": {
+    "name": "Mind Flayer",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 2.9,
+      "agi": 4.06,
+      "int": 7.54,
+      "hp": 3.15,
+      "attack": 0.41,
+      "armor": 0.1,
+      "resist": 0.372
+    },
+    "initial": {
+      "str": 9,
+      "agi": 19,
+      "int": 30,
+      "hp": 117,
+      "hpRegen": 5.29,
+      "attack": 16,
+      "attackSpeed": 0,
+      "armor": 10.28,
+      "resist": 29
+    },
+    "spells": [
+      "psychic_lash",
+      "mind_fog",
+      "telepathic_surge"
+    ]
   },
-  "initial": {
-    "str": 24,
-    "agi": 14,
-    "int": 12,
-    "hp": 100,
-    "hpRegen": 1.2,
-    "attack": 16,
-    "attackSpeed": 0,
-    "armor": 16,
-    "resist": 10
+  "void_walker": {
+    "name": "Void Walker",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": {
+      "str": 3.48,
+      "agi": 8.12,
+      "int": 2.9,
+      "hp": 3.04,
+      "attack": 0.61,
+      "armor": 0.08,
+      "resist": 0.162
+    },
+    "initial": {
+      "str": 14,
+      "agi": 32,
+      "int": 12,
+      "hp": 108,
+      "hpRegen": 0,
+      "attack": 31,
+      "attackSpeed": 0,
+      "armor": 7.17,
+      "resist": 21
+    },
+    "spells": [
+      "phase_strike",
+      "void_step",
+      "shadow_realm_passive"
+    ]
   },
-  "spells": [
-    "crushing_blow_demon",
-    "hellfire_aura_passive"
-  ]
-},
-"demon_lord": {
-  "name": "Demon Lord",
-  "boss": true,
-  "mainstat": "str",
-  "modifiers": {
-    "str": 5,
-    "agi": 4,
-    "int": 4,
-    "hp": 3.9,
-    "attack": 0.35,
-    "armor": 0.28,
-    "resist": 0.178
+  "aberration": {
+    "name": "Aberration",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 7.54,
+      "agi": 3.48,
+      "int": 3.48,
+      "hp": 4.5,
+      "attack": 0.25,
+      "armor": 0.42,
+      "resist": 0.071
+    },
+    "initial": {
+      "str": 30,
+      "agi": 14,
+      "int": 14,
+      "hp": 192,
+      "hpRegen": 0,
+      "attack": 7,
+      "attackSpeed": 0,
+      "armor": 38.28,
+      "resist": 6
+    },
+    "spells": [
+      "tentacle_slam",
+      "maddening_presence",
+      "eldritch_resilience"
+    ]
   },
-  "initial": {
-    "str": 20,
-    "agi": 16,
-    "int": 18,
-    "hp": 115,
-    "hpRegen": 2.5,
-    "attack": 13,
-    "attackSpeed": 0,
-    "armor": 20,
-    "resist": 14
+  "illusionist": {
+    "name": "Illusionist",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 3.48,
+      "agi": 3.48,
+      "int": 7.54,
+      "hp": 3.32,
+      "attack": 0.37,
+      "armor": 0.17,
+      "resist": 0.343
+    },
+    "initial": {
+      "str": 14,
+      "agi": 14,
+      "int": 30,
+      "hp": 137,
+      "hpRegen": 4.65,
+      "attack": 12,
+      "attackSpeed": 0,
+      "armor": 17.05,
+      "resist": 25
+    },
+    "spells": [
+      "phantom_bolt",
+      "mirror_images",
+      "reality_twist"
+    ]
   },
-  "spells": [
-    "demons_wrath",
-    "summon_hellfire",
-    "infernal_command",
-    "lords_presence_passive"
-  ]
-},
-"hades": {
-  "name": "Hades",
-  "boss": true,
-  "mainstat": "str",
-  "modifiers": {
-    "str": 5.5,
-    "agi": 3.5,
-    "int": 4,
-    "hp": 4.2,
-    "attack": 0.32,
-    "armor": 0.32,
-    "resist": 0.155
+  "labyrinth_guardian": {
+    "name": "Labyrinth Guardian",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 5.77,
+      "agi": 5.19,
+      "int": 4.04,
+      "hp": 4,
+      "attack": 0.34,
+      "armor": 0.29,
+      "resist": 0.165
+    },
+    "initial": {
+      "str": 22,
+      "agi": 20,
+      "int": 18,
+      "hp": 146,
+      "hpRegen": 2.2,
+      "attack": 15,
+      "attackSpeed": 0,
+      "armor": 25.58,
+      "resist": 16
+    },
+    "spells": [
+      "dimensional_slash",
+      "maze_shift",
+      "guardians_ward",
+      "eternal_vigil_passive"
+    ]
   },
-  "initial": {
-    "str": 22,
-    "agi": 14,
-    "int": 18,
-    "hp": 125,
-    "hpRegen": 2.2,
-    "attack": 11,
-    "attackSpeed": 0,
-    "armor": 23,
-    "resist": 12
+  "mindreaver": {
+    "name": "Mindreaver",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 3.46,
+      "agi": 4.04,
+      "int": 7.5,
+      "hp": 3.7,
+      "attack": 0.33,
+      "armor": 0.18,
+      "resist": 0.307
+    },
+    "initial": {
+      "str": 13,
+      "agi": 18,
+      "int": 29,
+      "hp": 132,
+      "hpRegen": 5.04,
+      "attack": 14,
+      "attackSpeed": 0,
+      "armor": 16.8,
+      "resist": 25
+    },
+    "spells": [
+      "mind_spike",
+      "psychic_storm",
+      "madness_cascade",
+      "hivemind_passive"
+    ]
   },
-  "spells": [
-    "soul_reaper",
-    "underworld_gates",
-    "eternal_torment",
-    "deaths_domain_passive"
-  ]
-},
-"mind_flayer": {
-  "name": "Mind Flayer",
-  "boss": false,
-  "mainstat": "int",
-  "modifiers": {
-    "str": 2.5,
-    "agi": 3.5,
-    "int": 6.5,
-    "hp": 3.05,
-    "attack": 0.36,
-    "armor": 0.09,
-    "resist": 0.315
+  "magma_elemental": {
+    "name": "Magma Elemental",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 4.06,
+      "agi": 2.9,
+      "int": 7.54,
+      "hp": 3.37,
+      "attack": 0.38,
+      "armor": 0.13,
+      "resist": 0.341
+    },
+    "initial": {
+      "str": 16,
+      "agi": 12,
+      "int": 30,
+      "hp": 142,
+      "hpRegen": 4.47,
+      "attack": 14,
+      "attackSpeed": 0,
+      "armor": 12.32,
+      "resist": 28
+    },
+    "spells": [
+      "lava_burst",
+      "molten_shield",
+      "eruption"
+    ]
   },
-  "initial": {
-    "str": 8,
-    "agi": 16,
-    "int": 26,
-    "hp": 80,
-    "hpRegen": 3.6,
-    "attack": 11,
-    "attackSpeed": 0,
-    "armor": 7,
-    "resist": 20
+  "flame_dancer": {
+    "name": "Flame Dancer",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": {
+      "str": 4.06,
+      "agi": 7.54,
+      "int": 2.9,
+      "hp": 3.13,
+      "attack": 0.58,
+      "armor": 0.11,
+      "resist": 0.157
+    },
+    "initial": {
+      "str": 16,
+      "agi": 30,
+      "int": 12,
+      "hp": 114,
+      "hpRegen": 0,
+      "attack": 30,
+      "attackSpeed": 0,
+      "armor": 8.75,
+      "resist": 21
+    },
+    "spells": [
+      "burning_strike",
+      "fire_dance",
+      "ignition_trail_passive"
+    ]
   },
-  "spells": [
-    "psychic_lash",
-    "mind_fog",
-    "telepathic_surge"
-  ]
-},
-"void_walker": {
-  "name": "Void Walker",
-  "boss": false,
-  "mainstat": "agi",
-  "modifiers": {
-    "str": 3,
-    "agi": 7,
-    "int": 2.5,
-    "hp": 2.95,
-    "attack": 0.52,
-    "armor": 0.07,
-    "resist": 0.135
+  "obsidian_golem": {
+    "name": "Obsidian Golem",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 8.7,
+      "agi": 2.9,
+      "int": 2.9,
+      "hp": 4.65,
+      "attack": 0.23,
+      "armor": 0.45,
+      "resist": 0.048
+    },
+    "initial": {
+      "str": 34,
+      "agi": 12,
+      "int": 12,
+      "hp": 196,
+      "hpRegen": 0,
+      "attack": 6,
+      "attackSpeed": 0,
+      "armor": 40.5,
+      "resist": 4
+    },
+    "spells": [
+      "volcanic_slam",
+      "hardened_lava",
+      "molten_core"
+    ]
   },
-  "initial": {
-    "str": 12,
-    "agi": 28,
-    "int": 10,
-    "hp": 75,
-    "hpRegen": 0,
-    "attack": 22,
-    "attackSpeed": 0,
-    "armor": 5,
-    "resist": 15
+  "phoenix": {
+    "name": "Phoenix",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 2.9,
+      "agi": 5.22,
+      "int": 6.38,
+      "hp": 3.26,
+      "attack": 0.39,
+      "armor": 0.16,
+      "resist": 0.337
+    },
+    "initial": {
+      "str": 12,
+      "agi": 21,
+      "int": 25,
+      "hp": 131,
+      "hpRegen": 5.34,
+      "attack": 14,
+      "attackSpeed": 0,
+      "armor": 15.27,
+      "resist": 23
+    },
+    "spells": [
+      "flame_feather",
+      "rebirth",
+      "from_ashes"
+    ]
   },
-  "spells": [
-    "phase_strike",
-    "void_step",
-    "shadow_realm_passive"
-  ]
-},
-"aberration": {
-  "name": "Aberration",
-  "boss": false,
-  "mainstat": "str",
-  "modifiers": {
-    "str": 6.5,
-    "agi": 3,
-    "int": 3,
-    "hp": 4.3,
-    "attack": 0.24,
-    "armor": 0.38,
-    "resist": 0.065
+  "inferno_lord": {
+    "name": "Inferno Lord",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 6.35,
+      "agi": 4.04,
+      "int": 4.61,
+      "hp": 4.06,
+      "attack": 0.33,
+      "armor": 0.29,
+      "resist": 0.164
+    },
+    "initial": {
+      "str": 24,
+      "agi": 16,
+      "int": 20,
+      "hp": 145,
+      "hpRegen": 2.74,
+      "attack": 14,
+      "attackSpeed": 0,
+      "armor": 26.25,
+      "resist": 15
+    },
+    "spells": [
+      "pyroblast",
+      "flame_wave",
+      "infernal_rage",
+      "burning_aura_passive"
+    ]
   },
-  "initial": {
-    "str": 26,
-    "agi": 12,
-    "int": 12,
-    "hp": 130,
-    "hpRegen": 0,
-    "attack": 5,
-    "attackSpeed": 0,
-    "armor": 26,
-    "resist": 4
+  "flame_revenant": {
+    "name": "Flame Revenant",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 4.04,
+      "agi": 4.04,
+      "int": 6.92,
+      "hp": 3.82,
+      "attack": 0.31,
+      "armor": 0.2,
+      "resist": 0.291
+    },
+    "initial": {
+      "str": 16,
+      "agi": 18,
+      "int": 26,
+      "hp": 140,
+      "hpRegen": 4.87,
+      "attack": 12,
+      "attackSpeed": 0,
+      "armor": 19.48,
+      "resist": 24
+    },
+    "spells": [
+      "soulfire",
+      "eternal_flame",
+      "phoenix_rising",
+      "cinder_lord_passive"
+    ]
   },
-  "spells": [
-    "tentacle_slam",
-    "maddening_presence",
-    "eldritch_resilience"
-  ]
-},
-"illusionist": {
-  "name": "Illusionist",
-  "boss": false,
-  "mainstat": "int",
-  "modifiers": {
-    "str": 3,
-    "agi": 3,
-    "int": 6.5,
-    "hp": 3.15,
-    "attack": 0.32,
-    "armor": 0.14,
-    "resist": 0.275
-  },
-  "initial": {
-    "str": 12,
-    "agi": 12,
-    "int": 26,
-    "hp": 88,
-    "hpRegen": 3.0,
-    "attack": 8,
-    "attackSpeed": 0,
-    "armor": 11,
-    "resist": 16
-  },
-  "spells": [
-    "phantom_bolt",
-    "mirror_images",
-    "reality_twist"
-  ]
-},
-"labyrinth_guardian": {
-  "name": "Labyrinth Guardian",
-  "boss": true,
-  "mainstat": "str",
-  "modifiers": {
-    "str": 5,
-    "agi": 4.5,
-    "int": 3.5,
-    "hp": 4.0,
-    "attack": 0.34,
-    "armor": 0.29,
-    "resist": 0.165
-  },
-  "initial": {
-    "str": 20,
-    "agi": 18,
-    "int": 16,
-    "hp": 120,
-    "hpRegen": 1.8,
-    "attack": 12,
-    "attackSpeed": 0,
-    "armor": 21,
-    "resist": 13
-  },
-  "spells": [
-    "dimensional_slash",
-    "maze_shift",
-    "guardians_ward",
-    "eternal_vigil_passive"
-  ]
-},
-"mindreaver": {
-  "name": "Mindreaver",
-  "boss": true,
-  "mainstat": "int",
-  "modifiers": {
-    "str": 3,
-    "agi": 3.5,
-    "int": 6.5,
-    "hp": 3.7,
-    "attack": 0.33,
-    "armor": 0.18,
-    "resist": 0.307
-  },
-  "initial": {
-    "str": 12,
-    "agi": 16,
-    "int": 26,
-    "hp": 110,
-    "hpRegen": 4.2,
-    "attack": 12,
-    "attackSpeed": 0,
-    "armor": 14,
-    "resist": 21
-  },
-  "spells": [
-    "mind_spike",
-    "psychic_storm",
-    "madness_cascade",
-    "hivemind_passive"
-  ]
-},
-"magma_elemental": {
-  "name": "Magma Elemental",
-  "boss": false,
-  "mainstat": "int",
-  "modifiers": {
-    "str": 3.5,
-    "agi": 2.5,
-    "int": 6.5,
-    "hp": 3.25,
-    "attack": 0.34,
-    "armor": 0.11,
-    "resist": 0.295
-  },
-  "initial": {
-    "str": 14,
-    "agi": 10,
-    "int": 26,
-    "hp": 92,
-    "hpRegen": 2.9,
-    "attack": 9,
-    "attackSpeed": 0,
-    "armor": 8,
-    "resist": 18
-  },
-  "spells": [
-    "lava_burst",
-    "molten_shield",
-    "eruption"
-  ]
-},
-"flame_dancer": {
-  "name": "Flame Dancer",
-  "boss": false,
-  "mainstat": "agi",
-  "modifiers": {
-    "str": 3.5,
-    "agi": 6.5,
-    "int": 2.5,
-    "hp": 3.0,
-    "attack": 0.48,
-    "armor": 0.09,
-    "resist": 0.125
-  },
-  "initial": {
-    "str": 14,
-    "agi": 26,
-    "int": 10,
-    "hp": 78,
-    "hpRegen": 0,
-    "attack": 20,
-    "attackSpeed": 0,
-    "armor": 6,
-    "resist": 14
-  },
-  "spells": [
-    "burning_strike",
-    "fire_dance",
-    "ignition_trail_passive"
-  ]
-},
-"obsidian_golem": {
-  "name": "Obsidian Golem",
-  "boss": false,
-  "mainstat": "str",
-  "modifiers": {
-    "str": 7.5,
-    "agi": 2.5,
-    "int": 2.5,
-    "hp": 4.5,
-    "attack": 0.22,
-    "armor": 0.42,
-    "resist": 0.045
-  },
-  "initial": {
-    "str": 30,
-    "agi": 10,
-    "int": 10,
-    "hp": 140,
-    "hpRegen": 0,
-    "attack": 4,
-    "attackSpeed": 0,
-    "armor": 29,
-    "resist": 3
-  },
-  "spells": [
-    "volcanic_slam",
-    "hardened_lava",
-    "molten_core"
-  ]
-},
-"phoenix": {
-  "name": "Phoenix",
-  "boss": false,
-  "mainstat": "int",
-  "modifiers": {
-    "str": 2.5,
-    "agi": 4.5,
-    "int": 5.5,
-    "hp": 3.1,
-    "attack": 0.33,
-    "armor": 0.13,
-    "resist": 0.265
-  },
-  "initial": {
-    "str": 10,
-    "agi": 18,
-    "int": 22,
-    "hp": 86,
-    "hpRegen": 3.5,
-    "attack": 9,
-    "attackSpeed": 0,
-    "armor": 10,
-    "resist": 15
-  },
-  "spells": [
-    "flame_feather",
-    "rebirth",
-    "from_ashes"
-  ]
-},
-"inferno_lord": {
-  "name": "Inferno Lord",
-  "boss": true,
-  "mainstat": "str",
-  "modifiers": {
-    "str": 5.5,
-    "agi": 3.5,
-    "int": 4,
-    "hp": 4.1,
-    "attack": 0.33,
-    "armor": 0.3,
-    "resist": 0.168
-  },
-  "initial": {
-    "str": 22,
-    "agi": 14,
-    "int": 18,
-    "hp": 122,
-    "hpRegen": 2.3,
-    "attack": 12,
-    "attackSpeed": 0,
-    "armor": 22,
-    "resist": 13
-  },
-  "spells": [
-    "pyroblast",
-    "flame_wave",
-    "infernal_rage",
-    "burning_aura_passive"
-  ]
-},
-"flame_revenant": {
-  "name": "Flame Revenant",
-  "boss": true,
-  "mainstat": "int",
-  "modifiers": {
-    "str": 3.5,
-    "agi": 3.5,
-    "int": 6,
-    "hp": 3.8,
-    "attack": 0.31,
-    "armor": 0.2,
-    "resist": 0.287
-  },
-  "initial": {
-    "str": 14,
-    "agi": 16,
-    "int": 24,
-    "hp": 115,
-    "hpRegen": 4.0,
-    "attack": 10,
-    "attackSpeed": 0,
-    "armor": 16,
-    "resist": 20
-  },
-  "spells": [
-    "soulfire",
-    "eternal_flame",
-    "phoenix_rising",
-    "cinder_lord_passive"
-  ]
-},
   "mirage": {
     "name": "Mirage",
     "boss": true,
@@ -3171,10 +3171,10 @@
       "agi": 28,
       "int": 18,
       "hp": 115,
-      "hpRegen": 2.7,
+      "hpRegen": 2.72,
       "attack": 23,
       "attackSpeed": 0,
-      "armor": 19,
+      "armor": 19.1,
       "resist": 18
     },
     "spells": []
@@ -3197,10 +3197,10 @@
       "agi": 17,
       "int": 17,
       "hp": 119,
-      "hpRegen": 3.74,
+      "hpRegen": 3.76,
       "attack": 20,
       "attackSpeed": 0,
-      "armor": 25,
+      "armor": 25.15,
       "resist": 11
     },
     "spells": []
@@ -3223,10 +3223,10 @@
       "agi": 24,
       "int": 20,
       "hp": 117,
-      "hpRegen": 3.92,
+      "hpRegen": 3.94,
       "attack": 23,
       "attackSpeed": 0,
-      "armor": 25,
+      "armor": 25.09,
       "resist": 17
     },
     "spells": []
@@ -3249,10 +3249,10 @@
       "agi": 23,
       "int": 23,
       "hp": 117,
-      "hpRegen": 3.9,
+      "hpRegen": 3.92,
       "attack": 24,
       "attackSpeed": 0,
-      "armor": 21,
+      "armor": 21.1,
       "resist": 21
     },
     "spells": []
@@ -3278,7 +3278,7 @@
       "hpRegen": 4.21,
       "attack": 24,
       "attackSpeed": 0,
-      "armor": 21,
+      "armor": 21.02,
       "resist": 22
     },
     "spells": []
@@ -3301,10 +3301,10 @@
       "agi": 20,
       "int": 24,
       "hp": 102,
-      "hpRegen": 4.49,
+      "hpRegen": 4.47,
       "attack": 24,
       "attackSpeed": 0,
-      "armor": 23,
+      "armor": 22.89,
       "resist": 20
     },
     "spells": []
@@ -3327,10 +3327,10 @@
       "agi": 23,
       "int": 23,
       "hp": 101,
-      "hpRegen": 4.78,
+      "hpRegen": 4.81,
       "attack": 23,
       "attackSpeed": 0,
-      "armor": 22,
+      "armor": 22.12,
       "resist": 22
     },
     "spells": []
@@ -3353,10 +3353,10 @@
       "agi": 20,
       "int": 24,
       "hp": 97,
-      "hpRegen": 5.06,
+      "hpRegen": 5.09,
       "attack": 23,
       "attackSpeed": 0,
-      "armor": 22,
+      "armor": 22.11,
       "resist": 22
     },
     "spells": []
@@ -3379,10 +3379,10 @@
       "agi": 23,
       "int": 23,
       "hp": 90,
-      "hpRegen": 4.97,
+      "hpRegen": 4.94,
       "attack": 23,
       "attackSpeed": 0,
-      "armor": 23,
+      "armor": 22.89,
       "resist": 23
     },
     "spells": []
