@@ -163,6 +163,18 @@ this.enemies.forEach(enemy => {
     }
 });
 
+        // Apply boss scaling for specific waves
+        this.animations.applyBossScaling(this.enemies, this.currentWave);
+        
+        // Add special log messages for scaled bosses
+        if (this.enemies.length > 0 && this.enemies[0] && this.enemies[0].source.isBoss) {
+            if (this.currentWave === 2) {
+                this.log(`${this.enemies[0].name} appears larger than usual!`);
+            } else if (this.currentWave === 4) {
+                this.log(`${this.enemies[0].name} looms over the battlefield!`);
+            }
+        }
+
         // Initialize battle stats for new wave enemies
 this.enemies.forEach(enemy => {
     if (!this.battleStats[enemy.name]) {
@@ -203,6 +215,9 @@ this.enemies.forEach(enemy => {
                 element.style.visibility = '';
             }
         }
+        
+        // Remove boss scaling classes
+        this.animations.removeBossScaling();
     }
 
     initializeAllUI() {
