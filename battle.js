@@ -15,6 +15,7 @@ constructor(game, party, enemyWaves, mode = 'dungeon') {
         this.processingWaveTransition = false;
         this.targetingState = null;
         this.battlePaused = false; // Pause for animations
+        this.enableBossScaling = false;
 
         // Clear any existing timer interval from previous battles
         if (this.timerInterval) {
