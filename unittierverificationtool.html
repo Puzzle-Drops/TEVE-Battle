@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit Tier Verification Tool</title>
+    <title>Unit & Hero Tier Verification Tool</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -113,13 +113,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>Unit Tier Verification Tool</h1>
+        <h1>Unit & Hero Tier Verification Tool</h1>
         
         <div class="input-section">
-            <h3>Paste enemies.json content here:</h3>
+            <h3>Paste enemies.json or heroes/classes.json content here:</h3>
             <p style="color: #666; font-size: 14px;">
-                Tier Progression: Easy (0/1) → Medium (1/2) → Hard (2/3) → Forsaken (3/4) → 
-                Nightmare (4/5) → Hell (5/6) → Impossible (6/7) → Endgame (8/10)
+                Enemies: Easy (0/1) → Medium (1/2) → Hard (2/3) → Forsaken (3/4) → 
+                Nightmare (4/5) → Hell (5/6) → Impossible (6/7) → Endgame (8/10)<br>
+                Heroes: Tier is included in the unit data
             </p>
             <textarea id="jsonInput" placeholder="Paste your JSON data here..."></textarea>
             <button onclick="checkUnits()">Check Units</button>
@@ -266,6 +267,7 @@
         };
         
         let originalData = null; // Store the original data for export
+        let dataType = null; // 'enemies' or 'heroes'
         
         function checkUnits() {
             const resultsDiv = document.getElementById('results');
@@ -281,15 +283,40 @@
                 const data = JSON.parse(jsonText);
                 originalData = data; // Store for export
                 
-                // Check each unit
-                const expectedTiers = getExpectedTiers(data);
+                // Determine data type
+                let unitsData;
+                if (data.classes) {
+                    dataType = 'heroes';
+                    unitsData = data.classes;
+                } else {
+                    dataType = 'enemies';
+                    unitsData = data;
+                }
                 
+                // Check each unit
                 let hasUnits = false;
-                for (const [unitId, unit] of Object.entries(data)) {
-                    const expectedTier = expectedTiers[unitId];
-                    if (expectedTier === undefined) {
-                        console.log(`No expected tier found for ${unitId}`);
+                for (const [unitId, unit] of Object.entries(unitsData)) {
+                    // Skip tester_male for heroes
+                    if (dataType === 'heroes' && unitId === 'tester_male') {
                         continue;
+                    }
+                    
+                    let expectedTier;
+                    if (dataType === 'heroes') {
+                        // For heroes, use the tier from the unit data
+                        expectedTier = unit.tier;
+                        if (expectedTier === undefined) {
+                            console.log(`No tier found for hero ${unitId}`);
+                            continue;
+                        }
+                    } else {
+                        // For enemies, determine expected tier based on dungeon
+                        const expectedTiers = getExpectedTiers(unitsData);
+                        expectedTier = expectedTiers[unitId];
+                        if (expectedTier === undefined) {
+                            console.log(`No expected tier found for enemy ${unitId}`);
+                            continue;
+                        }
                     }
                     
                     hasUnits = true;
@@ -407,8 +434,15 @@
             
             let html = `
                 <div class="unit-name">${unit.name} (${unitId})</div>
-                <div>Expected Tier: ${expectedTier} | Boss: ${unit.boss ? 'Yes' : 'No'}</div>
-            `;
+                <div>Expected Tier: ${expectedTier}`;
+            
+            if (dataType === 'enemies') {
+                html += ` | Boss: ${unit.boss ? 'Yes' : 'No'}`;
+            } else if (dataType === 'heroes') {
+                html += ` | Mainstat: ${unit.mainstat}`;
+            }
+            
+            html += '</div>';
             
             if (result.pass) {
                 html += '<div class="success">✓ Unit matches tier requirements</div>';
@@ -592,14 +626,34 @@
         function exportFixedValues() {
             if (!originalData) return;
             
-            const fixedData = {};
-            const expectedTiers = getExpectedTiers(originalData);
+            let fixedData;
             
-            for (const [unitId, unit] of Object.entries(originalData)) {
-                const expectedTier = expectedTiers[unitId];
-                if (expectedTier === undefined) continue;
+            if (dataType === 'heroes') {
+                // For heroes, preserve the structure and non-unit data
+                fixedData = JSON.parse(JSON.stringify(originalData));
                 
-                fixedData[unitId] = fixUnit(JSON.parse(JSON.stringify(unit)), expectedTier);
+                for (const [unitId, unit] of Object.entries(originalData.classes)) {
+                    // Skip tester_male
+                    if (unitId === 'tester_male') {
+                        continue;
+                    }
+                    
+                    const expectedTier = unit.tier;
+                    if (expectedTier === undefined) continue;
+                    
+                    fixedData.classes[unitId] = fixUnit(JSON.parse(JSON.stringify(unit)), expectedTier);
+                }
+            } else {
+                // For enemies, just process the units
+                fixedData = {};
+                const expectedTiers = getExpectedTiers(originalData);
+                
+                for (const [unitId, unit] of Object.entries(originalData)) {
+                    const expectedTier = expectedTiers[unitId];
+                    if (expectedTier === undefined) continue;
+                    
+                    fixedData[unitId] = fixUnit(JSON.parse(JSON.stringify(unit)), expectedTier);
+                }
             }
             
             // Copy to clipboard
@@ -702,7 +756,7 @@
                 if (unit.initial.hpRegen > 0) unit.initial.hpRegen = parseFloat((unit.initial.hpRegen * scale).toFixed(2));
                 if (unit.initial.attack > 0) unit.initial.attack = Math.round(unit.initial.attack * scale);
                 if (unit.initial.attackSpeed > 0) unit.initial.attackSpeed = parseFloat((unit.initial.attackSpeed * scale).toFixed(2));
-                if (unit.initial.armor > 0) unit.initial.armor = Math.round(unit.initial.armor * scale);
+                if (unit.initial.armor > 0) unit.initial.armor = parseFloat((unit.initial.armor * scale).toFixed(2));
                 if (unit.initial.resist > 0) unit.initial.resist = Math.round(unit.initial.resist * scale);
             }
             
@@ -724,6 +778,11 @@
                 unit.modifiers.attack = parseFloat((baselineModifiers.attack + attackBonus * scale).toFixed(2));
                 unit.modifiers.armor = parseFloat((baselineModifiers.armor + armorBonus * scale).toFixed(2));
                 unit.modifiers.resist = parseFloat((baselineModifiers.resist + resistBonus * scale).toFixed(3)); // 3 decimals for resist
+            }
+            
+            // Preserve the tier for heroes
+            if (dataType === 'heroes' && unit.tier !== undefined) {
+                unit.tier = expectedTier;
             }
             
             return unit;
