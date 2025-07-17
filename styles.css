@@ -6580,9 +6580,9 @@ body {
 
 /* Action bar */
 .unitSlot.boss-wave5 .actionBar {
-    width: 71.5%;
+    width: 78%;
     left: 23px;
-    top: -14px;
+    top: -11px;
     height: 11px;
 }
 
@@ -6593,7 +6593,7 @@ body {
 
 /* Level indicator */
 .unitSlot.boss-wave5 .levelIndicator {
-    left: -12px;
+    left: -17px;
     top: -46px;
     width: 52.8px;
     height: 52.8px;
