@@ -6574,8 +6574,8 @@ body {
 /* Health bar container */
 .unitSlot.boss-wave5 .healthBarContainer {
     transform-origin: left center;
-    top: -98px;
-    left: -24px
+    top: -23px;
+    left: -24px;
 }
 
 /* Action bar */
