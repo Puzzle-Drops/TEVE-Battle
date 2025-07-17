@@ -4094,7 +4094,8 @@ body {
     position: absolute;
     top: -52px;
     left: 28px;
-    width: 100%;
+    width: auto;
+    max-width: none;
     height: 38px;
     display: flex;
     gap: 2px;
@@ -4103,6 +4104,7 @@ body {
     padding: 0 30px;
     pointer-events: auto;
     z-index: 1000;
+    overflow: visible;
 }
 
 .buffIcon, .debuffIcon {
@@ -4154,6 +4156,27 @@ body {
     text-shadow: 1px 1px 2px rgba(0,0,0,1);
     min-width: 12px;
     text-align: center;
+}
+
+/* Small icons when there are many buffs/debuffs */
+.buffDebuffContainer.many-effects .buffIcon,
+.buffDebuffContainer.many-effects .debuffIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.buffDebuffContainer.many-effects .buffIcon img,
+.buffDebuffContainer.many-effects .debuffIcon img {
+    width: 100%;
+    height: 100%;
+}
+
+.buffDebuffContainer.many-effects .buffDebuffDuration {
+    font-size: 9px;
+    bottom: -1px;
+    right: -1px;
+    padding: 0 2px;
+    min-width: 10px;
 }
 
 /* Buff/Debuff Tooltip */
@@ -6642,6 +6665,35 @@ body {
 .unitSlot.boss-wave5 .targetArrow {
     font-size: 43.2px;
     top: -50px;
+}
+
+/* Buff/debuff container overflow for boss units */
+.unitSlot.boss-wave3 .buffDebuffContainer,
+.unitSlot.boss-wave5 .buffDebuffContainer {
+    overflow: visible;
+    width: auto;
+    max-width: none;
+}
+
+/* Small buff/debuff icons for boss units */
+.unitSlot.boss-wave3 .buffDebuffContainer.many-effects .buffIcon,
+.unitSlot.boss-wave3 .buffDebuffContainer.many-effects .debuffIcon {
+    width: 30px; /* 24 * 1.25 scale */
+    height: 30px;
+}
+
+.unitSlot.boss-wave5 .buffDebuffContainer.many-effects .buffIcon,
+.unitSlot.boss-wave5 .buffDebuffContainer.many-effects .debuffIcon {
+    width: 36px; /* 24 * 1.5 scale */
+    height: 36px;
+}
+
+.unitSlot.boss-wave3 .buffDebuffContainer.many-effects .buffDebuffDuration {
+    font-size: 11.25px; /* 9 * 1.25 scale */
+}
+
+.unitSlot.boss-wave5 .buffDebuffContainer.many-effects .buffDebuffDuration {
+    font-size: 13.5px; /* 9 * 1.5 scale */
 }
 
 /* END end EnD eNd ENd eND enD bottom document/*
