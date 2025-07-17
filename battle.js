@@ -432,7 +432,7 @@ if (unit.isEnemy) {
         }
     }
 
-applyInitialPassives() {
+    applyInitialPassives() {
     // Apply passive abilities at battle start
     this.allUnits.forEach(unit => {
         // Apply Champion Female passive shield
@@ -1263,11 +1263,6 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
         }
     });
 
-    // Apply magical damage bonus if applicable (from Cinder Lord passive)
-    if (damageType === 'magical' && attacker.magicalDamageBonus) {
-        damage *= (1 + attacker.magicalDamageBonus);
-    }
-
     // Warmaster passive - check if attacker has bleed and if any ally has warmaster passive
     if (attacker.debuffs.some(d => d.name === 'Bleed')) {
         const allies = this.getParty(attacker);
@@ -1333,8 +1328,8 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
             damage = damage * (1 - magicalDR);
         }
     }
-
-// Check for shields first
+    
+    // Check for shields first
     const shield = target.buffs.find(b => b.name === 'Shield');
     let shieldDamageAbsorbed = 0;
     if (shield && shield.shieldAmount > 0) {
@@ -1506,19 +1501,11 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
                 // Champion Male passive
                 this.applyDebuff(attacker, 'Stun', effect.duration, { stunned: true });
                 this.log(`${target.name} stuns ${attacker.name} with a counter!`);
-            } else if (effect.type === 'hellfire_retaliation' && attacker.isAlive) {
-                // Hellfire Aura passive
-                attacker.currentHp = Math.max(0, attacker.currentHp - effect.damage);
-                this.applyDebuff(attacker, 'Reduce Speed', effect.slowDuration, {});
-                this.log(`${attacker.name} takes ${effect.damage} fire damage and is slowed by hellfire aura!`);
-                
-                if (attacker.currentHp <= 0 && !attacker.isDead) {
-                    this.handleUnitDeath(attacker, target);
-                }
             }
         });
     }
-// Demolition Expert passive - AOE retaliation
+
+    // Demolition Expert passive - AOE retaliation
     if (target.demolitionExpertPassive && target.isAlive && actualDamage > 0) {
         // Check if target has any debuffs
         if (!target.debuffs || target.debuffs.length === 0) {
@@ -1571,14 +1558,6 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
         }
     }
     
-    // Burning Aura passive - chance to apply bleed to attacker
-    if (target.burningAuraPassive && target.isAlive && actualDamage > 0 && attacker.isAlive) {
-        if (Math.random() < 0.3) { // 30% chance
-            this.applyDebuff(attacker, 'Bleed', 1, {});
-            this.log(`${attacker.name} is burned by ${target.name}'s burning aura!`);
-        }
-    }
-    
     // Check for Frost Armor retaliation
     if (target.isAlive && damage > 0 && hasFrostArmor) {
         // Apply or stack reduce speed on the attacker
@@ -1605,7 +1584,1278 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     }
     
     return actualDamage;
+}
+
+handleUnitDeath(unit, killer = null) {
+    // Prevent double death handling
+    if (unit.isDead) return;
+
+    // Check for Undying Will passive
+    if (unit.undyingWillPassive && !unit.undyingWillUsed) {
+        unit.undyingWillUsed = true;
+        unit.currentHp = Math.floor(unit.maxHp * unit.undyingWillHealPercent);
+        this.log(`${unit.name}'s undying will prevents death! Healed to ${unit.currentHp} HP!`);
+        return;
+    }
+    
+    unit.isDead = true;
+    // Track death
+    this.trackBattleStat(unit.name, 'deaths', 1);
+    
+    // Hide active circle on death
+    const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
+    const element = document.getElementById(elementId);
+    if (element) {
+        const animContainer = element.querySelector('.unitAnimationContainer');
+        if (animContainer) {
+            const activeCircle = animContainer.querySelector('.unitActiveCircle');
+            if (activeCircle) {
+                activeCircle.style.display = 'none';
+            }
+        }
+    }
+    
+    // Check for kill effects from killer
+    if (killer && killer.isAlive) {
+        // Track kill for ANY killer
+        this.trackBattleStat(killer.name, 'kills', 1);
+
+        // Check for Queen's Lament passive on any living unit
+        this.allUnits.forEach(otherUnit => {
+            if (otherUnit.isAlive && otherUnit.queensLamentPassive) {
+                // Heal 10% HP
+                const healAmount = Math.floor(otherUnit.maxHp * otherUnit.queensLamentHealPercent);
+                this.healUnit(otherUnit, healAmount);
+                
+                // Apply Increase Attack buff
+                this.applyBuff(otherUnit, 'Increase Attack', otherUnit.queensLamentBuffDuration, { damageMultiplier: 1.5 });
+                
+                this.log(`${otherUnit.name} gains power from ${unit.name}'s death!`);
+            }
+            
+            // Death's Domain passive - when any unit dies, gain shield and speed
+            if (otherUnit.isAlive && otherUnit.deathsDomainPassive) {
+                const shieldAmount = Math.floor(otherUnit.maxHp * (otherUnit.deathsDomainShieldPercent || 0.2));
+                this.applyBuff(otherUnit, 'Shield', -1, { shieldAmount: shieldAmount });
+                this.applyBuff(otherUnit, 'Increase Speed', otherUnit.deathsDomainSpeedDuration || 2, {});
+                this.log(`${otherUnit.name} gains power from death itself!`);
+            }
+        });
+        
+        // Sniper Female passive - speed buff on kill
+        if (killer.onKillEffects) {
+            killer.onKillEffects.forEach(effect => {
+                if (effect.type === 'buff') {
+                    this.applyBuff(killer, effect.buffName, effect.duration, {});
+                    this.log(`${killer.name} gains ${effect.buffName} from the kill!`);
+                }
+            });
+        }
+        
+        // Phantom Assassin Male passive - refill action bar on assassinate kill
+        if (killer.phantomAssassinMalePassive && killer.actionBarRefillOnKill) {
+            // Check if the last ability used was Assassinate
+            const lastAbility = killer.abilities.find(a => a.id === 'assassinate');
+            if (lastAbility && killer.cooldowns[killer.abilities.indexOf(lastAbility)] === lastAbility.cooldown) {
+                killer.actionBar = Math.floor(10000 * killer.actionBarRefillOnKill);
+                this.log(`${killer.name}'s action bar refills to 75%!`);
+            }
+        }
+        
+        // Dark Arch Templar Male passive - spread debuffs on kill
+        if (killer.darkArchTemplarMalePassive && unit.debuffs.length > 0) {
+            const enemies = killer.isEnemy ? this.party.filter(p => p && p.isAlive) : this.enemies.filter(e => e && e.isAlive);
+            if (enemies.length > 0) {
+                const debuffsToSpread = [...unit.debuffs];
+                debuffsToSpread.forEach(debuff => {
+                    const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+                    this.applyDebuff(randomEnemy, debuff.name, debuff.duration, { ...debuff });
+                });
+                this.log(`${unit.name}'s debuffs spread to the enemy team!`);
+            }
+        }
+    }
+    
+    // Check if this unit was the source of any taunts
+    this.allUnits.forEach(otherUnit => {
+        if (otherUnit.isAlive) {
+            // Remove any taunts where this unit was the taunt target
+            otherUnit.debuffs = otherUnit.debuffs.filter(debuff => {
+                if (debuff.name === 'Taunt' && debuff.tauntTarget === unit) {
+                    this.log(`${otherUnit.name}'s taunt ends as ${unit.name} has fallen!`);
+                    return false;
+                }
+                return true;
+            });
+        }
+    });
+    
+    // Trigger death animation only if not already animated
+    if (!unit.deathAnimated) {
+        unit.deathAnimated = true;
+        this.animations.triggerDeathAnimation(unit);
+    }
+}
+
+    healUnit(target, amount) {
+        if (!target.isAlive) return 0;
+        
+        // Check for blight
+        if (target.debuffs.some(d => d.name === 'Blight')) {
+            this.log(`${target.name} cannot be healed due to Blight!`);
+            return 0;
+        }
+        
+        let heal = Math.floor(amount);
+        
+        // Apply healing received modifiers
+        if (target.healingReceived) {
+            heal *= target.healingReceived;
+        }
+        
+        heal = Math.floor(heal);
+        const actualHeal = Math.min(heal, target.maxHp - target.currentHp);
+        const overheal = heal - actualHeal;
+        
+        target.currentHp += actualHeal;
+
+// Track healing done (use currentUnit as healer)
+if (this.currentUnit && this.currentUnit.isAlive) {
+    this.trackBattleStat(this.currentUnit.name, 'healingDone', actualHeal);
+}
+        
+        // Handle overhealing for Prophet/Prophetess passives
+        if (overheal > 0) {
+            // Check if healer has Prophet/Prophetess passive
+            const healer = this.currentUnit;
+            if (healer) {
+                // Prophet Male - create shield from overheal
+                if (healer.prophetMalePassive && target.isAlive) {
+                    const maxShield = Math.floor(target.maxHp * 0.25);
+                    const shieldAmount = Math.min(overheal, maxShield);
+                    
+                    const existingShield = target.buffs.find(b => b.name === 'Shield');
+                    if (existingShield) {
+                        const newTotal = Math.min(existingShield.shieldAmount + shieldAmount, maxShield);
+                        existingShield.shieldAmount = newTotal;
+                        this.log(`${target.name}'s shield increased by overhealing!`);
+                    } else {
+                        this.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
+                        this.log(`${target.name} gains shield from overhealing!`);
+                    }
+                }
+                
+                // Prophetess Female - apply immune on overheal
+                if (healer.prophetessFemalePassive && target.isAlive) {
+                    this.applyBuff(target, 'Immune', 1, { immunity: true });
+                    this.log(`${target.name} gains immunity from overhealing!`);
+                }
+            }
+        }
+        
+        this.log(`${target.name} is healed for ${actualHeal} HP!`);
+        
+        return actualHeal;
+    }
+    
+    applyBuff(target, buffName, duration, effects) {
+        if (!target.isAlive) return;
+        
+        // Check if target is marked (prevents gaining buffs)
+        if (target.debuffs.some(d => d.name === 'Mark')) {
+            this.log(`${target.name} is marked and cannot gain buffs!`);
+            return;
+        }
+        
+        // Special handling for shields
+        if (buffName === 'Shield' && effects.shieldAmount !== undefined) {
+            // Check if shield already exists
+            const existingShield = target.buffs.find(b => b.name === 'Shield');
+            
+            if (existingShield) {
+                // Compare shield amounts and keep the higher one
+                if (effects.shieldAmount > existingShield.shieldAmount) {
+                    existingShield.shieldAmount = effects.shieldAmount;
+                    existingShield.duration = duration;
+                    this.log(`${target.name}'s shield is strengthened to ${effects.shieldAmount} HP!`);
+                } else {
+                    this.log(`${target.name} already has a stronger shield (${existingShield.shieldAmount} HP)!`);
+                }
+            } else {
+                // Create new shield
+                const shield = {
+                    name: buffName,
+                    duration: duration,
+                    shieldAmount: effects.shieldAmount,
+                    ...effects
+                };
+                
+                target.buffs.push(shield);
+this.log(`${target.name} gains a ${effects.shieldAmount} HP shield!`);
+
+// Track shield application  
+if (this.currentUnit && this.currentUnit.isAlive) {
+    this.trackBattleStat(this.currentUnit.name, 'shieldingApplied', effects.shieldAmount);
+}
+            }
+            return;
+        }
+        
+        // Check if caster is buffing themselves during their turn
+        let adjustedDuration = duration;
+        if (target === this.currentUnit) {
+            adjustedDuration = duration + 1;
+        }
+        
+        // Check if buff already exists
+        const existingBuff = target.buffs.find(b => b.name === buffName);
+        
+        if (existingBuff) {
+            // Update duration to the higher value
+            const oldDuration = existingBuff.duration;
+            existingBuff.duration = Math.max(existingBuff.duration, adjustedDuration);
+            
+            // Update other effects if provided
+            Object.assign(existingBuff, effects);
+            
+            // Log if duration was increased
+            if (existingBuff.duration > oldDuration) {
+                this.log(`${target.name}'s ${buffName} is refreshed to ${existingBuff.duration} turns!`);
+            } else {
+                this.log(`${target.name} already has ${buffName} with ${oldDuration} turns remaining!`);
+            }
+        } else {
+            // Create new buff
+            const buff = {
+                name: buffName,
+                duration: adjustedDuration,
+                ...effects
+            };
+            
+            target.buffs.push(buff);
+this.log(`${target.name} gains ${buffName}!`);
+
+// Track buff application
+if (this.currentUnit && this.currentUnit.isAlive) {
+    this.trackBattleStat(this.currentUnit.name, 'buffsApplied', 1);
+}
+        }
+        
+        // Hierophant Male passive - 20% shield when buffed
+        if (buffName !== 'Shield') { // Prevent infinite loop
+            // Find all Hierophant Male units
+            const allies = this.getParty(target);
+            allies.forEach(ally => {
+                if (ally.isAlive && ally.hierophantMalePassive && ally === this.currentUnit) {
+                    const shieldAmount = Math.floor(target.maxHp * 0.2);
+                    const existingShield = target.buffs.find(b => b.name === 'Shield');
+                    
+                    if (!existingShield) {
+                        this.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
+                        this.log(`${target.name} gains divine protection shield!`);
+                    }
+                }
+            });
+        }
+    }
+    
+    applyDebuff(target, debuffName, duration, effects) {
+    if (!target.isAlive) return;
+    
+    // Check for immunity
+    if (target.buffs.some(b => b.name === 'Immune' || b.immunity)) {
+        this.log(`${target.name} is immune to debuffs!`);
+        return;
+    }
+    
+    // Check for boss stun resistance
+    if (debuffName === 'Stun') {
+        const bossBuff = target.buffs.find(b => b.name === 'Boss');
+        if (bossBuff && bossBuff.stunResistance) {
+            if (Math.random() < bossBuff.stunResistance) {
+                this.log(`${target.name} is a boss and shrugged off your stun attempt!`);
+                return;
+            }
+        }
+    }
+    
+    // Check for Sovereign's Presence - prevents Reduce Speed on allies
+    if (debuffName === 'Reduce Speed') {
+        const allies = this.getParty(target);
+        const hasSovereignAlly = allies.some(ally => 
+            ally.isAlive && ally.sovereignsPresencePassive
+        );
+        
+        if (hasSovereignAlly) {
+            this.log(`${target.name} cannot be slowed due to sovereign's protection!`);
+            return;
+        }
+    }
+    
+    // Check for Patient Zero passive - immune to Blight and Bleed, heals instead
+    if (target.patientZeroPassive && (debuffName === 'Blight' || debuffName === 'Bleed')) {
+        const healAmount = Math.floor(target.maxHp * (target.patientZeroHealPercent || 0.05));
+        const actualHeal = Math.min(healAmount, target.maxHp - target.currentHp);
+        if (actualHeal > 0) {
+            target.currentHp += actualHeal;
+            this.log(`${target.name}'s toxic immunity converts ${debuffName} into ${actualHeal} healing!`);
+        }
+        return;
+    }
+    
+    // Check if caster is debuffing themselves during their turn
+    let adjustedDuration = duration;
+    if (target === this.currentUnit) {
+        adjustedDuration = duration + 1;
+    }
+    
+    // Check if debuff already exists
+    const existingDebuff = target.debuffs.find(d => d.name === debuffName);
+    
+    if (existingDebuff) {
+        // Special handling for Bleed - it stacks duration
+        if (debuffName === 'Bleed') {
+            existingDebuff.duration += adjustedDuration;
+            this.log(`${target.name}'s ${debuffName} stacks to ${existingDebuff.duration} turns!`);
+        } else {
+            // Normal debuffs - update duration to the higher value
+            const oldDuration = existingDebuff.duration;
+            existingDebuff.duration = Math.max(existingDebuff.duration, adjustedDuration);
+            
+            // Update other effects if provided
+            Object.assign(existingDebuff, effects);
+            
+            // Log if duration was increased
+            if (existingDebuff.duration > oldDuration) {
+                this.log(`${target.name}'s ${debuffName} is refreshed to ${existingDebuff.duration} turns!`);
+            } else {
+                this.log(`${target.name} already has ${debuffName} with ${oldDuration} turns remaining!`);
+            }
+        }
+    } else {
+        // Create new debuff
+        const debuff = {
+            name: debuffName,
+            duration: adjustedDuration,
+            ...effects
+        };
+        
+        target.debuffs.push(debuff);
+        this.log(`${target.name} suffers from ${debuffName}!`);
+
+        // Track debuff application
+        if (this.currentUnit && this.currentUnit.isAlive) {
+            this.trackBattleStat(this.currentUnit.name, 'debuffsApplied', 1);
+        }
+        
+        // Apply stun visuals if it's a stun debuff
+        if (debuffName === 'Stun' || effects.stunned) {
+            this.animations.updateStunVisuals(target);
+        }
+    }
+    
+    // Arch Sage passives - gain buff when receiving debuff
+    if (target.archSageMalePassive || target.archSageFemalePassive) {
+        if (target.archSageMalePassive) {
+            this.applyBuff(target, 'Increase Attack', adjustedDuration, { damageMultiplier: 1.5 });
+        }
+        if (target.archSageFemalePassive) {
+            this.applyBuff(target, 'Increase Speed', adjustedDuration, {});
+        }
+    }
+}
+    
+    applyShield(target, amount) {
+        if (!target.isAlive) return;
+        
+        // Apply shield as a buff
+        this.applyBuff(target, 'Shield', 3, { shieldAmount: Math.floor(amount) });
+    }
+    
+removeBuffs(target) {
+    // Count buffs that will be removed (excluding permanent buffs and Boss buff)
+    const removedCount = target.buffs.filter(buff => 
+        buff.duration !== -1 && buff.name !== 'Boss'
+    ).length;
+    
+    // Remove all buffs except permanent ones and Boss buff
+    target.buffs = target.buffs.filter(buff => 
+        buff.duration === -1 || buff.name === 'Boss'
+    );
+    
+    // Track buffs dispelled
+    if (this.currentUnit && removedCount > 0) {
+        this.trackBattleStat(this.currentUnit.name, 'buffsDispelled', removedCount);
+    }
+}
+    
+removeDebuffs(target) {
+    // Store if unit was stunned before removing
+    const wasStunned = target.debuffs.some(d => d.name === 'Stun' || d.stunned);
+    
+    const removedCount = target.debuffs.length;
+    target.debuffs = [];
+    
+    // Track debuffs cleansed
+    if (this.currentUnit && removedCount > 0) {
+        this.trackBattleStat(this.currentUnit.name, 'debuffsCleansed', removedCount);
+        
+        // White Wizard Male passive - Empowering Cleanse
+        if (this.currentUnit.whiteWizardMalePassive) {
+            this.applyBuff(target, 'Increase Attack', 1, { damageMultiplier: 1.5 });
+            this.log(`${target.name} gains attack power from empowering cleanse!`);
+        }
+        
+        // White Witch Female passive - Hastening Cleanse
+        if (this.currentUnit.whiteWitchFemalePassive) {
+            this.applyBuff(target, 'Increase Speed', 1, {});
+            this.log(`${target.name} gains speed from hastening cleanse!`);
+        }
+    }
+}
+    
+    getParty(unit) {
+        return unit.isEnemy ? this.enemies : this.party;
+    }
+    
+    getEnemies(unit) {
+        return unit.isEnemy ? this.party : this.enemies;
+    }
+    
+    applyDotEffects(unit) {
+        unit.debuffs.forEach(debuff => {
+            if (debuff.dotDamage && unit.isAlive) {
+                const damage = Math.floor(debuff.dotDamage);
+                const previousHp = unit.currentHp;
+                unit.currentHp = Math.max(0, unit.currentHp - damage);
+                this.log(`${unit.name} takes ${damage} damage from ${debuff.name}!`);
+                
+                // Check if unit died from DOT
+                if (previousHp > 0 && unit.currentHp <= 0) {
+                    this.handleUnitDeath(unit);
+                }
+            } else if (debuff.name === 'Bleed' && unit.isAlive) {
+                const damage = Math.ceil(unit.maxHp * 0.05);
+                const previousHp = unit.currentHp;
+                unit.currentHp = Math.max(0, unit.currentHp - damage);
+                this.log(`${unit.name} bleeds for ${damage} damage!`);
+                
+                // Check if unit died from DOT
+                if (previousHp > 0 && unit.currentHp <= 0) {
+                    this.handleUnitDeath(unit);
+                }
+            }
+        });
+    }
+
+    checkBattleEnd() {
+        const partyAlive = this.party.some(u => u && u.isAlive);
+        const enemiesAlive = this.enemies.some(u => u && u.isAlive);
+        
+        if (!partyAlive) {
+            this.log("Defeat! Your party has been wiped out!");
+            this.endBattle(false);
+            return true;
+        }
+        
+        if (!enemiesAlive) {
+            // Only calculate exp once per wave
+            if (!this.waveExpCalculated) {
+                this.waveExpCalculated = true;
+                
+                // Calculate exp for this wave before transitioning
+                const waveExp = this.calculateWaveExp();
+                console.log(`Wave ${this.currentWave + 1} cleared, exp calculated: ${waveExp}`);
+                this.waveExpEarned.push(waveExp);
+                
+                // Award exp to alive heroes
+                this.party.forEach((unit, index) => {
+                    if (unit && unit.isAlive) {
+                        const hero = unit.source;
+                        const prevExp = hero.pendingExp;
+                        hero.pendingExp += waveExp;
+                        this.log(`${hero.name} earned ${waveExp} exp from wave ${this.currentWave + 1} (total pending: ${hero.pendingExp})`);
+                    }
+                });
+            }
+            
+            // Check if there are more waves
+            if (this.currentWave < this.enemyWaves.length - 1) {
+                // Prevent multiple wave transitions
+                if (!this.processingWaveTransition) {
+                    this.processingWaveTransition = true;
+                    this.log("Wave cleared!");
+                    
+                    // Only update UI for living party members - don't revive dead ones
+this.party.forEach((unit, index) => {
+    if (unit && unit.isAlive && !unit.isDead) {
+        // Only ensure UI is properly shown for LIVING party members
+        const elementId = `party${unit.position + 1}`;
+        const element = document.getElementById(elementId);
+        
+        if (element) {
+            element.style.display = 'block';
+            
+            const healthBar = element.querySelector('.healthBar');
+            const actionBar = element.querySelector('.actionBar');
+            const levelIndicator = element.querySelector('.levelIndicator');
+            const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+            const animContainer = element.querySelector('.unitAnimationContainer');
+            const unitActiveCircle = animContainer ? animContainer.querySelector('.unitActiveCircle') : null;
+            
+            if (healthBar) healthBar.style.display = '';
+            if (actionBar) actionBar.style.display = '';
+            if (levelIndicator) levelIndicator.style.display = '';
+            if (buffDebuffContainer) buffDebuffContainer.style.display = '';
+            if (unitActiveCircle) unitActiveCircle.style.display = 'none'; // Ensure it's hidden
+        }
+    }
 });
+                    
+                    // Load next wave
+                    setTimeout(() => {
+                        this.loadWave(this.currentWave + 1);
+                        this.processingWaveTransition = false;
+                        this.waveExpCalculated = false; // Reset for next wave
+                    }, 1000);
+                }
+                return false; // Battle continues
+            } else {
+                this.log("Victory! All waves defeated!");
+                this.endBattle(true);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    calculateWaveExp() {
+        // Base exp per enemy level
+        const baseExpPerLevel = 25;
+        let totalExp = 0;
+        
+        // Safety check
+        if (!this.dungeonWaves || !Array.isArray(this.dungeonWaves)) {
+            return 0;
+        }
+        
+        if (this.currentWave >= this.dungeonWaves.length) {
+            return 0;
+        }
+        
+        // Get the current wave configuration
+        const currentWaveEnemies = this.dungeonWaves[this.currentWave];
+        
+        if (!currentWaveEnemies) {
+            return 0;
+        }
+        
+        // Calculate exp based on enemy levels
+        currentWaveEnemies.forEach(enemy => {
+            if (enemy) {
+                const expFromEnemy = enemy.level * baseExpPerLevel;
+                totalExp += expFromEnemy;
+            }
+        });
+        
+        return totalExp;
+    }
+    
+    endBattle(victory) {
+    this.running = false;
+    this.endTime = Date.now();
+
+    // Clear timer interval
+    if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+    }
+
+    // Clear all buffs and debuffs from all units
+    this.allUnits.forEach(unit => {
+        unit.buffs = [];
+        unit.debuffs = [];
+    });
+    
+    // Clear pending exp for all party members if defeat
+    if (!victory) {
+        this.party.forEach(unit => {
+            if (unit && unit.source) {
+                unit.source.pendingExp = 0;
+            }
+        });
+    }
+
+    // Clear any active targeting
+    if (this.targetingState) {
+        this.clearTargeting();
+    }
+    
+    // Clean up level indicator event listeners for both party and enemies
+    for (let i = 1; i <= 5; i++) {
+        ['party', 'enemy'].forEach(type => {
+            const element = document.getElementById(`${type}${i}`);
+            if (element) {
+                const levelIndicator = element.querySelector('.levelIndicator');
+                if (levelIndicator && levelIndicator._unitInfoHandler) {
+                    levelIndicator.removeEventListener('click', levelIndicator._unitInfoHandler);
+                    delete levelIndicator._unitInfoHandler;
+                }
+                
+                // Also clean up right-click handlers
+                if (element._rightClickHandler) {
+                    element.removeEventListener('contextmenu', element._rightClickHandler);
+                    delete element._rightClickHandler;
+                }
+            }
+        });
+    }
+
+    // Hide exit button when showing results
+    const exitButton = document.querySelector('.exitBattleButton');
+    if (exitButton) {
+        exitButton.style.display = 'none';
+    }
+    
+    // Close any open popup
+    this.game.uiManager.closeHeroInfo();
+
+    // Calculate battle duration
+    const duration = Math.floor((this.endTime - this.startTime) / 1000);
+    const minutes = Math.floor(duration / 60);
+    const seconds = duration % 60;
+    const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+// Get dungeon data (only for dungeon mode)
+    let dungeonId = null;
+    let dungeonConfig = null;
+    let rewards = { gold: 0, exp: 0, items: [] };
+    
+    if (this.mode === 'dungeon' && this.game.currentDungeon) {
+        dungeonId = this.game.currentDungeon.id;
+        dungeonConfig = dungeonData.dungeons[dungeonId];
+        rewards = dungeonConfig.rewards || { gold: 0, exp: 0, items: [] };
+    }
+    
+// Process items only on victory and in dungeon mode
+const itemRolls = [];
+if (victory && this.mode === 'dungeon' && dungeonConfig) {
+    // Get global collection drop bonus once
+    const globalDropBonus = this.game.getCollectionDropBonus();
+    
+    // Only roll items if we won
+    this.party.forEach(unit => {
+        if (!unit || !unit.source) return;
+        
+        const hero = unit.source;
+        
+        // Check if villager (they only get items from first 3 dungeons and only gold after that)
+        const isVillager = hero.className.includes('villager') || hero.className.includes('tester');
+        const dungeonLevel = dungeonConfig ? dungeonConfig.level : 0;
+        
+        if (isVillager) {
+            // Villagers only get items from dungeons level 50 and below (first 3 easy dungeons)
+            if (dungeonLevel > 50 || !unit.isAlive) {
+                // Only gold for villagers in harder dungeons or if dead
+                itemRolls.push({
+                    hero: hero,
+                    gold: Math.floor(rewards.gold / this.party.length),
+                    item: null
+                });
+            } else if (unit.isAlive) {
+                // 50% chance for item in easy dungeons
+                if (Math.random() < 0.5) {
+                    // Get item from dungeon rewards
+                    if (rewards.items && rewards.items.length > 0) {
+                        const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
+                        
+                        // Get collection bonuses for this item
+                        const itemBonuses = this.game.getItemCollectionBonuses(itemId);
+                        const collectionBonuses = {
+                            globalDropBonus: globalDropBonus,
+                            ...itemBonuses
+                        };
+                        
+                        // Create item with collection bonuses
+                        const item = new Item(itemId);
+                        item.rollItem(collectionBonuses);
+                        
+                        itemRolls.push({
+                            hero: hero,
+                            gold: 0,
+                            item: item
+                        });
+                    } else {
+                        // No items available, give gold instead
+                        itemRolls.push({
+                            hero: hero,
+                            gold: Math.floor(rewards.gold / this.party.length),
+                            item: null
+                        });
+                    }
+                } else {
+                    // Failed item roll, get gold
+                    itemRolls.push({
+                        hero: hero,
+                        gold: Math.floor(rewards.gold / this.party.length),
+                        item: null
+                    });
+                }
+            } else {
+                // Dead villagers get nothing
+                itemRolls.push({
+                    hero: hero,
+                    gold: 0,
+                    item: null
+                });
+            }
+        } else {
+            // Non-villager heroes - original logic
+            if (unit.isAlive) {
+                // 50% chance for item
+                if (Math.random() < 0.5) {
+                    // Get item from dungeon rewards
+                    if (rewards.items && rewards.items.length > 0) {
+                        const itemId = rewards.items[Math.floor(Math.random() * rewards.items.length)];
+                        
+                        // Get collection bonuses for this item
+                        const itemBonuses = this.game.getItemCollectionBonuses(itemId);
+                        const collectionBonuses = {
+                            globalDropBonus: globalDropBonus,
+                            ...itemBonuses
+                        };
+                        
+                        // Create item with collection bonuses
+                        const item = new Item(itemId);
+                        item.rollItem(collectionBonuses);
+                        
+                        itemRolls.push({
+                            hero: hero,
+                            gold: 0,
+                            item: item
+                        });
+                    } else {
+                        // No items available, give gold instead
+                        itemRolls.push({
+                            hero: hero,
+                            gold: Math.floor(rewards.gold / this.party.length),
+                            item: null
+                        });
+                    }
+                } else {
+                    // Failed item roll, get gold
+                    itemRolls.push({
+                        hero: hero,
+                        gold: Math.floor(rewards.gold / this.party.length),
+                        item: null
+                    });
+                }
+            } else {
+                // Dead heroes get nothing
+                itemRolls.push({
+                    hero: hero,
+                    gold: 0,
+                    item: null
+                });
+            }
+        }
+    });
+} else {
+    // On defeat, no items are rolled - just empty entries
+    this.party.forEach(unit => {
+        if (!unit || !unit.source) return;
+        itemRolls.push({
+            hero: unit.source,
+            gold: 0,
+            item: null
+        });
+    });
+}
+    
+// Calculate party deaths from battleStats
+let partyDeaths = 0;
+this.party.forEach(unit => {
+    if (unit && this.battleStats[unit.name]) {
+        partyDeaths += this.battleStats[unit.name].deaths || 0;
+    }
+});
+
+// Store battle results
+    this.game.pendingBattleResults = {
+        victory: victory,
+        dungeonName: this.mode === 'arena' ? 'Arena Battle' : (this.game.currentDungeon ? this.game.currentDungeon.name : 'Unknown'),
+        time: timeString,
+        goldChange: 0, // No longer used at this level
+        dungeonBonusExp: victory ? rewards.exp : 0,
+        battleStats: this.battleStats, // Add this line here
+        partyDeaths: partyDeaths, // Add calculated party deaths
+        currentArenaTeam: this.mode === 'arena' ? this.game.currentArenaTeam : null, // Add this line
+        // In endBattle method, when creating heroResults:
+        heroResults: this.party.map((unit, index) => {
+            if (!unit) return null;
+            const hero = unit.source;
+            const waveExp = hero.pendingExp;
+            const dungeonBonus = victory && unit.isAlive ? rewards.exp : 0;
+            const totalExp = waveExp + dungeonBonus;
+            
+            const itemRoll = itemRolls[index];
+            
+            return {
+                hero: hero,
+                expGained: totalExp,
+                survived: unit.isAlive,
+                item: itemRoll.item,
+                gold: itemRoll.gold
+            };
+        }).filter(r => r !== null)
+    };
+    
+    // Apply battle results immediately (both victory and defeat)
+    console.log('Applying battle results immediately');
+    this.game.applyBattleResults();
+    
+    // Save game immediately after applying results
+    if (this.game && saveManager && saveManager.currentSlot) {
+        console.log('Saving game after battle results applied');
+        saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save
+    }
+    
+// Show results popup - use arena results for arena mode
+setTimeout(() => {
+    if (this.mode === 'arena') {
+        this.game.uiManager.showArenaResults();
+    } else {
+        this.game.uiManager.showBattleResults();
+    }
+}, 1000);
+}
+
+exitBattle() {
+    if (this.mode === 'arena') {
+        // Return to arena party select
+        this.game.uiManager.showPartySelect('arena');
+    } else {
+        // Return to main menu
+        this.game.uiManager.showMainMenu();
+    }
+}
+    
+    log(message) {
+        this.battleLog.push(message);
+        const logElement = document.getElementById('battleLog');
+        if (logElement) {
+            logElement.innerHTML = this.battleLog.slice(-50).join('<br>') + '<br>';
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+    }
+    
+    showPlayerAbilities(unit) {
+    const abilityPanel = document.getElementById('abilityPanel');
+    abilityPanel.innerHTML = '';
+    
+    // Show all abilities including passives
+    unit.abilities.forEach((ability, index) => {
+        const abilityDiv = document.createElement('div');
+        abilityDiv.className = 'ability';
+        
+        if (!unit.canUseAbility(index)) {
+            abilityDiv.classList.add('onCooldown');
+        }
+        
+        // Add passive class if it's a passive ability
+        const isPassive = ability.passive === true;
+        if (isPassive) {
+            abilityDiv.classList.add('passive');
+        }
+        
+        const spell = spellManager.getSpell(ability.id);
+        const iconUrl = `https://puzzle-drops.github.io/TEVE/img/spells/${ability.id}.png`;
+        
+        abilityDiv.innerHTML = `
+            ${isPassive ? `
+                <div class="waterbrush-overlay-1">
+                    <div class="waterbrush-blob-1"></div>
+                    <div class="waterbrush-blob-2"></div>
+                </div>
+            ` : ''}
+            <img src="${iconUrl}" alt="${ability.name}" style="width: 100px; height: 100px;" onerror="this.style.display='none'">
+            ${unit.cooldowns[index] > 0 && !isPassive ? `<span class="cooldownText">${unit.cooldowns[index]}</span>` : ''}
+        `;
+        
+        // Add tooltip on hover using the new format
+        abilityDiv.onmouseover = (e) => {
+            const showFormula = e.altKey;
+            const tooltipHtml = game.uiManager.formatAbilityTooltip(ability, ability.level, unit.source, showFormula);
+            game.uiManager.showAbilityTooltipFromHTML(e, tooltipHtml);
+        };
+        abilityDiv.onmouseout = () => {
+            game.uiManager.hideAbilityTooltip();
+        };
+        
+        // Add click handler only to non-passive abilities
+        if (!isPassive) {
+            abilityDiv.onclick = () => {
+                // Hide tooltip when clicked
+                game.uiManager.hideAbilityTooltip();
+                
+                // If we're already targeting, clear it first
+                if (this.targetingState) {
+                    this.clearTargeting();
+                }
+                
+                // Re-enable all abilities first
+                const allAbilities = abilityPanel.querySelectorAll('.ability');
+                allAbilities.forEach(ab => {
+                    ab.style.opacity = '';
+                });
+                
+                // If this ability can't be used, just return after clearing
+                if (!unit.canUseAbility(index)) {
+                    return;
+                }
+                
+                // Visually disable all other abilities (but keep them clickable)
+                allAbilities.forEach(ab => {
+                    if (ab !== abilityDiv) {
+                        ab.style.opacity = '0.5';
+                    }
+                });
+                
+                if (spell) {
+                    // For targeted abilities, highlight valid targets
+                    if (spell.target === 'enemy' || spell.target === 'ally') {
+                        this.selectTarget(unit, index, spell.target);
+                    } else {
+                        this.executeAbility(unit, index, spell.target === 'self' ? unit : 'all');
+                        this.endTurn();
+                    }
+                }
+            };
+        }
+        
+        abilityPanel.appendChild(abilityDiv);
+    });
+    
+    // Apply centering based on ability count
+    abilityPanel.style.width = '100%';
+}
+
+    hidePlayerAbilities() {
+        const abilityPanel = document.getElementById('abilityPanel');
+        if (abilityPanel) {
+            abilityPanel.innerHTML = '';
+        }
+        // Don't trigger any targeting clear here - just hide the abilities
+    }
+    
+    selectTarget(caster, abilityIndex, targetType) {
+        // Store targeting state
+        this.targetingState = {
+            caster: caster,
+            abilityIndex: abilityIndex,
+            targetType: targetType
+        };
+
+        // Highlight valid targets - only alive units
+        const validTargets = targetType === 'enemy' ? 
+            this.enemies.filter(e => e && e.isAlive && !e.isDead) : 
+            this.party.filter(p => p && p.isAlive && !p.isDead);
+        
+        // Add click handlers to valid targets
+        validTargets.forEach(target => {
+            const element = document.getElementById(target.isEnemy ? `enemy${target.position + 1}` : `party${target.position + 1}`);
+            if (element) {
+                element.style.cursor = 'pointer';
+                element.style.filter = 'brightness(1.2)';
+                
+                // Add target arrow
+                let targetArrow = element.querySelector('.targetArrow');
+                if (!targetArrow) {
+                    targetArrow = document.createElement('div');
+                    targetArrow.className = 'targetArrow';
+                    targetArrow.innerHTML = '▼';
+                    element.appendChild(targetArrow);
+                }
+                
+                const clickHandler = (e) => {
+                    // Don't trigger if clicking on level indicator
+                    if (e.target.closest('.levelIndicator')) {
+                        return;
+                    }
+                    
+                    // Remove all handlers and highlighting
+                    this.clearTargeting();
+                    
+                    // Execute ability
+                    this.executeAbility(caster, abilityIndex, target);
+                    this.endTurn();
+                };
+                
+                // Store handler reference so we can remove it later
+                element._targetingHandler = clickHandler;
+                element.addEventListener('click', clickHandler);
+            }
+        });
+    }
+    
+    clearTargeting() {
+        // Clear targeting state
+        this.targetingState = null;
+        
+        // Re-enable all abilities
+        const abilityPanel = document.getElementById('abilityPanel');
+        if (abilityPanel) {
+            const allAbilities = abilityPanel.querySelectorAll('.ability');
+            allAbilities.forEach(ab => {
+                ab.style.opacity = '';
+            });
+        }
+        
+        // Remove all targeting highlights and handlers
+        this.allUnits.forEach(unit => {
+            const element = document.getElementById(unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`);
+            if (element) {
+                // Always clean up targeting visuals
+                element.style.cursor = '';
+                element.style.filter = '';
+                
+                // Remove target arrow
+                const targetArrow = element.querySelector('.targetArrow');
+                if (targetArrow) {
+                    targetArrow.remove();
+                }
+                
+                // Remove targeting handler if exists
+                if (element._targetingHandler) {
+                    element.removeEventListener('click', element._targetingHandler);
+                    delete element._targetingHandler;
+                }
+                
+                // Skip further DOM manipulation for dead units
+                if (unit.isDead || !unit.isAlive) {
+                    return;
+                }
+            }
+        });
+    }
+    
+    toggleAutoMode(enabled) {
+        // Set pending auto mode change
+        this.pendingAutoMode = enabled;
+        
+        // If currently waiting for player and auto mode is enabled, execute AI turn
+        if (enabled && this.waitingForPlayer) {
+            this.ai.executeAITurn(this.currentUnit);
+        }
+    }
+
+    updateUI() {
+        // Update all unit displays
+        this.allUnits.forEach(unit => {
+            const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
+            const element = document.getElementById(elementId);
+            
+            if (!element) return;
+            
+            // Skip dead units entirely - no UI updates for them
+            if (!unit.isAlive || unit.isDead) {
+                return;
+            }
+            
+            // Update health and shield bars
+            const healthBar = element.querySelector('.healthBar');
+            const healthFill = element.querySelector('.healthFill');
+            const shieldFill = element.querySelector('.shieldFill');
+            const healthText = element.querySelector('.healthText');
+            
+            if (healthBar && healthFill && shieldFill) {
+                const currentShield = unit.currentShield;
+                const totalMax = unit.maxHp + currentShield;
+                
+                // Calculate percentages
+                const hpPercent = (unit.currentHp / totalMax) * 100;
+                const shieldPercent = (currentShield / totalMax) * 100;
+                
+                // Update health bar width and position
+                healthFill.style.width = `${hpPercent}%`;
+                healthFill.style.position = 'absolute';
+                healthFill.style.left = '0';
+                
+                // Update shield bar
+                if (currentShield > 0) {
+                    shieldFill.style.display = 'block';
+                    shieldFill.style.width = `${shieldPercent}%`;
+                    shieldFill.style.position = 'absolute';
+                    shieldFill.style.left = `${hpPercent}%`;
+                } else {
+                    shieldFill.style.display = 'none';
+                }
+                
+                // Change health bar color based on HP percentage (of max HP, not total)
+                const hpOfMaxPercent = (unit.currentHp / unit.maxHp) * 100;
+                if (hpOfMaxPercent > 60) {
+                    healthFill.style.background = 'linear-gradient(90deg, #00ff88 0%, #00cc66 100%)';
+                } else if (hpOfMaxPercent > 30) {
+                    healthFill.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff8800 100%)';
+                } else {
+                    healthFill.style.background = 'linear-gradient(90deg, #ff4444 0%, #cc0000 100%)';
+                }
+            }
+            
+            if (healthText) {
+                // Show current HP with shield if present
+                if (unit.currentShield > 0) {
+                    healthText.textContent = `${Math.floor(unit.currentHp)}+${Math.floor(unit.currentShield)}`;
+                } else {
+                    healthText.textContent = `${Math.floor(unit.currentHp)}`;
+                }
+            }
+            
+            // Update action bar fill
+            const actionFill = element.querySelector('.actionFill');
+            if (actionFill) {
+                const actionPercent = Math.min((unit.actionBar / 10000) * 100, 100);
+                actionFill.style.width = `${actionPercent}%`;
+                
+                // Glow when ready
+                if (actionPercent >= 100) {
+                    actionFill.style.boxShadow = '0 0 10px rgba(77, 208, 225, 1)';
+                } else {
+                    actionFill.style.boxShadow = '0 0 5px rgba(77, 208, 225, 0.5)';
+                }
+            }
+            
+            // Update buffs and debuffs display only if changed
+            const currentBuffDebuffState = JSON.stringify({
+                buffs: unit.buffs.map(b => ({ name: b.name, duration: b.duration, shieldAmount: b.shieldAmount })),
+                debuffs: unit.debuffs.map(d => ({ name: d.name, duration: d.duration }))
+            });
+            
+            if (unit._lastBuffDebuffState !== currentBuffDebuffState) {
+    unit._lastBuffDebuffState = currentBuffDebuffState;
+    
+    // Hide tooltip when buff/debuff state changes since icons are being recreated
+    this.hideBuffDebuffTooltip();
+    
+    const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+    if (buffDebuffContainer) {
+        buffDebuffContainer.innerHTML = '';
+        
+        // Calculate total number of buffs and debuffs
+        const totalEffects = unit.buffs.length + unit.debuffs.length;
+        
+        // Add or remove the many-effects class based on count
+        if (totalEffects > 5) {
+            buffDebuffContainer.classList.add('many-effects');
+        } else {
+            buffDebuffContainer.classList.remove('many-effects');
+        }
+        
+        // Display buffs first
+        unit.buffs.forEach((buff, index) => {
+            const buffDiv = document.createElement('div');
+            buffDiv.className = 'buffIcon';
+            const iconName = this.getBuffIconName(buff.name);
+            
+            buffDiv.innerHTML = `
+                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                     alt="${buff.name}"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
+                ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
+            `;
+            
+            // Add tooltip on hover
+            buffDiv.onmouseenter = (e) => {
+                this.showBuffDebuffTooltip(e, buff, true);
+            };
+            
+            buffDiv.onmouseleave = () => {
+                this.hideBuffDebuffTooltip();
+            };
+            
+            buffDebuffContainer.appendChild(buffDiv);
+        });
+        
+        // Display debuffs after buffs
+        unit.debuffs.forEach((debuff, index) => {
+            const debuffDiv = document.createElement('div');
+            debuffDiv.className = 'debuffIcon';
+            const iconName = this.getDebuffIconName(debuff.name);
+            
+            debuffDiv.innerHTML = `
+                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                     alt="${debuff.name}"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
+                ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
+            `;
+            
+            // Add tooltip on hover
+            debuffDiv.onmouseenter = (e) => {
+                this.showBuffDebuffTooltip(e, debuff, false);
+            };
+            
+            debuffDiv.onmouseleave = () => {
+                this.hideBuffDebuffTooltip();
+            };
+            
+            buffDebuffContainer.appendChild(debuffDiv);
+        });
+    }
+}
+                    
+                    // Display buffs first
+                    unit.buffs.forEach((buff, index) => {
+                        const buffDiv = document.createElement('div');
+                        buffDiv.className = 'buffIcon';
+                        const iconName = this.getBuffIconName(buff.name);
+                        
+                        buffDiv.innerHTML = `
+                            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                                 alt="${buff.name}"
+                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
+                            ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
+                        `;
+                        
+                        // Add tooltip on hover
+                        buffDiv.onmouseenter = (e) => {
+                            this.showBuffDebuffTooltip(e, buff, true);
+                        };
+                        
+                        buffDiv.onmouseleave = () => {
+                            this.hideBuffDebuffTooltip();
+                        };
+                        
+                        buffDebuffContainer.appendChild(buffDiv);
+                    });
+                    
+                    // Display debuffs after buffs
+                    unit.debuffs.forEach((debuff, index) => {
+                        const debuffDiv = document.createElement('div');
+                        debuffDiv.className = 'debuffIcon';
+                        const iconName = this.getDebuffIconName(debuff.name);
+                        
+                        debuffDiv.innerHTML = `
+                            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                                 alt="${debuff.name}"
+                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
+                            ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
+                        `;
+                        
+                        // Add tooltip on hover
+                        debuffDiv.onmouseenter = (e) => {
+                            this.showBuffDebuffTooltip(e, debuff, false);
+                        };
+                        
+                        debuffDiv.onmouseleave = () => {
+                            this.hideBuffDebuffTooltip();
+                        };
+                        
+                        buffDebuffContainer.appendChild(debuffDiv);
+                    });
+                }
+            }
+        });
     }
 
     getBuffIconName(buffName) {
