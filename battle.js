@@ -990,8 +990,8 @@ processTurn() {
         this.ai.executeAITurn(unit);
     }
 }
-
-executeAbility(caster, abilityIndex, target) {
+    
+    executeAbility(caster, abilityIndex, target) {
     const ability = caster.abilities[abilityIndex];
     if (!ability || !caster.useAbility(abilityIndex)) return;
     
@@ -1006,30 +1006,6 @@ executeAbility(caster, abilityIndex, target) {
             this.applyDebuff(target, 'Stun', 1, { stunned: true });
             this.log(`${caster.name}'s mastery stuns ${target.name}!`);
         }
-    }
-    
-    // Check for Fire Dance AoE effect
-    if (caster.nextAttackIsAoE && (spell.effects.includes('physical') || spell.effects.includes('magical'))) {
-        caster.nextAttackIsAoE = false;
-        this.log(`${caster.name}'s fire dance turns the attack into an inferno!`);
-        
-        // Execute the ability on all enemies
-        const enemies = this.getEnemies(caster);
-        enemies.forEach(enemy => {
-            if (enemy.isAlive) {
-                if (spellLogic[spell.logicKey]) {
-                    try {
-                        const spellLevel = ability.level || caster.spellLevel || 1;
-                        spellLogic[spell.logicKey](this, caster, enemy, spell, spellLevel);
-                    } catch (error) {
-                        console.error(`Error executing AoE ${ability.name}:`, error);
-                    }
-                }
-            }
-        });
-        
-        // Don't continue with normal execution since we already hit all enemies
-        return;
     }
     
     // Show spell animation
@@ -1405,39 +1381,6 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
 
     // AFTER DAMAGE TAKEN EFFECTS BELOW
 
-    // Check for From Ashes trigger
-    if (target.fromAshesReady && !target.fromAshesTriggered && target.isAlive) {
-        const hpPercent = target.currentHp / target.maxHp;
-        if (hpPercent <= target.fromAshesThreshold) {
-            target.fromAshesTriggered = true;
-            
-            // Heal all allies
-            const allies = this.getParty(target);
-            allies.forEach(ally => {
-                if (ally.isAlive) {
-                    const healAmount = Math.floor(ally.maxHp * target.fromAshesHealPercent);
-                    this.healUnit(ally, healAmount);
-                }
-            });
-            
-            this.log(`${target.name} rises from ashes, healing all allies!`);
-            
-            // Set cooldown (this would need to be tracked properly in a real implementation)
-            target.fromAshesReady = false;
-        }
-    }
-
-    // Molten Shield retaliation
-    if (target.moltenShieldActive && actualDamage > 0 && attacker.isAlive) {
-        const retaliationDamage = target.moltenShieldDamage || 75;
-        attacker.currentHp = Math.max(0, attacker.currentHp - retaliationDamage);
-        this.log(`${attacker.name} takes ${retaliationDamage} fire damage from molten shield!`);
-        
-        if (attacker.currentHp <= 0 && !attacker.isDead) {
-            this.handleUnitDeath(attacker, target);
-        }
-    }
-
     // Acidic Body reflection - based on shield damage absorbed
     if (target.acidicBodyReflect && shieldDamageAbsorbed > 0 && attacker.isAlive) {
         const reflectDamage = Math.floor(shieldDamageAbsorbed * target.acidicBodyReflect);
@@ -1586,11 +1529,11 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     return actualDamage;
 }
 
-handleUnitDeath(unit, killer = null) {
+    handleUnitDeath(unit, killer = null) {
     // Prevent double death handling
     if (unit.isDead) return;
 
-    // Check for Undying Will passive
+        // Check for Undying Will passive
     if (unit.undyingWillPassive && !unit.undyingWillUsed) {
         unit.undyingWillUsed = true;
         unit.currentHp = Math.floor(unit.maxHp * unit.undyingWillHealPercent);
@@ -1616,35 +1559,27 @@ handleUnitDeath(unit, killer = null) {
     }
     
     // Check for kill effects from killer
-    if (killer && killer.isAlive) {
-        // Track kill for ANY killer
-        this.trackBattleStat(killer.name, 'kills', 1);
+if (killer && killer.isAlive) {
+    // Track kill for ANY killer
+    this.trackBattleStat(killer.name, 'kills', 1);
 
-        // Check for Queen's Lament passive on any living unit
-        this.allUnits.forEach(otherUnit => {
-            if (otherUnit.isAlive && otherUnit.queensLamentPassive) {
-                // Heal 10% HP
-                const healAmount = Math.floor(otherUnit.maxHp * otherUnit.queensLamentHealPercent);
-                this.healUnit(otherUnit, healAmount);
-                
-                // Apply Increase Attack buff
-                this.applyBuff(otherUnit, 'Increase Attack', otherUnit.queensLamentBuffDuration, { damageMultiplier: 1.5 });
-                
-                this.log(`${otherUnit.name} gains power from ${unit.name}'s death!`);
-            }
+// Check for Queen's Lament passive on any living unit
+    this.allUnits.forEach(otherUnit => {
+        if (otherUnit.isAlive && otherUnit.queensLamentPassive) {
+            // Heal 10% HP
+            const healAmount = Math.floor(otherUnit.maxHp * otherUnit.queensLamentHealPercent);
+            this.healUnit(otherUnit, healAmount);
             
-            // Death's Domain passive - when any unit dies, gain shield and speed
-            if (otherUnit.isAlive && otherUnit.deathsDomainPassive) {
-                const shieldAmount = Math.floor(otherUnit.maxHp * (otherUnit.deathsDomainShieldPercent || 0.2));
-                this.applyBuff(otherUnit, 'Shield', -1, { shieldAmount: shieldAmount });
-                this.applyBuff(otherUnit, 'Increase Speed', otherUnit.deathsDomainSpeedDuration || 2, {});
-                this.log(`${otherUnit.name} gains power from death itself!`);
-            }
-        });
-        
-        // Sniper Female passive - speed buff on kill
-        if (killer.onKillEffects) {
-            killer.onKillEffects.forEach(effect => {
+            // Apply Increase Attack buff
+            this.applyBuff(otherUnit, 'Increase Attack', otherUnit.queensLamentBuffDuration, { damageMultiplier: 1.5 });
+            
+            this.log(`${otherUnit.name} gains power from ${unit.name}'s death!`);
+        }
+    });
+    
+    // Sniper Female passive - speed buff on kill
+    if (killer.onKillEffects) {
+        killer.onKillEffects.forEach(effect => {
                 if (effect.type === 'buff') {
                     this.applyBuff(killer, effect.buffName, effect.duration, {});
                     this.log(`${killer.name} gains ${effect.buffName} from the kill!`);
@@ -2733,77 +2668,69 @@ exitBattle() {
             });
             
             if (unit._lastBuffDebuffState !== currentBuffDebuffState) {
-    unit._lastBuffDebuffState = currentBuffDebuffState;
-    
-    // Hide tooltip when buff/debuff state changes since icons are being recreated
-    this.hideBuffDebuffTooltip();
-    
-    const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-    if (buffDebuffContainer) {
-        buffDebuffContainer.innerHTML = '';
-        
-        // Calculate total number of buffs and debuffs
-        const totalEffects = unit.buffs.length + unit.debuffs.length;
-        
-        // Add or remove the many-effects class based on count
-        if (totalEffects > 5) {
-            buffDebuffContainer.classList.add('many-effects');
-        } else {
-            buffDebuffContainer.classList.remove('many-effects');
-        }
-        
-        // Display buffs first
-        unit.buffs.forEach((buff, index) => {
-            const buffDiv = document.createElement('div');
-            buffDiv.className = 'buffIcon';
-            const iconName = this.getBuffIconName(buff.name);
-            
-            buffDiv.innerHTML = `
-                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
-                     alt="${buff.name}"
-                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
-                ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
-            `;
-            
-            // Add tooltip on hover
-            buffDiv.onmouseenter = (e) => {
-                this.showBuffDebuffTooltip(e, buff, true);
-            };
-            
-            buffDiv.onmouseleave = () => {
+                unit._lastBuffDebuffState = currentBuffDebuffState;
+                
+                // Hide tooltip when buff/debuff state changes since icons are being recreated
                 this.hideBuffDebuffTooltip();
-            };
-            
-            buffDebuffContainer.appendChild(buffDiv);
-        });
-        
-        // Display debuffs after buffs
-        unit.debuffs.forEach((debuff, index) => {
-            const debuffDiv = document.createElement('div');
-            debuffDiv.className = 'debuffIcon';
-            const iconName = this.getDebuffIconName(debuff.name);
-            
-            debuffDiv.innerHTML = `
-                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
-                     alt="${debuff.name}"
-                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
-                ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
-            `;
-            
-            // Add tooltip on hover
-            debuffDiv.onmouseenter = (e) => {
-                this.showBuffDebuffTooltip(e, debuff, false);
-            };
-            
-            debuffDiv.onmouseleave = () => {
-                this.hideBuffDebuffTooltip();
-            };
-            
-            buffDebuffContainer.appendChild(debuffDiv);
+                
+                const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+                if (buffDebuffContainer) {
+                    buffDebuffContainer.innerHTML = '';
+                    
+                    // Display buffs first
+                    unit.buffs.forEach((buff, index) => {
+                        const buffDiv = document.createElement('div');
+                        buffDiv.className = 'buffIcon';
+                        const iconName = this.getBuffIconName(buff.name);
+                        
+                        buffDiv.innerHTML = `
+                            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                                 alt="${buff.name}"
+                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
+                            ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
+                        `;
+                        
+                        // Add tooltip on hover
+                        buffDiv.onmouseenter = (e) => {
+                            this.showBuffDebuffTooltip(e, buff, true);
+                        };
+                        
+                        buffDiv.onmouseleave = () => {
+                            this.hideBuffDebuffTooltip();
+                        };
+                        
+                        buffDebuffContainer.appendChild(buffDiv);
+                    });
+                    
+                    // Display debuffs after buffs
+                    unit.debuffs.forEach((debuff, index) => {
+                        const debuffDiv = document.createElement('div');
+                        debuffDiv.className = 'debuffIcon';
+                        const iconName = this.getDebuffIconName(debuff.name);
+                        
+                        debuffDiv.innerHTML = `
+                            <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                                 alt="${debuff.name}"
+                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
+                            ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
+                        `;
+                        
+                        // Add tooltip on hover
+                        debuffDiv.onmouseenter = (e) => {
+                            this.showBuffDebuffTooltip(e, debuff, false);
+                        };
+                        
+                        debuffDiv.onmouseleave = () => {
+                            this.hideBuffDebuffTooltip();
+                        };
+                        
+                        buffDebuffContainer.appendChild(debuffDiv);
+                    });
+                }
+            }
         });
     }
-}
-                    
+
     getBuffIconName(buffName) {
     const iconMap = {
         'Boss': 'boss',
