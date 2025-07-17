@@ -6419,107 +6419,108 @@ body {
 
 /* Active turn circle */
 .unitSlot.boss-wave3 .unitActiveCircle {
-    transform: scale(1.25);
-    width: 100px;
-    height: 100px;
+    transform: scale(1.1);
+    width: 88px;
+    height: 88px;
 }
 
 /* Health bar */
 .unitSlot.boss-wave3 .healthBar {
-    width: 81.25%;
+    width: 71.5%;
     left: 47px;
-    height: 30px;
+    height: 26.4px;
     top: -18px;
 }
 
 /* Health bar fill */
 .unitSlot.boss-wave3 .healthFill {
-    height: 30px;
+    height: 26.4px;
 }
 
 /* Shield bar fill */
 .unitSlot.boss-wave3 .shieldFill {
-    height: 30px;
+    height: 26.4px;
 }
 
 /* Health text */
 .unitSlot.boss-wave3 .healthText {
-    font-size: 30px;
-    line-height: 30px;
+    font-size: 26.4px;
+    line-height: 26.4px;
 }
 
 /* Health bar container */
 .unitSlot.boss-wave3 .healthBarContainer {
-    transform: scale(1.25);
+    transform: scale(1.1);
     transform-origin: left center;
     top: -96px;
+    left: -44px
 }
 
 /* Action bar */
 .unitSlot.boss-wave3 .actionBar {
-    width: 81.25%;
-    left: 47px;
-    height: 12.5px;
+    width: 100%;
+    left: 18px;
+    height: 11px;
     top: -84px;
 }
 
 /* Action bar fill */
 .unitSlot.boss-wave3 .actionFill {
-    height: 12.5px;
+    height: 11px;
 }
 
 /* Level indicator */
 .unitSlot.boss-wave3 .levelIndicator {
-    transform: scale(1.25);
-    left: 18px;
-    top: -25px;
-    width: 55px;
-    height: 55px;
+    transform: scale(1.1);
+    left: -34px;
+    top: -122px;
+    width: 48.4px;
+    height: 48.4px;
 }
 
 /* Level number inside indicator */
 .unitSlot.boss-wave3 .levelNumber {
-    font-size: 25px;
+    font-size: 22px;
 }
 
 /* Level stars inside indicator */
 .unitSlot.boss-wave3 .levelIndicator .levelStars {
-    font-size: 17.5px;
+    font-size: 15.4px;
 }
 
 /* Buff/debuff container */
 .unitSlot.boss-wave3 .buffDebuffContainer {
-    transform: scale(1.25);
+    transform: scale(1.1);
     transform-origin: left center;
-    left: 10px;
-    top: -158px;
+    left: -24px;
+    top: -167px;
 }
 
 /* Individual buff/debuff icons */
 .unitSlot.boss-wave3 .buffIcon,
 .unitSlot.boss-wave3 .debuffIcon {
-    width: 45px;
-    height: 45px;
+    width: 39.6px;
+    height: 39.6px;
 }
 
 /* Buff/debuff duration text */
 .unitSlot.boss-wave3 .buffDebuffDuration {
-    font-size: 14px;
+    font-size: 12.1px;
 }
 
 /* Damage numbers */
 .unitSlot.boss-wave3 .damageNumber {
-    font-size: 32.5px;
+    font-size: 28.6px;
 }
 
 /* Spell text */
 .unitSlot.boss-wave3 .spellText {
-    font-size: 45px;
+    font-size: 39.6px;
 }
 
 /* Target arrow */
 .unitSlot.boss-wave3 .targetArrow {
-    font-size: 45px;
+    font-size: 39.6px;
     top: -50px;
 }
 
@@ -6548,97 +6549,110 @@ body {
 
 /* Active turn circle */
 .unitSlot.boss-wave5 .unitActiveCircle {
-    transform: scale(1.5);
-    width: 120px;
-    height: 120px;
+    transform: scale(1.2);
+    width: 96px;
+    height: 96px;
 }
 
 /* Health bar */
 .unitSlot.boss-wave5 .healthBar {
-    width: 97.5%;
-    left: 35px;
-    height: 36px;
-    top: -22px;
+    width: 78%;
+    left: 47px;
+    height: 28.8px;
+    top: -18px;
 }
 
 /* Health bar fill */
 .unitSlot.boss-wave5 .healthFill {
-    height: 36px;
-}
-
-/* Health bar container */
-.unitSlot.boss-wave5 .healthBarContainer {
-    transform: scale(1.25);
-    transform-origin: left center;
-    top: -96px;
+    height: 28.8px;
 }
 
 /* Shield bar fill */
 .unitSlot.boss-wave5 .shieldFill {
-    height: 36px;
+    height: 28.8px;
 }
 
 /* Health text */
 .unitSlot.boss-wave5 .healthText {
-    font-size: 36px;
-    line-height: 36px;
+    font-size: 28.8px;
+    line-height: 28.8px;
+}
+
+/* Health bar container */
+.unitSlot.boss-wave5 .healthBarContainer {
+    transform: scale(1.2);
+    transform-origin: left center;
+    top: -96px;
+    left: -44px;
 }
 
 /* Action bar */
 .unitSlot.boss-wave5 .actionBar {
-    width: 97.5%;
-    left: 35px;
-    height: 15px;
-    top: 14px;
+    width: 100%;
+    left: 18px;
+    height: 12px;
+    top: -84px;
 }
 
 /* Action bar fill */
 .unitSlot.boss-wave5 .actionFill {
-    height: 15px;
+    height: 12px;
 }
 
 /* Level indicator */
 .unitSlot.boss-wave5 .levelIndicator {
-    transform: scale(1.5);
-    left: 12px;
-    top: -30px;
-    width: 66px;
-    height: 66px;
+    transform: scale(1.2);
+    left: -34px;
+    top: -122px;
+    width: 52.8px;
+    height: 52.8px;
 }
 
 /* Level number inside indicator */
 .unitSlot.boss-wave5 .levelNumber {
-    font-size: 30px;
+    font-size: 24px;
 }
 
 /* Level stars inside indicator */
 .unitSlot.boss-wave5 .levelIndicator .levelStars {
-    font-size: 21px;
+    font-size: 16.8px;
 }
 
 /* Buff/debuff container */
 .unitSlot.boss-wave5 .buffDebuffContainer {
-    transform: scale(1.5);
+    transform: scale(1.2);
     transform-origin: left center;
-    left: 10px;
-    top: -158px;
+    left: -24px;
+    top: -167px;
 }
 
 /* Individual buff/debuff icons */
 .unitSlot.boss-wave5 .buffIcon,
 .unitSlot.boss-wave5 .debuffIcon {
-    width: 54px;
-    height: 54px;
+    width: 43.2px;
+    height: 43.2px;
 }
 
 /* Buff/debuff duration text */
 .unitSlot.boss-wave5 .buffDebuffDuration {
-    font-size: 16.5px;
+    font-size: 13.2px;
 }
 
 /* Damage numbers */
 .unitSlot.boss-wave5 .damageNumber {
-    font-size: 39
+    font-size: 31.2px;
+}
+
+/* Spell text */
+.unitSlot.boss-wave5 .spellText {
+    font-size: 43.2px;
+}
+
+/* Target arrow */
+.unitSlot.boss-wave5 .targetArrow {
+    font-size: 43.2px;
+    top: -50px;
+}
 
 /* END end EnD eNd ENd eND enD bottom document/*
 
