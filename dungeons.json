@@ -870,66 +870,186 @@
         "items": ["sewer_plaguemask", "sewer_rotplate", "sewer_sludgeboots", "sewer_devourjaw", "sewer_corrodeshield", "sewer_toxicshard", "sewer_plaguebringer"]
     }
 },
-    "oblivion": {
-      "id": "oblivion",
-      "name": "Oblivion",
-      "boss": "Hades",
-      "tier": "Hell",
-      "subtitle": "Hell 1",
-      "level": 375,
-      "waves": [
-        {
-          "enemies": [
-            { "id": "hades", "level": 375 }
-          ]
-        }
-      ],
-      "rewards": {
-        "gold": 19660800,
-        "exp": 47104000,
-        "items": ["oblivion_doomcrown", "oblivion_soulplate", "oblivion_hellstrides", "oblivion_soulreaper", "oblivion_styxguard", "oblivion_deathstone", "oblivion_hadesclaw"]
-      }
+"oblivion": {
+  "id": "oblivion",
+  "name": "Oblivion",
+  "boss": "Hades",
+  "tier": "Hell",
+  "subtitle": "Hell 1",
+  "level": 375,
+  "waves": [
+    {
+      "enemies": [
+        { "id": "imp_tormentor", "level": 355 },
+        { "id": "imp_tormentor", "level": 355 },
+        { "id": "hell_knight", "level": 355 },
+        { "id": "hell_knight", "level": 355 },
+        { "id": "succubus", "level": 355 }
+      ]
     },
-    "abyssal_labyrinth": {
-      "id": "abyssal_labyrinth",
-      "name": "Abyssal Labyrinth",
-      "boss": "Mindreaver",
-      "tier": "Hell",
-      "subtitle": "Hell 2",
-      "level": 400,
-      "waves": [
-        {
-          "enemies": [
-            { "id": "mindreaver", "level": 400 }
-          ]
-        }
-      ],
-      "rewards": {
-        "gold": 39321600,
-        "exp": 94208000,
-        "items": ["labyrinth_mindhelm", "labyrinth_voidmail", "labyrinth_mazesteps", "labyrinth_mindrazor", "labyrinth_psychward", "labyrinth_mindgem", "labyrinth_voidripper"]
-      }
+    {
+      "enemies": [
+        { "id": "pit_fiend", "level": 360 },
+        { "id": "succubus", "level": 360 },
+        { "id": "succubus", "level": 360 },
+        { "id": "imp_tormentor", "level": 358 },
+        { "id": "imp_tormentor", "level": 358 }
+      ]
     },
-    "scorching_crater": {
-      "id": "scorching_crater",
-      "name": "Scorching Crater",
-      "boss": "Flame Revenant",
-      "tier": "Hell",
-      "subtitle": "Hell 3",
-      "level": 425,
-      "waves": [
-        {
-          "enemies": [
-            { "id": "flame_revenant", "level": 425 }
-          ]
-        }
-      ],
-      "rewards": {
-        "gold": 78643200,
-        "exp": 188416000,
-        "items": ["crater_blazecrown", "crater_magmaplate", "crater_emberstrides", "crater_infernostaff", "crater_pyroshield", "crater_phoenix_heart", "crater_phoenixwing"]
-      }
+    {
+      "enemies": [
+        { "id": "demon_lord", "level": 375 },
+        { "id": "hell_knight", "level": 365 },
+        { "id": "hell_knight", "level": 365 },
+        { "id": "pit_fiend", "level": 365 },
+        { "id": "succubus", "level": 363 }
+      ]
     },
+    {
+      "enemies": [
+        { "id": "pit_fiend", "level": 370 },
+        { "id": "pit_fiend", "level": 370 },
+        { "id": "succubus", "level": 368 },
+        { "id": "hell_knight", "level": 368 },
+        { "id": "hell_knight", "level": 368 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "hades", "level": 375 },
+        { "id": "pit_fiend", "level": 370 },
+        { "id": "succubus", "level": 370 },
+        { "id": "hell_knight", "level": 370 },
+        { "id": "imp_tormentor", "level": 370 }
+      ]
+    }
+  ],
+  "rewards": {
+    "gold": 19660800,
+    "exp": 47104000,
+    "items": ["oblivion_doomcrown", "oblivion_soulplate", "oblivion_hellstrides", "oblivion_soulreaper", "oblivion_styxguard", "oblivion_deathstone", "oblivion_hadesclaw"]
+  }
+},
+"abyssal_labyrinth": {
+  "id": "abyssal_labyrinth",
+  "name": "Abyssal Labyrinth",
+  "boss": "Mindreaver",
+  "tier": "Hell",
+  "subtitle": "Hell 2",
+  "level": 400,
+  "waves": [
+    {
+      "enemies": [
+        { "id": "mind_flayer", "level": 380 },
+        { "id": "mind_flayer", "level": 380 },
+        { "id": "void_walker", "level": 380 },
+        { "id": "void_walker", "level": 380 },
+        { "id": "aberration", "level": 380 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "illusionist", "level": 385 },
+        { "id": "mind_flayer", "level": 383 },
+        { "id": "mind_flayer", "level": 383 },
+        { "id": "void_walker", "level": 385 },
+        { "id": "void_walker", "level": 385 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "labyrinth_guardian", "level": 400 },
+        { "id": "aberration", "level": 390 },
+        { "id": "illusionist", "level": 390 },
+        { "id": "void_walker", "level": 388 },
+        { "id": "void_walker", "level": 388 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "aberration", "level": 395 },
+        { "id": "aberration", "level": 395 },
+        { "id": "illusionist", "level": 393 },
+        { "id": "illusionist", "level": 393 },
+        { "id": "mind_flayer", "level": 392 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "mindreaver", "level": 400 },
+        { "id": "aberration", "level": 395 },
+        { "id": "illusionist", "level": 395 },
+        { "id": "void_walker", "level": 395 },
+        { "id": "mind_flayer", "level": 395 }
+      ]
+    }
+  ],
+  "rewards": {
+    "gold": 39321600,
+    "exp": 94208000,
+    "items": ["labyrinth_mindhelm", "labyrinth_voidmail", "labyrinth_mazesteps", "labyrinth_mindrazor", "labyrinth_psychward", "labyrinth_mindgem", "labyrinth_voidripper"]
+  }
+},
+"scorching_crater": {
+  "id": "scorching_crater",
+  "name": "Scorching Crater",
+  "boss": "Flame Revenant",
+  "tier": "Hell",
+  "subtitle": "Hell 3",
+  "level": 425,
+  "waves": [
+    {
+      "enemies": [
+        { "id": "magma_elemental", "level": 405 },
+        { "id": "magma_elemental", "level": 405 },
+        { "id": "flame_dancer", "level": 405 },
+        { "id": "flame_dancer", "level": 405 },
+        { "id": "obsidian_golem", "level": 405 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "phoenix", "level": 410 },
+        { "id": "magma_elemental", "level": 408 },
+        { "id": "magma_elemental", "level": 408 },
+        { "id": "flame_dancer", "level": 410 },
+        { "id": "flame_dancer", "level": 410 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "inferno_lord", "level": 425 },
+        { "id": "obsidian_golem", "level": 415 },
+        { "id": "phoenix", "level": 415 },
+        { "id": "flame_dancer", "level": 413 },
+        { "id": "flame_dancer", "level": 413 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "obsidian_golem", "level": 420 },
+        { "id": "obsidian_golem", "level": 420 },
+        { "id": "phoenix", "level": 418 },
+        { "id": "magma_elemental", "level": 417 },
+        { "id": "magma_elemental", "level": 417 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "flame_revenant", "level": 425 },
+        { "id": "phoenix", "level": 420 },
+        { "id": "obsidian_golem", "level": 420 },
+        { "id": "magma_elemental", "level": 420 },
+        { "id": "flame_dancer", "level": 420 }
+      ]
+    }
+  ],
+  "rewards": {
+    "gold": 78643200,
+    "exp": 188416000,
+    "items": ["crater_blazecrown", "crater_magmaplate", "crater_emberstrides", "crater_infernostaff", "crater_pyroshield", "crater_phoenix_heart", "crater_phoenixwing"]
+  }
+},
     "tristam_plague": {
       "id": "tristam_plague",
       "name": "Tristam Plague",
