@@ -2668,14 +2668,76 @@ exitBattle() {
             });
             
             if (unit._lastBuffDebuffState !== currentBuffDebuffState) {
-                unit._lastBuffDebuffState = currentBuffDebuffState;
-                
-                // Hide tooltip when buff/debuff state changes since icons are being recreated
+    unit._lastBuffDebuffState = currentBuffDebuffState;
+    
+    // Hide tooltip when buff/debuff state changes since icons are being recreated
+    this.hideBuffDebuffTooltip();
+    
+    const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
+    if (buffDebuffContainer) {
+        buffDebuffContainer.innerHTML = '';
+        
+        // Calculate total number of buffs and debuffs
+        const totalEffects = unit.buffs.length + unit.debuffs.length;
+        
+        // Add or remove the many-effects class based on count
+        if (totalEffects > 5) {
+            buffDebuffContainer.classList.add('many-effects');
+        } else {
+            buffDebuffContainer.classList.remove('many-effects');
+        }
+        
+        // Display buffs first
+        unit.buffs.forEach((buff, index) => {
+            const buffDiv = document.createElement('div');
+            buffDiv.className = 'buffIcon';
+            const iconName = this.getBuffIconName(buff.name);
+            
+            buffDiv.innerHTML = `
+                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                     alt="${buff.name}"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
+                ${buff.duration > 0 ? `<div class="buffDebuffDuration">${buff.duration}</div>` : ''}
+            `;
+            
+            // Add tooltip on hover
+            buffDiv.onmouseenter = (e) => {
+                this.showBuffDebuffTooltip(e, buff, true);
+            };
+            
+            buffDiv.onmouseleave = () => {
                 this.hideBuffDebuffTooltip();
-                
-                const buffDebuffContainer = element.querySelector('.buffDebuffContainer');
-                if (buffDebuffContainer) {
-                    buffDebuffContainer.innerHTML = '';
+            };
+            
+            buffDebuffContainer.appendChild(buffDiv);
+        });
+        
+        // Display debuffs after buffs
+        unit.debuffs.forEach((debuff, index) => {
+            const debuffDiv = document.createElement('div');
+            debuffDiv.className = 'debuffIcon';
+            const iconName = this.getDebuffIconName(debuff.name);
+            
+            debuffDiv.innerHTML = `
+                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" 
+                     alt="${debuff.name}"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
+                ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${debuff.duration}</div>` : ''}
+            `;
+            
+            // Add tooltip on hover
+            debuffDiv.onmouseenter = (e) => {
+                this.showBuffDebuffTooltip(e, debuff, false);
+            };
+            
+            debuffDiv.onmouseleave = () => {
+                this.hideBuffDebuffTooltip();
+            };
+            
+            buffDebuffContainer.appendChild(debuffDiv);
+        });
+    }
+}
                     
                     // Display buffs first
                     unit.buffs.forEach((buff, index) => {
