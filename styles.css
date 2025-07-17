@@ -6449,16 +6449,16 @@ body {
 /* Health bar container */
 .unitSlot.boss-wave3 .healthBarContainer {
     transform-origin: left center;
-    top: -98px;
-    left: -24px
+    top: -23px;
+    left: -24px;
 }
 
 /* Action bar */
 .unitSlot.boss-wave3 .actionBar {
-    width: 78.65%;
-    left: 28px;
+    width: 71.5%;
+    left: 23px;
+    top: -14px;
     height: 11px;
-    top: -90px;
 }
 
 /* Action bar fill */
@@ -6469,7 +6469,7 @@ body {
 /* Level indicator */
 .unitSlot.boss-wave3 .levelIndicator {
     left: -12px;
-    top: -122px;
+    top: -46px;
     width: 48.4px;
     height: 48.4px;
 }
@@ -6488,7 +6488,7 @@ body {
 .unitSlot.boss-wave3 .buffDebuffContainer {
     transform-origin: left center;
     left: -6px;
-    top: -158px;
+    top: -78px;
 }
 
 /* Individual buff/debuff icons */
@@ -6580,10 +6580,10 @@ body {
 
 /* Action bar */
 .unitSlot.boss-wave5 .actionBar {
-    width: 78.65%;
-    left: 28px;
+    width: 71.5%;
+    left: 23px;
+    top: -14px;
     height: 11px;
-    top: -90px;
 }
 
 /* Action bar fill */
@@ -6594,7 +6594,7 @@ body {
 /* Level indicator */
 .unitSlot.boss-wave5 .levelIndicator {
     left: -12px;
-    top: -122px;
+    top: -46px;
     width: 52.8px;
     height: 52.8px;
 }
@@ -6613,7 +6613,7 @@ body {
 .unitSlot.boss-wave5 .buffDebuffContainer {
     transform-origin: left center;
     left: -6px;
-    top: -158px;
+    top: -78px;
 }
 
 /* Individual buff/debuff icons */
