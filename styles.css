@@ -6393,9 +6393,14 @@ body {
     line-height: 1.5;
 }
 
-/* Boss Scaling for specific waves - Complete control over all elements */
+/* Boss Scaling for specific waves */
 
 /* ===== WAVE 3 BOSS (125% scale) ===== */
+.unitSlot.boss-wave3 {
+    transform: scale(1.25);
+    transform-origin: center bottom;
+    z-index: 10;
+}
 
 /* Unit sprite/image scaling */
 .unitSlot.boss-wave3 .unitAnimationContainer {
@@ -6413,15 +6418,15 @@ body {
 /* Active turn circle */
 .unitSlot.boss-wave3 .unitActiveCircle {
     transform: scale(1.25);
-    width: 100px; /* 80% * 1.25 */
-    height: 100px; /* 80px * 1.25 */
+    width: 100px;
+    height: 100px;
 }
 
 /* Health bar */
 .unitSlot.boss-wave3 .healthBar {
-    width: 81.25%; /* 65% * 1.25 */
+    width: 81.25%;
     left: 47px;
-    height: 30px; /* 24px * 1.25 */
+    height: 30px;
     top: -18px;
 }
 
@@ -6437,15 +6442,15 @@ body {
 
 /* Health text */
 .unitSlot.boss-wave3 .healthText {
-    font-size: 30px; /* 24px * 1.25 */
+    font-size: 30px;
     line-height: 30px;
 }
 
 /* Action bar */
 .unitSlot.boss-wave3 .actionBar {
-    width: 81.25%; /* 65% * 1.25 */
+    width: 81.25%;
     left: 47px;
-    height: 12.5px; /* 10px * 1.25 */
+    height: 12.5px;
     top: 11px;
 }
 
@@ -6459,18 +6464,18 @@ body {
     transform: scale(1.25);
     left: 18px;
     top: -25px;
-    width: 55px; /* 44px * 1.25 */
-    height: 55px; /* 44px * 1.25 */
+    width: 55px;
+    height: 55px;
 }
 
 /* Level number inside indicator */
 .unitSlot.boss-wave3 .levelNumber {
-    font-size: 25px; /* 20px * 1.25 */
+    font-size: 25px;
 }
 
 /* Level stars inside indicator */
 .unitSlot.boss-wave3 .levelIndicator .levelStars {
-    font-size: 17.5px; /* 14px * 1.25 */
+    font-size: 17.5px;
 }
 
 /* Buff/debuff container */
@@ -6478,39 +6483,44 @@ body {
     transform: scale(1.25);
     transform-origin: left center;
     left: 16px;
-    top: -65px; /* Adjusted for larger health bar */
+    top: -65px;
 }
 
 /* Individual buff/debuff icons */
 .unitSlot.boss-wave3 .buffIcon,
 .unitSlot.boss-wave3 .debuffIcon {
-    width: 45px; /* 36px * 1.25 */
-    height: 45px; /* 36px * 1.25 */
+    width: 45px;
+    height: 45px;
 }
 
 /* Buff/debuff duration text */
 .unitSlot.boss-wave3 .buffDebuffDuration {
-    font-size: 14px; /* 11px * 1.25 */
+    font-size: 14px;
 }
 
 /* Damage numbers */
 .unitSlot.boss-wave3 .damageNumber {
-    font-size: 32.5px; /* 26px * 1.25 */
+    font-size: 32.5px;
 }
 
 /* Spell text */
 .unitSlot.boss-wave3 .spellText {
-    font-size: 45px; /* 36px * 1.25 */
+    font-size: 45px;
 }
 
 /* Target arrow */
 .unitSlot.boss-wave3 .targetArrow {
-    font-size: 45px; /* 36px * 1.25 */
+    font-size: 45px;
     top: -50px;
 }
 
 
 /* ===== WAVE 5 BOSS (150% scale) ===== */
+.unitSlot.boss-wave5 {
+    transform: scale(1.5);
+    transform-origin: center bottom;
+    z-index: 10;
+}
 
 /* Unit sprite/image scaling */
 .unitSlot.boss-wave5 .unitAnimationContainer {
@@ -6528,15 +6538,15 @@ body {
 /* Active turn circle */
 .unitSlot.boss-wave5 .unitActiveCircle {
     transform: scale(1.5);
-    width: 120px; /* 80% * 1.5 */
-    height: 120px; /* 80px * 1.5 */
+    width: 120px;
+    height: 120px;
 }
 
 /* Health bar */
 .unitSlot.boss-wave5 .healthBar {
-    width: 97.5%; /* 65% * 1.5 */
+    width: 97.5%;
     left: 35px;
-    height: 36px; /* 24px * 1.5 */
+    height: 36px;
     top: -22px;
 }
 
@@ -6552,15 +6562,15 @@ body {
 
 /* Health text */
 .unitSlot.boss-wave5 .healthText {
-    font-size: 36px; /* 24px * 1.5 */
+    font-size: 36px;
     line-height: 36px;
 }
 
 /* Action bar */
 .unitSlot.boss-wave5 .actionBar {
-    width: 97.5%; /* 65% * 1.5 */
+    width: 97.5%;
     left: 35px;
-    height: 15px; /* 10px * 1.5 */
+    height: 15px;
     top: 14px;
 }
 
@@ -6574,18 +6584,18 @@ body {
     transform: scale(1.5);
     left: 12px;
     top: -30px;
-    width: 66px; /* 44px * 1.5 */
-    height: 66px; /* 44px * 1.5 */
+    width: 66px;
+    height: 66px;
 }
 
 /* Level number inside indicator */
 .unitSlot.boss-wave5 .levelNumber {
-    font-size: 30px; /* 20px * 1.5 */
+    font-size: 30px;
 }
 
 /* Level stars inside indicator */
 .unitSlot.boss-wave5 .levelIndicator .levelStars {
-    font-size: 21px; /* 14px * 1.5 */
+    font-size: 21px;
 }
 
 /* Buff/debuff container */
@@ -6593,65 +6603,24 @@ body {
     transform: scale(1.5);
     transform-origin: left center;
     left: 8px;
-    top: -78px; /* Adjusted for larger health bar */
+    top: -78px;
 }
 
 /* Individual buff/debuff icons */
 .unitSlot.boss-wave5 .buffIcon,
 .unitSlot.boss-wave5 .debuffIcon {
-    width: 54px; /* 36px * 1.5 */
-    height: 54px; /* 36px * 1.5 */
+    width: 54px;
+    height: 54px;
 }
 
 /* Buff/debuff duration text */
 .unitSlot.boss-wave5 .buffDebuffDuration {
-    font-size: 16.5px; /* 11px * 1.5 */
+    font-size: 16.5px;
 }
 
 /* Damage numbers */
 .unitSlot.boss-wave5 .damageNumber {
-    font-size: 39px; /* 26px * 1.5 */
-}
-
-/* Spell text */
-.unitSlot.boss-wave5 .spellText {
-    font-size: 54px; /* 36px * 1.5 */
-}
-
-/* Target arrow */
-.unitSlot.boss-wave5 .targetArrow {
-    font-size: 54px; /* 36px * 1.5 */
-    top: -60px;
-}
-
-
-/* ===== OPTIONAL: Additional styling for boss units ===== */
-
-/* Add a subtle glow to boss health bars */
-.unitSlot.boss-wave3 .healthBar {
-    box-shadow: 
-        0 0 20px rgba(255, 215, 0, 0.3),
-        inset 0 0 15px rgba(0,0,0,0.5);
-}
-
-.unitSlot.boss-wave5 .healthBar {
-    box-shadow: 
-        0 0 30px rgba(255, 68, 68, 0.4),
-        inset 0 0 20px rgba(0,0,0,0.5);
-}
-
-/* Make boss level indicators glow */
-.unitSlot.boss-wave3 .levelIndicator {
-    box-shadow: 
-        0 0 25px rgba(255, 215, 0, 0.5),
-        inset 0 0 15px rgba(0,0,0,0.5);
-}
-
-.unitSlot.boss-wave5 .levelIndicator {
-    box-shadow: 
-        0 0 35px rgba(255, 68, 68, 0.6),
-        inset 0 0 20px rgba(0,0,0,0.5);
-}
+    font-size: 39
 
 /* END end EnD eNd ENd eND enD bottom document/*
 
