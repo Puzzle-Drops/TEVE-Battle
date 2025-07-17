@@ -6393,36 +6393,265 @@ body {
     line-height: 1.5;
 }
 
-/* Boss Scaling for specific waves - only scale visual elements */
+/* Boss Scaling for specific waves - Complete control over all elements */
+
+/* ===== WAVE 3 BOSS (125% scale) ===== */
+
+/* Unit sprite/image scaling */
 .unitSlot.boss-wave3 .unitAnimationContainer {
     transform: scale(1.25);
     transform-origin: center bottom;
-}
-
-.unitSlot.boss-wave5 .unitAnimationContainer {
-    transform: scale(1.5);
-    transform-origin: center bottom;
-}
-
-/* Ensure boss units have higher z-index when scaled */
-.unitSlot.boss-wave3 .unitAnimationContainer,
-.unitSlot.boss-wave5 .unitAnimationContainer {
     z-index: 5;
 }
 
-/* Adjust health bar width for scaled bosses */
+/* Unit shadow */
+.unitSlot.boss-wave3 .unitShadow {
+    transform: scale(1.5);
+    opacity: 0.4;
+}
+
+/* Active turn circle */
+.unitSlot.boss-wave3 .unitActiveCircle {
+    transform: scale(1.25);
+    width: 100px; /* 80% * 1.25 */
+    height: 100px; /* 80px * 1.25 */
+}
+
+/* Health bar */
 .unitSlot.boss-wave3 .healthBar {
     width: 81.25%; /* 65% * 1.25 */
-    left: 47px; /* Adjusted to center */
+    left: 47px;
+    height: 30px; /* 24px * 1.25 */
+    top: -18px;
+}
+
+/* Health bar fill */
+.unitSlot.boss-wave3 .healthFill {
+    height: 30px;
+}
+
+/* Shield bar fill */
+.unitSlot.boss-wave3 .shieldFill {
+    height: 30px;
+}
+
+/* Health text */
+.unitSlot.boss-wave3 .healthText {
+    font-size: 30px; /* 24px * 1.25 */
+    line-height: 30px;
+}
+
+/* Action bar */
+.unitSlot.boss-wave3 .actionBar {
+    width: 81.25%; /* 65% * 1.25 */
+    left: 47px;
+    height: 12.5px; /* 10px * 1.25 */
+    top: 11px;
+}
+
+/* Action bar fill */
+.unitSlot.boss-wave3 .actionFill {
+    height: 12.5px;
+}
+
+/* Level indicator */
+.unitSlot.boss-wave3 .levelIndicator {
+    transform: scale(1.25);
+    left: 18px;
+    top: -25px;
+    width: 55px; /* 44px * 1.25 */
+    height: 55px; /* 44px * 1.25 */
+}
+
+/* Level number inside indicator */
+.unitSlot.boss-wave3 .levelNumber {
+    font-size: 25px; /* 20px * 1.25 */
+}
+
+/* Level stars inside indicator */
+.unitSlot.boss-wave3 .levelIndicator .levelStars {
+    font-size: 17.5px; /* 14px * 1.25 */
+}
+
+/* Buff/debuff container */
+.unitSlot.boss-wave3 .buffDebuffContainer {
+    transform: scale(1.25);
+    transform-origin: left center;
+    left: 16px;
+    top: -65px; /* Adjusted for larger health bar */
+}
+
+/* Individual buff/debuff icons */
+.unitSlot.boss-wave3 .buffIcon,
+.unitSlot.boss-wave3 .debuffIcon {
+    width: 45px; /* 36px * 1.25 */
+    height: 45px; /* 36px * 1.25 */
+}
+
+/* Buff/debuff duration text */
+.unitSlot.boss-wave3 .buffDebuffDuration {
+    font-size: 14px; /* 11px * 1.25 */
+}
+
+/* Damage numbers */
+.unitSlot.boss-wave3 .damageNumber {
+    font-size: 32.5px; /* 26px * 1.25 */
+}
+
+/* Spell text */
+.unitSlot.boss-wave3 .spellText {
+    font-size: 45px; /* 36px * 1.25 */
+}
+
+/* Target arrow */
+.unitSlot.boss-wave3 .targetArrow {
+    font-size: 45px; /* 36px * 1.25 */
+    top: -50px;
+}
+
+
+/* ===== WAVE 5 BOSS (150% scale) ===== */
+
+/* Unit sprite/image scaling */
+.unitSlot.boss-wave5 .unitAnimationContainer {
+    transform: scale(1.5);
+    transform-origin: center bottom;
+    z-index: 5;
+}
+
+/* Unit shadow */
+.unitSlot.boss-wave5 .unitShadow {
+    transform: scale(2);
+    opacity: 0.5;
+}
+
+/* Active turn circle */
+.unitSlot.boss-wave5 .unitActiveCircle {
+    transform: scale(1.5);
+    width: 120px; /* 80% * 1.5 */
+    height: 120px; /* 80px * 1.5 */
+}
+
+/* Health bar */
+.unitSlot.boss-wave5 .healthBar {
+    width: 97.5%; /* 65% * 1.5 */
+    left: 35px;
+    height: 36px; /* 24px * 1.5 */
+    top: -22px;
+}
+
+/* Health bar fill */
+.unitSlot.boss-wave5 .healthFill {
+    height: 36px;
+}
+
+/* Shield bar fill */
+.unitSlot.boss-wave5 .shieldFill {
+    height: 36px;
+}
+
+/* Health text */
+.unitSlot.boss-wave5 .healthText {
+    font-size: 36px; /* 24px * 1.5 */
+    line-height: 36px;
+}
+
+/* Action bar */
+.unitSlot.boss-wave5 .actionBar {
+    width: 97.5%; /* 65% * 1.5 */
+    left: 35px;
+    height: 15px; /* 10px * 1.5 */
+    top: 14px;
+}
+
+/* Action bar fill */
+.unitSlot.boss-wave5 .actionFill {
+    height: 15px;
+}
+
+/* Level indicator */
+.unitSlot.boss-wave5 .levelIndicator {
+    transform: scale(1.5);
+    left: 12px;
+    top: -30px;
+    width: 66px; /* 44px * 1.5 */
+    height: 66px; /* 44px * 1.5 */
+}
+
+/* Level number inside indicator */
+.unitSlot.boss-wave5 .levelNumber {
+    font-size: 30px; /* 20px * 1.5 */
+}
+
+/* Level stars inside indicator */
+.unitSlot.boss-wave5 .levelIndicator .levelStars {
+    font-size: 21px; /* 14px * 1.5 */
+}
+
+/* Buff/debuff container */
+.unitSlot.boss-wave5 .buffDebuffContainer {
+    transform: scale(1.5);
+    transform-origin: left center;
+    left: 8px;
+    top: -78px; /* Adjusted for larger health bar */
+}
+
+/* Individual buff/debuff icons */
+.unitSlot.boss-wave5 .buffIcon,
+.unitSlot.boss-wave5 .debuffIcon {
+    width: 54px; /* 36px * 1.5 */
+    height: 54px; /* 36px * 1.5 */
+}
+
+/* Buff/debuff duration text */
+.unitSlot.boss-wave5 .buffDebuffDuration {
+    font-size: 16.5px; /* 11px * 1.5 */
+}
+
+/* Damage numbers */
+.unitSlot.boss-wave5 .damageNumber {
+    font-size: 39px; /* 26px * 1.5 */
+}
+
+/* Spell text */
+.unitSlot.boss-wave5 .spellText {
+    font-size: 54px; /* 36px * 1.5 */
+}
+
+/* Target arrow */
+.unitSlot.boss-wave5 .targetArrow {
+    font-size: 54px; /* 36px * 1.5 */
+    top: -60px;
+}
+
+
+/* ===== OPTIONAL: Additional styling for boss units ===== */
+
+/* Add a subtle glow to boss health bars */
+.unitSlot.boss-wave3 .healthBar {
+    box-shadow: 
+        0 0 20px rgba(255, 215, 0, 0.3),
+        inset 0 0 15px rgba(0,0,0,0.5);
 }
 
 .unitSlot.boss-wave5 .healthBar {
-    width: 97.5%; /* 65% * 1.5 */
-    left: 35px; /* Adjusted to center */
+    box-shadow: 
+        0 0 30px rgba(255, 68, 68, 0.4),
+        inset 0 0 20px rgba(0,0,0,0.5);
 }
 
-/* Adjust action bar width for scaled bosses */
-.unitSlot.boss-wave3 .act
+/* Make boss level indicators glow */
+.unitSlot.boss-wave3 .levelIndicator {
+    box-shadow: 
+        0 0 25px rgba(255, 215, 0, 0.5),
+        inset 0 0 15px rgba(0,0,0,0.5);
+}
+
+.unitSlot.boss-wave5 .levelIndicator {
+    box-shadow: 
+        0 0 35px rgba(255, 68, 68, 0.6),
+        inset 0 0 20px rgba(0,0,0,0.5);
+}
 
 /* END end EnD eNd ENd eND enD bottom document/*
 
