@@ -2608,84 +2608,551 @@
       "patient_zero_passive"
     ]
   },
-  "hades": {
-    "name": "Hades",
-    "boss": true,
-    "mainstat": "str",
-    "modifiers": {
-      "str": 5.36,
-      "agi": 4.29,
-      "int": 5.35,
-      "hp": 3.98,
-      "attack": 0.32,
-      "armor": 0.3,
-      "resist": 0.188
-    },
-    "initial": {
-      "str": 22,
-      "agi": 17,
-      "int": 21,
-      "hp": 109,
-      "hpRegen": 2.52,
-      "attack": 19,
-      "attackSpeed": 0,
-      "armor": 24,
-      "resist": 17
-    },
-    "spells": []
+  "imp_tormentor": {
+  "name": "Imp Tormentor",
+  "boss": false,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 2.5,
+    "agi": 3,
+    "int": 7,
+    "hp": 3.2,
+    "attack": 0.38,
+    "armor": 0.08,
+    "resist": 0.305
   },
-  "mindreaver": {
-    "name": "Mindreaver",
-    "boss": true,
-    "mainstat": "int",
-    "modifiers": {
-      "str": 3,
-      "agi": 3.46,
-      "int": 8.54,
-      "hp": 3.38,
-      "attack": 0.39,
-      "armor": 0.09,
-      "resist": 0.356
-    },
-    "initial": {
-      "str": 10,
-      "agi": 15,
-      "int": 35,
-      "hp": 98,
-      "hpRegen": 4.86,
-      "attack": 20,
-      "attackSpeed": 0,
-      "armor": 12,
-      "resist": 28
-    },
-    "spells": []
+  "initial": {
+    "str": 8,
+    "agi": 14,
+    "int": 28,
+    "hp": 90,
+    "hpRegen": 3.2,
+    "attack": 12,
+    "attackSpeed": 0,
+    "armor": 6,
+    "resist": 19
   },
-  "flame_revenant": {
-    "name": "Flame Revenant",
-    "boss": true,
-    "mainstat": "int",
-    "modifiers": {
-      "str": 4.62,
-      "agi": 3.46,
-      "int": 6.92,
-      "hp": 3.65,
-      "attack": 0.37,
-      "armor": 0.17,
-      "resist": 0.274
-    },
-    "initial": {
-      "str": 17,
-      "agi": 14,
-      "int": 29,
-      "hp": 110,
-      "hpRegen": 3.55,
-      "attack": 19,
-      "attackSpeed": 0,
-      "armor": 18,
-      "resist": 22
-    },
-    "spells": []
+  "spells": [
+    "hellfire_bolt",
+    "torment",
+    "demonic_giggle"
+  ]
+},
+"hell_knight": {
+  "name": "Hell Knight",
+  "boss": false,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 7,
+    "agi": 2.5,
+    "int": 3,
+    "hp": 4.1,
+    "attack": 0.26,
+    "armor": 0.35,
+    "resist": 0.095
   },
+  "initial": {
+    "str": 28,
+    "agi": 8,
+    "int": 14,
+    "hp": 120,
+    "hpRegen": 0,
+    "attack": 6,
+    "attackSpeed": 0,
+    "armor": 24,
+    "resist": 7
+  },
+  "spells": [
+    "infernal_blade",
+    "hellish_vigor",
+    "damned_charge"
+  ]
+},
+"succubus": {
+  "name": "Succubus",
+  "boss": false,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 3,
+    "agi": 4,
+    "int": 5.5,
+    "hp": 3.1,
+    "attack": 0.35,
+    "armor": 0.12,
+    "resist": 0.285
+  },
+  "initial": {
+    "str": 12,
+    "agi": 16,
+    "int": 22,
+    "hp": 85,
+    "hpRegen": 2.8,
+    "attack": 10,
+    "attackSpeed": 0,
+    "armor": 9,
+    "resist": 17
+  },
+  "spells": [
+    "draining_kiss",
+    "charm",
+    "life_tap"
+  ]
+},
+"pit_fiend": {
+  "name": "Pit Fiend",
+  "boss": false,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 6,
+    "agi": 3.5,
+    "int": 3,
+    "hp": 3.8,
+    "attack": 0.42,
+    "armor": 0.24,
+    "resist": 0.125
+  },
+  "initial": {
+    "str": 24,
+    "agi": 14,
+    "int": 12,
+    "hp": 100,
+    "hpRegen": 1.2,
+    "attack": 16,
+    "attackSpeed": 0,
+    "armor": 16,
+    "resist": 10
+  },
+  "spells": [
+    "crushing_blow_demon",
+    "hellfire_aura_passive"
+  ]
+},
+"demon_lord": {
+  "name": "Demon Lord",
+  "boss": true,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 5,
+    "agi": 4,
+    "int": 4,
+    "hp": 3.9,
+    "attack": 0.35,
+    "armor": 0.28,
+    "resist": 0.178
+  },
+  "initial": {
+    "str": 20,
+    "agi": 16,
+    "int": 18,
+    "hp": 115,
+    "hpRegen": 2.5,
+    "attack": 13,
+    "attackSpeed": 0,
+    "armor": 20,
+    "resist": 14
+  },
+  "spells": [
+    "demons_wrath",
+    "summon_hellfire",
+    "infernal_command",
+    "lords_presence_passive"
+  ]
+},
+"hades": {
+  "name": "Hades",
+  "boss": true,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 5.5,
+    "agi": 3.5,
+    "int": 4,
+    "hp": 4.2,
+    "attack": 0.32,
+    "armor": 0.32,
+    "resist": 0.155
+  },
+  "initial": {
+    "str": 22,
+    "agi": 14,
+    "int": 18,
+    "hp": 125,
+    "hpRegen": 2.2,
+    "attack": 11,
+    "attackSpeed": 0,
+    "armor": 23,
+    "resist": 12
+  },
+  "spells": [
+    "soul_reaper",
+    "underworld_gates",
+    "eternal_torment",
+    "deaths_domain_passive"
+  ]
+},
+"mind_flayer": {
+  "name": "Mind Flayer",
+  "boss": false,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 2.5,
+    "agi": 3.5,
+    "int": 6.5,
+    "hp": 3.05,
+    "attack": 0.36,
+    "armor": 0.09,
+    "resist": 0.315
+  },
+  "initial": {
+    "str": 8,
+    "agi": 16,
+    "int": 26,
+    "hp": 80,
+    "hpRegen": 3.6,
+    "attack": 11,
+    "attackSpeed": 0,
+    "armor": 7,
+    "resist": 20
+  },
+  "spells": [
+    "psychic_lash",
+    "mind_fog",
+    "telepathic_surge"
+  ]
+},
+"void_walker": {
+  "name": "Void Walker",
+  "boss": false,
+  "mainstat": "agi",
+  "modifiers": {
+    "str": 3,
+    "agi": 7,
+    "int": 2.5,
+    "hp": 2.95,
+    "attack": 0.52,
+    "armor": 0.07,
+    "resist": 0.135
+  },
+  "initial": {
+    "str": 12,
+    "agi": 28,
+    "int": 10,
+    "hp": 75,
+    "hpRegen": 0,
+    "attack": 22,
+    "attackSpeed": 0,
+    "armor": 5,
+    "resist": 15
+  },
+  "spells": [
+    "phase_strike",
+    "void_step",
+    "shadow_realm_passive"
+  ]
+},
+"aberration": {
+  "name": "Aberration",
+  "boss": false,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 6.5,
+    "agi": 3,
+    "int": 3,
+    "hp": 4.3,
+    "attack": 0.24,
+    "armor": 0.38,
+    "resist": 0.065
+  },
+  "initial": {
+    "str": 26,
+    "agi": 12,
+    "int": 12,
+    "hp": 130,
+    "hpRegen": 0,
+    "attack": 5,
+    "attackSpeed": 0,
+    "armor": 26,
+    "resist": 4
+  },
+  "spells": [
+    "tentacle_slam",
+    "maddening_presence",
+    "eldritch_resilience"
+  ]
+},
+"illusionist": {
+  "name": "Illusionist",
+  "boss": false,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 3,
+    "agi": 3,
+    "int": 6.5,
+    "hp": 3.15,
+    "attack": 0.32,
+    "armor": 0.14,
+    "resist": 0.275
+  },
+  "initial": {
+    "str": 12,
+    "agi": 12,
+    "int": 26,
+    "hp": 88,
+    "hpRegen": 3.0,
+    "attack": 8,
+    "attackSpeed": 0,
+    "armor": 11,
+    "resist": 16
+  },
+  "spells": [
+    "phantom_bolt",
+    "mirror_images",
+    "reality_twist"
+  ]
+},
+"labyrinth_guardian": {
+  "name": "Labyrinth Guardian",
+  "boss": true,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 5,
+    "agi": 4.5,
+    "int": 3.5,
+    "hp": 4.0,
+    "attack": 0.34,
+    "armor": 0.29,
+    "resist": 0.165
+  },
+  "initial": {
+    "str": 20,
+    "agi": 18,
+    "int": 16,
+    "hp": 120,
+    "hpRegen": 1.8,
+    "attack": 12,
+    "attackSpeed": 0,
+    "armor": 21,
+    "resist": 13
+  },
+  "spells": [
+    "dimensional_slash",
+    "maze_shift",
+    "guardians_ward",
+    "eternal_vigil_passive"
+  ]
+},
+"mindreaver": {
+  "name": "Mindreaver",
+  "boss": true,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 3,
+    "agi": 3.5,
+    "int": 6.5,
+    "hp": 3.7,
+    "attack": 0.33,
+    "armor": 0.18,
+    "resist": 0.307
+  },
+  "initial": {
+    "str": 12,
+    "agi": 16,
+    "int": 26,
+    "hp": 110,
+    "hpRegen": 4.2,
+    "attack": 12,
+    "attackSpeed": 0,
+    "armor": 14,
+    "resist": 21
+  },
+  "spells": [
+    "mind_spike",
+    "psychic_storm",
+    "madness_cascade",
+    "hivemind_passive"
+  ]
+},
+"magma_elemental": {
+  "name": "Magma Elemental",
+  "boss": false,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 3.5,
+    "agi": 2.5,
+    "int": 6.5,
+    "hp": 3.25,
+    "attack": 0.34,
+    "armor": 0.11,
+    "resist": 0.295
+  },
+  "initial": {
+    "str": 14,
+    "agi": 10,
+    "int": 26,
+    "hp": 92,
+    "hpRegen": 2.9,
+    "attack": 9,
+    "attackSpeed": 0,
+    "armor": 8,
+    "resist": 18
+  },
+  "spells": [
+    "lava_burst",
+    "molten_shield",
+    "eruption"
+  ]
+},
+"flame_dancer": {
+  "name": "Flame Dancer",
+  "boss": false,
+  "mainstat": "agi",
+  "modifiers": {
+    "str": 3.5,
+    "agi": 6.5,
+    "int": 2.5,
+    "hp": 3.0,
+    "attack": 0.48,
+    "armor": 0.09,
+    "resist": 0.125
+  },
+  "initial": {
+    "str": 14,
+    "agi": 26,
+    "int": 10,
+    "hp": 78,
+    "hpRegen": 0,
+    "attack": 20,
+    "attackSpeed": 0,
+    "armor": 6,
+    "resist": 14
+  },
+  "spells": [
+    "burning_strike",
+    "fire_dance",
+    "ignition_trail_passive"
+  ]
+},
+"obsidian_golem": {
+  "name": "Obsidian Golem",
+  "boss": false,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 7.5,
+    "agi": 2.5,
+    "int": 2.5,
+    "hp": 4.5,
+    "attack": 0.22,
+    "armor": 0.42,
+    "resist": 0.045
+  },
+  "initial": {
+    "str": 30,
+    "agi": 10,
+    "int": 10,
+    "hp": 140,
+    "hpRegen": 0,
+    "attack": 4,
+    "attackSpeed": 0,
+    "armor": 29,
+    "resist": 3
+  },
+  "spells": [
+    "volcanic_slam",
+    "hardened_lava",
+    "molten_core"
+  ]
+},
+"phoenix": {
+  "name": "Phoenix",
+  "boss": false,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 2.5,
+    "agi": 4.5,
+    "int": 5.5,
+    "hp": 3.1,
+    "attack": 0.33,
+    "armor": 0.13,
+    "resist": 0.265
+  },
+  "initial": {
+    "str": 10,
+    "agi": 18,
+    "int": 22,
+    "hp": 86,
+    "hpRegen": 3.5,
+    "attack": 9,
+    "attackSpeed": 0,
+    "armor": 10,
+    "resist": 15
+  },
+  "spells": [
+    "flame_feather",
+    "rebirth",
+    "from_ashes"
+  ]
+},
+"inferno_lord": {
+  "name": "Inferno Lord",
+  "boss": true,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 5.5,
+    "agi": 3.5,
+    "int": 4,
+    "hp": 4.1,
+    "attack": 0.33,
+    "armor": 0.3,
+    "resist": 0.168
+  },
+  "initial": {
+    "str": 22,
+    "agi": 14,
+    "int": 18,
+    "hp": 122,
+    "hpRegen": 2.3,
+    "attack": 12,
+    "attackSpeed": 0,
+    "armor": 22,
+    "resist": 13
+  },
+  "spells": [
+    "pyroblast",
+    "flame_wave",
+    "infernal_rage",
+    "burning_aura_passive"
+  ]
+},
+"flame_revenant": {
+  "name": "Flame Revenant",
+  "boss": true,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 3.5,
+    "agi": 3.5,
+    "int": 6,
+    "hp": 3.8,
+    "attack": 0.31,
+    "armor": 0.2,
+    "resist": 0.287
+  },
+  "initial": {
+    "str": 14,
+    "agi": 16,
+    "int": 24,
+    "hp": 115,
+    "hpRegen": 4.0,
+    "attack": 10,
+    "attackSpeed": 0,
+    "armor": 16,
+    "resist": 20
+  },
+  "spells": [
+    "soulfire",
+    "eternal_flame",
+    "phoenix_rising",
+    "cinder_lord_passive"
+  ]
+},
   "mirage": {
     "name": "Mirage",
     "boss": true,
