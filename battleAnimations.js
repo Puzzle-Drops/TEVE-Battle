@@ -275,6 +275,12 @@ class BattleAnimations {
     }
 
     applyBossScaling(enemies, currentWave) {
+
+        // Check if boss scaling is enabled
+        if (!this.battle.enableBossScaling) {
+            return;
+        }
+
         // Remove any existing boss scaling classes
         for (let i = 1; i <= 5; i++) {
             const element = document.getElementById(`enemy${i}`);
