@@ -2581,7 +2581,7 @@ exitBattle() {
         
         // If currently waiting for player and auto mode is enabled, execute AI turn
         if (enabled && this.waitingForPlayer) {
-            this.executeAITurn(this.currentUnit);
+            this.ai.executeAITurn(this.currentUnit);
         }
     }
 
