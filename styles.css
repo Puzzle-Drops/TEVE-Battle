@@ -6393,31 +6393,36 @@ body {
     line-height: 1.5;
 }
 
-/* Boss Scaling for specific waves */
-.unitSlot.boss-wave3 {
+/* Boss Scaling for specific waves - only scale visual elements */
+.unitSlot.boss-wave3 .unitAnimationContainer {
     transform: scale(1.25);
-    transform-origin: center center;
+    transform-origin: center bottom;
 }
 
-.unitSlot.boss-wave5 {
+.unitSlot.boss-wave5 .unitAnimationContainer {
     transform: scale(1.5);
-    transform-origin: center center;
+    transform-origin: center bottom;
 }
 
 /* Ensure boss units have higher z-index when scaled */
-.unitSlot.boss-wave3,
-.unitSlot.boss-wave5 {
+.unitSlot.boss-wave3 .unitAnimationContainer,
+.unitSlot.boss-wave5 .unitAnimationContainer {
     z-index: 5;
 }
 
-/* Adjust health bar position for scaled bosses */
+/* Adjust health bar width for scaled bosses */
 .unitSlot.boss-wave3 .healthBar {
-    top: -18px;
+    width: 81.25%; /* 65% * 1.25 */
+    left: 47px; /* Adjusted to center */
 }
 
 .unitSlot.boss-wave5 .healthBar {
-    top: -22px;
+    width: 97.5%; /* 65% * 1.5 */
+    left: 35px; /* Adjusted to center */
 }
+
+/* Adjust action bar width for scaled bosses */
+.unitSlot.boss-wave3 .act
 
 /* END end EnD eNd ENd eND enD bottom document/*
 
