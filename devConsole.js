@@ -1366,4 +1366,4 @@ spawnTester() {
 }
 
 // Initialize dev console globally
-window.devConsole = new DevConsole();
+//window.devConsole = new DevConsole();
