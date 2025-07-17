@@ -6400,8 +6400,8 @@ body {
     transform: scale(1.25);
     transform-origin: center bottom;
     z-index: 10;
-    right: 31%;
-    top: 55%;
+    right: 32%;
+    top: 60%;
 }
 
 /* Unit sprite/image scaling */
@@ -6525,8 +6525,8 @@ body {
     transform: scale(1.5);
     transform-origin: center bottom;
     z-index: 10;
-    right: 32%;
-    top: 54%;
+    right: 34%;
+    top: 62%;
 }
 
 /* Unit sprite/image scaling */
@@ -6612,7 +6612,7 @@ body {
 /* Buff/debuff container */
 .unitSlot.boss-wave5 .buffDebuffContainer {
     transform-origin: left center;
-    left: 18px;
+    left: 22px;
     top: -78px;
 }
 
