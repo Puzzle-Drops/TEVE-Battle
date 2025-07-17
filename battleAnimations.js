@@ -273,4 +273,40 @@ class BattleAnimations {
             unitDiv.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
         }
     }
+
+    applyBossScaling(enemies, currentWave) {
+        // Remove any existing boss scaling classes
+        for (let i = 1; i <= 5; i++) {
+            const element = document.getElementById(`enemy${i}`);
+            if (element) {
+                element.classList.remove('boss-wave3', 'boss-wave5');
+            }
+        }
+
+        // Check if first enemy is a boss and apply appropriate scaling
+        if (enemies.length > 0 && enemies[0] && enemies[0].source.isBoss) {
+            const element = document.getElementById('enemy1');
+            if (element) {
+                // Wave 3 (index 2) = 125% scale
+                if (currentWave === 2) {
+                    element.classList.add('boss-wave3');
+                }
+                // Wave 5 (index 4) = 150% scale
+                else if (currentWave === 4) {
+                    element.classList.add('boss-wave5');
+                }
+            }
+        }
+    }
+
+    removeBossScaling() {
+        // Remove boss scaling classes from all enemy slots
+        for (let i = 1; i <= 5; i++) {
+            const element = document.getElementById(`enemy${i}`);
+            if (element) {
+                element.classList.remove('boss-wave3', 'boss-wave5');
+            }
+        }
+    }
+    
 }
