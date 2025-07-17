@@ -3842,6 +3842,84 @@ const spellLogic = {
         caster.immuneToDebuffs.push('Blight', 'Bleed');
     },
 
+deathsDomainPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.deathsDomainPassive = true;
+    caster.deathsDomainShieldPercent = spell.shieldPercent || 0.2;
+    caster.deathsDomainSpeedDuration = spell.speedDuration || 2;
+},
+
+fireDanceLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    const stackCount = spell.stackCount || 2;
+    
+    // Apply double speed stacks
+    for (let i = 0; i < stackCount; i++) {
+        battle.applyBuff(caster, 'Increase Speed', duration, {});
+    }
+    
+    // Apply attack buff
+    battle.applyBuff(caster, 'Increase Attack', duration, { damageMultiplier: 1.5 });
+    
+    // Mark for AoE next attack
+    caster.nextAttackIsAoE = true;
+    battle.log(`${caster.name}'s next attack will hit all enemies!`);
+},
+
+moltenShieldLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.2);
+    const retaliationDamage = spell.retaliationDamage || 75;
+    
+    const shieldAmount = hpHelpers.percentOfMaxHp(caster, shieldPercent);
+    battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
+    
+    // Add molten shield retaliation flag
+    caster.moltenShieldActive = true;
+    caster.moltenShieldDamage = retaliationDamage;
+    battle.log(`${caster.name} is surrounded by molten shield!`);
+},
+
+    fromAshesLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const hpThreshold = spellHelpers.getParam(spell, 'hpThreshold', levelIndex, 0.25);
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.25);
+    const cooldown = spellHelpers.getParam(spell, 'cooldown', levelIndex, 8);
+    
+    // Mark the ability as ready to trigger
+    caster.fromAshesReady = true;
+    caster.fromAshesThreshold = hpThreshold;
+    caster.fromAshesHealPercent = healPercent;
+    caster.fromAshesCooldown = cooldown;
+    battle.log(`${caster.name} prepares From Ashes!`);
+},
+
+    phoenixRisingLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const hpThreshold = spellHelpers.getParam(spell, 'hpThreshold', levelIndex, 0.25);
+    const immuneDuration = spellHelpers.getParam(spell, 'immuneDuration', levelIndex, 1);
+    
+    // Check if caster is below HP threshold
+    if (!hpHelpers.isBelowThreshold(caster, hpThreshold)) {
+        battle.log(`${caster.name} is not wounded enough to use Phoenix Rising!`);
+        return false;
+    }
+    
+    // Heal all allies to full HP
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        const healAmount = ally.maxHp - ally.currentHp;
+        if (healAmount > 0) {
+            ally.currentHp = ally.maxHp;
+            battle.log(`${ally.name} is fully healed by phoenix flames!`);
+        }
+        
+        // Grant immune
+        battle.applyBuff(ally, 'Immune', immuneDuration, { immunity: true });
+    });
+    
+    battle.log(`${caster.name} rises like a phoenix!`);
+},
+
     // Test Spells
     winLogic: function(battle, caster, targets, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
