@@ -6463,7 +6463,7 @@ body {
 
 /* Action bar fill */
 .unitSlot.boss-wave3 .actionFill {
-    height: 11px;
+    height: 100%;
 }
 
 /* Level indicator */
@@ -6588,7 +6588,7 @@ body {
 
 /* Action bar fill */
 .unitSlot.boss-wave5 .actionFill {
-    height: 12px;
+    height: 100%;
 }
 
 /* Level indicator */
