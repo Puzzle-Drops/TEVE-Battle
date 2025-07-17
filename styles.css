@@ -6406,20 +6406,18 @@ body {
 
 /* Unit sprite/image scaling */
 .unitSlot.boss-wave3 .unitAnimationContainer {
-    transform: scale(1.25);
     transform-origin: center bottom;
     z-index: 5;
 }
 
 /* Unit shadow */
 .unitSlot.boss-wave3 .unitShadow {
-    transform: scale(1.5) translateX(-33%);
+    transform: translateX(-33%);
     opacity: 0.4;
 }
 
 /* Active turn circle */
 .unitSlot.boss-wave3 .unitActiveCircle {
-    transform: scale(1.1);
     width: 88px;
     height: 88px;
 }
@@ -6450,7 +6448,6 @@ body {
 
 /* Health bar container */
 .unitSlot.boss-wave3 .healthBarContainer {
-    transform: scale(1.1);
     transform-origin: left center;
     top: -98px;
     left: -24px
@@ -6471,7 +6468,6 @@ body {
 
 /* Level indicator */
 .unitSlot.boss-wave3 .levelIndicator {
-    transform: scale(1.1);
     left: -12px;
     top: -122px;
     width: 48.4px;
@@ -6490,7 +6486,6 @@ body {
 
 /* Buff/debuff container */
 .unitSlot.boss-wave3 .buffDebuffContainer {
-    transform: scale(1.1);
     transform-origin: left center;
     left: -6px;
     top: -158px;
@@ -6536,20 +6531,18 @@ body {
 
 /* Unit sprite/image scaling */
 .unitSlot.boss-wave5 .unitAnimationContainer {
-    transform: scale(1.5);
     transform-origin: center bottom;
     z-index: 5;
 }
 
 /* Unit shadow */
 .unitSlot.boss-wave5 .unitShadow {
-    transform: scale(2) translateX(-50%);
+    transform: translateX(-50%);
     opacity: 0.5;
 }
 
 /* Active turn circle */
 .unitSlot.boss-wave5 .unitActiveCircle {
-    transform: scale(1.2);
     width: 96px;
     height: 96px;
 }
@@ -6580,7 +6573,6 @@ body {
 
 /* Health bar container */
 .unitSlot.boss-wave5 .healthBarContainer {
-    transform: scale(1.2);
     transform-origin: left center;
     top: -98px;
     left: -24px
@@ -6601,7 +6593,6 @@ body {
 
 /* Level indicator */
 .unitSlot.boss-wave5 .levelIndicator {
-    transform: scale(1.2);
     left: -12px;
     top: -122px;
     width: 52.8px;
@@ -6620,7 +6611,6 @@ body {
 
 /* Buff/debuff container */
 .unitSlot.boss-wave5 .buffDebuffContainer {
-    transform: scale(1.2);
     transform-origin: left center;
     left: -6px;
     top: -158px;
