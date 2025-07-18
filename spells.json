@@ -1026,7 +1026,7 @@
 "chilling_touch": {
     "id": "chilling_touch",
     "name": "Chilling Touch",
-    "description": "{slowChance} chance to apply Reduce Speed for {slowDuration} turns on basic attacks",
+    "description": "{slowChance} chance to apply Reduce Speed for {slowDuration} turns on damaging attacks",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive", "debuff_reduce_speed"],
     "passive": true,
