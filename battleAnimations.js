@@ -129,85 +129,88 @@ class BattleAnimations {
     }
 
     showSpellAnimation(caster, spellName, effects) {
-        // Clear any existing spell animations first
-        document.querySelectorAll('.spellText').forEach(text => text.remove());
+    // Clear any existing spell animations first
+    document.querySelectorAll('.spellText').forEach(text => text.remove());
+    
+    const elementId = caster.isEnemy ? `enemy${caster.position + 1}` : `party${caster.position + 1}`;
+    const unitSlot = document.getElementById(elementId);
+    
+    if (unitSlot) {
+        // Get animation container
+        const animContainer = unitSlot.querySelector('.unitAnimationContainer');
+        if (!animContainer) return;
         
-        const elementId = caster.isEnemy ? `enemy${caster.position + 1}` : `party${caster.position + 1}`;
-        const unitSlot = document.getElementById(elementId);
-        
-        if (unitSlot) {
-            // Get animation container
-            const animContainer = unitSlot.querySelector('.unitAnimationContainer');
-            if (!animContainer) return;
-            
-            // Clear any existing spell text in this container
-            const existingSpellText = animContainer.querySelector('.spellText');
-            if (existingSpellText) {
-                existingSpellText.remove();
-            }
-            
-            // Check if effects contains any buff_* or debuff_* effects
-            const hasBuff = effects.some(effect => effect.startsWith('buff_'));
-            const hasDebuff = effects.some(effect => effect.startsWith('debuff_'));
-            const hasDamage = effects.includes('physical') || effects.includes('magical') || effects.includes('pure');
-            
-            // Determine animation type based on spell effects with priority
-            let animationClass = 'casting-damage'; // default
-            
-            // Priority order: damage > heal > shield > buff > debuff
-            if (hasDamage) {
-                animationClass = 'casting-damage';
-            } else if (effects.includes('heal')) {
-                animationClass = 'casting-heal';
-            } else if (effects.includes('buff_shield')) {
-                animationClass = 'casting-shield';
-            } else if (hasBuff) {
-                animationClass = 'casting-buff';
-            } else if (hasDebuff) {
-                animationClass = 'casting-debuff';
-            }
-            
-            // Remove any existing animation classes
-            animContainer.classList.remove('casting-damage', 'casting-heal', 'casting-shield', 'casting-buff', 'casting-debuff');
-            
-            // Add animation
-            animContainer.classList.add(animationClass);
-            setTimeout(() => animContainer.classList.remove(animationClass), 800);
-            
-            // Create spell text inside animation container
-            const spellText = document.createElement('div');
-            spellText.className = 'spellText';
-            spellText.textContent = spellName;
-            
-            // Add appropriate color class based on spell type with priority
-            if (effects.includes('physical')) {
-                spellText.classList.add('damage-physical');
-            } else if (effects.includes('magical')) {
-                spellText.classList.add('damage-magical');
-            } else if (effects.includes('pure')) {
-                spellText.classList.add('damage-pure');
-            } else if (effects.includes('heal')) {
-                spellText.classList.add('heal');
-            } else if (effects.includes('buff_shield')) {
-                spellText.classList.add('shield');
-            } else if (hasBuff) {
-                spellText.classList.add('buff');
-            } else if (hasDebuff) {
-                spellText.classList.add('debuff');
-            } else {
-                spellText.classList.add('damage-physical'); // default
-            }
-            
-            animContainer.appendChild(spellText);
-            
-            // Remove spell text after animation
-            setTimeout(() => {
-                if (spellText.parentNode) {
-                    spellText.remove();
-                }
-            }, 3000);
+        // Clear any existing spell text in this container
+        const existingSpellText = animContainer.querySelector('.spellText');
+        if (existingSpellText) {
+            existingSpellText.remove();
         }
+        
+        // Check if effects contains any buff_* or debuff_* effects
+        const hasBuff = effects.some(effect => effect.startsWith('buff_'));
+        const hasDebuff = effects.some(effect => effect.startsWith('debuff_'));
+        const hasDamage = effects.includes('physical') || effects.includes('magical') || effects.includes('pure');
+        
+        // Determine animation type based on spell effects with priority
+        let animationClass = 'casting-damage'; // default
+        
+        // Priority order: damage > heal > shield > buff > debuff
+        if (hasDamage) {
+            animationClass = 'casting-damage';
+        } else if (effects.includes('heal')) {
+            animationClass = 'casting-heal';
+        } else if (effects.includes('buff_shield')) {
+            animationClass = 'casting-shield';
+        } else if (hasBuff) {
+            animationClass = 'casting-buff';
+        } else if (hasDebuff) {
+            animationClass = 'casting-debuff';
+        }
+        
+        // Remove any existing animation classes
+        animContainer.classList.remove('casting-damage', 'casting-heal', 'casting-shield', 'casting-buff', 'casting-debuff');
+        
+        // Add animation
+        animContainer.classList.add(animationClass);
+        setTimeout(() => animContainer.classList.remove(animationClass), 800);
+        
+        // Create spell text inside animation container
+        const spellText = document.createElement('div');
+        spellText.className = 'spellText';
+        spellText.textContent = spellName;
+        
+        // Add appropriate color class based on spell type with priority
+        if (effects.includes('physical')) {
+            spellText.classList.add('damage-physical');
+        } else if (effects.includes('magical')) {
+            spellText.classList.add('damage-magical');
+        } else if (effects.includes('pure')) {
+            spellText.classList.add('damage-pure');
+        } else if (effects.includes('heal')) {
+            spellText.classList.add('heal');
+        } else if (effects.includes('buff_shield')) {
+            spellText.classList.add('shield');
+        } else if (hasBuff) {
+            spellText.classList.add('buff');
+        } else if (hasDebuff) {
+            spellText.classList.add('debuff');
+        } else {
+            spellText.classList.add('damage-physical'); // default
+        }
+        
+        animContainer.appendChild(spellText);
+        
+        // Add empty item to queue to create a gap before buff/debuff text
+        this.queueBuffDebuffText(caster, '', false);
+        
+        // Remove spell text after animation
+        setTimeout(() => {
+            if (spellText.parentNode) {
+                spellText.remove();
+            }
+        }, 1500); // Reduced from 3000 to match the animation duration
     }
+}
 
     triggerDeathAnimation(unit) {
         const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
@@ -333,24 +336,26 @@ class BattleAnimations {
     }
     
     processBuffDebuffQueue() {
-        if (this.buffDebuffTextQueue.length === 0) {
-            this.isProcessingQueue = false;
-            return;
-        }
-        
-        this.isProcessingQueue = true;
-        
-        // Get next item from queue
-        const item = this.buffDebuffTextQueue.shift();
-        
-        // Show the text
-        this.showBuffDebuffText(item.target, item.text, item.isDebuff);
-        
-        // Process next item after a delay
-        setTimeout(() => {
-            this.processBuffDebuffQueue();
-        }, 500); // 500ms delay between texts
+    if (this.buffDebuffTextQueue.length === 0) {
+        this.isProcessingQueue = false;
+        return;
     }
+    
+    this.isProcessingQueue = true;
+    
+    // Get next item from queue
+    const item = this.buffDebuffTextQueue.shift();
+    
+    // Show the text only if it's not empty
+    if (item.text !== '') {
+        this.showBuffDebuffText(item.target, item.text, item.isDebuff);
+    }
+    
+    // Process next item after a delay
+    setTimeout(() => {
+        this.processBuffDebuffQueue();
+    }, 500); // 500ms delay
+}
     
     showBuffDebuffText(target, text, isDebuff = false) {
         const elementId = target.isEnemy ? `enemy${target.position + 1}` : `party${target.position + 1}`;
