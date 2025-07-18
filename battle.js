@@ -1561,6 +1561,14 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
             this.log(`${attacker.name} is weakened by ${target.name}'s corrosive splash!`);
         }
     }
+
+    // Nature's Vengeance passive - chance to reduce attacker's speed
+    if (target.naturesVengeancePassive && target.isAlive && damage > 0 && attacker.isAlive) {
+        if (Math.random() < target.naturesVengeanceChance) {
+            this.applyDebuff(attacker, 'Reduce Speed', target.naturesVengeanceDuration, {});
+            this.log(`${attacker.name} is slowed by ${target.name}'s nature's vengeance!`);
+        }
+    }
     
     // Check for Frost Armor retaliation
     if (target.isAlive && damage > 0 && hasFrostArmor) {
