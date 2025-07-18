@@ -3376,8 +3376,8 @@ const spellLogic = {
 
     sovereignsPresencePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.sovereignsPresencePassive = true;
-        caster.sovereignsSpeedBonus = spell.speedBonus || 0.15;
-    },
+        caster.sovereignBuffDuration = spell.buffDuration || 1;
+},
 
     // Naga Ruins Spells
     scaleBashLogic: function(battle, caster, target, spell, spellLevel = 1) {
