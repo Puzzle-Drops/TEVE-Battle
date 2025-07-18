@@ -1885,7 +1885,7 @@ if (this.currentUnit && this.currentUnit.isAlive) {
                 ...effects
             };
             
-            target.buffs.push(buff);
+        target.buffs.push(buff);
         this.log(`${target.name} gains ${buffName}!`);
 
         // Track buff application
@@ -1893,17 +1893,11 @@ if (this.currentUnit && this.currentUnit.isAlive) {
             this.trackBattleStat(this.currentUnit.name, 'buffsApplied', 1);
         }
         
-        // Queue buff text animation
+        // Queue buff text animation (no delay needed - spell text creates the gap)
         if (this.animations) {
-            // Add delay if self-buffing
-            if (target === this.currentUnit) {
-                setTimeout(() => {
-                    this.animations.queueBuffDebuffText(target, buffName, false);
-                }, 300); // 300ms delay for self-buffs
-            } else {
-                this.animations.queueBuffDebuffText(target, buffName, false);
-            }
+            this.animations.queueBuffDebuffText(target, buffName, false);
         }
+            
         }
         
         // Hierophant Male passive - 20% shield when buffed
