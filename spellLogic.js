@@ -3376,7 +3376,8 @@ const spellLogic = {
 
     sovereignsPresencePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.sovereignsPresencePassive = true;
-        caster.sovereignBuffDuration = spell.buffDuration || 1;
+        const levelIndex = spellLevel - 1;
+        caster.sovereignBuffDuration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
 },
 
     // Naga Ruins Spells
