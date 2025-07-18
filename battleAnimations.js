@@ -3,6 +3,9 @@
 class BattleAnimations {
     constructor(battle) {
         this.battle = battle;
+        // Add buff/debuff text queue
+        this.buffDebuffTextQueue = [];
+        this.isProcessingQueue = false;
     }
 
     showDamageAnimation(attacker, target, damage, damageType) {
@@ -312,6 +315,66 @@ class BattleAnimations {
             if (element) {
                 element.classList.remove('boss-wave3', 'boss-wave5');
             }
+        }
+    }
+
+    queueBuffDebuffText(target, text, isDebuff = false) {
+        // Add to queue
+        this.buffDebuffTextQueue.push({
+            target: target,
+            text: text,
+            isDebuff: isDebuff
+        });
+        
+        // Start processing if not already doing so
+        if (!this.isProcessingQueue) {
+            this.processBuffDebuffQueue();
+        }
+    }
+    
+    processBuffDebuffQueue() {
+        if (this.buffDebuffTextQueue.length === 0) {
+            this.isProcessingQueue = false;
+            return;
+        }
+        
+        this.isProcessingQueue = true;
+        
+        // Get next item from queue
+        const item = this.buffDebuffTextQueue.shift();
+        
+        // Show the text
+        this.showBuffDebuffText(item.target, item.text, item.isDebuff);
+        
+        // Process next item after a delay
+        setTimeout(() => {
+            this.processBuffDebuffQueue();
+        }, 500); // 500ms delay between texts
+    }
+    
+    showBuffDebuffText(target, text, isDebuff = false) {
+        const elementId = target.isEnemy ? `enemy${target.position + 1}` : `party${target.position + 1}`;
+        const unitSlot = document.getElementById(elementId);
+        
+        if (unitSlot) {
+            // Get animation container
+            const animContainer = unitSlot.querySelector('.unitAnimationContainer');
+            if (!animContainer) return;
+            
+            // Create buff/debuff text
+            const buffDebuffText = document.createElement('div');
+            buffDebuffText.className = 'buffDebuffText';
+            buffDebuffText.classList.add(isDebuff ? 'debuff' : 'buff');
+            buffDebuffText.textContent = text;
+            
+            animContainer.appendChild(buffDebuffText);
+            
+            // Remove text after animation
+            setTimeout(() => {
+                if (buffDebuffText.parentNode) {
+                    buffDebuffText.remove();
+                }
+            }, 1500); // Match the animation duration
         }
     }
     
