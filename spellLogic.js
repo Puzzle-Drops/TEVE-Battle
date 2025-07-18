@@ -1292,7 +1292,7 @@ const spellLogic = {
         battle.log(`${caster.name} goes on a rampage, causing all enemies to bleed!`);
     },
 
-    frostBreathLogic: function(battle, caster, targets, spell, spellLevel = 1) {
+    frostBreathLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const strScaling = spellHelpers.getParam(spell, 'scaling.str', levelIndex, 0.8);
         const slowDuration = spellHelpers.getParam(spell, 'slowDuration', levelIndex, 2);
@@ -4606,7 +4606,7 @@ cinderLordPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) 
 },
     
     // Test Spells
-    winLogic: function(battle, caster, targets, spell, spellLevel = 1) {
+    winLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const baseDamage = spellHelpers.getParam(spell, 'scaling.base', levelIndex, 10000000);
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 5);
@@ -4618,7 +4618,7 @@ cinderLordPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) 
         battle.applyBuff(caster, 'Increase Speed', duration, {});
     },
 
-    loseLogic: function(battle, caster, targets, spell, spellLevel = 1) {
+    loseLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const baseDamage = spellHelpers.getParam(spell, 'scaling.base', levelIndex, 10000000);
         
