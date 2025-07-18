@@ -2837,7 +2837,7 @@ const spellLogic = {
         caster.burningAuraDebuffDuration = spell.debuffDuration || 1;
     },
 
-    warchiefBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    warchiefsBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
             scalingTypes: {attack: true, str: true},
             damageType: 'physical'
@@ -2914,7 +2914,7 @@ const spellLogic = {
         }
     },
 
-    chaosToxtinLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    chaosToxinLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Blight', 'Mark', 'Stun', 'Silence'];
         const debuffCount = spell.debuffCount || 3;
         const targetCount = spell.targetCount || 3;
