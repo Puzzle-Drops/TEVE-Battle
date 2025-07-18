@@ -908,6 +908,20 @@ processTurn() {
             }
         });
     }
+
+    // Sovereign's Presence passive - apply Immune and Increase Speed to all allies at turn start
+    if (unit.sovereignsPresencePassive && unit.isAlive) {
+        const allies = this.getParty(unit);
+        allies.forEach(ally => {
+            if (ally.isAlive) {
+                // Apply Immune buff
+                this.applyBuff(ally, 'Immune', unit.sovereignBuffDuration || 1, { immunity: true });
+                // Apply Increase Speed buff
+                this.applyBuff(ally, 'Increase Speed', unit.sovereignBuffDuration || 1, {});
+            }
+        });
+        this.log(`${unit.name}'s sovereign presence protects and hastens all allies!`);
+    }
     
     // Check for Twilight's End
     if (unit.twilightsEndPending) {
@@ -1935,19 +1949,6 @@ if (this.currentUnit && this.currentUnit.isAlive) {
                 this.log(`${target.name} is a boss and shrugged off your stun attempt!`);
                 return;
             }
-        }
-    }
-    
-    // Check for Sovereign's Presence - prevents Reduce Speed on allies
-    if (debuffName === 'Reduce Speed') {
-        const allies = this.getParty(target);
-        const hasSovereignAlly = allies.some(ally => 
-            ally.isAlive && ally.sovereignsPresencePassive
-        );
-        
-        if (hasSovereignAlly) {
-            this.log(`${target.name} cannot be slowed due to sovereign's protection!`);
-            return;
         }
     }
     
