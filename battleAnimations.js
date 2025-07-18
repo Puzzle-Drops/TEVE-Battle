@@ -4,8 +4,8 @@ class BattleAnimations {
     constructor(battle) {
         this.battle = battle;
         // Add buff/debuff text queue
-        this.buffDebuffTextQueue = [];
-        this.isProcessingQueue = false;
+        this.buffDebuffTextQueues = new Map(); // Map of unit -> queue
+        this.processingUnits = new Set(); // Track which units are processing
     }
 
     showDamageAnimation(attacker, target, damage, damageType) {
@@ -129,6 +129,9 @@ class BattleAnimations {
     }
 
     showSpellAnimation(caster, spellName, effects) {
+        // Clear any pending buff/debuff texts for the caster
+        this.clearUnitQueue(caster);
+        
     // Clear any existing spell animations first
     document.querySelectorAll('.spellText').forEach(text => text.remove());
     
@@ -322,40 +325,56 @@ class BattleAnimations {
     }
 
     queueBuffDebuffText(target, text, isDebuff = false) {
-        // Add to queue
-        this.buffDebuffTextQueue.push({
+        // Get or create queue for this unit
+        if (!this.buffDebuffTextQueues.has(target)) {
+            this.buffDebuffTextQueues.set(target, []);
+        }
+        
+        // Add to unit's queue
+        const queue = this.buffDebuffTextQueues.get(target);
+        queue.push({
             target: target,
             text: text,
             isDebuff: isDebuff
         });
         
-        // Start processing if not already doing so
-        if (!this.isProcessingQueue) {
-            this.processBuffDebuffQueue();
+        // Start processing if not already doing so for this unit
+        if (!this.processingUnits.has(target)) {
+            this.processBuffDebuffQueue(target);
         }
     }
     
-    processBuffDebuffQueue() {
-    if (this.buffDebuffTextQueue.length === 0) {
-        this.isProcessingQueue = false;
-        return;
+    processBuffDebuffQueue(unit) {
+        const queue = this.buffDebuffTextQueues.get(unit);
+        
+        if (!queue || queue.length === 0) {
+            this.processingUnits.delete(unit);
+            this.buffDebuffTextQueues.delete(unit);
+            return;
+        }
+        
+        this.processingUnits.add(unit);
+        
+        // Get next item from queue
+        const item = queue.shift();
+        
+        // Show the text only if it's not empty
+        if (item.text !== '') {
+            this.showBuffDebuffText(item.target, item.text, item.isDebuff);
+        }
+        
+        // Process next item after a delay
+        setTimeout(() => {
+            this.processBuffDebuffQueue(unit);
+        }, 200); // Reduced to 200ms for faster processing
     }
     
-    this.isProcessingQueue = true;
-    
-    // Get next item from queue
-    const item = this.buffDebuffTextQueue.shift();
-    
-    // Show the text only if it's not empty
-    if (item.text !== '') {
-        this.showBuffDebuffText(item.target, item.text, item.isDebuff);
+    clearUnitQueue(unit) {
+        // Clear any pending texts for this unit
+        if (this.buffDebuffTextQueues.has(unit)) {
+            this.buffDebuffTextQueues.set(unit, []);
+        }
     }
-    
-    // Process next item after a delay
-    setTimeout(() => {
-        this.processBuffDebuffQueue();
-    }, 500); // 500ms delay
-}
     
     showBuffDebuffText(target, text, isDebuff = false) {
         const elementId = target.isEnemy ? `enemy${target.position + 1}` : `party${target.position + 1}`;
