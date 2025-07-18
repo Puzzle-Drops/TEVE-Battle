@@ -2844,7 +2844,7 @@
         "str": [0.32, 0.34, 0.36, 0.38, 0.40]
     },
     "target": "all_enemies",
-    "logicKey": "warchiefBladeLogic"
+    "logicKey": "warchiefsBladeLogic"
 },
 "rally_the_tribe": {
     "id": "rally_the_tribe",
@@ -2921,7 +2921,7 @@
     "targetCount": 3,
     "duration": 2,
     "target": "all_enemies",
-    "logicKey": "chaosToxtinLogic"
+    "logicKey": "chaosToxinLogic"
 },
 "master_of_deception": {
     "id": "master_of_deception",
