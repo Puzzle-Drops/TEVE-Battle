@@ -3396,11 +3396,10 @@
 "sovereigns_presence_passive": {
     "id": "sovereigns_presence_passive",
     "name": "Sovereign's Presence",
-    "description": "Allies gain +15% speed and cannot be slowed",
+    "description": "Grants all allies increase speed and immunity every turn",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
-    "speedBonus": 0.15,
     "target": "self",
     "logicKey": "sovereignsPresencePassiveLogic"
 },
