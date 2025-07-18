@@ -432,7 +432,7 @@ if (unit.isEnemy) {
         }
     }
 
-    applyInitialPassives() {
+applyInitialPassives() {
     // Apply passive abilities at battle start
     this.allUnits.forEach(unit => {
         // Apply Champion Female passive shield
@@ -460,6 +460,32 @@ if (unit.isEnemy) {
                 }
             }
         });
+        
+        // Apply Lord's Presence passive effects
+        if (unit.lordsPresencePassive) {
+            const attackBonus = 0.2;
+            const allies = this.getParty(unit);
+            allies.forEach(ally => {
+                if (ally.isAlive) {
+                    ally.source.attack = Math.floor(ally.source.attack * (1 + attackBonus));
+                    ally.stunImmunity = true;
+                }
+            });
+            this.log(`${unit.name}'s presence empowers all allies!`);
+        }
+        
+        // Apply Cinder Lord passive effects
+        if (unit.cinderLordPassive) {
+            unit.immuneToReduceAttack = true;
+            const magicalDamageBonus = 0.15;
+            const allies = this.getParty(unit);
+            allies.forEach(ally => {
+                if (ally.isAlive) {
+                    ally.magicalDamageBonus = (ally.magicalDamageBonus || 0) + magicalDamageBonus;
+                }
+            });
+            this.log(`${unit.name}'s flames enhance all magical attacks!`);
+        }
     });
 }
 
@@ -990,8 +1016,8 @@ processTurn() {
         this.ai.executeAITurn(unit);
     }
 }
-    
-    executeAbility(caster, abilityIndex, target) {
+
+executeAbility(caster, abilityIndex, target) {
     const ability = caster.abilities[abilityIndex];
     if (!ability || !caster.useAbility(abilityIndex)) return;
     
@@ -1015,7 +1041,23 @@ processTurn() {
     if (spellLogic[spell.logicKey]) {
         try {
             const spellLevel = ability.level || caster.spellLevel || 1;
-            spellLogic[spell.logicKey](this, caster, target, spell, spellLevel);
+            
+            // Check for Fire Dance AoE effect
+            if (caster.nextAttackIsAoE && (spell.effects.includes('physical') || spell.effects.includes('magical'))) {
+                caster.nextAttackIsAoE = false;
+                this.log(`${caster.name}'s fire dance spreads the attack to all enemies!`);
+                
+                // Execute the ability on all enemies
+                const enemies = this.getEnemies(caster);
+                enemies.forEach(enemy => {
+                    if (enemy.isAlive) {
+                        spellLogic[spell.logicKey](this, caster, enemy, spell, spellLevel);
+                    }
+                });
+            } else {
+                // Normal execution
+                spellLogic[spell.logicKey](this, caster, target, spell, spellLevel);
+            }
             
             // Check for Whirling Step double attack
             if (caster.nextAttackHitsTwice && spell.effects.includes('physical')) {
@@ -1238,6 +1280,11 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
             damage *= 1.5;
         }
     });
+
+    // Apply magical damage bonus from Cinder Lord passive
+    if (damageType === 'magical' && attacker.magicalDamageBonus) {
+        damage *= (1 + attacker.magicalDamageBonus);
+    }
 
     // Warmaster passive - check if attacker has bleed and if any ally has warmaster passive
     if (attacker.debuffs.some(d => d.name === 'Bleed')) {
@@ -1516,6 +1563,54 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
         }
     }
     
+    // Hellfire Aura passive retaliation
+    if (target.hellfireAuraPassive && target.isAlive && damage > 0 && attacker.isAlive) {
+        const retaliationDamage = target.hellfireRetaliationDamage || 50;
+        attacker.currentHp = Math.max(0, attacker.currentHp - retaliationDamage);
+        this.log(`${attacker.name} takes ${retaliationDamage} hellfire damage!`);
+        
+        this.applyDebuff(attacker, 'Reduce Speed', target.hellfireSlowDuration || 1, {});
+        
+        if (attacker.currentHp <= 0 && !attacker.isDead) {
+            this.handleUnitDeath(attacker, target);
+        }
+    }
+    
+    // Molten Shield retaliation
+    if (target.moltenShieldActive && target.isAlive && damage > 0 && attacker.isAlive) {
+        const retaliationDamage = target.moltenShieldDamage || 75;
+        attacker.currentHp = Math.max(0, attacker.currentHp - retaliationDamage);
+        this.log(`${attacker.name} takes ${retaliationDamage} molten damage from hitting the shield!`);
+        
+        if (attacker.currentHp <= 0 && !attacker.isDead) {
+            this.handleUnitDeath(attacker, target);
+        }
+    }
+    
+    // Burning Aura passive - chance to apply bleed when attacked
+    if (attacker.burningAuraPassive && attacker.isAlive && damage > 0 && target.isAlive) {
+        if (Math.random() < (attacker.burningAuraChance || 0.3)) {
+            this.applyDebuff(target, 'Bleed', attacker.burningAuraBleedDuration || 1, {});
+            this.log(`${target.name} starts bleeding from ${attacker.name}'s burning aura!`);
+        }
+    }
+    
+    // Check for From Ashes trigger
+    if (target.fromAshesReady && !target.fromAshesTriggered && target.isAlive && 
+        (target.currentHp / target.maxHp) <= (target.fromAshesThreshold || 0.25)) {
+        target.fromAshesTriggered = true;
+        const healPercent = target.fromAshesHealPercent || 0.25;
+        
+        const allies = this.getParty(target);
+        allies.forEach(ally => {
+            if (ally.isAlive) {
+                const healAmount = Math.floor(ally.maxHp * healPercent);
+                this.healUnit(ally, healAmount);
+            }
+        });
+        this.log(`${target.name} rises from near death, healing all allies!`);
+    }
+    
     this.log(`${attacker.name} deals ${damage} ${damageType} damage to ${target.name}!`);
     
     // Show damage animation
@@ -1529,11 +1624,11 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     return actualDamage;
 }
 
-    handleUnitDeath(unit, killer = null) {
+handleUnitDeath(unit, killer = null) {
     // Prevent double death handling
     if (unit.isDead) return;
 
-        // Check for Undying Will passive
+    // Check for Undying Will passive
     if (unit.undyingWillPassive && !unit.undyingWillUsed) {
         unit.undyingWillUsed = true;
         unit.currentHp = Math.floor(unit.maxHp * unit.undyingWillHealPercent);
@@ -1559,27 +1654,50 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     }
     
     // Check for kill effects from killer
-if (killer && killer.isAlive) {
-    // Track kill for ANY killer
-    this.trackBattleStat(killer.name, 'kills', 1);
+    if (killer && killer.isAlive) {
+        // Track kill for ANY killer
+        this.trackBattleStat(killer.name, 'kills', 1);
 
-// Check for Queen's Lament passive on any living unit
-    this.allUnits.forEach(otherUnit => {
-        if (otherUnit.isAlive && otherUnit.queensLamentPassive) {
-            // Heal 10% HP
-            const healAmount = Math.floor(otherUnit.maxHp * otherUnit.queensLamentHealPercent);
-            this.healUnit(otherUnit, healAmount);
-            
-            // Apply Increase Attack buff
-            this.applyBuff(otherUnit, 'Increase Attack', otherUnit.queensLamentBuffDuration, { damageMultiplier: 1.5 });
-            
-            this.log(`${otherUnit.name} gains power from ${unit.name}'s death!`);
+        // Check for Queen's Lament passive on any living unit
+        this.allUnits.forEach(otherUnit => {
+            if (otherUnit.isAlive && otherUnit.queensLamentPassive) {
+                // Heal 10% HP
+                const healAmount = Math.floor(otherUnit.maxHp * otherUnit.queensLamentHealPercent);
+                this.healUnit(otherUnit, healAmount);
+                
+                // Apply Increase Attack buff
+                this.applyBuff(otherUnit, 'Increase Attack', otherUnit.queensLamentBuffDuration, { damageMultiplier: 1.5 });
+                
+                this.log(`${otherUnit.name} gains power from ${unit.name}'s death!`);
+            }
+        });
+        
+        // Check for Death's Domain passive
+        this.allUnits.forEach(otherUnit => {
+            if (otherUnit.isAlive && otherUnit.deathsDomainPassive) {
+                const shieldPercent = otherUnit.deathsDomainShieldPercent || 0.2;
+                const shieldAmount = Math.floor(otherUnit.maxHp * shieldPercent);
+                this.applyBuff(otherUnit, 'Shield', -1, { shieldAmount: shieldAmount });
+                this.applyBuff(otherUnit, 'Increase Speed', otherUnit.deathsDomainSpeedDuration || 2, {});
+                this.log(`${otherUnit.name} gains power from death itself!`);
+            }
+        });
+        
+        // Check for Hivemind passive - when any ally dies
+        if (!unit.isEnemy) { // If a party member died
+            this.party.forEach(ally => {
+                if (ally.isAlive && ally.hivemindPassive) {
+                    const healAmount = Math.floor(ally.maxHp * (ally.hivemindHealPercent || 0.2));
+                    this.healUnit(ally, healAmount);
+                    this.applyBuff(ally, 'Increase Attack', ally.hivemindBuffDuration || 2, { damageMultiplier: 1.5 });
+                    this.log(`${ally.name}'s hivemind grows stronger from ${unit.name}'s death!`);
+                }
+            });
         }
-    });
-    
-    // Sniper Female passive - speed buff on kill
-    if (killer.onKillEffects) {
-        killer.onKillEffects.forEach(effect => {
+        
+        // Sniper Female passive - speed buff on kill
+        if (killer.onKillEffects) {
+            killer.onKillEffects.forEach(effect => {
                 if (effect.type === 'buff') {
                     this.applyBuff(killer, effect.buffName, effect.duration, {});
                     this.log(`${killer.name} gains ${effect.buffName} from the kill!`);
