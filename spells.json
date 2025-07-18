@@ -25,7 +25,7 @@
 "throw_rock": {
     "id": "throw_rock",
     "name": "Throw Rock",
-    "description": "Throw a rock dealing [{base} + {attack} + {int}] physical damage and stunning for {stunDuration} turn",
+    "description": "Throw a rock dealing [{base} + {attack} + {int}] physical damage and stunning for {stunDuration} turn(s)",
     "cooldown": [7, 7, 6, 6, 5],
     "effects": ["physical", "debuff_stun"],
     "scaling": {
