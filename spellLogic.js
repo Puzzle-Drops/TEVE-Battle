@@ -370,7 +370,7 @@ const spellLogic = {
     furyLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
-        battle.applyBuff(target, 'Increase Speed', duration, {});
+        battle.applyBuff(caster, 'Increase Speed', duration, {});
     },
 
     throwRockLogic: function(battle, caster, target, spell, spellLevel = 1) {
