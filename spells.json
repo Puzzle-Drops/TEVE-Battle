@@ -3399,6 +3399,7 @@
     "description": "Grants all allies increase speed and immunity every turn",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
+    "duration": [1, 1, 1, 1, 2],
     "passive": true,
     "target": "self",
     "logicKey": "sovereignsPresencePassiveLogic"
