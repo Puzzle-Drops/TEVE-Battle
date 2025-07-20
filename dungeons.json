@@ -363,7 +363,7 @@
     "rewards": {
         "gold": 19200,
         "exp": 46000,
-        "items": ["bandit_shadowhood", "bandit_leathercoat", "bandit_prowlpants", "bandit_dagger", "bandit_parryguard", "bandit_lockpick", "bandit_shadowfang"]
+        "items": ["bandit_shadowhood", "bandit_leathercoat", "bandit_prowlpants", "bandit_dagger", "bandit_parryguard", "bandit_lockpick", "bandit_shadowdagger"]
     }
 },
 "gold_mine": {
