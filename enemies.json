@@ -2456,8 +2456,8 @@
       "toxic_blood_passive"
     ]
   },
-  "toxic_sludge_enemy": {
-    "name": "Toxic Sludge",
+  "corrosive_sludge": {
+    "name": "Corrosive Sludge",
     "boss": false,
     "mainstat": "str",
     "modifiers": {
