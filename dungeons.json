@@ -825,7 +825,7 @@
         {
             "enemies": [
                 { "id": "plague_bearer", "level": 330 },
-                { "id": "toxic_sludge_enemy", "level": 333 },
+                { "id": "corrosive_sludge", "level": 333 },
                 { "id": "corrupted_alchemist", "level": 335 }
             ]
         },
@@ -833,7 +833,7 @@
             "enemies": [
                 { "id": "sewer_lurker", "level": 338 },
                 { "id": "plague_bearer", "level": 340 },
-                { "id": "toxic_sludge_enemy", "level": 342 }
+                { "id": "corrosive_sludge", "level": 342 }
             ]
         },
         {
@@ -842,7 +842,7 @@
                 { "id": "sewer_lurker", "level": 343 },
                 { "id": "corrupted_alchemist", "level": 344 },
                 { "id": "plague_bearer", "level": 345 },
-                { "id": "toxic_sludge_enemy", "level": 343 }
+                { "id": "corrosive_sludge", "level": 343 }
             ]
         },
         {
@@ -851,13 +851,13 @@
                 { "id": "sewer_lurker", "level": 348 },
                 { "id": "corrupted_alchemist", "level": 346 },
                 { "id": "plague_bearer", "level": 346 },
-                { "id": "toxic_sludge_enemy", "level": 345 }
+                { "id": "corrosive_sludge", "level": 345 }
             ]
         },
         {
             "enemies": [
                 { "id": "plague_master", "level": 350 },
-                { "id": "putrid_abomination", "level": 349 },
+                { "id": "corrosive_sludge", "level": 349 },
                 { "id": "sewer_lurker", "level": 349 },
                 { "id": "corrupted_alchemist", "level": 348 },
                 { "id": "plague_bearer", "level": 348 }
