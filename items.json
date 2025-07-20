@@ -615,9 +615,9 @@
             "value4": 700,
             "sellcost": 21000
         },
-        "bandit_shadowfang": {
-            "id": "bandit_shadowfang",
-            "name": "Bandit Shadowfang",
+        "bandit_shadowdagger": {
+            "id": "bandit_shadowdagger",
+            "name": "Bandit Shadowdagger",
             "slot": "weapon",
             "level": 135,
             "roll1": "attack",
