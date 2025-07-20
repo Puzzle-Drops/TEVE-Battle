@@ -829,7 +829,7 @@
     ]
   },
   "stitched_horror": {
-    "name": "The Stitched Horror",
+    "name": "Stitched Horror",
     "boss": true,
     "mainstat": "str",
     "modifiers": {
@@ -2578,7 +2578,7 @@
     ]
   },
   "plague_master": {
-    "name": "The Plague Master",
+    "name": "Plague Master",
     "boss": true,
     "mainstat": "int",
     "modifiers": {
