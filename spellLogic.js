@@ -1613,7 +1613,7 @@ const spellLogic = {
         });
     },
 
-    wailingChorusLogic: function(battle, caster, target, spell, spellLevel = 1) {
+wailingChorusLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
     const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
     
