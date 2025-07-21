@@ -2829,11 +2829,12 @@
 "burning_aura_passive": {
     "id": "burning_aura_passive",
     "name": "Burning Aura",
-    "description": "Attackers take magic damage and gain Reduce Attack for 1 turn",
+    "description": "Attackers have {procChance} chance to take {retaliationDamage} magic damage and gain Reduce Attack for 1 turn",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
-    "retaliationDamage": 50,
+    "retaliationDamage": [50, 75, 100, 125, 150],
+    "procChance": [0.3, 0.35, 0.4, 0.45, 0.5],
     "debuffDuration": 1,
     "target": "self",
     "logicKey": "burningAuraPassiveLogic"
