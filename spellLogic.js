@@ -3023,22 +3023,30 @@ burningAuraPassiveLogic: function(battle, caster, target, spell, spellLevel = 1)
         caster.commandersAttackBonus = spell.attackBonus || 0.1;
     },
 
-    trickStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const buffStealCount = spell.buffStealCount || 2;
-        
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, agi: true},
-            damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                for (let i = 0; i < buffStealCount && buffDebuffHelpers.countBuffs(target) > 0; i++) {
-                    const stolenBuff = target.buffs.shift();
+trickStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const buffStealCount = spell.buffStealCount || 2;
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        afterDamage: (battle, caster, target) => {
+            // Use helpers to count and validate
+            const availableBuffs = buffDebuffHelpers.getBuffs(target).filter(b => b.name !== 'Boss');
+            const stealCount = Math.min(buffStealCount, availableBuffs.length);
+            
+            for (let i = 0; i < stealCount; i++) {
+                // Find and remove first non-Boss buff
+                const buffIndex = target.buffs.findIndex(b => b.name !== 'Boss');
+                if (buffIndex !== -1) {
+                    const stolenBuff = target.buffs.splice(buffIndex, 1)[0];
                     caster.buffs = caster.buffs || [];
                     caster.buffs.push(stolenBuff);
                     battle.log(`${caster.name} steals ${stolenBuff.name}!`);
                 }
             }
-        });
-    },
+        }
+    });
+},
 
     smokeAndMirrorsLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
