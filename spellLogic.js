@@ -1706,17 +1706,19 @@ wailingChorusLogic: function(battle, caster, target, spell, spellLevel = 1) {
     },
 
     piercingShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, agi: true},
-            damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                if (buffDebuffHelpers.getBuffs(target).length > 0) {
-                    target.buffs.shift();
-                    battle.log(`Piercing shot removes a buff from ${target.name}!`);
-                }
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        afterDamage: (battle, caster, target) => {
+            // Find first removable buff (not Boss)
+            const removableBuffIndex = target.buffs.findIndex(b => b.name !== 'Boss');
+            if (removableBuffIndex !== -1) {
+                const removedBuff = target.buffs.splice(removableBuffIndex, 1)[0];
+                battle.log(`Piercing shot removes ${removedBuff.name} from ${target.name}!`);
             }
-        });
-    },
+        }
+    });
+},
 
     deathBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
