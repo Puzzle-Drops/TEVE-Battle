@@ -1073,11 +1073,13 @@
 "frost_breath": {
     "id": "frost_breath",
     "name": "Frost Breath",
-    "description": "Breathe frost on all enemies dealing [{str}] magical damage and applying Reduce Speed for {slowDuration} turns",
+    "description": "Breathe frost on all enemies dealing [{base} + {attack} + {int}] magical damage and applying Reduce Speed for {slowDuration} turns",
     "cooldown": [5, 5, 4, 4, 3],
     "effects": ["aoe", "magical", "debuff_reduce_speed"],
     "scaling": {
-        "str": [0.8, 0.9, 1.0, 1.1, 1.2]
+        "base": [30, 100, 200, 350, 500],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.5, 0.52, 0.54, 0.56, 0.58]
     },
     "slowDuration": [2, 2, 3, 3, 4],
     "target": "all_enemies",
