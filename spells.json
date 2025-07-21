@@ -1499,7 +1499,7 @@
 "dark_ritual": {
     "id": "dark_ritual",
     "name": "Dark Ritual",
-    "description": "Dark magic heals all undead allies for {healPercent} of their max HP",
+    "description": "Dark magic heals all allies for {healPercent} of their max HP",
     "cooldown": [4, 4, 3, 3, 2],
     "effects": ["aoe", "heal"],
     "healPercent": [0.2, 0.22, 0.24, 0.26, 0.28],
