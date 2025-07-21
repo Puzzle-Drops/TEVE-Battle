@@ -2393,16 +2393,16 @@ plunderLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    rallyingHornLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        const actionBarGrant = spell.actionBarGrant || 0.2;
-        
-        spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            actionBarHelpers.grant(ally, actionBarGrant);
-            battle.applyBuff(ally, 'Increase Speed', duration, {});
-        });
-    },
+rallyingHornLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    const actionBarGrant = spellHelpers.getParam(spell, 'actionBarGrant', levelIndex, 0.2);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        actionBarHelpers.grant(ally, actionBarGrant, battle);
+        battle.applyBuff(ally, 'Increase Speed', duration, {});
+    });
+},
 
     tribalLeaderPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.tribalLeaderPassive = true;
