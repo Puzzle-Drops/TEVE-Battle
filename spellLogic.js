@@ -1330,20 +1330,20 @@ const spellLogic = {
     },
 
     bansheeWailLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const silenceChance = spellHelpers.getParam(spell, 'silenceChance', levelIndex, 0.3);
-        const silenceDuration = spellHelpers.getParam(spell, 'silenceDuration', levelIndex, 1);
-        
-        spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
-            scalingTypes: {attack: false, int: true},
-            damageType: 'magical',
-            perEnemyEffect: (battle, caster, enemy) => {
-                if (Math.random() < silenceChance) {
-                    applyConfiguredDebuff(battle, enemy, 'Silence', silenceDuration);
-                }
+    const levelIndex = spellLevel - 1;
+    const silenceChance = spellHelpers.getParam(spell, 'silenceChance', levelIndex, 0.3);
+    const silenceDuration = spellHelpers.getParam(spell, 'silenceDuration', levelIndex, 1);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            if (Math.random() < silenceChance) {
+                applyConfiguredDebuff(battle, enemy, 'Silence', silenceDuration);
             }
-        });
-    },
+        }
+    });
+},
 
     phaseShiftLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
