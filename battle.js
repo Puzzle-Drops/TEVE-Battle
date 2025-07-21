@@ -1308,6 +1308,13 @@ dealDamage(attacker, target, amount, damageType = 'physical', options = {}) {
         }
     });
 
+    // Commander's Presence passive - bonus damage if any ally is buffed
+const allies = this.getParty(attacker);
+const commanderAlly = allies.find(ally => ally.isAlive && ally.commandersPresencePassive);
+if (commanderAlly && allies.some(ally => ally.isAlive && ally.buffs.length > 0)) {
+    damage *= (1 + commanderAlly.commandersAttackBonus);
+}
+
     // Hunter's Focus - double damage on next attack
 if (attacker.huntersFocusActive) {
     damage *= 2;
