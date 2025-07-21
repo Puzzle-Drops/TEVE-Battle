@@ -1241,7 +1241,7 @@ if (this.currentUnit.mirrorImageDodge && this.currentUnit.mirrorImageDuration !=
     }
     
     // Combat methods referenced by spells
-dealDamage(attacker, target, amount, damageType = 'physical') {
+dealDamage(attacker, target, amount, damageType = 'physical', options = {}) {
     if (!target.isAlive) return 0;
     
     let damage = Math.round(amount);
@@ -1333,15 +1333,19 @@ dealDamage(attacker, target, amount, damageType = 'physical') {
     }
     
     // Apply damage reduction based on type (skip for pure damage)
-    if (damageType !== 'pure') {
-        if (damageType === 'physical') {
-            let physicalDR = target.physicalDamageReduction;
-            
-            // Apply Reduce Defense (flat -25 percentage points)
-            if (hasReduceDefense) {
-                physicalDR = Math.max(0, physicalDR - 0.25);
-            }
-            
+if (damageType !== 'pure') {
+    if (damageType === 'physical') {
+        let physicalDR = target.physicalDamageReduction;
+        
+        // Apply armor piercing if specified
+        if (options && options.armorPierce) {
+            physicalDR *= (1 - options.armorPierce);
+        }
+        
+        // Apply Reduce Defense (flat -25 percentage points)
+        if (hasReduceDefense) {
+            physicalDR = Math.max(0, physicalDR - 0.25);
+        }        
             // Apply Increase Defense (flat +25 percentage points, capped at 90%)
             if (hasIncreaseDefense) {
                 physicalDR = Math.min(0.9, physicalDR + 0.25);
