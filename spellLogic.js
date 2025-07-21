@@ -2426,16 +2426,16 @@ hornGoreLogic: function(battle, caster, target, spell, spellLevel = 1) {
     });
 },
 
-    bloodRageLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
-        const stackCount = spell.stackCount || 3;
-        
-        for (let i = 0; i < stackCount; i++) {
-            battle.applyBuff(caster, 'Increase Attack', duration, { damageMultiplier: 1.5 });
-        }
+bloodRageLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
+    const stackCount = spellHelpers.getParam(spell, 'stackCount', levelIndex, 3);
+    
+    for (let i = 0; i < stackCount; i++) {
+        battle.applyBuff(caster, 'Increase Attack', duration, { damageMultiplier: 1.5 });
         battle.applyBuff(caster, 'Increase Speed', duration, {});
-    },
+    }
+},
 
     thunderousChargeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const actionBarPercent = caster.actionBar / 10000;
