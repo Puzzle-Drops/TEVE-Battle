@@ -2646,11 +2646,11 @@ bladeMasteryPassiveLogic: function(battle, caster, target, spell, spellLevel = 1
         });
     },
 
-    regenerativeRootsPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.regenerativeRootsPassive = true;
-        caster.regenHealPercent = spell.healPercent || 0.03;
-        caster.regenHpThreshold = spell.hpThreshold || 0.5;
-    },
+regenerativeRootsPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.regenerativeRootsPassive = true;
+    caster.regenHealPercent = spellHelpers.getParam(spell, 'healPercent', spellLevel - 1, 0.03);
+    caster.regenHpThreshold = spellHelpers.getParam(spell, 'hpThreshold', spellLevel - 1, 0.5);
+},
 
     brutalClubLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const markBonus = conditionalDamageHelpers.ifDebuffed(
