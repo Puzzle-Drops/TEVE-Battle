@@ -1365,11 +1365,12 @@
 "wailing_chorus": {
     "id": "wailing_chorus",
     "name": "Wailing Chorus",
-    "description": "Chorus of wails dealing [{base} + {int}] magical damage to all enemies and applying Mark for {duration} turns",
+    "description": "Chorus of wails dealing [{base} + {attack} + {int}] magical damage to all enemies and applying Mark for {duration} turns",
     "cooldown": [4, 4, 3, 3, 2],
     "effects": ["aoe", "magical", "debuff_mark"],
     "scaling": {
         "base": [30, 120, 240, 420, 600],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "int": [0.65, 0.68, 0.71, 0.74, 0.77]
     },
     "duration": [3, 3, 4, 4, 5],
