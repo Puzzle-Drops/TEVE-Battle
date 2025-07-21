@@ -6,32 +6,32 @@ const spellHelpers = {
     },
 
     // Damage calculation helper
-    calculateDamage: function(spell, levelIndex, caster, scalingTypes = {}) {
-        const baseDamage = this.getParam(spell, 'scaling.base', levelIndex, 0);
-        let damage = baseDamage;
-        
-        if (scalingTypes.attack !== false && spell.scaling?.attack) {
-            const attackScaling = this.getParam(spell, 'scaling.attack', levelIndex, 1.0);
-            damage += caster.source.attack * attackScaling;
-        }
-        
-        if (scalingTypes.str && spell.scaling?.str) {
-            const strScaling = this.getParam(spell, 'scaling.str', levelIndex, 0);
-            damage += caster.stats.str * strScaling;
-        }
-        
-        if (scalingTypes.int && spell.scaling?.int) {
-            const intScaling = this.getParam(spell, 'scaling.int', levelIndex, 0);
-            damage += caster.stats.int * intScaling;
-        }
-        
-        if (scalingTypes.agi && spell.scaling?.agi) {
-            const agiScaling = this.getParam(spell, 'scaling.agi', levelIndex, 0);
-            damage += caster.stats.agi * agiScaling;
-        }
-        
-        return damage;
-    },
+calculateDamage: function(spell, levelIndex, caster, scalingTypes = {}) {
+    const baseDamage = this.getParam(spell, 'scaling.base', levelIndex, 0);
+    let damage = baseDamage;
+    
+    if (scalingTypes.attack !== false && spell.scaling?.attack) {
+        const attackScaling = this.getParam(spell, 'scaling.attack', levelIndex, 1.0);
+        damage += caster.source.attack * attackScaling;
+    }
+    
+    if (scalingTypes.str && spell.scaling?.str) {
+        const strScaling = this.getParam(spell, 'scaling.str', levelIndex, 0);
+        damage += caster.source.str * strScaling;
+    }
+    
+    if (scalingTypes.int && spell.scaling?.int) {
+        const intScaling = this.getParam(spell, 'scaling.int', levelIndex, 0);
+        damage += caster.source.int * intScaling;
+    }
+    
+    if (scalingTypes.agi && spell.scaling?.agi) {
+        const agiScaling = this.getParam(spell, 'scaling.agi', levelIndex, 0);
+        damage += caster.source.agi * agiScaling;
+    }
+    
+    return damage;
+},
 
     // Find lowest HP ally
     getLowestHpAlly: function(battle, caster) {
