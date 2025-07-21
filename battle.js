@@ -1308,6 +1308,22 @@ dealDamage(attacker, target, amount, damageType = 'physical', options = {}) {
         }
     });
 
+    // Hunter's Focus - double damage on next attack
+if (attacker.huntersFocusActive) {
+    damage *= 2;
+    attacker.huntersFocusActive = false; // Consume the buff
+    this.log(`${attacker.name}'s focused shot deals double damage!`);
+}
+
+    // Predator's Instinct passive - bonus damage vs low HP enemies
+if (attacker.predatorsInstinctPassive && target.isAlive) {
+    const targetHpPercent = target.currentHp / target.maxHp;
+    if (targetHpPercent < attacker.predatorsHpThreshold) {
+        damage *= attacker.predatorsDamageBonus;
+        this.log(`${attacker.name}'s predator instincts trigger!`);
+    }
+}
+
     // Apply magical damage bonus from Cinder Lord passive
     if (damageType === 'magical' && attacker.magicalDamageBonus) {
         damage *= (1 + attacker.magicalDamageBonus);
