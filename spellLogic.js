@@ -2523,18 +2523,19 @@ furyStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    executeSwingLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const executeThreshold = spell.executeThreshold || 0.35;
-        const multiplier = conditionalDamageHelpers.ifBelowHp(
-            target, executeThreshold, 3, battle, 'Execute swing devastates the wounded target!'
-        );
-        
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, str: true},
-            damageType: 'physical',
-            damageModifier: multiplier
-        });
-    },
+executeSwingLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const executeThreshold = spellHelpers.getParam(spell, 'executeThreshold', levelIndex, 0.35);
+    const multiplier = conditionalDamageHelpers.ifBelowHp(
+        target, executeThreshold, 3, battle, 'Execute swing devastates the wounded target!'
+    );
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        damageModifier: multiplier
+    });
+},
 
     intimidatingShoutLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
