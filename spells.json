@@ -1992,7 +1992,7 @@
 "bomb_vest": {
     "id": "bomb_vest",
     "name": "Bomb Vest",
-    "description": "Explosive strike dealing [{base} + {attack} + {str}] damage, take 20% max HP self damage",
+    "description": "Explosive strike dealing [{base} + {attack} + {str}] physical damage, take 20% max HP self damage",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical"],
     "scaling": {
@@ -2017,7 +2017,7 @@
 "shrapnel_blast": {
     "id": "shrapnel_blast",
     "name": "Shrapnel Blast",
-    "description": "AOE blast dealing [{base} + {attack} + {str}] damage and applying Bleed for {bleedDuration} turns",
+    "description": "AOE blast dealing [{base} + {attack} + {str}] physical damage and applying Bleed for {bleedDuration} turns",
     "cooldown": [5, 5, 4, 4, 3],
     "effects": ["aoe", "physical", "debuff_bleed"],
     "scaling": {
