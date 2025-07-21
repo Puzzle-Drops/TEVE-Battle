@@ -2652,17 +2652,19 @@ regenerativeRootsPassiveLogic: function(battle, caster, target, spell, spellLeve
     caster.regenHpThreshold = spellHelpers.getParam(spell, 'hpThreshold', spellLevel - 1, 0.5);
 },
 
-    brutalClubLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const markBonus = conditionalDamageHelpers.ifDebuffed(
-            target, 'Mark', spell.markBonus || 1.5, battle, 'Brutal club crushes the marked target!'
-        );
-        
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, str: true},
-            damageType: 'physical',
-            damageModifier: markBonus
-        });
-    },
+brutalClubLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const markBonus = spellHelpers.getParam(spell, 'markBonus', levelIndex, 1.5);
+    const damageModifier = conditionalDamageHelpers.ifDebuffed(
+        target, 'Mark', markBonus, battle, 'Brutal club crushes the marked target!'
+    );
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        damageModifier: damageModifier
+    });
+},
 
     intimidatingRoarLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
