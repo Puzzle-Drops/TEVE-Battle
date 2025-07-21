@@ -2355,29 +2355,30 @@ plunderLogic: function(battle, caster, target, spell, spellLevel = 1) {
     },
 
     ancestralVigorLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
-        const healPercent = spell.healPercent || 0.03;
-        
-        battle.applyBuff(target, 'Increase Speed', duration, {});
-        
-        if (!target.ancestralVigorRegen) {
-            target.ancestralVigorRegen = healPercent;
-            target.ancestralVigorDuration = duration;
-        }
-    },
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.03);
+    
+    battle.applyBuff(target, 'Increase Speed', duration, {});
+    
+    if (!target.ancestralVigorRegen) {
+        target.ancestralVigorRegen = healPercent;
+        target.ancestralVigorDuration = duration;
+    }
+},
 
     stampedeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const knockbackPercent = spell.knockbackPercent || 0.3;
-        
-        spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
-            scalingTypes: {attack: true, str: true},
-            damageType: 'physical',
-            perEnemyEffect: (battle, caster, enemy) => {
-                actionBarHelpers.reduce(enemy, knockbackPercent);
-            }
-        });
-    },
+    const levelIndex = spellLevel - 1;
+    const knockbackPercent = spellHelpers.getParam(spell, 'knockbackPercent', levelIndex, 0.3);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            actionBarHelpers.reduce(enemy, knockbackPercent);
+        }
+    });
+},
 
     warStompLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
