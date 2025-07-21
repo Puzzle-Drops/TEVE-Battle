@@ -2614,13 +2614,10 @@ mirrorImageLogic: function(battle, caster, target, spell, spellLevel = 1) {
         }
     },
 
-    bladeMasteryPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.bladeMasteryPassive = true;
-        passiveHelpers.addDamageCalculation(caster, {
-            type: 'blade_mastery',
-            damageBonus: spell.damageBonus || 1.5
-        });
-    },
+bladeMasteryPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.bladeMasteryPassive = true;
+    caster.bladeMasteryExtraAttackChance = spell.extraAttackChance || 0.3;
+},
 
     // Snapdragon Swamp Spells
     venomSpitLogic: function(battle, caster, target, spell, spellLevel = 1) {
