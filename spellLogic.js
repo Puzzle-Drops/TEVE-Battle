@@ -1627,16 +1627,15 @@ wailingChorusLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
     spiritualDrainLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        if (buffDebuffHelpers.countBuffs(target) > 0) {
-            const stolen = buffDebuffHelpers.clearBuffs(target);
-            caster.buffs = caster.buffs || [];
-            caster.buffs.push(...stolen);
-            battle.log(`${caster.name} steals all buffs from ${target.name}!`);
-        }
-        
-        actionBarHelpers.steal(target, caster);
-        battle.log(`${caster.name} drains ${target.name}'s action bar!`);
-    },
+    if (buffDebuffHelpers.countBuffs(target) > 0) {
+        const stolen = buffDebuffHelpers.clearBuffs(target);
+        caster.buffs = caster.buffs || [];
+        caster.buffs.push(...stolen);
+        battle.log(`${caster.name} steals all buffs from ${target.name}!`);
+    }
+    
+    actionBarHelpers.steal(target, caster, 1.0, battle);
+},
 
     queensLamentPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.queensLamentPassive = true;
