@@ -1287,11 +1287,12 @@
 "death_shriek": {
     "id": "death_shriek",
     "name": "Death Shriek",
-    "description": "Devastating shriek dealing [{base} + {int}] magical damage to all enemies and silencing for {silenceDuration} turn",
+    "description": "Devastating shriek dealing [{base} + {attack} + {int}] magical damage to all enemies and silencing for {silenceDuration} turn",
     "cooldown": [4, 4, 3, 3, 2],
     "effects": ["aoe", "magical", "debuff_silence"],
     "scaling": {
         "base": [25, 100, 200, 350, 500],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "int": [0.6, 0.63, 0.66, 0.69, 0.72]
     },
     "silenceDuration": [1, 1, 1, 2, 2],
