@@ -1825,10 +1825,11 @@
 "dirty_fighting": {
     "id": "dirty_fighting",
     "name": "Dirty Fighting",
-    "description": "Apply 3 random debuffs to random enemies",
+    "description": "Apply {debuffCount} random debuffs distributed among enemies for {duration} turns",
     "cooldown": [5, 5, 4, 4, 3],
     "effects": ["support"],
-    "debuffCount": 3,
+    "debuffCount": [3, 3, 4, 4, 5],
+    "duration": [1, 1, 2, 2, 3],
     "target": "all_enemies",
     "logicKey": "dirtyFightingLogic"
 },
