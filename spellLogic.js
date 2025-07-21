@@ -2563,25 +2563,27 @@ executeSwingLogic: function(battle, caster, target, spell, spellLevel = 1) {
         }
     },
 
-    warmasterPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.warmasterPassive = true;
-        caster.warmasterAttackBonus = 0.25;
-    },
+warmasterPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.warmasterPassive = true;
+    caster.warmasterAttackBonus = spell.attackBonus || 0.25;
+},
 
-    bladeFlurryLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const critChance = spell.critChance || 0.3;
-        
-        spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
-            scalingTypes: {attack: true, agi: true},
-            damageType: 'physical',
-            getDamageModifier: () => Math.random() < critChance ? 2 : 1,
-            perEnemyEffect: (battle, caster, enemy, spell, levelIndex, modifier) => {
-                if (modifier === 2) {
-                    battle.log(`Critical blade strike!`);
-                }
+bladeFlurryLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const critChance = spellHelpers.getParam(spell, 'critChance', levelIndex, 0.3);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        getDamageModifier: () => {
+            const isCrit = Math.random() < critChance;
+            if (isCrit) {
+                battle.log(`Critical blade strike!`);
             }
-        });
-    },
+            return isCrit ? 2 : 1;
+        }
+    });
+},
 
     mirrorImageLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
