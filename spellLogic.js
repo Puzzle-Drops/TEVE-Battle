@@ -1309,16 +1309,17 @@ const spellLogic = {
     },
 
     frostBreathLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const strScaling = spellHelpers.getParam(spell, 'scaling.str', levelIndex, 0.8);
-        const slowDuration = spellHelpers.getParam(spell, 'slowDuration', levelIndex, 2);
-        
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            const damage = caster.stats.str * strScaling;
-            battle.dealDamage(caster, enemy, damage, 'magical');
+    const levelIndex = spellLevel - 1;
+    const slowDuration = spellHelpers.getParam(spell, 'slowDuration', levelIndex, 2);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        perEnemyEffect: (battle, caster, enemy) => {
             applyConfiguredDebuff(battle, enemy, 'Reduce Speed', slowDuration);
-        });
-    },
+        }
+    });
+},
 
     // Sorrowshade Hollow Spells
     spiritTouchLogic: function(battle, caster, target, spell, spellLevel = 1) {
