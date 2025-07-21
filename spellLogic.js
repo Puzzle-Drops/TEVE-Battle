@@ -3048,24 +3048,28 @@ trickStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
     });
 },
 
-    smokeAndMirrorsLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
-        const dodgePhysical = spell.dodgePhysical || 0.5;
-        const dodgeMagical = spell.dodgeMagical || 0.5;
-        const speedStacks = spell.speedStacks || 2;
-        
-        if (!caster.smokeAndMirrorsDodge) {
-            caster.smokeAndMirrorsDodge = true;
-            caster.dodgePhysical = (caster.dodgePhysical || 0) + dodgePhysical;
-            caster.dodgeMagical = (caster.dodgeMagical || 0) + dodgeMagical;
-            caster.smokeAndMirrorsDuration = duration;
-        }
-        
-        for (let i = 0; i < speedStacks; i++) {
-            battle.applyBuff(caster, 'Increase Speed', duration, {});
-        }
-    },
+smokeAndMirrorsLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
+    const dodgePhysical = spell.dodgePhysical || 0.5;
+    const dodgeMagical = spell.dodgeMagical || 0.5;
+    const speedStacks = spell.speedStacks || 2;
+    
+    // Only apply dodge if not already active
+    if (!caster.smokeAndMirrorsDodge) {
+        caster.smokeAndMirrorsDodge = true;
+        caster.dodgePhysical = (caster.dodgePhysical || 0) + dodgePhysical;
+        caster.dodgeMagical = (caster.dodgeMagical || 0) + dodgeMagical;
+        caster.smokeAndMirrorsDuration = duration;
+    } else {
+        // Refresh duration if already active
+        caster.smokeAndMirrorsDuration = duration;
+    }
+    
+    for (let i = 0; i < speedStacks; i++) {
+        battle.applyBuff(caster, 'Increase Speed', duration, {});
+    }
+},
 
     chaosToxinLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Blight', 'Mark', 'Stun', 'Silence'];
