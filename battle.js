@@ -1101,7 +1101,7 @@ executeAbility(caster, abilityIndex, target) {
     
     // Blade Mastery passive - chance for extra attack
     if (caster.bladeMasteryPassive && !ability.passive && spell.effects.includes('physical')) {
-        if (Math.random() < 0.3) { // 30% chance
+        if (Math.random() < (caster.bladeMasteryExtraAttackChance || 0.3)) {
             this.log(`${caster.name}'s blade mastery grants an extra strike!`);
             // Execute the same ability again on the same target if they're still alive
             if (target && target !== 'all' && target.isAlive) {
