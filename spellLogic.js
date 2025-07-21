@@ -337,21 +337,135 @@ const multiApplyHelpers = {
         }
     },
     
-    applyRandomDebuffs: function(battle, targets, debuffTypes, count, duration) {
-        for (let i = 0; i < count && targets.length > 0; i++) {
-            const target = targets[Math.floor(Math.random() * targets.length)];
-            const debuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
-            applyConfiguredDebuff(battle, target, debuff, duration);
-        }
-    },
+    applyRandomDebuffs: function(battle, targets, debuffTypes, count, duration, caster = null) {
+    const debuffCaps = {
+        'Stun': 1,
+        'Silence': 2,
+        'Taunt': 0 // Don't apply taunt through random debuffs
+    };
     
-    convertBuffsToDebuffs: function(battle, target, duration) {
-        const buffCount = buffDebuffHelpers.countBuffs(target, ['Boss']);
-        buffDebuffHelpers.clearBuffs(target, ['Boss']);
+    // Track applied debuffs per target
+    const targetDebuffs = {};
+    targets.forEach(target => {
+        targetDebuffs[target.name] = {};
+        // Count existing debuffs
+        target.debuffs.forEach(d => {
+            targetDebuffs[target.name][d.name] = d.duration;
+        });
+    });
+    
+    for (let i = 0; i < count && targets.length > 0; i++) {
+        const target = targets[Math.floor(Math.random() * targets.length)];
+        let debuffApplied = false;
+        let attempts = 0;
         
-        const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Mark'];
-        this.applyRandomDebuffs(battle, [target], debuffTypes, buffCount, duration);
+        while (!debuffApplied && attempts < 10) {
+            let debuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
+            
+            // Replace Taunt with Mark
+            if (debuff === 'Taunt') {
+                debuff = 'Mark';
+            }
+            
+            const currentDuration = targetDebuffs[target.name][debuff] || 0;
+            const cap = debuffCaps[debuff];
+            
+            if (cap === undefined || currentDuration < cap) {
+                // Can apply this debuff
+                applyConfiguredDebuff(battle, target, debuff, duration, caster);
+                
+                // Update tracking
+                if (!targetDebuffs[target.name][debuff]) {
+                    targetDebuffs[target.name][debuff] = 0;
+                }
+                targetDebuffs[target.name][debuff] += duration;
+                
+                debuffApplied = true;
+            }
+            
+            attempts++;
+        }
+        
+        // Fallback to Mark if couldn't apply anything else
+        if (!debuffApplied) {
+            applyConfiguredDebuff(battle, target, 'Mark', duration);
+        }
     }
+},
+    
+    convertBuffsToDebuffs: function(battle, target, caster) {
+    // Get all buffs with their durations (excluding Boss)
+    const buffsToConvert = buffDebuffHelpers.getBuffs(target).filter(b => b.name !== 'Boss');
+    buffDebuffHelpers.clearBuffs(target, ['Boss']);
+    
+    if (buffsToConvert.length === 0) return;
+    
+    // Debuff types that can be applied
+    const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Mark'];
+    
+    // Track debuffs to apply and their current durations
+    const debuffsToApply = {};
+    const debuffCaps = {
+        'Stun': 1,
+        'Silence': 2,
+        // No caps for other debuffs
+    };
+    
+    // Convert each buff to a random debuff, preserving duration
+    buffsToConvert.forEach(buff => {
+        const duration = buff.duration === -1 ? 1 : buff.duration; // Convert permanent buffs to 1 turn
+        
+        // Keep trying until we find a debuff that isn't already capped
+        let attempts = 0;
+        let debuffApplied = false;
+        
+        while (!debuffApplied && attempts < 10) {
+            const randomDebuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
+            
+            // Check if this debuff is already at cap
+            const currentDuration = debuffsToApply[randomDebuff] || 0;
+            const cap = debuffCaps[randomDebuff];
+            
+            if (!cap || currentDuration < cap) {
+                // Can apply this debuff
+                if (!debuffsToApply[randomDebuff]) {
+                    debuffsToApply[randomDebuff] = 0;
+                }
+                
+                if (cap) {
+                    // Add only up to the cap
+                    debuffsToApply[randomDebuff] = Math.min(currentDuration + duration, cap);
+                } else {
+                    // No cap, add full duration
+                    debuffsToApply[randomDebuff] += duration;
+                }
+                
+                debuffApplied = true;
+            }
+            
+            attempts++;
+        }
+        
+        // Fallback: if we couldn't find an uncapped debuff after 10 tries, 
+        // just add to Mark (which has no cap)
+        if (!debuffApplied) {
+            if (!debuffsToApply['Mark']) {
+                debuffsToApply['Mark'] = 0;
+            }
+            debuffsToApply['Mark'] += duration;
+        }
+    });
+    
+    // Apply the accumulated debuffs
+    Object.entries(debuffsToApply).forEach(([debuffName, totalDuration]) => {
+        if (debuffName === 'Taunt') {
+            // Skip taunt since we need a valid target - replace with Mark
+            applyConfiguredDebuff(battle, target, 'Mark', totalDuration);
+        } else {
+            applyConfiguredDebuff(battle, target, debuffName, totalDuration);
+        }
+    });
+}
 };
 
 // Resource stealing and redistribution
@@ -1916,16 +2030,16 @@ const spellLogic = {
     },
 
     dirtyFightingLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Mark', 'Stun'];
-        const debuffCount = spell.debuffCount || 3;
-        const duration = 2;
-        
-        const enemies = battle.getEnemies(caster);
-        const aliveEnemies = enemies.filter(e => e && e.isAlive);
-        
-        multiApplyHelpers.applyRandomDebuffs(battle, aliveEnemies, debuffTypes, debuffCount, duration);
-        battle.log(`Dirty fighting afflicts enemies with random debuffs!`);
-    },
+    const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Mark', 'Stun'];
+    const debuffCount = spell.debuffCount || 3;
+    const duration = 2;
+    
+    const enemies = battle.getEnemies(caster);
+    const aliveEnemies = enemies.filter(e => e && e.isAlive);
+    
+    multiApplyHelpers.applyRandomDebuffs(battle, aliveEnemies, debuffTypes, debuffCount, duration, caster);
+    battle.log(`Dirty fighting afflicts enemies with random debuffs!`);
+},
 
     executeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const executeThreshold = spell.executeThreshold || 0.25;
@@ -2932,28 +3046,29 @@ const spellLogic = {
     },
 
     chaosToxinLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Blight', 'Mark', 'Stun', 'Silence'];
-        const debuffCount = spell.debuffCount || 3;
-        const targetCount = spell.targetCount || 3;
-        const duration = spell.duration || 2;
-        
-        const enemies = battle.getEnemies(caster);
-        const aliveEnemies = enemies.filter(e => e && e.isAlive);
-        
-        for (let i = 0; i < targetCount && aliveEnemies.length > 0; i++) {
-            const randomEnemy = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
-            
-            for (let j = 0; j < debuffCount; j++) {
-                const randomDebuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
-                applyConfiguredDebuff(battle, randomEnemy, randomDebuff, randomDebuff === 'Stun' || randomDebuff === 'Silence' ? 1 : duration);
-            }
-        }
-    },
+    const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Blight', 'Mark', 'Stun', 'Silence'];
+    const debuffCount = spell.debuffCount || 3;
+    const targetCount = spell.targetCount || 3;
+    const duration = spell.duration || 2;
+    
+    const enemies = battle.getEnemies(caster);
+    const aliveEnemies = enemies.filter(e => e && e.isAlive);
+    
+    // Apply debuffs to random enemies
+    const targetsToDebuff = [];
+    for (let i = 0; i < targetCount && aliveEnemies.length > 0; i++) {
+        const randomEnemy = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+        targetsToDebuff.push(randomEnemy);
+    }
+    
+    // Use the improved random debuff application
+    multiApplyHelpers.applyRandomDebuffs(battle, targetsToDebuff, debuffTypes, debuffCount * targetCount, duration, caster);
+},
 
     masterOfDeceptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        multiApplyHelpers.convertBuffsToDebuffs(battle, target, 2);
-        battle.log(`${caster.name} twists ${target.name}'s buffs into debuffs!`);
-    },
+    multiApplyHelpers.convertBuffsToDebuffs(battle, target, caster);
+    battle.log(`${caster.name} twists ${target.name}'s buffs into debuffs!`);
+},
 
     // Puzzle Sanctuary Spells
     frostStrikeRevenantLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -4265,7 +4380,7 @@ realityTwistLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const duration = spell.duration || 2;
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-        multiApplyHelpers.convertBuffsToDebuffs(battle, enemy, duration);
+        multiApplyHelpers.convertBuffsToDebuffs(battle, enemy, caster);
     });
     battle.log(`Reality twists, converting all enemy buffs to debuffs!`);
 },
