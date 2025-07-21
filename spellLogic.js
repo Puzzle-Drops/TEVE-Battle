@@ -1614,17 +1614,17 @@ const spellLogic = {
     },
 
     wailingChorusLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
-        
-        spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
-            scalingTypes: {attack: false, int: true},
-            damageType: 'magical',
-            perEnemyEffect: (battle, caster, enemy) => {
-                applyConfiguredDebuff(battle, enemy, 'Mark', duration);
-            }
-        });
-    },
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            applyConfiguredDebuff(battle, enemy, 'Mark', duration);
+        }
+    });
+},
 
     spiritualDrainLogic: function(battle, caster, target, spell, spellLevel = 1) {
         if (buffDebuffHelpers.countBuffs(target) > 0) {
