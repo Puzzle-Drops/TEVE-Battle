@@ -2404,26 +2404,27 @@ rallyingHornLogic: function(battle, caster, target, spell, spellLevel = 1) {
     });
 },
 
-    tribalLeaderPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.tribalLeaderPassive = true;
-        caster.auraBuffs = ['Increase Attack', 'Increase Defense'];
-        caster.auraDuration = 1;
-    },
+tribalLeaderPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.tribalLeaderPassive = true;
+    caster.auraBuffs = ['Increase Attack', 'Increase Defense'];
+    caster.auraDuration = spell.auraDuration || 1;
+},
 
-    hornGoreLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 3);
-        const bleedStacks = spell.bleedStacks || 2;
-        
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, str: true},
-            damageType: 'physical',
-            damageOptions: { armorPierce: 0.3 },
-            afterDamage: () => {
-                multiApplyHelpers.applyDebuffStacks(battle, target, 'Bleed', bleedStacks, bleedDuration);
-            }
-        });
-    },
+hornGoreLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 3);
+    const bleedStacks = spellHelpers.getParam(spell, 'bleedStacks', levelIndex, 2);
+    const armorPierce = spellHelpers.getParam(spell, 'armorPierce', levelIndex, 0.3);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        damageOptions: { armorPierce: armorPierce },
+        afterDamage: () => {
+            multiApplyHelpers.applyDebuffStacks(battle, target, 'Bleed', bleedStacks, bleedDuration);
+        }
+    });
+},
 
     bloodRageLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
