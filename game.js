@@ -1842,6 +1842,13 @@ continueFromArena() {
     
     exitBattle() {
     if (this.currentBattle) {
+
+        // Clear the battle timer interval FIRST
+        if (this.currentBattle.timerInterval) {
+            clearInterval(this.currentBattle.timerInterval);
+            this.currentBattle.timerInterval = null;
+        }
+        
         // Reset battlefield position
         const battleField = document.querySelector('.battleField');
         if (battleField) {
