@@ -2116,27 +2116,26 @@ lordsBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         );
     },
 
-    plunderLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const actionBarSteal = spellHelpers.getParam(spell, 'actionBarSteal', levelIndex, 0.3);
-        
-        let totalStolenPercent = 0;
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            actionBarHelpers.drain(enemy, actionBarSteal);
-            totalStolenPercent += actionBarSteal;
+plunderLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarSteal = spellHelpers.getParam(spell, 'actionBarSteal', levelIndex, 0.3);
+    
+    let totalStolenAmount = 0;
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        totalStolenAmount += actionBarHelpers.drain(enemy, actionBarSteal);
+    });
+    
+    const allies = battle.getParty(caster);
+    const aliveAllies = allies.filter(a => a && a.isAlive);
+    if (aliveAllies.length > 0 && totalStolenAmount > 0) {
+        const perAllyAmount = totalStolenAmount / aliveAllies.length;
+        aliveAllies.forEach(ally => {
+            ally.actionBar = Math.min(10000, ally.actionBar + perAllyAmount);
         });
-        
-        const allies = battle.getParty(caster);
-        const aliveAllies = allies.filter(a => a && a.isAlive);
-        if (aliveAllies.length > 0) {
-            const perAllyPercent = totalStolenPercent / aliveAllies.length;
-            aliveAllies.forEach(ally => {
-                actionBarHelpers.grant(ally, perAllyPercent);
-            });
-        }
-        
-        battle.log(`Plunder steals action bar from all enemies!`);
-    },
+    }
+    
+    battle.log(`Plunder steals action bar from all enemies!`);
+},
 
     callToArmsLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
