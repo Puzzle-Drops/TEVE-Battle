@@ -2310,13 +2310,13 @@ plunderLogic: function(battle, caster, target, spell, spellLevel = 1) {
     },
 
     swiftGallopLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        const actionBarGain = spell.actionBarGain || 0.25;
-        
-        battle.applyBuff(caster, 'Increase Speed', duration, {});
-        actionBarHelpers.grant(caster, actionBarGain);
-    },
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    const actionBarGain = spellHelpers.getParam(spell, 'actionBarGain', levelIndex, 0.25);
+    
+    battle.applyBuff(caster, 'Increase Speed', duration, {});
+    actionBarHelpers.grant(caster, actionBarGain, battle);
+},
 
     hoofStompLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
