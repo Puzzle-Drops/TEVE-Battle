@@ -2068,7 +2068,7 @@
 "scrap_cannon": {
     "id": "scrap_cannon",
     "name": "Scrap Cannon",
-    "description": "AOE blast dealing [{base} + {attack} + {int}] + 50 per debuff on enemies",
+    "description": "AOE blast dealing [{base} + {attack} + {int}] physical damage + 50 per debuff on enemies",
     "cooldown": [5, 5, 4, 4, 3],
     "effects": ["aoe", "physical"],
     "scaling": {
