@@ -2289,11 +2289,11 @@ plunderLogic: function(battle, caster, target, spell, spellLevel = 1) {
     },
 
     reinforcedPlatingPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.reinforcedPlatingPassive = true;
-        caster.globalDamageReduction = (caster.globalDamageReduction || 0) + 0.3;
-        caster.shieldRegenPercent = 0.1;
-        caster.shieldRegenTurns = 3;
-    },
+    caster.reinforcedPlatingPassive = true;
+    caster.globalDamageReduction = (caster.globalDamageReduction || 0) + (spell.damageReduction || 0.3);
+    caster.shieldRegenPercent = spell.shieldRegenPercent || 0.1;
+    caster.shieldRegenTurns = spell.shieldRegenTurns || 3;
+},
 
     // Centaur Cliffs Spells
     arrowVolleyLogic: function(battle, caster, target, spell, spellLevel = 1) {
