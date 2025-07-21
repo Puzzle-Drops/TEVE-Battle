@@ -2722,19 +2722,20 @@ brutalClubLogic: function(battle, caster, target, spell, spellLevel = 1) {
         }
     },
 
-    ambushStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const debuffThreshold = spell.debuffThreshold || 3;
-        const damageType = buffDebuffHelpers.countDebuffs(target) >= debuffThreshold ? 'pure' : 'physical';
-        
-        if (damageType === 'pure') {
-            battle.log(`Ambush strike finds all weaknesses!`);
-        }
-        
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, agi: true},
-            damageType: damageType
-        });
-    },
+ambushStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const debuffThreshold = spellHelpers.getParam(spell, 'debuffThreshold', levelIndex, 3);
+    const damageType = buffDebuffHelpers.countDebuffs(target) >= debuffThreshold ? 'pure' : 'physical';
+    
+    if (damageType === 'pure') {
+        battle.log(`Ambush strike finds all weaknesses!`);
+    }
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: damageType
+    });
+},
 
     murkyDisappearanceLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
