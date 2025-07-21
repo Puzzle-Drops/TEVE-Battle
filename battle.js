@@ -1635,6 +1635,21 @@ if (attacker.stalkersMarkPassive && target.isAlive && actualDamage > 0) {
             this.handleUnitDeath(attacker, target);
         }
     }
+
+    // Burning Aura passive retaliation
+    if (target.burningAuraPassive && target.isAlive && damage > 0 && attacker.isAlive) {
+        if (Math.random() < (target.burningAuraProcChance || 0.3)) {
+            const retaliationDamage = target.burningAuraRetaliationDamage || 50;
+            attacker.currentHp = Math.max(0, attacker.currentHp - retaliationDamage);
+            this.log(`${attacker.name} takes ${retaliationDamage} burning damage!`);
+            
+            this.applyDebuff(attacker, 'Reduce Attack', target.burningAuraDebuffDuration || 1, {});
+            
+            if (attacker.currentHp <= 0 && !attacker.isDead) {
+                this.handleUnitDeath(attacker, target);
+            }
+        }
+    }
     
     // Molten Shield retaliation
     if (target.moltenShieldActive && target.isAlive && damage > 0 && attacker.isAlive) {
