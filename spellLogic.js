@@ -1587,7 +1587,7 @@ const spellLogic = {
     },
 
     naturesCorruptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        multiApplyHelpers.convertBuffsToDebuffs(battle, target, 2);
+        multiApplyHelpers.convertBuffsToDebuffs(battle, target, caster);
         battle.log(`${target.name}'s buffs corrupted into debuffs!`);
     },
 
