@@ -2451,13 +2451,13 @@ bloodRageLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    savageMomentumPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.savageMomentumPassive = true;
-        passiveHelpers.addDamageCalculation(caster, {
-            type: 'missing_hp_damage',
-            maxBonus: 0.5
-        });
-    },
+savageMomentumPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.savageMomentumPassive = true;
+    passiveHelpers.addDamageCalculation(caster, {
+        type: 'missing_hp_damage',
+        maxBonus: spell.maxBonus || 0.5
+    });
+},
 
     // Orc Warlands Spells
     brutalSwingLogic: function(battle, caster, target, spell, spellLevel = 1) {
