@@ -2082,20 +2082,22 @@ dirtyFightingLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    lordsBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, agi: true},
-            damageType: 'physical',
-            afterDamage: (battle, caster, target) => {
-                if (buffDebuffHelpers.countBuffs(target) > 0) {
-                    const stolenBuff = target.buffs.shift();
-                    caster.buffs = caster.buffs || [];
-                    caster.buffs.push(stolenBuff);
-                    battle.log(`${caster.name} steals ${stolenBuff.name} from ${target.name}!`);
-                }
+lordsBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const buffStealCount = spell.buffStealCount || 1;
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        afterDamage: (battle, caster, target) => {
+            for (let i = 0; i < buffStealCount && buffDebuffHelpers.countBuffs(target) > 0; i++) {
+                const stolenBuff = target.buffs.shift();
+                caster.buffs = caster.buffs || [];
+                caster.buffs.push(stolenBuff);
+                battle.log(`${caster.name} steals ${stolenBuff.name}!`);
             }
-        });
-    },
+        }
+    });
+},
 
     banditsGambitLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const enemies = battle.getEnemies(caster);
