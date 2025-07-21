@@ -2974,11 +2974,13 @@ ambushStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
     },
 
-    burningAuraPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.burningAuraPassive = true;
-        caster.burningAuraDamage = spell.retaliationDamage || 50;
-        caster.burningAuraDebuffDuration = spell.debuffDuration || 1;
-    },
+burningAuraPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.burningAuraPassive = true;
+    const levelIndex = spellLevel - 1;
+    caster.burningAuraRetaliationDamage = spellHelpers.getParam(spell, 'retaliationDamage', levelIndex, 50);
+    caster.burningAuraProcChance = spellHelpers.getParam(spell, 'procChance', levelIndex, 0.3);
+    caster.burningAuraDebuffDuration = spell.debuffDuration || 1;
+},
 
     warchiefsBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
