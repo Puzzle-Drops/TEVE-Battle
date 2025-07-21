@@ -1432,17 +1432,17 @@ const spellLogic = {
     },
 
     deathShriekLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const silenceDuration = spellHelpers.getParam(spell, 'silenceDuration', levelIndex, 1);
-        
-        spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
-            scalingTypes: {attack: false, int: true},
-            damageType: 'magical',
-            perEnemyEffect: (battle, caster, enemy) => {
-                applyConfiguredDebuff(battle, enemy, 'Silence', silenceDuration);
-            }
-        });
-    },
+    const levelIndex = spellLevel - 1;
+    const silenceDuration = spellHelpers.getParam(spell, 'silenceDuration', levelIndex, 1);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            applyConfiguredDebuff(battle, enemy, 'Silence', silenceDuration);
+        }
+    });
+},
 
     mournfulPresenceLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
