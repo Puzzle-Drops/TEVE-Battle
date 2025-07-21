@@ -2492,18 +2492,19 @@ recklessAssaultLogic: function(battle, caster, target, spell, spellLevel = 1) {
     });
 },
 
-    furyStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const hitCount = spell.hitCount || 3;
-        
-        for (let i = 0; i < hitCount; i++) {
-            if (target.isAlive) {
-                spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-                    scalingTypes: {attack: true, str: true},
-                    damageType: 'physical'
-                });
-            }
+furyStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const hitCount = spellHelpers.getParam(spell, 'hitCount', levelIndex, 3);
+    
+    for (let i = 0; i < hitCount; i++) {
+        if (target.isAlive) {
+            spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+                scalingTypes: {attack: true, str: true},
+                damageType: 'physical'
+            });
         }
-    },
+    }
+},
 
     lightningBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
