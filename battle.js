@@ -1231,6 +1231,18 @@ if (this.currentUnit.mirrorImageDodge && this.currentUnit.mirrorImageDuration !=
         this.log(`${this.currentUnit.name}'s mirror images fade away.`);
     }
 }
+
+            // Smoke and Mirrors dodge duration tracking
+if (this.currentUnit.smokeAndMirrorsDodge && this.currentUnit.smokeAndMirrorsDuration !== undefined) {
+    this.currentUnit.smokeAndMirrorsDuration--;
+    if (this.currentUnit.smokeAndMirrorsDuration <= 0) {
+        this.currentUnit.dodgePhysical = (this.currentUnit.dodgePhysical || 0) - 0.5;
+        this.currentUnit.dodgeMagical = (this.currentUnit.dodgeMagical || 0) - 0.5;
+        this.currentUnit.smokeAndMirrorsDodge = false;
+        this.currentUnit.smokeAndMirrorsDuration = undefined;
+        this.log(`${this.currentUnit.name}'s illusions disappear.`);
+    }
+}
             
         }
         
