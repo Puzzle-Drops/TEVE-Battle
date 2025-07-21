@@ -1653,7 +1653,7 @@
 "corpse_explosion": {
     "id": "corpse_explosion",
     "name": "Corpse Explosion",
-    "description": "Explode corpses dealing magical damage to all enemies based on their missing HP",
+    "description": "Explode corpses dealing [{baseDamage} + {missingHpPercent} of missing HP] magical damage to all enemies based on their missing HP",
     "cooldown": [4, 4, 3, 3, 2],
     "effects": ["aoe", "magical"],
     "missingHpPercent": [0.2, 0.25, 0.3, 0.35, 0.4],
