@@ -2032,7 +2032,7 @@
 "demolition_expert_passive": {
     "id": "demolition_expert_passive",
     "name": "Demolition Expert",
-    "description": "When taking damage, deal 30% of that damage to all enemies",
+    "description": "When taking damage while having no debuffs, deal 30% of that damage to all enemies",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
@@ -2042,7 +2042,7 @@
 "drill_charge": {
     "id": "drill_charge",
     "name": "Drill Charge",
-    "description": "Piercing charge dealing [{base} + {attack} + {str}] damage, ignores 50% armor",
+    "description": "Piercing charge dealing [{base} + {attack} + {str}] physical damage, ignores 50% armor",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical"],
     "scaling": {
