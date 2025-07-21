@@ -1152,11 +1152,12 @@
 "banshee_wail": {
     "id": "banshee_wail",
     "name": "Banshee Wail",
-    "description": "Terrifying wail dealing [{base} + {int}] magical damage to all enemies with {silenceChance} chance to silence for {silenceDuration} turn",
+    "description": "Terrifying wail dealing [{base} + {attack} + {int}] magical damage to all enemies with {silenceChance} chance to silence for {silenceDuration} turn",
     "cooldown": [4, 4, 3, 3, 2],
     "effects": ["aoe", "magical", "debuff_silence"],
     "scaling": {
         "base": [15, 60, 120, 210, 300],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "int": [0.5, 0.52, 0.54, 0.56, 0.58]
     },
     "silenceChance": [0.3, 0.35, 0.4, 0.45, 0.5],
