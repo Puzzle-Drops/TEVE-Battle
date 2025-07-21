@@ -2467,28 +2467,30 @@ savageMomentumPassiveLogic: function(battle, caster, target, spell, spellLevel =
         });
     },
 
-    bloodlustLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        const hpCost = spell.hpCost || 0.1;
-        
-        const hpSacrifice = hpHelpers.drainHpPercent(caster, hpCost);
-        
-        battle.applyBuff(caster, 'Increase Attack', duration, { damageMultiplier: 1.5 });
-        battle.applyBuff(caster, 'Increase Speed', duration, {});
-    },
+bloodlustLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    const hpCost = spellHelpers.getParam(spell, 'hpCost', levelIndex, 0.1);
+    
+    const hpSacrifice = hpHelpers.drainHpPercent(caster, hpCost);
+    battle.log(`${caster.name} sacrifices ${hpSacrifice} HP!`);
+    
+    battle.applyBuff(caster, 'Increase Attack', duration, { damageMultiplier: 1.5 });
+    battle.applyBuff(caster, 'Increase Speed', duration, {});
+},
 
-    recklessAssaultLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const selfDebuffDuration = spell.selfDebuffDuration || 2;
-        
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, str: true},
-            damageType: 'physical',
-            afterDamage: (battle, caster) => {
-                applyConfiguredDebuff(battle, caster, 'Reduce Defense', selfDebuffDuration);
-            }
-        });
-    },
+recklessAssaultLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const selfDebuffDuration = spellHelpers.getParam(spell, 'selfDebuffDuration', levelIndex, 2);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        afterDamage: (battle, caster) => {
+            applyConfiguredDebuff(battle, caster, 'Reduce Defense', selfDebuffDuration);
+        }
+    });
+},
 
     furyStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const hitCount = spell.hitCount || 3;
