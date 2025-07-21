@@ -2585,19 +2585,20 @@ bladeFlurryLogic: function(battle, caster, target, spell, spellLevel = 1) {
     });
 },
 
-    mirrorImageLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        
-        buffDebuffHelpers.clearDebuffs(caster);
-        battle.applyBuff(caster, 'Increase Speed', duration, {});
-        
-        if (!caster.mirrorImageDodge) {
-            caster.mirrorImageDodge = true;
-            caster.dodgePhysical = (caster.dodgePhysical || 0) + 0.5;
-            caster.mirrorImageDuration = duration;
-        }
-    },
+mirrorImageLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    const dodgePhysical = spellHelpers.getParam(spell, 'dodgePhysical', levelIndex, 0.5);
+    
+    buffDebuffHelpers.clearDebuffs(caster);
+    battle.applyBuff(caster, 'Increase Speed', duration, {});
+    
+    if (!caster.mirrorImageDodge) {
+        caster.mirrorImageDodge = true;
+        caster.dodgePhysical = (caster.dodgePhysical || 0) + dodgePhysical;
+        caster.mirrorImageDuration = duration;
+    }
+},
 
     windWalkLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
