@@ -2030,10 +2030,11 @@ wailingChorusLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    dirtyFightingLogic: function(battle, caster, target, spell, spellLevel = 1) {
+dirtyFightingLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
     const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Mark', 'Stun'];
-    const debuffCount = spell.debuffCount || 3;
-    const duration = 2;
+    const debuffCount = spellHelpers.getParam(spell, 'debuffCount', levelIndex, 3);
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
     
     const enemies = battle.getEnemies(caster);
     const aliveEnemies = enemies.filter(e => e && e.isAlive);
