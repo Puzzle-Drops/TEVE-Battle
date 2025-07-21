@@ -1509,6 +1509,11 @@ if (damageType !== 'pure') {
         this.applyDebuff(target, 'Blight', attacker.rottingPresenceBlightDuration || 1, { noHeal: true });
     }
 
+    // Stalker's Mark passive - attacks apply Mark
+if (attacker.stalkersMarkPassive && target.isAlive && actualDamage > 0) {
+    this.applyDebuff(target, 'Mark', attacker.markDuration || 1, {});
+}
+
     // Check for on-damage-taken effects from target
     if (target.onDamageTaken && target.isAlive && damage > 0) {
         target.onDamageTaken.forEach(effect => {
