@@ -1,9 +1,25 @@
 // Helper Functions
 const spellHelpers = {
     // Parameter extraction helper
-    getParam: function(spell, paramName, levelIndex, defaultValue = null) {
-        return spell[paramName]?.[levelIndex] ?? spell[paramName]?.[0] ?? defaultValue;
-    },
+getParam: function(spell, paramName, levelIndex, defaultValue = null) {
+    // Handle nested property paths like 'scaling.base'
+    const keys = paramName.split('.');
+    let value = spell;
+    
+    for (const key of keys) {
+        value = value?.[key];
+        if (value === undefined) {
+            return defaultValue;
+        }
+    }
+    
+    // Now value should be the array, get the level-specific value
+    if (Array.isArray(value)) {
+        return value[levelIndex] ?? value[0] ?? defaultValue;
+    }
+    
+    return value ?? defaultValue;
+},
 
     // Damage calculation helper
 calculateDamage: function(spell, levelIndex, caster, scalingTypes = {}) {
@@ -17,17 +33,17 @@ calculateDamage: function(spell, levelIndex, caster, scalingTypes = {}) {
     
     if (scalingTypes.str && spell.scaling?.str) {
         const strScaling = this.getParam(spell, 'scaling.str', levelIndex, 0);
-        damage += caster.source.str * strScaling;
+        damage += caster.stats.str * strScaling;
     }
     
     if (scalingTypes.int && spell.scaling?.int) {
         const intScaling = this.getParam(spell, 'scaling.int', levelIndex, 0);
-        damage += caster.source.int * intScaling;
+        damage += caster.stats.int * intScaling;
     }
     
     if (scalingTypes.agi && spell.scaling?.agi) {
         const agiScaling = this.getParam(spell, 'scaling.agi', levelIndex, 0);
-        damage += caster.source.agi * agiScaling;
+        damage += caster.stats.agi * agiScaling;
     }
     
     return damage;
