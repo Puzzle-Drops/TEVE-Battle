@@ -1202,6 +1202,19 @@ executeAbility(caster, abilityIndex, target) {
                 }
             }
 
+            // Regenerative Roots passive healing
+if (this.currentUnit.regenerativeRootsPassive && this.currentUnit.isAlive) {
+    const hpPercent = this.currentUnit.currentHp / this.currentUnit.maxHp;
+    if (hpPercent < this.currentUnit.regenHpThreshold && !this.currentUnit.debuffs.some(d => d.name === 'Blight')) {
+        const healAmount = Math.floor(this.currentUnit.maxHp * this.currentUnit.regenHealPercent);
+        const actualHeal = Math.min(healAmount, this.currentUnit.maxHp - this.currentUnit.currentHp);
+        if (actualHeal > 0) {
+            this.currentUnit.currentHp += actualHeal;
+            this.log(`${this.currentUnit.name}'s regenerative roots heal ${actualHeal} HP.`);
+        }
+    }
+}
+
             // Apply DOT effects first (before buff/debuff duration update)
             this.applyDotEffects(this.currentUnit);
             // Then update buff/debuff durations
