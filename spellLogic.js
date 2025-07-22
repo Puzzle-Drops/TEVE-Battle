@@ -4366,7 +4366,7 @@ phaseStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
 voidStepLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
     const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-    const stackCount = spell.stackCount || 2;
+    const stackCount = spellHelpers.getParam(spell, 'stackCount', levelIndex, 2);
     
     buffDebuffHelpers.clearDebuffs(caster);
     
@@ -4376,8 +4376,9 @@ voidStepLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 shadowRealmPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
     caster.shadowRealmPassive = true;
-    const damageReduction = spell.damageReduction || 0.3;
+    const damageReduction = spellHelpers.getParam(spell, 'damageReduction', levelIndex, 0.3);
     caster.physicalDamageReduction = (caster.physicalDamageReduction || 0) + damageReduction;
     caster.magicDamageReduction = (caster.magicDamageReduction || 0) + damageReduction;
 },
