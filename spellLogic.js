@@ -3071,27 +3071,44 @@ smokeAndMirrorsLogic: function(battle, caster, target, spell, spellLevel = 1) {
     }
 },
 
-    chaosToxinLogic: function(battle, caster, target, spell, spellLevel = 1) {
+chaosToxinLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const debuffCount = spellHelpers.getParam(spell, 'debuffCount', levelIndex, 3);
+    const targetCount = spellHelpers.getParam(spell, 'targetCount', levelIndex, 3);
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
     const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Blight', 'Mark', 'Stun', 'Silence'];
-    const debuffCount = spell.debuffCount || 3;
-    const targetCount = spell.targetCount || 3;
-    const duration = spell.duration || 2;
     
     const enemies = battle.getEnemies(caster);
     const aliveEnemies = enemies.filter(e => e && e.isAlive);
     
-    // Apply debuffs to random enemies
-    const targetsToDebuff = [];
-    for (let i = 0; i < targetCount && aliveEnemies.length > 0; i++) {
-        const randomEnemy = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
-        targetsToDebuff.push(randomEnemy);
+    if (aliveEnemies.length === 0) {
+        battle.log(`No enemies to afflict with chaos toxin!`);
+        return;
     }
     
-    // Use the improved random debuff application
-    multiApplyHelpers.applyRandomDebuffs(battle, targetsToDebuff, debuffTypes, debuffCount * targetCount, duration, caster);
+    // Select up to targetCount unique enemies
+    const selectedEnemies = [];
+    const enemiesCopy = [...aliveEnemies];
+    
+    const actualTargetCount = Math.min(targetCount, enemiesCopy.length);
+    for (let i = 0; i < actualTargetCount; i++) {
+        const randomIndex = Math.floor(Math.random() * enemiesCopy.length);
+        selectedEnemies.push(enemiesCopy.splice(randomIndex, 1)[0]);
+    }
+    
+    // Apply debuffCount debuffs to each selected enemy
+    selectedEnemies.forEach(enemy => {
+        // Create a separate array for this enemy to ensure they get exactly debuffCount debuffs
+        multiApplyHelpers.applyRandomDebuffs(battle, [enemy], debuffTypes, debuffCount, duration, caster);
+    });
+    
+    battle.log(`Chaos toxin afflicts ${selectedEnemies.length} enemies with random debuffs!`);
 },
 
-    masterOfDeceptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
+masterOfDeceptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    
     multiApplyHelpers.convertBuffsToDebuffs(battle, target, caster);
     battle.log(`${caster.name} twists ${target.name}'s buffs into debuffs!`);
 },
@@ -3110,21 +3127,24 @@ smokeAndMirrorsLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    icyGraspLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const stunDuration = spellHelpers.getParam(spell, 'stunDuration', levelIndex, 1);
-        const actionBarDrain = spell.actionBarDrain || 0.2;
-        
-        applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
-        actionBarHelpers.drain(target, actionBarDrain);
-        battle.log(`${target.name} is frozen in place!`);
-    },
+icyGraspLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const stunDuration = spellHelpers.getParam(spell, 'stunDuration', levelIndex, 1);
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.2);
+    
+    applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
+    actionBarHelpers.drain(target, actionBarDrain, battle);
+    battle.log(`${target.name} is frozen in place!`);
+},
 
-    frozenSoulPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.frozenSoulPassive = true;
-        caster.immuneToReduceSpeed = true;
-        caster.magicResist = (caster.magicResist || 0) + (spell.magicResist || 0.2);
-    },
+frozenSoulPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const magicResist = spellHelpers.getParam(spell, 'magicResist', levelIndex, 0.2);
+    
+    caster.frozenSoulPassive = true;
+    caster.immuneToReduceSpeed = true;
+    caster.magicDamageReduction = (caster.magicDamageReduction || 0) + magicResist;
+},
 
     chillTouchLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const frostArmorDuration = spell.frostArmorDuration || 2;
