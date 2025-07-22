@@ -801,18 +801,20 @@ rainOfArrowsLogic: function(battle, caster, target, spell, spellLevel = 1) {
         }
     },
 
-    barkskinLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        
-        battle.applyBuff(target, 'Increase Defense', duration, {});
-        
-        const healAmount = hpHelpers.percentOfMaxHp(target, spell.healPercent);
-        battle.healUnit(target, healAmount);
-        
-        const shieldAmount = hpHelpers.percentOfMaxHp(target, spell.shieldPercent);
-        battle.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
-    },
+barkskinLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.15);
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.08);
+    
+    battle.applyBuff(target, 'Increase Defense', duration, {});
+    
+    const healAmount = hpHelpers.percentOfMaxHp(target, healPercent);
+    battle.healUnit(target, healAmount);
+    
+    const shieldAmount = hpHelpers.percentOfMaxHp(target, shieldPercent);
+    battle.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
+},
 
     primalRoarLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
