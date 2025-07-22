@@ -1428,10 +1428,16 @@ if (damageType !== 'pure') {
         shieldDamageAbsorbed = shieldDamage;
         
         if (shield.shieldAmount <= 0) {
-            target.buffs = target.buffs.filter(b => b !== shield);
-            this.log(`${target.name}'s shield breaks!`);
-            
-            // Oceanic Resilience passive - when shield breaks, apply Increase Defense
+    target.buffs = target.buffs.filter(b => b !== shield);
+    battle.log(`${target.name}'s shield breaks!`);
+    
+    // Molten Shield - disable retaliation when shield breaks
+    if (target.moltenShieldActive) {
+        target.moltenShieldActive = false;
+        target.moltenShieldDamage = null;
+    }
+    
+    // Oceanic Resilience passive - when shield breaks, apply Increase Defense
             const allies = this.getParty(target);
             const oceanicResilienceAlly = allies.find(ally => 
                 ally.isAlive && ally.oceanicResiliencePassive
