@@ -4059,13 +4059,11 @@ deathsDomainPassiveLogic: function(battle, caster, target, spell, spellLevel = 1
     caster.deathsDomainSpeedDuration = spell.speedDuration || 2;
 },
 
-    // Add these spell logic functions to the spellLogic object
-
 // Demon Spells
 hellfireBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const defenseChance = spell.defenseChance || 0.3;
-    const defenseDebuffDuration = spell.defenseDebuffDuration || 2;
+    const defenseChance = spellHelpers.getParam(spell, 'defenseChance', levelIndex, 0.3);
+    const defenseDebuffDuration = spellHelpers.getParam(spell, 'defenseDebuffDuration', levelIndex, 2);
     
     spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
         scalingTypes: {attack: true, int: true},
