@@ -2058,11 +2058,24 @@ if (this.currentUnit && this.currentUnit.isAlive) {
         return;
     }
 
-    // Check for specific debuff immunities
-    if (debuffName === 'Reduce Speed' && target.immuneToReduceSpeed) {
-        this.log(`${target.name} is immune to speed reduction!`);
-        return;
-    }
+// Check for specific debuff immunities
+const immunityMap = {
+    'Reduce Speed': 'immuneToReduceSpeed',
+    'Reduce Attack': 'immuneToReduceAttack',
+    'Reduce Defense': 'immuneToReduceDefense',
+    'Blight': 'immuneToBlight',
+    'Bleed': 'immuneToBleed',
+    'Stun': 'immuneToStun',
+    'Taunt': 'immuneToTaunt',
+    'Silence': 'immuneToSilence',
+    'Mark': 'immuneToMark'
+};
+
+const immunityProperty = immunityMap[debuffName];
+if (immunityProperty && target[immunityProperty]) {
+    this.log(`${target.name} is immune to ${debuffName}!`);
+    return;
+}
     
     // Check for boss stun resistance
     if (debuffName === 'Stun') {
