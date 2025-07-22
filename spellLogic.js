@@ -3213,15 +3213,16 @@ shatterPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
     caster.shatterSlowDuration = spellHelpers.getParam(spell, 'slowDuration', levelIndex, 2);
 },
 
-    soulDrainLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const healPercent = spell.healPercent || 0.5;
-        
-        const damage = spellHelpers.calculateDamage(spell, spellLevel - 1, caster, {attack: true, int: true});
-        const damageDealt = battle.dealDamage(caster, target, damage, 'magical');
-        
-        const healAmount = damageDealt * healPercent;
-        battle.healUnit(caster, healAmount);
-    },
+soulDrainLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.5);
+    
+    const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
+    const damageDealt = battle.dealDamage(caster, target, damage, 'magical');
+    
+    const healAmount = damageDealt * healPercent;
+    battle.healUnit(caster, healAmount);
+},
 
     wraithFormLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
