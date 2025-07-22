@@ -1765,6 +1765,29 @@ handleUnitDeath(unit, killer = null) {
                 this.log(`${otherUnit.name} gains power from ${unit.name}'s death!`);
             }
         });
+
+        // Check for Shatter passive on the dying unit
+        if (unit.shatterPassive && unit.shatterDamage) {
+            // Deal AOE damage to all enemies
+            const enemies = this.getEnemies(unit);
+            enemies.forEach(enemy => {
+                if (enemy.isAlive) {
+                    enemy.currentHp = Math.max(0, enemy.currentHp - unit.shatterDamage);
+                    this.log(`${enemy.name} takes ${unit.shatterDamage} damage from shatter!`);
+                    
+                    // Apply Reduce Speed
+                    if (unit.shatterSlowDuration) {
+                        this.applyDebuff(enemy, 'Reduce Speed', unit.shatterSlowDuration, {});
+                    }
+                    
+                    // Check if enemy died from shatter damage
+                    if (enemy.currentHp <= 0 && !enemy.isDead) {
+                        this.handleUnitDeath(enemy, unit);
+                    }
+                }
+            });
+            this.log(`${unit.name} shatters on death!`);
+        }
         
         // Check for Death's Domain passive
         this.allUnits.forEach(otherUnit => {
