@@ -3348,7 +3348,7 @@
     "description": "All allies gain 20% action bar and remove 1 debuff",
     "cooldown": [5, 5, 4, 4, 3],
     "effects": ["aoe", "cleanse", "support"],
-    "actionBarGrant": 0.2,
+    "actionBarGrant": [0.2, 0.2, 0.2, 0.2, 0.2],
     "target": "all_allies",
     "logicKey": "evasiveManeuversLogic"
 },
