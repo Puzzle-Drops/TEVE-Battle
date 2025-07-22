@@ -774,20 +774,24 @@ rainOfArrowsLogic: function(battle, caster, target, spell, spellLevel = 1) {
     },
 
     // Druid Family Spells
-    naturesBlessingLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
-        battle.dealDamage(caster, target, damage, 'magical');
+naturesBlessingLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarGrant = spellHelpers.getParam(spell, 'actionBarGrant', levelIndex, 0.1);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical'
+    });
+    
+    const lowestHpAlly = spellHelpers.getLowestHpAlly(battle, caster);
+    if (lowestHpAlly) {
+        actionBarHelpers.grant(lowestHpAlly, actionBarGrant, battle);
         
-        const lowestHpAlly = spellHelpers.getLowestHpAlly(battle, caster);
-        if (lowestHpAlly) {
-            actionBarHelpers.grant(lowestHpAlly, 0.1, battle);
-            
-            if (caster.summonerFemalePassive) {
-                const healAmount = hpHelpers.percentOfMaxHp(lowestHpAlly, 0.05);
-                battle.healUnit(lowestHpAlly, healAmount);
-            }
+        if (caster.summonerFemalePassive) {
+            const healAmount = hpHelpers.percentOfMaxHp(lowestHpAlly, 0.05);
+            battle.healUnit(lowestHpAlly, healAmount);
         }
+    }
         
         if (caster.summonerMalePassive) {
             const enemies = battle.getEnemies(caster);
@@ -833,23 +837,26 @@ barkskinLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    naturesBalanceLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const healAmount = spellHelpers.getParam(spell, 'healAmount', levelIndex, 10);
-        const damageAmount = spellHelpers.getParam(spell, 'damageAmount', levelIndex, 10);
-        
-        spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            buffDebuffHelpers.clearDebuffs(ally);
-            battle.healUnit(ally, healAmount);
-            battle.log(`${ally.name} cleansed and healed!`);
-        });
-        
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+naturesBalanceLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const healAmount = spellHelpers.getParam(spell, 'healAmount', levelIndex, 10);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        buffDebuffHelpers.clearDebuffs(ally);
+        battle.healUnit(ally, healAmount);
+        battle.log(`${ally.name} cleansed and healed!`);
+    });
+    
+    // Use aoeDamageSpell helper for damage portion
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        perEnemyEffect: (battle, caster, enemy) => {
             buffDebuffHelpers.clearBuffs(enemy);
-            battle.dealDamage(caster, enemy, damageAmount, 'magical');
-            battle.log(`${enemy.name} dispelled and damaged!`);
-        });
-    },
+            battle.log(`${enemy.name} dispelled!`);
+        }
+    });
+},
 
     runemasterMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.runemasterMalePassive = true;
