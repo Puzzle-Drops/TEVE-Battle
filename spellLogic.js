@@ -4397,8 +4397,9 @@ tentacleSlamLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 maddeningPresenceLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const actionBarDrain = spell.actionBarDrain || 0.15;
-    const debuffDuration = spell.debuffDuration || 2;
+    const levelIndex = spellLevel - 1;
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.15);
+    const debuffDuration = spellHelpers.getParam(spell, 'debuffDuration', levelIndex, 2);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
         actionBarHelpers.drain(enemy, actionBarDrain, battle);
@@ -4411,8 +4412,8 @@ maddeningPresenceLogic: function(battle, caster, target, spell, spellLevel = 1) 
 
 eldritchResilienceLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const shieldPercent = spell.shieldPercent || 0.4;
-    const immuneDuration = spell.immuneDuration || 1;
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.4);
+    const immuneDuration = spellHelpers.getParam(spell, 'immuneDuration', levelIndex, 1);
     
     const shieldAmount = hpHelpers.percentOfMaxHp(caster, shieldPercent);
     battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
@@ -4420,8 +4421,9 @@ eldritchResilienceLogic: function(battle, caster, target, spell, spellLevel = 1)
 },
 
 phantomBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const debuffThreshold = spell.debuffThreshold || 3;
-    const damageMultiplier = spell.damageMultiplier || 2;
+    const levelIndex = spellLevel - 1;
+    const debuffThreshold = spellHelpers.getParam(spell, 'debuffThreshold', levelIndex, 3);
+    const damageMultiplier = spellHelpers.getParam(spell, 'damageMultiplier', levelIndex, 2);
     const debuffCount = buffDebuffHelpers.countDebuffs(target);
     
     spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
@@ -4437,7 +4439,7 @@ phantomBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 mirrorImagesLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const duration = spell.duration || 2;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
     
     spellHelpers.forEachAliveAlly(battle, caster, ally => {
         battle.applyBuff(ally, 'Frost Armor', duration, {});
@@ -4446,16 +4448,31 @@ mirrorImagesLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 realityTwistLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const duration = spell.duration || 2;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-        multiApplyHelpers.convertBuffsToDebuffs(battle, enemy, caster);
+        // Get all buffs (excluding Boss)
+        const buffsToConvert = buffDebuffHelpers.getBuffs(enemy).filter(b => b.name !== 'Boss');
+        buffDebuffHelpers.clearBuffs(enemy, ['Boss']);
+        
+        if (buffsToConvert.length === 0) return;
+        
+        // Debuff types that can be applied
+        const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Blight', 'Bleed', 'Mark'];
+        
+        // Convert each buff to a random debuff with the spell's duration
+        buffsToConvert.forEach(buff => {
+            const randomDebuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
+            applyConfiguredDebuff(battle, enemy, randomDebuff, duration);
+        });
     });
+    
     battle.log(`Reality twists, converting all enemy buffs to debuffs!`);
 },
 
 dimensionalSlashLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const armorPierce = spell.armorPierce || 0.5;
+    const levelIndex = spellLevel - 1;
+    const armorPierce = spellHelpers.getParam(spell, 'armorPierce', levelIndex, 0.5);
     
     spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
         scalingTypes: {attack: true, str: true},
@@ -4466,8 +4483,8 @@ dimensionalSlashLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 mazeShiftLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const duration = spell.duration || 2;
-    const actionBarDrain = spell.actionBarDrain || 0.2;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.2);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
         applyConfiguredDebuff(battle, enemy, 'Reduce Speed', duration);
@@ -4477,7 +4494,7 @@ mazeShiftLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 guardiansWardLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const shieldPercent = spell.shieldPercent || 0.3;
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.3);
     
     spellHelpers.forEachAliveAlly(battle, caster, ally => {
         const shieldAmount = hpHelpers.percentOfMaxHp(ally, shieldPercent);
