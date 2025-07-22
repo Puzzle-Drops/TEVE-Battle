@@ -572,6 +572,21 @@ divineLightLogic: function(battle, caster, target, spell, spellLevel = 1) {
     if (debuffsRemoved > 0) {
         battle.log(`Removed ${debuffsRemoved} debuff${debuffsRemoved > 1 ? 's' : ''} from ${target.name}!`);
     }
+    
+    // Hierophant Male passive - Divine Retribution
+    if (caster.hierophantMalePassive && caster.divineRetributionChance && Math.random() < caster.divineRetributionChance) {
+        const enemies = battle.getEnemies(caster);
+        const aliveEnemies = enemies.filter(e => e && e.isAlive);
+        
+        if (aliveEnemies.length > 0) {
+            const randomEnemy = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+            battle.log(`Divine retribution! ${target.name} strikes ${randomEnemy.name}!`);
+            
+            // Deal damage based on the healed target's attack
+            const retributionDamage = target.source.attack;
+            battle.dealDamage(target, randomEnemy, retributionDamage, 'physical');
+        }
+    }
 },
 
 sanctuaryLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -590,6 +605,14 @@ sanctuaryLogic: function(battle, caster, target, spell, spellLevel = 1) {
             battle.log(`Sanctuary cleanses ${removedDebuff.name} from ${ally.name}!`);
         }
     });
+    
+    // Hierophant Female passive - Sanctuary Momentum
+    if (caster.hierophantFemalePassive && caster.sanctuaryActionBarGrant) {
+        spellHelpers.forEachAliveAlly(battle, caster, ally => {
+            actionBarHelpers.grant(ally, caster.sanctuaryActionBarGrant, battle);
+        });
+        battle.log(`Sanctuary's divine energy accelerates all allies!`);
+    }
 },
 
 massHealLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -600,6 +623,12 @@ massHealLogic: function(battle, caster, target, spell, spellLevel = 1) {
         battle.healUnit(ally, healAmount);
         battle.applyBuff(ally, 'Immune', 2, { immunity: true });
     });
+    
+    // Prophetess Female passive - Mass Momentum
+    if (caster.prophetessFemalePassive && caster.massHealActionBarChance && Math.random() < caster.massHealActionBarChance) {
+        actionBarHelpers.fill(caster, battle);
+        battle.log(`${caster.name}'s mass healing momentum fills their action bar!`);
+    }
 },
 
 hierophantMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
