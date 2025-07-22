@@ -2695,7 +2695,7 @@
     "spells": [
       "draining_kiss",
       "charm",
-      "life_tap"
+      "infernal_tempo"
     ]
   },
   "pit_fiend": {
@@ -2723,7 +2723,7 @@
       "resist": 13
     },
     "spells": [
-      "crushing_blow_demon",
+      "hells_impact",
       "hellfire_aura_passive"
     ]
   },
