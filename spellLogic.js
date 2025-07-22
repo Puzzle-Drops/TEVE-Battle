@@ -527,30 +527,52 @@ const spellLogic = {
     },
 
     // Acolyte Family Spells
-    holySmiteLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.3);
-        
-        const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
-        battle.dealDamage(caster, target, damage, 'magical');
-        
-        const lowestHpAlly = spellHelpers.getLowestHpAlly(battle, caster);
-        if (lowestHpAlly) {
-            const healAmount = damage * healPercent;
-            battle.healUnit(lowestHpAlly, healAmount);
-        }
-    },
+holySmiteLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.3);
+    
+    const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
+    const actualDamage = battle.dealDamage(caster, target, damage, 'magical');
+    
+    const lowestHpAlly = spellHelpers.getLowestHpAlly(battle, caster);
+    if (lowestHpAlly && actualDamage > 0) {
+        const healAmount = actualDamage * healPercent;
+        battle.healUnit(lowestHpAlly, healAmount);
+    }
+},
 
-    divineLightLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const healAmount = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: false, int: true});
-        
-        battle.healUnit(target, healAmount);
-        
+divineLightLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const healAmount = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
+    
+    // Check if target is at full HP before healing
+    const isFullHp = target.currentHp >= target.maxHp;
+    
+    // Heal the target
+    const actualHeal = battle.healUnit(target, healAmount);
+    
+    // If target was full HP, apply shield and immune
+    if (isFullHp) {
+        const shieldAmount = Math.floor(healAmount / 2);
+        battle.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
+        battle.applyBuff(target, 'Immune', 1, { immunity: true });
+        battle.log(`${target.name} is already at full health! Gains shield and immunity!`);
+    }
+    
+    // Remove up to 3 debuffs
+    let debuffsRemoved = 0;
+    for (let i = 0; i < 3; i++) {
         if (buffDebuffHelpers.removeFirstDebuff(target)) {
-            battle.log(`Removed a debuff from ${target.name}!`);
+            debuffsRemoved++;
+        } else {
+            break; // No more debuffs to remove
         }
-    },
+    }
+    
+    if (debuffsRemoved > 0) {
+        battle.log(`Removed ${debuffsRemoved} debuff${debuffsRemoved > 1 ? 's' : ''} from ${target.name}!`);
+    }
+},
 
     sanctuaryLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
