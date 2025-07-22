@@ -3232,18 +3232,18 @@ soulDrainLogic: function(battle, caster, target, spell, spellLevel = 1) {
         battle.applyBuff(caster, 'Increase Speed', duration, {});
     },
 
-    lifeTapLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const hpCost = spell.hpCost || 0.2;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        
-        const hpSacrifice = hpHelpers.drainHpPercent(caster, hpCost);
-        battle.log(`${caster.name} sacrifices ${hpSacrifice} HP!`);
-        
-        spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
-        });
-    },
+lifeTapLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const hpCost = spellHelpers.getParam(spell, 'hpCost', levelIndex, 0.2);
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    const hpSacrifice = hpHelpers.drainHpPercent(caster, hpCost);
+    battle.log(`${caster.name} sacrifices ${hpSacrifice} HP!`);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
+    });
+},
 
     tombStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
