@@ -69,8 +69,8 @@
 "sanctuary": {
     "id": "sanctuary",
     "name": "Sanctuary",
-    "description": "All allies gain Increase Defense and convert debuffs to Increase Attack for {duration} turns",
-    "cooldown": [6, 6, 5, 5, 4],
+    "description": "All allies gain Increase Defense and Increase Attack for {duration} turns and cleanse one random debuff",
+    "cooldown": [6, 5, 4, 4, 3],
     "effects": ["aoe", "buff_increase_defense", "buff_increase_attack", "cleanse"],
     "duration": [2, 2, 2, 3, 3],
     "target": "all_allies",
@@ -79,11 +79,12 @@
 "mass_heal": {
     "id": "mass_heal",
     "name": "Mass Heal",
-    "description": "Heal all allies for [{base} + {int}] HP",
-    "cooldown": [6, 6, 5, 5, 4],
-    "effects": ["aoe", "heal"],
+    "description": "Heal all allies for [{base} + {attack} + {int}] HP and grant Immune for 2 turns",
+    "cooldown": [6, 5, 5, 5, 4],
+    "effects": ["aoe", "heal", "buff_immune"],
     "scaling": {
         "base": [20, 200, 400, 800, 1400],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "int": [0.7, 0.75, 0.8, 0.85, 0.9]
     },
     "target": "all_allies",
