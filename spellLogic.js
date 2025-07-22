@@ -4085,8 +4085,9 @@ tormentLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 demonicGiggleLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const actionBarGrant = spell.actionBarGrant || 0.1;
-    const debuffDuration = spell.debuffDuration || 2;
+    const levelIndex = spellLevel - 1;
+    const actionBarGrant = spellHelpers.getParam(spell, 'actionBarGrant', levelIndex, 0.1);
+    const debuffDuration = spellHelpers.getParam(spell, 'debuffDuration', levelIndex, 2);
     
     // Grant 10% action bar to all enemies
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
@@ -4107,8 +4108,8 @@ demonicGiggleLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 infernalBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const bleedChance = spell.bleedChance || 0.4;
-    const bleedDuration = spell.bleedDuration || 2;
+    const bleedChance = spellHelpers.getParam(spell, 'bleedChance', levelIndex, 0.4);
+    const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 2);
     
     spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
         scalingTypes: {attack: true, str: true},
