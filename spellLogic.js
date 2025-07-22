@@ -3519,10 +3519,12 @@ alphasCallPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) 
         });
     },
 
-    bladeDancerPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.bladeMasteryPassive = true;
-        caster.bladeMasteryDamageBonus = spell.damageBonus || 1.5;
-    },
+bladeDancerPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    passiveHelpers.addDamageCalculation(caster, {
+        type: 'blade_mastery',
+        damageBonus: spell.damageBonus || 1.5
+    });
+},
 
     royalCommandLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
