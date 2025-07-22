@@ -3779,20 +3779,18 @@ bladeDancerPassiveLogic: function(battle, caster, target, spell, spellLevel = 1)
         });
     },
 
-    imperialCommandLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const debuffCount = spellHelpers.getParam(spell, 'debuffCount', levelIndex, 3);
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        
-        const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Blight', 'Mark'];
-        
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            for (let i = 0; i < debuffCount; i++) {
-                const randomDebuff = debuffTypes[Math.floor(Math.random() * debuffTypes.length)];
-                applyConfiguredDebuff(battle, enemy, randomDebuff, duration);
-            }
-        });
-    },
+imperialCommandLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const debuffCount = spellHelpers.getParam(spell, 'debuffCount', levelIndex, 3);
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    const debuffTypes = ['Reduce Attack', 'Reduce Speed', 'Reduce Defense', 'Bleed', 'Blight', 'Mark'];
+    
+    const enemies = battle.getEnemies(caster);
+    const aliveEnemies = enemies.filter(e => e && e.isAlive);
+    
+    multiApplyHelpers.applyRandomDebuffs(battle, aliveEnemies, debuffTypes, debuffCount * aliveEnemies.length, duration, caster);
+},
 
     abyssalShieldLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
