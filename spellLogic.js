@@ -4779,8 +4779,8 @@ soulfireLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 eternalFlameLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const duration = spell.duration || 3;
-    const bleedStacks = spell.bleedStacks || 3;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
+    const bleedStacks = spellHelpers.getParam(spell, 'bleedStacks', levelIndex, 3);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
         applyConfiguredDebuff(battle, enemy, 'Blight', duration);
@@ -4790,8 +4790,8 @@ eternalFlameLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 phoenixRisingLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const hpThreshold = spell.hpThreshold || 0.25;
-    const immuneDuration = spell.immuneDuration || 1;
+    const hpThreshold = spellHelpers.getParam(spell, 'hpThreshold', levelIndex, 0.25);
+    const immuneDuration = spellHelpers.getParam(spell, 'immuneDuration', levelIndex, 1);
     
     if (hpHelpers.isBelowThreshold(caster, hpThreshold)) {
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
@@ -4805,9 +4805,10 @@ phoenixRisingLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 cinderLordPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
     caster.cinderLordPassive = true;
     caster.immuneToReduceAttack = true;
-    const magicalDamageBonus = spell.magicalDamageBonus || 0.15;
+    const magicalDamageBonus = spellHelpers.getParam(spell, 'magicalDamageBonus', levelIndex, 0.15);
     
     // Apply magical damage bonus to all allies
     const allies = battle.getParty(caster);
