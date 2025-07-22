@@ -3146,20 +3146,21 @@ frozenSoulPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) 
     caster.magicDamageReduction = (caster.magicDamageReduction || 0) + magicResist;
 },
 
-    chillTouchLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const frostArmorDuration = spell.frostArmorDuration || 2;
-        
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, int: true},
-            damageType: 'magical',
-            afterDamage: () => {
-                const lowestHpAlly = spellHelpers.getLowestHpAlly(battle, caster);
-                if (lowestHpAlly) {
-                    battle.applyBuff(lowestHpAlly, 'Frost Armor', frostArmorDuration, {});
-                }
+chillTouchLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const frostArmorDuration = spellHelpers.getParam(spell, 'frostArmorDuration', levelIndex, 2);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        afterDamage: () => {
+            const lowestHpAlly = spellHelpers.getLowestHpAlly(battle, caster);
+            if (lowestHpAlly) {
+                battle.applyBuff(lowestHpAlly, 'Frost Armor', frostArmorDuration, {});
             }
-        });
-    },
+        }
+    });
+},
 
     spectralWailLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
@@ -3170,14 +3171,15 @@ frozenSoulPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) 
         });
     },
 
-    phaseWalkLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const actionBarGrant = spell.actionBarGrant || 0.5;
-        
-        buffDebuffHelpers.clearDebuffs(target);
-        battle.log(`${target.name} phases through reality!`);
-        
-        actionBarHelpers.grant(target, actionBarGrant);
-    },
+phaseWalkLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarGrant = spellHelpers.getParam(spell, 'actionBarGrant', levelIndex, 0.5);
+    
+    buffDebuffHelpers.clearDebuffs(target);
+    battle.log(`${target.name} phases through reality!`);
+    
+    actionBarHelpers.grant(target, actionBarGrant, battle);
+},
 
     stoneSlamLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
@@ -3204,11 +3206,12 @@ frozenSoulPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) 
         });
     },
 
-    shatterPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.shatterPassive = true;
-        caster.shatterDamage = spell.aoeDamage || 200;
-        caster.shatterSlowDuration = spell.slowDuration || 2;
-    },
+shatterPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    caster.shatterPassive = true;
+    caster.shatterDamage = spellHelpers.getParam(spell, 'aoeDamage', levelIndex, 200);
+    caster.shatterSlowDuration = spellHelpers.getParam(spell, 'slowDuration', levelIndex, 2);
+},
 
     soulDrainLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const healPercent = spell.healPercent || 0.5;
