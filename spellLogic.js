@@ -4817,121 +4817,120 @@ cinderLordPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) 
     
     battle.log(`${caster.name}'s flames enhance all magical attacks!`);
 },
+
+// Test Spells
+winLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 5);
     
-    // Test Spells
-    winLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const baseDamage = spellHelpers.getParam(spell, 'scaling.base', levelIndex, 10000000);
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 5);
-        
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.dealDamage(caster, enemy, baseDamage, 'pure');
-        });
-        
-        battle.applyBuff(caster, 'Increase Speed', duration, {});
-    },
-
-    loseLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const baseDamage = spellHelpers.getParam(spell, 'scaling.base', levelIndex, 10000000);
-        
-        const allies = battle.getParty(caster);
-        allies.forEach(ally => {
-            if (ally.currentHp > 0) {
-                battle.dealDamage(caster, ally, baseDamage, 'pure');
-            }
-        });
-    },
-
-    increaseAttackTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
-        battle.applyBuff(target, 'Increase Attack', duration, { damageMultiplier: 1.5 });
-    },
-
-    increaseSpeedTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyBuff(target, 'Increase Speed', duration, {});
-    },
-
-    increaseDefenseTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyBuff(target, 'Increase Defense', duration, {});
-    },
-
-    immuneTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyBuff(target, 'Immune', duration, { immunity: true });
-    },
-
-    shieldTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const shieldAmount = spellHelpers.getParam(spell, 'shieldAmount', levelIndex, 50);
-        battle.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
-    },
-
-    frostArmorTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        battle.applyBuff(target, 'Frost Armor', duration, {});
-    },
-
-    reduceAttackTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        applyConfiguredDebuff(battle, target, 'Reduce Attack', duration);
-    },
-
-    reduceSpeedTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
-    },
-
-    reduceDefenseTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        applyConfiguredDebuff(battle, target, 'Reduce Defense', duration);
-    },
+    // Use AoE helper for cleaner code
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: false}, // Pure damage, no attack scaling
+        damageType: 'pure'
+    });
     
-    blightTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        applyConfiguredDebuff(battle, target, 'Blight', duration);
-    },
+    battle.applyBuff(caster, 'Increase Speed', duration, {});
+},
 
-    bleedTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        applyConfiguredDebuff(battle, target, 'Bleed', duration);
-    },
+loseLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const baseDamage = spellHelpers.getParam(spell, 'scaling.base', levelIndex, 10000000);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        battle.dealDamage(caster, ally, baseDamage, 'pure');
+    });
+},
 
-    stunTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
-        applyConfiguredDebuff(battle, target, 'Stun', duration);
-    },
+increaseAttackTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    battle.applyBuff(target, 'Increase Attack', duration, { damageMultiplier: 1.5 });
+},
 
-    tauntTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        applyConfiguredDebuff(battle, target, 'Taunt', duration, caster);
-    },
+increaseSpeedTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    battle.applyBuff(target, 'Increase Speed', duration, {});
+},
 
-    silenceTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        applyConfiguredDebuff(battle, target, 'Silence', duration);
-    },
+increaseDefenseTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    battle.applyBuff(target, 'Increase Defense', duration, {});
+},
 
-    markTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        applyConfiguredDebuff(battle, target, 'Mark', duration);
-    }
+immuneTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    battle.applyBuff(target, 'Immune', duration, { immunity: true });
+},
+
+shieldTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const shieldAmount = spellHelpers.getParam(spell, 'shieldAmount', levelIndex, 50);
+    battle.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
+},
+
+frostArmorTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    battle.applyBuff(target, 'Frost Armor', duration, {});
+},
+
+reduceAttackTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    applyConfiguredDebuff(battle, target, 'Reduce Attack', duration);
+},
+
+reduceSpeedTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
+},
+
+reduceDefenseTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    applyConfiguredDebuff(battle, target, 'Reduce Defense', duration);
+},
+
+blightTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    applyConfiguredDebuff(battle, target, 'Blight', duration);
+},
+
+bleedTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    applyConfiguredDebuff(battle, target, 'Bleed', duration);
+},
+
+stunTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    applyConfiguredDebuff(battle, target, 'Stun', duration);
+},
+
+tauntTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    applyConfiguredDebuff(battle, target, 'Taunt', duration, caster);
+},
+
+silenceTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    applyConfiguredDebuff(battle, target, 'Silence', duration);
+},
+
+markTestLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    applyConfiguredDebuff(battle, target, 'Mark', duration);
+}
+    
 };
 
 // Spell Manager Class
