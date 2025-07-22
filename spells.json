@@ -699,13 +699,13 @@
 "purge_slash": {
     "id": "purge_slash",
     "name": "Purge Slash",
-    "description": "Deal [{base} + {attack} + {str}] physical damage and remove 1 buff from enemy",
+    "description": "Deal [{base} + {attack} + {agi}] physical damage and remove 1 buff from enemy",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical", "dispel"],
     "scaling": {
         "base": [16, 60, 120, 240, 420],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
-        "str": [0.15, 0.17, 0.19, 0.21, 0.23]
+        "agi": [0.25, 0.27, 0.29, 0.31, 0.33]
     },
     "target": "enemy",
     "logicKey": "purgeSlashLogic"
