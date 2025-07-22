@@ -574,32 +574,33 @@ divineLightLogic: function(battle, caster, target, spell, spellLevel = 1) {
     }
 },
 
-    sanctuaryLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+sanctuaryLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        // Apply both buffs to all allies
+        battle.applyBuff(ally, 'Increase Defense', duration, {});
+        battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
         
-        spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            battle.applyBuff(ally, 'Increase Defense', duration, {});
-            
-            const debuffCount = buffDebuffHelpers.countDebuffs(ally);
-            if (debuffCount > 0) {
-                buffDebuffHelpers.clearDebuffs(ally);
-                for (let i = 0; i < debuffCount; i++) {
-                    battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
-                }
-                battle.log(`${ally.name}'s debuffs converted to Increase Attack!`);
-            }
-        });
-    },
+        // Remove one random debuff if any exist
+        if (ally.debuffs && ally.debuffs.length > 0) {
+            const randomIndex = Math.floor(Math.random() * ally.debuffs.length);
+            const removedDebuff = ally.debuffs.splice(randomIndex, 1)[0];
+            battle.log(`Sanctuary cleanses ${removedDebuff.name} from ${ally.name}!`);
+        }
+    });
+},
 
-    massHealLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const healAmount = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: false, int: true});
-        
-        spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            battle.healUnit(ally, healAmount);
-        });
-    },
+massHealLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const healAmount = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        battle.healUnit(ally, healAmount);
+        battle.applyBuff(ally, 'Immune', 2, { immunity: true });
+    });
+},
 
     hierophantMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.hierophantMalePassive = true;
