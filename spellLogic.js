@@ -4203,21 +4203,15 @@ hellsImpactLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 hellfireAuraPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
     caster.hellfireAuraPassive = true;
-    caster.hellfireRetaliationDamage = spell.retaliationDamage || 50;
-    caster.hellfireSlowDuration = spell.slowDuration || 1;
-    
-    // Add on-damage-taken effect
-    passiveHelpers.addOnDamageTaken(caster, {
-        type: 'hellfire_retaliation',
-        damage: caster.hellfireRetaliationDamage,
-        slowDuration: caster.hellfireSlowDuration
-    });
+    caster.hellfireRetaliationDamage = spellHelpers.getParam(spell, 'retaliationDamage', levelIndex, 50);
+    caster.hellfireSlowDuration = spellHelpers.getParam(spell, 'slowDuration', levelIndex, 1);
 },
 
 demonsWrathLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const randomTargets = spell.randomTargets || 2;
+    const randomTargets = spellHelpers.getParam(spell, 'randomTargets', levelIndex, 2);
     
     // Heavy physical damage to main target
     const physicalDamage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, str: true});
@@ -4237,8 +4231,8 @@ demonsWrathLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 summonHellfireLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const blightDuration = spell.blightDuration || 3;
-    const buffDuration = spell.buffDuration || 2;
+    const blightDuration = spellHelpers.getParam(spell, 'blightDuration', levelIndex, 3);
+    const buffDuration = spellHelpers.getParam(spell, 'buffDuration', levelIndex, 2);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
         applyConfiguredDebuff(battle, enemy, 'Blight', blightDuration);
@@ -4250,7 +4244,8 @@ summonHellfireLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 infernalCommandLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const actionBarGrant = spell.actionBarGrant || 0.3;
+    const levelIndex = spellLevel - 1;
+    const actionBarGrant = spellHelpers.getParam(spell, 'actionBarGrant', levelIndex, 0.3);
     
     // Reset all enemy action bars to 0
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
