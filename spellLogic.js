@@ -1078,7 +1078,7 @@ const spellLogic = {
         }
         
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, str: true},
+            scalingTypes: {attack: true, agi: true},
             damageType: damageType
         });
     },
