@@ -4285,8 +4285,8 @@ soulReaperLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 underworldGatesLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const duration = spell.duration || 3;
-    const actionBarDrain = spell.actionBarDrain || 0.3;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.3);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
         applyConfiguredDebuff(battle, enemy, 'Mark', duration);
@@ -4297,8 +4297,8 @@ underworldGatesLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 eternalTormentLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const duration = spell.duration || 3;
-    const stackCount = spell.stackCount || 2;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
+    const stackCount = spellHelpers.getParam(spell, 'stackCount', levelIndex, 2);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
         multiApplyHelpers.applyDebuffStacks(battle, enemy, 'Bleed', stackCount, duration);
@@ -4308,14 +4308,15 @@ eternalTormentLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 deathsDomainPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
     caster.deathsDomainPassive = true;
-    caster.deathsDomainShieldPercent = spell.shieldPercent || 0.2;
-    caster.deathsDomainSpeedDuration = spell.speedDuration || 2;
+    caster.deathsDomainShieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.2);
+    caster.deathsDomainSpeedDuration = spellHelpers.getParam(spell, 'speedDuration', levelIndex, 2);
 },
 
 psychicLashLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const actionBarDrain = spell.actionBarDrain || 0.1;
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.1);
     
     spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
         scalingTypes: {attack: true, int: true},
@@ -4336,7 +4337,7 @@ mindFogLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 telepathicSurgeLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const speedDuration = spell.speedDuration || 2;
+    const speedDuration = spellHelpers.getParam(spell, 'speedDuration', levelIndex, 2);
     
     // Steal all buffs from target
     const stolenBuffs = buffDebuffHelpers.clearBuffs(target);
