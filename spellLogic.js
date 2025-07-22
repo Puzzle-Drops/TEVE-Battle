@@ -3387,23 +3387,26 @@ eternalWinterLogic: function(battle, caster, target, spell, spellLevel = 1) {
         battle.applyBuff(caster, 'Increase Speed', speedDuration, {});
     },
 
-    swiftArrowLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const actionBarGrant = spellHelpers.getParam(spell, 'actionBarGrant', levelIndex, 0.1);
-        
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, agi: true},
-            damageType: 'physical',
-            afterDamage: (battle, caster) => {
-                const allies = battle.getParty(caster);
-                const aliveAllies = allies.filter(a => a && a.isAlive && a !== caster);
-                if (aliveAllies.length > 0) {
-                    const randomAlly = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
-                    actionBarHelpers.grant(randomAlly, actionBarGrant, battle);
-                }
+swiftArrowLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarGrant = spellHelpers.getParam(spell, 'actionBarGrant', levelIndex, 0.1);
+    
+    // Store reference for closure
+    const grantAmount = actionBarGrant;
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        afterDamage: (battle, caster) => {
+            const allies = battle.getParty(caster);
+            const aliveAllies = allies.filter(a => a && a.isAlive && a !== caster);
+            if (aliveAllies.length > 0) {
+                const randomAlly = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
+                actionBarHelpers.grant(randomAlly, grantAmount, battle);
             }
-        });
-    },
+        }
+    });
+},
 
     elvenVolleyLogic: function(battle, caster, target, spell, spellLevel = 1) {
         spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
@@ -3447,10 +3450,11 @@ eternalWinterLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    alphasCallPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.alphasCallPassive = true;
-        caster.alphasCallBuffDuration = spell.buffDuration || 2;
-    },
+alphasCallPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    caster.alphasCallPassive = true;
+    caster.alphasCallBuffDuration = spellHelpers.getParam(spell, 'buffDuration', levelIndex, 2);
+},
 
     shadowStrikeElfLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
