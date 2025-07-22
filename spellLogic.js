@@ -3890,13 +3890,10 @@ imperialCommandLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    mutationLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        
-        multiApplyHelpers.convertBuffsToDebuffs(battle, target, duration);
-        battle.log(`${target.name}'s buffs mutated into debuffs!`);
-    },
+mutationLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    multiApplyHelpers.convertBuffsToDebuffs(battle, target, caster);
+    battle.log(`${target.name}'s buffs mutated into debuffs!`);
+},
 
     toxicRemedyLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
