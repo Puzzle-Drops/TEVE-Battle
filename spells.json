@@ -238,7 +238,7 @@
 "natures_blessing": {
     "id": "natures_blessing",
     "name": "Nature's Blessing",
-    "description": "Deal [{base} + {attack} + {int}] magic damage to enemy and grant 10% action bar to all allies",
+    "description": "Deal [{base} + {attack} + {int}] magic damage to enemy and grant 10% action bar to lowest HP ally",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["magical", "support"],
     "scaling": {
@@ -246,19 +246,19 @@
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "int": [0.6, 0.63, 0.66, 0.69, 0.72]
     },
-    "actionBarGrant": 0.1,
+    "actionBarGrant": [0.1, 0.1, 0.1, 0.1, 0.1],
     "target": "enemy",
     "logicKey": "naturesBlessingLogic"
 },
 "barkskin": {
     "id": "barkskin",
     "name": "Barkskin",
-    "description": "Target ally gains Increase Defense for {duration} turns, heals {healPercent} HP, and gains {shieldPercent} max HP shield",
+    "description": "Target ally gains Increase Defense for {duration} turns, heals {healPercent}% HP, and gains {shieldPercent}% max HP shield",
     "cooldown": [4, 4, 3, 3, 2],
     "effects": ["buff_increase_defense", "heal", "buff_shield"],
     "duration": [1, 2, 2, 2, 3],
-    "healPercent": [12, 14, 16, 18, 20],
-    "shieldPercent": [6, 7, 8, 9, 10],
+    "healPercent": [0.12, 0.14, 0.16, 0.18, 0.20],
+    "shieldPercent": [0.06, 0.07, 0.08, 0.09, 0.10],
     "target": "ally",
     "logicKey": "barkskinLogic"
 },
@@ -280,7 +280,7 @@
 "natures_balance": {
     "id": "natures_balance",
     "name": "Nature's Balance",
-    "description": "AOE: Remove all debuffs from allies (heal {healAmount}) OR remove all buffs from enemies (deal {damageAmount} damage)",
+    "description": "Remove all debuffs from allies and heal {healAmount}, while removing all buffs from enemies and dealing {damageAmount} damage",
     "cooldown": [5, 5, 4, 4, 3],
     "effects": ["aoe", "cleanse", "dispel"],
     "healAmount": [10, 50, 100, 200, 350],
