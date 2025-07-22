@@ -724,25 +724,20 @@ prophetessFemalePassiveLogic: function(battle, caster, target, spell, spellLevel
         }
     },
 
-    rainOfArrowsLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const debuffBonus = spellHelpers.getParam(spell, 'debuffBonus', levelIndex, 5);
-        
-        // Base damage to all enemies
-        spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
-            scalingTypes: {attack: true, agi: true},
-            damageType: 'physical'
-        });
-        
-        // Then apply bonus damage per debuff
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            const debuffCount = buffDebuffHelpers.countDebuffs(enemy);
-            if (debuffCount > 0) {
-                const bonusDamage = debuffBonus * debuffCount;
-                battle.dealDamage(caster, enemy, bonusDamage, 'physical');
-            }
-        });
-    },
+rainOfArrowsLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const debuffBonus = spellHelpers.getParam(spell, 'debuffBonus', levelIndex, 20);
+    
+    // Calculate base damage once
+    const baseDamage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, agi: true});
+    
+    // Apply damage to each enemy with debuff bonus
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        const debuffCount = buffDebuffHelpers.countDebuffs(enemy);
+        const totalDamage = baseDamage + (debuffBonus * debuffCount);
+        battle.dealDamage(caster, enemy, totalDamage, 'physical');
+    });
+},
 
     sniperMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         passiveHelpers.addDamageCalculation(caster, {
