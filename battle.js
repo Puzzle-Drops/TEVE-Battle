@@ -462,17 +462,17 @@ applyInitialPassives() {
         });
         
         // Apply Lord's Presence passive effects
-        if (unit.lordsPresencePassive) {
-            const attackBonus = 0.2;
-            const allies = this.getParty(unit);
-            allies.forEach(ally => {
-                if (ally.isAlive) {
-                    ally.source.attack = Math.floor(ally.source.attack * (1 + attackBonus));
-                    ally.stunImmunity = true;
-                }
-            });
-            this.log(`${unit.name}'s presence empowers all allies!`);
+if (unit.lordsPresencePassive) {
+    const attackBonus = unit.lordsPresenceAttackBonus || 0.2;
+    const allies = this.getParty(unit);
+    allies.forEach(ally => {
+        if (ally.isAlive) {
+            ally.source.attack = Math.floor(ally.source.attack * (1 + attackBonus));
+            ally.stunImmunity = true;
         }
+    });
+    this.log(`${unit.name}'s presence empowers all allies!`);
+}
         
         // Apply Cinder Lord passive effects
         if (unit.cinderLordPassive) {
