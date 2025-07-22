@@ -1519,6 +1519,14 @@ if (damageType !== 'pure') {
         }
     }
 
+// Burning Wounds passive - chance to apply Bleed when attacked
+if (target.burningWoundsPassive && target.isAlive && actualDamage > 0 && attacker.isAlive) {
+    if (Math.random() < (target.burningWoundsChance || 0.3)) {
+        this.applyDebuff(attacker, 'Bleed', target.burningWoundsBleedDuration || 1, {});
+        this.log(`${attacker.name} starts bleeding from ${target.name}'s burning wounds!`);
+    }
+}
+
     // Runemaster Female passive - retaliate with Nature's Blessing when taking magical damage
     if (target.runemasterFemalePassive && target.isAlive && actualDamage > 0 && damageType === 'magical') {
         // Find lowest HP ally
