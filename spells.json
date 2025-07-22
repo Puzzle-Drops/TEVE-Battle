@@ -3995,19 +3995,19 @@
   "target": "enemy",
   "logicKey": "charmLogic"
 },
-"life_tap": {
-  "id": "life_tap",
-  "name": "Life Tap",
+"inferno_tempo": {
+  "id": "inferno_tempo",
+  "name": "Inferno Tempo",
   "description": "Steal 20% action bar from all enemies, distribute to allies",
   "cooldown": [4, 4, 3, 3, 2],
   "effects": ["aoe", "support"],
   "actionBarSteal": 0.2,
   "target": "all",
-  "logicKey": "lifeTapLogic"
+  "logicKey": "infernoTempoLogic"
 },
-"crushing_blow_demon": {
-  "id": "crushing_blow_demon",
-  "name": "Crushing Blow",
+"hells_impact": {
+  "id": "hells_impact",
+  "name": "Hells Impact",
   "description": "Devastating strike dealing [{base} + {attack} + {str}] physical damage, +50% damage if target has Reduce Defense",
   "cooldown": [0, 0, 0, 0, 0],
   "effects": ["physical"],
@@ -4018,7 +4018,7 @@
   },
   "reducedDefenseBonus": 1.5,
   "target": "enemy",
-  "logicKey": "crushingBlowDemonLogic"
+  "logicKey": "hellsImpactLogic"
 },
 "hellfire_aura_passive": {
   "id": "hellfire_aura_passive",
