@@ -599,10 +599,12 @@ sanctuaryLogic: function(battle, caster, target, spell, spellLevel = 1) {
         battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
         
         // Remove one random debuff if any exist
-        if (ally.debuffs && ally.debuffs.length > 0) {
-            const randomIndex = Math.floor(Math.random() * ally.debuffs.length);
-            const removedDebuff = ally.debuffs.splice(randomIndex, 1)[0];
-            battle.log(`Sanctuary cleanses ${removedDebuff.name} from ${ally.name}!`);
+        const debuffs = buffDebuffHelpers.getDebuffs(ally);
+        if (debuffs.length > 0) {
+            const randomDebuff = debuffs[Math.floor(Math.random() * debuffs.length)];
+            if (buffDebuffHelpers.removeDebuff(ally, randomDebuff.name)) {
+                battle.log(`Sanctuary cleanses ${randomDebuff.name} from ${ally.name}!`);
+            }
         }
     });
     
@@ -626,8 +628,8 @@ massHealLogic: function(battle, caster, target, spell, spellLevel = 1) {
     
     // Prophetess Female passive - Mass Momentum
     if (caster.prophetessFemalePassive && caster.massHealActionBarChance && Math.random() < caster.massHealActionBarChance) {
-        actionBarHelpers.fill(caster, battle);
-        battle.log(`${caster.name}'s mass healing momentum fills their action bar!`);
+        actionBarHelpers.grant(caster, caster.massHealActionBarGain, battle);
+        battle.log(`${caster.name}'s mass healing momentum grants full action bar!`);
     }
 },
 
