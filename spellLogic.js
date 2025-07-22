@@ -4125,7 +4125,7 @@ infernalBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
 hellishVigorLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
     const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-    const shieldPercent = spell.shieldPercent || 0.25;
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.25);
     
     battle.applyBuff(caster, 'Increase Defense', duration, {});
     
@@ -4135,8 +4135,8 @@ hellishVigorLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 damnedChargeLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const tauntDuration = spell.tauntDuration || 1;
-    const buffDuration = spell.buffDuration || 2;
+    const tauntDuration = spellHelpers.getParam(spell, 'tauntDuration', levelIndex, 1);
+    const buffDuration = spellHelpers.getParam(spell, 'buffDuration', levelIndex, 2);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
         applyConfiguredDebuff(battle, enemy, 'Taunt', tauntDuration, caster);
@@ -4147,7 +4147,7 @@ damnedChargeLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 drainingKissLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const healPercent = spell.healPercent || 0.3;
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.3);
     
     const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
     const damageDealt = battle.dealDamage(caster, target, damage, 'magical');
@@ -4158,8 +4158,8 @@ drainingKissLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 charmLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const tauntDuration = spell.tauntDuration || 2;
-    const debuffDuration = spell.debuffDuration || 2;
+    const tauntDuration = spellHelpers.getParam(spell, 'tauntDuration', levelIndex, 2);
+    const debuffDuration = spellHelpers.getParam(spell, 'debuffDuration', levelIndex, 2);
     
     applyConfiguredDebuff(battle, target, 'Taunt', tauntDuration, caster);
     applyConfiguredDebuff(battle, target, 'Reduce Attack', debuffDuration);
