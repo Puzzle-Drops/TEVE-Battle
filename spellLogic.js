@@ -4581,8 +4581,8 @@ lavaBurstLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 moltenShieldLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const shieldPercent = spell.shieldPercent || 0.2;
-    const retaliationDamage = spell.retaliationDamage || 75;
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.2);
+    const retaliationDamage = spellHelpers.getParam(spell, 'retaliationDamage', levelIndex, 75);
     
     const shieldAmount = hpHelpers.percentOfMaxHp(caster, shieldPercent);
     battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
@@ -4593,7 +4593,7 @@ moltenShieldLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 eruptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const bleedDuration = spell.bleedDuration || 2;
+    const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 2);
     
     spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
         scalingTypes: {attack: true, int: true},
