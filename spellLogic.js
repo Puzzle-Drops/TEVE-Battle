@@ -4708,8 +4708,8 @@ rebirthLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 fromAshesLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const healPercent = spell.healPercent || 0.25;
-    const hpThreshold = spell.hpThreshold || 0.25;
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.25);
+    const hpThreshold = spellHelpers.getParam(spell, 'hpThreshold', levelIndex, 0.25);
     
     // Set up the trigger for when HP drops below threshold
     caster.fromAshesReady = true;
@@ -4735,7 +4735,7 @@ pyroblastLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 flameWaveLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const duration = spell.duration || 3;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
     
     spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
         scalingTypes: {attack: true, int: true},
@@ -4748,8 +4748,8 @@ flameWaveLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 infernalRageLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const duration = spell.duration || 2;
-    const stackCount = spell.stackCount || 3;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    const stackCount = spellHelpers.getParam(spell, 'stackCount', levelIndex, 3);
     
     // Apply stacks to self
     for (let i = 0; i < stackCount; i++) {
@@ -4763,16 +4763,15 @@ infernalRageLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 burningAuraPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
     caster.burningAuraPassive = true;
-    const procChance = spell.procChance || 0.3;
-    const bleedDuration = spell.bleedDuration || 1;
-    
-    // Note: This effect would need to be implemented in the damage calculation
-    // to check when caster is attacked
+    caster.burningAuraChance = spellHelpers.getParam(spell, 'procChance', levelIndex, 0.3);
+    caster.burningAuraBleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 1);
 },
 
 soulfireLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const hpPercentDamage = spell.hpPercentDamage || 0.1;
+    const levelIndex = spellLevel - 1;
+    const hpPercentDamage = spellHelpers.getParam(spell, 'hpPercentDamage', levelIndex, 0.1);
     
     const damage = target.currentHp * hpPercentDamage;
     battle.dealDamage(caster, target, damage, 'magical');
