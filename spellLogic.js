@@ -4811,12 +4811,11 @@ cinderLordPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) 
     const magicalDamageBonus = spellHelpers.getParam(spell, 'magicalDamageBonus', levelIndex, 0.15);
     
     // Apply magical damage bonus to all allies
-    const allies = battle.getParty(caster);
-    allies.forEach(ally => {
-        if (ally.isAlive) {
-            ally.magicalDamageBonus = (ally.magicalDamageBonus || 0) + magicalDamageBonus;
-        }
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        ally.magicalDamageBonus = (ally.magicalDamageBonus || 0) + magicalDamageBonus;
     });
+    
+    battle.log(`${caster.name}'s flames enhance all magical attacks!`);
 },
     
     // Test Spells
