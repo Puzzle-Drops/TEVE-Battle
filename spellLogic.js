@@ -4762,11 +4762,11 @@ infernalRageLogic: function(battle, caster, target, spell, spellLevel = 1) {
     });
 },
 
-burningAuraPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+burningWoundsPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    caster.burningAuraPassive = true;
-    caster.burningAuraChance = spellHelpers.getParam(spell, 'procChance', levelIndex, 0.3);
-    caster.burningAuraBleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 1);
+    caster.burningWoundsPassive = true;
+    caster.burningWoundsChance = spellHelpers.getParam(spell, 'procChance', levelIndex, 0.3);
+    caster.burningWoundsBleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 1);
 },
 
 soulfireLogic: function(battle, caster, target, spell, spellLevel = 1) {
