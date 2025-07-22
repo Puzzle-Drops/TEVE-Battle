@@ -55,11 +55,12 @@
 "divine_light": {
     "id": "divine_light",
     "name": "Divine Light",
-    "description": "Heal target ally for [{base} + {int}] HP and remove 1 debuff",
-    "cooldown": [4, 4, 4, 3, 3],
-    "effects": ["heal", "cleanse"],
+    "description": "Heal target ally for [{base} + {attack} + {int}] HP and remove up to 3 debuffs. If ally is at full HP, grants shield for half the heal amount and Immune for 1 turn",
+    "cooldown": [4, 3, 3, 3, 2],
+    "effects": ["heal", "cleanse", "shield", "buff_immune"],
     "scaling": {
         "base": [25, 100, 200, 400, 700],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "int": [0.8, 0.85, 0.9, 0.95, 1.0]
     },
     "target": "ally",
