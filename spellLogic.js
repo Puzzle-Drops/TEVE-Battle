@@ -659,26 +659,33 @@ prophetessFemalePassiveLogic: function(battle, caster, target, spell, spellLevel
     // Archer Family Spells
     aimedShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
+        const armorPierce = spellHelpers.getParam(spell, 'armorPierce', levelIndex, 0.25);
         
+        // Shield break using helper
         if (buffDebuffHelpers.removeBuff(target, 'Shield')) {
             battle.log(`${target.name}'s shield was broken!`);
         }
         
+        // Damage using helper with proper options
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, agi: true},
             damageType: 'physical',
-            damageOptions: { armorPierce: spell.armorPierce }
+            damageOptions: { armorPierce: armorPierce },
+            afterDamage: (battle, caster, target) => {
+                // Monster Hunter Male passive - apply bleed
+                if (caster.aimedShotAppliesBleed && target.isAlive) {
+                    applyConfiguredDebuff(battle, target, 'Bleed', caster.aimedShotBleedDuration || 1);
+                }
+                
+                // Monster Hunter Female passive - action bar per debuff
+                if (caster.aimedShotActionBarPerDebuff && target.isAlive) {
+                    const debuffCount = buffDebuffHelpers.countDebuffs(target);
+                    if (debuffCount > 0) {
+                        actionBarHelpers.grant(caster, debuffCount * caster.aimedShotActionBarPerDebuff, battle);
+                    }
+                }
+            }
         });
-        
-        if (caster.aimedShotAppliesBleed && target.isAlive) {
-            applyConfiguredDebuff(battle, target, 'Bleed', caster.aimedShotBleedDuration || 1);
-        }
-        
-        if (caster.aimedShotActionBarPerDebuff) {
-            const debuffCount = buffDebuffHelpers.countDebuffs(target);
-            const actionBarGainPercent = debuffCount * caster.aimedShotActionBarPerDebuff;
-            actionBarHelpers.grant(caster, actionBarGainPercent, battle);
-        }
     },
 
     huntersMarkLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -692,17 +699,28 @@ prophetessFemalePassiveLogic: function(battle, caster, target, spell, spellLevel
     doubleShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
         const debuffDuration = spellHelpers.getParam(spell, 'debuffDuration', levelIndex, 1);
-        const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, agi: true});
         
-        battle.dealDamage(caster, target, damage, 'physical');
-        applyConfiguredDebuff(battle, target, 'Reduce Defense', debuffDuration);
+        // First shot with Reduce Defense
+        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+            scalingTypes: {attack: true, agi: true},
+            damageType: 'physical',
+            afterDamage: () => {
+                applyConfiguredDebuff(battle, target, 'Reduce Defense', debuffDuration);
+            }
+        });
         
+        // Second shot to random enemy with Bleed
         const enemies = battle.getEnemies(caster);
         const aliveEnemies = enemies.filter(e => e && e.isAlive);
         if (aliveEnemies.length > 0) {
             const randomTarget = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
-            battle.dealDamage(caster, randomTarget, damage, 'physical');
-            applyConfiguredDebuff(battle, randomTarget, 'Bleed', debuffDuration);
+            spellHelpers.basicDamageSpell(battle, caster, randomTarget, spell, spellLevel, {
+                scalingTypes: {attack: true, agi: true},
+                damageType: 'physical',
+                afterDamage: () => {
+                    applyConfiguredDebuff(battle, randomTarget, 'Bleed', debuffDuration);
+                }
+            });
         }
     },
 
@@ -710,13 +728,18 @@ prophetessFemalePassiveLogic: function(battle, caster, target, spell, spellLevel
         const levelIndex = spellLevel - 1;
         const debuffBonus = spellHelpers.getParam(spell, 'debuffBonus', levelIndex, 5);
         
+        // Base damage to all enemies
         spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
             scalingTypes: {attack: true, agi: true},
-            damageType: 'physical',
-            getDamageModifier: (enemy) => {
-                const baseDamage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, agi: true});
-                const debuffCount = buffDebuffHelpers.countDebuffs(enemy);
-                return (baseDamage + (debuffBonus * debuffCount)) / baseDamage;
+            damageType: 'physical'
+        });
+        
+        // Then apply bonus damage per debuff
+        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+            const debuffCount = buffDebuffHelpers.countDebuffs(enemy);
+            if (debuffCount > 0) {
+                const bonusDamage = debuffBonus * debuffCount;
+                battle.dealDamage(caster, enemy, bonusDamage, 'physical');
             }
         });
     },
@@ -730,20 +753,29 @@ prophetessFemalePassiveLogic: function(battle, caster, target, spell, spellLevel
     },
 
     sniperFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const speedDuration = spellHelpers.getParam(spell, 'speedDuration', levelIndex, 2);
+        
         passiveHelpers.addOnKillEffect(caster, {
             type: 'buff',
             buffName: 'Increase Speed',
-            duration: 2
+            duration: speedDuration
         });
     },
 
     monsterHunterMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+        const levelIndex = spellLevel - 1;
+        const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 1);
+        
         caster.aimedShotAppliesBleed = true;
-        caster.aimedShotBleedDuration = 1;
+        caster.aimedShotBleedDuration = bleedDuration;
     },
 
     monsterHunterFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.aimedShotActionBarPerDebuff = 0.05;
+        const levelIndex = spellLevel - 1;
+        const actionBarPerDebuff = spellHelpers.getParam(spell, 'actionBarPerDebuff', levelIndex, 0.05);
+        
+        caster.aimedShotActionBarPerDebuff = actionBarPerDebuff;
     },
 
     // Druid Family Spells
