@@ -4260,21 +4260,14 @@ infernalCommandLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 lordsPresencePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
     caster.lordsPresencePassive = true;
-    const attackBonus = spell.attackBonus || 0.2;
-    
-    // Apply attack bonus to all allies
-    const allies = battle.getParty(caster);
-    allies.forEach(ally => {
-        if (ally.isAlive) {
-            ally.source.attack = Math.floor(ally.source.attack * (1 + attackBonus));
-            ally.stunImmunity = true;
-        }
-    });
+    caster.lordsPresenceAttackBonus = spellHelpers.getParam(spell, 'attackBonus', levelIndex, 0.2);
 },
 
 soulReaperLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const executeThreshold = spell.executeThreshold || 0.3;
+    const levelIndex = spellLevel - 1;
+    const executeThreshold = spellHelpers.getParam(spell, 'executeThreshold', levelIndex, 0.3);
     
     if (hpHelpers.isBelowThreshold(target, executeThreshold)) {
         // Pure damage execution
