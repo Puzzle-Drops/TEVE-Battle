@@ -473,19 +473,11 @@ if (unit.lordsPresencePassive) {
     });
     this.log(`${unit.name}'s presence empowers all allies!`);
 }
+
+
+
+
         
-        // Apply Cinder Lord passive effects
-        if (unit.cinderLordPassive) {
-            unit.immuneToReduceAttack = true;
-            const magicalDamageBonus = 0.15;
-            const allies = this.getParty(unit);
-            allies.forEach(ally => {
-                if (ally.isAlive) {
-                    ally.magicalDamageBonus = (ally.magicalDamageBonus || 0) + magicalDamageBonus;
-                }
-            });
-            this.log(`${unit.name}'s flames enhance all magical attacks!`);
-        }
     });
 }
 
