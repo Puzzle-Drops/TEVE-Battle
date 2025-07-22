@@ -602,21 +602,26 @@ massHealLogic: function(battle, caster, target, spell, spellLevel = 1) {
     });
 },
 
-    hierophantMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.hierophantMalePassive = true;
-    },
+hierophantMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.hierophantMalePassive = true;
+    caster.divineRetributionChance = spell.retributionChance || 1.0;
+},
 
-    hierophantFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.hierophantFemalePassive = true;
-    },
+hierophantFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.hierophantFemalePassive = true;
+    caster.sanctuaryActionBarGrant = spell.actionBarGrant || 0.2;
+},
 
-    prophetMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.prophetMalePassive = true;
-    },
+prophetMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.prophetMalePassive = true;
+    caster.overhealingSpillover = spell.spilloverPercent || 0.5;
+},
 
-    prophetessFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.prophetessFemalePassive = true;
-    },
+prophetessFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.prophetessFemalePassive = true;
+    caster.massHealActionBarChance = spell.actionBarChance || 0.5;
+    caster.massHealActionBarGain = spell.actionBarGain || 1.0;
+},
 
     // Archer Family Spells
     aimedShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
