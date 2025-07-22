@@ -4165,8 +4165,9 @@ charmLogic: function(battle, caster, target, spell, spellLevel = 1) {
     applyConfiguredDebuff(battle, target, 'Reduce Attack', debuffDuration);
 },
 
-lifeTapLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const actionBarSteal = spell.actionBarSteal || 0.2;
+infernalTempoLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarSteal = spellHelpers.getParam(spell, 'actionBarSteal', levelIndex, 0.2);
     
     let totalStolen = 0;
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
@@ -4185,8 +4186,9 @@ lifeTapLogic: function(battle, caster, target, spell, spellLevel = 1) {
     }
 },
 
-crushingBlowDemonLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const reducedDefenseBonus = spell.reducedDefenseBonus || 1.5;
+hellsImpactLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const reducedDefenseBonus = spellHelpers.getParam(spell, 'reducedDefenseBonus', levelIndex, 1.5);
     const hasReduceDefense = buffDebuffHelpers.hasDebuff(target, 'Reduce Defense');
     
     spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
