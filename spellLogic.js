@@ -4606,7 +4606,7 @@ eruptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 burningStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const actionBarDrain = spell.actionBarDrain || 0.05;
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.05);
     
     spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
         scalingTypes: {attack: true, agi: true},
@@ -4620,7 +4620,7 @@ burningStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
 fireDanceLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
     const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-    const stackCount = spell.stackCount || 2;
+    const stackCount = spellHelpers.getParam(spell, 'stackCount', levelIndex, 2);
     
     for (let i = 0; i < stackCount; i++) {
         battle.applyBuff(caster, 'Increase Speed', duration, {});
@@ -4632,8 +4632,9 @@ fireDanceLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 ignitionTrailPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
     caster.ignitionTrailPassive = true;
-    const bleedDuration = spell.bleedDuration || 1;
+    const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 1);
     
     passiveHelpers.addOnHitEffect(caster, {
         type: 'debuff',
@@ -4645,8 +4646,8 @@ ignitionTrailPassiveLogic: function(battle, caster, target, spell, spellLevel = 
 
 volcanicSlamLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const stunChance = spell.stunChance || 0.25;
-    const stunDuration = spell.stunDuration || 1;
+    const stunChance = spellHelpers.getParam(spell, 'stunChance', levelIndex, 0.25);
+    const stunDuration = spellHelpers.getParam(spell, 'stunDuration', levelIndex, 1);
     
     spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
         scalingTypes: {attack: true, str: true},
@@ -4661,7 +4662,7 @@ volcanicSlamLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 hardenedLavaLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const duration = spell.duration || 3;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
     
     battle.applyBuff(caster, 'Increase Defense', duration, {});
     battle.applyBuff(caster, 'Frost Armor', duration, {});
@@ -4669,8 +4670,8 @@ hardenedLavaLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 moltenCoreLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const hpCost = spell.hpCost || 0.2;
-    const duration = spell.duration || 2;
+    const hpCost = spellHelpers.getParam(spell, 'hpCost', levelIndex, 0.2);
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
     
     const hpSacrifice = hpHelpers.drainHpPercent(caster, hpCost);
     battle.log(`${caster.name} sacrifices ${hpSacrifice} HP!`);
@@ -4683,7 +4684,7 @@ moltenCoreLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 flameFeatherLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const healPercent = spell.healPercent || 0.3;
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.3);
     
     const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
     const damageDealt = battle.dealDamage(caster, target, damage, 'magical');
@@ -4697,7 +4698,7 @@ flameFeatherLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 rebirthLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const duration = spell.duration || 2;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
     
     spellHelpers.forEachAliveAlly(battle, caster, ally => {
         buffDebuffHelpers.clearDebuffs(ally);
