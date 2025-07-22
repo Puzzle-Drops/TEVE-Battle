@@ -4561,9 +4561,9 @@
   "target": "all",
   "logicKey": "infernalRageLogic"
 },
-"burning_aura_passive": {
-  "id": "burning_aura_passive",
-  "name": "Burning Aura",
+"burning_wounds_passive": {
+  "id": "burning_wounds_passive",
+  "name": "Burning Wounds",
   "description": "All enemy attacks have 30% chance to apply Bleed to attacker for 1 turn",
   "cooldown": [0, 0, 0, 0, 0],
   "effects": ["passive"],
@@ -4571,7 +4571,7 @@
   "procChance": 0.3,
   "bleedDuration": 1,
   "target": "self",
-  "logicKey": "burningAuraPassiveLogic"
+  "logicKey": "burningWoundsPassiveLogic"
 },
 "soulfire": {
   "id": "soulfire",
