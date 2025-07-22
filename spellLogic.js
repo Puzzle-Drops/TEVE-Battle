@@ -4507,16 +4507,17 @@ guardiansWardLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 eternalVigilPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
     caster.eternalVigilPassive = true;
     caster.immuneToReduceSpeed = true;
-    const speedBonus = spell.speedBonus || 0.25;
+    const speedBonus = spellHelpers.getParam(spell, 'speedBonus', levelIndex, 0.25);
     caster.actionBarSpeed = Math.floor(caster.actionBarSpeed * (1 + speedBonus));
 },
 
 mindSpikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const markDuration = spell.markDuration || 3;
-    const stunDuration = spell.stunDuration || 1;
+    const markDuration = spellHelpers.getParam(spell, 'markDuration', levelIndex, 3);
+    const stunDuration = spellHelpers.getParam(spell, 'stunDuration', levelIndex, 1);
     const isMarked = buffDebuffHelpers.hasDebuff(target, 'Mark');
     
     spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
@@ -4534,7 +4535,8 @@ mindSpikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 psychicStormLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const missingHpPercent = spell.missingHpPercent || 0.3;
+    const levelIndex = spellLevel - 1;
+    const missingHpPercent = spellHelpers.getParam(spell, 'missingHpPercent', levelIndex, 0.3);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
         const missingHp = hpHelpers.missingHp(enemy);
@@ -4545,28 +4547,21 @@ psychicStormLogic: function(battle, caster, target, spell, spellLevel = 1) {
 
 madnessCascadeLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
-    const silenceDuration = spell.silenceDuration || 1;
-    const duration = spell.duration || 3;
+    const silenceDuration = spellHelpers.getParam(spell, 'silenceDuration', levelIndex, 1);
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
         applyConfiguredDebuff(battle, enemy, 'Silence', silenceDuration);
+        applyConfiguredDebuff(battle, enemy, 'Reduce Attack', duration);
+        applyConfiguredDebuff(battle, enemy, 'Reduce Defense', duration);
     });
-    
-    // After silence wears off, apply other debuffs
-    setTimeout(() => {
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            if (enemy.isAlive) {
-                applyConfiguredDebuff(battle, enemy, 'Reduce Attack', duration);
-                applyConfiguredDebuff(battle, enemy, 'Reduce Defense', duration);
-            }
-        });
-    }, 0); // Apply immediately in same turn
 },
 
 hivemindPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
     caster.hivemindPassive = true;
-    caster.hivemindHealPercent = spell.healPercent || 0.2;
-    caster.hivemindBuffDuration = spell.buffDuration || 2;
+    caster.hivemindHealPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.2);
+    caster.hivemindBuffDuration = spellHelpers.getParam(spell, 'buffDuration', levelIndex, 2);
     
     // Note: The actual effect is handled in handleUnitDeath
 },
