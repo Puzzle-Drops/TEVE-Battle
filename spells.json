@@ -154,9 +154,9 @@
     "id": "hunters_mark",
     "name": "Hunter's Mark",
     "description": "Apply Mark and Blight debuff to target for {duration} turns",
-    "cooldown": [5, 5, 4, 4, 3],
+    "cooldown": [5, 4, 3, 3, 2],
     "effects": ["debuff_mark", "debuff_blight"],
-    "duration": [3, 3, 4, 4, 5],
+    "duration": [2, 2, 2, 2, 3],
     "target": "enemy",
     "logicKey": "huntersMarkLogic"
 },
@@ -164,7 +164,7 @@
     "id": "double_shot",
     "name": "Double Shot",
     "description": "Fire twice: first shot applies Reduce Defense, second shot hits random enemy and applies Bleed",
-    "cooldown": [6, 6, 5, 5, 4],
+    "cooldown": [4, 4, 3, 3, 2],
     "effects": ["physical", "debuff_reduce_defense", "debuff_bleed"],
     "scaling": {
         "base": [10, 60, 120, 240, 420],
@@ -179,14 +179,14 @@
     "id": "rain_of_arrows",
     "name": "Rain of Arrows",
     "description": "AOE damage dealing [{base} + {attack} + {agi}] + {debuffBonus} per debuff on enemies",
-    "cooldown": [5, 5, 4, 4, 3],
+    "cooldown": [6, 5, 5, 4, 4],
     "effects": ["aoe", "physical"],
     "scaling": {
-        "base": [8, 40, 80, 160, 280],
+        "base": [8, 30, 60, 120, 210],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "agi": [0.3, 0.32, 0.34, 0.36, 0.38]
     },
-    "debuffBonus": [5, 20, 40, 80, 140],
+    "debuffBonus": [20, 40, 80, 160, 320],
     "target": "all_enemies",
     "logicKey": "rainOfArrowsLogic"
 },
