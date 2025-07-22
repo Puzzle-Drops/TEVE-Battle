@@ -148,6 +148,16 @@ const buffDebuffHelpers = {
         }
         return false;
     },
+
+    removeDebuff: function(unit, debuffName) {
+    if (!unit.debuffs) return false;
+    const index = unit.debuffs.findIndex(d => d.name === debuffName);
+    if (index !== -1) {
+        unit.debuffs.splice(index, 1);
+        return true;
+    }
+    return false;
+},
     
     removeFirstDebuff: function(unit) {
         if (unit.debuffs && unit.debuffs.length > 0) {
@@ -4013,24 +4023,28 @@ mutationLogic: function(battle, caster, target, spell, spellLevel = 1) {
         actionBarHelpers.drain(target, actionBarDrain, battle);
     },
 
-    blackDeathLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const blightDuration = spellHelpers.getParam(spell, 'blightDuration', levelIndex, 3);
-        const buffDuration = spellHelpers.getParam(spell, 'buffDuration', levelIndex, 2);
-        
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            applyConfiguredDebuff(battle, enemy, 'Blight', blightDuration);
-        });
-        
-        spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            if (buffDebuffHelpers.hasDebuff(ally, 'Blight')) {
-                buffDebuffHelpers.removeBuff(ally, 'Blight');
-                ally.debuffs = ally.debuffs.filter(d => d.name !== 'Blight');
-                battle.applyBuff(ally, 'Increase Attack', buffDuration, { damageMultiplier: 1.5 });
-                battle.log(`${ally.name} converted Blight to power!`);
-            }
-        });
-    },
+blackDeathLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const blightDuration = spellHelpers.getParam(spell, 'blightDuration', levelIndex, 3);
+    const buffDuration = spellHelpers.getParam(spell, 'buffDuration', levelIndex, 2);
+    
+    // Apply Blight to all enemies
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        applyConfiguredDebuff(battle, enemy, 'Blight', blightDuration);
+    });
+    
+    // Cleanse Blight from allies and give them Increase Attack
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        // Check if ally has Blight and remove it
+        if (buffDebuffHelpers.hasDebuff(ally, 'Blight')) {
+            buffDebuffHelpers.removeDebuff(ally, 'Blight');
+            
+            // Apply Increase Attack
+            battle.applyBuff(ally, 'Increase Attack', buffDuration, { damageMultiplier: 1.5 });
+            battle.log(`${ally.name} converted Blight to power!`);
+        }
+    });
+},
 
     patientZeroPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.patientZeroPassive = true;
