@@ -1124,21 +1124,6 @@ executeAbility(caster, abilityIndex, target) {
                 }
             }
             
-            // Hierophant Female passive regeneration
-            if (this.currentUnit.hierophantFemalePassive) {
-                const allies = this.getParty(this.currentUnit);
-                allies.forEach(ally => {
-                    if (ally.isAlive && ally.buffs.length > 0 && !ally.debuffs.some(d => d.name === 'Blight')) {
-                        const regen = Math.floor(ally.maxHp * 0.05);
-                        const actualRegen = Math.min(regen, ally.maxHp - ally.currentHp);
-                        if (actualRegen > 0) {
-                            ally.currentHp += actualRegen;
-                            this.log(`${ally.name} regenerates ${actualRegen} HP from blessed regeneration.`);
-                        }
-                    }
-                });
-            }
-            
             // Champion Female passive shield regeneration
             if (this.currentUnit.shieldRegenTimer !== undefined && this.currentUnit.shieldRegenAmount) {
                 const shieldPercent = this.currentUnit.shieldRegenAmount / this.currentUnit.maxHp;
@@ -1900,34 +1885,32 @@ if (this.currentUnit && this.currentUnit.isAlive) {
     this.trackBattleStat(this.currentUnit.name, 'healingDone', actualHeal);
 }
         
-        // Handle overhealing for Prophet/Prophetess passives
-        if (overheal > 0) {
-            // Check if healer has Prophet/Prophetess passive
-            const healer = this.currentUnit;
-            if (healer) {
-                // Prophet Male - create shield from overheal
-                if (healer.prophetMalePassive && target.isAlive) {
-                    const maxShield = Math.floor(target.maxHp * 0.25);
-                    const shieldAmount = Math.min(overheal, maxShield);
-                    
-                    const existingShield = target.buffs.find(b => b.name === 'Shield');
-                    if (existingShield) {
-                        const newTotal = Math.min(existingShield.shieldAmount + shieldAmount, maxShield);
-                        existingShield.shieldAmount = newTotal;
-                        this.log(`${target.name}'s shield increased by overhealing!`);
-                    } else {
-                        this.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
-                        this.log(`${target.name} gains shield from overhealing!`);
-                    }
-                }
+        // Handle overhealing for Prophet Male passive
+if (overheal > 0) {
+    // Check if healer has Prophet Male passive
+    const healer = this.currentUnit;
+    if (healer && healer.prophetMalePassive && healer.overhealingSpillover) {
+        // Find next lowest HP ally (excluding current target)
+        const allies = this.getParty(healer);
+        const aliveAllies = allies.filter(a => a && a.isAlive && a !== target);
+        
+        if (aliveAllies.length > 0) {
+            aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+            const nextTarget = aliveAllies[0];
+            
+            // Calculate spillover healing
+            const spilloverAmount = Math.floor(overheal * healer.overhealingSpillover);
+            if (spilloverAmount > 0) {
+                const spilloverHeal = Math.min(spilloverAmount, nextTarget.maxHp - nextTarget.currentHp);
+                nextTarget.currentHp += spilloverHeal;
+                this.log(`Divine spillover heals ${nextTarget.name} for ${spilloverHeal} HP!`);
                 
-                // Prophetess Female - apply immune on overheal
-                if (healer.prophetessFemalePassive && target.isAlive) {
-                    this.applyBuff(target, 'Immune', 1, { immunity: true });
-                    this.log(`${target.name} gains immunity from overhealing!`);
-                }
+                // Track healing done for spillover healing
+                this.trackBattleStat(healer.name, 'healingDone', spilloverHeal);
             }
         }
+    }
+}
         
         this.log(`${target.name} is healed for ${actualHeal} HP!`);
         
@@ -2023,22 +2006,6 @@ if (this.currentUnit && this.currentUnit.isAlive) {
             
         }
         
-        // Hierophant Male passive - 20% shield when buffed
-        if (buffName !== 'Shield') { // Prevent infinite loop
-            // Find all Hierophant Male units
-            const allies = this.getParty(target);
-            allies.forEach(ally => {
-                if (ally.isAlive && ally.hierophantMalePassive && ally === this.currentUnit) {
-                    const shieldAmount = Math.floor(target.maxHp * 0.2);
-                    const existingShield = target.buffs.find(b => b.name === 'Shield');
-                    
-                    if (!existingShield) {
-                        this.applyBuff(target, 'Shield', -1, { shieldAmount: shieldAmount });
-                        this.log(`${target.name} gains divine protection shield!`);
-                    }
-                }
-            });
-        }
     }
     
     applyDebuff(target, debuffName, duration, effects) {
