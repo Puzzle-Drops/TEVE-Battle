@@ -2020,6 +2020,12 @@ if (this.currentUnit && this.currentUnit.isAlive) {
         this.log(`${target.name} is immune to debuffs!`);
         return;
     }
+
+    // Check for specific debuff immunities
+    if (debuffName === 'Reduce Speed' && target.immuneToReduceSpeed) {
+        this.log(`${target.name} is immune to speed reduction!`);
+        return;
+    }
     
     // Check for boss stun resistance
     if (debuffName === 'Stun') {
