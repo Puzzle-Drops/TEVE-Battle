@@ -3283,10 +3283,11 @@ lifeTapLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    undyingWillPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.undyingWillPassive = true;
-        caster.undyingWillHealPercent = spell.healPercent || 0.3;
-    },
+undyingWillPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    caster.undyingWillPassive = true;
+    caster.undyingWillHealPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.3);
+},
 
     frozenSoulBlastLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
@@ -3302,55 +3303,67 @@ lifeTapLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    lichsPhylacteryLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const shieldPercent = spell.shieldPercent || 0.5;
-        
-        const enemies = battle.getEnemies(caster);
-        enemies.forEach(enemy => {
-            if (enemy.isAlive) {
-                const stolen = buffDebuffHelpers.clearBuffs(enemy);
-                caster.buffs = caster.buffs || [];
-                caster.buffs.push(...stolen);
-            }
-        });
-        
-        const shieldAmount = hpHelpers.percentOfMaxHp(caster, shieldPercent);
-        battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
-    },
-
-    deathAndDecayLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
-        const actionBarDrain = spell.actionBarDrain || 0.3;
-        
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            applyConfiguredDebuff(battle, enemy, 'Blight', duration);
-            applyConfiguredDebuff(battle, enemy, 'Bleed', duration);
-            actionBarHelpers.drain(enemy, actionBarDrain);
-        });
-    },
-
-    eternalWinterLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const hpDrainPercent = spell.hpDrainPercent || 0.1;
-        let totalDrained = 0;
-        
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            const drained = hpHelpers.drainHpPercent(enemy, hpDrainPercent);
-            totalDrained += drained;
-            battle.log(`${enemy.name} loses ${drained} HP to eternal winter!`);
-        });
-        
-        const allies = battle.getParty(caster);
-        const aliveAllies = allies.filter(a => a && a.isAlive);
-        
-        if (aliveAllies.length > 0 && totalDrained > 0) {
-            const shieldPerAlly = Math.floor(totalDrained / aliveAllies.length);
-            aliveAllies.forEach(ally => {
-                battle.applyBuff(ally, 'Shield', -1, { shieldAmount: shieldPerAlly });
-            });
-            battle.log(`Allies gain ${shieldPerAlly} shield from the stolen life force!`);
+lichsPhylacteryLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.5);
+    
+    let totalBuffsStolen = 0;
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        const stolen = buffDebuffHelpers.clearBuffs(enemy);
+        if (stolen.length > 0) {
+            caster.buffs = caster.buffs || [];
+            caster.buffs.push(...stolen);
+            totalBuffsStolen += stolen.length;
         }
-    },
+    });
+    
+    if (totalBuffsStolen > 0) {
+        battle.log(`${caster.name} steals ${totalBuffsStolen} buffs!`);
+    }
+    
+    const shieldAmount = hpHelpers.percentOfMaxHp(caster, shieldPercent);
+    battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
+},
+
+deathAndDecayLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.3);
+    
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        applyConfiguredDebuff(battle, enemy, 'Blight', duration);
+        applyConfiguredDebuff(battle, enemy, 'Bleed', duration);
+        actionBarHelpers.drain(enemy, actionBarDrain, battle);
+    });
+    
+    battle.log(`Death and decay spreads across the battlefield!`);
+},
+
+eternalWinterLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const hpDrainPercent = spellHelpers.getParam(spell, 'hpDrainPercent', levelIndex, 0.1);
+    let totalDrained = 0;
+    
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        const drained = hpHelpers.drainHpPercent(enemy, hpDrainPercent);
+        totalDrained += drained;
+        battle.log(`${enemy.name} loses ${drained} HP to eternal winter!`);
+    });
+    
+    const aliveAllies = [];
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        aliveAllies.push(ally);
+    });
+    
+    if (aliveAllies.length > 0 && totalDrained > 0) {
+        const shieldPerAlly = Math.floor(totalDrained / aliveAllies.length);
+        aliveAllies.forEach(ally => {
+            battle.applyBuff(ally, 'Shield', -1, { shieldAmount: shieldPerAlly });
+        });
+        battle.log(`Allies gain ${shieldPerAlly} shield from the stolen life force!`);
+    }
+},
+    
     // Bloodleaf Depths Spells
     huntersShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
