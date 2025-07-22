@@ -280,14 +280,18 @@
 "natures_balance": {
     "id": "natures_balance",
     "name": "Nature's Balance",
-    "description": "Remove all debuffs from allies and heal {healAmount}, while removing all buffs from enemies and dealing {damageAmount} damage",
-    "cooldown": [5, 5, 4, 4, 3],
+    "description": "Remove all debuffs from allies and heal {healAmount}, while removing all buffs from enemies and dealing [{base} + {attack} + {int}] damage",
+    "cooldown": [6, 6, 5, 5, 4],
     "effects": ["aoe", "cleanse", "dispel"],
     "healAmount": [10, 50, 100, 200, 350],
-    "damageAmount": [10, 50, 100, 200, 350],
+    "scaling": {
+        "base": [10, 50, 100, 200, 350],
+        "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+        "int": [0.4, 0.42, 0.44, 0.46, 0.48]
+    },
     "target": "all",
     "logicKey": "naturesBalanceLogic"
-},
+}
 "runemaster_male_passive": {
     "id": "runemaster_male_passive",
     "name": "Intimidating Roar",
