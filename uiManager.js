@@ -881,8 +881,8 @@ if (this.game.tutorial) {
                 };
                 
                 // Add hover tooltip with alt key detection
-                itemDiv.onmouseover = (e) => this.showItemTooltip(e, item);
-                itemDiv.onmouseout = () => this.hideItemTooltip();
+                itemDiv.onmouseenter = (e) => this.showItemTooltip(e, item);
+                itemDiv.onmouseleave = () => this.hideItemTooltip();
                 
                 inventory.appendChild(itemDiv);
             });
@@ -1119,7 +1119,7 @@ showArena() {
                             this.hideItemTooltip();
                         };
                     } else {
-                        thumbnailDiv.onmouseover = (e) => {
+                        thumbnailDiv.onmouseenter = (e) => {
                             // Create a fresh item for tooltip with proper quality
                             const hoverItem = new Item(itemId);
                             // Clear all qualities first
@@ -1134,7 +1134,7 @@ showArena() {
                             }
                             this.showItemTooltip(e, hoverItem);
                         };
-                        thumbnailDiv.onmouseout = () => {
+                        thumbnailDiv.onmouseleave = () => {
                             this.hideItemTooltip();
                         };
                     }
@@ -1846,8 +1846,8 @@ renderArenaGearSlot(enemy, slot) {
             <div class="gearLabel">${slotLabels[slot]}</div>
             ${item ? 
                 `<div class="gearItem ${item.getRarity()}"
-onmouseover="game.uiManager.showItemTooltip(event, document.getElementById('heroInfoPopup')._currentHero.gear.${slot})"
-onmouseout="game.uiManager.hideItemTooltip()">
+onmouseenter="game.uiManager.showItemTooltip(event, document.getElementById('heroInfoPopup')._currentHero.gear.${slot})"
+onmouseleave="game.uiManager.hideItemTooltip()">
                     <div class="itemContainer">
                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                              alt="${item.name}"
@@ -1904,12 +1904,12 @@ onmouseout="game.uiManager.hideItemTooltip()">
                 `;
                 
                 // Add hover tooltip
-                itemSlot.onmouseover = (e) => {
+                itemSlot.onmouseenter = (e) => {
                     // Create a temporary reference for the tooltip
                     this.game.tempRewardItem = displayItem;
                     this.showItemTooltip(e, displayItem);
                 };
-                itemSlot.onmouseout = () => {
+                itemSlot.onmouseleave = () => {
                     this.hideItemTooltip();
                     delete this.game.tempRewardItem;
                 };
@@ -2146,8 +2146,8 @@ updateHeroSelection() {
                 ${item ? 
                     `<div class="gearItem ${item.getRarity()}" 
                          style="pointer-events: all;"
-                         onmouseover="game.uiManager.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
-                         onmouseout="game.uiManager.hideItemTooltip()">
+                         onmouseenter="game.uiManager.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
+                         onmouseleave="game.uiManager.hideItemTooltip()">
                         <div class="itemContainer">
                             <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                  alt="${item.name}"
@@ -2391,8 +2391,8 @@ updateHeroSelection() {
                                         <div class="stashItemSlot ${item.getRarity()}" 
                                              onclick="game.equipFromStash(${originalIndex}, '${item.slot}')"
                                              oncontextmenu="event.preventDefault(); game.showItemOptionsFromGearTab(${originalIndex}, '${familyName}')"
-                                             onmouseover="game.uiManager.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}], true)"
-                                             onmouseout="game.uiManager.hideItemTooltip()">
+                                             onmouseenter="game.uiManager.showItemTooltip(event, game.stashes['${familyName}'].items[${originalIndex}], true)"
+                                             onmouseleave="game.uiManager.hideItemTooltip()">
                                             <div class="itemContainer">
                                                 <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                                      alt="${item.name}"
@@ -2435,8 +2435,8 @@ updateHeroSelection() {
                     `<div class="gearItem ${item.getRarity()}" 
                          onclick="game.unequipGear('${slot}')"
                          oncontextmenu="event.preventDefault(); game.showEquippedItemOptions('${slot}')"
-                         onmouseover="game.uiManager.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
-                         onmouseout="game.uiManager.hideItemTooltip()">
+                         onmouseenter="game.uiManager.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
+                         onmouseleave="game.uiManager.hideItemTooltip()">
                         <div class="itemContainer">
                             <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                  alt="${item.name}"
@@ -2589,8 +2589,8 @@ document.getElementById('popupGear').innerHTML = gearHtml;
                 <div class="gearLabel">${slotLabels[slot]}</div>
                 ${item ? 
                     `<div class="gearItem ${item.getRarity()}"
-                         onmouseover="game.uiManager.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
-                         onmouseout="game.uiManager.hideItemTooltip()">
+                         onmouseenter="game.uiManager.showItemTooltip(event, game.heroes[${heroIndex}].gear.${slot})"
+                         onmouseleave="game.uiManager.hideItemTooltip()">
                         <div class="itemContainer">
                             <img src="https://puzzle-drops.github.io/TEVE/img/items/${item.id}.png" 
                                  alt="${item.name}"
@@ -2827,7 +2827,7 @@ if (enemy.gear && Object.keys(enemy.gear).some(slot => enemy.gear[slot] !== null
             let rewardSlotHTML = '';
             if (result.item) {
                 const itemStarData = result.item.getStars();
-                rewardSlotHTML = `<div class="itemSlot" onmouseover="game.uiManager.showItemTooltip(event, game.pendingBattleResults.heroResults[${results.heroResults.indexOf(result)}].item)" onmouseout="game.uiManager.hideItemTooltip()">
+                rewardSlotHTML = `<div class="itemSlot" onmouseenter="game.uiManager.showItemTooltip(event, game.pendingBattleResults.heroResults[${results.heroResults.indexOf(result)}].item)" onmouseleave="game.uiManager.hideItemTooltip()">
                     <div class="itemContainer">
                         <img src="https://puzzle-drops.github.io/TEVE/img/items/${result.item.id}.png" alt="${result.item.name}" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
                         ${result.item.refined ? '<div class="itemRefined">*</div>' : ''}
@@ -2837,7 +2837,7 @@ if (enemy.gear && Object.keys(enemy.gear).some(slot => enemy.gear[slot] !== null
                     </div>
                 </div>`;
             } else if (result.gold > 0) {
-                rewardSlotHTML = `<div class="itemSlot golden" onmouseover="game.uiManager.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseout="game.uiManager.hideGoldTooltip()">
+                rewardSlotHTML = `<div class="itemSlot golden" onmouseenter="game.uiManager.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseleave="game.uiManager.hideGoldTooltip()">
                     <img src="https://puzzle-drops.github.io/TEVE/img/items/gold.png" alt="Gold" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
                 </div>`;
             } else {
