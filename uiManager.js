@@ -3419,7 +3419,7 @@ updateAutoReplayText(countdown) {
     }
 
     addComparisonIndicators(newItemHTML, newItem, equippedItem) {
-    // Helper function to create indicator HTML with monospace alignment
+    // Helper function to create indicator HTML with right-aligned percentages
     const getIndicator = (newValue, oldValue, hasNewRoll = false, hasOldRoll = true, percentText = '') => {
         let arrow = '';
         
@@ -3446,8 +3446,8 @@ updateAutoReplayText(countdown) {
         else if (arrow === '↓') color = '#ff4444';
         else color = 'inherit';
         
-        // Use a monospace span with fixed width to ensure alignment
-        return `<span style="font-family: monospace; display: inline-block; width: 20px; text-align: left; color: ${color};">${arrow}</span>`;
+        // Return just the arrow in a colored span - we'll handle alignment differently
+        return `<span style="color: ${color};">${arrow}</span>`;
     };
     
     // Same function for header stats (no spacing needed)
@@ -3510,13 +3510,12 @@ updateAutoReplayText(countdown) {
             // Create the indicator
             const indicator = getIndicator(newPercent, oldPercent, true, hasMatchingRoll, percentText);
             
-            // Find and replace the percentage in this specific stat line
-            // We need to be more specific to avoid replacing the same percentage multiple times
+            // Find and replace the percentage span with a fixed-width container
             const oldSpan = `<span style="color: #6a9aaa;">${newPercent}%</span>`;
-            const newSpan = `<span style="color: #6a9aaa;">${indicator}${newPercent}%</span>`;
+            const newSpan = `<span style="color: #6a9aaa; display: inline-block; width: 60px; text-align: right;">${indicator} ${newPercent}%</span>`;
             
             // Only replace if we haven't already added an indicator
-            if (!newItemHTML.includes(`>${indicator}${newPercent}%</span>`)) {
+            if (!newItemHTML.includes(`width: 60px;`)) {
                 newItemHTML = newItemHTML.replace(oldSpan, newSpan);
             }
         }
