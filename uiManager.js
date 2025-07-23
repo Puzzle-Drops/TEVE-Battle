@@ -2086,9 +2086,9 @@ updateHeroSelection() {
                     ${hero.level >= 500 ? 'Max Level' : `${hero.exp} / ${hero.expToNext} (${((hero.exp / hero.expToNext) * 100).toFixed(1)}%)`}
                 </div>
             </div>
-            
-            <div style="flex: 0 0 auto; min-width: 200px; place-items: anchor-center; margin: 10px 0">
-    <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
+                        <div style="margin-top: 40px; display: flex; gap: 40px; align-items: flex-start;">
+                <div style="flex: 0 0 auto; min-width: 200px; place-items: anchor-center; margin: 10px 0">
+                    <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; wi
         ${this.renderGearSlotReadOnly(hero, 'trinket', this.selectedHero)}
         ${this.renderGearSlotReadOnly(hero, 'head', this.selectedHero)}
         ${this.renderGearSlotReadOnly(hero, 'weapon', this.selectedHero)}
