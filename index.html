@@ -593,7 +593,7 @@
         </div>
     </div>
         
-    <div style="display: flex; flex-direction: column; align-items: center; margin-left: 140px">
+<div style="display: flex; flex-direction: column; align-items: center; margin-left: 140px">
         <div class="rewardsLabel">
             <span class="rewardsLabelText">Rewards</span>
         </div>
@@ -613,26 +613,24 @@
             </div>
         </div>
     </div>
+</div>
+<!-- End of battlePreview -->
 
-
-<!-- Autosell Section -->
-    <div class="autosellSection" id="autosellSection" style="display: flex; flex-direction: column; align-items: center; margin-left: 20px">
-        <div class="autosellButton" onclick="game.uiManager.showAutosellSettings()">
-            <span class="autosellLabelText">Autosell</span>
-            <label class="autosellToggle" onclick="event.stopPropagation()">
-                <input type="checkbox" id="autosellToggleSwitch" 
-                       onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings()">
-                <span class="toggleSlider"></span>
-            </label>
-        </div>
-        <div class="autosellContent" id="autosellContent">
-            <div class="autosellInfo">
-                <span id="autosellPresetText">Basic preset</span>
-            </div>
+<!-- Autosell Section - Now outside battlePreview -->
+<div class="autosellSection" id="autosellSection" style="display: none; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+    <div class="autosellButton" onclick="game.uiManager.showAutosellSettings()">
+        <span class="autosellLabelText">Autosell</span>
+        <label class="autosellToggle" onclick="event.stopPropagation()">
+            <input type="checkbox" id="autosellToggleSwitch" 
+                   onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings()">
+            <span class="toggleSlider"></span>
+        </label>
+    </div>
+    <div class="autosellContent" id="autosellContent" style="margin-left: 20px;">
+        <div class="autosellInfo">
+            <span id="autosellPresetText">Basic preset</span>
         </div>
     </div>
-</div>
-			
 </div>
                 
                 <div class="heroSelectArea">
