@@ -920,6 +920,18 @@
             </div>
         </div>
     </div>
+
+<!-- Sell Confirmation Modal -->
+<div id="sellConfirmModal" class="confirmModal">
+    <div class="confirmContent">
+        <div class="confirmText" id="sellConfirmText"></div>
+        <div class="confirmCost" id="sellConfirmDetails"></div>
+        <div class="confirmButtons">
+            <button class="confirmBtn confirmYes" onclick="game.confirmSell()">Yes</button>
+            <button class="confirmBtn confirmNo" onclick="game.cancelSell()">No</button>
+        </div>
+    </div>
+</div>
 	
 <!-- Load only the loading manager initially -->
 <script src="loadingManager.js"></script>
