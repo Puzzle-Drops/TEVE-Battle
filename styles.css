@@ -3386,13 +3386,11 @@ body {
 .itemQualityText {
     font-size: 16px;
     color: #b0e0f0;
-    margin-bottom: 5px;
 }
 
 .itemScoreText {
     font-size: 16px;
     color: #b0e0f0;
-    margin-bottom: 4px;
 }
 
 .itemStarsInline {
@@ -3454,7 +3452,6 @@ body {
 .itemTooltip .itemLevelText {
     font-size: 16px;
     color: #b0e0f0;
-    margin-bottom: 8px;
 }
 
 /* Ensure the divider always shows */
