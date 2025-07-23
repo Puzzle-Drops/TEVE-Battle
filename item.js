@@ -293,7 +293,7 @@ getTooltip(showMax = false) {
 tooltip += `<div class="itemLevelText">Level ${this.level}</div>`;
 
 const itemScore = this.getItemScore();
-tooltip += `<div class="itemScoreText" style="color: #4dd0e1;">Item Score: ${itemScore}</div>`;
+tooltip += `<div class="itemScoreText">Score: ${itemScore}</div>`;
 
 // Quality
 tooltip += `<div class="itemQualityText">Quality: ${this.getQualityPercent()}%</div>`;
