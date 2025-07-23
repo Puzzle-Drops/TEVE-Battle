@@ -335,6 +335,19 @@ getClassAbilities(spellIds) {
                 
     return abilities;
 }
+	
+getGearScore() {
+    let totalScore = 0;
+    const slots = ['trinket', 'head', 'weapon', 'chest', 'offhand', 'legs'];
+    
+    slots.forEach(slot => {
+        if (this.gear[slot]) {
+            totalScore += this.gear[slot].getItemScore();
+        }
+    });
+    
+    return totalScore;
+}
 
 	
 }
