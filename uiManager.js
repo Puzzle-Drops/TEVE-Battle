@@ -1375,8 +1375,20 @@ if (autosellButton) {
         }
     }
     
-    // Render hero selection list
-    this.renderHeroSelectList();
+// Save scroll position before rendering
+const heroSelectList = document.getElementById('heroSelectList');
+const scrollPosition = heroSelectList ? heroSelectList.scrollLeft : 0;
+
+// Render hero selection list
+this.renderHeroSelectList();
+
+// Restore scroll position after rendering
+setTimeout(() => {
+    const heroSelectList = document.getElementById('heroSelectList');
+    if (heroSelectList) {
+        heroSelectList.scrollLeft = scrollPosition;
+    }
+}, 0);
     
     // Clear party slots
     this.updatePartySlots();
@@ -1650,9 +1662,29 @@ resetAutosellStats() {
         });
     }
 
+updateHeroSelectionState(changedHeroIndex) {
+    // Find all hero elements
+    const heroElements = document.querySelectorAll('.selectableHero');
+    
+    heroElements.forEach(element => {
+        const elementHeroIndex = parseInt(element.dataset.heroIndex);
+        
+        // Check if this hero is in the selected party
+        const isSelected = this.game.selectedParty.includes(elementHeroIndex);
+        
+        // Update the selected class
+        if (isSelected) {
+            element.classList.add('selected');
+        } else {
+            element.classList.remove('selected');
+        }
+    });
+}
+
     createSelectableHeroThumb(hero, heroIndex) {
         const wrapper = document.createElement('div');
         wrapper.className = 'selectableHero';
+        wrapper.dataset.heroIndex = heroIndex;
         
         // Check if hero is already selected
         if (this.game.selectedParty.includes(heroIndex)) {
