@@ -613,6 +613,26 @@
             </div>
         </div>
     </div>
+
+
+<!-- Autosell Section -->
+    <div class="autosellSection" id="autosellSection" style="display: flex; flex-direction: column; align-items: center; margin-left: 20px">
+        <div class="autosellButton" onclick="game.uiManager.showAutosellSettings()">
+            <span class="autosellLabelText">Autosell</span>
+            <label class="autosellToggle" onclick="event.stopPropagation()">
+                <input type="checkbox" id="autosellToggleSwitch" 
+                       onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings()">
+                <span class="toggleSlider"></span>
+            </label>
+        </div>
+        <div class="autosellContent" id="autosellContent">
+            <div class="autosellInfo">
+                <span id="autosellPresetText">Basic preset</span>
+            </div>
+        </div>
+    </div>
+</div>
+			
 </div>
                 
                 <div class="heroSelectArea">
