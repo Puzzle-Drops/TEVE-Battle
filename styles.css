@@ -1394,6 +1394,7 @@ body {
     padding: 30px;
     text-align: center;
     box-shadow: 0 0 30px rgba(77, 208, 225, 0.3);
+    min-width: 440px;
     max-width: fit-content;
 }
 
