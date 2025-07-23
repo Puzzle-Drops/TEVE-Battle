@@ -3444,9 +3444,9 @@ updateAutoReplayText(countdown) {
             // Add appropriate spacing based on percentage length
             let spacing = '';
             if (percentText.length === 3) { // "80%", "60%", etc.
-                spacing = '     '; // Five spaces
+                spacing = '         '; // Nine spaces
             } else if (percentText.length === 2) { // "9%", "5%", etc.
-                spacing = '       '; // Seven spaces
+                spacing = '         '; // Seven spaces
             }
             // "100%" gets one space
             
