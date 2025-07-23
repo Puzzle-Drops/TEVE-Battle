@@ -845,7 +845,7 @@ showSellConfirmation(item, itemIndex, family, isEquipped, slot, isMassSell) {
         confirmText.innerHTML = `Are you sure you wish to sell<br><br><b>Level ${item.level} ${item.name}</b><br><br>AND mass sell every item currently sorted below it?`;
         confirmDetails.innerHTML = `Selling: ${this.pendingSell.totalItems} items<br>Sell Value: +${this.pendingSell.totalValue}g`;
     } else {
-        confirmText.innerHTML = `Are you sure you wish to sell<br><br><b>Level ${item.level} ${item.name}</b><br>?`;
+        confirmText.innerHTML = `Are you sure you wish to sell<br><br><b>Level ${item.level} ${item.name}</b>?<br>`;
         confirmDetails.innerHTML = `Sell Value: +${item.sellcost}g`;
     }
     
