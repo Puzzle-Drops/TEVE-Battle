@@ -291,7 +291,7 @@
     },
     "target": "all",
     "logicKey": "naturesBalanceLogic"
-}
+},
 "runemaster_male_passive": {
     "id": "runemaster_male_passive",
     "name": "Intimidating Roar",
