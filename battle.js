@@ -1504,22 +1504,45 @@ if (target.burningWoundsPassive && target.isAlive && actualDamage > 0 && attacke
     }
 }
 
-    // Runemaster Female passive - retaliate with Nature's Blessing when taking magical damage
-    if (target.runemasterFemalePassive && target.isAlive && actualDamage > 0 && damageType === 'magical') {
-        // Find lowest HP ally
-        const allies = this.getParty(target);
-        const aliveAllies = allies.filter(a => a && a.isAlive);
-        
-        if (aliveAllies.length > 0) {
-            aliveAllies.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
-            const lowestHpAlly = aliveAllies[0];
-            
-            // Grant 10% action bar to lowest HP ally
-            const actionBarGain = 0.1 * 10000;
-            lowestHpAlly.actionBar = Math.min(10000, lowestHpAlly.actionBar + actionBarGain);
-            this.log(`${target.name}'s Nature's Revenge grants action bar to ${lowestHpAlly.name}!`);
+// Runemaster Female passive - retaliate with Nature's Blessing when taking magical damage
+if (target.runemasterFemalePassive && target.isAlive && actualDamage > 0 && damageType === 'magical' && !target.isDead) {
+    // Find first non-passive ability (spell 1)
+    let spell1Index = -1;
+    for (let i = 0; i < target.abilities.length; i++) {
+        if (target.abilities[i] && !target.abilities[i].passive) {
+            spell1Index = i;
+            break;
         }
     }
+    
+    if (spell1Index >= 0) {
+        // Get random enemy
+        const enemies = this.getEnemies(target);
+        const aliveEnemies = enemies.filter(e => e && e.isAlive);
+        
+        if (aliveEnemies.length > 0) {
+            const randomEnemy = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+            const ability = target.abilities[spell1Index];
+            const spell = spellManager.getSpell(ability.id);
+            
+            if (spell && spellLogic[spell.logicKey]) {
+                // Execute the spell without consuming cooldown or action bar
+                const spellLevel = ability.level || target.spellLevel || 1;
+                this.log(`${target.name}'s Nature's Revenge triggers ${ability.name}!`);
+                
+                // Show spell animation
+                this.animations.showSpellAnimation(target, ability.name, spell.effects);
+                
+                // Execute spell logic directly
+                try {
+                    spellLogic[spell.logicKey](this, target, randomEnemy, spell, spellLevel);
+                } catch (error) {
+                    console.error(`Error executing Nature's Revenge retaliation:`, error);
+                }
+            }
+        }
+    }
+}
     
     // Check for on-hit effects from attacker
     if (attacker.onHitEffects && target.isAlive) {
