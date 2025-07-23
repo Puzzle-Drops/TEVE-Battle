@@ -192,10 +192,10 @@ getStats() {
         this.applyStatValue(stats, this.roll4, value);
     }
     if (this.quality5 > 0) {  // Add this block for 5th roll
-        // 5th roll is always allstats with value 5
-        stats.str += 5;
-        stats.agi += 5;
-        stats.int += 5;
+        // 5th roll is always allstats with value 10
+        stats.str += 10;
+        stats.agi += 10;
+        stats.int += 10;
     }
     
     return stats;
@@ -288,13 +288,15 @@ getTooltip(showMax = false) {
     
     let tooltip = `<div class="itemTooltip ${rarity}">`;
     tooltip += `<div class="itemName">${this.name}${this.refined ? '<span style="float: right; font-size: 16px;">*</span>' : ''}</div>`;
+	
+// Level on its own line
+tooltip += `<div class="itemLevelText">Level ${this.level}</div>`;
 
-    
-    // Level on its own line
-    tooltip += `<div class="itemLevelText">Level ${this.level}</div>`;
-    
-    // Quality
-    tooltip += `<div class="itemQualityText">Quality: ${this.getQualityPercent()}%</div>`;
+const itemScore = this.getItemScore();
+tooltip += `<div class="itemScoreText" style="color: #4dd0e1;">Item Score: ${itemScore}</div>`;
+
+// Quality
+tooltip += `<div class="itemQualityText">Quality: ${this.getQualityPercent()}%</div>`;
     
 // Stars if they exist
 if (starData.html) {
