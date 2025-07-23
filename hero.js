@@ -401,4 +401,21 @@ equipItem(item, slot) {
                 // Add attack speed bonus from gear AGI (using the same formula as baseStats)
                 this.gearStats.attackSpeed += 100 * (gearAgi / (gearAgi + 1000));
             }
+
+		getGearScore() {
+    let totalScore = 0;
+    const slots = ['trinket', 'head', 'weapon', 'chest', 'offhand', 'legs'];
+    
+    slots.forEach(slot => {
+        if (this.gear[slot]) {
+            totalScore += this.gear[slot].getItemScore();
+        }
+    });
+    
+    return totalScore;
+}
+
+
+
+		
         }
