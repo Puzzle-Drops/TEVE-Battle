@@ -2087,17 +2087,19 @@ updateHeroSelection() {
                 </div>
             </div>
             
-            <div style="margin-top: 40px; display: flex; gap: 40px; align-items: flex-start;">
-                <div style="flex: 0 0 auto; min-width: 200px; place-items: anchor-center; margin: 10px 0">
-                    <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
-                        ${this.renderGearSlotReadOnly(hero, 'trinket', this.selectedHero)}
-                        ${this.renderGearSlotReadOnly(hero, 'head', this.selectedHero)}
-                        ${this.renderGearSlotReadOnly(hero, 'weapon', this.selectedHero)}
-                        ${this.renderGearSlotReadOnly(hero, 'chest', this.selectedHero)}
-                        ${this.renderGearSlotReadOnly(hero, 'offhand', this.selectedHero)}
-                        ${this.renderGearSlotReadOnly(hero, 'legs', this.selectedHero)}
-                    </div>
-                </div>
+            <div style="flex: 0 0 auto; min-width: 200px; place-items: anchor-center; margin: 10px 0">
+    <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
+        ${this.renderGearSlotReadOnly(hero, 'trinket', this.selectedHero)}
+        ${this.renderGearSlotReadOnly(hero, 'head', this.selectedHero)}
+        ${this.renderGearSlotReadOnly(hero, 'weapon', this.selectedHero)}
+        ${this.renderGearSlotReadOnly(hero, 'chest', this.selectedHero)}
+        ${this.renderGearSlotReadOnly(hero, 'offhand', this.selectedHero)}
+        ${this.renderGearSlotReadOnly(hero, 'legs', this.selectedHero)}
+    </div>
+    <div style="text-align: center; margin-top: 15px; font-size: 18px; color: #4dd0e1;">
+        Gear Score: ${hero.getGearScore()}
+    </div>
+</div>
                 
                 <div style="flex: 1; min-width: 200px;">
                     ${this.renderStatLine('Health Points', 'Health', hero.baseStats.hp, hero.gearStats.hp, this.selectedHero)}
@@ -2337,8 +2339,11 @@ updateHeroSelection() {
                         ${this.renderGearSlot(hero, 'legs', this.selectedHero)}
                     </div>
                     <div class="gearStatsPreview">
-                        <h4>Total Stats</h4>
-                        <div class="gearStatsGrid">
+    <div style="text-align: center; margin-bottom: 10px; font-size: 16px; color: #4dd0e1;">
+        Gear Score: ${hero.getGearScore()}
+    </div>
+    <h4>Total Stats</h4>
+    <div class="gearStatsGrid">
                             ${this.renderGearStatLine('Health Points', 'HP:', hero.hp, false)}
                             ${this.renderGearStatLine('HP Regeneration', 'REG:', hero.hpRegen.toFixed(1), false)}
                             ${this.renderGearStatLine('Attack', 'ATK:', hero.attack, false)}
@@ -3640,6 +3645,7 @@ hideArenaStatTooltip() {
         // Build sort criteria list
         const criteriaHTML = this.game.sortSettings.order.map((criteria, index) => {
             const labels = {
+                itemScore: 'Item Score',
                 rarity: 'Rarity',
                 stars: 'Stars',
                 quality: 'Quality %',
