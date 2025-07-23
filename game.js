@@ -1586,8 +1586,9 @@ this.uiManager.closeRefinementPopup();
     loadSortSettings() {
         // Always start with default settings
         this.sortSettings = {
-            order: ['rarity', 'stars', 'quality', 'level', 'name'],
+            order: ['itemScore', 'rarity', 'stars', 'quality', 'level', 'name'],
             direction: {
+                itemScore: 'desc',
                 rarity: 'desc',
                 stars: 'desc',
                 quality: 'desc',
@@ -1631,8 +1632,9 @@ this.uiManager.closeRefinementPopup();
 
     resetSortSettings(source) {
         this.sortSettings = {
-            order: ['rarity', 'stars', 'quality', 'level', 'name'],
+            order: ['itemScore', 'rarity', 'stars', 'quality', 'level', 'name'],
             direction: {
+                itemScore: 'desc',
                 rarity: 'desc',
                 stars: 'desc',
                 quality: 'desc',
@@ -1662,6 +1664,9 @@ this.uiManager.closeRefinementPopup();
                 const direction = this.sortSettings.direction[criteria];
                 
                 switch (criteria) {
+                    case 'itemScore':
+                        comparison = a.getItemScore() - b.getItemScore();
+                        break;
                     case 'level':
                         comparison = a.level - b.level;
                         break;
