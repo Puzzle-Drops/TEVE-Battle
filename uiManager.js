@@ -1389,6 +1389,225 @@ if (mode === 'arena') {
     }
 }
 
+showAutosellSettings() {
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'autosellOverlay';
+    overlay.id = 'autosellOverlay';
+    overlay.onclick = (e) => {
+        if (e.target === overlay) {
+            this.closeAutosellSettings();
+        }
+    };
+    
+    // Create popup
+    const popup = document.createElement('div');
+    popup.className = 'autosellPopup';
+    
+    // Build popup content
+    const autosell = this.game.autosell;
+    
+    popup.innerHTML = `
+        <div class="autosellHeader">
+            <h2>Autosell Settings</h2>
+            <button class="closeButton" onclick="game.uiManager.closeAutosellSettings()">×</button>
+        </div>
+        
+        <div class="autosellEnableRow">
+            <label>
+                <input type="checkbox" id="autosellEnableCheckbox" 
+                       ${autosell.enabled ? 'checked' : ''} 
+                       onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings(); document.getElementById('autosellToggleSwitch').checked = this.checked;">
+                Enable Autosell
+            </label>
+        </div>
+        
+        <div class="autosellPresets">
+            <h3>Presets</h3>
+            <div class="presetButtons">
+                <button class="presetButton ${autosell.preset === 'basic' ? 'active' : ''}" 
+                        onclick="game.uiManager.selectAutosellPreset('basic')">Basic</button>
+                <button class="presetButton ${autosell.preset === 'strict' ? 'active' : ''}" 
+                        onclick="game.uiManager.selectAutosellPreset('strict')">Strict</button>
+                <button class="presetButton ${autosell.preset === 'balanced' ? 'active' : ''}" 
+                        onclick="game.uiManager.selectAutosellPreset('balanced')">Balanced</button>
+                <button class="presetButton ${autosell.preset === 'relaxed' ? 'active' : ''}" 
+                        onclick="game.uiManager.selectAutosellPreset('relaxed')">Relaxed</button>
+                <button class="presetButton ${autosell.preset === 'custom' ? 'active' : ''}" 
+                        onclick="game.uiManager.selectAutosellPreset('custom')">Custom</button>
+            </div>
+        </div>
+        
+        <div id="autosellDescription" class="autosellDescription" style="${autosell.preset === 'basic' ? '' : 'display: none;'}">
+            ${autosell.presets.basic.description}
+        </div>
+        
+        <div id="autosellCriteria" class="autosellCriteria" style="${autosell.preset === 'basic' ? 'display: none;' : ''}">
+            <h3>Sell if:</h3>
+            
+            <div class="criteriaRow">
+                <label>Below level:</label>
+                <input type="number" id="levelBelowInput" value="${autosell.criteria.levelBelow || ''}" 
+                       ${autosell.preset !== 'custom' ? 'disabled' : ''}
+                       onchange="game.uiManager.updateAutosellCriteria('levelBelow', this.value)">
+            </div>
+            
+            <div class="criteriaRow">
+                <label>Score below:</label>
+                <input type="number" id="scoreBelowInput" value="${autosell.criteria.scoreBelow || ''}" 
+                       ${autosell.preset !== 'custom' ? 'disabled' : ''}
+                       onchange="game.uiManager.updateAutosellCriteria('scoreBelow', this.value)">
+            </div>
+            
+            <div class="criteriaRow">
+                <label>Quality below %:</label>
+                <input type="number" id="qualityBelowInput" value="${autosell.criteria.qualityBelow || ''}" 
+                       min="0" max="100"
+                       ${autosell.preset !== 'custom' ? 'disabled' : ''}
+                       onchange="game.uiManager.updateAutosellCriteria('qualityBelow', this.value)">
+            </div>
+            
+            <div class="criteriaRow">
+                <label>Stars below:</label>
+                <input type="number" id="starsBelowInput" value="${autosell.criteria.starsBelow || ''}" 
+                       min="0" max="4"
+                       ${autosell.preset !== 'custom' ? 'disabled' : ''}
+                       onchange="game.uiManager.updateAutosellCriteria('starsBelow', this.value)">
+            </div>
+            
+            <div class="criteriaRow">
+                <label>Always sell rarities:</label>
+                <div class="rarityCheckboxes">
+                    <label class="rarityCheckbox">
+                        <input type="checkbox" ${autosell.criteria.sellRarities.green ? 'checked' : ''} 
+                               ${autosell.preset !== 'custom' ? 'disabled' : ''}
+                               onchange="game.uiManager.updateAutosellRarity('green', this.checked)">
+                        <span class="green">Green</span>
+                    </label>
+                    <label class="rarityCheckbox">
+                        <input type="checkbox" ${autosell.criteria.sellRarities.blue ? 'checked' : ''} 
+                               ${autosell.preset !== 'custom' ? 'disabled' : ''}
+                               onchange="game.uiManager.updateAutosellRarity('blue', this.checked)">
+                        <span class="blue">Blue</span>
+                    </label>
+                    <label class="rarityCheckbox">
+                        <input type="checkbox" ${autosell.criteria.sellRarities.purple ? 'checked' : ''} 
+                               ${autosell.preset !== 'custom' ? 'disabled' : ''}
+                               onchange="game.uiManager.updateAutosellRarity('purple', this.checked)">
+                        <span class="purple">Purple</span>
+                    </label>
+                    <label class="rarityCheckbox">
+                        <input type="checkbox" ${autosell.criteria.sellRarities.red ? 'checked' : ''} 
+                               ${autosell.preset !== 'custom' ? 'disabled' : ''}
+                               onchange="game.uiManager.updateAutosellRarity('red', this.checked)">
+                        <span class="red">Red</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="autosellActions">
+            <button class="applyButton" onclick="game.uiManager.applyAutosellSettings()">Apply</button>
+        </div>
+        
+        <div class="autosellStats">
+            <h3>Autosell Tracking</h3>
+            <div class="statsGrid">
+                <div class="statItem">Items Sold: <span id="itemsSoldStat">${autosell.stats.itemsSold.toLocaleString()}</span></div>
+                <div class="statItem">Gold Gained: <span id="goldGainedStat">${autosell.stats.goldGained.toLocaleString()}</span></div>
+                <div class="statItem">Items Saved: <span id="itemsSavedStat">${autosell.stats.itemsSaved.toLocaleString()}</span></div>
+            </div>
+            <button class="resetStatsButton" onclick="game.uiManager.resetAutosellStats()">Reset Tracking</button>
+        </div>
+    `;
+    
+    overlay.appendChild(popup);
+    document.body.appendChild(overlay);
+}
+
+closeAutosellSettings() {
+    const overlay = document.getElementById('autosellOverlay');
+    if (overlay) {
+        overlay.remove();
+    }
+}
+
+selectAutosellPreset(preset) {
+    const autosell = this.game.autosell;
+    autosell.applyPreset(preset);
+    
+    // Update UI
+    document.querySelectorAll('.presetButton').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === preset);
+    });
+    
+    // Show/hide description and criteria
+    const descDiv = document.getElementById('autosellDescription');
+    const criteriaDiv = document.getElementById('autosellCriteria');
+    
+    if (preset === 'basic') {
+        descDiv.style.display = 'block';
+        criteriaDiv.style.display = 'none';
+    } else {
+        descDiv.style.display = 'none';
+        criteriaDiv.style.display = 'block';
+        
+        // Update criteria inputs
+        const criteria = preset === 'custom' ? autosell.criteria : autosell.presets[preset];
+        document.getElementById('levelBelowInput').value = criteria.levelBelow || '';
+        document.getElementById('scoreBelowInput').value = criteria.scoreBelow || '';
+        document.getElementById('qualityBelowInput').value = criteria.qualityBelow || '';
+        document.getElementById('starsBelowInput').value = criteria.starsBelow || '';
+        
+        // Update checkboxes
+        document.querySelectorAll('.rarityCheckbox input').forEach((checkbox, index) => {
+            const rarities = ['green', 'blue', 'purple', 'red'];
+            checkbox.checked = criteria.sellRarities[rarities[index]];
+        });
+        
+        // Enable/disable inputs
+        const isCustom = preset === 'custom';
+        document.querySelectorAll('#autosellCriteria input').forEach(input => {
+            input.disabled = !isCustom;
+        });
+    }
+}
+
+updateAutosellCriteria(field, value) {
+    if (this.game.autosell.preset === 'custom') {
+        if (value === '') {
+            this.game.autosell.criteria[field] = null;
+        } else {
+            this.game.autosell.criteria[field] = parseInt(value);
+        }
+    }
+}
+
+updateAutosellRarity(rarity, checked) {
+    if (this.game.autosell.preset === 'custom') {
+        this.game.autosell.criteria.sellRarities[rarity] = checked;
+    }
+}
+
+applyAutosellSettings() {
+    this.game.autosell.saveSettings();
+    
+    // Update preset text in party select
+    const presetText = document.getElementById('autosellPresetText');
+    if (presetText) {
+        presetText.textContent = this.game.autosell.preset.charAt(0).toUpperCase() + this.game.autosell.preset.slice(1) + ' preset';
+    }
+    
+    this.closeAutosellSettings();
+}
+
+resetAutosellStats() {
+    this.game.autosell.resetStats();
+    document.getElementById('itemsSoldStat').textContent = '0';
+    document.getElementById('goldGainedStat').textContent = '0';
+    document.getElementById('itemsSavedStat').textContent = '0';
+}
+
     renderHeroSelectList() {
         const container = document.getElementById('heroSelectList');
         container.innerHTML = '';
