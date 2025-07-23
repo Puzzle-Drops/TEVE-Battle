@@ -1417,11 +1417,14 @@ if (mode === 'arena') {
             </div>
         `;
         
-        // Insert after rewards section
-        const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
-        if (rewardsSection && rewardsSection.parentElement) {
-            rewardsSection.parentElement.insertBefore(autosellSection, rewardsSection.nextSibling);
-        }
+        // Insert inside battlePreview container, after the rewards section
+const battlePreview = document.querySelector('.battlePreview');
+const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
+
+if (battlePreview && rewardsSection) {
+    // Insert after the rewards section, but inside battlePreview
+    battlePreview.insertBefore(autosellSection, rewardsSection.nextSibling);
+}
     }
 }
 
