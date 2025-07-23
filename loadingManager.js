@@ -1,7 +1,7 @@
 // Loading manager
 class LoadingManager {
     constructor() {
-        this.totalAssets = 21; // 6 JSON files + 13 JS files + map image
+        this.totalAssets = 22; // 6 JSON files + 14 JS files + map image
         this.loadedAssets = 0;
         this.failedAssets = []; // Track which assets failed
         this.preloadedImages = {}; // Store preloaded images
@@ -90,6 +90,7 @@ async function loadGameData() {
         { src: 'battle.js', name: 'Battle System' },
         { src: 'devConsole.js', name: 'Dev Console' },
         { src: 'item.js', name: 'Item System' },
+        { src: 'autosell.js', name: 'Autosell System' },
         { src: 'uiManager.js', name: 'UI Manager' },
         { src: 'hero.js', name: 'Hero System' },
         { src: 'enemy.js', name: 'Enemy System' },
