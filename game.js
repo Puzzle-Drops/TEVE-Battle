@@ -839,11 +839,11 @@ showSellConfirmation(item, itemIndex, family, isEquipped, slot, isMassSell) {
         this.pendingSell.totalItems = massSelInfo.count + 1; // +1 for the clicked item
         this.pendingSell.totalValue = massSelInfo.totalValue + item.sellcost;
         
-        confirmText.innerHTML = `Are you sure you wish to sell "<b>Level ${item.level} ${item.name}</b>" AND mass sell every item currently sorted below it?`;
-        confirmDetails.innerHTML = `Selling: ${this.pendingSell.totalItems} items<br>Sell Value: <span class="goldText">+${this.pendingSell.totalValue}g</span>`;
+        confirmText.innerHTML = `Are you sure you wish to sell<br><b>Level ${item.level} ${item.name}</b><br>AND mass sell every item currently sorted below it?`;
+        confirmDetails.innerHTML = `Selling: ${this.pendingSell.totalItems} items<br>Sell Value: +${this.pendingSell.totalValue}g`;
     } else {
-        confirmText.innerHTML = `Are you sure you wish to sell "<b>Level ${item.level} ${item.name}</b>"?`;
-        confirmDetails.innerHTML = `Sell Value: <span class="goldText">+${item.sellcost}g</span>`;
+        confirmText.innerHTML = `Are you sure you wish to sell<br><b>Level ${item.level} ${item.name}</b>?`;
+        confirmDetails.innerHTML = `Sell Value: +${item.sellcost}g`;
     }
     
     modal.style.display = 'flex';
