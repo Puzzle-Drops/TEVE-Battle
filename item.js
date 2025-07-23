@@ -513,5 +513,24 @@ if (rangeInfo) {
 }
 }
 
+	
+getItemScore() {
+    // Count number of rolls
+    let rollCount = 0;
+    if (this.quality1 > 0) rollCount++;
+    if (this.quality2 > 0) rollCount++;
+    if (this.quality3 > 0) rollCount++;
+    if (this.quality4 > 0) rollCount++;
+    if (this.quality5 > 0) rollCount++;
+    
+    // Get quality as decimal (0-1)
+    const qualityDecimal = this.getQualityPercent() / 100;
+    
+    // Calculate score: (level × rolls) × quality
+    const score = Math.floor((this.level * rollCount) * qualityDecimal);
+    
+    return score;
+}
+
 
 }
