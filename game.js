@@ -30,6 +30,9 @@ class Game {
         this.arenaMode = null; // 'spar' or 'pvp'
         this.arenaOpponents = null; // array of Enemy objects
 
+        // Create autosell system
+        this.autosell = new AutoSell(this);
+
         // Progression tracking
         this.progression = {
             unlockedFeatures: {
