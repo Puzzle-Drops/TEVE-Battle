@@ -1811,7 +1811,7 @@ showArenaEnemyInfoPopup(enemy) {
         });
     });
     
-    // Show gear
+// Show gear with gear score
 const gearHtml = `
     <div class="gearGrid">
         ${this.renderArenaGearSlot(enemy, 'trinket')}
@@ -1821,8 +1821,11 @@ const gearHtml = `
         ${this.renderArenaGearSlot(enemy, 'offhand')}
         ${this.renderArenaGearSlot(enemy, 'legs')}
     </div>
+    <div style="text-align: center; margin-top: 15px; font-size: 18px; color: #4dd0e1;">
+        Gear Score: ${enemy.getGearScore()}
+    </div>
 `;
-    document.getElementById('popupGear').innerHTML = gearHtml;
+document.getElementById('popupGear').innerHTML = gearHtml;
     
     popup.style.display = 'block';
 }
@@ -2541,18 +2544,21 @@ updateHeroSelection() {
             });
         });
                     
-        // Show gear in grid format
-        const gearHtml = `
-            <div class="gearGrid">
-                ${this.renderPopupGearSlot(hero, 'trinket', this.game.heroes.indexOf(hero))}
-                ${this.renderPopupGearSlot(hero, 'head', this.game.heroes.indexOf(hero))}
-                ${this.renderPopupGearSlot(hero, 'weapon', this.game.heroes.indexOf(hero))}
-                ${this.renderPopupGearSlot(hero, 'chest', this.game.heroes.indexOf(hero))}
-                ${this.renderPopupGearSlot(hero, 'offhand', this.game.heroes.indexOf(hero))}
-                ${this.renderPopupGearSlot(hero, 'legs', this.game.heroes.indexOf(hero))}
-            </div>
-        `;
-        document.getElementById('popupGear').innerHTML = gearHtml;
+        // Show gear in grid format with gear score
+const gearHtml = `
+    <div class="gearGrid">
+        ${this.renderPopupGearSlot(hero, 'trinket', this.game.heroes.indexOf(hero))}
+        ${this.renderPopupGearSlot(hero, 'head', this.game.heroes.indexOf(hero))}
+        ${this.renderPopupGearSlot(hero, 'weapon', this.game.heroes.indexOf(hero))}
+        ${this.renderPopupGearSlot(hero, 'chest', this.game.heroes.indexOf(hero))}
+        ${this.renderPopupGearSlot(hero, 'offhand', this.game.heroes.indexOf(hero))}
+        ${this.renderPopupGearSlot(hero, 'legs', this.game.heroes.indexOf(hero))}
+    </div>
+    <div style="text-align: center; margin-top: 15px; font-size: 18px; color: #4dd0e1;">
+        Gear Score: ${hero.getGearScore()}
+    </div>
+`;
+document.getElementById('popupGear').innerHTML = gearHtml;
         
         popup.style.display = 'block';
     }
@@ -2683,19 +2689,22 @@ updateHeroSelection() {
         });
         
         // Check if enemy has gear (arena enemies)
-        if (enemy.gear && Object.keys(enemy.gear).some(slot => enemy.gear[slot] !== null)) {
-            // Show gear for arena enemies
-            const gearHtml = `
-                <div class="gearGrid">
-                    ${this.renderArenaGearSlot(enemy, 'trinket')}
-                    ${this.renderArenaGearSlot(enemy, 'head')}
-                    ${this.renderArenaGearSlot(enemy, 'weapon')}
-                    ${this.renderArenaGearSlot(enemy, 'chest')}
-                    ${this.renderArenaGearSlot(enemy, 'offhand')}
-                    ${this.renderArenaGearSlot(enemy, 'legs')}
-                </div>
-            `;
-            document.getElementById('popupGear').innerHTML = gearHtml;
+if (enemy.gear && Object.keys(enemy.gear).some(slot => enemy.gear[slot] !== null)) {
+    // Show gear for arena enemies
+    const gearHtml = `
+        <div class="gearGrid">
+            ${this.renderArenaGearSlot(enemy, 'trinket')}
+            ${this.renderArenaGearSlot(enemy, 'head')}
+            ${this.renderArenaGearSlot(enemy, 'weapon')}
+            ${this.renderArenaGearSlot(enemy, 'chest')}
+            ${this.renderArenaGearSlot(enemy, 'offhand')}
+            ${this.renderArenaGearSlot(enemy, 'legs')}
+        </div>
+        <div style="text-align: center; margin-top: 15px; font-size: 18px; color: #4dd0e1;">
+            Gear Score: ${enemy.getGearScore()}
+        </div>
+    `;
+    document.getElementById('popupGear').innerHTML = gearHtml;
         } else {
             // Show empty gear grid for regular enemies
             const emptyGearHtml = `
