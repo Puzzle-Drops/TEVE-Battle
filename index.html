@@ -616,38 +616,40 @@
 </div>
 <!-- End of battlePreview -->
 
-<!-- Autosell Section - Now outside battlePreview -->
-<div class="autosellSection" id="autosellSection" style="display: none; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
-    <div class="autosellButton" onclick="game.uiManager.showAutosellSettings()">
-        <span class="autosellLabelText">Autosell</span>
-        <label class="autosellToggle" onclick="event.stopPropagation()">
-            <input type="checkbox" id="autosellToggleSwitch" 
-                   onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings()">
-            <span class="toggleSlider"></span>
-        </label>
-    </div>
-    <div class="autosellContent" id="autosellContent" style="margin-left: 20px;">
-        <div class="autosellInfo">
-            <span id="autosellPresetText">Basic preset</span>
-        </div>
-    </div>
-</div>
+		    
                 
                 <div class="heroSelectArea">
                     <div class="heroSelectList" id="heroSelectList">
                         <!-- Hero thumbnails will be generated here -->
                     </div>
                     <div class="actionButtons">
-                        <div class="autoTogglesPartySelect">
-                            <label style="color: #b0e0f0;">
-                                <input type="checkbox" id="autoBattleToggle" onchange="game.toggleAutoBattle(this.checked)">
-                                Auto Battle
-                            </label>
-                            <label style="color: #b0e0f0;">
-                                <input type="checkbox" id="autoReplayToggleParty" onchange="game.toggleAutoReplay(this.checked)">
-                                Auto Replay
-                            </label>
-                        </div>
+    <!-- Autosell Button -->
+    <div class="autosellButtonContainer" id="autosellButtonContainer" style="display: none; margin-bottom: 10px;">
+        <button class="autosellButton" onclick="game.uiManager.showAutosellSettings()" style="width: 200px; padding: 8px; background: rgba(10, 25, 41, 0.8); border: 1px solid #2a6a8a; color: #b0e0f0; cursor: pointer;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span>Autosell</span>
+                <label class="autosellToggle" onclick="event.stopPropagation()" style="margin-left: 10px;">
+                    <input type="checkbox" id="autosellToggleSwitch" 
+                           onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings()">
+                    <span class="toggleSlider"></span>
+                </label>
+            </div>
+            <div style="font-size: 12px; color: #6a9aaa; margin-top: 4px;">
+                <span id="autosellPresetText">Basic preset</span>
+            </div>
+        </button>
+    </div>
+    
+    <div class="autoTogglesPartySelect">
+        <label style="color: #b0e0f0;">
+            <input type="checkbox" id="autoBattleToggle" onchange="game.toggleAutoBattle(this.checked)">
+            Auto Battle
+        </label>
+        <label style="color: #b0e0f0;">
+            <input type="checkbox" id="autoReplayToggleParty" onchange="game.toggleAutoReplay(this.checked)">
+            Auto Replay
+        </label>
+    </div>
                         <button class="startBattleBtn" id="startBattleBtn" disabled onclick="game.startBattle()">
                             ⚔️ Start
                         </button>
