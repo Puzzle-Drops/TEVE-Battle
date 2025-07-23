@@ -1387,6 +1387,42 @@ if (mode === 'arena') {
         this.updateRewardsDisplay();
         this.updateRecordsDisplay();
     }
+    
+    // Add autosell section for dungeon mode only
+    if (mode === 'dungeon') {
+        // Remove any existing autosell section first
+        const existingAutosell = document.querySelector('.autosellSection');
+        if (existingAutosell) {
+            existingAutosell.remove();
+        }
+        
+        // Create autosell section
+        const autosellSection = document.createElement('div');
+        autosellSection.className = 'autosellSection';
+        autosellSection.style.cssText = 'display: flex; flex-direction: column; align-items: center; margin-left: 20px';
+        autosellSection.innerHTML = `
+            <div class="autosellButton" onclick="game.uiManager.showAutosellSettings()">
+                <span class="autosellLabelText">Autosell</span>
+                <label class="autosellToggle" onclick="event.stopPropagation()">
+                    <input type="checkbox" id="autosellToggleSwitch" 
+                           ${this.game.autosell.enabled ? 'checked' : ''} 
+                           onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings()">
+                    <span class="toggleSlider"></span>
+                </label>
+            </div>
+            <div class="autosellContent" id="autosellContent">
+                <div class="autosellInfo">
+                    <span id="autosellPresetText">${this.game.autosell.preset.charAt(0).toUpperCase() + this.game.autosell.preset.slice(1)} preset</span>
+                </div>
+            </div>
+        `;
+        
+        // Insert after rewards section
+        const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
+        if (rewardsSection && rewardsSection.parentElement) {
+            rewardsSection.parentElement.insertBefore(autosellSection, rewardsSection.nextSibling);
+        }
+    }
 }
 
 showAutosellSettings() {
