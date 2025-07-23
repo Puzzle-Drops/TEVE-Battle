@@ -1154,20 +1154,25 @@ document.addEventListener('keydown', (e) => {
                 const itemTooltip = document.getElementById('itemTooltipDiv');
                 if (itemTooltip && itemTooltip.style.display === 'block' && itemTooltip._currentItem) {
                     if (itemTooltip._isComparison && itemTooltip._equippedItem) {
-                        // Rebuild comparison tooltip with max values
-                        let tooltipHTML = '<div style="display: flex; gap: 20px;">';
-                        tooltipHTML += '<div style="flex: 1;">';
-                        tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
-                        tooltipHTML += itemTooltip._currentItem.getTooltip(true);
-                        tooltipHTML += '</div>';
-                        tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
-                        tooltipHTML += '<div style="flex: 1;">';
-                        tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
-                        tooltipHTML += itemTooltip._equippedItem.getTooltip(true);
-                        tooltipHTML += '</div>';
-                        tooltipHTML += '</div>';
-                        itemTooltip.innerHTML = tooltipHTML;
-                    } else {
+    // Rebuild comparison tooltip with max values
+    let tooltipHTML = '<div style="display: flex; gap: 20px;">';
+    tooltipHTML += '<div style="flex: 1;">';
+    tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
+    
+    // Get new item tooltip with comparison indicators
+    let newItemTooltip = itemTooltip._currentItem.getTooltip(true);
+    newItemTooltip = game.uiManager.addComparisonIndicators(newItemTooltip, itemTooltip._currentItem, itemTooltip._equippedItem);
+    tooltipHTML += newItemTooltip;
+    
+    tooltipHTML += '</div>';
+    tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
+    tooltipHTML += '<div style="flex: 1;">';
+    tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
+    tooltipHTML += itemTooltip._equippedItem.getTooltip(true);
+    tooltipHTML += '</div>';
+    tooltipHTML += '</div>';
+    itemTooltip.innerHTML = tooltipHTML;
+} else {
                         itemTooltip.innerHTML = itemTooltip._currentItem.getTooltip(true);
                     }
                 }
@@ -1204,20 +1209,25 @@ document.addEventListener('keydown', (e) => {
                 const itemTooltip = document.getElementById('itemTooltipDiv');
                 if (itemTooltip && itemTooltip.style.display === 'block' && itemTooltip._currentItem) {
                     if (itemTooltip._isComparison && itemTooltip._equippedItem) {
-                        // Rebuild comparison tooltip without max values
-                        let tooltipHTML = '<div style="display: flex; gap: 20px;">';
-                        tooltipHTML += '<div style="flex: 1;">';
-                        tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
-                        tooltipHTML += itemTooltip._currentItem.getTooltip(false);
-                        tooltipHTML += '</div>';
-                        tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
-                        tooltipHTML += '<div style="flex: 1;">';
-                        tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
-                        tooltipHTML += itemTooltip._equippedItem.getTooltip(false);
-                        tooltipHTML += '</div>';
-                        tooltipHTML += '</div>';
-                        itemTooltip.innerHTML = tooltipHTML;
-                    } else {
+    // Rebuild comparison tooltip without max values
+    let tooltipHTML = '<div style="display: flex; gap: 20px;">';
+    tooltipHTML += '<div style="flex: 1;">';
+    tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
+    
+    // Get new item tooltip with comparison indicators
+    let newItemTooltip = itemTooltip._currentItem.getTooltip(false);
+    newItemTooltip = game.uiManager.addComparisonIndicators(newItemTooltip, itemTooltip._currentItem, itemTooltip._equippedItem);
+    tooltipHTML += newItemTooltip;
+    
+    tooltipHTML += '</div>';
+    tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
+    tooltipHTML += '<div style="flex: 1;">';
+    tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
+    tooltipHTML += itemTooltip._equippedItem.getTooltip(false);
+    tooltipHTML += '</div>';
+    tooltipHTML += '</div>';
+    itemTooltip.innerHTML = tooltipHTML;
+} else {
                         itemTooltip.innerHTML = itemTooltip._currentItem.getTooltip(false);
                     }
                 }
