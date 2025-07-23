@@ -1052,6 +1052,14 @@ if (sellConfirmModal && sellConfirmModal.style.display === 'flex') {
     return;
 }
 
+// Close autosell settings overlay if open
+const autosellOverlay = document.getElementById('autosellOverlay');
+if (autosellOverlay) {
+    game.uiManager.closeAutosellSettings();
+    e.preventDefault();
+    return;
+}
+
                 // Close collection complete popup if open
                 const collectionPopup = document.getElementById('collectionCompletePopup');
                 if (collectionPopup && collectionPopup.style.display === 'block') {
