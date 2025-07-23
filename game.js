@@ -641,143 +641,270 @@ getItemCollectionBonuses(itemId) {
         this.uiManager.showIndividualStash(family);
     }
     
-    showItemOptions(item, itemIndex, family, isEquipped = false, slot = null) {
-        // Hide item tooltip first
-        this.uiManager.hideItemTooltip();
-        
-        // Close any existing context menu
-        this.uiManager.closeItemContextMenu();
-        
-        // Create context menu
-        const menu = document.createElement('div');
-        menu.className = 'itemContextMenu';
-        menu.id = 'itemContextMenu';
-        
-        // Store item reference for later use
-        this.contextMenuItem = { item, itemIndex, family, isEquipped, slot };
-        
-        // Get stash for gold checks
-        const familyName = isEquipped ? 
-            this.getClassFamily(this.heroes[this.uiManager.selectedHero].className, this.heroes[this.uiManager.selectedHero].classTier) : 
-            family.name;
-        const stash = this.stashes[familyName];
-        
-        // Add options
-        const options = [];
-        
-        // Equip/Unequip option
-        if (isEquipped) {
-            options.push({
-                text: 'Unequip',
-                action: () => {
-                    this.unequipGear(slot);
-                    this.uiManager.closeItemContextMenu();
-                }
-            });
-        } else if (this.currentScreen === 'heroesScreen' && this.uiManager.selectedHero !== undefined) {
-            options.push({
-                text: 'Equip',
-                action: () => {
-                    this.equipFromContextMenu();
-                    this.uiManager.closeItemContextMenu();
-                }
-            });
-        }
-        
-        // Refine option
-        const refineCost = item.getRefineCost();
-        const canAfford = stash.gold >= refineCost;
+showItemOptions(item, itemIndex, family, isEquipped = false, slot = null) {
+    // Hide item tooltip first
+    this.uiManager.hideItemTooltip();
+    
+    // Close any existing context menu
+    this.uiManager.closeItemContextMenu();
+    
+    // Create context menu
+    const menu = document.createElement('div');
+    menu.className = 'itemContextMenu';
+    menu.id = 'itemContextMenu';
+    
+    // Store item reference for later use
+    this.contextMenuItem = { item, itemIndex, family, isEquipped, slot };
+    
+    // Get stash for gold checks
+    const familyName = isEquipped ? 
+        this.getClassFamily(this.heroes[this.uiManager.selectedHero].className, this.heroes[this.uiManager.selectedHero].classTier) : 
+        family.name;
+    const stash = this.stashes[familyName];
+    
+    // Add options
+    const options = [];
+    
+    // Equip/Unequip option
+    if (isEquipped) {
         options.push({
-            text: `Refine`,
-            cost: refineCost,
-            disabled: item.refined || !canAfford,
+            text: 'Unequip',
             action: () => {
-                if (stash.gold >= refineCost && item.canRefine()) {
-                    this.uiManager.closeItemContextMenu();
-                    this.showRefinementPopup(item, itemIndex, family, isEquipped, slot);
-                } else {
-                    this.uiManager.closeItemContextMenu();
-                }
-            }
-        });
-        
-        // Sell option
-        options.push({
-            text: 'Sell',
-            cost: -item.sellcost,
-            action: () => {
-                if (isEquipped) {
-                    // Unequip first
-                    this.heroes[this.uiManager.selectedHero].unequipItem(slot);
-                } else {
-                    // Remove from stash
-                    this.stashes[familyName].items.splice(itemIndex, 1);
-                }
-                
-                // Add gold
-                stash.gold += item.sellcost;
-                saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after selling
-                
-                // Refresh display based on current screen
-                if (this.currentScreen === 'heroesScreen') {
-                    // Stay on hero screen
-                    this.uiManager.showGearTab(this.heroes[this.uiManager.selectedHero], document.getElementById('heroContent'));
-                } else {
-                    // Only go to stash screen if we're already there
-                    this.uiManager.showIndividualStash(family);
-                }
+                this.unequipGear(slot);
                 this.uiManager.closeItemContextMenu();
             }
         });
-        
-        // Create menu HTML
-        let menuHTML = '';
-        options.forEach(option => {
-            let className = 'itemContextOption';
-            if (option.disabled) className += ' disabled';
-            
-            let costText = '';
-            if (option.cost !== undefined) {
-                if (option.cost < 0) {
-                    costText = `<span class="costText">+${Math.abs(option.cost)}g</span>`;
-                } else {
-                    costText = `<span class="costText">-${option.cost}g</span>`;
-                }
-            }
-            
-            menuHTML += `<div class="${className}">${option.text}${costText}</div>`;
-        });
-        
-        menu.innerHTML = menuHTML;
-        
-        // Add click handlers
-        const menuOptions = menu.querySelectorAll('.itemContextOption');
-        menuOptions.forEach((elem, index) => {
-            if (!options[index].disabled) {
-                elem.onclick = options[index].action;
+    } else if (this.currentScreen === 'heroesScreen' && this.uiManager.selectedHero !== undefined) {
+        options.push({
+            text: 'Equip',
+            action: () => {
+                this.equipFromContextMenu();
+                this.uiManager.closeItemContextMenu();
             }
         });
-        
-        // Position menu at cursor
-        document.body.appendChild(menu);
-        const rect = event.target.getBoundingClientRect();
-        menu.style.left = rect.right + 'px';
-        menu.style.top = rect.top + 'px';
-        
-        // Adjust if menu goes off screen
-        const menuRect = menu.getBoundingClientRect();
-        if (menuRect.right > window.innerWidth) {
-            menu.style.left = (rect.left - menuRect.width) + 'px';
-        }
-        if (menuRect.bottom > window.innerHeight) {
-            menu.style.top = (window.innerHeight - menuRect.height - 10) + 'px';
-        }
-        
-        // Close menu when clicking elsewhere
-        setTimeout(() => {
-            document.addEventListener('click', this.uiManager.closeItemContextMenu.bind(this.uiManager), { once: true });
-        }, 10);
     }
+    
+    // Refine option
+    const refineCost = item.getRefineCost();
+    const canAfford = stash.gold >= refineCost;
+    options.push({
+        text: `Refine`,
+        cost: refineCost,
+        disabled: item.refined || !canAfford,
+        action: () => {
+            if (stash.gold >= refineCost && item.canRefine()) {
+                this.uiManager.closeItemContextMenu();
+                this.showRefinementPopup(item, itemIndex, family, isEquipped, slot);
+            } else {
+                this.uiManager.closeItemContextMenu();
+            }
+        }
+    });
+    
+    // Sell option (with confirmation)
+    options.push({
+        text: 'Sell',
+        cost: -item.sellcost,
+        action: () => {
+            this.uiManager.closeItemContextMenu();
+            this.showSellConfirmation(item, itemIndex, family, isEquipped, slot, false);
+        }
+    });
+    
+    // Mass Sell option (only for stash items)
+    if (!isEquipped) {
+        // Calculate how many items would be sold
+        const massSelInfo = this.calculateMassSell(item, itemIndex, family);
+        if (massSelInfo.count > 0) {
+            options.push({
+                text: 'Mass Sell',
+                cost: -massSelInfo.totalValue,
+                action: () => {
+                    this.uiManager.closeItemContextMenu();
+                    this.showSellConfirmation(item, itemIndex, family, isEquipped, slot, true);
+                }
+            });
+        }
+    }
+    
+    // Create menu HTML
+    let menuHTML = '';
+    options.forEach(option => {
+        let className = 'itemContextOption';
+        if (option.disabled) className += ' disabled';
+        
+        let costText = '';
+        if (option.cost !== undefined) {
+            if (option.cost < 0) {
+                costText = `<span class="costText">+${Math.abs(option.cost)}g</span>`;
+            } else {
+                costText = `<span class="costText">-${option.cost}g</span>`;
+            }
+        }
+        
+        menuHTML += `<div class="${className}">${option.text}${costText}</div>`;
+    });
+    
+    menu.innerHTML = menuHTML;
+    
+    // Add click handlers
+    const menuOptions = menu.querySelectorAll('.itemContextOption');
+    menuOptions.forEach((elem, index) => {
+        if (!options[index].disabled) {
+            elem.onclick = options[index].action;
+        }
+    });
+    
+    // Position menu at cursor
+    document.body.appendChild(menu);
+    const rect = event.target.getBoundingClientRect();
+    menu.style.left = rect.right + 'px';
+    menu.style.top = rect.top + 'px';
+    
+    // Adjust if menu goes off screen
+    const menuRect = menu.getBoundingClientRect();
+    if (menuRect.right > window.innerWidth) {
+        menu.style.left = (rect.left - menuRect.width) + 'px';
+    }
+    if (menuRect.bottom > window.innerHeight) {
+        menu.style.top = (window.innerHeight - menuRect.height - 10) + 'px';
+    }
+    
+    // Close menu when clicking elsewhere
+    setTimeout(() => {
+        document.addEventListener('click', this.uiManager.closeItemContextMenu.bind(this.uiManager), { once: true });
+    }, 10);
+}
+
+    calculateMassSell(item, itemIndex, family) {
+    const familyName = family.name;
+    const stash = this.stashes[familyName];
+    
+    // Get current filter value
+    let filterValue = 'all';
+    if (this.currentScreen === 'heroesScreen' && this.uiManager.currentGearFilter) {
+        filterValue = this.uiManager.currentGearFilter;
+    } else if (this.currentScreen === 'individualStashScreen' && this.uiManager.currentStashFilter) {
+        filterValue = this.uiManager.currentStashFilter;
+    }
+    
+    // Filter items
+    let itemsToCheck = stash.items;
+    if (filterValue !== 'all') {
+        itemsToCheck = stash.items.filter(i => i.slot === filterValue);
+    }
+    
+    // Sort items using current sort settings
+    const sortedItems = this.sortItems(itemsToCheck);
+    
+    // Find the position of our item in the sorted list
+    const sortedIndex = sortedItems.indexOf(item);
+    if (sortedIndex === -1) {
+        return { count: 0, totalValue: 0, items: [] };
+    }
+    
+    // Get all items after this one in the sorted list
+    const itemsToSell = sortedItems.slice(sortedIndex + 1);
+    
+    // Calculate total value
+    const totalValue = itemsToSell.reduce((sum, i) => sum + i.sellcost, 0);
+    
+    return {
+        count: itemsToSell.length,
+        totalValue: totalValue,
+        items: itemsToSell
+    };
+}
+
+showSellConfirmation(item, itemIndex, family, isEquipped, slot, isMassSell) {
+    const modal = document.getElementById('sellConfirmModal');
+    const confirmText = document.getElementById('sellConfirmText');
+    const confirmDetails = document.getElementById('sellConfirmDetails');
+    
+    // Store context for confirmation
+    this.pendingSell = {
+        item: item,
+        itemIndex: itemIndex,
+        family: family,
+        isEquipped: isEquipped,
+        slot: slot,
+        isMassSell: isMassSell
+    };
+    
+    if (isMassSell) {
+        const massSelInfo = this.calculateMassSell(item, itemIndex, family);
+        
+        // Lock in the items to sell at this moment
+        this.pendingSell.itemsToSell = massSelInfo.items;
+        this.pendingSell.totalItems = massSelInfo.count + 1; // +1 for the clicked item
+        this.pendingSell.totalValue = massSelInfo.totalValue + item.sellcost;
+        
+        confirmText.innerHTML = `Are you sure you wish to sell "<b>Level ${item.level} ${item.name}</b>" AND mass sell every item currently sorted below it?`;
+        confirmDetails.innerHTML = `Selling: ${this.pendingSell.totalItems} items<br>Sell Value: <span class="goldText">+${this.pendingSell.totalValue}g</span>`;
+    } else {
+        confirmText.innerHTML = `Are you sure you wish to sell "<b>Level ${item.level} ${item.name}</b>"?`;
+        confirmDetails.innerHTML = `Sell Value: <span class="goldText">+${item.sellcost}g</span>`;
+    }
+    
+    modal.style.display = 'flex';
+}
+
+confirmSell() {
+    const modal = document.getElementById('sellConfirmModal');
+    modal.style.display = 'none';
+    
+    if (!this.pendingSell) return;
+    
+    const { item, itemIndex, family, isEquipped, slot, isMassSell } = this.pendingSell;
+    const familyName = isEquipped ? 
+        this.getClassFamily(this.heroes[this.uiManager.selectedHero].className, this.heroes[this.uiManager.selectedHero].classTier) : 
+        family.name;
+    const stash = this.stashes[familyName];
+    
+    if (isMassSell) {
+        // Mass sell - remove all locked-in items
+        const itemsToRemove = [item, ...this.pendingSell.itemsToSell];
+        
+        // Remove items from stash (filter out the items to sell)
+        stash.items = stash.items.filter(stashItem => !itemsToRemove.includes(stashItem));
+        
+        // Add total gold
+        stash.gold += this.pendingSell.totalValue;
+    } else {
+        // Single sell
+        if (isEquipped) {
+            // Unequip first
+            this.heroes[this.uiManager.selectedHero].unequipItem(slot);
+        } else {
+            // Remove from stash
+            const actualIndex = stash.items.indexOf(item);
+            if (actualIndex !== -1) {
+                stash.items.splice(actualIndex, 1);
+            }
+        }
+        
+        // Add gold
+        stash.gold += item.sellcost;
+    }
+    
+    saveManager.saveToSlot(saveManager.currentSlot, true); // Silent save after selling
+    
+    // Refresh display based on current screen
+    if (this.currentScreen === 'heroesScreen') {
+        this.uiManager.showGearTab(this.heroes[this.uiManager.selectedHero], document.getElementById('heroContent'));
+    } else {
+        this.uiManager.showIndividualStash(family);
+    }
+    
+    // Clear pending sell
+    this.pendingSell = null;
+}
+
+cancelSell() {
+    const modal = document.getElementById('sellConfirmModal');
+    modal.style.display = 'none';
+    this.pendingSell = null;
+}
 
     showItemOptionsFromGearTab(itemIndex, familyName) {
         const family = { name: familyName };
