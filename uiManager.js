@@ -2087,21 +2087,21 @@ updateHeroSelection() {
                 </div>
             </div>
             
-            <div style="margin-top: 40px; display: flex; gap: 40px; align-items: flex-start;">
-                <div style="flex: 0 0 auto; min-width: 200px; place-items: anchor-center; margin: 10px 0">
-                    <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
-        ${this.renderGearSlotReadOnly(hero, 'trinket', this.selectedHero)}
-        ${this.renderGearSlotReadOnly(hero, 'head', this.selectedHero)}
-        ${this.renderGearSlotReadOnly(hero, 'weapon', this.selectedHero)}
-        ${this.renderGearSlotReadOnly(hero, 'chest', this.selectedHero)}
-        ${this.renderGearSlotReadOnly(hero, 'offhand', this.selectedHero)}
-        ${this.renderGearSlotReadOnly(hero, 'legs', this.selectedHero)}
+<div style="margin-top: 40px; display: flex; gap: 40px; align-items: flex-start;">
+    <div style="flex: 0 0 auto; min-width: 200px;">
+        <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
+            ${this.renderGearSlotReadOnly(hero, 'trinket', this.selectedHero)}
+            ${this.renderGearSlotReadOnly(hero, 'head', this.selectedHero)}
+            ${this.renderGearSlotReadOnly(hero, 'weapon', this.selectedHero)}
+            ${this.renderGearSlotReadOnly(hero, 'chest', this.selectedHero)}
+            ${this.renderGearSlotReadOnly(hero, 'offhand', this.selectedHero)}
+            ${this.renderGearSlotReadOnly(hero, 'legs', this.selectedHero)}
+        </div>
+        <div style="text-align: center; margin-top: 15px; font-size: 18px; color: #4dd0e1;">
+            Gear Score: ${hero.getGearScore()}
+        </div>
     </div>
-    <div style="text-align: center; margin-top: 15px; font-size: 18px; color: #4dd0e1;">
-        Gear Score: ${hero.getGearScore()}
-    </div>
-</div>
-                
+              
                 <div style="flex: 1; min-width: 200px;">
                     ${this.renderStatLine('Health Points', 'Health', hero.baseStats.hp, hero.gearStats.hp, this.selectedHero)}
                     ${this.renderStatLine('Attack', 'Attack', hero.baseStats.attack, hero.gearStats.attack, this.selectedHero)}
