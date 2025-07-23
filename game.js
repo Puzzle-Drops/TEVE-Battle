@@ -1327,6 +1327,9 @@ cancelSell() {
     performRefinementAnimation() {
         const context = this.refinementContext;
         const item = context.item;
+
+        // Clear the refined item slot right before showing result
+        document.getElementById('refinedItemSlot').innerHTML = '';
         
         // Perform the actual refinement
         const oldRarity = item.getRarity();
@@ -1391,6 +1394,9 @@ setTimeout(() => {
 
         // Update display after floating texts are done
         setTimeout(() => {
+            // Clear the refined item slot right before showing result
+            document.getElementById('refinedItemSlot').innerHTML = '';
+            
             // Hide columns and show result
             document.getElementById('refinementColumns').style.display = 'none';
             document.getElementById('refinementResult').style.display = 'block';
