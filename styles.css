@@ -6792,11 +6792,11 @@ body {
 
 /* Autosell Styles */
 .autosellButton {
-    background: linear-gradient(135deg, #0a1929 0%, #1a3a52 100%);
-    border: 2px solid #2a6a8a;
-    border-radius: 8px;
-    padding: 12px 20px;
+    background: rgba(10, 25, 41, 0.9);
+    border: 1px solid #2a6a8a;
+    padding: 10px;
     cursor: pointer;
+    font-size: 16px;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
@@ -6822,6 +6822,7 @@ body {
     display: inline-block;
     width: 50px;
     height: 24px;
+    margin-left: 10px;
 }
 
 .autosellToggle input {
