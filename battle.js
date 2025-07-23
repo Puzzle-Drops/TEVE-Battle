@@ -2464,11 +2464,17 @@ if (victory && this.mode === 'dungeon' && dungeonConfig) {
                         const item = new Item(itemId);
                         item.rollItem(collectionBonuses);
                         
-                        itemRolls.push({
+                        // Check collection BEFORE autoselling
+                        this.game.checkItemForCollection(item, hero.name, hero.displayClassName);
+                        
+                        // Process through autosell
+                        const processedRoll = this.game.autosell.processItemRoll({
                             hero: hero,
                             gold: 0,
                             item: item
                         });
+                        
+                        itemRolls.push(processedRoll);
                     } else {
                         // No items available, give gold instead
                         itemRolls.push({
@@ -2513,11 +2519,17 @@ if (victory && this.mode === 'dungeon' && dungeonConfig) {
                         const item = new Item(itemId);
                         item.rollItem(collectionBonuses);
                         
-                        itemRolls.push({
+                        // Check collection BEFORE autoselling
+                        this.game.checkItemForCollection(item, hero.name, hero.displayClassName);
+                        
+                        // Process through autosell
+                        const processedRoll = this.game.autosell.processItemRoll({
                             hero: hero,
                             gold: 0,
                             item: item
                         });
+                        
+                        itemRolls.push(processedRoll);
                     } else {
                         // No items available, give gold instead
                         itemRolls.push({
@@ -2544,6 +2556,9 @@ if (victory && this.mode === 'dungeon' && dungeonConfig) {
             }
         }
     });
+    
+    // Save autosell stats after processing
+    this.game.autosell.saveSettings();
 } else {
     // On defeat, no items are rolled - just empty entries
     this.party.forEach(unit => {
