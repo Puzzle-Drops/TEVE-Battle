@@ -625,10 +625,10 @@
                     <div class="actionButtons">
     <!-- Autosell Button -->
     <div class="autosellButtonContainer" id="autosellButtonContainer" style="display: none; margin-bottom: 10px;">
-        <button class="autosellButton" onclick="game.uiManager.showAutosellSettings()" style="width: 200px; padding: 8px; background: rgba(10, 25, 41, 0.8); border: 1px solid #2a6a8a; color: #b0e0f0; cursor: pointer;">
+        <button class="autosellButton" onclick="game.uiManager.showAutosellSettings()">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span>Autosell</span>
-                <label class="autosellToggle" onclick="event.stopPropagation()" style="margin-left: 10px;">
+                <label class="autosellToggle" onclick="event.stopPropagation()">
                     <input type="checkbox" id="autosellToggleSwitch" 
                            onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings()">
                     <span class="toggleSlider"></span>
