@@ -2361,28 +2361,28 @@ closePartySelect() {
     }
 
     toggleHeroSelection(heroIndex) {
-        // Check if hero is already selected
-        const currentIndex = this.selectedParty.indexOf(heroIndex);
-        
-        if (currentIndex !== -1) {
-            // Remove from party
-            this.selectedParty[currentIndex] = null;
-        } else {
-            // Find first empty slot
-            const emptySlot = this.selectedParty.indexOf(null);
-            if (emptySlot !== -1) {
-                this.selectedParty[emptySlot] = heroIndex;
-            }
+    // Check if hero is already selected
+    const currentIndex = this.selectedParty.indexOf(heroIndex);
+    
+    if (currentIndex !== -1) {
+        // Remove from party
+        this.selectedParty[currentIndex] = null;
+    } else {
+        // Find first empty slot
+        const emptySlot = this.selectedParty.indexOf(null);
+        if (emptySlot !== -1) {
+            this.selectedParty[emptySlot] = heroIndex;
         }
-        
-        // Update UI
-        this.uiManager.renderHeroSelectList();
-        this.uiManager.updatePartySlots();
-        
-        // Enable/disable start button
-        const hasHeroes = this.selectedParty.some(h => h !== null);
-        document.getElementById('startBattleBtn').disabled = !hasHeroes;
     }
+    
+    // Update UI - just update the selected state instead of rebuilding
+    this.uiManager.updateHeroSelectionState(heroIndex);
+    this.uiManager.updatePartySlots();
+    
+    // Enable/disable start button
+    const hasHeroes = this.selectedParty.some(h => h !== null);
+    document.getElementById('startBattleBtn').disabled = !hasHeroes;
+}
 
     calculateSpellValue(spell, unit, valueType = 'damage') {
         if (!spell || !unit) return 0;
