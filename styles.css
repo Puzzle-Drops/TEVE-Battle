@@ -1606,6 +1606,33 @@ body {
     transform: none !important;
 }
 
+/* Item tooltip stability - prevent child elements from interfering */
+.itemContainer .itemRefined,
+.itemContainer .itemStars,
+.itemContainer .itemLevel,
+.itemContainer .itemQuality {
+    pointer-events: none;
+}
+
+/* Ensure containers remain interactive */
+.stashItemSlot {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.gearItem {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.itemContainer {
+    pointer-events: auto;
+}
+
+.itemContainer img {
+    pointer-events: auto;
+}
+
 /* Item visual indicators */
 .itemContainer {
     position: relative;
