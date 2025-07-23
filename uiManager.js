@@ -3517,14 +3517,18 @@ addComparisonIndicators(newItemHTML, newItem, equippedItem) {
             }
             
             // Create the indicator
-            const indicator = getIndicator(newPercent, oldPercent, true, hasMatchingRoll, percentText);
-            
-            // Find and replace ALL occurrences of this percentage
-            const oldSpan = `<span style="color: #6a9aaa;">${newPercent}%</span>`;
-            const newSpan = `<span style="color: #6a9aaa; display: inline-block; width: 60px; text-align: right;">${indicator} ${newPercent}%</span>`;
-            
-            // Replace all occurrences
-            newItemHTML = newItemHTML.split(oldSpan).join(newSpan);
+const indicator = getIndicator(newPercent, oldPercent, true, hasMatchingRoll, percentText);
+
+// Find and replace ALL occurrences of this percentage
+const oldSpan = `<span style="color: #6a9aaa;">${newPercent}%</span>`;
+// Create a container with fixed positioning for arrow and percentage
+const newSpan = `<span style="color: #6a9aaa; display: inline-flex; width: 60px; align-items: center;">` +
+    `<span style="display: inline-block; width: 15px; text-align: center;">${indicator}</span>` +
+    `<span style="flex: 1; text-align: right;">${newPercent}%</span>` +
+    `</span>`;
+
+// Replace all occurrences
+newItemHTML = newItemHTML.split(oldSpan).join(newSpan);
         }
     }
     
