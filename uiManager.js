@@ -3175,6 +3175,68 @@ updateAutoReplayText(countdown) {
         }, 100);
     }
 
+    // Add this new method right before showItemTooltip
+    addComparisonIndicators(newItemHTML, newItem, equippedItem) {
+        // Helper function to create indicator HTML
+        const getIndicator = (newValue, oldValue) => {
+            if (newValue > oldValue) {
+                return '<span style="color: #00ff88; margin-right: 5px;">↑</span>';
+            } else if (newValue < oldValue) {
+                return '<span style="color: #ff4444; margin-right: 5px;">↓</span>';
+            } else {
+                return '<span style="color: inherit; margin-right: 5px;">=</span>';
+            }
+        };
+        
+        // Compare basic stats
+        const newLevel = newItem.level;
+        const oldLevel = equippedItem.level;
+        const newScore = newItem.getItemScore();
+        const oldScore = equippedItem.getItemScore();
+        const newQuality = newItem.getQualityPercent();
+        const oldQuality = equippedItem.getQualityPercent();
+        
+        // Replace Level line
+        newItemHTML = newItemHTML.replace(
+            /<div class="itemLevelText">Level (\d+)<\/div>/,
+            `<div class="itemLevelText">${getIndicator(newLevel, oldLevel)}Level $1</div>`
+        );
+        
+        // Replace Score line
+        newItemHTML = newItemHTML.replace(
+            /<div class="itemScoreText">Score: (\d+)<\/div>/,
+            `<div class="itemScoreText">${getIndicator(newScore, oldScore)}Score: $1</div>`
+        );
+        
+        // Replace Quality line
+        newItemHTML = newItemHTML.replace(
+            /<div class="itemQualityText">Quality: (\d+)%<\/div>/,
+            `<div class="itemQualityText">${getIndicator(newQuality, oldQuality)}Quality: $1%</div>`
+        );
+        
+        // Compare individual stat qualities
+        for (let i = 1; i <= 4; i++) {
+            const newStatQuality = newItem[`quality${i}`];
+            const oldStatQuality = equippedItem[`quality${i}`];
+            
+            if (newStatQuality > 0 && oldStatQuality > 0) {
+                const newPercent = Math.round((newStatQuality / 5) * 100);
+                const oldPercent = Math.round((oldStatQuality / 5) * 100);
+                
+                // Replace the quality percentage in stat lines
+                newItemHTML = newItemHTML.replace(
+                    new RegExp(`<span style="color: #6a9aaa;">${newPercent}%</span>`, 'g'),
+                    (match) => {
+                        // Only replace if it's in a stat line context
+                        return `<span style="color: #6a9aaa;">${getIndicator(newPercent, oldPercent)}${newPercent}%</span>`;
+                    }
+                );
+            }
+        }
+        
+        return newItemHTML;
+    }
+    
     // Tooltip Functions
     showItemTooltip(event, item, isStashItem = false) {
         // Check if alt key is held
@@ -3217,26 +3279,31 @@ updateAutoReplayText(countdown) {
         let tooltipHTML = '';
         
         if (showComparison) {
-            // Comparison layout
-            tooltipHTML = '<div style="display: flex; gap: 20px;">';
-            
-            // Hovered item (left)
-            tooltipHTML += '<div style="flex: 1;">';
-            tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
-            tooltipHTML += item.getTooltip(showMax);
-            tooltipHTML += '</div>';
-            
-            // Separator
-            tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
-            
-            // Equipped item (right)
-            tooltipHTML += '<div style="flex: 1;">';
-            tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
-            tooltipHTML += equippedItem.getTooltip(showMax);
-            tooltipHTML += '</div>';
-            
-            tooltipHTML += '</div>';
-        } else {
+    // Comparison layout
+    tooltipHTML = '<div style="display: flex; gap: 20px;">';
+    
+    // Hovered item (left) - with comparison indicators
+    tooltipHTML += '<div style="flex: 1;">';
+    tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">New Item</div>';
+    
+    // Get the new item tooltip and add comparison indicators
+    let newItemTooltip = item.getTooltip(showMax);
+    newItemTooltip = this.addComparisonIndicators(newItemTooltip, item, equippedItem);
+    tooltipHTML += newItemTooltip;
+    
+    tooltipHTML += '</div>';
+    
+    // Separator
+    tooltipHTML += '<div style="width: 1px; background: #2a6a8a; margin: 0 10px;"></div>';
+    
+    // Equipped item (right)
+    tooltipHTML += '<div style="flex: 1;">';
+    tooltipHTML += '<div style="text-align: center; color: #6a9aaa; margin-bottom: 10px; font-size: 14px;">Currently Equipped</div>';
+    tooltipHTML += equippedItem.getTooltip(showMax);
+    tooltipHTML += '</div>';
+    
+    tooltipHTML += '</div>';
+} else {
             // Single item tooltip
             tooltipHTML = item.getTooltip(showMax);
         }
