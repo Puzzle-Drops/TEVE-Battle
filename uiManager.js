@@ -1321,10 +1321,10 @@ showPartySelect(mode = 'dungeon') {
         }
         
         // Hide autosell for arena mode
-        const autosellSection = document.getElementById('autosellSection');
-        if (autosellSection) {
-            autosellSection.style.display = 'none';
-        }
+const autosellButton = document.getElementById('autosellButtonContainer');
+if (autosellButton) {
+    autosellButton.style.display = 'none';
+}
     } else {
         // Show all elements for dungeon mode
         const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
@@ -1393,10 +1393,10 @@ showPartySelect(mode = 'dungeon') {
         this.updateRewardsDisplay();
         this.updateRecordsDisplay();
         
-        // Show autosell section and update its state
-        const autosellSection = document.getElementById('autosellSection');
-        if (autosellSection) {
-            autosellSection.style.display = 'flex';
+        // Show autosell button and update its state
+const autosellButton = document.getElementById('autosellButtonContainer');
+if (autosellButton) {
+    autosellButton.style.display = 'block';
             
             // Update toggle state
             const toggle = document.getElementById('autosellToggleSwitch');
