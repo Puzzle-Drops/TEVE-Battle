@@ -3418,7 +3418,7 @@ updateAutoReplayText(countdown) {
         }, 100);
     }
 
-    addComparisonIndicators(newItemHTML, newItem, equippedItem) {
+addComparisonIndicators(newItemHTML, newItem, equippedItem) {
     // Helper function to create indicator HTML with right-aligned percentages
     const getIndicator = (newValue, oldValue, hasNewRoll = false, hasOldRoll = true, percentText = '') => {
         let arrow = '';
@@ -3487,6 +3487,9 @@ updateAutoReplayText(countdown) {
         `<div class="itemQualityText">${getIndicatorSimple(newQuality, oldQuality)}Quality: $1%</div>`
     );
     
+    // Track which percentages we've already processed
+    const processedPercentages = new Set();
+    
     // Compare individual stat qualities
     for (let i = 1; i <= 4; i++) {
         const newStatQuality = newItem[`quality${i}`];
@@ -3496,6 +3499,12 @@ updateAutoReplayText(countdown) {
         if (newStatQuality > 0) {
             const newPercent = Math.round((newStatQuality / 5) * 100);
             const percentText = newPercent + '%';
+            
+            // Skip if we've already processed this percentage value
+            if (processedPercentages.has(newPercent)) {
+                continue;
+            }
+            processedPercentages.add(newPercent);
             
             // Check if this specific roll exists on the old item
             let hasMatchingRoll = false;
@@ -3510,14 +3519,12 @@ updateAutoReplayText(countdown) {
             // Create the indicator
             const indicator = getIndicator(newPercent, oldPercent, true, hasMatchingRoll, percentText);
             
-            // Find and replace the percentage span with a fixed-width container
+            // Find and replace ALL occurrences of this percentage
             const oldSpan = `<span style="color: #6a9aaa;">${newPercent}%</span>`;
             const newSpan = `<span style="color: #6a9aaa; display: inline-block; width: 60px; text-align: right;">${indicator} ${newPercent}%</span>`;
             
-            // Only replace if we haven't already added an indicator
-            if (!newItemHTML.includes(`width: 60px;`)) {
-                newItemHTML = newItemHTML.replace(oldSpan, newSpan);
-            }
+            // Replace all occurrences
+            newItemHTML = newItemHTML.split(oldSpan).join(newSpan);
         }
     }
     
