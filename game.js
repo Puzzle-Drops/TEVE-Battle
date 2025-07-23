@@ -957,6 +957,9 @@ cancelSell() {
         document.getElementById('refinementButtons').style.display = 'flex';
         document.getElementById('refinementCloseButton').style.display = 'none';
         document.getElementById('refinementResultLabel').textContent = 'Current Item';
+
+        // Clear the refined item slot to prevent showing previous item
+        document.getElementById('refinedItemSlot').innerHTML = '';
         
         popup.style.display = 'block';
     }
