@@ -3177,8 +3177,41 @@ updateAutoReplayText(countdown) {
 
     // Add this new method right before showItemTooltip
     addComparisonIndicators(newItemHTML, newItem, equippedItem) {
-        // Helper function to create indicator HTML
-        const getIndicator = (newValue, oldValue) => {
+        // Helper function to create indicator HTML with spacing
+        const getIndicator = (newValue, oldValue, hasNewRoll = false, hasOldRoll = true, percentText = '') => {
+            let arrow = '';
+            
+            // If new item has a roll and old doesn't, it's always better
+            if (hasNewRoll && !hasOldRoll) {
+                arrow = '<span style="color: #00ff88;">↑</span>';
+            }
+            // If old item has a roll and new doesn't, it's worse
+            else if (!hasNewRoll && hasOldRoll) {
+                arrow = '<span style="color: #ff4444;">↓</span>';
+            }
+            // Normal comparison
+            else if (newValue > oldValue) {
+                arrow = '<span style="color: #00ff88;">↑</span>';
+            } else if (newValue < oldValue) {
+                arrow = '<span style="color: #ff4444;">↓</span>';
+            } else {
+                arrow = '<span style="color: inherit;">=</span>';
+            }
+            
+            // Add appropriate spacing based on percentage length
+            let spacing = ' ';
+            if (percentText.length === 3) { // "80%", "60%", etc.
+                spacing = '  '; // Two spaces
+            } else if (percentText.length === 2) { // "9%", "5%", etc.
+                spacing = '   '; // Three spaces
+            }
+            // "100%" gets one space
+            
+            return arrow + spacing;
+        };
+        
+        // Same function for header stats (no spacing needed)
+        const getIndicatorSimple = (newValue, oldValue) => {
             if (newValue > oldValue) {
                 return '<span style="color: #00ff88; margin-right: 5px;">↑</span>';
             } else if (newValue < oldValue) {
@@ -3199,37 +3232,48 @@ updateAutoReplayText(countdown) {
         // Replace Level line
         newItemHTML = newItemHTML.replace(
             /<div class="itemLevelText">Level (\d+)<\/div>/,
-            `<div class="itemLevelText">${getIndicator(newLevel, oldLevel)}Level $1</div>`
+            `<div class="itemLevelText">${getIndicatorSimple(newLevel, oldLevel)}Level $1</div>`
         );
         
         // Replace Score line
         newItemHTML = newItemHTML.replace(
             /<div class="itemScoreText">Score: (\d+)<\/div>/,
-            `<div class="itemScoreText">${getIndicator(newScore, oldScore)}Score: $1</div>`
+            `<div class="itemScoreText">${getIndicatorSimple(newScore, oldScore)}Score: $1</div>`
         );
         
         // Replace Quality line
         newItemHTML = newItemHTML.replace(
             /<div class="itemQualityText">Quality: (\d+)%<\/div>/,
-            `<div class="itemQualityText">${getIndicator(newQuality, oldQuality)}Quality: $1%</div>`
+            `<div class="itemQualityText">${getIndicatorSimple(newQuality, oldQuality)}Quality: $1%</div>`
         );
         
         // Compare individual stat qualities
         for (let i = 1; i <= 4; i++) {
             const newStatQuality = newItem[`quality${i}`];
             const oldStatQuality = equippedItem[`quality${i}`];
+            const newStatRoll = newItem[`roll${i}`];
             
-            if (newStatQuality > 0 && oldStatQuality > 0) {
+            if (newStatQuality > 0) {
                 const newPercent = Math.round((newStatQuality / 5) * 100);
-                const oldPercent = Math.round((oldStatQuality / 5) * 100);
+                const percentText = newPercent + '%';
                 
-                // Replace the quality percentage in stat lines
+                // Check if this specific roll exists on the old item
+                let hasMatchingRoll = false;
+                let oldPercent = 0;
+                
+                if (oldStatQuality > 0) {
+                    // Direct comparison if same slot has a roll
+                    hasMatchingRoll = true;
+                    oldPercent = Math.round((oldStatQuality / 5) * 100);
+                }
+                
+                // Create the indicator with appropriate spacing
+                const indicator = getIndicator(newPercent, oldPercent, true, hasMatchingRoll, percentText);
+                
+                // Find and replace the percentage in this specific stat line
                 newItemHTML = newItemHTML.replace(
                     new RegExp(`<span style="color: #6a9aaa;">${newPercent}%</span>`, 'g'),
-                    (match) => {
-                        // Only replace if it's in a stat line context
-                        return `<span style="color: #6a9aaa;">${getIndicator(newPercent, oldPercent)}${newPercent}%</span>`;
-                    }
+                    `<span style="color: #6a9aaa;">${indicator}${newPercent}%</span>`
                 );
             }
         }
