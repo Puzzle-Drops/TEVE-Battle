@@ -1024,6 +1024,14 @@ if (refinementPopup && refinementPopup.style.display === 'block') {
     return;
 }
 
+// Close sell confirmation modal if open
+const sellConfirmModal = document.getElementById('sellConfirmModal');
+if (sellConfirmModal && sellConfirmModal.style.display === 'flex') {
+    game.cancelSell();
+    e.preventDefault();
+    return;
+}
+
                 // Close collection complete popup if open
                 const collectionPopup = document.getElementById('collectionCompletePopup');
                 if (collectionPopup && collectionPopup.style.display === 'block') {
