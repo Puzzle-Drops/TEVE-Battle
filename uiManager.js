@@ -1276,98 +1276,104 @@ showPartySelect(mode = 'dungeon') {
         document.getElementById('dungeonName').textContent = this.game.currentDungeon.name;
     }
 
-// Hide/show elements based on mode
-if (mode === 'arena') {
-    
-    // Show records section for arena (different from dungeons)
-    const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
-    if (recordsSection) recordsSection.style.display = '';
-    
-    // Update the records content for arena format
-    const recordsContent = document.getElementById('recordsContent');
-    if (recordsContent) {
-        recordsContent.innerHTML = `
-            <div class="rewardStats">
-                <div class="rewardStat">
-                    <span class="recordIcon">⏱️</span>
-                    <span id="dungeonBestTime">--:--</span>
+    // Hide/show elements based on mode
+    if (mode === 'arena') {
+        
+        // Show records section for arena (different from dungeons)
+        const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
+        if (recordsSection) recordsSection.style.display = '';
+        
+        // Update the records content for arena format
+        const recordsContent = document.getElementById('recordsContent');
+        if (recordsContent) {
+            recordsContent.innerHTML = `
+                <div class="rewardStats">
+                    <div class="rewardStat">
+                        <span class="recordIcon">⏱️</span>
+                        <span id="dungeonBestTime">--:--</span>
+                    </div>
+                    <div class="rewardStat">
+                        <span class="recordIcon">🏆</span>
+                        <span id="dungeonCompletions">0</span>
+                    </div>
+                    <div class="rewardStat">
+                        <span class="recordIcon">💀</span>
+                        <span id="dungeonCollectionPercent">-- deaths</span>
+                    </div>
                 </div>
-                <div class="rewardStat">
-                    <span class="recordIcon">🏆</span>
-                    <span id="dungeonCompletions">0</span>
-                </div>
-                <div class="rewardStat">
-                    <span class="recordIcon">💀</span>
-                    <span id="dungeonCollectionPercent">-- deaths</span>
-                </div>
-            </div>
-        `;
-    }
-    
-    // Update records display for current arena team
-    this.updateArenaRecordsDisplay();
-    
-    // Keep wave navigation visible for arena team selection
-    const waveNav = document.getElementById('waveNavigation');
-    if (waveNav) waveNav.style.display = '';
-    
-    const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
-    if (rewardsSection) rewardsSection.style.display = 'none';
+            `;
+        }
+        
+        // Update records display for current arena team
+        this.updateArenaRecordsDisplay();
+        
+        // Keep wave navigation visible for arena team selection
+        const waveNav = document.getElementById('waveNavigation');
+        if (waveNav) waveNav.style.display = '';
+        
+        const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
+        if (rewardsSection) rewardsSection.style.display = 'none';
 
         // Ensure battle preview is visible for arena
-    const battlePreview = document.querySelector('.battlePreview');
-    if (battlePreview) {
-        battlePreview.style.display = '';  // Explicitly show it
-    }
-} else {
-    // Show all elements for dungeon mode
-    const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
-    if (recordsSection) recordsSection.style.display = '';
-    
-    // Reset records content to dungeon format (with book emoji)
-    const recordsContent = document.getElementById('recordsContent');
-    if (recordsContent) {
-        recordsContent.innerHTML = `
-            <div class="rewardStats">
-                <div class="rewardStat">
-                    <span class="recordIcon">⏱️</span>
-                    <span id="dungeonBestTime">--:--</span>
+        const battlePreview = document.querySelector('.battlePreview');
+        if (battlePreview) {
+            battlePreview.style.display = '';  // Explicitly show it
+        }
+        
+        // Hide autosell for arena mode
+        const autosellSection = document.getElementById('autosellSection');
+        if (autosellSection) {
+            autosellSection.style.display = 'none';
+        }
+    } else {
+        // Show all elements for dungeon mode
+        const recordsSection = document.querySelector('#recordsContent').parentElement.parentElement;
+        if (recordsSection) recordsSection.style.display = '';
+        
+        // Reset records content to dungeon format (with book emoji)
+        const recordsContent = document.getElementById('recordsContent');
+        if (recordsContent) {
+            recordsContent.innerHTML = `
+                <div class="rewardStats">
+                    <div class="rewardStat">
+                        <span class="recordIcon">⏱️</span>
+                        <span id="dungeonBestTime">--:--</span>
+                    </div>
+                    <div class="rewardStat">
+                        <span class="recordIcon">🏆</span>
+                        <span id="dungeonCompletions">0</span>
+                    </div>
+                    <div class="rewardStat">
+                        <span class="recordIcon">📖</span>
+                        <span id="dungeonCollectionPercent">0%</span>
+                    </div>
                 </div>
-                <div class="rewardStat">
-                    <span class="recordIcon">🏆</span>
-                    <span id="dungeonCompletions">0</span>
-                </div>
-                <div class="rewardStat">
-                    <span class="recordIcon">📖</span>
-                    <span id="dungeonCollectionPercent">0%</span>
-                </div>
-            </div>
-        `;
-    }
-    
-    const waveNav = document.getElementById('waveNavigation');
-    if (waveNav) waveNav.style.display = '';
-    
-    const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
-    if (rewardsSection) rewardsSection.style.display = '';
-    
-    // Show auto toggles
-    const autoBattleToggle = document.getElementById('autoBattleToggle');
-    if (autoBattleToggle) autoBattleToggle.parentElement.style.display = '';
-    
-    const autoReplayToggle = document.getElementById('autoReplayToggleParty');
-    if (autoReplayToggle) autoReplayToggle.parentElement.style.display = '';
-    
-    // Set toggle states
-    if (autoBattleToggle) autoBattleToggle.checked = this.game.autoBattle;
-    if (autoReplayToggle) autoReplayToggle.checked = this.game.autoReplay;
+            `;
+        }
+        
+        const waveNav = document.getElementById('waveNavigation');
+        if (waveNav) waveNav.style.display = '';
+        
+        const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
+        if (rewardsSection) rewardsSection.style.display = '';
+        
+        // Show auto toggles
+        const autoBattleToggle = document.getElementById('autoBattleToggle');
+        if (autoBattleToggle) autoBattleToggle.parentElement.style.display = '';
+        
+        const autoReplayToggle = document.getElementById('autoReplayToggleParty');
+        if (autoReplayToggle) autoReplayToggle.parentElement.style.display = '';
+        
+        // Set toggle states
+        if (autoBattleToggle) autoBattleToggle.checked = this.game.autoBattle;
+        if (autoReplayToggle) autoReplayToggle.checked = this.game.autoReplay;
 
-    // Ensure battle preview is visible for dungeons
-    const battlePreview = document.querySelector('.battlePreview');
-    if (battlePreview) {
-        battlePreview.style.display = '';  // Explicitly show it
+        // Ensure battle preview is visible for dungeons
+        const battlePreview = document.querySelector('.battlePreview');
+        if (battlePreview) {
+            battlePreview.style.display = '';  // Explicitly show it
+        }
     }
-}
     
     // Render hero selection list
     this.renderHeroSelectList();
@@ -1386,45 +1392,24 @@ if (mode === 'arena') {
     if (mode === 'dungeon') {
         this.updateRewardsDisplay();
         this.updateRecordsDisplay();
-    }
-    
-    // Add autosell section for dungeon mode only
-    if (mode === 'dungeon') {
-        // Remove any existing autosell section first
-        const existingAutosell = document.querySelector('.autosellSection');
-        if (existingAutosell) {
-            existingAutosell.remove();
+        
+        // Show autosell section and update its state
+        const autosellSection = document.getElementById('autosellSection');
+        if (autosellSection) {
+            autosellSection.style.display = 'flex';
+            
+            // Update toggle state
+            const toggle = document.getElementById('autosellToggleSwitch');
+            if (toggle) {
+                toggle.checked = this.game.autosell.enabled;
+            }
+            
+            // Update preset text
+            const presetText = document.getElementById('autosellPresetText');
+            if (presetText) {
+                presetText.textContent = this.game.autosell.preset.charAt(0).toUpperCase() + this.game.autosell.preset.slice(1) + ' preset';
+            }
         }
-        
-        // Create autosell section
-        const autosellSection = document.createElement('div');
-        autosellSection.className = 'autosellSection';
-        autosellSection.style.cssText = 'display: flex; flex-direction: column; align-items: center; margin-left: 20px';
-        autosellSection.innerHTML = `
-            <div class="autosellButton" onclick="game.uiManager.showAutosellSettings()">
-                <span class="autosellLabelText">Autosell</span>
-                <label class="autosellToggle" onclick="event.stopPropagation()">
-                    <input type="checkbox" id="autosellToggleSwitch" 
-                           ${this.game.autosell.enabled ? 'checked' : ''} 
-                           onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings()">
-                    <span class="toggleSlider"></span>
-                </label>
-            </div>
-            <div class="autosellContent" id="autosellContent">
-                <div class="autosellInfo">
-                    <span id="autosellPresetText">${this.game.autosell.preset.charAt(0).toUpperCase() + this.game.autosell.preset.slice(1)} preset</span>
-                </div>
-            </div>
-        `;
-        
-        // Insert inside battlePreview container, after the rewards section
-const battlePreview = document.querySelector('.battlePreview');
-const rewardsSection = document.querySelector('#rewardsContent').parentElement.parentElement;
-
-if (battlePreview && rewardsSection) {
-    // Insert after the rewards section, but inside battlePreview
-    battlePreview.insertBefore(autosellSection, rewardsSection.nextSibling);
-}
     }
 }
 
