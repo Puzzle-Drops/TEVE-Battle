@@ -1456,9 +1456,7 @@ setTimeout(() => {
             }
             
             // Show refined item in slot after delay
-            setTimeout(() => {
                 this.showRefinedItemInSlot();
-            }, 600); // 400ms after the display updates (1200 + 400 = 1600ms total)
             
             // Update buttons
             document.getElementById('refinementButtons').style.display = 'none';
