@@ -3398,8 +3398,8 @@ body {
 
 /* Updated tooltip styles */
 .itemTooltip {
-    min-width: 200px; /* Reduced from 250px */
-    max-width: 250px; /* Added max width */
+    min-width: 200px;
+    max-width: 250px;
 }
 
 .itemTooltip .itemName {
@@ -3413,18 +3413,20 @@ body {
 .itemQualityText {
     font-size: 16px;
     color: #b0e0f0;
+    margin: 4px 0;
 }
 
 .itemScoreText {
     font-size: 16px;
     color: #b0e0f0;
+    margin: 4px 0;
 }
 
 .itemStarsInline {
     font-size: 16px;
     font-weight: bold;
     letter-spacing: -2px;
-    margin-bottom: 8px;
+    margin: 4px 0 8px 0;
 }
 
 .itemDivider {
@@ -3479,6 +3481,7 @@ body {
 .itemTooltip .itemLevelText {
     font-size: 16px;
     color: #b0e0f0;
+    margin: 4px 0;
 }
 
 /* Ensure the divider always shows */
