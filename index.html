@@ -624,21 +624,17 @@
                     </div>
                     <div class="actionButtons">
     <!-- Autosell Button -->
-    <div class="autosellButtonContainer" id="autosellButtonContainer" style="display: none;">
-        <button class="autosellButton" onclick="game.uiManager.showAutosellSettings()">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-size: 16px; color: #b0e0f0;>Autosell</span>
-                <label class="autosellToggle" onclick="event.stopPropagation()">
-                    <input type="checkbox" id="autosellToggleSwitch" 
-                           onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings()">
-                    <span class="toggleSlider"></span>
-                </label>
-            </div>
-            <div style="font-size: 14px; color: #6a9aaa;">
-                <span id="autosellPresetText">Basic preset</span>
-            </div>
-        </button>
-    </div>
+<div class="autosellButtonContainer" id="autosellButtonContainer" style="display: none;">
+    <button class="autosellButton" onclick="game.uiManager.showAutosellSettings()">
+        <span class="autosellText">Autosell</span>
+        <label class="autosellToggle" onclick="event.stopPropagation()">
+            <input type="checkbox" id="autosellToggleSwitch" 
+                   onchange="game.autosell.enabled = this.checked; game.autosell.saveSettings()">
+            <span class="toggleSlider"></span>
+        </label>
+        <span class="autosellPresetText" id="autosellPresetText">Basic preset</span>
+    </button>
+</div>
     
     <div class="autoTogglesPartySelect">
         <label style="color: #b0e0f0;">
