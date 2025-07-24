@@ -2366,7 +2366,7 @@ updateHeroSelection() {
             </div>
             
 <div style="margin-top: 40px; display: flex; gap: 40px; align-items: flex-start;">
-    <div style="flex: 0 0 auto; min-width: 200px;">
+    <div style="flex: 0 0 auto; min-width: 200px; justify-items: anchor-center;">
         <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
             ${this.renderGearSlotReadOnly(hero, 'trinket', this.selectedHero)}
             ${this.renderGearSlotReadOnly(hero, 'head', this.selectedHero)}
@@ -2375,7 +2375,7 @@ updateHeroSelection() {
             ${this.renderGearSlotReadOnly(hero, 'offhand', this.selectedHero)}
             ${this.renderGearSlotReadOnly(hero, 'legs', this.selectedHero)}
         </div>
-        <div style="text-align: center; margin-top: 15px; font-size: 18px; color: #4dd0e1;">
+        <div style="text-align: left; margin-top: 15px; font-size: 24px; color: #4dd0e1;">
             Gear Score: ${hero.getGearScore()}
         </div>
     </div>
@@ -2618,7 +2618,7 @@ updateHeroSelection() {
                         ${this.renderGearSlot(hero, 'legs', this.selectedHero)}
                     </div>
                     <div class="gearStatsPreview">
-    <div style="text-align: center; margin-bottom: 10px; font-size: 16px; color: #4dd0e1;">
+    <div style="text-align: center; margin-bottom: 40px; margin-top: 10px; font-size: 16px; color: #4dd0e1;">
         Gear Score: ${hero.getGearScore()}
     </div>
     <h4>Total Stats</h4>
