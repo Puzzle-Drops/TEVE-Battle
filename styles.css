@@ -2200,6 +2200,7 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 10px 10px;
     margin-top: 0px;
+    max-width: 138px;
 }
 
 .heroInfoGear .gearSlot {
