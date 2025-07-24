@@ -4810,7 +4810,6 @@ body {
 
 /* Gear Stats Preview */
 .gearStatsPreview {
-    margin-top: 20px;
     background: rgba(10, 25, 41, 0.8);
     padding: 4px;
     border-radius: 4px;
