@@ -2096,7 +2096,7 @@ const gearHtml = `
         ${this.renderArenaGearSlot(enemy, 'offhand')}
         ${this.renderArenaGearSlot(enemy, 'legs')}
     </div>
-    <div style="text-align: center; margin-top: 15px; font-size: 18px; color: #4dd0e1;">
+    <div style="text-align: left; margin-top: 10px; font-size: 16px; color: #4dd0e1;">
         Gear Score: ${enemy.getGearScore()}
     </div>
 `;
