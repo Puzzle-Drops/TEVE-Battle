@@ -495,11 +495,11 @@
 "avenger_male_passive": {
     "id": "avenger_male_passive",
     "name": "Blighting Vengeance",
-    "description": "When attacked by a taunted unit, that unit receives Blight debuff",
+    "description": "When attacked by a taunted unit, that unit receives Blight debuff for {blightDuration} turns",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
-    "blightDuration": 1,
+    "blightDuration": 2,
     "target": "self",
     "logicKey": "avengerMalePassiveLogic"
 },
