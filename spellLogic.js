@@ -788,21 +788,21 @@ naturesBlessingLogic: function(battle, caster, target, spell, spellLevel = 1) {
         actionBarHelpers.grant(lowestHpAlly, actionBarGrant, battle);
         
         if (caster.summonerFemalePassive) {
-            const healAmount = hpHelpers.percentOfMaxHp(lowestHpAlly, 0.05);
-            battle.healUnit(lowestHpAlly, healAmount);
-        }
+    const healAmount = hpHelpers.percentOfMaxHp(lowestHpAlly, caster.summonerFemaleHealPercent || 0.05);
+    battle.healUnit(lowestHpAlly, healAmount);
+}
     }
         
         if (caster.summonerMalePassive) {
-            const enemies = battle.getEnemies(caster);
-            const aliveEnemies = enemies.filter(e => e && e.isAlive);
-            
-            if (aliveEnemies.length > 0) {
-                aliveEnemies.sort((a, b) => hpHelpers.hpPercent(a) - hpHelpers.hpPercent(b));
-                const lowestHpEnemy = aliveEnemies[0];
-                actionBarHelpers.drain(lowestHpEnemy, 0.05, battle);
-            }
-        }
+    const enemies = battle.getEnemies(caster);
+    const aliveEnemies = enemies.filter(e => e && e.isAlive);
+    
+    if (aliveEnemies.length > 0) {
+        aliveEnemies.sort((a, b) => hpHelpers.hpPercent(a) - hpHelpers.hpPercent(b));
+        const lowestHpEnemy = aliveEnemies[0];
+        actionBarHelpers.drain(lowestHpEnemy, caster.summonerMaleActionBarDrain || 0.05, battle);
+    }
+}
     },
 
 barkskinLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -868,12 +868,14 @@ naturesBalanceLogic: function(battle, caster, target, spell, spellLevel = 1) {
     },
 
     summonerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.summonerMalePassive = true;
-    },
+    caster.summonerMalePassive = true;
+    caster.summonerMaleActionBarDrain = spell.actionBarDrain || 0.05;
+},
 
     summonerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.summonerFemalePassive = true;
-    },
+    caster.summonerFemalePassive = true;
+    caster.summonerFemaleHealPercent = spell.healPercent || 0.05;
+},
 
     // Initiate Family Spells
     arcaneMissilesLogic: function(battle, caster, target, spell, spellLevel = 1) {
