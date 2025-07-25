@@ -71,9 +71,13 @@ class LoadingManager {
     });
 }
 
-    hideLoadingScreen() {
-        this.loadingScreen.style.display = 'none';
-        this.gameContainer.style.display = 'flex';
+hideLoadingScreen() {
+    this.loadingScreen.style.display = 'none';
+    this.gameContainer.style.display = 'block'; // Changed from 'flex' to 'block'
+    
+    // Initialize viewport scaler after showing game container
+    if (window.viewportScaler) {
+        window.viewportScaler.updateScale();
     }
 }
 
