@@ -16,6 +16,7 @@ body {
     position: relative;
     transform-origin: center center;
     background-color: #0a1a2a; /* Your game's background color */
+    display: none; /* Keep it hidden initially */
 }
 
 /* Ensure loading screen also respects the viewport */
@@ -27,6 +28,9 @@ body {
     height: 1080px;
     background-color: #0a1a2a;
     z-index: 10000;
+    display: flex; /* Make it flex for centering content */
+    justify-content: center;
+    align-items: center;
 }
 
 /* Loading Screen */
