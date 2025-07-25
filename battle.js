@@ -2183,17 +2183,6 @@ removeDebuffs(target) {
     if (this.currentUnit && removedCount > 0) {
         this.trackBattleStat(this.currentUnit.name, 'debuffsCleansed', removedCount);
         
-        // White Wizard Male passive - Empowering Cleanse
-        if (this.currentUnit.whiteWizardMalePassive) {
-            this.applyBuff(target, 'Increase Attack', 1, { damageMultiplier: 1.5 });
-            this.log(`${target.name} gains attack power from empowering cleanse!`);
-        }
-        
-        // White Witch Female passive - Hastening Cleanse
-        if (this.currentUnit.whiteWitchFemalePassive) {
-            this.applyBuff(target, 'Increase Speed', 1, {});
-            this.log(`${target.name} gains speed from hastening cleanse!`);
-        }
     }
 }
     
