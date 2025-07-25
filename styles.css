@@ -4,22 +4,26 @@ body {
     padding: 0;
     overflow: hidden;
     background-color: #000; /* Black bars for letterboxing */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+#scalingWrapper {
+    /* Styles are set by JavaScript */
 }
 
 #gameContainer {
     width: 1920px;
     height: 1080px;
-    position: relative;
-    transform-origin: center center;
-    background-color: #0a1a2a; /* Your game's background color */
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #0a1a2a;
     display: none; /* Keep it hidden initially */
 }
 
-/* Ensure loading screen also respects the viewport */
+/* Ensure loading screen fills the viewport */
 #loadingScreen {
     position: absolute;
     top: 0;
@@ -28,10 +32,12 @@ body {
     height: 1080px;
     background-color: #0a1a2a;
     z-index: 10000;
-    display: flex; /* Make it flex for centering content */
+    display: flex;
     justify-content: center;
     align-items: center;
 }
+
+/* end viewport styles /*
 
 /* Loading Screen */
 #loadingScreen {
