@@ -423,7 +423,7 @@
 "blade_strike": {
     "id": "blade_strike",
     "name": "Blade Strike",
-    "description": "Physical attack dealing [{base} + {attack} + {str}] damage, 150% damage if target is bleeding",
+    "description": "Physical attack dealing [{base} + {attack} + {str}] damage, {bleedBonus} damage if target is bleeding",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical"],
     "scaling": {
@@ -439,9 +439,9 @@
     "id": "shield_bash",
     "name": "Shield Bash",
     "description": "Taunt target for {tauntDuration} turn and gain {shieldAmount} shield",
-    "cooldown": [4, 4, 3, 3, 2],
+    "cooldown": [4, 4, 4, 4, 3],
     "effects": ["debuff_taunt", "buff_shield"],
-    "tauntDuration": [1, 1, 1, 2, 2],
+    "tauntDuration": [1, 1, 1, 1, 1],
     "shieldAmount": [25, 100, 200, 400, 700],
     "target": "enemy",
     "logicKey": "shieldBashLogic"
@@ -449,10 +449,10 @@
 "rally_banner": {
     "id": "rally_banner",
     "name": "Rally Banner",
-    "description": "Taunt all enemies, allies gain Increase Attack for {duration} turn and 30% action bar",
-    "cooldown": [7, 7, 6, 6, 5],
+    "description": "Taunt all enemies, allies gain Increase Attack for {duration} turn and {actionBarGrant} action bar",
+    "cooldown": [7, 7, 6, 5, 4],
     "effects": ["aoe", "debuff_taunt", "buff_increase_attack", "support"],
-    "duration": [1, 1, 1, 2, 2],
+    "duration": [1, 1, 1, 1, 1],
     "actionBarGrant": 0.3,
     "target": "all",
     "logicKey": "rallyBannerLogic"
@@ -460,11 +460,11 @@
 "blood_pact": {
     "id": "blood_pact",
     "name": "Blood Pact",
-    "description": "Taunt all enemies, apply 2 bleed stacks to self and all taunted enemies",
-    "cooldown": [5, 5, 4, 4, 3],
+    "description": "Taunt all enemies, apply {bleedDuration} bleed stacks to self and all taunted enemies",
+    "cooldown": [7, 7, 6, 5, 4],
     "effects": ["aoe", "debuff_taunt", "debuff_bleed"],
     "bleedStacks": 2,
-    "bleedDuration": [2, 2, 3, 3, 4],
+    "bleedDuration": [1, 1, 2, 2, 3],
     "target": "all",
     "logicKey": "bloodPactLogic"
 },
@@ -483,7 +483,7 @@
 "champion_female_passive": {
     "id": "champion_female_passive",
     "name": "Regenerating Shield",
-    "description": "Start battle with Shield equal to 20% max HP, regenerates every 4 turns",
+    "description": "Start battle with Shield equal to {shieldPercent} max HP, regenerates every {regenerateTurns} turns",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
@@ -499,14 +499,14 @@
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
-    "blightDuration": 2,
+    "blightDuration": 1,
     "target": "self",
     "logicKey": "avengerMalePassiveLogic"
 },
 "avenger_female_passive": {
     "id": "avenger_female_passive",
     "name": "Reactive Speed",
-    "description": "Gain 15% action bar when taking damage",
+    "description": "Gain {actionBarGain} action bar when taking damage",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
