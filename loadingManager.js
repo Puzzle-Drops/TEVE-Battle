@@ -81,6 +81,8 @@ hideLoadingScreen() {
     }
 }
 
+}
+
 const loadingManager = new LoadingManager();
 
 // Initialize data loading
