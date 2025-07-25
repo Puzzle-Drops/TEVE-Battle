@@ -987,19 +987,19 @@ twilightsEndLogic: function(battle, caster, target, spell, spellLevel = 1) {
         battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
     },
 
-    rallyBannerLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
-        
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            applyConfiguredDebuff(battle, enemy, 'Taunt', duration, caster);
-        });
-        
-        spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
-            actionBarHelpers.grant(ally, 0.3);
-        });
-    },
+rallyBannerLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        applyConfiguredDebuff(battle, enemy, 'Taunt', duration, caster);
+    });
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
+        actionBarHelpers.grant(ally, spell.actionBarGrant); // Changed from hardcoded 0.3
+    });
+},
 
     bloodPactLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
@@ -1021,22 +1021,22 @@ twilightsEndLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    championFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const shieldAmount = hpHelpers.percentOfMaxHp(caster, 0.2);
-        battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
-        caster.shieldRegenTimer = 0;
-        caster.shieldRegenTurns = 4;
-        caster.shieldRegenAmount = shieldAmount;
-        caster.championFemalePassive = true;
-    },
+championFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const shieldAmount = hpHelpers.percentOfMaxHp(caster, 0.2);
+    battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
+    caster.shieldRegenTimer = 0;
+    caster.shieldRegenTurns = 4;
+    caster.shieldRegenAmount = shieldAmount;
+    caster.championFemalePassive = true;
+},
 
     avengerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.avengerBlightOnTauntedAttack = true;
     },
 
-    avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.actionBarGainOnDamage = 0.15;
-    },
+avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.actionBarGainOnDamage = spell.actionBarGain || 0.15;
+},
 
     // Templar Family Spells
     psiStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
