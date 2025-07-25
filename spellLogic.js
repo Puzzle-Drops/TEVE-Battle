@@ -1057,16 +1057,20 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
 },
 
     // Templar Family Spells
-    psiStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const damage = spellHelpers.calculateDamage(spell, spellLevel - 1, caster, {attack: true, int: true});
-        
-        if (target.actionBar >= 3000) {
-            battle.dealDamage(caster, target, damage, 'physical');
-            actionBarHelpers.drain(target, 0.05);
-        } else {
-            battle.dealDamage(caster, target, damage, 'pure');
-        }
-    },
+psiStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.05);
+    const actionBarThreshold = spellHelpers.getParam(spell, 'actionBarThreshold', levelIndex, 0.3);
+    
+    const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
+    
+    if (target.actionBar >= (10000 * actionBarThreshold)) {
+        battle.dealDamage(caster, target, damage, 'physical');
+        actionBarHelpers.drain(target, actionBarDrain, battle);
+    } else {
+        battle.dealDamage(caster, target, damage, 'pure');
+    }
+},
 
     psychicMarkLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
@@ -1080,33 +1084,57 @@ avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 
         }
     },
 
-    voidStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const debuffCount = buffDebuffHelpers.countDebuffs(target);
-        
-        if (debuffCount > 0) {
+voidStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const debuffCount = buffDebuffHelpers.countDebuffs(target);
+    
+    if (debuffCount > 0) {
+        // Get the actual psi_strike spell for consistent scaling
+        const psiStrikeSpell = spellManager.getSpell('psi_strike');
+        if (psiStrikeSpell) {
             for (let i = 0; i < debuffCount; i++) {
-                spellLogic.psiStrikeLogic(battle, caster, target, {
-                    scaling: {
-                        base: spell.scaling?.base || [14, 55, 110, 220, 385],
-                        attack: spell.scaling?.attack || [1.0, 1.0, 1.0, 1.0, 1.0],
-                        int: spell.scaling?.int || [0.5, 0.52, 0.54, 0.56, 0.58]
-                    },
-                    actionBarDrain: 0.05
-                }, spellLevel);
+                spellLogic.psiStrikeLogic(battle, caster, target, psiStrikeSpell, spellLevel);
             }
         } else {
-            battle.log(`${target.name} has no debuffs, Void Strike fizzles!`);
+            // Fallback using helper functions
+            const levelIndex = spellLevel - 1;
+            const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.05);
+            const actionBarThreshold = spellHelpers.getParam(spell, 'actionBarThreshold', levelIndex, 0.3);
+            
+            for (let i = 0; i < debuffCount; i++) {
+                const damage = spellHelpers.calculateDamage({
+                    scaling: {
+                        base: [14, 55, 110, 220, 385],
+                        attack: [1.0, 1.0, 1.0, 1.0, 1.0],
+                        int: [0.5, 0.52, 0.54, 0.56, 0.58]
+                    }
+                }, levelIndex, caster, {attack: true, int: true});
+                
+                if (target.actionBar >= (10000 * actionBarThreshold)) {
+                    battle.dealDamage(caster, target, damage, 'physical');
+                    actionBarHelpers.drain(target, actionBarDrain, battle);
+                } else {
+                    battle.dealDamage(caster, target, damage, 'pure');
+                }
+            }
         }
-    },
+    } else {
+        battle.log(`${target.name} has no debuffs, Void Strike fizzles!`);
+    }
+},
 
-    psiShiftLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        actionBarHelpers.steal(target, caster, 1.0, battle);
-        
-        const damage = spellHelpers.calculateDamage(spell, spellLevel - 1, caster, {attack: true, int: true});
-        battle.dealDamage(caster, target, damage, 'magical');
-        
-        target.actionBar = caster.grandTemplarFemalePassive ? 0 : 2500;
-    },
+psiShiftLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const finalActionBarPercent = spellHelpers.getParam(spell, 'finalActionBarPercent', levelIndex, 0.25);
+    
+    actionBarHelpers.steal(target, caster, 1.0, battle);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical'
+    });
+    
+    target.actionBar = caster.grandTemplarFemalePassive ? 0 : Math.floor(10000 * finalActionBarPercent);
+},
 
     darkArchTemplarMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.darkArchTemplarMalePassive = true;
