@@ -878,18 +878,21 @@ naturesBalanceLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
     // Initiate Family Spells
-    arcaneMissilesLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const damage = spellHelpers.calculateDamage(spell, spellLevel - 1, caster, {attack: true, int: true});
-        
-        battle.dealDamage(caster, target, damage, 'magical');
-        
-        const enemies = battle.getEnemies(caster);
-        enemies.forEach(enemy => {
-            if (enemy.isAlive && enemy !== target && buffDebuffHelpers.countDebuffs(enemy) > 0) {
-                battle.dealDamage(caster, enemy, damage, 'magical');
-            }
-        });
-    },
+arcaneMissilesLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // Hit the primary target using helper
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical'
+    });
+    
+    // Hit each debuffed enemy (including the original target if it has debuffs)
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        if (buffDebuffHelpers.countDebuffs(enemy) > 0) {
+            const damage = spellHelpers.calculateDamage(spell, spellLevel - 1, caster, {attack: true, int: true});
+            battle.dealDamage(caster, enemy, damage, 'magical');
+        }
+    });
+},
 
     frostArmorLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
