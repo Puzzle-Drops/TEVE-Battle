@@ -517,7 +517,7 @@
 "psi_strike": {
     "id": "psi_strike",
     "name": "Psi Strike",
-    "description": "If enemy ≥30% action bar: [{base} + {attack} + {int}] physical damage and drain 5% action bar. If <30%: pure damage",
+    "description": "If enemy ≥30% action bar: [{base} + {attack} + {int}] physical damage and drain {actionBarDrain} action bar. If <30%: pure damage",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical"],
     "scaling": {
@@ -533,9 +533,9 @@
     "id": "psychic_mark",
     "name": "Psychic Mark",
     "description": "Apply Mark and Reduce Speed debuff to target for {duration} turns",
-    "cooldown": [5, 5, 4, 4, 3],
+    "cooldown": [5, 4, 4, 3, 3],
     "effects": ["debuff_mark", "debuff_reduce_speed"],
-    "duration": [3, 3, 4, 4, 5],
+    "duration": [2, 2, 2, 2, 3],
     "target": "enemy",
     "logicKey": "psychicMarkLogic"
 },
@@ -543,7 +543,7 @@
     "id": "void_strike",
     "name": "Void Strike",
     "description": "Hit enemy with Psi Strike once per debuff on target",
-    "cooldown": [6, 6, 5, 5, 4],
+    "cooldown": [4, 3, 3, 2, 2],
     "effects": ["physical"],
     "target": "enemy",
     "logicKey": "voidStrikeLogic"
@@ -552,10 +552,10 @@
     "id": "psi_shift",
     "name": "Psi Shift",
     "description": "Steal all action bar from target dealing [{base} + {attack} + {int}] magic damage, set target to 25% action bar",
-    "cooldown": [7, 7, 6, 6, 5],
+    "cooldown": [6, 5, 4, 4, 3],
     "effects": ["magical", "support"],
     "scaling": {
-        "base": [8, 100, 200, 400, 700],
+        "base": [8, 75, 150, 300, 600],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "int": [0.4, 0.42, 0.44, 0.46, 0.48]
     },
@@ -585,7 +585,7 @@
 "grand_templar_male_passive": {
     "id": "grand_templar_male_passive",
     "name": "Stunning Mastery",
-    "description": "All abilities have a 20% chance to stun",
+    "description": "All abilities have a {stunChance} chance to stun",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
