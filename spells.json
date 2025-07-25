@@ -708,7 +708,7 @@
 "purge_slash": {
     "id": "purge_slash",
     "name": "Purge Slash",
-    "description": "Deal [{base} + {attack} + {agi}] physical damage and remove 2 random buffs from enemy",
+    "description": "Deal [{base} + {attack} + {agi}] physical damage and remove {buffsToRemove} buffs from enemy",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical", "dispel"],
     "scaling": {
@@ -716,6 +716,7 @@
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "agi": [0.25, 0.27, 0.29, 0.31, 0.33]
     },
+    "buffsToRemove": [1, 1, 1, 1, 2],
     "target": "enemy",
     "logicKey": "purgeSlashLogic"
 },
@@ -766,12 +767,11 @@
 },
 "grand_inquisitor_female_passive": {
     "id": "grand_inquisitor_female_passive",
-    "name": "Double Purge",
-    "description": "Purge Slash removes all buffs on attack",
+    "name": "Complete Purge",
+    "description": "Purge Slash removes all buffs from the target",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
-    "buffRemoveCount": 2,
     "target": "self",
     "logicKey": "grandInquisitorFemalePassiveLogic"
 },
