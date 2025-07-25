@@ -1838,14 +1838,13 @@ handleUnitDeath(unit, killer = null) {
         }
         
         // Phantom Assassin Male passive - refill action bar on assassinate kill
-        if (killer.phantomAssassinMalePassive && killer.actionBarRefillOnKill) {
-            // Check if the last ability used was Assassinate
-            const lastAbility = killer.abilities.find(a => a.id === 'assassinate');
-            if (lastAbility && killer.cooldowns[killer.abilities.indexOf(lastAbility)] === lastAbility.cooldown) {
-                killer.actionBar = Math.floor(10000 * killer.actionBarRefillOnKill);
-                this.log(`${killer.name}'s action bar refills to 75%!`);
-            }
-        }
+if (killer.phantomAssassinMalePassive && killer.actionBarRefillOnKill) {
+    // Check if the last ability used was Assassinate
+    if (killer.lastAbilityUsed === 'assassinate') {
+        killer.actionBar = Math.floor(10000 * killer.actionBarRefillOnKill);
+        battle.log(`${killer.name}'s action bar refills to ${Math.floor(killer.actionBarRefillOnKill * 100)}%!`);
+    }
+}
         
         // Dark Arch Templar Male passive - spread debuffs on kill
         if (killer.darkArchTemplarMalePassive && unit.debuffs.length > 0) {
