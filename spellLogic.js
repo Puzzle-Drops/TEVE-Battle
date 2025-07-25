@@ -1263,36 +1263,60 @@ masterStalkerFemalePassiveLogic: function(battle, caster, target, spell, spellLe
 },
 
     // Witch Hunter Family Spells
-    purgeSlashLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        let buffsRemoved = 0;
-        let damageType = 'physical';
+purgeSlashLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    let buffsRemoved = 0;
+    let damageType = 'physical';
+    
+    // Grand Inquisitor Female removes ALL buffs
+    if (caster.grandInquisitorFemalePassive && caster.purgeSlashRemoveAll) {
+        // Count buffs before removal (excluding Boss)
+        const buffsBeforeRemoval = buffDebuffHelpers.countBuffs(target, ['Boss']);
         
-        const buffsToRemove = caster.grandInquisitorFemalePassive && caster.purgeSlashBuffRemoveCount ? 
-            caster.purgeSlashBuffRemoveCount : 1;
+        // Remove all buffs except Boss
+        const removedBuffs = buffDebuffHelpers.clearBuffs(target, ['Boss']);
+        buffsRemoved = removedBuffs.length;
         
-        if (buffDebuffHelpers.countBuffs(target) > 0) {
-            for (let i = 0; i < buffsToRemove && buffDebuffHelpers.countBuffs(target) > 0; i++) {
-                target.buffs.shift();
-                buffsRemoved++;
-            }
-            battle.log(`Removed ${buffsRemoved} buff${buffsRemoved > 1 ? 's' : ''} from ${target.name}!`);
+        if (buffsRemoved > 0) {
+            battle.log(`Removed ALL ${buffsRemoved} buff${buffsRemoved > 1 ? 's' : ''} from ${target.name}!`);
         }
+    } else {
+        // Normal behavior - remove specific number of buffs
+        const baseBuffsToRemove = spellHelpers.getParam(spell, 'buffsToRemove', levelIndex, 1);
         
-        if (caster.grandInquisitorMalePassive && buffsRemoved === 0) {
+        // Remove buffs (excluding Boss buff)
+        if (buffDebuffHelpers.countBuffs(target, ['Boss']) > 0) {
+            for (let i = 0; i < baseBuffsToRemove && buffDebuffHelpers.countBuffs(target, ['Boss']) > 0; i++) {
+                // Find first non-Boss buff
+                const buffIndex = target.buffs.findIndex(b => b.name !== 'Boss');
+                if (buffIndex !== -1) {
+                    target.buffs.splice(buffIndex, 1);
+                    buffsRemoved++;
+                }
+            }
+            if (buffsRemoved > 0) {
+                battle.log(`Removed ${buffsRemoved} buff${buffsRemoved > 1 ? 's' : ''} from ${target.name}!`);
+            }
+        }
+    }
+    
+    // Grand Inquisitor Male passive - pure damage if no buffs removed
+    if (caster.grandInquisitorMalePassive && buffsRemoved === 0) {
+        damageType = 'pure';
+    }
+    
+    // Professional Witcher Male passive - pure damage vs silenced
+    if (buffDebuffHelpers.hasDebuff(target, 'Silence')) {
+        if (caster.professionalWitcherMalePassive) {
             damageType = 'pure';
         }
-        
-        if (buffDebuffHelpers.hasDebuff(target, 'Silence')) {
-            if (caster.professionalWitcherMalePassive) {
-                damageType = 'pure';
-            }
-        }
-        
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, agi: true},
-            damageType: damageType
-        });
-    },
+    }
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: damageType
+    });
+},
 
     nullbladeCleaveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
@@ -1341,8 +1365,8 @@ masterStalkerFemalePassiveLogic: function(battle, caster, target, spell, spellLe
 
     grandInquisitorFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.grandInquisitorFemalePassive = true;
-        caster.purgeSlashBuffRemoveCount = spell.buffRemoveCount;
-    },
+        caster.purgeSlashRemoveAll = true;
+},
 
     professionalWitcherMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.professionalWitcherMalePassive = true;
