@@ -900,12 +900,30 @@ arcaneMissilesLogic: function(battle, caster, target, spell, spellLevel = 1) {
         battle.applyBuff(caster, 'Frost Armor', duration, {});
     },
 
-    helpingHandLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        buffDebuffHelpers.clearDebuffs(target);
-        battle.log(`All debuffs removed from ${target.name}!`);
-        
-        actionBarHelpers.fill(target, battle);
-    },
+helpingHandLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const debuffCount = buffDebuffHelpers.countDebuffs(target);
+    buffDebuffHelpers.clearDebuffs(target);
+    battle.log(`All debuffs removed from ${target.name}!`);
+    
+    actionBarHelpers.fill(target, battle);
+    
+    // White Wizard/Witch passives - always give Frost Armor, conditionally give extra buff
+    if (caster.whiteWizardMalePassive) {
+        battle.applyBuff(target, 'Frost Armor', 2, {});
+        if (debuffCount >= 2) {
+            battle.applyBuff(target, 'Increase Attack', 1, { damageMultiplier: 1.5 });
+            battle.log(`${target.name} gains attack power from empowering cleanse!`);
+        }
+    }
+    
+    if (caster.whiteWitchFemalePassive) {
+        battle.applyBuff(target, 'Frost Armor', 2, {});
+        if (debuffCount >= 2) {
+            battle.applyBuff(target, 'Increase Speed', 1, {});
+            battle.log(`${target.name} gains speed from hastening cleanse!`);
+        }
+    }
+},
 
     twilightsPromiseLogic: function(battle, caster, target, spell, spellLevel = 1) {
         spellHelpers.forEachAliveAlly(battle, caster, ally => {
