@@ -342,7 +342,7 @@
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["magical"],
     "scaling": {
-        "base": [18, 70, 140, 280, 490],
+        "base": [18, 40, 80, 160, 320],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "int": [0.7, 0.72, 0.74, 0.76, 0.78]
     },
@@ -353,9 +353,9 @@
     "id": "frost_armor",
     "name": "Frost Armor",
     "description": "Apply Frost Armor buff for {duration} turns (25% damage reduction, attackers are slowed)",
-    "cooldown": [4, 4, 3, 3, 2],
+    "cooldown": [5, 5, 4, 4, 3],
     "effects": ["buff_frost_armor", "support"],
-    "duration": [2, 2, 2, 3, 3],
+    "duration": [2, 2, 2, 2, 3],
     "target": "self",
     "logicKey": "frostArmorLogic"
 },
@@ -381,7 +381,7 @@
 "white_wizard_male_passive": {
     "id": "white_wizard_male_passive",
     "name": "Empowering Cleanse",
-    "description": "Allies cleansed of debuffs gain Increase Attack buff for 1 turn",
+    "description": "Helping hand gives target frost armor buff, if two or more debuffs removed, grants increase attack buff as well",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
@@ -392,7 +392,7 @@
 "white_witch_female_passive": {
     "id": "white_witch_female_passive",
     "name": "Hastening Cleanse",
-    "description": "When cleansing debuffs, ally gains Increase Speed buff for 1 turn",
+    "description": "Helping hand gives target frost armor buff, if two or more debuffs removed, grants increase speed buff as well",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
