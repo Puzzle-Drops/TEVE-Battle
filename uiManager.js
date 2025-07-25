@@ -4217,197 +4217,255 @@ hideArenaStatTooltip() {
     }
 }
 
-    // Ability Tooltip Formatting (moved from game.js)
-    formatAbilityTooltip(ability, level, unit = null, showFormula = false) {
-        const spell = spellManager ? spellManager.getSpell(ability.id) : null;
-        if (!spell) return `<h3>${ability.name} (Level ${level})</h3><p>${ability.description}</p>`;
-        
-        // Get the description
-        let description = spell.description;
-        const levelIndex = Math.max(0, Math.min(4, level - 1)); // Clamp between 0-4
-        
-        if (typeof description === 'string') {
-            if (showFormula) {
-                // When showing formula, replace individual placeholders with values
-                description = description.replace(/{(\w+(?:\.\w+)*)}/g, (match, property) => {
-                    // Get the value for this property
-                    let value = null;
-                    
-                    // Handle nested properties like scaling.base
-                    if (property.includes('.')) {
-                        const parts = property.split('.');
-                        let temp = spell;
-                        for (const part of parts) {
-                            temp = temp?.[part];
-                        }
-                        if (Array.isArray(temp)) {
-                            value = temp[levelIndex] || temp[0];
-                        } else {
-                            value = temp;
-                        }
-                    } else if (spell[property] && Array.isArray(spell[property])) {
-                        value = spell[property][levelIndex] || spell[property][0];
-                    } else if (spell.scaling && spell.scaling[property] && Array.isArray(spell.scaling[property])) {
-                        value = spell.scaling[property][levelIndex] || spell.scaling[property][0];
+// Ability Tooltip Formatting
+formatAbilityTooltip(ability, level, unit = null, showFormula = false) {
+    const spell = spellManager ? spellManager.getSpell(ability.id) : null;
+    if (!spell) return `<h3>${ability.name} (Level ${level})</h3><p>${ability.description}</p>`;
+    
+    // Get the description
+    let description = spell.description;
+    const levelIndex = Math.max(0, Math.min(4, level - 1)); // Clamp between 0-4
+    
+    if (typeof description === 'string') {
+        if (showFormula) {
+            // When showing formula, replace individual placeholders with values
+            description = description.replace(/{(\w+(?:\.\w+)*)}/g, (match, property) => {
+                // Get the value for this property
+                let value = null;
+                
+                // Handle nested properties like scaling.base
+                if (property.includes('.')) {
+                    const parts = property.split('.');
+                    let temp = spell;
+                    for (const part of parts) {
+                        temp = temp?.[part];
                     }
-                    
-                    // Format the value
-                    if (value !== null && value !== undefined) {
-                        // Format percentages
-                        if (typeof value === 'number' && value < 1 && value > 0 && property.includes('percent')) {
+                    if (Array.isArray(temp)) {
+                        value = temp[levelIndex] || temp[0];
+                    } else {
+                        value = temp;
+                    }
+                } else if (spell[property] && Array.isArray(spell[property])) {
+                    value = spell[property][levelIndex] || spell[property][0];
+                } else if (spell.scaling && spell.scaling[property] && Array.isArray(spell.scaling[property])) {
+                    value = spell.scaling[property][levelIndex] || spell.scaling[property][0];
+                }
+                
+                // Format the value
+                if (value !== null && value !== undefined) {
+                    // Format percentages
+                    if (typeof value === 'number') {
+                        // Properties that are percentages (0-1 range)
+                        const percentageProperties = [
+                            'actionBarGrant', 'actionBarGain', 'actionBarDrain', 'actionBarSteal', 'actionBarRefill',
+                            'actionBarPerDebuff', 'actionBarChance', 'actionBarThreshold', 'actionBarPerBuff',
+                            'bleedChance', 'stunChance', 'silenceChance', 'markChance', 'defenseChance', 
+                            'procChance', 'extraAttackChance', 'critChance', 'dodgeChance', 'retributionChance',
+                            'armorPierce', 'damageReduction', 'hpThreshold', 'executeThreshold',
+                            'hpCost', 'shieldPercent', 'healPercent', 'spilloverPercent',
+                            'hpPercentDamage', 'missingHpPercent', 'knockbackPercent',
+                            'speedBonus', 'attackBonus', 'magicalDamageBonus',
+                            'dodgePure', 'dodgeMagical', 'dodgePhysical',
+                            'blightChance', 'slowChance', 'reflectPercent',
+                            'maxPercent', 'finalActionBarPercent', 'debuffChance'
+                        ];
+                        
+                        // Properties that are multipliers (show as percentages but stored as 1.5 for 150%)
+                        const multiplierProperties = [
+                            'damageBonus', 'damageMultiplier', 'bleedBonus', 'markBonus',
+                            'reducedDefenseBonus', 'silencedMultiplier', 'maxBonus', 'debuffBonus'
+                        ];
+                        
+                        // Check if this property should be shown as a percentage
+                        if (percentageProperties.includes(property) || property.includes('Percent') || property.includes('Chance')) {
+                            if (value > 0 && value <= 1) {
+                                value = Math.round(value * 100) + '%';
+                            }
+                        } else if (multiplierProperties.includes(property) || property.includes('Bonus') || property.includes('Multiplier')) {
+                            // For multipliers, show as percentage (1.5 = 150%)
                             value = Math.round(value * 100) + '%';
-                        } else if (typeof value === 'number' && (property === 'attack' || property === 'str' || 
-                                   property === 'agi' || property === 'int')) {
-                            // For scaling values, add 'x' suffix
-                            value = value + 'x';
                         }
-                        
-                        // Special case for base - don't show the property name
-                        if (property === 'base') {
-                            return value.toString();
-                        }
-                        
-                        return `${value} (${property})`;
+                    } else if (typeof value === 'number' && (property === 'attack' || property === 'str' || 
+                                       property === 'agi' || property === 'int')) {
+                        // For scaling values, add 'x' suffix
+                        value = value + 'x';
                     }
                     
-                    return match;
-                });
+                    // Special case for base - don't show the property name
+                    if (property === 'base') {
+                        return value.toString();
+                    }
+                    
+                    return `${value} (${property})`;
+                }
                 
-                // Remove square brackets when showing formula
-                description = description.replace(/\[|\]/g, '');
-            } else {
-                // When not showing formula, calculate totals for bracketed sections
-                description = description.replace(/\[([^\]]+)\]/g, (match, bracketContent) => {
-                    // Calculate the total value for everything in brackets
-                    if (unit && spell.scaling) {
-                        const damage = this.calculateSpellValue(spell, unit, 'damage');
-                        return damage.toString();
-                    }
-                    return match;
-                });
+                return match;
+            });
+            
+            // Remove square brackets when showing formula
+            description = description.replace(/\[|\]/g, '');
+        } else {
+            // When not showing formula, calculate totals for bracketed sections
+            description = description.replace(/\[([^\]]+)\]/g, (match, bracketContent) => {
+                // Calculate the total value for everything in brackets
+                if (unit && spell.scaling) {
+                    const damage = this.calculateSpellValue(spell, unit, 'damage');
+                    return damage.toString();
+                }
+                return match;
+            });
+            
+            // Handle individual placeholders outside of brackets
+            description = description.replace(/{(\w+(?:\.\w+)*)}/g, (match, property) => {
+                // Special handling for specific properties that aren't part of damage calculation
+                if (property === 'shieldAmount' && unit) {
+                    const shield = this.calculateSpellValue(spell, unit, 'shield');
+                    return shield;
+                }
                 
-                // Handle individual placeholders outside of brackets
-                description = description.replace(/{(\w+(?:\.\w+)*)}/g, (match, property) => {
-                    // Special handling for specific properties that aren't part of damage calculation
-                    if (property === 'shieldAmount' && unit) {
-                        const shield = this.calculateSpellValue(spell, unit, 'shield');
-                        return shield;
+                // For duration, cooldown, chances, etc.
+                let value = null;
+                
+                if (property.includes('.')) {
+                    const parts = property.split('.');
+                    let temp = spell;
+                    for (const part of parts) {
+                        temp = temp?.[part];
                     }
-                    
-                    // For duration, cooldown, chances, etc.
-                    let value = null;
-                    
-                    if (property.includes('.')) {
-                        const parts = property.split('.');
-                        let temp = spell;
-                        for (const part of parts) {
-                            temp = temp?.[part];
-                        }
-                        if (Array.isArray(temp)) {
-                            value = temp[levelIndex] || temp[0];
-                        } else {
-                            value = temp;
-                        }
-                    } else if (spell[property] && Array.isArray(spell[property])) {
-                        value = spell[property][levelIndex] || spell[property][0];
-                    } else if (spell.scaling && spell.scaling[property] && Array.isArray(spell.scaling[property])) {
-                        value = spell.scaling[property][levelIndex] || spell.scaling[property][0];
+                    if (Array.isArray(temp)) {
+                        value = temp[levelIndex] || temp[0];
+                    } else {
+                        value = temp;
                     }
-                    
-                    if (value !== null && value !== undefined) {
-                        // Format percentages
-                        if (typeof value === 'number' && value < 1 && value > 0) {
+                } else if (spell[property] && Array.isArray(spell[property])) {
+                    value = spell[property][levelIndex] || spell[property][0];
+                } else if (spell.scaling && spell.scaling[property] && Array.isArray(spell.scaling[property])) {
+                    value = spell.scaling[property][levelIndex] || spell.scaling[property][0];
+                }
+                
+                if (value !== null && value !== undefined) {
+                    // Format percentages
+                    if (typeof value === 'number') {
+                        // Properties that are percentages (0-1 range)
+                        const percentageProperties = [
+                            'actionBarGrant', 'actionBarGain', 'actionBarDrain', 'actionBarSteal', 'actionBarRefill',
+                            'actionBarPerDebuff', 'actionBarChance', 'actionBarThreshold', 'actionBarPerBuff',
+                            'bleedChance', 'stunChance', 'silenceChance', 'markChance', 'defenseChance', 
+                            'procChance', 'extraAttackChance', 'critChance', 'dodgeChance', 'retributionChance',
+                            'armorPierce', 'damageReduction', 'hpThreshold', 'executeThreshold',
+                            'hpCost', 'shieldPercent', 'healPercent', 'spilloverPercent',
+                            'hpPercentDamage', 'missingHpPercent', 'knockbackPercent',
+                            'speedBonus', 'attackBonus', 'magicalDamageBonus',
+                            'dodgePure', 'dodgeMagical', 'dodgePhysical',
+                            'blightChance', 'slowChance', 'reflectPercent',
+                            'maxPercent', 'finalActionBarPercent', 'debuffChance'
+                        ];
+                        
+                        // Properties that are multipliers (show as percentages but stored as 1.5 for 150%)
+                        const multiplierProperties = [
+                            'damageBonus', 'damageMultiplier', 'bleedBonus', 'markBonus',
+                            'reducedDefenseBonus', 'silencedMultiplier', 'maxBonus', 'debuffBonus'
+                        ];
+                        
+                        // Check if this property should be shown as a percentage
+                        if (percentageProperties.includes(property) || property.includes('Percent') || property.includes('Chance')) {
+                            if (value > 0 && value <= 1) {
+                                return Math.round(value * 100) + '%';
+                            }
+                        } else if (multiplierProperties.includes(property) || property.includes('Bonus') || property.includes('Multiplier')) {
+                            // For multipliers, show as percentage (1.5 = 150%)
                             return Math.round(value * 100) + '%';
                         }
-                        return value;
                     }
-                    
-                    return match;
-                });
-            }
+                    return value;
+                }
+                
+                return match;
+            });
         }
-        
-        // Build effect tags in specific order
-        let effectTags = '';
-        const effects = spell.effects || [];
-        
-        // Define the order of effects and their display names
-        const effectOrder = [
-            // Core effects
-            { key: 'passive', display: 'Passive' },
-            { key: 'aoe', display: 'AOE' },
-            
-            // Damage types
-            { key: 'physical', display: 'Physical' },
-            { key: 'magical', display: 'Magical' },
-            { key: 'pure', display: 'Pure' },
-            
-            // Special effects
-            { key: 'heal', display: 'Heal' },
-            { key: 'evasion', display: 'Evasion' },
-            { key: 'cleanse', display: 'Cleanse' },
-            { key: 'dispel', display: 'Dispel' },
-            { key: 'shield_break', display: 'Shield Break' },
-            { key: 'support', display: 'Support' },
-
-            // Buffs
-            { key: 'buff_boss', display: 'Boss' },
-            { key: 'buff_increase_attack', display: 'Increase Attack' },
-            { key: 'buff_increase_speed', display: 'Increase Speed' },
-            { key: 'buff_increase_defense', display: 'Increase Defense' },
-            { key: 'buff_immune', display: 'Immune' },
-            { key: 'buff_shield', display: 'Shield' },
-            { key: 'buff_frost_armor', display: 'Frost Armor' },
-            
-            // Debuffs
-            { key: 'debuff_reduce_attack', display: 'Reduce Attack' },
-            { key: 'debuff_reduce_speed', display: 'Reduce Speed' },
-            { key: 'debuff_reduce_defense', display: 'Reduce Defense' },
-            { key: 'debuff_blight', display: 'Blight' },
-            { key: 'debuff_bleed', display: 'Bleed' },
-            { key: 'debuff_stun', display: 'Stun' },
-            { key: 'debuff_taunt', display: 'Taunt' },
-            { key: 'debuff_silence', display: 'Silence' },
-            { key: 'debuff_mark', display: 'Mark' },
-        ];
-
-        // Add effect tags in the specified order
-        effectOrder.forEach(effect => {
-            if (effects.includes(effect.key)) {
-                effectTags += `<span class="abilityEffectTag ${effect.key}">${effect.display}</span>`;
-            }
-        });
-        
-        // Format cooldown with level scaling
-        let cooldownText = 'Cooldown: ';
-        if (ability.passive || effects.includes('passive')) {
-            cooldownText += 'Passive';
-        } else {
-            let cooldownValue = 0;
-            if (Array.isArray(spell.cooldown)) {
-                cooldownValue = spell.cooldown[levelIndex] || spell.cooldown[0];
-            } else {
-                cooldownValue = ability.cooldown || 0;
-            }
-            
-            if (cooldownValue === 0) {
-                cooldownText += 'none';
-            } else {
-                cooldownText += `${cooldownValue} turns`;
-            }
-        }
-        
-        // Add formula indicator if showing formula
-        const formulaIndicator = showFormula ? ' <span style="color: #ffd700;">[Formula]</span>' : '';
-        
-        return `
-            <div style="font-size: 24px; color: #4dd0e1; margin-bottom: 8px;">${ability.name} (Level ${level})${formulaIndicator}</div>
-            <div style="margin-bottom: 8px;">${effectTags}</div>
-            <div style="font-size: 18px; color: #6a9aaa; margin-bottom: 8px;">${cooldownText}</div>
-            <div style="font-size: 18px; color: #b0e0f0;">${description}</div>
-            ${!showFormula && unit ? '<div style="font-size: 14px; color: #6a9aaa; margin-top: 8px;">Hold Alt to see damage formula</div>' : ''}
-        `;
     }
+    
+    // Build effect tags in specific order
+    let effectTags = '';
+    const effects = spell.effects || [];
+    
+    // Define the order of effects and their display names
+    const effectOrder = [
+        // Core effects
+        { key: 'passive', display: 'Passive' },
+        { key: 'aoe', display: 'AOE' },
+        
+        // Damage types
+        { key: 'physical', display: 'Physical' },
+        { key: 'magical', display: 'Magical' },
+        { key: 'pure', display: 'Pure' },
+        
+        // Special effects
+        { key: 'heal', display: 'Heal' },
+        { key: 'evasion', display: 'Evasion' },
+        { key: 'cleanse', display: 'Cleanse' },
+        { key: 'dispel', display: 'Dispel' },
+        { key: 'shield_break', display: 'Shield Break' },
+        { key: 'support', display: 'Support' },
+
+        // Buffs
+        { key: 'buff_boss', display: 'Boss' },
+        { key: 'buff_increase_attack', display: 'Increase Attack' },
+        { key: 'buff_increase_speed', display: 'Increase Speed' },
+        { key: 'buff_increase_defense', display: 'Increase Defense' },
+        { key: 'buff_immune', display: 'Immune' },
+        { key: 'buff_shield', display: 'Shield' },
+        { key: 'buff_frost_armor', display: 'Frost Armor' },
+        
+        // Debuffs
+        { key: 'debuff_reduce_attack', display: 'Reduce Attack' },
+        { key: 'debuff_reduce_speed', display: 'Reduce Speed' },
+        { key: 'debuff_reduce_defense', display: 'Reduce Defense' },
+        { key: 'debuff_blight', display: 'Blight' },
+        { key: 'debuff_bleed', display: 'Bleed' },
+        { key: 'debuff_stun', display: 'Stun' },
+        { key: 'debuff_taunt', display: 'Taunt' },
+        { key: 'debuff_silence', display: 'Silence' },
+        { key: 'debuff_mark', display: 'Mark' },
+    ];
+
+    // Add effect tags in the specified order
+    effectOrder.forEach(effect => {
+        if (effects.includes(effect.key)) {
+            effectTags += `<span class="abilityEffectTag ${effect.key}">${effect.display}</span>`;
+        }
+    });
+    
+    // Format cooldown with level scaling
+    let cooldownText = 'Cooldown: ';
+    if (ability.passive || effects.includes('passive')) {
+        cooldownText += 'Passive';
+    } else {
+        let cooldownValue = 0;
+        if (Array.isArray(spell.cooldown)) {
+            cooldownValue = spell.cooldown[levelIndex] || spell.cooldown[0];
+        } else {
+            cooldownValue = ability.cooldown || 0;
+        }
+        
+        if (cooldownValue === 0) {
+            cooldownText += 'none';
+        } else {
+            cooldownText += `${cooldownValue} turns`;
+        }
+    }
+    
+    // Add formula indicator if showing formula
+    const formulaIndicator = showFormula ? ' <span style="color: #ffd700;">[Formula]</span>' : '';
+    
+    return `
+        <div style="font-size: 24px; color: #4dd0e1; margin-bottom: 8px;">${ability.name} (Level ${level})${formulaIndicator}</div>
+        <div style="margin-bottom: 8px;">${effectTags}</div>
+        <div style="font-size: 18px; color: #6a9aaa; margin-bottom: 8px;">${cooldownText}</div>
+        <div style="font-size: 18px; color: #b0e0f0;">${description}</div>
+        ${!showFormula && unit ? '<div style="font-size: 14px; color: #6a9aaa; margin-top: 8px;">Hold Alt to see damage formula</div>' : ''}
+    `;
+}
 
     calculateSpellValue(spell, unit, valueType = 'damage') {
         if (!spell || !unit) return 0;
