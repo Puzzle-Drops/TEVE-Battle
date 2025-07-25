@@ -1268,6 +1268,9 @@ purgeSlashLogic: function(battle, caster, target, spell, spellLevel = 1) {
     let buffsRemoved = 0;
     let damageType = 'physical';
     
+    // Store the ability being used for passive checks
+    caster.lastAbilityUsed = 'purge_slash';
+    
     // Grand Inquisitor Female removes ALL buffs
     if (caster.grandInquisitorFemalePassive && caster.purgeSlashRemoveAll) {
         // Count buffs before removal (excluding Boss)
@@ -1284,13 +1287,15 @@ purgeSlashLogic: function(battle, caster, target, spell, spellLevel = 1) {
         // Normal behavior - remove specific number of buffs
         const baseBuffsToRemove = spellHelpers.getParam(spell, 'buffsToRemove', levelIndex, 1);
         
-        // Remove buffs (excluding Boss buff)
-        if (buffDebuffHelpers.countBuffs(target, ['Boss']) > 0) {
-            for (let i = 0; i < baseBuffsToRemove && buffDebuffHelpers.countBuffs(target, ['Boss']) > 0; i++) {
-                // Find first non-Boss buff
-                const buffIndex = target.buffs.findIndex(b => b.name !== 'Boss');
-                if (buffIndex !== -1) {
-                    target.buffs.splice(buffIndex, 1);
+        // Remove buffs using helper to handle Boss buff
+        const currentBuffCount = buffDebuffHelpers.countBuffs(target, ['Boss']);
+        if (currentBuffCount > 0) {
+            const buffsToRemove = Math.min(baseBuffsToRemove, currentBuffCount);
+            for (let i = 0; i < buffsToRemove; i++) {
+                const buffs = buffDebuffHelpers.getBuffs(target);
+                const removableBuffIndex = buffs.findIndex(b => b.name !== 'Boss');
+                if (removableBuffIndex !== -1) {
+                    target.buffs.splice(removableBuffIndex, 1);
                     buffsRemoved++;
                 }
             }
@@ -1318,63 +1323,76 @@ purgeSlashLogic: function(battle, caster, target, spell, spellLevel = 1) {
     });
 },
 
-    nullbladeCleaveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const buffBonus = spellHelpers.getParam(spell, 'buffBonus', levelIndex, 10);
-        
-        spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
-            scalingTypes: {attack: true, int: true},
-            damageType: 'physical',
-            getDamageModifier: (enemy) => {
-                const baseDamage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
-                const buffCount = buffDebuffHelpers.countBuffs(enemy);
-                return (baseDamage + (buffBonus * buffCount)) / baseDamage;
+nullbladeCleaveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const buffBonus = spellHelpers.getParam(spell, 'buffBonus', levelIndex, 10);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'physical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            // Calculate bonus damage after the base hit
+            const buffCount = buffDebuffHelpers.countBuffs(enemy, ['Boss']);
+            if (buffCount > 0) {
+                const bonusDamage = buffBonus * buffCount;
+                battle.dealDamage(caster, enemy, bonusDamage, 'physical');
+                battle.log(`+${bonusDamage} bonus damage from ${buffCount} buffs!`);
             }
-        });
-    },
+        }
+    });
+},
 
-    stealMagicLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+stealMagicLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    // Get stealable buffs (excluding Boss)
+    const stealableBuffs = buffDebuffHelpers.getBuffs(target).filter(b => b.name !== 'Boss');
+    
+    if (stealableBuffs.length > 0) {
+        const allies = battle.getParty(caster);
+        const aliveAllies = allies.filter(a => a && a.isAlive);
         
-        if (buffDebuffHelpers.countBuffs(target) > 0) {
-            const allies = battle.getParty(caster);
-            const aliveAllies = allies.filter(a => a && a.isAlive);
-            
-            while (buffDebuffHelpers.countBuffs(target) > 0 && aliveAllies.length > 0) {
-                const buff = target.buffs.shift();
+        // Clear all buffs except Boss
+        buffDebuffHelpers.clearBuffs(target, ['Boss']);
+        
+        // Distribute stolen buffs randomly to allies
+        stealableBuffs.forEach(buff => {
+            if (aliveAllies.length > 0) {
                 const randomAlly = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
                 randomAlly.buffs = randomAlly.buffs || [];
                 randomAlly.buffs.push(buff);
                 battle.log(`${buff.name} stolen and given to ${randomAlly.name}!`);
             }
-        } else {
-            applyConfiguredDebuff(battle, target, 'Reduce Defense', duration);
-        }
-    },
-
-    hexLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        applyConfiguredDebuff(battle, target, 'Silence', duration);
-    },
-
-    grandInquisitorMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.grandInquisitorMalePassive = true;
-    },
-
-    grandInquisitorFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.grandInquisitorFemalePassive = true;
-        caster.purgeSlashRemoveAll = true;
+        });
+    } else {
+        applyConfiguredDebuff(battle, target, 'Reduce Defense', duration);
+    }
 },
 
-    professionalWitcherMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.professionalWitcherMalePassive = true;
-    },
+hexLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    applyConfiguredDebuff(battle, target, 'Silence', duration);
+},
 
-    professionalWitcherFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.professionalWitcherFemalePassive = true;
-    },
+grandInquisitorMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.grandInquisitorMalePassive = true;
+},
+
+grandInquisitorFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.grandInquisitorFemalePassive = true;
+    caster.purgeSlashRemoveAll = true;
+},
+
+professionalWitcherMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.professionalWitcherMalePassive = true;
+},
+
+professionalWitcherFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.professionalWitcherFemalePassive = true;
+},
 
     // Boss/Enemy Spells
     slashLogic: function(battle, caster, target, spell, spellLevel = 1) {
