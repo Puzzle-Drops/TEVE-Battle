@@ -1062,14 +1062,17 @@ psiStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.05);
     const actionBarThreshold = spellHelpers.getParam(spell, 'actionBarThreshold', levelIndex, 0.3);
     
-    const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
+    const damageType = target.actionBar >= (10000 * actionBarThreshold) ? 'physical' : 'pure';
     
-    if (target.actionBar >= (10000 * actionBarThreshold)) {
-        battle.dealDamage(caster, target, damage, 'physical');
-        actionBarHelpers.drain(target, actionBarDrain, battle);
-    } else {
-        battle.dealDamage(caster, target, damage, 'pure');
-    }
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: damageType,
+        afterDamage: (battle, caster, target) => {
+            if (damageType === 'physical' && target.isAlive) {
+                actionBarHelpers.drain(target, actionBarDrain, battle);
+            }
+        }
+    });
 },
 
     psychicMarkLogic: function(battle, caster, target, spell, spellLevel = 1) {
