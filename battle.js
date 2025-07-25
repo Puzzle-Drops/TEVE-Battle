@@ -1617,13 +1617,14 @@ if (attacker.stalkersMarkPassive && target.isAlive && actualDamage > 0) {
     }
 
     // Avenger Male passive - apply blight when attacked by taunted unit
-    if (target.avengerBlightOnTauntedAttack && target.isAlive && damage > 0) {
-        const attackerTaunt = attacker.debuffs.find(d => d.name === 'Taunt' && d.tauntTarget === target);
-        if (attackerTaunt) {
-            this.applyDebuff(attacker, 'Blight', 2, { noHeal: true });
-            this.log(`${attacker.name} is blighted by ${target.name}'s vengeance!`);
-        }
+if (target.avengerBlightOnTauntedAttack && target.isAlive && damage > 0) {
+    const attackerTaunt = attacker.debuffs.find(d => d.name === 'Taunt' && d.tauntTarget === target);
+    if (attackerTaunt) {
+        const blightDuration = target.avengerBlightDuration || 2;
+        this.applyDebuff(attacker, 'Blight', blightDuration, { noHeal: true });
+        this.log(`${attacker.name} is blighted by ${target.name}'s vengeance!`);
     }
+}
 
     // Corrosive Splash passive - chance to reduce attacker's attack
     if (target.corrosiveSplashPassive && target.isAlive && damage > 0) {
