@@ -1366,6 +1366,7 @@ stealMagicLogic: function(battle, caster, target, spell, spellLevel = 1) {
             }
         });
     } else {
+        battle.log(`No buffs to steal from ${target.name}, applying Reduce Defense instead!`);
         applyConfiguredDebuff(battle, target, 'Reduce Defense', duration);
     }
 },
