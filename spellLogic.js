@@ -887,11 +887,13 @@ arcaneMissilesLogic: function(battle, caster, target, spell, spellLevel = 1) {
     
     // Hit each debuffed enemy (including the original target if it has debuffs)
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-        if (buffDebuffHelpers.countDebuffs(enemy) > 0) {
-            const damage = spellHelpers.calculateDamage(spell, spellLevel - 1, caster, {attack: true, int: true});
-            battle.dealDamage(caster, enemy, damage, 'magical');
-        }
-    });
+    if (buffDebuffHelpers.countDebuffs(enemy) > 0) {
+        spellHelpers.basicDamageSpell(battle, caster, enemy, spell, spellLevel, {
+            scalingTypes: {attack: true, int: true},
+            damageType: 'magical'
+        });
+    }
+});
 },
 
     frostArmorLogic: function(battle, caster, target, spell, spellLevel = 1) {
@@ -925,25 +927,29 @@ helpingHandLogic: function(battle, caster, target, spell, spellLevel = 1) {
     }
 },
 
-    twilightsPromiseLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        spellHelpers.forEachAliveAlly(battle, caster, ally => {
-            actionBarHelpers.reduce(ally, 0.1);
-        });
-        
-        caster.twilightsEndPending = true;
-        battle.log(`${caster.name} prepares Twilight's End!`);
-    },
+twilightsPromiseLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const actionBarDrain = spell.actionBarDrain || 0.1;
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        actionBarHelpers.reduce(ally, actionBarDrain);
+    });
+    
+    caster.twilightsEndPending = true;
+    battle.log(`${caster.name} prepares Twilight's End!`);
+},
 
-    twilightsEndLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const baseDamage = 2000 + (levelIndex * 1000);
-        const damage = baseDamage + caster.source.attack + caster.stats.int;
-        
-        spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
-            battle.dealDamage(caster, enemy, damage, 'magical');
-            actionBarHelpers.reduce(enemy, 0.5);
-        });
-    },
+twilightsEndLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarReduction = spellHelpers.getParam(spell, 'actionBarReduction', levelIndex, 0.5);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            actionBarHelpers.reduce(enemy, actionBarReduction);
+        }
+    });
+},
 
     whiteWizardMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
         caster.whiteWizardMalePassive = true;
