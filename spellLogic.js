@@ -1157,84 +1157,110 @@ psiShiftLogic: function(battle, caster, target, spell, spellLevel = 1) {
     },
 
     // Thief Family Spells
-    cheapShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const debuff = buffDebuffHelpers.stealRandomDebuff(caster, target);
-        if (debuff) {
-            battle.log(`${caster.name} transfers ${debuff.name} to ${target.name}!`);
+cheapShotLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    
+    const debuff = buffDebuffHelpers.stealRandomDebuff(caster, target);
+    if (debuff) {
+        battle.log(`${caster.name} transfers ${debuff.name} to ${target.name}!`);
+    }
+    
+    let damageType = 'physical';
+    if (caster.phantomAssassinFemalePassive && caster.cheapShotPureThreshold) {
+        if (hpHelpers.isBelowThreshold(target, caster.cheapShotPureThreshold)) {
+            damageType = 'pure';
         }
-        
-        let damageType = 'physical';
-        if (caster.phantomAssassinFemalePassive && caster.cheapShotPureThreshold) {
-            if (hpHelpers.isBelowThreshold(target, caster.cheapShotPureThreshold)) {
-                damageType = 'pure';
+    }
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: damageType,
+        afterDamage: (battle, caster, target) => {
+            if (caster.cheapShotAddsBleed && target.isAlive) {
+                const bleedDuration = caster.cheapShotBleedDuration || 2;
+                applyConfiguredDebuff(battle, target, 'Bleed', bleedDuration);
             }
         }
-        
+    });
+},
+
+crippleLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
+    applyConfiguredDebuff(battle, target, 'Reduce Attack', duration);
+    applyConfiguredDebuff(battle, target, 'Bleed', duration);
+},
+
+assassinateLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const hpThreshold = spellHelpers.getParam(spell, 'hpThreshold', levelIndex, 0.3);
+    
+    if (hpHelpers.isBelowThreshold(target, hpThreshold) && buffDebuffHelpers.countDebuffs(target) > 0) {
         spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
             scalingTypes: {attack: true, agi: true},
-            damageType: damageType,
-            afterDamage: (battle, caster, target) => {
-                if (caster.cheapShotAddsBleed && target.isAlive) {
-                    applyConfiguredDebuff(battle, target, 'Bleed', 2);
-                }
-            }
+            damageType: 'pure'
         });
-    },
+    } else {
+        battle.log(`Assassinate conditions not met!`);
+    }
+},
 
-    crippleLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        
-        applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
-        applyConfiguredDebuff(battle, target, 'Reduce Attack', duration);
-        applyConfiguredDebuff(battle, target, 'Bleed', duration);
-    },
+shadowstepLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    applyConfiguredDebuff(battle, target, 'Taunt', duration, caster);
+    applyConfiguredDebuff(battle, target, 'Mark', duration);
+    applyConfiguredDebuff(battle, target, 'Bleed', duration);
+},
 
-    assassinateLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        if (hpHelpers.isBelowThreshold(target, spell.hpThreshold) && buffDebuffHelpers.countDebuffs(target) > 0) {
-            spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-                scalingTypes: {attack: true, agi: true},
-                damageType: 'pure'
-            });
-        } else {
-            battle.log(`Assassinate conditions not met!`);
-        }
-    },
+phantomAssassinMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarRefill = spellHelpers.getParam(spell, 'actionBarRefill', levelIndex, 0.75);
+    
+    caster.phantomAssassinMalePassive = true;
+    caster.actionBarRefillOnKill = actionBarRefill;
+},
 
-    shadowstepLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const levelIndex = spellLevel - 1;
-        const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
-        
-        applyConfiguredDebuff(battle, target, 'Taunt', duration, caster);
-        applyConfiguredDebuff(battle, target, 'Mark', duration);
-        applyConfiguredDebuff(battle, target, 'Bleed', duration);
-    },
+phantomAssassinFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const hpThreshold = spellHelpers.getParam(spell, 'hpThreshold', levelIndex, 0.5);
+    
+    caster.phantomAssassinFemalePassive = true;
+    caster.cheapShotPureThreshold = hpThreshold;
+},
 
-    phantomAssassinMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.phantomAssassinMalePassive = true;
-        caster.actionBarRefillOnKill = spell.actionBarRefill;
-    },
+masterStalkerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const dodgePure = spellHelpers.getParam(spell, 'dodgePure', levelIndex, 0.1);
+    const dodgeMagical = spellHelpers.getParam(spell, 'dodgeMagical', levelIndex, 0.2);
+    const dodgePhysical = spellHelpers.getParam(spell, 'dodgePhysical', levelIndex, 0.3);
+    const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 2);
+    
+    caster.masterStalkerMalePassive = true;
+    caster.dodgePure = dodgePure;
+    caster.dodgeMagical = dodgeMagical;
+    caster.dodgePhysical = dodgePhysical;
+    caster.cheapShotAddsBleed = true;
+    caster.cheapShotBleedDuration = bleedDuration;
+},
 
-    phantomAssassinFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.phantomAssassinFemalePassive = true;
-        caster.cheapShotPureThreshold = spell.hpThreshold;
-    },
-
-    masterStalkerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.masterStalkerMalePassive = true;
-        caster.dodgePure = spell.dodgePure;
-        caster.dodgeMagical = spell.dodgeMagical;
-        caster.dodgePhysical = spell.dodgePhysical;
-        caster.cheapShotAddsBleed = true;
-    },
-
-    masterStalkerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.masterStalkerFemalePassive = true;
-        caster.dodgePure = spell.dodgePure;
-        caster.dodgePhysical = spell.dodgePhysical;
-        caster.dodgeMagical = spell.dodgeMagical;
-        caster.cheapShotAddsBleed = true;
-    },
+masterStalkerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const dodgePure = spellHelpers.getParam(spell, 'dodgePure', levelIndex, 0.1);
+    const dodgePhysical = spellHelpers.getParam(spell, 'dodgePhysical', levelIndex, 0.2);
+    const dodgeMagical = spellHelpers.getParam(spell, 'dodgeMagical', levelIndex, 0.3);
+    const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 2);
+    
+    caster.masterStalkerFemalePassive = true;
+    caster.dodgePure = dodgePure;
+    caster.dodgePhysical = dodgePhysical;
+    caster.dodgeMagical = dodgeMagical;
+    caster.cheapShotAddsBleed = true;
+    caster.cheapShotBleedDuration = bleedDuration;
+},
 
     // Witch Hunter Family Spells
     purgeSlashLogic: function(battle, caster, target, spell, spellLevel = 1) {
