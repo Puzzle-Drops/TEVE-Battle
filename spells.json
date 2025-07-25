@@ -708,7 +708,7 @@
 "purge_slash": {
     "id": "purge_slash",
     "name": "Purge Slash",
-    "description": "Deal [{base} + {attack} + {agi}] physical damage and remove 1 buff from enemy",
+    "description": "Deal [{base} + {attack} + {agi}] physical damage and remove 2 random buffs from enemy",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["physical", "dispel"],
     "scaling": {
@@ -726,11 +726,11 @@
     "cooldown": [4, 4, 3, 3, 2],
     "effects": ["aoe", "physical"],
     "scaling": {
-        "base": [8, 50, 100, 200, 350],
+        "base": [8, 30, 60, 120, 240],
         "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
         "int": [0.5, 0.52, 0.54, 0.56, 0.58]
     },
-    "buffBonus": [10, 30, 60, 120, 210],
+    "buffBonus": [20, 60, 120, 240, 480],
     "target": "all_enemies",
     "logicKey": "nullbladeCleaveLogic"
 },
@@ -738,9 +738,9 @@
     "id": "steal_magic",
     "name": "Steal Magic",
     "description": "Transfer all buffs from enemy to random allies. Unbuffed enemies receive Reduce Defense for {duration} turns",
-    "cooldown": [7, 7, 6, 6, 5],
+    "cooldown": [6, 5, 5, 4, 4],
     "effects": ["dispel", "debuff_reduce_defense"],
-    "duration": [2, 2, 2, 3, 3],
+    "duration": [1, 1, 2, 2, 3],
     "target": "enemy",
     "logicKey": "stealMagicLogic"
 },
@@ -750,7 +750,7 @@
     "description": "Apply Silence debuff to enemy for {duration} turns",
     "cooldown": [4, 4, 3, 3, 2],
     "effects": ["debuff_silence"],
-    "duration": [2, 2, 2, 3, 3],
+    "duration": [2, 2, 2, 2, 3],
     "target": "enemy",
     "logicKey": "hexLogic"
 },
@@ -767,7 +767,7 @@
 "grand_inquisitor_female_passive": {
     "id": "grand_inquisitor_female_passive",
     "name": "Double Purge",
-    "description": "Purge Slash removes 2 buffs on attack instead of 1",
+    "description": "Purge Slash removes all buffs on attack",
     "cooldown": [0, 0, 0, 0, 0],
     "effects": ["passive"],
     "passive": true,
