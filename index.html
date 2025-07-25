@@ -949,13 +949,8 @@
     </div>
 </div>
 	
-<!-- Load only the loading manager and viewport scaler initially -->
+<!-- Load only the loading manager initially -->
 <script src="loadingManager.js"></script>
-<script src="viewportScaler.js"></script>
-<script>
-    // Initialize viewport scaler immediately
-    window.viewportScaler.init();
-</script>
 <script>
 	
     // Global managers
@@ -965,10 +960,8 @@
     let itemData;
     let arenaData;
 
-// Initialize game after loading data
+    // Initialize game after loading data
 window.addEventListener('DOMContentLoaded', async () => {
-    // Viewport scaler is already initialized before this
-    
     const loadSuccess = await loadGameData();
     
     if (loadSuccess) {
@@ -1370,13 +1363,10 @@ if (game.currentScreen === 'heroesScreen' && game.uiManager.currentTab === 'skil
             }
         });
 
-// Add resize handler for trail canvas
+	    // Add resize handler for trail canvas
 window.addEventListener('resize', () => {
     if (game && game.uiManager) {
-        // Small delay to ensure viewport scale is updated first
-        setTimeout(() => {
-            game.uiManager.resizeTrailCanvas();
-        }, 10);
+        game.uiManager.resizeTrailCanvas();
     }
 });
 
