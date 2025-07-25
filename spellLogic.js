@@ -968,15 +968,17 @@ twilightsEndLogic: function(battle, caster, target, spell, spellLevel = 1) {
     },
 
     // Swordsman Family Spells
-    bladeStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        const bleedBonus = conditionalDamageHelpers.ifDebuffed(target, 'Bleed', spell.bleedBonus, battle, 'Critical strike on bleeding target!');
-        
-        spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
-            scalingTypes: {attack: true, str: true},
-            damageType: 'physical',
-            damageModifier: bleedBonus
-        });
-    },
+bladeStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const bleedBonus = spellHelpers.getParam(spell, 'bleedBonus', levelIndex, 1.5);
+    const damageMultiplier = conditionalDamageHelpers.ifDebuffed(target, 'Bleed', bleedBonus, battle, 'Critical strike on bleeding target!');
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        damageModifier: damageMultiplier
+    });
+},
 
     shieldBashLogic: function(battle, caster, target, spell, spellLevel = 1) {
         const levelIndex = spellLevel - 1;
@@ -997,7 +999,7 @@ rallyBannerLogic: function(battle, caster, target, spell, spellLevel = 1) {
     
     spellHelpers.forEachAliveAlly(battle, caster, ally => {
         battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
-        actionBarHelpers.grant(ally, spell.actionBarGrant); // Changed from hardcoded 0.3
+        actionBarHelpers.grant(ally, spell.actionBarGrant, battle);
     });
 },
 
@@ -1013,29 +1015,44 @@ rallyBannerLogic: function(battle, caster, target, spell, spellLevel = 1) {
         });
     },
 
-    championMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        passiveHelpers.addOnDamageTaken(caster, {
-            type: 'stun_counter',
-            chance: 0.2,
-            duration: 1
-        });
-    },
+championMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const stunChance = spellHelpers.getParam(spell, 'stunChance', levelIndex, 0.2);
+    const stunDuration = spellHelpers.getParam(spell, 'stunDuration', levelIndex, 1);
+    
+    passiveHelpers.addOnDamageTaken(caster, {
+        type: 'stun_counter',
+        chance: stunChance,
+        duration: stunDuration
+    });
+},
 
 championFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const shieldAmount = hpHelpers.percentOfMaxHp(caster, 0.2);
+    const levelIndex = spellLevel - 1;
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.2);
+    const regenerateTurns = spellHelpers.getParam(spell, 'regenerateTurns', levelIndex, 4);
+    
+    const shieldAmount = hpHelpers.percentOfMaxHp(caster, shieldPercent);
     battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
     caster.shieldRegenTimer = 0;
-    caster.shieldRegenTurns = 4;
+    caster.shieldRegenTurns = regenerateTurns;
     caster.shieldRegenAmount = shieldAmount;
     caster.championFemalePassive = true;
 },
 
-    avengerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-        caster.avengerBlightOnTauntedAttack = true;
-    },
+avengerMalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const blightDuration = spellHelpers.getParam(spell, 'blightDuration', levelIndex, 2);
+    
+    caster.avengerBlightOnTauntedAttack = true;
+    caster.avengerBlightDuration = blightDuration;
+},
 
 avengerFemalePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    caster.actionBarGainOnDamage = spell.actionBarGain || 0.15;
+    const levelIndex = spellLevel - 1;
+    const actionBarGain = spellHelpers.getParam(spell, 'actionBarGain', levelIndex, 0.15);
+    
+    caster.actionBarGainOnDamage = actionBarGain;
 },
 
     // Templar Family Spells
