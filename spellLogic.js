@@ -992,6 +992,7 @@ bladeStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
 rallyBannerLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
     const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    const actionBarGrant = spellHelpers.getParam(spell, 'actionBarGrant', levelIndex, 0.3);
     
     spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
         applyConfiguredDebuff(battle, enemy, 'Taunt', duration, caster);
@@ -999,7 +1000,7 @@ rallyBannerLogic: function(battle, caster, target, spell, spellLevel = 1) {
     
     spellHelpers.forEachAliveAlly(battle, caster, ally => {
         battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
-        actionBarHelpers.grant(ally, spell.actionBarGrant, battle);
+        actionBarHelpers.grant(ally, actionBarGrant, battle);
     });
 },
 
