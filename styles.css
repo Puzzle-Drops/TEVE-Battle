@@ -6861,6 +6861,11 @@ body {
 }
 
 /* Autosell Styles */
+.autosellButtonContainer {
+    width: 300px;  /* Fixed width for the button container */
+    margin-bottom: 10px;
+}
+
 .autosellButton {
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
@@ -6963,20 +6968,18 @@ body {
     width: 1920px;
     height: 1080px;
     background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 2000;
 }
-
 .autosellPopup {
+    position: absolute;
+    top: 108px;           /* 10% of 1080 */
+    left: 660px;          /* (1920 - 600) / 2 */
+    width: 600px;         /* Fixed width */
+    max-height: 864px;    /* 80% of 1080 */
     background: linear-gradient(135deg, #0a1929 0%, #1a3a52 100%);
     border: 2px solid #2a6a8a;
     border-radius: 10px;
     padding: 30px;
-    max-width: 600px;
-    width: 600px;        /* Fixed width */
-    max-height: 864px;   /* 80% of 1080 */
     overflow-y: auto;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
 }
