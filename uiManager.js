@@ -404,39 +404,57 @@ if (!this.game.tutorialCompleted) {
         }
     }
     
-    resizeTrailCanvas() {
-        if (!this.trailCanvas) return;
-        this.trailCanvas.width = window.innerWidth;
-        this.trailCanvas.height = window.innerHeight;
-        this.drawProgressionTrails();
-    }
+resizeTrailCanvas() {
+    if (!this.trailCanvas) return;
+    // Canvas should always be 1920x1080 to match game resolution
+    this.trailCanvas.width = 1920;
+    this.trailCanvas.height = 1080;
+    this.drawProgressionTrails();
+}
     
     getElementCenter(elementClass) {
-        // Special positions for portal effect
-        if (elementClass === 'portal') {
-            const orb8 = document.querySelector('.dungeonOrb8');
-            if (!orb8) return { x: 0, y: 0 };
-            const rect = orb8.getBoundingClientRect();
-            return {
-                x: rect.left + rect.width / 2,
-                y: rect.top - 100 // Portal position above orb 8 (moved down 20px from -120)
-            };
-        }
-        if (elementClass === 'offscreen') {
-            return {
-                x: window.innerWidth + 100, // Off screen to the right
-                y: window.innerHeight - 100 // Near bottom
-            };
-        }
+    // Special positions for portal effect
+    if (elementClass === 'portal') {
+        const orb8 = document.querySelector('.dungeonOrb8');
+        if (!orb8) return { x: 0, y: 0 };
+        // Get position relative to game container, not viewport
+        const gameContainer = document.getElementById('gameContainer');
+        const containerRect = gameContainer.getBoundingClientRect();
+        const elemRect = orb8.getBoundingClientRect();
         
-        const elem = document.querySelector('.' + elementClass);
-        if (!elem) return { x: 0, y: 0 };
-        const rect = elem.getBoundingClientRect();
+        // Calculate position relative to the 1920x1080 game space
+        const scaleX = 1920 / containerRect.width;
+        const scaleY = 1080 / containerRect.height;
+        
         return {
-            x: rect.left + rect.width / 2,
-            y: rect.top + rect.height / 2
+            x: (elemRect.left - containerRect.left) * scaleX + (elemRect.width * scaleX) / 2,
+            y: (elemRect.top - containerRect.top) * scaleY - 100 // Portal position above orb 8
         };
     }
+    if (elementClass === 'offscreen') {
+        return {
+            x: 1920 + 100, // Off screen to the right of game area
+            y: 1080 - 100 // Near bottom of game area
+        };
+    }
+    
+    const elem = document.querySelector('.' + elementClass);
+    if (!elem) return { x: 0, y: 0 };
+    
+    // Get position relative to game container
+    const gameContainer = document.getElementById('gameContainer');
+    const containerRect = gameContainer.getBoundingClientRect();
+    const elemRect = elem.getBoundingClientRect();
+    
+    // Calculate position relative to the 1920x1080 game space
+    const scaleX = 1920 / containerRect.width;
+    const scaleY = 1080 / containerRect.height;
+    
+    return {
+        x: (elemRect.left - containerRect.left) * scaleX + (elemRect.width * scaleX) / 2,
+        y: (elemRect.top - containerRect.top) * scaleY + (elemRect.height * scaleY) / 2
+    };
+}
     
     drawMapTrail(from, to, curveDirection) {
         const start = this.getElementCenter(from);
@@ -3669,19 +3687,23 @@ newItemHTML = newItemHTML.split(oldSpan).join(newSpan);
         tooltip.innerHTML = tooltipHTML;
         tooltip.style.display = 'block';
         
-        // Position tooltip
-        const rect = event.target.getBoundingClientRect();
-        tooltip.style.left = rect.right + 10 + 'px';
-        tooltip.style.top = rect.top + 'px';
-        
-        // Adjust if tooltip goes off screen
-        const tooltipRect = tooltip.getBoundingClientRect();
-        if (tooltipRect.right > window.innerWidth) {
-            tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
-        }
-        if (tooltipRect.bottom > window.innerHeight) {
-            tooltip.style.top = (window.innerHeight - tooltipRect.height - 10) + 'px';
-        }
+        // Get game container for coordinate translation
+const gameContainer = document.getElementById('scaleWrapper');
+const containerRect = gameContainer.getBoundingClientRect();
+
+// Position tooltip relative to game container
+const rect = event.target.getBoundingClientRect();
+tooltip.style.left = (rect.right + 10) + 'px';
+tooltip.style.top = rect.top + 'px';
+
+// Adjust if tooltip goes off game area
+const tooltipRect = tooltip.getBoundingClientRect();
+if (tooltipRect.right > containerRect.right) {
+    tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
+}
+if (tooltipRect.bottom > containerRect.bottom) {
+    tooltip.style.top = (containerRect.bottom - tooltipRect.height - 10) + 'px';
+}
     }
 
     hideItemTooltip() {
@@ -3735,14 +3757,18 @@ newItemHTML = newItemHTML.split(oldSpan).join(newSpan);
         tooltip.style.top = (rect.bottom + 5) + 'px';
         tooltip.style.display = 'block';
         
-        // Adjust if tooltip goes off screen
-        const tooltipRect = tooltip.getBoundingClientRect();
-        if (tooltipRect.right > window.innerWidth) {
-            tooltip.style.left = (window.innerWidth - tooltipRect.width - 10) + 'px';
-        }
-        if (tooltipRect.bottom > window.innerHeight) {
-            tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
-        }
+        // Get game container for coordinate translation
+const gameContainer = document.getElementById('scaleWrapper');
+const containerRect = gameContainer.getBoundingClientRect();
+
+// Adjust if tooltip goes off game area
+const tooltipRect = tooltip.getBoundingClientRect();
+if (tooltipRect.right > containerRect.right) {
+    tooltip.style.left = (containerRect.right - tooltipRect.width - 10) + 'px';
+}
+if (tooltipRect.bottom > containerRect.bottom) {
+    tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
+}
     }
 
     hideAbilityTooltip() {
@@ -3820,13 +3846,17 @@ newItemHTML = newItemHTML.split(oldSpan).join(newSpan);
         let left = rect.left;
         let top = rect.bottom + 5;
 
-        // Adjust if tooltip would overflow the screen
-        if (left + tooltipRect.width > window.innerWidth) {
-            left = window.innerWidth - tooltipRect.width - 10;
-        }
-        if (top + tooltipRect.height > window.innerHeight) {
-            top = rect.top - tooltipRect.height - 5;
-        }
+        // Get game container for coordinate translation
+const gameContainer = document.getElementById('scaleWrapper');
+const containerRect = gameContainer.getBoundingClientRect();
+
+// Adjust if tooltip would overflow the game area
+if (left + tooltipRect.width > containerRect.right) {
+    left = containerRect.right - tooltipRect.width - 10;
+}
+if (top + tooltipRect.height > containerRect.bottom) {
+    top = rect.top - tooltipRect.height - 5;
+}
 
         tooltip.style.left = `${left}px`;
         tooltip.style.top = `${top}px`;
@@ -3867,14 +3897,18 @@ newItemHTML = newItemHTML.split(oldSpan).join(newSpan);
         tooltip.style.left = rect.right + 10 + 'px';
         tooltip.style.top = rect.top + 'px';
         
-        // Adjust if tooltip goes off screen
-        const tooltipRect = tooltip.getBoundingClientRect();
-        if (tooltipRect.right > window.innerWidth) {
-            tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
-        }
-        if (tooltipRect.bottom > window.innerHeight) {
-            tooltip.style.top = (window.innerHeight - tooltipRect.height - 10) + 'px';
-        }
+        // Get game container for coordinate translation
+const gameContainer = document.getElementById('scaleWrapper');
+const containerRect = gameContainer.getBoundingClientRect();
+
+// Adjust if tooltip goes off game area
+const tooltipRect = tooltip.getBoundingClientRect();
+if (tooltipRect.right > containerRect.right) {
+    tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
+}
+if (tooltipRect.bottom > containerRect.bottom) {
+    tooltip.style.top = (containerRect.bottom - tooltipRect.height - 10) + 'px';
+}
     }
 
     hideGoldTooltip() {
@@ -3914,14 +3948,18 @@ newItemHTML = newItemHTML.split(oldSpan).join(newSpan);
     tooltip.style.left = rect.left + 'px';
     tooltip.style.top = (rect.bottom + 5) + 'px';
     
-    // Adjust if tooltip goes off screen
-    const tooltipRect = tooltip.getBoundingClientRect();
-    if (tooltipRect.right > window.innerWidth) {
-        tooltip.style.left = (window.innerWidth - tooltipRect.width - 10) + 'px';
-    }
-    if (tooltipRect.bottom > window.innerHeight) {
-        tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
-    }
+    // Get game container for coordinate translation
+const gameContainer = document.getElementById('scaleWrapper');
+const containerRect = gameContainer.getBoundingClientRect();
+
+// Adjust if tooltip goes off game area
+const tooltipRect = tooltip.getBoundingClientRect();
+if (tooltipRect.right > containerRect.right) {
+    tooltip.style.left = (containerRect.right - tooltipRect.width - 10) + 'px';
+}
+if (tooltipRect.bottom > containerRect.bottom) {
+    tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
+}
 }
 
 hideArenaStatTooltip() {
@@ -4010,14 +4048,18 @@ hideArenaStatTooltip() {
         tooltip.style.left = rect.right + 10 + 'px';
         tooltip.style.top = rect.top + 'px';
         
-        // Adjust if tooltip goes off screen
-        const tooltipRect = tooltip.getBoundingClientRect();
-        if (tooltipRect.right > window.innerWidth) {
-            tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
-        }
-        if (tooltipRect.bottom > window.innerHeight) {
-            tooltip.style.top = (window.innerHeight - tooltipRect.height - 10) + 'px';
-        }
+        // Get game container for coordinate translation
+const gameContainer = document.getElementById('scaleWrapper');
+const containerRect = gameContainer.getBoundingClientRect();
+
+// Adjust if tooltip goes off game area
+const tooltipRect = tooltip.getBoundingClientRect();
+if (tooltipRect.right > containerRect.right) {
+    tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
+}
+if (tooltipRect.bottom > containerRect.bottom) {
+    tooltip.style.top = (containerRect.bottom - tooltipRect.height - 10) + 'px';
+}
     }
 
     // Sort Settings Functions
