@@ -39,9 +39,11 @@
     </div>
 </div>
 
-    <div id="gameContainer" style="display: none;">
-	    
-        <!-- Splash Screen -->
+    <!-- Scale Wrapper for fixed 1920x1080 rendering -->
+    <div id="scaleWrapper">
+        <div id="gameContainer" style="display: none;">
+        
+            <!-- Splash Screen -->
 <div id="splashScreen">
     <div class="gameTitle">TEVE</div>
     <div class="splashText">Press any button to continue</div>
@@ -850,8 +852,11 @@
     <button class="backButton" onclick="game.uiManager.showStash()">Back</button>
 </div>
 
-<!-- Blur Overlay -->
-<div id="refinementOverlay" class="refinementOverlay"></div>
+</div><!-- End of gameContainer -->
+    </div><!-- End of scaleWrapper -->
+
+    <!-- Blur Overlay -->
+    <div id="refinementOverlay" class="refinementOverlay"></div>
 
 <!-- Item Refinement Popup -->
 <div id="itemRefinementPopup" class="itemRefinementPopup">
@@ -951,6 +956,7 @@
 	
 <!-- Load only the loading manager initially -->
 <script src="loadingManager.js"></script>
+<script src="scalingSystem.js"></script>
 <script>
 	
     // Global managers
