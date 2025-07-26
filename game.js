@@ -104,6 +104,26 @@ class Game {
         this.init();
     }
 
+    // Helper method to get game coordinates from mouse/touch events
+getGameCoordinates(event) {
+    // Handle both mouse and touch events
+    let clientX, clientY;
+    
+    if (event.touches && event.touches.length > 0) {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+    } else if (event.changedTouches && event.changedTouches.length > 0) {
+        clientX = event.changedTouches[0].clientX;
+        clientY = event.changedTouches[0].clientY;
+    } else {
+        clientX = event.clientX;
+        clientY = event.clientY;
+    }
+    
+    // Convert to game coordinates
+    return window.scalingSystem.viewportToGame(clientX, clientY);
+}
+
 calculateMaxPartySize() {
     // Base size of 3 + 1 for each unique dungeon completed
     const uniqueDungeonsCompleted = Object.keys(this.progression.completedDungeons).filter(
@@ -758,35 +778,42 @@ showItemOptions(item, itemIndex, family, isEquipped = false, slot = null) {
         }
     });
     
-    // Position menu at cursor - UPDATED FOR FIXED COORDINATES
-    const gameContainer = document.getElementById('gameContainer');
-    gameContainer.appendChild(menu);
-    
-    // Convert event coordinates to game coordinates
-    const rect = event.target.getBoundingClientRect();
-    const gameRect = gameContainer.getBoundingClientRect();
-    
-    // Calculate position relative to game container
-    let menuLeft = rect.right - gameRect.left;
-    let menuTop = rect.top - gameRect.top;
-    
+    // Position menu at cursor using scaling system
+const gameContainer = document.getElementById('gameContainer');
+gameContainer.appendChild(menu);
+
+// Get click position in viewport coordinates
+const rect = event.target.getBoundingClientRect();
+const clickX = rect.right;
+const clickY = rect.top;
+
+// Convert to game coordinates using scaling system
+const gameCoords = window.scalingSystem.viewportToGame(clickX, clickY);
+
+// Set initial position
+let menuLeft = gameCoords.x;
+let menuTop = gameCoords.y;
+
+menu.style.left = menuLeft + 'px';
+menu.style.top = menuTop + 'px';
+
+// Check if menu would go off screen and adjust
+// We need to measure the menu in game coordinates
+const menuWidth = menu.offsetWidth / window.scalingSystem.getScale();
+const menuHeight = menu.offsetHeight / window.scalingSystem.getScale();
+
+// Adjust if menu goes off game bounds (1920x1080)
+if (menuLeft + menuWidth > 1920) {
+    // Position to the left of the click point
+    const leftRect = event.target.getBoundingClientRect();
+    const leftCoords = window.scalingSystem.viewportToGame(leftRect.left, leftRect.top);
+    menuLeft = leftCoords.x - menuWidth;
     menu.style.left = menuLeft + 'px';
+}
+if (menuTop + menuHeight > 1080) {
+    menuTop = 1080 - menuHeight - 10;
     menu.style.top = menuTop + 'px';
-    
-    // Adjust if menu goes off game container bounds
-    const menuRect = menu.getBoundingClientRect();
-    const relativeRight = menuRect.right - gameRect.left;
-    const relativeBottom = menuRect.bottom - gameRect.top;
-    
-    // Check against game container dimensions (1920x1080)
-    if (relativeRight > 1920) {
-        menuLeft = (rect.left - gameRect.left) - menuRect.width;
-        menu.style.left = menuLeft + 'px';
-    }
-    if (relativeBottom > 1080) {
-        menuTop = 1080 - menuRect.height - 10;
-        menu.style.top = menuTop + 'px';
-    }
+}
     
     // Close menu when clicking elsewhere
     setTimeout(() => {
@@ -1494,30 +1521,36 @@ setTimeout(() => {
 
     showSingleRefinementText(text, verticalOffset = 0) {
         // Get the refinement popup and result display
-        const popup = document.getElementById('itemRefinementPopup');
-        const resultDisplay = document.getElementById('refinementResult');
-        
-        // Use the result display if visible, otherwise use the popup
-        const targetElement = resultDisplay.style.display !== 'none' ? resultDisplay : popup;
-        const rect = targetElement.getBoundingClientRect();
-        
-        // Get game container for relative positioning
-        const gameContainer = document.getElementById('gameContainer');
-        const gameRect = gameContainer.getBoundingClientRect();
-        
-        const floatText = document.createElement('div');
-        floatText.className = 'refinementRollText';
-        floatText.textContent = text;
-        
-        // Calculate position relative to game container
-        const centerX = rect.left + rect.width / 2 - gameRect.left;
-        const centerY = rect.top + rect.height / 2 - gameRect.top + verticalOffset;
-        
-        floatText.style.left = centerX + 'px';
-        floatText.style.top = centerY + 'px';
-        
-        // Append to game container instead of document.body
-        gameContainer.appendChild(floatText);
+const popup = document.getElementById('itemRefinementPopup');
+const resultDisplay = document.getElementById('refinementResult');
+
+// Use the result display if visible, otherwise use the popup
+const targetElement = resultDisplay.style.display !== 'none' ? resultDisplay : popup;
+const rect = targetElement.getBoundingClientRect();
+
+// Get game container for appending
+const gameContainer = document.getElementById('gameContainer');
+
+const floatText = document.createElement('div');
+floatText.className = 'refinementRollText';
+floatText.textContent = text;
+
+// Calculate center position in viewport coordinates
+const viewportCenterX = rect.left + rect.width / 2;
+const viewportCenterY = rect.top + rect.height / 2;
+
+// Convert to game coordinates using scaling system
+const gameCoords = window.scalingSystem.viewportToGame(viewportCenterX, viewportCenterY);
+
+// Apply vertical offset in game space
+const centerX = gameCoords.x;
+const centerY = gameCoords.y + (verticalOffset / window.scalingSystem.getScale());
+
+floatText.style.left = centerX + 'px';
+floatText.style.top = centerY + 'px';
+
+// Append to game container
+gameContainer.appendChild(floatText);
         
         // Remove after animation
         setTimeout(() => {
@@ -1611,28 +1644,35 @@ setTimeout(() => {
             elem.onclick = options[index].action;
         });
         
-        // Position menu - UPDATED FOR FIXED COORDINATES
-        const gameContainer = document.getElementById('gameContainer');
-        gameContainer.appendChild(menu);
-        
-        const rect = e.target.getBoundingClientRect();
-        const gameRect = gameContainer.getBoundingClientRect();
-        
-        // Calculate position relative to game container
-        let menuLeft = rect.right - gameRect.left;
-        let menuTop = rect.top - gameRect.top;
-        
-        menu.style.left = menuLeft + 'px';
-        menu.style.top = menuTop + 'px';
-        
-        // Adjust if menu goes off game container bounds
-        const menuRect = menu.getBoundingClientRect();
-        const relativeRight = menuRect.right - gameRect.left;
-        
-        if (relativeRight > 1920) {
-            menuLeft = (rect.left - gameRect.left) - menuRect.width;
-            menu.style.left = menuLeft + 'px';
-        }
+        // Position menu using scaling system
+const gameContainer = document.getElementById('gameContainer');
+gameContainer.appendChild(menu);
+
+// Get click position in viewport coordinates
+const rect = e.target.getBoundingClientRect();
+const clickX = rect.right;
+const clickY = rect.top;
+
+// Convert to game coordinates using scaling system
+const gameCoords = window.scalingSystem.viewportToGame(clickX, clickY);
+
+// Set initial position
+let menuLeft = gameCoords.x;
+let menuTop = gameCoords.y;
+
+menu.style.left = menuLeft + 'px';
+menu.style.top = menuTop + 'px';
+
+// Check if menu would go off screen and adjust
+const menuWidth = menu.offsetWidth / window.scalingSystem.getScale();
+
+// Adjust if menu goes off game bounds (1920x1080)
+if (menuLeft + menuWidth > 1920) {
+    // Position to the left of the click point
+    const leftCoords = window.scalingSystem.viewportToGame(rect.left, rect.top);
+    menuLeft = leftCoords.x - menuWidth;
+    menu.style.left = menuLeft + 'px';
+}
         
         // Close when clicking elsewhere
         setTimeout(() => {
