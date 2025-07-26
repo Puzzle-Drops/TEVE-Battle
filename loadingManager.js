@@ -71,10 +71,17 @@ class LoadingManager {
     });
 }
 
-    hideLoadingScreen() {
-        this.loadingScreen.style.display = 'none';
-        this.gameContainer.style.display = 'flex';
+hideLoadingScreen() {
+    this.loadingScreen.style.display = 'none';
+    this.gameContainer.style.display = 'flex';
+    
+    // Initialize scaling after game is visible
+    if (window.scalingSystem) {
+        window.scalingSystem.updateScale();
     }
+}
+
+    
 }
 
 const loadingManager = new LoadingManager();
