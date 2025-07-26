@@ -130,15 +130,31 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: #0a0a0f;
+    background: #0a1929; /* Blue background for letterbox/pillarbox */
     color: #e0e0e0;
     overflow: hidden;
     user-select: none;
-}
-
-#gameContainer {
     width: 100vw;
     height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Scale wrapper - this is what gets scaled */
+#scaleWrapper {
+    position: absolute;
+    width: 1920px;
+    height: 1080px;
+    transform-origin: center center;
+}
+
+/* Game container - always exactly 1920x1080 */
+#gameContainer {
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -149,7 +165,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    width: 1920px;
+    height: 1080px;
     background: radial-gradient(ellipse at center, #0a1929 0%, #000511 100%);
     position: relative;
     overflow: hidden;
@@ -216,7 +233,8 @@ body {
 
 #battleScene {
     display: none;
-    height: 100%;
+    width: 1920px;
+    height: 1080px;
     background: #0a0f1a;
     position: relative;
     overflow: hidden; /* Hide the parts of background that extend beyond */
@@ -503,7 +521,7 @@ body {
 /* Battle Results Popup */
 .battleResultsPopup {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -514,7 +532,8 @@ body {
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
     min-width: 900px;  /* Increased from 700px */
     max-width: 1100px; /* Increased from 900px */
-    max-height: 80vh;
+    min-height: fit-content;
+    max-height: 1080px;
     overflow-y: auto;
 }
 
@@ -743,19 +762,37 @@ body {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
 }
 
-/* Party positions - more horizontal spacing */
-.party1 { left: 30%; top: 56%; }
-.party2 { left: 18%; top: 40%; }
-.party3 { left: 14%; top: 70%; }
-.party4 { left: 6%; top: 35%; }
-.party5 { left: 2%; top: 65%; }
+/* Fix all game screens to 1920x1080 */
+#splashScreen,
+#mainMenuScreen,
+#dungeonSelectScreen,
+#heroesScreen,
+#stashScreen,
+#partySelectScreen,
+#arenaScreen,
+#saveLoadScreen,
+#collectionLogScreen,
+#individualStashScreen {
+    width: 1920px;
+    height: 1080px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 
-/* Enemy positions - mirrored */
-.enemy1 { right: 30%; top: 56%; }
-.enemy2 { right: 18%; top: 40%; }
-.enemy3 { right: 14%; top: 70%; }
-.enemy4 { right: 6%; top: 35%; }
-.enemy5 { right: 2%; top: 65%; }
+/* Fix party unit positions to pixels */
+.party1 { left: 576px; top: 605px; }  /* 30% of 1920, 56% of 1080 */
+.party2 { left: 346px; top: 432px; }  /* 18% of 1920, 40% of 1080 */
+.party3 { left: 269px; top: 756px; }  /* 14% of 1920, 70% of 1080 */
+.party4 { left: 115px; top: 378px; }  /* 6% of 1920, 35% of 1080 */
+.party5 { left: 38px; top: 702px; }   /* 2% of 1920, 65% of 1080 */
+
+/* Fix enemy unit positions to pixels */
+.enemy1 { right: 576px; top: 605px; } /* 30% of 1920, 56% of 1080 */
+.enemy2 { right: 346px; top: 432px; } /* 18% of 1920, 40% of 1080 */
+.enemy3 { right: 269px; top: 756px; } /* 14% of 1920, 70% of 1080 */
+.enemy4 { right: 115px; top: 378px; } /* 6% of 1920, 35% of 1080 */
+.enemy5 { right: 38px; top: 702px; }  /* 2% of 1920, 65% of 1080 */
 
 /* Battle UI */
 .battleUI {
@@ -1171,7 +1208,7 @@ body {
 }
 
 #abilityTooltip {
-    position: fixed;
+    position: absolute;
     background: rgba(10, 15, 26, 0.95);
     border: 2px solid #2a6a8a;
     padding: 16px;
@@ -1381,7 +1418,7 @@ body {
 /* Confirmation Modal */
 .confirmModal {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -2154,7 +2191,7 @@ body {
 /* Hero Info Popup */
 .heroInfoPopup {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -2575,10 +2612,16 @@ body {
 }
 
 /* Stash Screen */
-#stashScreen {
-    display: none;
+#splashScreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 1920px;
     height: 1080px;
+    position: absolute;
+    top: 0;
+    left: 0;
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     padding: 40px;
     overflow-y: auto;
@@ -3512,7 +3555,7 @@ body {
 
 /* Item Context Menu */
 .itemContextMenu {
-    position: fixed;
+    position: absolute;
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
     border: 2px solid #2a6a8a;
     padding: 5px 0;
@@ -3841,7 +3884,7 @@ body {
 
 /* Tier sidebar */
 .tierSidebar {
-    width: 480px;
+    width: 480px;  /* 25% of 1920 */
     background: rgba(10, 25, 41, 0.6);
     border-right: 2px solid #2a6a8a;
     overflow-y: auto;
@@ -3956,7 +3999,7 @@ body {
 
 /* Dungeon content area */
 .collectionContent {
-    width: 1440px;
+    width: 1440px;  /* 75% of 1920 */
     padding: 20px;
     overflow-y: auto;
     display: grid;
@@ -4297,7 +4340,7 @@ body {
 
 /* Buff/Debuff Tooltip */
 #buffDebuffTooltip {
-    position: fixed;
+    position: absolute;
     background: rgba(10, 15, 26, 0.95);
     border: 2px solid #2a6a8a;
     padding: 12px;
@@ -4363,11 +4406,11 @@ body {
 
 /* Developer Console */
 #devConsole {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 1920px;
+    height: 1080px;
     background: rgba(10, 15, 26, 0.98);
     z-index: 20000;
     display: flex;
@@ -4915,7 +4958,7 @@ body {
 /* Item Refinement Popup */
 .itemRefinementPopup {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -5230,11 +5273,11 @@ body {
 /* Refinement Overlay */
 .refinementOverlay {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 1920px;
+    height: 1080px;
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -5252,11 +5295,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 1920px;
-    height: 1080px;
-    position: absolute;
-    top: 0;
-    left: 0;
+    height: 100%;
     background: radial-gradient(ellipse at center, #0a1929 0%, #000511 100%);
     position: relative;
     overflow: hidden;
@@ -5337,85 +5376,83 @@ body {
     cursor: pointer;
 }
 
-/* Button positions */
+/* Button positions - converted to pixels for 1920x1080 */
 .stashesButton {
-    bottom: 54%;
-    left: 50%;
+    bottom: 583px;  /* 54% of 1080 */
+    left: 960px;    /* 50% of 1920 */
     transform: translateX(-50%);
 }
 
 .arenaButton {
-    bottom: 29%;
-    left: 50%;
+    bottom: 313px;  /* 29% of 1080 */
+    left: 960px;    /* 50% of 1920 */
     transform: translateX(-50%);
 }
 
 .heroesButton {
-    bottom: 5%;
-    left: 50%;
+    bottom: 54px;   /* 5% of 1080 */
+    left: 960px;    /* 50% of 1920 */
     transform: translateX(-50%);
 }
-
-/* Dungeon Orb Positions */
+/* Dungeon Orb Positions - converted to pixels for 1920x1080 */
 .dungeonOrb0 {
-    bottom: 3%;
-    left: 70%;
+    bottom: 32px;  /* 3% of 1080 */
+    left: 1344px;   /* 70% of 1920 */
     transform: translateX(-50%);
 }
 .dungeonOrb1 {
-    bottom: 26%;
-    left: 70%;
+    bottom: 281px;  /* 26% of 1080 */
+    left: 1344px;   /* 70% of 1920 */
     transform: translateX(-50%);
 }
 .dungeonOrb2 {
-    bottom: 52%;
-    left: 70%;
+    bottom: 562px;  /* 52% of 1080 */
+    left: 1344px;   /* 70% of 1920 */
     transform: translateX(-50%);
 }
 .dungeonOrb3 {
-    bottom: 52%;
-    left: 30%;
+    bottom: 562px;  /* 52% of 1080 */
+    left: 576px;    /* 30% of 1920 */
     transform: translateX(-50%);
 }
 .dungeonOrb4 {
-    bottom: 26%;
-    left: 30%;
+    bottom: 281px;  /* 26% of 1080 */
+    left: 576px;    /* 30% of 1920 */
     transform: translateX(-50%);
 }
 .dungeonOrb5 {
-    bottom: 3%;
-    left: 30%;
+    bottom: 32px;   /* 3% of 1080 */
+    left: 576px;    /* 30% of 1920 */
     transform: translateX(-50%);
 }
 .dungeonOrb6 {
-    bottom: 1%;
-    left: 10%;
+    bottom: 11px;   /* 1% of 1080 */
+    left: 192px;    /* 10% of 1920 */
     transform: translateX(-50%);
 }
 .dungeonOrb7 {
-    bottom: 25%;
-    left: 10%;
+    bottom: 270px;  /* 25% of 1080 */
+    left: 192px;    /* 10% of 1920 */
     transform: translateX(-50%);
 }
 .dungeonOrb8 {
-    bottom: 49%;
-    left: 10%;
+    bottom: 529px;  /* 49% of 1080 */
+    left: 192px;    /* 10% of 1920 */
     transform: translateX(-50%);
 }
 .dungeonOrb9 {
-    bottom: 1%;
-    left: 90%;
+    bottom: 11px;   /* 1% of 1080 */
+    left: 1728px;   /* 90% of 1920 */
     transform: translateX(-50%);
 }
 .dungeonOrb10 {
-    bottom: 25%;
-    left: 90%;
+    bottom: 270px;  /* 25% of 1080 */
+    left: 1728px;   /* 90% of 1920 */
     transform: translateX(-50%);
 }
-
 .dungeonOrb11 {
-    bottom: 49%;
-    left: 90%;
+    bottom: 529px;  /* 49% of 1080 */
+    left: 1728px;   /* 90% of 1920 */
     transform: translateX(-50%);
 }
 
@@ -5851,7 +5888,7 @@ body {
 /* Arena Results Popup */
 .arenaResultsPopup {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -6093,11 +6130,11 @@ body {
 
 /* NPC Dialogue System */
 .npcDialogueOverlay {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 1920px;
+    height: 1080px;
     z-index: 9999;
     pointer-events: all;
 }
@@ -6110,13 +6147,13 @@ body {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 1920px;
+    height: 1080px;
     pointer-events: none;
 }
 
 .npcPortrait {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     width: 530px;
@@ -6133,7 +6170,7 @@ body {
 }
 
 .npcDialogueBox {
-    position: fixed;
+    position: absolute;
     bottom: 10px;
     right: 10px;
     width: 1370px;
@@ -6242,8 +6279,8 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 1920px;
+    height: 1080px;
     background: rgba(10, 25, 41, 0.98);
     overflow-y: auto;
     padding: 40px;
@@ -6431,7 +6468,7 @@ body {
 
 /* Save Notification */
 .saveNotification {
-    position: fixed;
+    position: absolute;
     top: 20px;
     right: 20px;
     background: rgba(10, 25, 41, 0.95);
@@ -6503,7 +6540,7 @@ body {
 /* Collection Complete Popup */
 .collectionCompletePopup {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -6917,11 +6954,11 @@ body {
 
 /* Autosell Popup */
 .autosellOverlay {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 1920px;
+    height: 1080px;
     background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
