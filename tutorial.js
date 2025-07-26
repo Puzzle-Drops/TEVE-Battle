@@ -116,15 +116,17 @@ this.game.uiManager.showMainMenu();
 }
     
 showBestiary() {
-    // Create bestiary overlay
+    // Create bestiary overlay within scaleWrapper
+    const scaleWrapper = document.getElementById('scaleWrapper');
+    
     const overlay = document.createElement('div');
     overlay.id = 'bestiaryOverlay';
     overlay.style.cssText = `
-        position: fixed;
+        position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        width: 1920px;
+        height: 1080px;
         background: rgba(0, 0, 0, 0.9);
         z-index: 10000;
         display: flex;
@@ -139,8 +141,8 @@ showBestiary() {
         background: rgba(10, 25, 41, 0.98);
         border: 2px solid #2a6a8a;
         border-radius: 8px;
-        width: 100%;
-        height: 100%;
+        width: 1920px;
+        height: 1080px;
         display: flex;
         flex-direction: column;
         box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
@@ -221,7 +223,7 @@ showBestiary() {
     container.appendChild(tabContainer);
     container.appendChild(content);
     overlay.appendChild(container);
-    document.body.appendChild(overlay);
+    scaleWrapper.appendChild(overlay);
 
     // Event listeners
     document.getElementById('closeBestiaryBtn').onclick = () => this.closeBestiary();
@@ -556,15 +558,17 @@ renderHeroTrees(container, svg, gender) {
     }
 
     showUnitDetails(unitId, unitData, unitType) {
-    // Create popup overlay
+    // Create popup overlay within scaleWrapper
+    const scaleWrapper = document.getElementById('scaleWrapper');
+    
     const popup = document.createElement('div');
     popup.id = 'unitDetailsPopup';
     popup.style.cssText = `
-        position: fixed;
+        position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        width: 1920px;
+        height: 1080px;
         background: rgba(10, 25, 41, 0.98);
         z-index: 10001;
         overflow-y: auto;
@@ -780,7 +784,7 @@ renderHeroTrees(container, svg, gender) {
     mainContent += `</div></div>`;
 
     popup.innerHTML = headerContent + mainContent;
-    document.body.appendChild(popup);
+    scaleWrapper.appendChild(popup);
 }
 
     formatSpellDescription(spell) {
@@ -1017,15 +1021,17 @@ renderHeroTrees(container, svg, gender) {
     }
 
     showNewHeroCreation() {
-        // Create overlay
+        // Create overlay within scaleWrapper
+        const scaleWrapper = document.getElementById('scaleWrapper');
+        
         const overlay = document.createElement('div');
         overlay.id = 'newHeroOverlay';
         overlay.style.cssText = `
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 1920px;
+            height: 1080px;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(5px);
             z-index: 10000;
@@ -1088,7 +1094,7 @@ renderHeroTrees(container, svg, gender) {
         `;
 
         overlay.appendChild(dialog);
-        document.body.appendChild(overlay);
+        scaleWrapper.appendChild(overlay);
 
         // Add event listeners
         this.setupNewHeroEventListeners();
