@@ -1575,8 +1575,16 @@ showAutosellSettings() {
         </div>
     `;
     
-    overlay.appendChild(popup);
-    document.body.appendChild(overlay);
+overlay.appendChild(popup);
+// Add to scaleWrapper instead of body for proper scaling
+const scaleWrapper = document.getElementById('scaleWrapper');
+if (scaleWrapper) {
+    scaleWrapper.appendChild(overlay);
+} else {
+    // Fallback to gameContainer if scaleWrapper not found
+    const gameContainer = document.getElementById('gameContainer');
+    gameContainer.appendChild(overlay);
+}
 }
 
 closeAutosellSettings() {
