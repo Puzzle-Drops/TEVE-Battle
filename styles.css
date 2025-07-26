@@ -6587,8 +6587,8 @@ body {
     transform: scale(1.25);
     transform-origin: center bottom;
     z-index: 10;
-    right: 32%;
-    top: 60%;
+    right: 614px;  /* 32% of 1920 = 614.4px */
+    top: 648px;    /* 60% of 1080 = 648px */
 }
 
 /* Unit sprite/image scaling */
@@ -6712,8 +6712,8 @@ body {
     transform: scale(1.5);
     transform-origin: center bottom;
     z-index: 10;
-    right: 34%;
-    top: 62%;
+    right: 653px;  /* 34% of 1920 = 652.8px */
+    top: 670px;    /* 62% of 1080 = 669.6px */
 }
 
 /* Unit sprite/image scaling */
