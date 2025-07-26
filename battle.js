@@ -554,21 +554,21 @@ trackBattleStat(unitName, stat, value) {
     this.log(`Your party: ${this.party.map(u => u.name).join(', ')}`);
     
     // Animate entire battlefield pan down
-    const battleField = document.querySelector('.battleField');
-    if (battleField) {
-        // Set to top position first (without transition)
-        battleField.style.transition = 'none';
-        battleField.style.top = '8%';
-        
-        // Force reflow to ensure the position is set before transition
-        battleField.offsetHeight;
-        
-        // Re-enable transition and animate to final position
-        setTimeout(() => {
-            battleField.style.transition = 'top 3s cubic-bezier(0.4, 0, 0.2, 1)';
-            battleField.style.top = '0%';
-        }, 100);
-    }
+const battleField = document.querySelector('.battleField');
+if (battleField) {
+    // Set to top position first (without transition)
+    battleField.style.transition = 'none';
+    battleField.style.top = '86px';  // 8% of 1080 = 86.4px
+    
+    // Force reflow to ensure the position is set before transition
+    battleField.offsetHeight;
+    
+    // Re-enable transition and animate to final position
+    setTimeout(() => {
+        battleField.style.transition = 'top 3s cubic-bezier(0.4, 0, 0.2, 1)';
+        battleField.style.top = '0px';
+    }, 100);
+}
     
     // Ensure all party members start alive and visible
     this.party.forEach(unit => {
