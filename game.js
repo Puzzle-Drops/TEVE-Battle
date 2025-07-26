@@ -758,19 +758,34 @@ showItemOptions(item, itemIndex, family, isEquipped = false, slot = null) {
         }
     });
     
-    // Position menu at cursor
-    document.body.appendChild(menu);
-    const rect = event.target.getBoundingClientRect();
-    menu.style.left = rect.right + 'px';
-    menu.style.top = rect.top + 'px';
+    // Position menu at cursor - UPDATED FOR FIXED COORDINATES
+    const gameContainer = document.getElementById('gameContainer');
+    gameContainer.appendChild(menu);
     
-    // Adjust if menu goes off screen
+    // Convert event coordinates to game coordinates
+    const rect = event.target.getBoundingClientRect();
+    const gameRect = gameContainer.getBoundingClientRect();
+    
+    // Calculate position relative to game container
+    let menuLeft = rect.right - gameRect.left;
+    let menuTop = rect.top - gameRect.top;
+    
+    menu.style.left = menuLeft + 'px';
+    menu.style.top = menuTop + 'px';
+    
+    // Adjust if menu goes off game container bounds
     const menuRect = menu.getBoundingClientRect();
-    if (menuRect.right > window.innerWidth) {
-        menu.style.left = (rect.left - menuRect.width) + 'px';
+    const relativeRight = menuRect.right - gameRect.left;
+    const relativeBottom = menuRect.bottom - gameRect.top;
+    
+    // Check against game container dimensions (1920x1080)
+    if (relativeRight > 1920) {
+        menuLeft = (rect.left - gameRect.left) - menuRect.width;
+        menu.style.left = menuLeft + 'px';
     }
-    if (menuRect.bottom > window.innerHeight) {
-        menu.style.top = (window.innerHeight - menuRect.height - 10) + 'px';
+    if (relativeBottom > 1080) {
+        menuTop = 1080 - menuRect.height - 10;
+        menu.style.top = menuTop + 'px';
     }
     
     // Close menu when clicking elsewhere
@@ -1486,13 +1501,23 @@ setTimeout(() => {
         const targetElement = resultDisplay.style.display !== 'none' ? resultDisplay : popup;
         const rect = targetElement.getBoundingClientRect();
         
+        // Get game container for relative positioning
+        const gameContainer = document.getElementById('gameContainer');
+        const gameRect = gameContainer.getBoundingClientRect();
+        
         const floatText = document.createElement('div');
         floatText.className = 'refinementRollText';
         floatText.textContent = text;
-        floatText.style.left = (rect.left + rect.width / 2) + 'px';
-        floatText.style.top = (rect.top + rect.height / 2 + verticalOffset) + 'px';
         
-        document.body.appendChild(floatText);
+        // Calculate position relative to game container
+        const centerX = rect.left + rect.width / 2 - gameRect.left;
+        const centerY = rect.top + rect.height / 2 - gameRect.top + verticalOffset;
+        
+        floatText.style.left = centerX + 'px';
+        floatText.style.top = centerY + 'px';
+        
+        // Append to game container instead of document.body
+        gameContainer.appendChild(floatText);
         
         // Remove after animation
         setTimeout(() => {
@@ -1586,16 +1611,27 @@ setTimeout(() => {
             elem.onclick = options[index].action;
         });
         
-        // Position menu
-        document.body.appendChild(menu);
-        const rect = e.target.getBoundingClientRect();
-        menu.style.left = rect.right + 'px';
-        menu.style.top = rect.top + 'px';
+        // Position menu - UPDATED FOR FIXED COORDINATES
+        const gameContainer = document.getElementById('gameContainer');
+        gameContainer.appendChild(menu);
         
-        // Adjust if menu goes off screen
+        const rect = e.target.getBoundingClientRect();
+        const gameRect = gameContainer.getBoundingClientRect();
+        
+        // Calculate position relative to game container
+        let menuLeft = rect.right - gameRect.left;
+        let menuTop = rect.top - gameRect.top;
+        
+        menu.style.left = menuLeft + 'px';
+        menu.style.top = menuTop + 'px';
+        
+        // Adjust if menu goes off game container bounds
         const menuRect = menu.getBoundingClientRect();
-        if (menuRect.right > window.innerWidth) {
-            menu.style.left = (rect.left - menuRect.width) + 'px';
+        const relativeRight = menuRect.right - gameRect.left;
+        
+        if (relativeRight > 1920) {
+            menuLeft = (rect.left - gameRect.left) - menuRect.width;
+            menu.style.left = menuLeft + 'px';
         }
         
         // Close when clicking elsewhere
