@@ -178,36 +178,29 @@ showSpellAnimation(caster, spellName, effects, abilityId) {
         setTimeout(() => animContainer.classList.remove(animationClass), 800);
         
         // Create spell text inside animation container
-const spellText = document.createElement('div');
-spellText.className = 'spellText';
+        const spellText = document.createElement('div');
+        spellText.className = 'spellText';
 
-// Only add icon if we have an abilityId (not for passives or special cases)
-if (abilityId) {
-    // Create a wrapper div for proper alignment
-    const spellContent = document.createElement('div');
-    spellContent.style.cssText = 'display: flex; align-items: center; gap: 8px;';
-    
-    // Create spell icon
-    const spellIcon = document.createElement('img');
-    spellIcon.src = `https://puzzle-drops.github.io/TEVE/img/spells/${abilityId}.png`;
-    spellIcon.className = 'spellIcon';
-    spellIcon.onerror = () => spellIcon.style.display = 'none'; // Hide if image fails to load
-    
-    // Create text span
-    const spellNameText = document.createElement('span');
-    spellNameText.textContent = spellName;
-    spellNameText.className = 'spellNameText';
-    
-    // Add both to wrapper
-    spellContent.appendChild(spellIcon);
-    spellContent.appendChild(spellNameText);
-    
-    // Add wrapper to spell text
-    spellText.appendChild(spellContent);
-} else {
-    // Fallback to text only (for passives or when no abilityId provided)
-    spellText.textContent = spellName;
-}
+        // Only add icon if we have an abilityId (not for passives or special cases)
+        if (abilityId) {
+            // Create spell icon
+            const spellIcon = document.createElement('img');
+            spellIcon.src = `https://puzzle-drops.github.io/TEVE/img/spells/${abilityId}.png`;
+            spellIcon.className = 'spellIcon';
+            spellIcon.onerror = () => spellIcon.style.display = 'none'; // Hide if image fails to load
+            
+            // Create text span
+            const spellNameText = document.createElement('span');
+            spellNameText.textContent = spellName;
+            spellNameText.className = 'spellNameText';
+            
+            // Add both to spell text (flex container handles the layout)
+            spellText.appendChild(spellIcon);
+            spellText.appendChild(spellNameText);
+        } else {
+            // Fallback to text only (for passives or when no abilityId provided)
+            spellText.textContent = spellName;
+        }
         
         // Add appropriate color class based on spell type with priority
         if (effects.includes('physical')) {
