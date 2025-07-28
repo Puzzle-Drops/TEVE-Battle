@@ -5062,6 +5062,267 @@ cinderLordPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) 
     battle.log(`${caster.name}'s flames enhance all magical attacks!`);
 },
 
+    // Plague/Disease themed spells
+rabidBiteLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const bleedChance = spellHelpers.getParam(spell, 'bleedChance', levelIndex, 0.8);
+    const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 1);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        afterDamage: (battle, caster, target) => {
+            if (Math.random() < bleedChance) {
+                applyConfiguredDebuff(battle, target, 'Bleed', bleedDuration);
+            }
+        }
+    });
+},
+
+festeringWoundDogLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    
+    // Apply Blight to self
+    applyConfiguredDebuff(battle, caster, 'Blight', duration);
+    
+    // Apply Blight to all enemies
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        applyConfiguredDebuff(battle, enemy, 'Blight', duration);
+    });
+    
+    battle.log(`${caster.name} spreads disease to everyone!`);
+},
+
+savageLeapLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.2);
+    
+    // Gain speed buff
+    battle.applyBuff(caster, 'Increase Speed', duration, {});
+    
+    // Drain action bar from target
+    actionBarHelpers.drain(target, actionBarDrain, battle);
+},
+
+toxicPrayerLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.15);
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.15);
+    
+    // Heal the target ally
+    const healAmount = hpHelpers.percentOfMaxHp(target, healPercent);
+    battle.healUnit(target, healAmount);
+    
+    // Find lowest HP enemy and drain their action bar
+    const enemies = battle.getEnemies(caster);
+    const aliveEnemies = enemies.filter(e => e && e.isAlive);
+    
+    if (aliveEnemies.length > 0) {
+        aliveEnemies.sort((a, b) => hpHelpers.hpPercent(a) - hpHelpers.hpPercent(b));
+        const lowestHpEnemy = aliveEnemies[0];
+        actionBarHelpers.drain(lowestHpEnemy, actionBarDrain, battle);
+    }
+},
+
+spreadCorruptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        applyConfiguredDebuff(battle, enemy, 'Reduce Defense', duration);
+    });
+},
+
+darkBlessingPlagueLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 2);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        // Apply buffs
+        battle.applyBuff(ally, 'Increase Attack', duration, { damageMultiplier: 1.5 });
+        battle.applyBuff(ally, 'Increase Defense', duration, {});
+        
+        // Apply bleed debuff
+        applyConfiguredDebuff(battle, ally, 'Bleed', bleedDuration);
+    });
+    
+    battle.log(`Dark blessing empowers allies but at a cost!`);
+},
+
+putridShieldLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const shieldAmount = spellHelpers.getParam(spell, 'shieldAmount', levelIndex, 120);
+    const tauntDuration = spellHelpers.getParam(spell, 'tauntDuration', levelIndex, 1);
+    
+    // Gain shield
+    battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
+    
+    // Taunt all enemies
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        applyConfiguredDebuff(battle, enemy, 'Taunt', tauntDuration, caster);
+    });
+},
+
+diseasedStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const stunDuration = spellHelpers.getParam(spell, 'stunDuration', levelIndex, 1);
+    const hasBlightBeforeAttack = buffDebuffHelpers.hasDebuff(target, 'Blight');
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        afterDamage: (battle, caster, target) => {
+            // Only stun if target had Blight before the attack
+            if (hasBlightBeforeAttack && target.isAlive) {
+                applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
+                battle.log(`Diseased strike stuns the blighted target!`);
+            }
+        }
+    });
+},
+
+corpseBloatPassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // This is a passive that triggers on death
+    // We need to add this to battle.js handleUnitDeath function
+    caster.corpseBloatPassive = true;
+    caster.corpseBloatBlightDuration = spell.blightDuration || 1;
+},
+
+plagueBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const bonusPercent = spellHelpers.getParam(spell, 'bonusPercent', levelIndex, 0.25);
+    const debuffCount = buffDebuffHelpers.countDebuffs(target);
+    const damageMultiplier = 1 + (bonusPercent * debuffCount);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        damageModifier: damageMultiplier
+    });
+    
+    if (debuffCount > 0) {
+        battle.log(`Plague bolt gains power from ${debuffCount} debuffs!`);
+    }
+},
+
+toxicCloudLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical'
+    });
+},
+
+siphonVitalityLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.5);
+    
+    const damage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
+    const damageDealt = battle.dealDamage(caster, target, damage, 'magical');
+    
+    const healAmount = damageDealt * healPercent;
+    battle.healUnit(caster, healAmount);
+},
+
+poisonedBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        afterDamage: () => {
+            applyConfiguredDebuff(battle, target, 'Blight', duration);
+            applyConfiguredDebuff(battle, target, 'Mark', duration);
+        }
+    });
+},
+
+cripplingStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        afterDamage: () => {
+            applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
+        }
+    });
+},
+
+vanishInSmokeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    
+    // Remove all debuffs
+    buffDebuffHelpers.clearDebuffs(caster);
+    
+    // Apply buffs
+    battle.applyBuff(caster, 'Increase Speed', duration, {});
+    battle.applyBuff(caster, 'Immune', duration, { immunity: true });
+},
+
+unholySermonLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const silenceDuration = spellHelpers.getParam(spell, 'silenceDuration', levelIndex, 1);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            applyConfiguredDebuff(battle, enemy, 'Silence', silenceDuration);
+        }
+    });
+},
+
+corruptBlessingLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const markDuration = spellHelpers.getParam(spell, 'markDuration', levelIndex, 2);
+    const buffDuration = spellHelpers.getParam(spell, 'buffDuration', levelIndex, 2);
+    
+    const buffTypes = ['Increase Attack', 'Increase Speed', 'Increase Defense'];
+    
+    // All enemies gain one random buff and Mark debuff
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        const randomBuff = buffTypes[Math.floor(Math.random() * buffTypes.length)];
+        if (randomBuff === 'Increase Attack') {
+            battle.applyBuff(enemy, randomBuff, buffDuration, { damageMultiplier: 1.5 });
+        } else {
+            battle.applyBuff(enemy, randomBuff, buffDuration, {});
+        }
+        applyConfiguredDebuff(battle, enemy, 'Mark', markDuration);
+    });
+    
+    // All allies gain one random buff
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        const randomBuff = buffTypes[Math.floor(Math.random() * buffTypes.length)];
+        if (randomBuff === 'Increase Attack') {
+            battle.applyBuff(ally, randomBuff, buffDuration, { damageMultiplier: 1.5 });
+        } else {
+            battle.applyBuff(ally, randomBuff, buffDuration, {});
+        }
+    });
+    
+    battle.log(`Corrupt blessing affects everyone!`);
+},
+
+divinePlagueLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        afterDamage: () => {
+            applyConfiguredDebuff(battle, target, 'Blight', duration);
+            applyConfiguredDebuff(battle, target, 'Silence', duration);
+        }
+    });
+},
+
 // Test Spells
 winLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
