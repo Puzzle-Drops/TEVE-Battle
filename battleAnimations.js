@@ -128,7 +128,7 @@ class BattleAnimations {
         }
     }
 
-    showSpellAnimation(caster, spellName, effects) {
+showSpellAnimation(caster, spellName, effects, abilityId) {
         // Clear any pending buff/debuff texts for the caster
         this.clearUnitQueue(caster);
         
@@ -178,9 +178,29 @@ class BattleAnimations {
         setTimeout(() => animContainer.classList.remove(animationClass), 800);
         
         // Create spell text inside animation container
-        const spellText = document.createElement('div');
-        spellText.className = 'spellText';
-        spellText.textContent = spellName;
+const spellText = document.createElement('div');
+spellText.className = 'spellText';
+
+// Only add icon if we have an abilityId (not for passives or special cases)
+if (abilityId) {
+    // Create spell icon
+    const spellIcon = document.createElement('img');
+    spellIcon.src = `https://puzzle-drops.github.io/TEVE/img/spells/${abilityId}.png`;
+    spellIcon.className = 'spellIcon';
+    spellIcon.onerror = () => spellIcon.style.display = 'none'; // Hide if image fails to load
+    
+    // Create text span
+    const spellNameText = document.createElement('span');
+    spellNameText.textContent = spellName;
+    spellNameText.className = 'spellNameText';
+    
+    // Add both to container
+    spellText.appendChild(spellIcon);
+    spellText.appendChild(spellNameText);
+} else {
+    // Fallback to text only (for passives or when no abilityId provided)
+    spellText.textContent = spellName;
+}
         
         // Add appropriate color class based on spell type with priority
         if (effects.includes('physical')) {
