@@ -1087,8 +1087,8 @@
     },
     {
       "enemies": [
-        { "id": "blighted_horror", "level": 450 },
         { "id": "infected_demon_dog", "level": 450 },
+        { "id": "contagion_mage", "level": 450 },
         { "id": "contagion_mage", "level": 450 },
         { "id": "infected_assassin", "level": 450 },
         { "id": "rotting_defender", "level": 450 }
