@@ -465,7 +465,7 @@
         {
             "enemies": [
                 { "id": "tribal_chieftain", "level": 175 },
-                { "id": "tribal_warchief", "level": 173 },
+                { "id": "tribal_warrior", "level": 173 },
                 { "id": "tribal_warrior", "level": 173 },
                 { "id": "tribal_mystic", "level": 171 },
                 { "id": "tribal_scout", "level": 171 }
@@ -521,7 +521,7 @@
         {
             "enemies": [
                 { "id": "orc_blademaster", "level": 200 },
-                { "id": "orc_warlord", "level": 198 },
+                { "id": "orc_bloodshaman", "level": 198 },
                 { "id": "orc_berserker", "level": 198 },
                 { "id": "orc_bloodshaman", "level": 196 },
                 { "id": "orc_grunt", "level": 196 }
@@ -577,7 +577,7 @@
         {
             "enemies": [
                 { "id": "owlkin_king", "level": 225 },
-                { "id": "bog_beast", "level": 224 },
+                { "id": "ogre_bruiser", "level": 224 },
                 { "id": "ogre_witch", "level": 225 },
                 { "id": "swamp_lurker", "level": 225 },
                 { "id": "snapdragon_spitter", "level": 225 }
@@ -633,7 +633,7 @@
         {
             "enemies": [
                 { "id": "lizardman_trickster", "level": 250 },
-                { "id": "owlkin_warchief", "level": 249 },
+                { "id": "owlkin_hunter", "level": 249 },
                 { "id": "lizardman_shaman", "level": 250 },
                 { "id": "lava_elemental", "level": 250 },
                 { "id": "lizardman_warrior", "level": 250 }
@@ -689,7 +689,7 @@
         {
             "enemies": [
                 { "id": "lich_queen", "level": 275 },
-                { "id": "crypt_king", "level": 274 },
+                { "id": "frost_specter", "level": 274 },
                 { "id": "soul_wraith", "level": 275 },
                 { "id": "frozen_gargoyle", "level": 275 },
                 { "id": "ice_revenant", "level": 275 }
@@ -745,7 +745,7 @@
         {
             "enemies": [
                 { "id": "elven_queen", "level": 300 },
-                { "id": "elven_bladedancer", "level": 299 },
+                { "id": "elven_hunter", "level": 299 },
                 { "id": "shadow_assassin", "level": 299 },
                 { "id": "elven_archer", "level": 298 },
                 { "id": "swift_wolf", "level": 298 }
@@ -801,7 +801,7 @@
         {
             "enemies": [
                 { "id": "naga_empress", "level": 325 },
-                { "id": "naga_warlord", "level": 324 },
+                { "id": "naga_warrior", "level": 324 },
                 { "id": "naga_siren", "level": 324 },
                 { "id": "naga_serpent_guard", "level": 323 },
                 { "id": "naga_tidecaller", "level": 323 }
