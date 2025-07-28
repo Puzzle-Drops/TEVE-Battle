@@ -3238,8 +3238,8 @@
       "resist": 8
     },
     "spells": [
-      "putrid_shield",
       "diseased_strike",
+      "putrid_shield",
       "corpse_bloat_passive"
     ]
   },
@@ -3269,8 +3269,8 @@
     },
     "spells": [
       "plague_bolt",
-      "toxic_cloud",
-      "siphon_vitality"
+      "siphon_vitality",
+      "toxic_cloud"
     ]
   },
   "infected_assassin": {
@@ -3331,8 +3331,7 @@
       "toxic_slam",
       "epidemic_burst",
       "consume_corruption",
-      "plague_nova",
-      "living_disease_passive"
+      "plague_nova"
     ]
   },
   "plaguebound_archbishop": {
@@ -3361,8 +3360,9 @@
     },
     "spells": [
       "unholy_sermon",
+      "divine_plague",
       "corrupt_blessing",
-      "divine_plague"
+      "living_disease_passive"
     ]
   },
   "mirage": {
