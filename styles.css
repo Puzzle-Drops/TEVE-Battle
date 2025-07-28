@@ -2822,6 +2822,8 @@ body {
     height: 28px;
     image-rendering: pixelated;
     flex-shrink: 0;
+    object-fit: contain;
+    display: block;
 }
 
 .spellNameText {
