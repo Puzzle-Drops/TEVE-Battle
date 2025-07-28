@@ -183,6 +183,10 @@ spellText.className = 'spellText';
 
 // Only add icon if we have an abilityId (not for passives or special cases)
 if (abilityId) {
+    // Create a wrapper div for proper alignment
+    const spellContent = document.createElement('div');
+    spellContent.style.cssText = 'display: flex; align-items: center; gap: 8px;';
+    
     // Create spell icon
     const spellIcon = document.createElement('img');
     spellIcon.src = `https://puzzle-drops.github.io/TEVE/img/spells/${abilityId}.png`;
@@ -194,9 +198,12 @@ if (abilityId) {
     spellNameText.textContent = spellName;
     spellNameText.className = 'spellNameText';
     
-    // Add both to container
-    spellText.appendChild(spellIcon);
-    spellText.appendChild(spellNameText);
+    // Add both to wrapper
+    spellContent.appendChild(spellIcon);
+    spellContent.appendChild(spellNameText);
+    
+    // Add wrapper to spell text
+    spellText.appendChild(spellContent);
 } else {
     // Fallback to text only (for passives or when no abilityId provided)
     spellText.textContent = spellName;
