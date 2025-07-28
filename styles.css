@@ -2811,10 +2811,10 @@ body {
     pointer-events: none;
     -webkit-text-stroke: 2px rgba(0, 0, 0, 0.7);
     text-stroke: 2px rgba(0, 0, 0, 0.7);
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;  /* Slightly increased gap for better readability */
+    gap: 8px;
 }
 
 .spellIcon {
@@ -2824,10 +2824,12 @@ body {
     flex-shrink: 0;
     object-fit: contain;
     display: block;
+    margin-right: 0;
 }
 
 .spellNameText {
-    /* Text inherits color and effects from parent .spellText */
+    margin-left: 0;
+    display: inline-block;
 }
 
 /* Buff/Debuff text - smaller than spell text */
