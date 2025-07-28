@@ -1803,6 +1803,18 @@ handleUnitDeath(unit, killer = null) {
             });
             this.log(`${unit.name} shatters on death!`);
         }
+
+        // Check for Corpse Bloat passive on the dying unit
+if (unit.corpseBloatPassive && unit.corpseBloatBlightDuration) {
+    // Apply Blight to all enemies
+    const enemies = this.getEnemies(unit);
+    enemies.forEach(enemy => {
+        if (enemy.isAlive) {
+            applyConfiguredDebuff(this, enemy, 'Blight', unit.corpseBloatBlightDuration);
+        }
+    });
+    this.log(`${unit.name}'s corpse explodes with disease!`);
+}
         
         // Check for Death's Domain passive
         this.allUnits.forEach(otherUnit => {
