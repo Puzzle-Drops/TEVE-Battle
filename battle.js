@@ -1041,7 +1041,7 @@ executeAbility(caster, abilityIndex, target) {
     }
     
     // Show spell animation
-    this.animations.showSpellAnimation(caster, ability.name, spell.effects);
+    this.animations.showSpellAnimation(caster, ability.name, spell.effects, ability.id);
     
     // Execute spell logic
     if (spellLogic[spell.logicKey]) {
