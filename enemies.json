@@ -3153,6 +3153,218 @@
       "cinder_lord_passive"
     ]
   },
+"infected_demon_dog": {
+  "name": "Infected Demon Dog",
+  "boss": false,
+  "mainstat": "agi",
+  "modifiers": {
+    "str": 4.5,
+    "agi": 7.0,
+    "int": 4.5,
+    "hp": 3.6,
+    "attack": 0.42,
+    "armor": 0.18,
+    "resist": 0.130
+  },
+  "initial": {
+    "str": 18,
+    "agi": 28,
+    "int": 18,
+    "hp": 200,
+    "hpRegen": 0,
+    "attack": 28,
+    "attackSpeed": 0,
+    "armor": 18,
+    "resist": 14
+  },
+  "spells": [
+    "rabid_bite",
+    "festering_wound_dog",
+    "savage_leap"
+  ]
+},
+"plague_cultist": {
+  "name": "Plague Cultist",
+  "boss": false,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 4.0,
+    "agi": 4.0,
+    "int": 8.0,
+    "hp": 3.2,
+    "attack": 0.36,
+    "armor": 0.16,
+    "resist": 0.355
+  },
+  "initial": {
+    "str": 16,
+    "agi": 16,
+    "int": 32,
+    "hp": 150,
+    "hpRegen": 5.36,
+    "attack": 14,
+    "attackSpeed": 0,
+    "armor": 16,
+    "resist": 32
+  },
+  "spells": [
+    "toxic_prayer",
+    "spread_corruption",
+    "dark_blessing_plague"
+  ]
+},
+"rotting_defender": {
+  "name": "Rotting Defender",
+  "boss": false,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 8.0,
+    "agi": 4.0,
+    "int": 4.0,
+    "hp": 4.4,
+    "attack": 0.26,
+    "armor": 0.46,
+    "resist": 0.080
+  },
+  "initial": {
+    "str": 32,
+    "agi": 16,
+    "int": 16,
+    "hp": 240,
+    "hpRegen": 0,
+    "attack": 8,
+    "attackSpeed": 0,
+    "armor": 40,
+    "resist": 8
+  },
+  "spells": [
+    "putrid_shield",
+    "diseased_strike",
+    "corpse_bloat_passive"
+  ]
+},
+"contagion_mage": {
+  "name": "Contagion Mage",
+  "boss": false,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 4.0,
+    "agi": 4.5,
+    "int": 7.5,
+    "hp": 3.0,
+    "attack": 0.38,
+    "armor": 0.14,
+    "resist": 0.380
+  },
+  "initial": {
+    "str": 16,
+    "agi": 18,
+    "int": 30,
+    "hp": 120,
+    "hpRegen": 6.03,
+    "attack": 16,
+    "attackSpeed": 0,
+    "armor": 14,
+    "resist": 36
+  },
+  "spells": [
+    "plague_bolt",
+    "toxic_cloud",
+    "siphon_vitality"
+  ]
+},
+"infected_assassin": {
+  "name": "Infected Assassin",
+  "boss": false,
+  "mainstat": "agi",
+  "modifiers": {
+    "str": 4.0,
+    "agi": 8.0,
+    "int": 4.0,
+    "hp": 2.9,
+    "attack": 0.52,
+    "armor": 0.10,
+    "resist": 0.155
+  },
+  "initial": {
+    "str": 16,
+    "agi": 32,
+    "int": 16,
+    "hp": 100,
+    "hpRegen": 0,
+    "attack": 32,
+    "attackSpeed": 0,
+    "armor": 10,
+    "resist": 20
+  },
+  "spells": [
+    "poisoned_blade",
+    "crippling_strike",
+    "vanish_in_smoke"
+  ]
+},
+"blighted_horror": {
+  "name": "The Blighted Horror",
+  "boss": true,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 9.0,
+    "agi": 4.0,
+    "int": 4.0,
+    "hp": 4.5,
+    "attack": 0.31,
+    "armor": 0.43,
+    "resist": 0.100
+  },
+  "initial": {
+    "str": 34,
+    "agi": 17,
+    "int": 17,
+    "hp": 260,
+    "hpRegen": 0,
+    "attack": 13,
+    "attackSpeed": 0,
+    "armor": 42.66,
+    "resist": 10
+  },
+  "spells": [
+    "toxic_slam",
+    "epidemic_burst",
+    "consume_corruption",
+    "plague_nova",
+    "living_disease_passive"
+  ]
+},
+"plaguebound_archbishop": {
+  "name": "Plaguebound Archbishop",
+  "boss": true,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 4.0,
+    "agi": 4.0,
+    "int": 9.0,
+    "hp": 3.8,
+    "attack": 0.32,
+    "armor": 0.25,
+    "resist": 0.305
+  },
+  "initial": {
+    "str": 17,
+    "agi": 17,
+    "int": 34,
+    "hp": 180,
+    "hpRegen": 7.37,
+    "attack": 14,
+    "attackSpeed": 0,
+    "armor": 25.33,
+    "resist": 26
+  },
+  "spells": [
+    "unholy_sermon",
+    "corrupt_blessing",
+    "divine_plague"
+  ]
+},
   "mirage": {
     "name": "Mirage",
     "boss": true,
