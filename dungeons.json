@@ -1051,25 +1051,65 @@
   }
 },
     "tristam_plague": {
-      "id": "tristam_plague",
-      "name": "Tristam Plague",
-      "boss": "Plaguebound Archbishop",
-      "tier": "Impossible",
-      "subtitle": "Impossible 1",
-      "level": 450,
-      "waves": [
-        {
-          "enemies": [
-            { "id": "plaguebound_archbishop", "level": 450 }
-          ]
-        }
-      ],
-      "rewards": {
-        "gold": 157286400,
-        "exp": 376832000,
-        "items": ["plague_miasmahood", "plague_blightrobes", "plague_rotwalkers", "plague_blightstaff", "plague_miasmaward", "plague_pestcore", "plague_pandemic"]
-      }
+  "id": "tristam_plague",
+  "name": "Tristam Plague",
+  "boss": "Plaguebound Archbishop",
+  "tier": "Impossible",
+  "subtitle": "Impossible 1",
+  "level": 450,
+  "waves": [
+    {
+      "enemies": [
+        { "id": "infected_demon_dog", "level": 450 },
+        { "id": "infected_demon_dog", "level": 450 },
+        { "id": "infected_demon_dog", "level": 450 },
+        { "id": "rotting_defender", "level": 450 },
+        { "id": "plague_cultist", "level": 450 }
+      ]
     },
+    {
+      "enemies": [
+        { "id": "infected_demon_dog", "level": 450 },
+        { "id": "infected_assassin", "level": 450 },
+        { "id": "infected_assassin", "level": 450 },
+        { "id": "contagion_mage", "level": 450 },
+        { "id": "contagion_mage", "level": 450 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "blighted_horror", "level": 450 },
+        { "id": "contagion_mage", "level": 450 },
+        { "id": "rotting_defender", "level": 450 },
+        { "id": "plague_cultist", "level": 450 },
+        { "id": "infected_assassin", "level": 450 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "blighted_horror", "level": 450 },
+        { "id": "infected_demon_dog", "level": 450 },
+        { "id": "contagion_mage", "level": 450 },
+        { "id": "infected_assassin", "level": 450 },
+        { "id": "rotting_defender", "level": 450 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "plaguebound_archbishop", "level": 450 },
+        { "id": "infected_demon_dog", "level": 450 },
+        { "id": "rotting_defender", "level": 450 },
+        { "id": "contagion_mage", "level": 450 },
+        { "id": "plague_cultist", "level": 450 }
+      ]
+    }
+  ],
+  "rewards": {
+    "gold": 157286400,
+    "exp": 376832000,
+    "items": ["plague_miasmahood", "plague_blightrobes", "plague_rotwalkers", "plague_blightstaff", "plague_miasmaward", "plague_pestcore", "plague_pandemic"]
+  }
+},
     "city_of_illusions": {
       "id": "city_of_illusions",
       "name": "City of Illusions",
