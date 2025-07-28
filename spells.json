@@ -4625,6 +4625,304 @@
   "target": "self",
   "logicKey": "cinderLordPassiveLogic"
 },
+"rabid_bite": {
+  "id": "rabid_bite",
+  "name": "Rabid Bite",
+  "description": "Vicious bite dealing [{base} + {attack} + {str}] physical damage with {bleedChance}% chance to cause Bleed for {bleedDuration} turns",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["physical", "debuff_bleed"],
+  "scaling": {
+    "base": [85, 340, 680, 1190, 1700],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "str": [0.3, 0.32, 0.34, 0.36, 0.38]
+  },
+  "bleedChance": [0.8, 0.85, 0.9, 0.95, 1.0],
+  "bleedDuration": [1, 1, 2, 2, 3],
+  "target": "enemy",
+  "logicKey": "rabidBiteLogic"
+},
+"festering_wound_dog": {
+  "id": "festering_wound_dog",
+  "name": "Festering Wound",
+  "description": "Apply Blight to self and all enemies for {duration} turns",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "debuff_blight"],
+  "duration": [1, 1, 2, 2, 2],
+  "target": "all",
+  "logicKey": "festeringWoundDogLogic"
+},
+"savage_leap": {
+  "id": "savage_leap",
+  "name": "Savage Leap",
+  "description": "Gain Increase Speed for {duration} turns and drain {actionBarDrain}% action bar from target",
+  "cooldown": [6, 5, 4, 3, 3],
+  "effects": ["buff_increase_speed", "support"],
+  "duration": [2, 2, 2, 3, 3],
+  "actionBarDrain": 0.2,
+  "target": "enemy",
+  "logicKey": "savageLeapLogic"
+},
+"toxic_prayer": {
+  "id": "toxic_prayer",
+  "name": "Toxic Prayer",
+  "description": "Heal ally for {healPercent}% HP and drain {actionBarDrain}% action bar from lowest HP enemy",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["heal", "support"],
+  "healPercent": [0.15, 0.18, 0.21, 0.24, 0.27],
+  "actionBarDrain": 0.15,
+  "target": "ally",
+  "logicKey": "toxicPrayerLogic"
+},
+"spread_corruption": {
+  "id": "spread_corruption",
+  "name": "Spread Corruption",
+  "description": "All enemies gain Reduce Defense for {duration} turns",
+  "cooldown": [5, 4, 4, 3, 3],
+  "effects": ["aoe", "debuff_reduce_defense"],
+  "duration": [1, 2, 2, 2, 3],
+  "target": "all_enemies",
+  "logicKey": "spreadCorruptionLogic"
+},
+"dark_blessing_plague": {
+  "id": "dark_blessing_plague",
+  "name": "Dark Blessing",
+  "description": "All allies gain Increase Attack and Defense for {duration} turns but gain 1 Bleed stack",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "buff_increase_attack", "buff_increase_defense", "debuff_bleed"],
+  "duration": [1, 1, 1, 2, 2],
+  "bleedDuration": 2,
+  "target": "all_allies",
+  "logicKey": "darkBlessingPlagueLogic"
+},
+"putrid_shield": {
+  "id": "putrid_shield",
+  "name": "Putrid Shield",
+  "description": "Gain {shieldAmount} shield and taunt all enemies for {tauntDuration} turns",
+  "cooldown": [6, 6, 5, 5, 4],
+  "effects": ["buff_shield", "aoe", "debuff_taunt"],
+  "shieldAmount": [120, 480, 960, 2180, 4000],
+  "tauntDuration": [1, 1, 1, 1, 1],
+  "target": "self",
+  "logicKey": "putridShieldLogic"
+},
+"diseased_strike": {
+  "id": "diseased_strike",
+  "name": "Diseased Strike",
+  "description": "Deal [{base} + {attack} + {str}] physical damage, stun for {stunDuration} turn if target has Blight",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["physical", "debuff_stun"],
+  "scaling": {
+    "base": [75, 300, 600, 1050, 1500],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "str": [0.15, 0.17, 0.19, 0.21, 0.23]
+  },
+  "stunDuration": 1,
+  "target": "enemy",
+  "logicKey": "diseasedStrikeLogic"
+},
+"corpse_bloat_passive": {
+  "id": "corpse_bloat_passive",
+  "name": "Corpse Bloat",
+  "description": "On death, all enemies gain Blight for {blightDuration} turn",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["passive"],
+  "passive": true,
+  "blightDuration": 1,
+  "target": "self",
+  "logicKey": "corpseBloatPassiveLogic"
+},
+"plague_bolt": {
+  "id": "plague_bolt",
+  "name": "Plague Bolt",
+  "description": "Diseased bolt dealing [{base} + {attack} + {int}] magical damage, +{bonusPercent} per debuff",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["magical"],
+  "scaling": {
+    "base": [70, 280, 560, 980, 1400],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.75, 0.78, 0.81, 0.84, 0.87]
+  },
+  "bonusPercent": 0.25,
+  "target": "enemy",
+  "logicKey": "plagueBoltLogic"
+},
+"toxic_cloud": {
+  "id": "toxic_cloud",
+  "name": "Toxic Cloud",
+  "description": "Poison gas dealing [{base} + {attack} + {int}] magical damage to all enemies",
+  "cooldown": [4, 4, 3, 3, 2],
+  "effects": ["aoe", "magical"],
+  "scaling": {
+    "base": [60, 240, 480, 840, 1200],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.7, 0.73, 0.76, 0.79, 0.82]
+  },
+  "target": "all_enemies",
+  "logicKey": "toxicCloudLogic"
+},
+"siphon_vitality": {
+  "id": "siphon_vitality",
+  "name": "Siphon Vitality",
+  "description": "Drain life dealing [{base} + {attack} + {int}] magical damage, heal self {healPercent} of damage",
+  "cooldown": [3, 3, 3, 2, 2],
+  "effects": ["magical", "heal"],
+  "scaling": {
+    "base": [65, 260, 520, 910, 1300],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.72, 0.75, 0.78, 0.81, 0.84]
+  },
+  "healPercent": 0.5,
+  "target": "enemy",
+  "logicKey": "siphonVitalityLogic"
+},
+"poisoned_blade": {
+  "id": "poisoned_blade",
+  "name": "Poisoned Blade",
+  "description": "Toxic strike dealing [{base} + {attack} + {agi}] physical damage, apply Blight and Mark for {duration} turns",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["physical", "debuff_blight", "debuff_mark"],
+  "scaling": {
+    "base": [72, 288, 576, 1008, 1440],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "agi": [0.48, 0.50, 0.52, 0.54, 0.56]
+  },
+  "duration": [2, 2, 3, 3, 4],
+  "target": "enemy",
+  "logicKey": "poisonedBladeLogic"
+},
+"crippling_strike": {
+  "id": "crippling_strike",
+  "name": "Crippling Strike",
+  "description": "Hamstring dealing [{base} + {attack} + {agi}] physical damage, apply Reduce Speed for {duration} turns",
+  "cooldown": [3, 3, 3, 2, 2],
+  "effects": ["physical", "debuff_reduce_speed"],
+  "scaling": {
+    "base": [68, 272, 544, 952, 1360],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "agi": [0.45, 0.47, 0.49, 0.51, 0.53]
+  },
+  "duration": [1, 1, 2, 2, 2],
+  "target": "enemy",
+  "logicKey": "cripplingStrikeLogic"
+},
+"vanish_in_smoke": {
+  "id": "vanish_in_smoke",
+  "name": "Vanish in Smoke",
+  "description": "Remove all debuffs, gain Increase Speed and Immune for {duration} turn",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["cleanse", "buff_increase_speed", "buff_immune"],
+  "duration": 1,
+  "target": "self",
+  "logicKey": "vanishInSmokeLogic"
+},
+"unholy_sermon": {
+  "id": "unholy_sermon",
+  "name": "Unholy Sermon",
+  "description": "Dark words dealing [{base} + {attack} + {int}] magical damage to all, apply Silence for {silenceDuration} turn",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["aoe", "magical", "debuff_silence"],
+  "scaling": {
+    "base": [100, 400, 800, 1400, 2000],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.85, 0.88, 0.91, 0.94, 0.97]
+  },
+  "silenceDuration": 1,
+  "target": "all_enemies",
+  "logicKey": "unholySermonLogic"
+},
+"corrupt_blessing": {
+  "id": "corrupt_blessing",
+  "name": "Corrupt Blessing",
+  "description": "All enemies gain one random buff and Mark debuff, all allies gain one random buff",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "support"],
+  "markDuration": 2,
+  "buffDuration": 2,
+  "target": "all",
+  "logicKey": "corruptBlessingLogic"
+},
+"divine_plague": {
+  "id": "divine_plague",
+  "name": "Divine Plague",
+  "description": "Holy corruption dealing [{base} + {attack} + {int}] magical damage, apply Blight and Silence for {duration} turns",
+  "cooldown": [4, 4, 3, 3, 2],
+  "effects": ["magical", "debuff_blight", "debuff_silence"],
+  "scaling": {
+    "base": [90, 360, 720, 1260, 1800],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.72, 0.75, 0.78, 0.81, 0.84]
+  },
+  "duration": [1, 1, 1, 2, 2],
+  "target": "enemy",
+  "logicKey": "divinePlagueLogic"
+},
+"toxic_slam": {
+  "id": "toxic_slam",
+  "name": "Toxic Slam",
+  "description": "Putrid slam dealing [{base} + {attack} + {str}] physical damage to all, apply {bleedStacks} Bleed stacks",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["aoe", "physical", "debuff_bleed"],
+  "scaling": {
+    "base": [95, 380, 760, 1330, 1900],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "str": [0.25, 0.27, 0.29, 0.31, 0.33]
+  },
+  "bleedStacks": 2,
+  "target": "all_enemies",
+  "logicKey": "toxicSlamLogic"
+},
+"epidemic_burst": {
+  "id": "epidemic_burst",
+  "name": "Epidemic Burst",
+  "description": "Plague explosion dealing [{base} + {attack} + {int}] magical damage +{bonusDamage} per total debuffs on enemies",
+  "cooldown": [4, 4, 3, 3, 2],
+  "effects": ["magical"],
+  "scaling": {
+    "base": [80, 320, 640, 1120, 1600],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.75, 0.78, 0.81, 0.84, 0.87]
+  },
+  "bonusDamage": 500,
+  "target": "enemy",
+  "logicKey": "epidemicBurstLogic"
+},
+"consume_corruption": {
+  "id": "consume_corruption",
+  "name": "Consume Corruption",
+  "description": "Remove all debuffs, gain massive Shield and Increase Attack/Speed for {duration} turns",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["cleanse", "buff_shield", "buff_increase_attack", "buff_increase_speed"],
+  "shieldPercent": 0.5,
+  "duration": [1, 1, 2, 2, 2],
+  "target": "self",
+  "logicKey": "consumeCorruptionLogic"
+},
+"plague_nova": {
+  "id": "plague_nova",
+  "name": "Plague Nova",
+  "description": "Disease wave dealing [{base} + {attack} + {int}] magical damage to all, stun enemies with Blight for {stunDuration} turn",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "magical", "debuff_stun"],
+  "scaling": {
+    "base": [85, 340, 680, 1190, 1700],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.7, 0.73, 0.76, 0.79, 0.82]
+  },
+  "stunDuration": 1,
+  "target": "all_enemies",
+  "logicKey": "plagueNovaLogic"
+},
+"living_disease_passive": {
+  "id": "living_disease_passive",
+  "name": "Living Disease",
+  "description": "Apply one random debuff to random enemy every turn",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["passive"],
+  "passive": true,
+  "debuffDuration": 2,
+  "target": "self",
+  "logicKey": "livingDiseasePassiveLogic"
+},
 "win": {
     "id": "win",
     "name": "Win",
