@@ -914,6 +914,49 @@ processTurn() {
         });
         this.log(`${unit.name}'s sovereign presence protects and hastens all allies!`);
     }
+
+    // Mirror of Truth passive - copy enemy buffs at turn start
+if (unit.mirrorOfTruthPassive && unit.isAlive) {
+    // Check if unit can act (not stunned, silenced, or taunted)
+    const canAct = !unit.debuffs.some(d => 
+        d.name === 'Stun' || d.stunned || 
+        d.name === 'Silence' || 
+        d.name === 'Taunt'
+    );
+    
+    if (canAct) {
+        // Collect all unique buff names from enemies
+        const enemyBuffNames = new Set();
+        const enemies = battle.getEnemies(unit);
+        enemies.forEach(enemy => {
+            if (enemy.isAlive) {
+                buffDebuffHelpers.getBuffs(enemy).forEach(buff => {
+                    if (buff.name !== 'Boss') {
+                        enemyBuffNames.add(buff.name);
+                    }
+                });
+            }
+        });
+        
+        // Apply missing buffs to self
+        enemyBuffNames.forEach(buffName => {
+            if (!buffDebuffHelpers.hasBuff(unit, buffName)) {
+                // Apply buff with duration 1 (until next turn)
+                if (buffName === 'Shield') {
+                    battle.applyBuff(unit, buffName, -1, { shieldAmount: 50 });
+                } else if (buffName === 'Increase Attack') {
+                    battle.applyBuff(unit, buffName, 1, { damageMultiplier: 1.5 });
+                } else {
+                    battle.applyBuff(unit, buffName, 1, {});
+                }
+            }
+        });
+        
+        if (enemyBuffNames.size > 0) {
+            battle.log(`${unit.name}'s mirror reflects enemy power!`);
+        }
+    }
+}
     
     // Check for Twilight's End
     if (unit.twilightsEndPending) {
@@ -1803,6 +1846,14 @@ handleUnitDeath(unit, killer = null) {
             });
             this.log(`${unit.name} shatters on death!`);
         }
+
+        // Check for Shattered Reflection passive on the dying unit
+if (unit.shatteredReflectionPassive && unit.shatteredReflectionImmuneDuration) {
+    spellHelpers.forEachAliveAlly(battle, unit, ally => {
+        battle.applyBuff(ally, 'Immune', unit.shatteredReflectionImmuneDuration, { immunity: true });
+    });
+    battle.log(`${unit.name}'s shattered reflection protects all allies!`);
+}
 
         // Check for Corpse Bloat passive on the dying unit
 if (unit.corpseBloatPassive && unit.corpseBloatBlightDuration) {
