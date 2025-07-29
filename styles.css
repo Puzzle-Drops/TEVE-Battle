@@ -4907,7 +4907,9 @@ body {
     padding: 4px;
     border-radius: 4px;
     max-height: 400px;
-    max-width: 138px;
+    max-width: 210px;
+    width: 210px;
+    min-width: 210px;
 }
 
 .gearStatsPreview h4 {
