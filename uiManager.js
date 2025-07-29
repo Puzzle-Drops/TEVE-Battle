@@ -2063,13 +2063,13 @@ showArenaEnemyInfoPopup(enemy) {
                 ${this.renderPopupStatRow('HP Regeneration', 'Regen', enemy.hpRegen.toFixed(1))}
                 ${this.renderPopupStatRow('Attack Speed', 'Atk Spd', enemy.actionBarSpeed.toFixed(1) + '%')}
                 <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
-                    <span class="statLabel">Armor</span>
-                    <span class="statValue">${Math.floor(enemy.armor)} <span style="color: #6a9aaa;">(${(enemy.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
-                </div>
-                <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
-                    <span class="statLabel">Resist</span>
-                    <span class="statValue">${Math.floor(enemy.resist)} <span style="color: #6a9aaa;">(${(enemy.magicDamageReduction * 100).toFixed(1)}%)</span></span>
-                </div>
+    <span class="statLabel">Armor</span>
+    <span class="statValue">${Math.floor(enemy.armor)}<br><span style="color: #6a9aaa;">(${(enemy.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
+</div>
+<div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
+    <span class="statLabel">Resist</span>
+    <span class="statValue">${Math.floor(enemy.resist)}<br><span style="color: #6a9aaa;">(${(enemy.magicDamageReduction * 100).toFixed(1)}%)</span></span>
+</div>
             </div>
         </div>
     `;
@@ -2421,13 +2421,13 @@ updateHeroSelection() {
                     ${this.renderStatLine('HP Regeneration', 'HP Reg', hero.baseStats.hpRegen.toFixed(1), hero.gearStats.hpRegen > 0 ? hero.gearStats.hpRegen.toFixed(1) : 0, this.selectedHero)}
                     ${this.renderStatLine('Attack Speed', 'Atk Spd', hero.baseStats.attackSpeed.toFixed(1) + '%', hero.gearStats.attackSpeed > 0 ? hero.gearStats.attackSpeed.toFixed(1) + '%' : 0, this.selectedHero)}
                     <div class="statLine" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
-                        <span class="statName">Armor</span>
-                        <span class="statValue">${Math.floor(hero.baseStats.armor)} ${hero.gearStats.armor > 0 ? `<span class="statBonus">+${hero.gearStats.armor}</span>` : ''} <span style="color: #6a9aaa;">(${(hero.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
-                    </div>
-                    <div class="statLine" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
-                        <span class="statName">Resist</span>
-                        <span class="statValue">${Math.floor(hero.baseStats.resist)} ${hero.gearStats.resist > 0 ? `<span class="statBonus">+${hero.gearStats.resist}</span>` : ''} <span style="color: #6a9aaa;">(${(hero.magicDamageReduction * 100).toFixed(1)}%)</span></span>
-                    </div>
+    <span class="statName">Armor</span>
+    <span class="statValue">${Math.floor(hero.baseStats.armor)} ${hero.gearStats.armor > 0 ? `<span class="statBonus">+${hero.gearStats.armor}</span>` : ''}<br><span style="color: #6a9aaa;">(${(hero.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
+</div>
+<div class="statLine" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
+    <span class="statName">Resist</span>
+    <span class="statValue">${Math.floor(hero.baseStats.resist)} ${hero.gearStats.resist > 0 ? `<span class="statBonus">+${hero.gearStats.resist}</span>` : ''}<br><span style="color: #6a9aaa;">(${(hero.magicDamageReduction * 100).toFixed(1)}%)</span></span>
+</div>
                 </div>
             </div>
         `;
@@ -2795,14 +2795,14 @@ updateHeroSelection() {
                 <div style="flex: 1;">
                     ${this.renderPopupStatRow('HP Regeneration', 'Regen', hero.hpRegen.toFixed(1))}
                     ${this.renderPopupStatRow('Attack Speed', 'Atk Spd', hero.actionBarSpeed.toFixed(1) + '%')}
-                    <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
-                        <span class="statLabel">Armor</span>
-                        <span class="statValue">${Math.floor(hero.armor)} <span style="color: #6a9aaa;">(${(hero.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
-                    </div>
-                    <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
-                        <span class="statLabel">Resist</span>
-                        <span class="statValue">${Math.floor(hero.resist)} <span style="color: #6a9aaa;">(${(hero.magicDamageReduction * 100).toFixed(1)}%)</span></span>
-                    </div>
+                   <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
+    <span class="statLabel">Armor</span>
+    <span class="statValue">${Math.floor(hero.armor)}<br><span style="color: #6a9aaa;">(${(hero.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
+</div>
+<div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
+    <span class="statLabel">Resist</span>
+    <span class="statValue">${Math.floor(hero.resist)}<br><span style="color: #6a9aaa;">(${(hero.magicDamageReduction * 100).toFixed(1)}%)</span></span>
+</div>
                 </div>
             </div>
         `;
@@ -2940,13 +2940,13 @@ document.getElementById('popupGear').innerHTML = gearHtml;
                     ${this.renderPopupStatRow('HP Regeneration', 'Regen', enemy.hpRegen.toFixed(1))}
                     ${this.renderPopupStatRow('Attack Speed', 'Atk Spd', enemy.actionBarSpeed.toFixed(1) + '%')}
                     <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
-                        <span class="statLabel">Armor</span>
-                        <span class="statValue">${Math.floor(enemy.armor)} <span style="color: #6a9aaa;">(${(enemy.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
-                    </div>
-                    <div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
-                        <span class="statLabel">Resist</span>
-                        <span class="statValue">${Math.floor(enemy.resist)} <span style="color: #6a9aaa;">(${(enemy.magicDamageReduction * 100).toFixed(1)}%)</span></span>
-                    </div>
+    <span class="statLabel">Armor</span>
+    <span class="statValue">${Math.floor(enemy.armor)}<br><span style="color: #6a9aaa;">(${(enemy.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
+</div>
+<div class="statRow" onmouseover="game.uiManager.showStatTooltip(event, 'Resistance')" onmouseout="game.uiManager.hideStatTooltip()">
+    <span class="statLabel">Resist</span>
+    <span class="statValue">${Math.floor(enemy.resist)}<br><span style="color: #6a9aaa;">(${(enemy.magicDamageReduction * 100).toFixed(1)}%)</span></span>
+</div>
                 </div>
             </div>
         `;
