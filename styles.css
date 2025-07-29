@@ -6577,7 +6577,7 @@ body {
 .collectionCompletePopup {
     display: none;
     position: absolute;
-    top: 25%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: linear-gradient(135deg, #0a1929 0%, #0a0f1a 100%);
