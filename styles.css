@@ -2835,17 +2835,6 @@ body {
     display: inline-block;
 }
 
-/* TEMPORARY DEBUG - Remove after fixing */
-.spellText {
-    border: 2px solid red !important;
-}
-.spellIcon {
-    border: 2px solid blue !important;
-}
-.spellNameText {
-    border: 2px solid green !important;
-}
-
 /* Buff/Debuff text - smaller than spell text */
 .buffDebuffText {
     position: absolute;
