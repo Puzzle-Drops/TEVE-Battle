@@ -2666,7 +2666,7 @@ updateHeroSelection() {
                     </div>
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column;">
-                    <h3 style="text-align: center; margin-bottom: 20px;">
+                    <h3 style="text-align: center; font-size: 38px; margin-bottom: 0px;">
                         ${familyName} Stash 
                         <span style="color: #ffd700; margin-left: 10px;">💰 ${stash.gold.toLocaleString()}</span>
                         <div class="stashSlotFilter" style="display: inline-flex; margin-left: 20px;">
