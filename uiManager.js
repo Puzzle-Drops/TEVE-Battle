@@ -2768,7 +2768,7 @@ updateHeroSelection() {
     showLogTab(hero, content) {
         content.innerHTML = `
             <h3>Activity Log</h3>
-            <div style="margin-top: 20px; background: #2a2a2a; padding: 20px; min-height: 300px; max-height: 400px; overflow-y: auto;">
+            <div style="margin-top: 20px; background: #2a2a2a; padding: 20px; height: 90%; font-size: 24px; overflow-y: auto;">
                 <p style="color: #888;">No recent activity</p>
             </div>
         `;
