@@ -2116,6 +2116,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 400px;
 }
 
 .autoTogglesPartySelect {
@@ -2125,7 +2126,7 @@ body {
     padding: 10px;
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
-    font-size: 16px;
+    font-size: 24px;
 }
 
 .autoTogglesPartySelect label {
@@ -2133,11 +2134,12 @@ body {
     align-items: center;
     gap: 5px;
     cursor: pointer;
+    font-size: 24px;
 }
 
 .autoTogglesPartySelect input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 24px;
+    height: 24px;
     cursor: pointer;
 }
 
@@ -6893,7 +6895,7 @@ body {
 
 /* Autosell Styles */
 .autosellButtonContainer {
-    width: 300px;  /* Fixed width for the button container */
+    width: 100%;
     margin-bottom: 10px;
 }
 
@@ -6920,7 +6922,7 @@ body {
 }
 
 .autosellText {
-    font-size: 16px;
+    font-size: 24px;
     font-weight: bold;
     color: #b0e0f0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -6936,7 +6938,7 @@ body {
 }
 
 .autosellPresetText {
-    font-size: 16px;
+    font-size: 20px;
     color: #6a9aaa;
     flex: 0 0 auto;
     text-align: right;
