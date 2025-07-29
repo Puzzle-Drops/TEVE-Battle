@@ -975,6 +975,252 @@ class BattleAI {
             score = -999999; // Massive negative score to ensure it's never chosen
         }
 
+        // ==== NEW ENHANCED SCORING FOR REQUESTED SPELLS ====
+        
+        // TIDAL SURGE - Mass action bar reset is EXTREMELY powerful
+        if (spell.id === 'tidal_surge') {
+            // Calculate total action bar that will be reset
+            let totalActionBarToReset = 0;
+            sortedLists.enemiesByActionBar.forEach(enemy => {
+                totalActionBarToReset += enemy.actionBar;
+            });
+            
+            // Each 1000 action bar reset is worth 15 points
+            score += (totalActionBarToReset / 1000) * 15;
+            
+            // Huge bonus if multiple enemies are close to acting
+            const enemiesAbove80Percent = sortedLists.enemiesByActionBar.filter(e => e.actionBar >= 8000).length;
+            score += enemiesAbove80Percent * 50;
+            
+            // Base value for mass reset
+            score += 100;
+        }
+        
+        // REALITY TWIST - Mass buff corruption
+        if (spell.id === 'reality_twist') {
+            // Count total buffs across all enemies
+            let totalBuffsToConvert = 0;
+            sortedLists.enemiesByBuffCount.forEach(enemy => {
+                totalBuffsToConvert += enemy.countableBuffs.length;
+            });
+            
+            // Each buff converted is worth 50 points
+            score += totalBuffsToConvert * 50;
+            
+            // Extra bonus if multiple enemies are heavily buffed
+            const heavilyBuffedEnemies = sortedLists.enemiesByBuffCount.filter(e => e.countableBuffs.length >= 3).length;
+            score += heavilyBuffedEnemies * 30;
+        }
+        
+        // MASTER OF DECEPTION - Single target buff reversal (already implemented above, enhancing)
+        if (spell.id === 'master_of_deception' && target !== 'all') {
+            // Additional scoring for quality of buffs
+            if (target.buffs.some(b => b.name === 'Immune')) score += 50;
+            if (target.buffs.some(b => b.name === 'Shield')) score += 30;
+            if (target.buffs.some(b => b.name === 'Increase Attack')) score += 25;
+            if (target.buffs.some(b => b.name === 'Increase Speed')) score += 20;
+        }
+        
+        // SMOKE AND MIRRORS - 50% dodge for 3 turns
+        if (spell.id === 'smoke_and_mirrors') {
+            const hpPercent = caster.currentHp / caster.maxHp;
+            
+            // High value when low HP
+            if (hpPercent < 0.3) {
+                score += 80;
+            } else if (hpPercent < 0.5) {
+                score += 60;
+            } else if (hpPercent < 0.7) {
+                score += 40;
+            } else {
+                score += 20;
+            }
+            
+            // Extra value if debuffed
+            score += caster.debuffs.length * 10;
+            
+            // Extra value if enemies have high attack
+            if (sortedLists.enemiesByAttack.length > 0) {
+                const highestAttackEnemy = sortedLists.enemiesByAttack[0];
+                if (highestAttackEnemy.source.attack > 150) {
+                    score += 30;
+                }
+            }
+        }
+        
+        // MIRROR IMAGE - 50% physical dodge for 2 turns + cleanse + speed
+        if (spell.id === 'mirror_image') {
+            // Already has some scoring above, adding dodge-specific scoring
+            const hpPercent = caster.currentHp / caster.maxHp;
+            
+            // Dodge value based on HP
+            if (hpPercent < 0.4) {
+                score += 50;
+            } else if (hpPercent < 0.6) {
+                score += 35;
+            } else {
+                score += 20;
+            }
+            
+            // Extra value against physical attackers
+            const physicalThreats = sortedLists.enemiesByAttack.filter(e => 
+                e.source.attack > e.source.magicPower
+            ).length;
+            score += physicalThreats * 10;
+        }
+        
+        // ETERNAL WINTER - HP drain to shield conversion (enhanced scoring)
+        if (spell.id === 'eternal_winter') {
+            // Calculate actual HP that can be drained (10% of current HP)
+            let totalDrainableHP = 0;
+            sortedLists.enemiesByHealth.forEach(enemy => {
+                totalDrainableHP += Math.floor(enemy.currentHp * 0.1);
+            });
+            
+            // Each 50 HP drained is worth 5 points
+            score += (totalDrainableHP / 50) * 5;
+            
+            // Bonus if allies are low HP and need shields
+            const lowHpAlliesNeedingShields = sortedLists.alliesByHealth.filter(ally => 
+                (ally.currentHp / ally.maxHp) < 0.5 && !ally.buffs.some(b => b.name === 'Shield')
+            ).length;
+            score += lowHpAlliesNeedingShields * 25;
+        }
+        
+        // PSYCHIC STORM - 30% missing HP damage to all enemies
+        if (spell.id === 'psychic_storm') {
+            // Calculate total missing HP damage
+            let totalMissingHpDamage = 0;
+            sortedLists.enemiesByHealth.forEach(enemy => {
+                const missingHp = enemy.maxHp - enemy.currentHp;
+                const damage = missingHp * 0.3;
+                totalMissingHpDamage += damage;
+                
+                // Bonus for potential kills
+                if (damage >= enemy.currentHp) {
+                    score += 50;
+                }
+            });
+            
+            // Score based on total damage potential
+            score += (totalMissingHpDamage / enemy.maxHp) * 100;
+            
+            // Extra value when multiple enemies are injured
+            const injuredEnemies = sortedLists.enemiesByHealth.filter(e => 
+                (e.currentHp / e.maxHp) < 0.6
+            ).length;
+            score += injuredEnemies * 20;
+        }
+        
+        // CORPSE EXPLOSION - AOE damage based on missing HP
+        if (spell.id === 'corpse_explosion') {
+            // Calculate damage for each enemy
+            let totalDamage = 0;
+            let killCount = 0;
+            
+            sortedLists.enemiesByHealth.forEach(enemy => {
+                const missingHp = enemy.maxHp - enemy.currentHp;
+                const damage = 50 + (missingHp * 0.2); // Base 50 + 20% missing HP
+                totalDamage += damage;
+                
+                // Check for kills
+                if (damage >= enemy.currentHp) {
+                    killCount++;
+                    score += 40; // Bonus per kill
+                }
+            });
+            
+            // Score based on average damage per enemy
+            const avgDamagePercent = (totalDamage / sortedLists.aliveEnemiesCount) / 
+                                   (sortedLists.enemiesByHealth[0]?.maxHp || 100) * 100;
+            score += avgDamagePercent * 1.5;
+            
+            // Extra bonus for multi-kills
+            if (killCount >= 2) score += 30;
+            if (killCount >= 3) score += 50;
+        }
+        
+        // FIRE DANCE - Next attack becomes AOE
+        if (spell.id === 'fire_dance') {
+            // Value based on caster's attack power
+            const attackPower = caster.source.attack;
+            
+            // Base value for making next attack AOE
+            score += 30;
+            
+            // Scale with attack power
+            if (attackPower > 200) {
+                score += 40;
+            } else if (attackPower > 150) {
+                score += 30;
+            } else if (attackPower > 100) {
+                score += 20;
+            } else {
+                score += 10;
+            }
+            
+            // Bonus based on enemy count
+            score += sortedLists.aliveEnemiesCount * 10;
+            
+            // Extra value if caster's next likely ability is a strong single target attack
+            const nextLikelyAbility = caster.abilities.find(a => !a.passive && a.cooldown === 0);
+            if (nextLikelyAbility && spellManager.getSpell(nextLikelyAbility.id)?.effects?.includes('physical')) {
+                score += 20;
+            }
+        }
+        
+        // WHIRLING STEP - Next attack hits twice (already has some scoring above)
+        if (spell.id === 'whirling_step') {
+            // Additional scoring based on what the next attack might be
+            const attackPower = caster.source.attack;
+            
+            // Value of doubling next attack
+            if (attackPower > 200) {
+                score += 35;
+            } else if (attackPower > 150) {
+                score += 25;
+            } else {
+                score += 15;
+            }
+            
+            // Check if any enemy is low HP (double attack could secure kill)
+            const lowHpEnemies = sortedLists.enemiesByHealth.filter(e => 
+                (e.currentHp / e.maxHp) < 0.3
+            ).length;
+            score += lowHpEnemies * 15;
+        }
+        
+        // HUNTER'S FOCUS - Next attack deals double damage
+        if (spell.id === 'hunters_focus') {
+            const attackPower = caster.source.attack;
+            
+            // Base value for doubling damage
+            score += 40;
+            
+            // Scale with attack power
+            if (attackPower > 200) {
+                score += 40;
+            } else if (attackPower > 150) {
+                score += 30;
+            } else if (attackPower > 100) {
+                score += 20;
+            }
+            
+            // Check for potential one-shot kills with double damage
+            sortedLists.enemiesByHealth.forEach(enemy => {
+                // Estimate if double damage could kill
+                const estimatedDamage = attackPower * 2 * 2; // Rough estimate
+                if (estimatedDamage >= enemy.currentHp) {
+                    score += 30;
+                }
+            });
+            
+            // Less value if already has attack buffs (diminishing returns)
+            if (caster.buffs.some(b => b.name === 'Increase Attack')) {
+                score -= 10;
+            }
+        }
+
         // Add small random noise (-1.5 to +1.5)
         const noise = (Math.random() - 0.5) * 3;
         return score + noise;
