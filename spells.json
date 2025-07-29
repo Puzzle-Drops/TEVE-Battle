@@ -5204,6 +5204,244 @@
   "target": "self",
   "logicKey": "mirrorOfTruthLogic"
 },
+"lightning_breath": {
+  "id": "lightning_breath",
+  "name": "Lightning Breath",
+  "description": "Electric breath dealing [{base} + {attack} + {int}] magical damage to all enemies with {stunChance}% chance to Stun for {stunDuration} turn",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["aoe", "magical", "debuff_stun"],
+  "scaling": {
+    "base": [65, 260, 520, 910, 1300],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.7, 0.73, 0.76, 0.79, 0.82]
+  },
+  "stunChance": [0.25, 0.3, 0.35, 0.4, 0.45],
+  "stunDuration": [1, 1, 1, 1, 2],
+  "target": "all_enemies",
+  "logicKey": "lightningBreathLogic"
+},
+"storm_shield": {
+  "id": "storm_shield",
+  "name": "Storm Shield",
+  "description": "Grant all allies a {shieldAmount} HP Shield",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "buff_shield"],
+  "shieldAmount": [60, 240, 480, 840, 1200],
+  "target": "all_allies",
+  "logicKey": "stormShieldLogic"
+},
+"eye_of_the_storm": {
+  "id": "eye_of_the_storm",
+  "name": "Eye of the Storm",
+  "description": "When damaged, grants random ally Increase Speed for {duration} turns",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["passive"],
+  "passive": true,
+  "duration": [1, 1, 2, 2, 2],
+  "target": "self",
+  "logicKey": "eyeOfTheStormLogic"
+},
+"shadow_flame": {
+  "id": "shadow_flame",
+  "name": "Shadow Flame",
+  "description": "Dark flames dealing [{base} + {attack} + {int}] magical damage and applying Mark and Blight for {duration} turns",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["magical", "debuff_mark", "debuff_blight"],
+  "scaling": {
+    "base": [70, 280, 560, 980, 1400],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.75, 0.78, 0.81, 0.84, 0.87]
+  },
+  "duration": [2, 2, 3, 3, 4],
+  "target": "enemy",
+  "logicKey": "shadowFlameLogic"
+},
+"corrupting_darkness": {
+  "id": "corrupting_darkness",
+  "name": "Corrupting Darkness",
+  "description": "Shadow wave silencing all enemies for {silenceDuration} turn",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "debuff_silence"],
+  "silenceDuration": [1, 1, 1, 2, 2],
+  "target": "all_enemies",
+  "logicKey": "corruptingDarknessLogic"
+},
+"shadow_veil": {
+  "id": "shadow_veil",
+  "name": "Shadow Veil",
+  "description": "Attacks have {markChance}% chance to apply Mark for {markDuration} turn",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["passive"],
+  "passive": true,
+  "markChance": [0.3, 0.35, 0.4, 0.45, 0.5],
+  "markDuration": [1, 1, 1, 1, 2],
+  "target": "self",
+  "logicKey": "shadowVeilLogic"
+},
+"scorching_breath": {
+  "id": "scorching_breath",
+  "name": "Scorching Breath",
+  "description": "Fiery breath dealing [{base} + {attack} + {str}] physical damage to all enemies and applying Bleed for {bleedDuration} turns",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["aoe", "physical", "debuff_bleed"],
+  "scaling": {
+    "base": [75, 300, 600, 1050, 1500],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "str": [0.35, 0.38, 0.41, 0.44, 0.47]
+  },
+  "bleedDuration": [2, 2, 3, 3, 4],
+  "target": "all_enemies",
+  "logicKey": "scorchingBreathLogic"
+},
+"inferno_wave": {
+  "id": "inferno_wave",
+  "name": "Inferno Wave",
+  "description": "Devastating fire wave dealing [{base} + {attack} + {str}] physical damage to all enemies, +50% damage to bleeding targets",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "physical"],
+  "scaling": {
+    "base": [85, 340, 680, 1190, 1700],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "str": [0.4, 0.43, 0.46, 0.49, 0.52]
+  },
+  "bleedBonus": 1.5,
+  "target": "all_enemies",
+  "logicKey": "infernoWaveLogic"
+},
+"burning_fury": {
+  "id": "burning_fury",
+  "name": "Burning Fury",
+  "description": "Gains Increase Attack for {duration} turns when any unit has Bleed",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["passive"],
+  "passive": true,
+  "duration": [1, 1, 2, 2, 2],
+  "target": "self",
+  "logicKey": "burningFuryLogic"
+},
+"frost_breath_dragon": {
+  "id": "frost_breath_dragon",
+  "name": "Frost Breath",
+  "description": "Icy breath dealing [{base} + {attack} + {int}] magical damage to all enemies, applying Reduce Speed and Reduce Attack for {duration} turns",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["aoe", "magical", "debuff_reduce_speed", "debuff_reduce_attack"],
+  "scaling": {
+    "base": [80, 320, 640, 1120, 1600],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.8, 0.83, 0.86, 0.89, 0.92]
+  },
+  "duration": [2, 2, 3, 3, 4],
+  "target": "all_enemies",
+  "logicKey": "frostBreathDragonLogic"
+},
+"glacial_barrier": {
+  "id": "glacial_barrier",
+  "name": "Glacial Barrier",
+  "description": "Grant Frost Armor to all allies for {duration} turns",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "buff_frost_armor"],
+  "duration": [2, 2, 3, 3, 4],
+  "target": "all_allies",
+  "logicKey": "glacialBarrierLogic"
+},
+"frozen_heart": {
+  "id": "frozen_heart",
+  "name": "Frozen Heart",
+  "description": "All magical damage is halved, gain Increase Defense for {duration} turns when hit with magical damage",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["passive"],
+  "passive": true,
+  "magicReduction": 0.5,
+  "duration": [1, 1, 2, 2, 2],
+  "target": "self",
+  "logicKey": "frozenHeartLogic"
+},
+"elemental_devastation": {
+  "id": "elemental_devastation",
+  "name": "Elemental Devastation",
+  "description": "Catastrophic AOE dealing [{base} + {attack} + {int}] magical damage + {debuffBonus} per debuff on targets",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["aoe", "magical"],
+  "scaling": {
+    "base": [100, 400, 800, 1400, 2000],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.85, 0.88, 0.91, 0.94, 0.97]
+  },
+  "debuffBonus": [50, 100, 200, 400, 800],
+  "target": "all_enemies",
+  "logicKey": "elementalDevastationLogic"
+},
+"regenerating_heads": {
+  "id": "regenerating_heads",
+  "name": "Regenerating Heads",
+  "description": "When below {hpThreshold}% HP, fully heal and cleanse all debuffs (once per battle)",
+  "cooldown": [99, 99, 99, 99, 99],
+  "effects": ["heal", "cleanse"],
+  "hpThreshold": [0.3, 0.3, 0.3, 0.3, 0.3],
+  "target": "self",
+  "logicKey": "regeneratingHeadsLogic"
+},
+"hydras_command": {
+  "id": "hydras_command",
+  "name": "Hydra's Command",
+  "description": "After Hydra's turn, random ally attacks with their first spell",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["passive"],
+  "passive": true,
+  "target": "self",
+  "logicKey": "hydrasCommandLogic"
+},
+"swift_strike": {
+  "id": "swift_strike",
+  "name": "Swift Strike",
+  "description": "Quick attack dealing [{base} + {attack} + {agi}] physical damage and granting Increase Speed for {duration} turns",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["physical", "buff_increase_speed"],
+  "scaling": {
+    "base": [40, 160, 320, 560, 800],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "agi": [0.5, 0.53, 0.56, 0.59, 0.62]
+  },
+  "duration": [1, 1, 2, 2, 2],
+  "target": "enemy",
+  "logicKey": "swiftStrikeLogic"
+},
+"aerial_support": {
+  "id": "aerial_support",
+  "name": "Aerial Support",
+  "description": "Grant all allies Increase Speed for {duration} turns and heal lowest HP ally for {healPercent}% max HP",
+  "cooldown": [4, 4, 3, 3, 2],
+  "effects": ["aoe", "buff_increase_speed", "heal"],
+  "duration": [2, 2, 3, 3, 4],
+  "healPercent": [0.15, 0.18, 0.21, 0.24, 0.27],
+  "target": "all_allies",
+  "logicKey": "aerialSupportLogic"
+},
+"purifying_flame": {
+  "id": "purifying_flame",
+  "name": "Purifying Flame",
+  "description": "Small flame dealing [{base} + {attack} + {int}] magical damage and removing 1 buff from target",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["magical", "dispel"],
+  "scaling": {
+    "base": [30, 120, 240, 420, 600],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.6, 0.63, 0.66, 0.69, 0.72]
+  },
+  "buffsToRemove": 1,
+  "target": "enemy",
+  "logicKey": "purifyingFlameLogic"
+},
+"youthful_energy": {
+  "id": "youthful_energy",
+  "name": "Youthful Energy",
+  "description": "Grant all allies {actionBarGrant}% action bar",
+  "cooldown": [4, 4, 3, 3, 2],
+  "effects": ["aoe", "support"],
+  "actionBarGrant": [0.2, 0.22, 0.24, 0.26, 0.28],
+  "target": "all_allies",
+  "logicKey": "youthfulEnergyLogic"
+},
 "win": {
     "id": "win",
     "name": "Win",
