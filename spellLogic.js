@@ -5624,11 +5624,9 @@ tsunamiLogic: function(battle, caster, target, spell, spellLevel = 1) {
 },
 
 ancientShellLogic: function(battle, caster, target, spell, spellLevel = 1) {
-    const levelIndex = spellLevel - 1;
-    const frostArmorDuration = spellHelpers.getParam(spell, 'frostArmorDuration', levelIndex, 3);
-    
-    // Passive that applies on creation
-    battle.applyBuff(caster, 'Frost Armor', frostArmorDuration, {});
+    // Set up passive properties
+    caster.ancientShellPassive = true;
+    caster.ancientShellFrostArmorDuration = spell.frostArmorDuration || 3;
 },
 
 phantomBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
