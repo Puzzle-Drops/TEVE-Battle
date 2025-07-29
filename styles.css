@@ -1685,8 +1685,8 @@ body {
 .itemStars {
     position: absolute;
     bottom: 0px;
-    left: 0px;
-    font-size: 12px;
+    left: 2px;
+    font-size: 18px;
     font-weight: bold;
     letter-spacing: -3px;
     text-shadow: 
@@ -1707,8 +1707,8 @@ body {
 .itemLevel {
     position: absolute;
     bottom: 0px;
-    right: 0px;
-    font-size: 12px;
+    right: 2px;
+    font-size: 18px;
     font-weight: bold;
     color: #fff;
     text-shadow: 
@@ -1722,7 +1722,7 @@ body {
     position: absolute;
     top: 2px;
     right: 2px;
-    font-size: 11px;
+    font-size: 18px;
     font-weight: bold;
     color: #fff;
     z-index: 2;
@@ -1860,7 +1860,7 @@ body {
     justify-content: center;
     gap: 60px;
     padding: 40px;
-    padding-top: 200px;
+    padding-top: 140px;
     background: rgba(10, 15, 26, 0.35);
 }
 
@@ -1896,7 +1896,7 @@ body {
 .partySlot .thumbStars {
     bottom: -2px !important;
     left: -2px !important;
-    font-size: 10px !important;
+    font-size: 18px !important;
     letter-spacing: -3px !important;
 }
 
@@ -1904,7 +1904,7 @@ body {
 .partySlot .thumbLevel {
     bottom: -2px !important;
     right: -2px !important;
-    font-size: 10px !important;
+    font-size: 18px !important;
 }
 
 /* Enemy slots already use different classes (enemyStars, enemyLevel) so they're safe */
@@ -2069,7 +2069,7 @@ body {
     position: absolute;
     bottom: 0px;
     left: 2px;
-    font-size: 12px;
+    font-size: 18px;
     font-weight: bold;
     letter-spacing: -5px;
     text-shadow: 
@@ -2095,7 +2095,7 @@ body {
     position: absolute;
     bottom: 0px;
     right: 2px;
-    font-size: 12px;
+    font-size: 18px;
     font-weight: bold;
     color: #fff;
     text-shadow: 
@@ -3718,8 +3718,8 @@ body {
 }
 
 .rewardItemSlot {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
     background: rgba(10, 25, 41, 0.8);
     border: 2px solid;
     position: relative;
