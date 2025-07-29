@@ -3577,31 +3577,213 @@
       "mirror_of_truth"
     ]
   },
+"wyvern": {
+    "name": "Wyvern",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": {
+      "str": 4.0,
+      "agi": 8.0,
+      "int": 4.0,
+      "hp": 3.2,
+      "attack": 0.52,
+      "armor": 0.16,
+      "resist": 0.155
+    },
+    "initial": {
+      "str": 16,
+      "agi": 32,
+      "int": 16,
+      "hp": 120,
+      "hpRegen": 2.01,
+      "attack": 12,
+      "attackSpeed": 4.02,
+      "armor": 10.64,
+      "resist": 18
+    },
+    "spells": [
+      "swift_strike",
+      "aerial_support"
+    ]
+  },
+  "dragon_hatchling": {
+    "name": "Dragon Hatchling",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 4.0,
+      "agi": 4.0,
+      "int": 8.0,
+      "hp": 3.0,
+      "attack": 0.38,
+      "armor": 0.21,
+      "resist": 0.255
+    },
+    "initial": {
+      "str": 16,
+      "agi": 16,
+      "int": 32,
+      "hp": 100,
+      "hpRegen": 3.35,
+      "attack": 8,
+      "attackSpeed": 0,
+      "armor": 13.30,
+      "resist": 20
+    },
+    "spells": [
+      "purifying_flame",
+      "youthful_energy"
+    ]
+  },
+  "storm_dragon": {
+    "name": "Storm Dragon",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 5.0,
+      "agi": 5.5,
+      "int": 6.5,
+      "hp": 3.85,
+      "attack": 0.36,
+      "armor": 0.26,
+      "resist": 0.215
+    },
+    "initial": {
+      "str": 20,
+      "agi": 22,
+      "int": 26,
+      "hp": 140,
+      "hpRegen": 3.35,
+      "attack": 14,
+      "attackSpeed": 0,
+      "armor": 17.29,
+      "resist": 18
+    },
+    "spells": [
+      "lightning_breath",
+      "storm_shield",
+      "eye_of_the_storm"
+    ]
+  },
+  "shadow_dragon": {
+    "name": "Shadow Dragon",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 5.0,
+      "agi": 5.0,
+      "int": 7.0,
+      "hp": 3.72,
+      "attack": 0.34,
+      "armor": 0.21,
+      "resist": 0.285
+    },
+    "initial": {
+      "str": 20,
+      "agi": 20,
+      "int": 28,
+      "hp": 130,
+      "hpRegen": 2.68,
+      "attack": 12,
+      "attackSpeed": 0,
+      "armor": 13.30,
+      "resist": 24
+    },
+    "spells": [
+      "shadow_flame",
+      "corrupting_darkness",
+      "shadow_veil"
+    ]
+  },
+  "blaze_dragon": {
+    "name": "Blaze Dragon",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 7.0,
+      "agi": 5.0,
+      "int": 5.0,
+      "hp": 3.98,
+      "attack": 0.42,
+      "armor": 0.36,
+      "resist": 0.115
+    },
+    "initial": {
+      "str": 28,
+      "agi": 20,
+      "int": 20,
+      "hp": 160,
+      "hpRegen": 0,
+      "attack": 16,
+      "attackSpeed": 0,
+      "armor": 23.92,
+      "resist": 10
+    },
+    "spells": [
+      "scorching_breath",
+      "inferno_wave",
+      "burning_fury"
+    ]
+  },
+  "winter_dragon": {
+    "name": "Winter Dragon",
+    "boss": true,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 5.0,
+      "agi": 5.0,
+      "int": 7.0,
+      "hp": 4.11,
+      "attack": 0.28,
+      "armor": 0.41,
+      "resist": 0.305
+    },
+    "initial": {
+      "str": 20,
+      "agi": 20,
+      "int": 28,
+      "hp": 180,
+      "hpRegen": 2.01,
+      "attack": 10,
+      "attackSpeed": 0,
+      "armor": 29.88,
+      "resist": 26
+    },
+    "spells": [
+      "frost_breath_dragon",
+      "glacial_barrier",
+      "frozen_heart"
+    ]
+  },
   "ancient_hydra": {
     "name": "Ancient Hydra",
     "boss": true,
     "mainstat": "str",
     "modifiers": {
-      "str": 7,
-      "agi": 5,
-      "int": 5,
-      "hp": 4.39,
-      "attack": 0.32,
+      "str": 6.0,
+      "agi": 5.5,
+      "int": 5.5,
+      "hp": 4.24,
+      "attack": 0.38,
       "armor": 0.38,
-      "resist": 0.097
+      "resist": 0.190
     },
     "initial": {
-      "str": 30,
-      "agi": 19,
-      "int": 19,
-      "hp": 131,
-      "hpRegen": 4.13,
-      "attack": 22,
+      "str": 24,
+      "agi": 22,
+      "int": 22,
+      "hp": 200,
+      "hpRegen": 4.02,
+      "attack": 18,
       "attackSpeed": 0,
-      "armor": 27.59,
-      "resist": 12
+      "armor": 26.56,
+      "resist": 16
     },
-    "spells": []
+    "spells": [
+      "elemental_devastation",
+      "regenerating_heads",
+      "hydras_command"
+    ]
   },
   "pugs": {
     "name": "Pugs",
