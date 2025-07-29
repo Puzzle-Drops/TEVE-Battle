@@ -2685,7 +2685,7 @@ updateHeroSelection() {
                     </h3>
                     <div style="flex: 1; background: rgba(10, 25, 41, 0.8); padding: 10px; overflow-y: auto;">
                         ${stash && sortedStashItems.length > 0 ? `
-                            <div style="display: grid; grid-template-columns: repeat(auto-fill, 60px); gap: 10px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, 100px); gap: 10px;">
                                 ${sortedStashItems.map((item, sortedIndex) => {
                                     // Find the original index of this item in the unsorted array
                                     const originalIndex = stash.items.indexOf(item);
