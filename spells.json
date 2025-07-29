@@ -4923,6 +4923,287 @@
   "target": "self",
   "logicKey": "livingDiseasePassiveLogic"
 },
+"mirror_strike": {
+  "id": "mirror_strike",
+  "name": "Mirror Strike",
+  "description": "Physical damage dealing [{base} + {attack} + {str}] damage, creates 5% HP shield on allies with no debuffs",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["physical", "buff_shield"],
+  "scaling": {
+    "base": [75, 300, 600, 1050, 1500],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "str": [0.35, 0.37, 0.39, 0.41, 0.43]
+  },
+  "shieldPercent": 0.05,
+  "target": "enemy",
+  "logicKey": "mirrorStrikeLogic"
+},
+"false_image": {
+  "id": "false_image",
+  "name": "False Image",
+  "description": "Grants self Frost Armor and Increase Defense for {duration} turns",
+  "cooldown": [4, 4, 3, 3, 2],
+  "effects": ["buff_frost_armor", "buff_increase_defense"],
+  "duration": [3, 3, 3, 3, 3],
+  "target": "self",
+  "logicKey": "falseImageLogic"
+},
+"deceptive_guard": {
+  "id": "deceptive_guard",
+  "name": "Deceptive Guard",
+  "description": "Taunt all enemies for 1 turn, heal self 10% HP, grant 10% HP shield to all allies",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "debuff_taunt", "heal", "buff_shield"],
+  "tauntDuration": 1,
+  "healPercent": 0.1,
+  "shieldPercent": 0.1,
+  "target": "all",
+  "logicKey": "deceptiveGuardLogic"
+},
+"illusion_bolt": {
+  "id": "illusion_bolt",
+  "name": "Illusion Bolt",
+  "description": "Magical bolt dealing [{base} + {attack} + {int}] damage, grants random ally Immune",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["magical", "buff_immune"],
+  "scaling": {
+    "base": [70, 280, 560, 980, 1400],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.75, 0.77, 0.79, 0.81, 0.83]
+  },
+  "immuneDuration": 1,
+  "target": "enemy",
+  "logicKey": "illusionBoltLogic"
+},
+"veil_of_deception": {
+  "id": "veil_of_deception",
+  "name": "Veil of Deception",
+  "description": "All allies heal 10% HP, gain Immune and Increase Speed for {duration} turn",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "heal", "buff_immune", "buff_increase_speed"],
+  "healPercent": 0.1,
+  "duration": 1,
+  "target": "all_allies",
+  "logicKey": "veilOfDeceptionLogic"
+},
+"reality_blur": {
+  "id": "reality_blur",
+  "name": "Reality Blur",
+  "description": "Remove all debuffs from allies and grant 20% HP shield",
+  "cooldown": [4, 4, 3, 3, 2],
+  "effects": ["aoe", "cleanse", "buff_shield"],
+  "shieldPercent": 0.2,
+  "target": "all_allies",
+  "logicKey": "realityBlurLogic"
+},
+"phantom_strike": {
+  "id": "phantom_strike",
+  "name": "Phantom Strike",
+  "description": "Physical strike dealing [{base} + {attack} + {agi}] damage, steals 1 buff",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["physical", "dispel"],
+  "scaling": {
+    "base": [72, 288, 576, 1008, 1440],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "agi": [0.55, 0.57, 0.59, 0.61, 0.63]
+  },
+  "buffStealCount": 1,
+  "target": "enemy",
+  "logicKey": "phantomStrikeLogic"
+},
+"smoke_and_daggers": {
+  "id": "smoke_and_daggers",
+  "name": "Smoke and Daggers",
+  "description": "Apply Mark and Reduce Speed to target for {duration} turns",
+  "cooldown": [4, 4, 3, 3, 2],
+  "effects": ["debuff_mark", "debuff_reduce_speed"],
+  "duration": [2, 2, 3, 3, 4],
+  "target": "enemy",
+  "logicKey": "smokeAndDaggersLogic"
+},
+"illusory_double": {
+  "id": "illusory_double",
+  "name": "Illusory Double",
+  "description": "All debuffs on self are applied to random enemies, then cleansed",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["cleanse", "support"],
+  "target": "self",
+  "logicKey": "illusoryDoubleLogic"
+},
+"nightmare_touch": {
+  "id": "nightmare_touch",
+  "name": "Nightmare Touch",
+  "description": "Dark touch dealing [{base} + {attack} + {int}] magical damage, drains 10% action bar",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["magical", "support"],
+  "scaling": {
+    "base": [68, 272, 544, 952, 1360],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.72, 0.74, 0.76, 0.78, 0.80]
+  },
+  "actionBarDrain": 0.1,
+  "target": "enemy",
+  "logicKey": "nightmareTouchLogic"
+},
+"sleep_paralysis": {
+  "id": "sleep_paralysis",
+  "name": "Sleep Paralysis",
+  "description": "Stun target for 1 turn if they have less than 50% action bar",
+  "cooldown": [3, 3, 3, 2, 2],
+  "effects": ["debuff_stun"],
+  "stunDuration": 1,
+  "actionBarThreshold": 0.5,
+  "target": "enemy",
+  "logicKey": "sleepParalysisLogic"
+},
+"dream_feast": {
+  "id": "dream_feast",
+  "name": "Dream Feast",
+  "description": "Drain 20% action bar from all enemies, heal allies based on drain (max 30% HP)",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "support", "heal"],
+  "actionBarDrain": 0.2,
+  "maxHealPercent": 0.3,
+  "target": "all",
+  "logicKey": "dreamFeastLogic"
+},
+"mirror_blade": {
+  "id": "mirror_blade",
+  "name": "Mirror Blade",
+  "description": "Physical strike dealing [{base} + {attack} + {agi}] damage, double if sharing buffs with target",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["physical"],
+  "scaling": {
+    "base": [74, 296, 592, 1036, 1480],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "agi": [0.6, 0.62, 0.64, 0.66, 0.68]
+  },
+  "target": "enemy",
+  "logicKey": "mirrorBladeLogic"
+},
+"perfect_copy": {
+  "id": "perfect_copy",
+  "name": "Perfect Copy",
+  "description": "Copy all buffs from target enemy to self",
+  "cooldown": [4, 4, 3, 3, 2],
+  "effects": ["support"],
+  "target": "enemy",
+  "logicKey": "perfectCopyLogic"
+},
+"shattered_reflection": {
+  "id": "shattered_reflection",
+  "name": "Shattered Reflection",
+  "description": "On death, all allies gain Immune for 1 turn",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["passive"],
+  "passive": true,
+  "immuneDuration": 1,
+  "target": "self",
+  "logicKey": "shatteredReflectionLogic"
+},
+"shell_slam": {
+  "id": "shell_slam",
+  "name": "Shell Slam",
+  "description": "Heavy slam dealing [{base} + {attack} + {str}] physical damage, 30% stun chance",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["physical", "debuff_stun"],
+  "scaling": {
+    "base": [90, 360, 720, 1260, 1800],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "str": [0.45, 0.47, 0.49, 0.51, 0.53]
+  },
+  "stunChance": 0.3,
+  "stunDuration": 1,
+  "target": "enemy",
+  "logicKey": "shellSlamLogic"
+},
+"fortress_shell": {
+  "id": "fortress_shell",
+  "name": "Fortress Shell",
+  "description": "Grant self massive shield (50% max HP) and Increase Defense for {duration} turns",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["buff_shield", "buff_increase_defense"],
+  "shieldPercent": 0.5,
+  "duration": [3, 3, 4, 4, 5],
+  "target": "self",
+  "logicKey": "fortressShellLogic"
+},
+"tsunami": {
+  "id": "tsunami",
+  "name": "Tsunami",
+  "description": "Halve all enemy action bars, deal [{base} + {attack} + {int}] magical damage to all",
+  "cooldown": [10, 10, 10, 10, 10],
+  "effects": ["aoe", "magical", "support"],
+  "scaling": {
+    "base": [100, 400, 800, 1400, 2000],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "int": [0.8, 0.82, 0.84, 0.86, 0.88]
+  },
+  "actionBarMultiplier": 0.5,
+  "target": "all_enemies",
+  "logicKey": "tsunamiLogic"
+},
+"ancient_shell": {
+  "id": "ancient_shell",
+  "name": "Ancient Shell",
+  "description": "Gains Frost Armor for 3 turns when created",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["passive"],
+  "passive": true,
+  "frostArmorDuration": 3,
+  "target": "self",
+  "logicKey": "ancientShellLogic"
+},
+"phantom_blade": {
+  "id": "phantom_blade",
+  "name": "Phantom Blade",
+  "description": "Hybrid strike dealing [{base} + {attack} + {agi}] damage based on lower defense",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["physical", "magical"],
+  "scaling": {
+    "base": [78, 312, 624, 1092, 1560],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "agi": [0.65, 0.67, 0.69, 0.71, 0.73],
+    "int": [0.65, 0.67, 0.69, 0.71, 0.73]
+  },
+  "target": "enemy",
+  "logicKey": "phantomBladeLogic"
+},
+"perfect_illusion": {
+  "id": "perfect_illusion",
+  "name": "Perfect Illusion",
+  "description": "Remove all debuffs, gain Increase Speed and Frost Armor for {duration} turns",
+  "cooldown": [4, 4, 3, 3, 2],
+  "effects": ["cleanse", "buff_increase_speed", "buff_frost_armor"],
+  "duration": [2, 2, 3, 3, 4],
+  "target": "self",
+  "logicKey": "perfectIllusionLogic"
+},
+"shimmering_assault": {
+  "id": "shimmering_assault",
+  "name": "Shimmering Assault",
+  "description": "Attack all enemies for [{base} + {attack} + {agi}] damage, steal 1 buff from each",
+  "cooldown": [5, 5, 4, 4, 3],
+  "effects": ["aoe", "physical", "dispel"],
+  "scaling": {
+    "base": [65, 260, 520, 910, 1300],
+    "attack": [1.0, 1.0, 1.0, 1.0, 1.0],
+    "agi": [0.55, 0.57, 0.59, 0.61, 0.63]
+  },
+  "buffStealCount": 1,
+  "target": "all_enemies",
+  "logicKey": "shimmeringAssaultLogic"
+},
+"mirror_of_truth": {
+  "id": "mirror_of_truth",
+  "name": "Mirror of Truth",
+  "description": "Each turn, copy all unique buffs from enemy team (unless stunned/silenced/taunted)",
+  "cooldown": [0, 0, 0, 0, 0],
+  "effects": ["passive"],
+  "passive": true,
+  "target": "self",
+  "logicKey": "mirrorOfTruthLogic"
+},
 "win": {
     "id": "win",
     "name": "Win",
