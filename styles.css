@@ -1239,13 +1239,13 @@ body {
     display: flex;
     justify-content: flex-start;
     gap: 20px;
-    margin: 10px 0;
-    font-size: 24px;
+    margin: 20px 0;
+    font-size: 40px;
 }
 
 .statName {
     color: #4dd0e1;
-    min-width: 160px;
+    min-width: 220px;
 }
 
 .statValue {
@@ -1258,7 +1258,7 @@ body {
 }
 
 .heroName {
-    font-size: 48px;
+    font-size: 70px;
     color: #4dd0e1;
     text-shadow: 0 0 20px rgba(77, 208, 225, 0.5);
 }
@@ -1735,8 +1735,8 @@ body {
     padding: 0;
     text-align: center;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-    width: 64px;
-    height: 64px;
+    width: 100px;
+    height: 100px;
     position: relative;
     overflow: hidden;
 }
