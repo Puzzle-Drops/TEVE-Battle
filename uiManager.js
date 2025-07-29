@@ -2519,14 +2519,14 @@ updateHeroSelection() {
                 <div class="promoteContent">
                     <div class="classCard">
                         <h2>Awaken</h2>
-                        <div style="font-size: 24px; font-weight: bold; color: #d896ff; text-shadow: 0 0 12px rgba(216, 150, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">★★★★★★</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #d896ff; text-shadow: 0 0 12px rgba(216, 150, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">★★★★★★</div>
                         <button class="promoteButton ${canPromote ? '' : 'disabled'}" 
                             style="${canPromote ? 'background: linear-gradient(135deg, #d896ff 0%, #a855f7 100%); box-shadow: 0 0 20px rgba(216, 150, 255, 0.5); color: #0a1929;' : ''}" 
                             onclick="${canPromote ? 'game.uiManager.showPromotionConfirm(\'Awaken\')' : ''}" 
                             onmouseover="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #e6b0ff 0%, #d896ff 100%)\'; this.style.boxShadow=\'0 0 30px rgba(230, 176, 255, 0.7)\'' : ''}"
                             onmouseout="${canPromote ? 'this.style.background=\'linear-gradient(135deg, #d896ff 0%, #a855f7 100%)\'; this.style.boxShadow=\'0 0 20px rgba(216, 150, 255, 0.5)\'' : ''}"
                             ${canPromote ? '' : 'disabled'}>
-                            ${canPromote ? 'Awaken<br><span style="font-size: 14px;">💰 -10000000</span>' : `Requires:<br><span style="font-size: 14px;">Level 400</span>`}
+                            ${canPromote ? 'Awaken<br><span style="font-size: 30px;">💰 -10000000</span>' : `Requires:<br><span style="font-size: 30px;">Level 400</span>`}
                         </button>
                     </div>
                 </div>
@@ -2575,16 +2575,16 @@ updateHeroSelection() {
                         return `
                             <div class="classCard">
                                 <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${promo}_portrait.png" alt="${displayName}" 
-                                     style="width: 80px; height: 80px; object-fit: cover; object-position: top center; image-rendering: pixelated;"
+                                     style="width: 128px; height: 128px; object-fit: cover; object-position: top center; image-rendering: pixelated;"
                                      onerror="this.style.display='none'">
-                                <div class="classStars" style="font-size: 24px; font-weight: bold; color: #ffd700; text-shadow: 0 0 12px rgba(255, 215, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${promoStarData.html}</div>
+                                <div class="classStars" style="font-size: 32px; font-weight: bold; color: #ffd700; text-shadow: 0 0 12px rgba(255, 215, 0, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${promoStarData.html}</div>
                                 <h2>${displayName}</h2>
                                 <button class="promoteButton ${canPromote ? '' : 'disabled'}" 
                                     onclick="${canPromote ? `game.uiManager.showPromotionConfirm('${promo}')` : ''}"
                                     ${canPromote ? '' : 'disabled'}>
                                     ${canPromote ? 
-                                        `Promote<br><span style="font-size: 14px;">💰 -${cost}</span>` : 
-                                        `Requires:<br><span style="font-size: 14px;">Level ${requiredLevel}</span>`
+                                        `Promote<br><span style="font-size: 30px;">💰 -${cost}</span>` : 
+                                        `Requires:<br><span style="font-size: 30px;">Level ${requiredLevel}</span>`
                                     }
                                 </button>
                             </div>
@@ -4511,11 +4511,11 @@ formatAbilityTooltip(ability, level, unit = null, showFormula = false) {
     const formulaIndicator = showFormula ? ' <span style="color: #ffd700;">[Formula]</span>' : '';
     
     return `
-        <div style="font-size: 24px; color: #4dd0e1; margin-bottom: 8px;">${ability.name} (Level ${level})${formulaIndicator}</div>
-        <div style="margin-bottom: 8px;">${effectTags}</div>
-        <div style="font-size: 18px; color: #6a9aaa; margin-bottom: 8px;">${cooldownText}</div>
-        <div style="font-size: 18px; color: #b0e0f0;">${description}</div>
-        ${!showFormula && unit ? '<div style="font-size: 14px; color: #6a9aaa; margin-top: 8px;">Hold Alt to see damage formula</div>' : ''}
+        <div style="font-size: 60px; color: #4dd0e1; margin-bottom: 20px;">${ability.name} (Level ${level})${formulaIndicator}</div>
+        <div style="margin-bottom: 20px;">${effectTags}</div>
+        <div style="font-size: 50px; color: #6a9aaa; margin-bottom: 20px;">${cooldownText}</div>
+        <div style="font-size: 50px; color: #b0e0f0;">${description}</div>
+        ${!showFormula && unit ? '<div style="font-size: 40px; color: #6a9aaa; margin-top: 40px;">Hold Alt to see damage formula</div>' : ''}
     `;
 }
 
