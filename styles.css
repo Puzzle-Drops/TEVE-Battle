@@ -3553,8 +3553,8 @@ body {
 .itemContainer .itemQuality {
     position: absolute;
     top: 0px;
-    right: 0px;
-    font-size: 12px;
+    right: 2px;
+    font-size: 18px;
     font-weight: bold;
     color: #fff;
     text-shadow: 
