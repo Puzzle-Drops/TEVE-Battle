@@ -2380,7 +2380,7 @@ updateHeroSelection() {
             
         content.innerHTML = `
             <div style="margin-bottom: 20px;">
-                ${starData.html ? `<div style="font-size: 60px; font-weight: bold; margin-top: -20px; ${starData.colorClass === 'awakened' ? 'color: #d896ff;' : 'color: #ffd700;'} text-shadow: 0 0 12px ${starData.colorClass === 'awakened' ? 'rgba(216, 150, 255, 0.9)' : 'rgba(255, 215, 0, 0.9)'}, 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${starData.html}</div>` : ''}
+                ${starData.html ? `<div style="font-size: 70px; font-weight: bold; margin-top: -24px; ${starData.colorClass === 'awakened' ? 'color: #d896ff;' : 'color: #ffd700;'} text-shadow: 0 0 12px ${starData.colorClass === 'awakened' ? 'rgba(216, 150, 255, 0.9)' : 'rgba(255, 215, 0, 0.9)'}, 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${starData.html}</div>` : ''}
                 <div class="heroName">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
                 <div style="font-size: 40px; color: #6a9aaa; cursor: pointer;" onclick="game.editHeroName()">
                     <span id="heroNameText">${hero.name}</span>
