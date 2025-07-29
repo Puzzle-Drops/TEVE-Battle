@@ -2410,16 +2410,16 @@ updateHeroSelection() {
     </div>
               
                 <div style="flex: 1; min-width: 220px;">
-                    ${this.renderStatLine('Health Points', 'Health', hero.baseStats.hp, hero.gearStats.hp, this.selectedHero)}
-                    ${this.renderStatLine('Attack', 'Attack', hero.baseStats.attack, hero.gearStats.attack, this.selectedHero)}
-                    ${this.renderStatLine('Strength', 'Strength', hero.baseStats.str, hero.gearStats.str, this.selectedHero, hero.mainstat === 'str')}
-                    ${this.renderStatLine('Agility', 'Agility', hero.baseStats.agi, hero.gearStats.agi, this.selectedHero, hero.mainstat === 'agi')}
-                    ${this.renderStatLine('Intelligence', 'Intelligence', hero.baseStats.int, hero.gearStats.int, this.selectedHero, hero.mainstat === 'int')}
+                    ${this.renderStatLine('Health Points', 'HP', hero.baseStats.hp, hero.gearStats.hp, this.selectedHero)}
+                    ${this.renderStatLine('Attack', 'Atk', hero.baseStats.attack, hero.gearStats.attack, this.selectedHero)}
+                    ${this.renderStatLine('Strength', 'Str', hero.baseStats.str, hero.gearStats.str, this.selectedHero, hero.mainstat === 'str')}
+                    ${this.renderStatLine('Agility', 'Agi', hero.baseStats.agi, hero.gearStats.agi, this.selectedHero, hero.mainstat === 'agi')}
+                    ${this.renderStatLine('Intelligence', 'Int', hero.baseStats.int, hero.gearStats.int, this.selectedHero, hero.mainstat === 'int')}
                 </div>
                 
                 <div style="flex: 1; min-width: 220px;">
-                    ${this.renderStatLine('HP Regen', 'HP Regen', hero.baseStats.hpRegen.toFixed(1), hero.gearStats.hpRegen > 0 ? hero.gearStats.hpRegen.toFixed(1) : 0, this.selectedHero)}
-                    ${this.renderStatLine('Speed', 'Atk Spd', hero.baseStats.attackSpeed.toFixed(1) + '%', hero.gearStats.attackSpeed > 0 ? hero.gearStats.attackSpeed.toFixed(1) + '%' : 0, this.selectedHero)}
+                    ${this.renderStatLine('HP Regeneration', 'HP Reg', hero.baseStats.hpRegen.toFixed(1), hero.gearStats.hpRegen > 0 ? hero.gearStats.hpRegen.toFixed(1) : 0, this.selectedHero)}
+                    ${this.renderStatLine('Attack Speed', 'Atk Spd', hero.baseStats.attackSpeed.toFixed(1) + '%', hero.gearStats.attackSpeed > 0 ? hero.gearStats.attackSpeed.toFixed(1) + '%' : 0, this.selectedHero)}
                     <div class="statLine" onmouseover="game.uiManager.showStatTooltip(event, 'Armor')" onmouseout="game.uiManager.hideStatTooltip()">
                         <span class="statName">Armor</span>
                         <span class="statValue">${Math.floor(hero.baseStats.armor)} ${hero.gearStats.armor > 0 ? `<span class="statBonus">+${hero.gearStats.armor}</span>` : ''} <span style="color: #6a9aaa;">(${(hero.physicalDamageReduction * 100).toFixed(1)}%)</span></span>
