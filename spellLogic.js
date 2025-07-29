@@ -5323,6 +5323,370 @@ divinePlagueLogic: function(battle, caster, target, spell, spellLevel = 1) {
     });
 },
 
+// Trickster/Illusionist Spells
+mirrorStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.05);
+    
+    // Deal physical damage
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical'
+    });
+    
+    // Shield allies without debuffs
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        if (buffDebuffHelpers.countDebuffs(ally) === 0) {
+            const shieldAmount = hpHelpers.percentOfMaxHp(ally, shieldPercent);
+            battle.applyBuff(ally, 'Shield', -1, { shieldAmount: shieldAmount });
+        }
+    });
+},
+
+falseImageLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
+    
+    battle.applyBuff(caster, 'Frost Armor', duration, {});
+    battle.applyBuff(caster, 'Increase Defense', duration, {});
+},
+
+deceptiveGuardLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const tauntDuration = spellHelpers.getParam(spell, 'tauntDuration', levelIndex, 1);
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.1);
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.1);
+    
+    // Taunt all enemies
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        applyConfiguredDebuff(battle, enemy, 'Taunt', tauntDuration, caster);
+    });
+    
+    // Heal self
+    const healAmount = hpHelpers.percentOfMaxHp(caster, healPercent);
+    battle.healUnit(caster, healAmount);
+    
+    // Shield all allies
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        const shieldAmount = hpHelpers.percentOfMaxHp(ally, shieldPercent);
+        battle.applyBuff(ally, 'Shield', -1, { shieldAmount: shieldAmount });
+    });
+},
+
+illusionBoltLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const immuneDuration = spellHelpers.getParam(spell, 'immuneDuration', levelIndex, 1);
+    
+    // Deal magical damage
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical'
+    });
+    
+    // Grant random ally Immune
+    const allies = battle.getParty(caster);
+    const aliveAllies = allies.filter(a => a && a.isAlive);
+    if (aliveAllies.length > 0) {
+        const randomAlly = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
+        battle.applyBuff(randomAlly, 'Immune', immuneDuration, { immunity: true });
+    }
+},
+
+veilOfDeceptionLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.1);
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        // Heal
+        const healAmount = hpHelpers.percentOfMaxHp(ally, healPercent);
+        battle.healUnit(ally, healAmount);
+        
+        // Apply buffs
+        battle.applyBuff(ally, 'Immune', duration, { immunity: true });
+        battle.applyBuff(ally, 'Increase Speed', duration, {});
+    });
+},
+
+realityBlurLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.2);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        // Remove all debuffs
+        buffDebuffHelpers.clearDebuffs(ally);
+        
+        // Grant shield
+        const shieldAmount = hpHelpers.percentOfMaxHp(ally, shieldPercent);
+        battle.applyBuff(ally, 'Shield', -1, { shieldAmount: shieldAmount });
+    });
+    
+    battle.log(`Reality blurs, cleansing and protecting all allies!`);
+},
+
+phantomStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const buffStealCount = spellHelpers.getParam(spell, 'buffStealCount', levelIndex, 1);
+    
+    // Deal physical damage
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        afterDamage: (battle, caster, target) => {
+            // Steal buffs
+            const availableBuffs = buffDebuffHelpers.getBuffs(target).filter(b => b.name !== 'Boss');
+            const stealCount = Math.min(buffStealCount, availableBuffs.length);
+            
+            for (let i = 0; i < stealCount; i++) {
+                const buffIndex = target.buffs.findIndex(b => b.name !== 'Boss');
+                if (buffIndex !== -1) {
+                    const stolenBuff = target.buffs.splice(buffIndex, 1)[0];
+                    caster.buffs = caster.buffs || [];
+                    caster.buffs.push(stolenBuff);
+                    battle.log(`${caster.name} steals ${stolenBuff.name}!`);
+                }
+            }
+        }
+    });
+},
+
+smokeAndDaggersLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    applyConfiguredDebuff(battle, target, 'Mark', duration);
+    applyConfiguredDebuff(battle, target, 'Reduce Speed', duration);
+},
+
+illusoryDoubleLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // Get all debuffs from self
+    const myDebuffs = [...buffDebuffHelpers.getDebuffs(caster)];
+    
+    if (myDebuffs.length > 0) {
+        // Get all alive enemies
+        const enemies = battle.getEnemies(caster);
+        const aliveEnemies = enemies.filter(e => e && e.isAlive);
+        
+        if (aliveEnemies.length > 0) {
+            // Apply each debuff to a random enemy
+            myDebuffs.forEach(debuff => {
+                const randomEnemy = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+                applyConfiguredDebuff(battle, randomEnemy, debuff.name, debuff.duration);
+            });
+            
+            battle.log(`${caster.name}'s illusory double transfers debuffs to enemies!`);
+        }
+    }
+    
+    // Cleanse self
+    buffDebuffHelpers.clearDebuffs(caster);
+},
+
+nightmareTouchLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.1);
+    
+    // Deal magical damage
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        afterDamage: () => {
+            actionBarHelpers.drain(target, actionBarDrain, battle);
+        }
+    });
+},
+
+sleepParalysisLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const stunDuration = spellHelpers.getParam(spell, 'stunDuration', levelIndex, 1);
+    const actionBarThreshold = spellHelpers.getParam(spell, 'actionBarThreshold', levelIndex, 0.5);
+    
+    if (target.actionBar < (10000 * actionBarThreshold)) {
+        applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
+        battle.log(`${target.name} is paralyzed in their sleep!`);
+    } else {
+        battle.log(`${target.name} resists sleep paralysis!`);
+    }
+},
+
+dreamFeastLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarDrain = spellHelpers.getParam(spell, 'actionBarDrain', levelIndex, 0.2);
+    const maxHealPercent = spellHelpers.getParam(spell, 'maxHealPercent', levelIndex, 0.3);
+    
+    // Drain action bar from all enemies and track total
+    let totalDrained = 0;
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        const drained = actionBarHelpers.drain(enemy, actionBarDrain);
+        totalDrained += drained;
+    });
+    
+    // Convert drained action bar to healing
+    if (totalDrained > 0) {
+        const healPercent = Math.min((totalDrained / 10000) * 0.1, maxHealPercent);
+        
+        spellHelpers.forEachAliveAlly(battle, caster, ally => {
+            const healAmount = hpHelpers.percentOfMaxHp(ally, healPercent);
+            battle.healUnit(ally, healAmount);
+        });
+        
+        battle.log(`Dreams consumed! Allies heal from stolen energy!`);
+    }
+},
+
+mirrorBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // Check if caster and target share any buffs
+    const casterBuffNames = buffDebuffHelpers.getBuffs(caster).map(b => b.name);
+    const targetBuffNames = buffDebuffHelpers.getBuffs(target).map(b => b.name);
+    const sharedBuffs = casterBuffNames.filter(name => targetBuffNames.includes(name));
+    
+    const damageModifier = sharedBuffs.length > 0 ? 2 : 1;
+    
+    if (sharedBuffs.length > 0) {
+        battle.log(`Mirror blade reflects shared power!`);
+    }
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        damageModifier: damageModifier
+    });
+},
+
+perfectCopyLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // Copy all buffs from target
+    const targetBuffs = buffDebuffHelpers.getBuffs(target);
+    
+    targetBuffs.forEach(buff => {
+        if (buff.name !== 'Boss') {
+            const buffCopy = { ...buff };
+            caster.buffs = caster.buffs || [];
+            caster.buffs.push(buffCopy);
+        }
+    });
+    
+    if (targetBuffs.length > 0) {
+        battle.log(`${caster.name} perfectly copies all buffs from ${target.name}!`);
+    }
+},
+
+shatteredReflectionLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const immuneDuration = spellHelpers.getParam(spell, 'immuneDuration', levelIndex, 1);
+    
+    // This is a passive that needs to be handled in handleUnitDeath
+    caster.shatteredReflectionPassive = true;
+    caster.shatteredReflectionImmuneDuration = immuneDuration;
+},
+
+shellSlamLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const stunChance = spellHelpers.getParam(spell, 'stunChance', levelIndex, 0.3);
+    const stunDuration = spellHelpers.getParam(spell, 'stunDuration', levelIndex, 1);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        afterDamage: (battle, caster, target) => {
+            if (Math.random() < stunChance) {
+                applyConfiguredDebuff(battle, target, 'Stun', stunDuration);
+            }
+        }
+    });
+},
+
+fortressShellLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const shieldPercent = spellHelpers.getParam(spell, 'shieldPercent', levelIndex, 0.5);
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 3);
+    
+    const shieldAmount = hpHelpers.percentOfMaxHp(caster, shieldPercent);
+    battle.applyBuff(caster, 'Shield', -1, { shieldAmount: shieldAmount });
+    battle.applyBuff(caster, 'Increase Defense', duration, {});
+},
+
+tsunamiLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarMultiplier = spellHelpers.getParam(spell, 'actionBarMultiplier', levelIndex, 0.5);
+    
+    // Halve all enemy action bars
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        enemy.actionBar = Math.floor(enemy.actionBar * actionBarMultiplier);
+    });
+    
+    battle.log(`Tsunami crashes down, washing away enemy momentum!`);
+    
+    // Deal AOE magical damage
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical'
+    });
+},
+
+ancientShellLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const frostArmorDuration = spellHelpers.getParam(spell, 'frostArmorDuration', levelIndex, 3);
+    
+    // Passive that applies on creation
+    battle.applyBuff(caster, 'Frost Armor', frostArmorDuration, {});
+},
+
+phantomBladeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // Choose damage type based on lower defense
+    const damageType = target.physicalDamageReduction > target.magicDamageReduction ? 'magical' : 'physical';
+    const scalingType = damageType === 'magical' ? 'int' : 'agi';
+    
+    battle.log(`Phantom blade strikes as ${damageType} damage!`);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, [scalingType]: true},
+        damageType: damageType
+    });
+},
+
+perfectIllusionLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    // Remove all debuffs
+    buffDebuffHelpers.clearDebuffs(caster);
+    
+    // Apply buffs
+    battle.applyBuff(caster, 'Increase Speed', duration, {});
+    battle.applyBuff(caster, 'Frost Armor', duration, {});
+},
+
+shimmeringAssaultLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const buffStealCount = spellHelpers.getParam(spell, 'buffStealCount', levelIndex, 1);
+    
+    // Deal AOE damage and steal buffs
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            // Steal buffs from each enemy
+            const availableBuffs = buffDebuffHelpers.getBuffs(enemy).filter(b => b.name !== 'Boss');
+            const stealCount = Math.min(buffStealCount, availableBuffs.length);
+            
+            for (let i = 0; i < stealCount; i++) {
+                const buffIndex = enemy.buffs.findIndex(b => b.name !== 'Boss');
+                if (buffIndex !== -1) {
+                    const stolenBuff = enemy.buffs.splice(buffIndex, 1)[0];
+                    caster.buffs = caster.buffs || [];
+                    caster.buffs.push(stolenBuff);
+                    battle.log(`${caster.name} steals ${stolenBuff.name} from ${enemy.name}!`);
+                }
+            }
+        }
+    });
+},
+
+mirrorOfTruthLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    // This is a passive that needs to be handled in processTurn
+    caster.mirrorOfTruthPassive = true;
+},
+
 // Test Spells
 winLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
