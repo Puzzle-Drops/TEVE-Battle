@@ -4513,9 +4513,9 @@ formatAbilityTooltip(ability, level, unit = null, showFormula = false) {
     return `
         <div style="font-size: 60px; color: #4dd0e1; margin-bottom: 20px;">${ability.name} (Level ${level})${formulaIndicator}</div>
         <div style="margin-bottom: 20px;">${effectTags}</div>
-        <div style="font-size: 50px; color: #6a9aaa; margin-bottom: 20px;">${cooldownText}</div>
-        <div style="font-size: 50px; color: #b0e0f0;">${description}</div>
-        ${!showFormula && unit ? '<div style="font-size: 40px; color: #6a9aaa; margin-top: 40px;">Hold Alt to see damage formula</div>' : ''}
+        <div style="font-size: 40px; color: #6a9aaa; margin-bottom: 20px;">${cooldownText}</div>
+        <div style="font-size: 40px; color: #b0e0f0;">${description}</div>
+        ${!showFormula && unit ? '<div style="font-size: 30px; color: #6a9aaa; margin-top: 30px;">Hold Alt to see damage formula</div>' : ''}
     `;
 }
 
