@@ -939,7 +939,7 @@
       "hpRegen": 0,
       "attack": 7,
       "attackSpeed": 0,
-      "armor": 4.68,
+      "armor": 4.67,
       "resist": 6
     },
     "spells": [
@@ -999,7 +999,7 @@
       "hpRegen": 0,
       "attack": 8,
       "attackSpeed": 0,
-      "armor": 3.26,
+      "armor": 3.29,
       "resist": 6
     },
     "spells": [
@@ -1418,7 +1418,7 @@
       "hpRegen": 0,
       "attack": 13,
       "attackSpeed": 0,
-      "armor": 4.19,
+      "armor": 4.22,
       "resist": 4
     },
     "spells": [
@@ -2173,7 +2173,7 @@
       "hpRegen": 0,
       "attack": 27,
       "attackSpeed": 0,
-      "armor": 5.83,
+      "armor": 5.8,
       "resist": 15
     },
     "spells": [
@@ -2537,7 +2537,7 @@
       "hpRegen": 0,
       "attack": 25,
       "attackSpeed": 0,
-      "armor": 5.83,
+      "armor": 5.8,
       "resist": 15
     },
     "spells": [
@@ -2840,7 +2840,7 @@
       "hpRegen": 0,
       "attack": 31,
       "attackSpeed": 0,
-      "armor": 7.32,
+      "armor": 7.35,
       "resist": 21
     },
     "spells": [
@@ -3022,7 +3022,7 @@
       "hpRegen": 0,
       "attack": 30,
       "attackSpeed": 0,
-      "armor": 8.5,
+      "armor": 8.47,
       "resist": 21
     },
     "spells": [
@@ -3174,7 +3174,7 @@
       "hpRegen": 0,
       "attack": 26,
       "attackSpeed": 0,
-      "armor": 16.97,
+      "armor": 17,
       "resist": 13
     },
     "spells": [
@@ -3264,7 +3264,7 @@
       "hpRegen": 5.82,
       "attack": 16,
       "attackSpeed": 0,
-      "armor": 13.49,
+      "armor": 13.48,
       "resist": 35
     },
     "spells": [
@@ -3294,7 +3294,7 @@
       "hpRegen": 0,
       "attack": 34,
       "attackSpeed": 0,
-      "armor": 10.84,
+      "armor": 10.87,
       "resist": 22
     },
     "spells": [
@@ -3365,218 +3365,218 @@
       "living_disease_passive"
     ]
   },
-"illusory_sentinel": {
-  "name": "Illusory Sentinel",
-  "boss": false,
-  "mainstat": "str",
-  "modifiers": {
-    "str": 4.5,
-    "agi": 4.0,
-    "int": 4.0,
-    "hp": 3.8,
-    "attack": 0.25,
-    "armor": 0.35,
-    "resist": 0.08
+  "illusory_sentinel": {
+    "name": "Illusory Sentinel",
+    "boss": false,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 5.76,
+      "agi": 5.12,
+      "int": 5.12,
+      "hp": 4.21,
+      "attack": 0.3,
+      "armor": 0.46,
+      "resist": 0.104
+    },
+    "initial": {
+      "str": 26,
+      "agi": 19,
+      "int": 19,
+      "hp": 185,
+      "hpRegen": 0,
+      "attack": 23,
+      "attackSpeed": 0,
+      "armor": 14.84,
+      "resist": 23
+    },
+    "spells": [
+      "mirror_strike",
+      "false_image",
+      "deceptive_guard"
+    ]
   },
-  "initial": {
-    "str": 18,
-    "agi": 14,
-    "int": 14,
-    "hp": 50,
-    "hpRegen": 0,
-    "attack": 6,
-    "attackSpeed": 0,
-    "armor": 4,
-    "resist": 6
+  "mirage_weaver": {
+    "name": "Mirage Weaver",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 5.12,
+      "agi": 5.12,
+      "int": 5.76,
+      "hp": 3.33,
+      "attack": 0.34,
+      "armor": 0.18,
+      "resist": 0.414
+    },
+    "initial": {
+      "str": 19,
+      "agi": 19,
+      "int": 26,
+      "hp": 96,
+      "hpRegen": 10.72,
+      "attack": 13,
+      "attackSpeed": 0,
+      "armor": 8.51,
+      "resist": 38
+    },
+    "spells": [
+      "illusion_bolt",
+      "veil_of_deception",
+      "reality_blur"
+    ]
   },
-  "spells": [
-    "mirror_strike",
-    "false_image",
-    "deceptive_guard"
-  ]
-},
-"mirage_weaver": {
-  "name": "Mirage Weaver",
-  "boss": false,
-  "mainstat": "int",
-  "modifiers": {
-    "str": 4.0,
-    "agi": 4.0,
-    "int": 4.5,
-    "hp": 3.2,
-    "attack": 0.3,
-    "armor": 0.15,
-    "resist": 0.35
+  "phantom_trickster": {
+    "name": "Phantom Trickster",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": {
+      "str": 5.12,
+      "agi": 5.76,
+      "int": 5.12,
+      "hp": 3.21,
+      "attack": 0.55,
+      "armor": 0.17,
+      "resist": 0.183
+    },
+    "initial": {
+      "str": 19,
+      "agi": 26,
+      "int": 19,
+      "hp": 0,
+      "hpRegen": 0,
+      "attack": 28,
+      "attackSpeed": 14.54,
+      "armor": 0,
+      "resist": 28
+    },
+    "spells": [
+      "phantom_strike",
+      "smoke_and_daggers",
+      "illusory_double"
+    ]
   },
-  "initial": {
-    "str": 14,
-    "agi": 14,
-    "int": 18,
-    "hp": 30,
-    "hpRegen": 3.35,
-    "attack": 4,
-    "attackSpeed": 0,
-    "armor": 2.66,
-    "resist": 12
+  "dream_eater": {
+    "name": "Dream Eater",
+    "boss": false,
+    "mainstat": "int",
+    "modifiers": {
+      "str": 5.12,
+      "agi": 5.38,
+      "int": 5.5,
+      "hp": 3.56,
+      "attack": 0.31,
+      "armor": 0.19,
+      "resist": 0.387
+    },
+    "initial": {
+      "str": 19,
+      "agi": 23,
+      "int": 22,
+      "hp": 127,
+      "hpRegen": 6.39,
+      "attack": 13,
+      "attackSpeed": 0,
+      "armor": 8.45,
+      "resist": 45
+    },
+    "spells": [
+      "nightmare_touch",
+      "sleep_paralysis",
+      "dream_feast"
+    ]
   },
-  "spells": [
-    "illusion_bolt",
-    "veil_of_deception",
-    "reality_blur"
-  ]
-},
-"phantom_trickster": {
-  "name": "Phantom Trickster",
-  "boss": false,
-  "mainstat": "agi",
-  "modifiers": {
-    "str": 4.0,
-    "agi": 4.5,
-    "int": 4.0,
-    "hp": 3.0,
-    "attack": 0.42,
-    "armor": 0.12,
-    "resist": 0.13
+  "reflection_assassin": {
+    "name": "Reflection Assassin",
+    "boss": false,
+    "mainstat": "agi",
+    "modifiers": {
+      "str": 5.12,
+      "agi": 6.14,
+      "int": 4.74,
+      "hp": 3.01,
+      "attack": 0.61,
+      "armor": 0.1,
+      "resist": 0.193
+    },
+    "initial": {
+      "str": 19,
+      "agi": 28,
+      "int": 17,
+      "hp": 67,
+      "hpRegen": 0,
+      "attack": 34,
+      "attackSpeed": 4.45,
+      "armor": 0,
+      "resist": 34
+    },
+    "spells": [
+      "mirror_blade",
+      "perfect_copy",
+      "shattered_reflection"
+    ]
   },
-  "initial": {
-    "str": 14,
-    "agi": 18,
-    "int": 14,
-    "hp": 0,
-    "hpRegen": 0,
-    "attack": 8,
-    "attackSpeed": 4.02,
-    "armor": 0,
-    "resist": 8
+  "shell_guardian": {
+    "name": "Shell Guardian",
+    "boss": true,
+    "mainstat": "str",
+    "modifiers": {
+      "str": 6.03,
+      "agi": 5.48,
+      "int": 5.49,
+      "hp": 4.5,
+      "attack": 0.26,
+      "armor": 0.53,
+      "resist": 0.069
+    },
+    "initial": {
+      "str": 30,
+      "agi": 19,
+      "int": 19,
+      "hp": 337,
+      "hpRegen": 0,
+      "attack": 9,
+      "attackSpeed": 0,
+      "armor": 22.38,
+      "resist": 17
+    },
+    "spells": [
+      "shell_slam",
+      "fortress_shell",
+      "tsunami",
+      "ancient_shell"
+    ]
   },
-  "spells": [
-    "phantom_strike",
-    "smoke_and_daggers",
-    "illusory_double"
-  ]
-},
-"dream_eater": {
-  "name": "Dream Eater",
-  "boss": false,
-  "mainstat": "int",
-  "modifiers": {
-    "str": 4.0,
-    "agi": 4.2,
-    "int": 4.3,
-    "hp": 3.4,
-    "attack": 0.28,
-    "armor": 0.16,
-    "resist": 0.33
+  "doppelganger": {
+    "name": "Doppelganger",
+    "boss": true,
+    "mainstat": "agi",
+    "modifiers": {
+      "str": 5,
+      "agi": 6,
+      "int": 6,
+      "hp": 3.58,
+      "attack": 0.41,
+      "armor": 0.22,
+      "resist": 0.269
+    },
+    "initial": {
+      "str": 19,
+      "agi": 25,
+      "int": 24,
+      "hp": 213,
+      "hpRegen": 0,
+      "attack": 17,
+      "attackSpeed": 2.85,
+      "armor": 11.28,
+      "resist": 34
+    },
+    "spells": [
+      "phantom_blade",
+      "perfect_illusion",
+      "shimmering_assault",
+      "mirror_of_truth"
+    ]
   },
-  "initial": {
-    "str": 14,
-    "agi": 16,
-    "int": 16,
-    "hp": 40,
-    "hpRegen": 2.01,
-    "attack": 4,
-    "attackSpeed": 0,
-    "armor": 2.66,
-    "resist": 14
-  },
-  "spells": [
-    "nightmare_touch",
-    "sleep_paralysis",
-    "dream_feast"
-  ]
-},
-"reflection_assassin": {
-  "name": "Reflection Assassin",
-  "boss": false,
-  "mainstat": "agi",
-  "modifiers": {
-    "str": 4.0,
-    "agi": 4.8,
-    "int": 3.7,
-    "hp": 2.9,
-    "attack": 0.5,
-    "armor": 0.08,
-    "resist": 0.15
-  },
-  "initial": {
-    "str": 14,
-    "agi": 20,
-    "int": 12,
-    "hp": 20,
-    "hpRegen": 0,
-    "attack": 10,
-    "attackSpeed": 1.34,
-    "armor": 0,
-    "resist": 10
-  },
-  "spells": [
-    "mirror_blade",
-    "perfect_copy",
-    "shattered_reflection"
-  ]
-},
-"shell_guardian": {
-  "name": "Shell Guardian",
-  "boss": true,
-  "mainstat": "str",
-  "modifiers": {
-    "str": 5.5,
-    "agi": 5.0,
-    "int": 5.0,
-    "hp": 4.2,
-    "attack": 0.24,
-    "armor": 0.45,
-    "resist": 0.06
-  },
-  "initial": {
-    "str": 22,
-    "agi": 14,
-    "int": 14,
-    "hp": 80,
-    "hpRegen": 0,
-    "attack": 2,
-    "attackSpeed": 0,
-    "armor": 5.32,
-    "resist": 4
-  },
-  "spells": [
-    "shell_slam",
-    "fortress_shell",
-    "tsunami",
-    "ancient_shell"
-  ]
-},
-"doppelganger": {
-  "name": "Doppelganger",
-  "boss": true,
-  "mainstat": "agi",
-  "modifiers": {
-    "str": 5.0,
-    "agi": 6.0,
-    "int": 6.0,
-    "hp": 3.5,
-    "attack": 0.38,
-    "armor": 0.2,
-    "resist": 0.25
-  },
-  "initial": {
-    "str": 14,
-    "agi": 18,
-    "int": 18,
-    "hp": 50,
-    "hpRegen": 0,
-    "attack": 4,
-    "attackSpeed": 0.67,
-    "armor": 2.66,
-    "resist": 8
-  },
-  "spells": [
-    "phantom_blade",
-    "perfect_illusion",
-    "shimmering_assault",
-    "mirror_of_truth"
-  ]
-},
   "ancient_hydra": {
     "name": "Ancient Hydra",
     "boss": true,
