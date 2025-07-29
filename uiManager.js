@@ -2660,9 +2660,9 @@ updateHeroSelection() {
                             ${this.renderGearStatLine('Agility', 'AGI:', hero.totalStats.agi, hero.mainstat === 'agi', this.selectedHero)}
                             ${this.renderGearStatLine('Intelligence', 'INT:', hero.totalStats.int, hero.mainstat === 'int', this.selectedHero)}
                             ${this.renderGearStatLine('Armor', 'ARM:', Math.floor(hero.armor), false)}
-                            ${this.renderGearStatLine('Armor', 'RED:', (hero.physicalDamageReduction * 100).toFixed(1) + '%', false)}
+                            ${this.renderGearStatLine('Armor', 'PHYS RED:', (hero.physicalDamageReduction * 100).toFixed(1) + '%', false)}
                             ${this.renderGearStatLine('Resistance', 'RES:', Math.floor(hero.resist), false)}
-                            ${this.renderGearStatLine('Resistance', 'RED:', (hero.magicDamageReduction * 100).toFixed(1) + '%', false)}
+                            ${this.renderGearStatLine('Resistance', 'MAG RED:', (hero.magicDamageReduction * 100).toFixed(1) + '%', false)}
                         </div>
                     </div>
                 </div>
