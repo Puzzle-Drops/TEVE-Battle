@@ -2820,8 +2820,10 @@ body {
 .spellIcon {
     width: 44px;
     height: 44px;
+    min-width: 44px;  /* Prevent shrinking below 44px */
+    max-width: 44px;  /* Prevent growing beyond 44px */
     image-rendering: pixelated;
-    flex-shrink: 0;
+    flex: 0 0 44px;   /* Don't grow, don't shrink, base size 44px */
     object-fit: contain;
     display: block;
 }
