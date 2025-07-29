@@ -1500,8 +1500,8 @@ body {
 }
 
 .skillBox {
-    width: 114px;
-    height: 114px;
+    width: 224px;
+    height: 224px;
     background: radial-gradient(circle, #1a4a6a 0%, #0a2a4a 100%);
     border: 2px solid #2a6a8a;
     display: flex;
@@ -1536,8 +1536,8 @@ body {
 }
 
 .skillBox img {
-    width: 100px;
-    height: 100px;
+    width: 192px;
+    height: 192px;
     image-rendering: pixelated;
 }
 
