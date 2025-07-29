@@ -494,7 +494,12 @@ if (unit.lordsPresencePassive) {
     this.log(`${unit.name}'s presence empowers all allies!`);
 }
 
-
+// Ancient Shell passive - Frost Armor at battle start
+if (unit.ancientShellPassive || unit.ancientShellFrostArmorDuration) {
+    const duration = unit.ancientShellFrostArmorDuration || 3;
+    this.applyBuff(unit, 'Frost Armor', duration, {});
+    this.log(`${unit.name}'s ancient shell provides protection!`);
+}
 
 
         
