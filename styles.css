@@ -1772,7 +1772,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px 10px;
-    margin-top: 39px;
+    margin-top: -3px;
 }
 
 /* Gear item image containers */
@@ -3303,8 +3303,8 @@ body {
 
 /* Item rarity borders */
 .stashItemSlot {
-    width: 64px;
-    height: 64px;
+    width: 100px;
+    height: 100px;
     background: rgba(10, 25, 41, 0.8);
     border: 2px solid #2a6a8a;
     padding: 2px;
