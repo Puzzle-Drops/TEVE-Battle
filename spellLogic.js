@@ -5685,6 +5685,281 @@ mirrorOfTruthLogic: function(battle, caster, target, spell, spellLevel = 1) {
     caster.mirrorOfTruthPassive = true;
 },
 
+lightningBreathLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const stunChance = spellHelpers.getParam(spell, 'stunChance', levelIndex, 0.25);
+    const stunDuration = spellHelpers.getParam(spell, 'stunDuration', levelIndex, 1);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            if (Math.random() < stunChance) {
+                applyConfiguredDebuff(battle, enemy, 'Stun', stunDuration);
+            }
+        }
+    });
+},
+
+stormShieldLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const shieldAmount = spellHelpers.getParam(spell, 'shieldAmount', levelIndex, 60);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        battle.applyBuff(ally, 'Shield', -1, { shieldAmount: shieldAmount });
+    });
+},
+
+eyeOfTheStormLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    
+    caster.eyeOfTheStormPassive = true;
+    caster.eyeOfTheStormDuration = duration;
+    
+    passiveHelpers.addOnDamageTaken(caster, {
+        type: 'grant_speed_to_ally',
+        duration: duration
+    });
+},
+
+shadowFlameLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        afterDamage: () => {
+            applyConfiguredDebuff(battle, target, 'Mark', duration);
+            applyConfiguredDebuff(battle, target, 'Blight', duration);
+        }
+    });
+},
+
+corruptingDarknessLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const silenceDuration = spellHelpers.getParam(spell, 'silenceDuration', levelIndex, 1);
+    
+    spellHelpers.forEachAliveEnemy(battle, caster, enemy => {
+        applyConfiguredDebuff(battle, enemy, 'Silence', silenceDuration);
+    });
+    
+    battle.log(`${caster.name}'s corrupting darkness silences all enemies!`);
+},
+
+shadowVeilLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const markChance = spellHelpers.getParam(spell, 'markChance', levelIndex, 0.3);
+    const markDuration = spellHelpers.getParam(spell, 'markDuration', levelIndex, 1);
+    
+    caster.shadowVeilPassive = true;
+    
+    passiveHelpers.addOnHitEffect(caster, {
+        type: 'debuff',
+        debuffName: 'Mark',
+        chance: markChance,
+        duration: markDuration
+    });
+},
+
+scorchingBreathLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const bleedDuration = spellHelpers.getParam(spell, 'bleedDuration', levelIndex, 2);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            applyConfiguredDebuff(battle, enemy, 'Bleed', bleedDuration);
+        }
+    });
+},
+
+infernoWaveLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const bleedBonus = spellHelpers.getParam(spell, 'bleedBonus', levelIndex, 1.5);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, str: true},
+        damageType: 'physical',
+        getDamageModifier: (enemy) => {
+            const hasBleed = buffDebuffHelpers.hasDebuff(enemy, 'Bleed');
+            if (hasBleed) {
+                battle.log(`Inferno wave burns bleeding wounds!`);
+            }
+            return hasBleed ? bleedBonus : 1;
+        }
+    });
+},
+
+burningFuryLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    
+    // This is a passive that triggers each turn
+    caster.burningFuryPassive = true;
+    caster.burningFuryDuration = duration;
+    
+    // Check if any unit has bleed at battle start
+    const anyUnitHasBleed = battle.allUnits.some(unit => 
+        unit.isAlive && buffDebuffHelpers.hasDebuff(unit, 'Bleed')
+    );
+    
+    if (anyUnitHasBleed) {
+        battle.applyBuff(caster, 'Increase Attack', duration, { damageMultiplier: 1.5 });
+        battle.log(`${caster.name}'s burning fury ignites!`);
+    }
+},
+
+frostBreathDragonLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        perEnemyEffect: (battle, caster, enemy) => {
+            applyConfiguredDebuff(battle, enemy, 'Reduce Speed', duration);
+            applyConfiguredDebuff(battle, enemy, 'Reduce Attack', duration);
+        }
+    });
+},
+
+glacialBarrierLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        battle.applyBuff(ally, 'Frost Armor', duration, {});
+    });
+},
+
+frozenHeartLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const magicReduction = spellHelpers.getParam(spell, 'magicReduction', levelIndex, 0.5);
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    
+    caster.frozenHeartPassive = true;
+    caster.frozenHeartMagicReduction = magicReduction;
+    caster.frozenHeartDefenseDuration = duration;
+    
+    // Apply magic damage reduction
+    caster.magicDamageReduction = (caster.magicDamageReduction || 0) + magicReduction;
+    
+    passiveHelpers.addOnDamageTaken(caster, {
+        type: 'frozen_heart_defense',
+        duration: duration
+    });
+},
+
+elementalDevastationLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const debuffBonus = spellHelpers.getParam(spell, 'debuffBonus', levelIndex, 50);
+    
+    spellHelpers.aoeDamageSpell(battle, caster, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        getDamageModifier: (enemy) => {
+            const baseDamage = spellHelpers.calculateDamage(spell, levelIndex, caster, {attack: true, int: true});
+            const debuffCount = buffDebuffHelpers.countDebuffs(enemy);
+            const bonusDamage = debuffBonus * debuffCount;
+            return (baseDamage + bonusDamage) / baseDamage;
+        }
+    });
+},
+
+regeneratingHeadsLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const hpThreshold = spellHelpers.getParam(spell, 'hpThreshold', levelIndex, 0.3);
+    
+    // Check if below threshold and hasn't triggered yet
+    if (hpHelpers.isBelowThreshold(caster, hpThreshold) && !caster.regeneratingHeadsUsed) {
+        caster.regeneratingHeadsUsed = true;
+        
+        // Full heal
+        caster.currentHp = caster.maxHp;
+        
+        // Cleanse all debuffs
+        buffDebuffHelpers.clearDebuffs(caster);
+        
+        battle.log(`${caster.name}'s heads regenerate! Full health restored!`);
+    }
+},
+
+hydrasCommandLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    caster.hydrasCommandPassive = true;
+},
+
+swiftStrikeLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 1);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, agi: true},
+        damageType: 'physical',
+        afterDamage: (battle, caster) => {
+            battle.applyBuff(caster, 'Increase Speed', duration, {});
+        }
+    });
+},
+
+aerialSupportLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const duration = spellHelpers.getParam(spell, 'duration', levelIndex, 2);
+    const healPercent = spellHelpers.getParam(spell, 'healPercent', levelIndex, 0.15);
+    
+    // Grant speed to all allies
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        battle.applyBuff(ally, 'Increase Speed', duration, {});
+    });
+    
+    // Heal lowest HP ally
+    const lowestHpAlly = spellHelpers.getLowestHpAlly(battle, caster);
+    if (lowestHpAlly) {
+        const healAmount = hpHelpers.percentOfMaxHp(lowestHpAlly, healPercent);
+        battle.healUnit(lowestHpAlly, healAmount);
+    }
+},
+
+purifyingFlameLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const buffsToRemove = spellHelpers.getParam(spell, 'buffsToRemove', levelIndex, 1);
+    
+    spellHelpers.basicDamageSpell(battle, caster, target, spell, spellLevel, {
+        scalingTypes: {attack: true, int: true},
+        damageType: 'magical',
+        afterDamage: (battle, caster, target) => {
+            // Remove specified number of buffs
+            const currentBuffCount = buffDebuffHelpers.countBuffs(target, ['Boss']);
+            const removeCount = Math.min(buffsToRemove, currentBuffCount);
+            
+            for (let i = 0; i < removeCount; i++) {
+                const buffs = buffDebuffHelpers.getBuffs(target);
+                const removableBuffIndex = buffs.findIndex(b => b.name !== 'Boss');
+                if (removableBuffIndex !== -1) {
+                    target.buffs.splice(removableBuffIndex, 1);
+                }
+            }
+            
+            if (removeCount > 0) {
+                battle.log(`Purifying flame removes ${removeCount} buff${removeCount > 1 ? 's' : ''}!`);
+            }
+        }
+    });
+},
+
+youthfulEnergyLogic: function(battle, caster, target, spell, spellLevel = 1) {
+    const levelIndex = spellLevel - 1;
+    const actionBarGrant = spellHelpers.getParam(spell, 'actionBarGrant', levelIndex, 0.2);
+    
+    spellHelpers.forEachAliveAlly(battle, caster, ally => {
+        actionBarHelpers.grant(ally, actionBarGrant, battle);
+    });
+    
+    battle.log(`${caster.name}'s youthful energy energizes all allies!`);
+},
+
 // Test Spells
 winLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
