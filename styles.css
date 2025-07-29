@@ -1348,7 +1348,7 @@ body {
 }
 
 .thumbClass {
-    font-size: 14px;
+    font-size: 18px;
     color: #b0e0f0;
     margin-top: 2px;
     line-height: 1;
@@ -2106,7 +2106,7 @@ body {
 
 /* Enemy name display */
 .enemyName {
-    font-size: 11px;
+    font-size: 18px;
     color: #ff9999;
     line-height: 1;
     margin-top: 2px;
