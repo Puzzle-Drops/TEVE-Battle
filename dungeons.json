@@ -1156,7 +1156,7 @@
     },
     {
       "enemies": [
-        { "id": "mirage", "level": 475 },
+        { "id": "doppelganger", "level": 475 },
         { "id": "reflection_assassin", "level": 474 },
         { "id": "dream_eater", "level": 474 },
         { "id": "mirage_weaver", "level": 473 },
