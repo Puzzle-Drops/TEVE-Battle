@@ -1110,26 +1110,66 @@
     "items": ["plague_miasmahood", "plague_blightrobes", "plague_rotwalkers", "plague_blightstaff", "plague_miasmaward", "plague_pestcore", "plague_pandemic"]
   }
 },
-    "city_of_illusions": {
-      "id": "city_of_illusions",
-      "name": "City of Illusions",
-      "boss": "Mirage",
-      "tier": "Impossible",
-      "subtitle": "Impossible 2",
-      "level": 475,
-      "waves": [
-        {
-          "enemies": [
-            { "id": "mirage", "level": 475 }
-          ]
-        }
-      ],
-      "rewards": {
-        "gold": 314572800,
-        "exp": 753664000,
-        "items": ["illusion_miragecrown", "illusion_shimmermail", "illusion_deceivers", "illusion_phantomblade", "illusion_mirrorshield", "illusion_prism", "illusion_realityshard"]
-      }
+"city_of_illusions": {
+  "id": "city_of_illusions",
+  "name": "City of Illusions",
+  "boss": "Mirage",
+  "tier": "Impossible",
+  "subtitle": "Impossible 2",
+  "level": 475,
+  "waves": [
+    {
+      "enemies": [
+        { "id": "illusory_sentinel", "level": 455 },
+        { "id": "mirage_weaver", "level": 458 },
+        { "id": "mirage_weaver", "level": 458 },
+        { "id": "phantom_trickster", "level": 460 },
+        { "id": "phantom_trickster", "level": 460 }
+      ]
     },
+    {
+      "enemies": [
+        { "id": "illusory_sentinel", "level": 465 },
+        { "id": "dream_eater", "level": 462 },
+        { "id": "reflection_assassin", "level": 464 },
+        { "id": "mirage_weaver", "level": 458 },
+        { "id": "phantom_trickster", "level": 458 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "shell_guardian", "level": 475 },
+        { "id": "mirage_weaver", "level": 468 },
+        { "id": "phantom_trickster", "level": 468 },
+        { "id": "dream_eater", "level": 466 },
+        { "id": "illusory_sentinel", "level": 466 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "reflection_assassin", "level": 473 },
+        { "id": "reflection_assassin", "level": 473 },
+        { "id": "dream_eater", "level": 471 },
+        { "id": "mirage_weaver", "level": 470 },
+        { "id": "phantom_trickster", "level": 470 }
+      ]
+    },
+    {
+      "enemies": [
+        { "id": "mirage", "level": 475 },
+        { "id": "reflection_assassin", "level": 474 },
+        { "id": "dream_eater", "level": 474 },
+        { "id": "mirage_weaver", "level": 473 },
+        { "id": "illusory_sentinel", "level": 473 }
+      ]
+    }
+  ],
+  "rewards": {
+    "gold": 314572800,
+    "exp": 753664000,
+    "items": ["illusion_miragecrown", "illusion_shimmermail", "illusion_deceivers", "illusion_phantomblade", "illusion_mirrorshield", "illusion_prism", "illusion_realityshard"]
+  }
+},
     "dragon_fortress": {
       "id": "dragon_fortress",
       "name": "Dragon Fortress",
