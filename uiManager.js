@@ -2379,23 +2379,23 @@ updateHeroSelection() {
             
         content.innerHTML = `
             <div style="margin-bottom: 20px;">
-                ${starData.html ? `<div style="font-size: 48px; font-weight: bold; ${starData.colorClass === 'awakened' ? 'color: #d896ff;' : 'color: #ffd700;'} text-shadow: 0 0 12px ${starData.colorClass === 'awakened' ? 'rgba(216, 150, 255, 0.9)' : 'rgba(255, 215, 0, 0.9)'}, 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${starData.html}</div>` : ''}
+                ${starData.html ? `<div style="font-size: 60px; font-weight: bold; margin-top: -20px; ${starData.colorClass === 'awakened' ? 'color: #d896ff;' : 'color: #ffd700;'} text-shadow: 0 0 12px ${starData.colorClass === 'awakened' ? 'rgba(216, 150, 255, 0.9)' : 'rgba(255, 215, 0, 0.9)'}, 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 3px rgba(255, 255, 255, 0.6); letter-spacing: 2px;">${starData.html}</div>` : ''}
                 <div class="heroName">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
-                <div style="font-size: 32px; color: #6a9aaa; cursor: pointer;" onclick="game.editHeroName()">
+                <div style="font-size: 40px; color: #6a9aaa; cursor: pointer;" onclick="game.editHeroName()">
                     <span id="heroNameText">${hero.name}</span>
                 </div>
-                <div style="font-size: 32px; color: #4dd0e1; margin-top: 40px;">Level ${hero.level}</div>
+                <div style="font-size: 44px; color: #4dd0e1; margin-top: 30px;">Level ${hero.level}</div>
             </div>
-            <div class="expBar" style="position: relative; height: 40px; border: 1px solid #2a6a8a;">
+            <div class="expBar" style="position: relative; height: 60px; border: 1px solid #2a6a8a;">
                 <div class="expFill" style="width: ${hero.level >= 500 ? '100' : Math.max(0, Math.min((hero.exp / hero.expToNext) * 100, 100))}%; height: 100%; background: ${hero.level >= 500 && hero.awakened ? 'linear-gradient(90deg, #d896ff 0%, #a855f7 100%)' : 'linear-gradient(90deg, #0066cc 0%, #0099ff 100%)'}; box-shadow: 0 0 10px ${hero.level >= 500 && hero.awakened ? 'rgba(216, 150, 255, 0.5)' : 'rgba(0, 153, 255, 0.5)'};"></div>
-                <div class="expText" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: ${hero.level >= 500 ? '#fff' : '#6a9aaa'};">
+                <div class="expText" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 42px; color: ${hero.level >= 500 ? '#fff' : '#6a9aaa'};">
                     ${hero.level >= 500 ? 'Max Level' : `${hero.exp} / ${hero.expToNext} (${((hero.exp / hero.expToNext) * 100).toFixed(1)}%)`}
                 </div>
             </div>
             
 <div style="margin-top: 40px; display: flex; gap: 40px; align-items: flex-start;">
-    <div style="flex: 0 0 auto; min-width: 200px; justify-items: anchor-center;">
-        <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 64px 64px; width: auto;">
+    <div style="flex: 0 0 auto; min-width: 220px; justify-items: anchor-center;">
+        <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 100px 100px; width: auto;">
             ${this.renderGearSlotReadOnly(hero, 'trinket', this.selectedHero)}
             ${this.renderGearSlotReadOnly(hero, 'head', this.selectedHero)}
             ${this.renderGearSlotReadOnly(hero, 'weapon', this.selectedHero)}
@@ -2403,7 +2403,7 @@ updateHeroSelection() {
             ${this.renderGearSlotReadOnly(hero, 'offhand', this.selectedHero)}
             ${this.renderGearSlotReadOnly(hero, 'legs', this.selectedHero)}
         </div>
-        <div style="text-align: left; margin-top: 15px; font-size: 24px; color: #4dd0e1;">
+        <div style="text-align: left; margin-top: 4px; font-size: 24px; color: #4dd0e1;">
             Gear Score: ${hero.getGearScore()}
         </div>
     </div>
@@ -2445,7 +2445,7 @@ updateHeroSelection() {
         const item = hero.gear[slot];
         return `
             <div class="gearSlot" style="cursor: default;">
-                <div class="gearLabel" style="font-size: 10px;">${slotLabels[slot]}</div>
+                <div class="gearLabel" style="font-size: 24px;">${slotLabels[slot]}</div>
                 ${item ? 
                     `<div class="gearItem ${item.getRarity()}" 
                          style="pointer-events: all;"
