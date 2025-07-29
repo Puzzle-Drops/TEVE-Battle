@@ -164,6 +164,26 @@ this.enemies.forEach(enemy => {
     }
 });
 
+// Apply passive abilities to newly spawned enemies
+this.enemies.forEach(enemy => {
+    enemy.abilities.forEach((ability, index) => {
+        if (ability.passive) {
+            // Get spell data
+            const spell = spellManager.getSpell(ability.id);
+            
+            if (spell && spell.logicKey && spellLogic[spell.logicKey]) {
+                try {
+                    const spellLevel = ability.level || enemy.spellLevel || 1;
+                    // Apply the passive
+                    spellLogic[spell.logicKey](this, enemy, enemy, spell, spellLevel);
+                } catch (error) {
+                    console.error(`Error applying passive ${ability.name} to enemy:`, error);
+                }
+            }
+        }
+    });
+});
+        
         // Apply boss scaling for specific waves if animations is available
         if (this.animations) {
             this.animations.applyBossScaling(this.enemies, this.currentWave);
