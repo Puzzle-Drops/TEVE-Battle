@@ -2646,7 +2646,7 @@ updateHeroSelection() {
                         ${this.renderGearSlot(hero, 'legs', this.selectedHero)}
                     </div>
                     <div class="gearStatsPreview">
-    <div style="text-align: center; margin-bottom: 40px; margin-top: 10px; font-size: 16px; color: #4dd0e1;">
+    <div style="text-align: center; margin-bottom: 20px; margin-top: 10px; font-size: 24px; color: #4dd0e1;">
         Gear Score: ${hero.getGearScore()}
     </div>
     <h4>Total Stats</h4>
