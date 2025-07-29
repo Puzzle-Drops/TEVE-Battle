@@ -1996,6 +1996,9 @@ updateArenaEnemyFormation() {
                     awakened: false 
                 });
                 
+                // Get display class name from unitData
+                const displayClassName = classData?.name || enemy.className;
+                
                 slot.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
                         <div style="position: relative; width: 100px; height: 100px;">
@@ -2006,7 +2009,7 @@ updateArenaEnemyFormation() {
                             ${starData.html ? `<div class="thumbStars ${starData.colorClass}" style="position: absolute; bottom: 0; left: 2; font-size: 18px;">${starData.html}</div>` : ''}
                             <div class="enemyLevel">${enemy.level}</div>
                         </div>
-                        <div class="enemyName">${enemy.className}</div>
+                        <div class="enemyName">${displayClassName} <span class="gender-${enemy.gender}">${enemy.gender === 'male' ? '♂' : '♀'}</span></div>
                     </div>
                 `;
                 slot.classList.add('filled');
