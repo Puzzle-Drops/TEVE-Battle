@@ -4916,7 +4916,7 @@ body {
 
 .gearStatsPreview h4 {
     margin: 0 0 10px 0;
-    font-size: 16px;
+    font-size: 20px;
     color: #4dd0e1;
     text-align: center;
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
@@ -4931,7 +4931,7 @@ body {
 .gearStatLine {
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
+    font-size: 16px;
     padding: 2px 0;
 }
 
