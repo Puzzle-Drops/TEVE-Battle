@@ -1040,7 +1040,7 @@ body {
 }
 
 .partyLabelText {
-    font-size: 20px;
+    font-size: 30px;
     color: #4dd0e1;
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
     text-align: center;
@@ -1060,7 +1060,7 @@ body {
 }
 
 .waveText {
-    font-size: 20px;
+    font-size: 30px;
     color: #4dd0e1;
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
     min-width: 100px;
@@ -1847,7 +1847,7 @@ body {
 }
 
 .dungeonTitle {
-    font-size: 48px;
+    font-size: 60px;
     color: #4dd0e1;
     text-shadow: 0 0 20px rgba(77, 208, 225, 0.5);
     margin-bottom: 10px;
@@ -1860,7 +1860,7 @@ body {
     justify-content: center;
     gap: 60px;
     padding: 40px;
-    padding-top: 140px;
+    padding-top: 120px;
     background: rgba(10, 15, 26, 0.35);
 }
 
@@ -2146,7 +2146,7 @@ body {
     background: linear-gradient(135deg, #4dd0e1 0%, #2a9aaa 100%);
     border: none;
     color: #0a1929;
-    font-size: 20px;
+    font-size: 30px;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0 0 20px rgba(77, 208, 225, 0.5);
@@ -2177,7 +2177,7 @@ body {
     background: linear-gradient(135deg, #8a4a4a 0%, #6a2a2a 100%);
     border: none;
     color: #fff;
-    font-size: 18px;
+    font-size: 28px;
     cursor: pointer;
     box-shadow: 0 0 15px rgba(138, 74, 74, 0.5);
     transition: all 0.3s;
@@ -3655,7 +3655,7 @@ body {
 }
 
 .rewardsLabelText {
-    font-size: 20px;
+    font-size: 30px;
     color: #4dd0e1;
     text-shadow: 0 0 10px rgba(77, 208, 225, 0.5);
     text-align: center;
@@ -3682,7 +3682,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 18px;
+    font-size: 24px;
     color: #b0e0f0;
 }
 
