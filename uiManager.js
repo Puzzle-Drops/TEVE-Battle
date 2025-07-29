@@ -1736,8 +1736,10 @@ updateHeroSelectionState(changedHeroIndex) {
             </div>
 
             <div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
-            <div class="thumbName">${hero.name}</div>
+            
         `;
+
+        //<div class="thumbName">${hero.name}</div> << add this back in below thumbClass if you want it ^^
         
         wrapper.appendChild(thumb);
         
