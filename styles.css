@@ -1215,7 +1215,8 @@ body {
     padding: 16px;
     border-radius: 4px;
     z-index: 1002;
-    max-width: 400px;
+    max-width: 1600px;
+    min-width: 800px;
     box-shadow: 0 0 20px rgba(0,0,0,0.8);
     pointer-events: none;
 }
