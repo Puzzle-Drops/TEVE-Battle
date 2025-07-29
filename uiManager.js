@@ -2394,7 +2394,7 @@ updateHeroSelection() {
             </div>
             
 <div style="margin-top: 40px; display: flex; gap: 40px; align-items: flex-start;">
-    <div style="flex: 0 0 auto; min-width: 220px; justify-items: anchor-center;">
+    <div style="flex: 0 0 auto; min-width: 480px; justify-items: anchor-center;">
         <div class="gearGrid" style="margin-top: 0; gap: 10px; pointer-events: none; grid-template-columns: 100px 100px; width: auto;">
             ${this.renderGearSlotReadOnly(hero, 'trinket', this.selectedHero)}
             ${this.renderGearSlotReadOnly(hero, 'head', this.selectedHero)}
