@@ -1575,6 +1575,7 @@ body {
 
 .classCard h2 {
     margin: 0;
+    font-size: 32px;
 }
 
 .classCard h3 {
@@ -3052,9 +3053,9 @@ body {
 /* Add styles for ability effect tags in tooltips */
 .abilityEffectTag {
     display: inline-block;
-    padding: 4px 8px;
-    margin: 0 3px;
-    font-size: 14px;
+    padding: 8px 24px;
+    margin: 0 8px;
+    font-size: 32px;
     font-weight: bold;
     border-radius: 4px;
     text-transform: uppercase;
