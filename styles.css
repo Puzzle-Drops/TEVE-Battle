@@ -3764,7 +3764,8 @@ body {
 
 .stashSlotFilter label {
     color: #6a9aaa;
-    font-size: 16px;
+    font-size: 36px;
+    margin-left: 40px;
 }
 
 .stashSlotFilter select {
@@ -4778,7 +4779,7 @@ body {
     color: #6a9aaa;
     padding: 4px 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 28px;
     margin-left: 10px;
     border-radius: 4px;
     transition: all 0.2s;
