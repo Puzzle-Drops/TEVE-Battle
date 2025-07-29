@@ -412,9 +412,9 @@ renderHeroTrees(container, svg, gender) {
         
         div.innerHTML = `
             <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${className}_battle.png"
-                 style="width: 96px; height: 96px; image-rendering: pixelated;"
+                 style="width: 120px; height: 120px; image-rendering: pixelated;"
                  onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 96 96\\'><rect fill=\\'%23666\\' width=\\'96\\' height=\\'96\\'/><text x=\\'48\\' y=\\'48\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>${classData.name}</text></svg>'">
-            <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${classData.name}</div>
+            <div style="color: #b0e0f0; font-size: 20px; margin-top: 4px;">${classData.name}</div>
         `;
         
         div.onclick = () => this.showUnitDetails(className, classData, 'hero');
@@ -444,7 +444,7 @@ renderHeroTrees(container, svg, gender) {
         const grid = document.createElement('div');
         grid.style.cssText = `
             display: grid;
-            grid-template-columns: repeat(auto-fill, 120px);
+            grid-template-columns: repeat(auto-fill, 140px);
             gap: 20px;
             padding: 20px;
         `;
@@ -460,9 +460,9 @@ renderHeroTrees(container, svg, gender) {
             
             div.innerHTML = `
                 <img src="https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${enemyId}.png"
-                     style="width: 96px; height: 96px; image-rendering: pixelated;"
+                     style="width: 128px; height: 128px; image-rendering: pixelated;"
                      onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 96 96\\'><rect fill=\\'%23666\\' width=\\'96\\' height=\\'96\\'/><text x=\\'48\\' y=\\'48\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>${enemyData.name}</text></svg>'">
-                <div style="color: #b0e0f0; font-size: 12px; margin-top: 4px;">${enemyData.name}</div>
+                <div style="color: #b0e0f0; font-size: 20px; margin-top: 4px;">${enemyData.name}</div>
             `;
             
             div.onmouseover = () => div.style.transform = 'scale(1.1)';
