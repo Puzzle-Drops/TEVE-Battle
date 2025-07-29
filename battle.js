@@ -165,24 +165,7 @@ this.enemies.forEach(enemy => {
 });
 
 // Apply passive abilities to newly spawned enemies
-this.enemies.forEach(enemy => {
-    enemy.abilities.forEach((ability, index) => {
-        if (ability.passive) {
-            // Get spell data
-            const spell = spellManager.getSpell(ability.id);
-            
-            if (spell && spell.logicKey && spellLogic[spell.logicKey]) {
-                try {
-                    const spellLevel = ability.level || enemy.spellLevel || 1;
-                    // Apply the passive
-                    spellLogic[spell.logicKey](this, enemy, enemy, spell, spellLevel);
-                } catch (error) {
-                    console.error(`Error applying passive ${ability.name} to enemy:`, error);
-                }
-            }
-        }
-    });
-});
+this.applyInitialPassives(this.enemies);
         
         // Apply boss scaling for specific waves if animations is available
         if (this.animations) {
@@ -452,9 +435,10 @@ if (unit.isEnemy) {
         }
     }
 
-applyInitialPassives() {
-    // Apply passive abilities at battle start
-    this.allUnits.forEach(unit => {
+applyInitialPassives(units = null) {
+    // Apply passive abilities to specified units (or all units if not specified)
+    const unitsToProcess = units || this.allUnits;
+    unitsToProcess.forEach(unit => {
         // Apply Champion Female passive shield
         if (unit.championFemalePassive || unit.shieldRegenAmount) {
             const shieldAmount = Math.floor(unit.maxHp * 0.2);
