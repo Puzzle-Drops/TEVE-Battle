@@ -3704,22 +3704,24 @@ if (scaleWrapper) {
         tooltip.innerHTML = tooltipHTML;
         tooltip.style.display = 'block';
         
-        // Get game container for coordinate translation
-const gameContainer = document.getElementById('scaleWrapper');
-const containerRect = gameContainer.getBoundingClientRect();
-
-// Position tooltip relative to game container
+        // Position tooltip using scaling system
 const rect = event.target.getBoundingClientRect();
-tooltip.style.left = (rect.right + 10) + 'px';
-tooltip.style.top = rect.top + 'px';
+const gameCoords = window.scalingSystem.viewportToGame(rect.right + 10, rect.top);
+tooltip.style.left = gameCoords.x + 'px';
+tooltip.style.top = gameCoords.y + 'px';
 
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
-if (tooltipRect.right > containerRect.right) {
-    tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
+const tooltipGameCoords = window.scalingSystem.viewportToGame(tooltipRect.left, tooltipRect.top);
+const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
+const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+
+if (tooltipGameCoords.x + tooltipWidth > 1920) {
+    const leftCoords = window.scalingSystem.viewportToGame(rect.left - 10, rect.top);
+    tooltip.style.left = (leftCoords.x - tooltipWidth) + 'px';
 }
-if (tooltipRect.bottom > containerRect.bottom) {
-    tooltip.style.top = (containerRect.bottom - tooltipRect.height - 10) + 'px';
+if (tooltipGameCoords.y + tooltipHeight > 1080) {
+    tooltip.style.top = (1080 - tooltipHeight - 10) + 'px';
 }
     }
 
@@ -3774,23 +3776,24 @@ if (scaleWrapper) {
         
         tooltip.innerHTML = html;
         
-        // Position tooltip
-        const rect = event.target.getBoundingClientRect();
-        tooltip.style.left = rect.left + 'px';
-        tooltip.style.top = (rect.bottom + 5) + 'px';
-        tooltip.style.display = 'block';
-        
-        // Get game container for coordinate translation
-const gameContainer = document.getElementById('scaleWrapper');
-const containerRect = gameContainer.getBoundingClientRect();
+        // Position tooltip using scaling system
+const rect = event.target.getBoundingClientRect();
+const gameCoords = window.scalingSystem.viewportToGame(rect.left, rect.bottom + 5);
+tooltip.style.left = gameCoords.x + 'px';
+tooltip.style.top = gameCoords.y + 'px';
+tooltip.style.display = 'block';
 
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
-if (tooltipRect.right > containerRect.right) {
-    tooltip.style.left = (containerRect.right - tooltipRect.width - 10) + 'px';
+const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
+const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+
+if (gameCoords.x + tooltipWidth > 1920) {
+    tooltip.style.left = (1920 - tooltipWidth - 10) + 'px';
 }
-if (tooltipRect.bottom > containerRect.bottom) {
-    tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
+if (gameCoords.y + tooltipHeight > 1080) {
+    const topCoords = window.scalingSystem.viewportToGame(rect.left, rect.top - 5);
+    tooltip.style.top = (topCoords.y - tooltipHeight) + 'px';
 }
     }
 
@@ -3868,27 +3871,24 @@ if (scaleWrapper) {
         tooltip.innerHTML = tooltipData[statName] || "No tooltip available.";
         tooltip.style.display = 'block';
 
-        // Position near bottom of hovered element
-        const rect = event.target.getBoundingClientRect();
-        const tooltipRect = tooltip.getBoundingClientRect();
+        // Position tooltip using scaling system
+const rect = event.target.getBoundingClientRect();
+const gameCoords = window.scalingSystem.viewportToGame(rect.left, rect.bottom + 5);
+tooltip.style.left = gameCoords.x + 'px';
+tooltip.style.top = gameCoords.y + 'px';
 
-        let left = rect.left;
-        let top = rect.bottom + 5;
+// Adjust if tooltip goes off game area
+const tooltipRect = tooltip.getBoundingClientRect();
+const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
+const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
 
-        // Get game container for coordinate translation
-const gameContainer = document.getElementById('scaleWrapper');
-const containerRect = gameContainer.getBoundingClientRect();
-
-// Adjust if tooltip would overflow the game area
-if (left + tooltipRect.width > containerRect.right) {
-    left = containerRect.right - tooltipRect.width - 10;
+if (gameCoords.x + tooltipWidth > 1920) {
+    tooltip.style.left = (1920 - tooltipWidth - 10) + 'px';
 }
-if (top + tooltipRect.height > containerRect.bottom) {
-    top = rect.top - tooltipRect.height - 5;
+if (gameCoords.y + tooltipHeight > 1080) {
+    const topCoords = window.scalingSystem.viewportToGame(rect.left, rect.top - 5);
+    tooltip.style.top = (topCoords.y - tooltipHeight) + 'px';
 }
-
-        tooltip.style.left = `${left}px`;
-        tooltip.style.top = `${top}px`;
     }
 
     hideStatTooltip() {
@@ -3927,22 +3927,24 @@ if (scaleWrapper) {
         tooltip.innerHTML = `<div style="font-size: 20px; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">${sign}${amount} Gold</div>`;
         tooltip.style.display = 'block';
         
-        // Position tooltip
-        const rect = event.target.getBoundingClientRect();
-        tooltip.style.left = rect.right + 10 + 'px';
-        tooltip.style.top = rect.top + 'px';
-        
-        // Get game container for coordinate translation
-const gameContainer = document.getElementById('scaleWrapper');
-const containerRect = gameContainer.getBoundingClientRect();
+        // Position tooltip using scaling system
+const rect = event.target.getBoundingClientRect();
+const gameCoords = window.scalingSystem.viewportToGame(rect.right + 10, rect.top);
+tooltip.style.left = gameCoords.x + 'px';
+tooltip.style.top = gameCoords.y + 'px';
 
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
-if (tooltipRect.right > containerRect.right) {
-    tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
+const tooltipGameCoords = window.scalingSystem.viewportToGame(tooltipRect.left, tooltipRect.top);
+const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
+const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+
+if (tooltipGameCoords.x + tooltipWidth > 1920) {
+    const leftCoords = window.scalingSystem.viewportToGame(rect.left - 10, rect.top);
+    tooltip.style.left = (leftCoords.x - tooltipWidth) + 'px';
 }
-if (tooltipRect.bottom > containerRect.bottom) {
-    tooltip.style.top = (containerRect.bottom - tooltipRect.height - 10) + 'px';
+if (tooltipGameCoords.y + tooltipHeight > 1080) {
+    tooltip.style.top = (1080 - tooltipHeight - 10) + 'px';
 }
     }
 
@@ -3984,22 +3986,23 @@ if (scaleWrapper) {
     tooltip.textContent = text;
     tooltip.style.display = 'block';
     
-    // Position tooltip
-    const rect = event.target.getBoundingClientRect();
-    tooltip.style.left = rect.left + 'px';
-    tooltip.style.top = (rect.bottom + 5) + 'px';
-    
-    // Get game container for coordinate translation
-const gameContainer = document.getElementById('scaleWrapper');
-const containerRect = gameContainer.getBoundingClientRect();
+    // Position tooltip using scaling system
+const rect = event.target.getBoundingClientRect();
+const gameCoords = window.scalingSystem.viewportToGame(rect.left, rect.bottom + 5);
+tooltip.style.left = gameCoords.x + 'px';
+tooltip.style.top = gameCoords.y + 'px';
 
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
-if (tooltipRect.right > containerRect.right) {
-    tooltip.style.left = (containerRect.right - tooltipRect.width - 10) + 'px';
+const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
+const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+
+if (gameCoords.x + tooltipWidth > 1920) {
+    tooltip.style.left = (1920 - tooltipWidth - 10) + 'px';
 }
-if (tooltipRect.bottom > containerRect.bottom) {
-    tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
+if (gameCoords.y + tooltipHeight > 1080) {
+    const topCoords = window.scalingSystem.viewportToGame(rect.left, rect.top - 5);
+    tooltip.style.top = (topCoords.y - tooltipHeight) + 'px';
 }
 }
 
@@ -4090,22 +4093,24 @@ if (scaleWrapper) {
                 tooltip.style.boxShadow = '';
         }
         
-        // Position tooltip
-        const rect = event.target.getBoundingClientRect();
-        tooltip.style.left = rect.right + 10 + 'px';
-        tooltip.style.top = rect.top + 'px';
-        
-        // Get game container for coordinate translation
-const gameContainer = document.getElementById('scaleWrapper');
-const containerRect = gameContainer.getBoundingClientRect();
+        // Position tooltip using scaling system
+const rect = event.target.getBoundingClientRect();
+const gameCoords = window.scalingSystem.viewportToGame(rect.right + 10, rect.top);
+tooltip.style.left = gameCoords.x + 'px';
+tooltip.style.top = gameCoords.y + 'px';
 
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
-if (tooltipRect.right > containerRect.right) {
-    tooltip.style.left = (rect.left - tooltipRect.width - 10) + 'px';
+const tooltipGameCoords = window.scalingSystem.viewportToGame(tooltipRect.left, tooltipRect.top);
+const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
+const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+
+if (tooltipGameCoords.x + tooltipWidth > 1920) {
+    const leftCoords = window.scalingSystem.viewportToGame(rect.left - 10, rect.top);
+    tooltip.style.left = (leftCoords.x - tooltipWidth) + 'px';
 }
-if (tooltipRect.bottom > containerRect.bottom) {
-    tooltip.style.top = (containerRect.bottom - tooltipRect.height - 10) + 'px';
+if (tooltipGameCoords.y + tooltipHeight > 1080) {
+    tooltip.style.top = (1080 - tooltipHeight - 10) + 'px';
 }
     }
 
@@ -4168,12 +4173,13 @@ if (tooltipRect.bottom > containerRect.bottom) {
             <button class="resetSortButton" onclick="game.resetSortSettings('${source}')">Reset to Default</button>
         `;
         
-        // Position panel below the button
-        const button = document.querySelector(`#${source}SortButton`);
-      const rect = button.getBoundingClientRect();
-        panel.style.position = 'fixed';
-        panel.style.top = (rect.bottom + 5) + 'px';
-        panel.style.left = rect.left + 'px';
+        // Position panel below the button using scaling system
+const button = document.querySelector(`#${source}SortButton`);
+const rect = button.getBoundingClientRect();
+const gameCoords = window.scalingSystem.viewportToGame(rect.left, rect.bottom + 5);
+panel.style.position = 'absolute';
+panel.style.top = gameCoords.y + 'px';
+panel.style.left = gameCoords.x + 'px';
         
         const scaleWrapper = document.getElementById('scaleWrapper');
 if (scaleWrapper) {
