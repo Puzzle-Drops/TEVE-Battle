@@ -547,8 +547,8 @@ renderHeroTrees(container, svg, gender) {
         return `
             <div style="margin-bottom: 10px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                    <span style="color: #b0e0f0; font-size: 14px;">${label}</span>
-                    <span style="color: #b0e0f0; font-size: 14px;">${value}</span>
+                    <span style="color: #b0e0f0; font-size: 40px;">${label}</span>
+                    <span style="color: #b0e0f0; font-size: 40px;">${value}</span>
                 </div>
                 <div style="width: 100%; height: 20px; background: rgba(0, 0, 0, 0.5); border: 1px solid #2a6a8a; border-radius: 3px;">
                     <div style="width: ${percentage}%; height: 100%; background: ${color}; border-radius: 2px; transition: width 0.3s;"></div>
@@ -634,7 +634,7 @@ renderHeroTrees(container, svg, gender) {
                      style="width: 90%; height: 90%; image-rendering: pixelated;"
                      onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 256 256\\'><rect fill=\\'%23666\\' width=\\'256\\' height=\\'256\\'/><text x=\\'128\\' y=\\'128\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'20\\'>${unitData.name}</text></svg>'">
             </div>
-            ${unitData.boss ? '<div style="color: #ff4444; font-size: 24px; font-weight: bold; text-align: center;">BOSS</div>' : ''}
+            ${unitData.boss ? '<div style="color: #ff4444; font-size: 40px; font-weight: bold; text-align: center;">BOSS</div>' : ''}
         </div>
     `;
 }
@@ -663,7 +663,7 @@ renderHeroTrees(container, svg, gender) {
     // Stats Bar Graph
     mainContent += `
         <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h3 style="color: #4dd0e1; margin-top: 0; margin-bottom: 20px;">Stats (Level ${statLevel})</h3>
+            <h3 style="color: #4dd0e1; margin-top: 0; margin-bottom: 20px; font-size: 50px;">Stats (Level ${statLevel})</h3>
             ${this.createStatBar(stats.str, maxValues.str, 'Strength', '#ff6b6b')}
             ${this.createStatBar(stats.agi, maxValues.agi, 'Agility', '#66d9ef')}
             ${this.createStatBar(stats.int, maxValues.int, 'Intelligence', '#bd93f9')}
@@ -751,7 +751,7 @@ renderHeroTrees(container, svg, gender) {
     if (unitData.spells && unitData.spells.length > 0) {
         mainContent += `
             <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px;">
-                <h3 style="color: #4dd0e1; margin-top: 0; margin-bottom: 20px;">Abilities | Level 1/2/3/4/5</h3>
+                <h3 style="color: #4dd0e1; margin-top: 0; margin-bottom: 20px; font-size: 40px;">Abilities | Level 1/2/3/4/5</h3>
         `;
         
         unitData.spells.forEach(spellId => {
@@ -764,11 +764,11 @@ renderHeroTrees(container, svg, gender) {
                                  style="width: 64px; height: 64px; border: 1px solid #2a6a8a;"
                                  onerror="this.style.display='none'">
                             <div style="flex: 1;">
-                                <div style="font-size: 18px; color: #4dd0e1; font-weight: bold;">${spell.name}</div>
-                                <div style="color: #6a9aaa; margin-top: 5px;">
+                                <div style="font-size: 32px; color: #4dd0e1; font-weight: bold;">${spell.name}</div>
+                                <div style="color: #6a9aaa; margin-top: 0px; font-size: 20px;">
                                     ${spell.passive || (spell.effects && spell.effects.includes('passive')) ? 'Passive' : `Cooldown: ${Array.isArray(spell.cooldown) ? spell.cooldown.join('/') : spell.cooldown} turns`}
                                 </div>
-                                <div style="color: #b0e0f0; margin-top: 10px; line-height: 1.5;">
+                                <div style="color: #b0e0f0; margin-top: 20px; line-height: 1.5; font-size: 20px;">
                                     ${this.formatSpellDescription(spell)}
                                 </div>
                             </div>
