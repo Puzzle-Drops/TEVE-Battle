@@ -2111,6 +2111,20 @@ body {
     color: #ff9999;
     line-height: 1;
     margin-top: 2px;
+    
+    /* Auto-scaling text to fit on one line */
+    width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    /* Scale down if needed */
+    display: inline-block;
+    max-width: 130px;
+    transform-origin: center;
+    
+    /* Use a smaller font size for longer text */
+    font-size: clamp(10px, 2.5vw, 18px);
 }
 
 .actionButtons {
