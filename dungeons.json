@@ -1170,7 +1170,7 @@
     "items": ["illusion_miragecrown", "illusion_shimmermail", "illusion_deceivers", "illusion_phantomblade", "illusion_mirrorshield", "illusion_prism", "illusion_realityshard"]
   }
 },
-    "dragon_fortress": {
+"dragon_fortress": {
       "id": "dragon_fortress",
       "name": "Dragon Fortress",
       "boss": "Ancient Hydra",
@@ -1180,7 +1180,47 @@
       "waves": [
         {
           "enemies": [
-            { "id": "ancient_hydra", "level": 500 }
+            { "id": "storm_dragon", "level": 500 },
+            { "id": "wyvern", "level": 485 },
+            { "id": "wyvern", "level": 485 },
+            { "id": "dragon_hatchling", "level": 480 },
+            { "id": "dragon_hatchling", "level": 480 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "shadow_dragon", "level": 500 },
+            { "id": "dragon_hatchling", "level": 488 },
+            { "id": "dragon_hatchling", "level": 488 },
+            { "id": "dragon_hatchling", "level": 485 },
+            { "id": "wyvern", "level": 490 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "blaze_dragon", "level": 500 },
+            { "id": "wyvern", "level": 492 },
+            { "id": "wyvern", "level": 492 },
+            { "id": "wyvern", "level": 490 },
+            { "id": "dragon_hatchling", "level": 495 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "winter_dragon", "level": 500 },
+            { "id": "dragon_hatchling", "level": 495 },
+            { "id": "dragon_hatchling", "level": 495 },
+            { "id": "wyvern", "level": 498 },
+            { "id": "wyvern", "level": 498 }
+          ]
+        },
+        {
+          "enemies": [
+            { "id": "ancient_hydra", "level": 500 },
+            { "id": "storm_dragon", "level": 500 },
+            { "id": "shadow_dragon", "level": 500 },
+            { "id": "blaze_dragon", "level": 500 },
+            { "id": "winter_dragon", "level": 500 }
           ]
         }
       ],
