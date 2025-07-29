@@ -2360,7 +2360,7 @@ body {
     border: 1px solid #2a6a8a;
     cursor: pointer;
     color: #b0e0f0;
-    font-size: 52px;
+    font-size: 40px;
     transition: all 0.3s;
     box-shadow: 0 0 15px rgba(42, 106, 138, 0.3);
 }
