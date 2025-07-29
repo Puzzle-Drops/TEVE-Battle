@@ -3365,32 +3365,218 @@
       "living_disease_passive"
     ]
   },
-  "mirage": {
-    "name": "Mirage",
-    "boss": true,
-    "mainstat": "agi",
-    "modifiers": {
-      "str": 5,
-      "agi": 7.02,
-      "int": 5,
-      "hp": 3.58,
-      "attack": 0.49,
-      "armor": 0.19,
-      "resist": 0.18
-    },
-    "initial": {
-      "str": 18,
-      "agi": 30,
-      "int": 20,
-      "hp": 126,
-      "hpRegen": 3,
-      "attack": 25,
-      "attackSpeed": 0,
-      "armor": 21.15,
-      "resist": 20
-    },
-    "spells": []
+"illusory_sentinel": {
+  "name": "Illusory Sentinel",
+  "boss": false,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 4.5,
+    "agi": 4.0,
+    "int": 4.0,
+    "hp": 3.8,
+    "attack": 0.25,
+    "armor": 0.35,
+    "resist": 0.08
   },
+  "initial": {
+    "str": 18,
+    "agi": 14,
+    "int": 14,
+    "hp": 50,
+    "hpRegen": 0,
+    "attack": 6,
+    "attackSpeed": 0,
+    "armor": 4,
+    "resist": 6
+  },
+  "spells": [
+    "mirror_strike",
+    "false_image",
+    "deceptive_guard"
+  ]
+},
+"mirage_weaver": {
+  "name": "Mirage Weaver",
+  "boss": false,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 4.0,
+    "agi": 4.0,
+    "int": 4.5,
+    "hp": 3.2,
+    "attack": 0.3,
+    "armor": 0.15,
+    "resist": 0.35
+  },
+  "initial": {
+    "str": 14,
+    "agi": 14,
+    "int": 18,
+    "hp": 30,
+    "hpRegen": 3.35,
+    "attack": 4,
+    "attackSpeed": 0,
+    "armor": 2.66,
+    "resist": 12
+  },
+  "spells": [
+    "illusion_bolt",
+    "veil_of_deception",
+    "reality_blur"
+  ]
+},
+"phantom_trickster": {
+  "name": "Phantom Trickster",
+  "boss": false,
+  "mainstat": "agi",
+  "modifiers": {
+    "str": 4.0,
+    "agi": 4.5,
+    "int": 4.0,
+    "hp": 3.0,
+    "attack": 0.42,
+    "armor": 0.12,
+    "resist": 0.13
+  },
+  "initial": {
+    "str": 14,
+    "agi": 18,
+    "int": 14,
+    "hp": 0,
+    "hpRegen": 0,
+    "attack": 8,
+    "attackSpeed": 4.02,
+    "armor": 0,
+    "resist": 8
+  },
+  "spells": [
+    "phantom_strike",
+    "smoke_and_daggers",
+    "illusory_double"
+  ]
+},
+"dream_eater": {
+  "name": "Dream Eater",
+  "boss": false,
+  "mainstat": "int",
+  "modifiers": {
+    "str": 4.0,
+    "agi": 4.2,
+    "int": 4.3,
+    "hp": 3.4,
+    "attack": 0.28,
+    "armor": 0.16,
+    "resist": 0.33
+  },
+  "initial": {
+    "str": 14,
+    "agi": 16,
+    "int": 16,
+    "hp": 40,
+    "hpRegen": 2.01,
+    "attack": 4,
+    "attackSpeed": 0,
+    "armor": 2.66,
+    "resist": 14
+  },
+  "spells": [
+    "nightmare_touch",
+    "sleep_paralysis",
+    "dream_feast"
+  ]
+},
+"reflection_assassin": {
+  "name": "Reflection Assassin",
+  "boss": false,
+  "mainstat": "agi",
+  "modifiers": {
+    "str": 4.0,
+    "agi": 4.8,
+    "int": 3.7,
+    "hp": 2.9,
+    "attack": 0.5,
+    "armor": 0.08,
+    "resist": 0.15
+  },
+  "initial": {
+    "str": 14,
+    "agi": 20,
+    "int": 12,
+    "hp": 20,
+    "hpRegen": 0,
+    "attack": 10,
+    "attackSpeed": 1.34,
+    "armor": 0,
+    "resist": 10
+  },
+  "spells": [
+    "mirror_blade",
+    "perfect_copy",
+    "shattered_reflection"
+  ]
+},
+"shell_guardian": {
+  "name": "Shell Guardian",
+  "boss": true,
+  "mainstat": "str",
+  "modifiers": {
+    "str": 5.5,
+    "agi": 5.0,
+    "int": 5.0,
+    "hp": 4.2,
+    "attack": 0.24,
+    "armor": 0.45,
+    "resist": 0.06
+  },
+  "initial": {
+    "str": 22,
+    "agi": 14,
+    "int": 14,
+    "hp": 80,
+    "hpRegen": 0,
+    "attack": 2,
+    "attackSpeed": 0,
+    "armor": 5.32,
+    "resist": 4
+  },
+  "spells": [
+    "shell_slam",
+    "fortress_shell",
+    "tsunami",
+    "ancient_shell"
+  ]
+},
+"doppelganger": {
+  "name": "Doppelganger",
+  "boss": true,
+  "mainstat": "agi",
+  "modifiers": {
+    "str": 5.0,
+    "agi": 6.0,
+    "int": 6.0,
+    "hp": 3.5,
+    "attack": 0.38,
+    "armor": 0.2,
+    "resist": 0.25
+  },
+  "initial": {
+    "str": 14,
+    "agi": 18,
+    "int": 18,
+    "hp": 50,
+    "hpRegen": 0,
+    "attack": 4,
+    "attackSpeed": 0.67,
+    "armor": 2.66,
+    "resist": 8
+  },
+  "spells": [
+    "phantom_blade",
+    "perfect_illusion",
+    "shimmering_assault",
+    "mirror_of_truth"
+  ]
+},
   "ancient_hydra": {
     "name": "Ancient Hydra",
     "boss": true,
