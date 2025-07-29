@@ -3626,7 +3626,13 @@ newItemHTML = newItemHTML.split(oldSpan).join(newSpan);
                 max-height: 600px;
                 overflow-y: auto;
             `;
-            document.body.appendChild(tooltip);
+            const scaleWrapper = document.getElementById('scaleWrapper');
+if (scaleWrapper) {
+    scaleWrapper.appendChild(tooltip);
+} else {
+    // Fallback
+    document.body.appendChild(tooltip);
+}
         }
         
         // Store item reference for alt key updates
@@ -3757,7 +3763,13 @@ if (tooltipRect.bottom > containerRect.bottom) {
                 box-shadow: 0 0 20px rgba(0,0,0,0.8);
                 pointer-events: none;
             `;
-            document.body.appendChild(tooltip);
+            const scaleWrapper = document.getElementById('scaleWrapper');
+if (scaleWrapper) {
+    scaleWrapper.appendChild(tooltip);
+} else {
+    // Fallback
+    document.body.appendChild(tooltip);
+}
         }
         
         tooltip.innerHTML = html;
@@ -3834,7 +3846,13 @@ if (tooltipRect.bottom > containerRect.bottom) {
                 color: #b0e0f0;
                 max-width: 500px;
             `;
-            document.body.appendChild(tooltip);
+            const scaleWrapper = document.getElementById('scaleWrapper');
+if (scaleWrapper) {
+    scaleWrapper.appendChild(tooltip);
+} else {
+    // Fallback
+    document.body.appendChild(tooltip);
+}
         }
 
         // Update border color if it's a main stat
@@ -3896,7 +3914,13 @@ if (top + tooltipRect.height > containerRect.bottom) {
                 pointer-events: none;
                 box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
             `;
-            document.body.appendChild(tooltip);
+            const scaleWrapper = document.getElementById('scaleWrapper');
+if (scaleWrapper) {
+    scaleWrapper.appendChild(tooltip);
+} else {
+    // Fallback
+    document.body.appendChild(tooltip);
+}
         }
         
         const sign = isDefeat ? '-' : '+';
@@ -3948,7 +3972,13 @@ if (tooltipRect.bottom > containerRect.bottom) {
             color: #b0e0f0;
             white-space: nowrap;
         `;
-        document.body.appendChild(tooltip);
+        const scaleWrapper = document.getElementById('scaleWrapper');
+if (scaleWrapper) {
+    scaleWrapper.appendChild(tooltip);
+} else {
+    // Fallback
+    document.body.appendChild(tooltip);
+}
     }
     
     tooltip.textContent = text;
@@ -4020,7 +4050,13 @@ hideArenaStatTooltip() {
                 z-index: 10000;
                 pointer-events: none;
             `;
-            document.body.appendChild(tooltip);
+            const scaleWrapper = document.getElementById('scaleWrapper');
+if (scaleWrapper) {
+    scaleWrapper.appendChild(tooltip);
+} else {
+    // Fallback
+    document.body.appendChild(tooltip);
+}
         }
         
         tooltip.innerHTML = tooltipHTML;
@@ -4139,7 +4175,13 @@ if (tooltipRect.bottom > containerRect.bottom) {
         panel.style.top = (rect.bottom + 5) + 'px';
         panel.style.left = rect.left + 'px';
         
-        document.body.appendChild(panel);
+        const scaleWrapper = document.getElementById('scaleWrapper');
+if (scaleWrapper) {
+    scaleWrapper.appendChild(panel);
+} else {
+    // Fallback
+    document.body.appendChild(panel);
+}
         
         // Add drag and drop event listeners
         this.setupSortDragDrop(source);
