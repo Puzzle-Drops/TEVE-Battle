@@ -507,9 +507,9 @@ body {
 /* Refined item asterisk */
 .itemRefined {
     position: absolute;
-    top: 2px;
+    top: -2px;
     left: 2px;
-    font-size: 16px;
+    font-size: 30px;
     font-weight: bold;
     color: #fff;
     text-shadow: 
@@ -1400,7 +1400,7 @@ body {
     position: absolute;
     top: 2px;
     left: 4px;
-    font-size: 16px;
+    font-size: 30px;
     font-weight: bold;
     text-shadow: 
         0 0 4px rgba(0, 0, 0, 0.9),
@@ -1685,7 +1685,7 @@ body {
 .itemStars {
     position: absolute;
     bottom: 0px;
-    left: 2px;
+    left: -2px;
     font-size: 18px;
     font-weight: bold;
     letter-spacing: -3px;
@@ -1707,7 +1707,7 @@ body {
 .itemLevel {
     position: absolute;
     bottom: 0px;
-    right: 2px;
+    right: -2px;
     font-size: 18px;
     font-weight: bold;
     color: #fff;
@@ -1721,7 +1721,7 @@ body {
 .itemQuality {
     position: absolute;
     top: 2px;
-    right: 2px;
+    right: -2px;
     font-size: 18px;
     font-weight: bold;
     color: #fff;
