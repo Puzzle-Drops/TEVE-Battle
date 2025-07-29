@@ -2127,6 +2127,7 @@ body {
     background: rgba(10, 25, 41, 0.9);
     border: 1px solid #2a6a8a;
     font-size: 24px;
+    height: 43px;
 }
 
 .autoTogglesPartySelect label {
@@ -6896,7 +6897,6 @@ body {
 /* Autosell Styles */
 .autosellButtonContainer {
     width: 100%;
-    margin-bottom: 10px;
 }
 
 .autosellButton {
