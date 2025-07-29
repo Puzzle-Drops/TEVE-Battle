@@ -1736,10 +1736,9 @@ updateHeroSelectionState(changedHeroIndex) {
             </div>
 
             <div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
-            
+            <div class="thumbName">${hero.name}</div>
         `;
 
-        //<div class="thumbName">${hero.name}</div> << add this back in below thumbClass if you want it ^^
         
         wrapper.appendChild(thumb);
         
@@ -1785,9 +1784,11 @@ updateHeroSelectionState(changedHeroIndex) {
                             <div class="thumbLevel">${hero.level}</div>
                         </div>
                         <div class="thumbClass">${hero.displayClassName} <span class="gender-${hero.gender}">${hero.gender === 'male' ? '♂' : '♀'}</span></div>
-                        <div class="thumbName">${hero.name}</div>
+
                     </div>
                 `;
+
+                //                        <div class="thumbName">${hero.name}</div> << add this back in under thumbClass if you want it
                 slot.classList.add('filled');
                 
                 // Make slot draggable
@@ -1997,15 +1998,15 @@ updateArenaEnemyFormation() {
                 
                 slot.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
-                        <div style="position: relative; width: 60px; height: 60px;">
+                        <div style="position: relative; width: 100px; height: 100px;">
                             <img src="https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${enemy.className}_portrait.png"
                                  alt="${enemy.name}" 
                                  style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: pixelated;"
-                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 60 60\\'><rect fill=\\'%23666\\' width=\\'60\\' height=\\'60\\'/><text x=\\'30\\' y=\\'35\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'10\\'>${enemy.name}</text></svg>'">
-                            ${starData.html ? `<div class="thumbStars ${starData.colorClass}" style="position: absolute; bottom: 0; left: 0; font-size: 12px;">${starData.html}</div>` : ''}
+                                 onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 60 60\\'><rect fill=\\'%23666\\' width=\\'100\\' height=\\'100\\'/><text x=\\'30\\' y=\\'35\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'18\\'>${enemy.name}</text></svg>'">
+                            ${starData.html ? `<div class="thumbStars ${starData.colorClass}" style="position: absolute; bottom: 0; left: 2; font-size: 18px;">${starData.html}</div>` : ''}
                             <div class="enemyLevel">${enemy.level}</div>
                         </div>
-                        <div class="enemyName">${enemy.name}</div>
+                        <div class="enemyName">${enemy.className}</div>
                     </div>
                 `;
                 slot.classList.add('filled');
