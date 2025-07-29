@@ -3466,7 +3466,7 @@ body {
 
 .stashInventory {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 74px);
+    grid-template-columns: repeat(auto-fill, 100px);
     gap: 10px;
     padding: 20px;
     min-height: 400px;
