@@ -1866,8 +1866,8 @@ body {
 
 .partyFormation {
     display: grid;
-    grid-template-columns: repeat(3, 120px);
-    grid-template-rows: repeat(2, 120px);
+    grid-template-columns: repeat(3, 140px);
+    grid-template-rows: repeat(2, 140px);
     gap: 15px;
 }
 
@@ -2004,8 +2004,8 @@ body {
 /* Enemy Formation - matches party formation */
 .enemyFormation {
     display: grid;
-    grid-template-columns: repeat(3, 120px);
-    grid-template-rows: repeat(2, 120px);
+    grid-template-columns: repeat(3, 140px);
+    grid-template-rows: repeat(2, 140px);
     gap: 15px;
 }
 
@@ -3715,7 +3715,7 @@ body {
 
 .rewardItemsGrid {
     display: grid;
-    grid-template-columns: repeat(3, 64px);
+    grid-template-columns: repeat(3, 100px);
     gap: 10px;
     justify-content: center;
 }
