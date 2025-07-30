@@ -279,7 +279,7 @@ showHeroClasses(gender) {
     
 renderHeroTrees(container, svg, gender) {
     const cellWidth = 120;
-    const cellHeight = 140;
+    const cellHeight = 160;
     const startX = -24;
     const startY = 50;
     
