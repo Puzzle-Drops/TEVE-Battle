@@ -2719,7 +2719,9 @@ this.party.forEach(unit => {
                 expGained: totalExp,
                 survived: unit.isAlive,
                 item: itemRoll.item,
-                gold: itemRoll.gold
+                gold: itemRoll.gold,
+                soldItem: itemRoll.soldItem,
+                autosold: itemRoll.autosold
             };
         }).filter(r => r !== null)
     };
