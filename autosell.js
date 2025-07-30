@@ -205,6 +205,10 @@ class AutoSell {
             this.stats.goldGained += item.sellcost;
             
             // Convert item to gold
+
+            console.log('[AUTOSELL] Item sold:', item.name, 'for', item.sellcost, 'gold');
+            console.log('[AUTOSELL] Sold item object:', item);
+
             return {
                 hero: hero,
                 gold: itemRoll.gold + item.sellcost,
