@@ -3179,11 +3179,23 @@ if (enemy.gear && Object.keys(enemy.gear).some(slot => enemy.gear[slot] !== null
             </div>
         </div>`;
     } else {
-        // Just gold (no item was rolled)
-        rewardSlotHTML = `<div class="itemSlot golden" onmouseenter="game.uiManager.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseleave="game.uiManager.hideGoldTooltip()">
-            <img src="https://puzzle-drops.github.io/TEVE/img/items/gold.png" alt="Gold" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
-        </div>`;
-    }
+    // Just gold (no item was rolled)
+    rewardSlotHTML = `<div class="itemSlot golden" onmouseenter="game.uiManager.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseleave="game.uiManager.hideGoldTooltip()">
+        <div class="itemContainer" style="position: relative;">
+            <img src="https://puzzle-drops.github.io/TEVE/img/items/gold.png" 
+                 alt="Gold" 
+                 style="width: 100%; height: 100%; filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));">
+            
+            <!-- Gold amount text -->
+            <div style="position: absolute; bottom: 2px; right: 2px; 
+                        color: #ffd700; font-weight: bold; font-size: 14px; 
+                        text-shadow: 0 0 4px rgba(0, 0, 0, 1), 1px 1px 2px rgba(0, 0, 0, 1);
+                        z-index: 11;">
+                +${result.gold}
+            </div>
+        </div>
+    </div>`;
+}
             } else {
                 rewardSlotHTML = '<div class="itemSlot"></div>';
             }
