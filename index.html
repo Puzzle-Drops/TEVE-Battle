@@ -1093,6 +1093,14 @@ if (bestiaryOverlay) {
     e.preventDefault();
     return;
 }
+
+		    // Close wiki if open
+const wikiOverlay = document.getElementById('wikiOverlay');
+if (wikiOverlay) {
+    game.tutorial.closeWiki();
+    e.preventDefault();
+    return;
+}
 		    
                 // Clear targeting in battle if active
                 if (game.currentBattle && game.currentBattle.targetingState) {
