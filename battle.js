@@ -870,6 +870,18 @@ processTurn() {
     // Debug log all possible actions if debugging is enabled
     this.ai.debugLogAllPossibleActions(unit);
 
+    // Burning Fury passive - check for bleed on any unit
+    if (unit.burningFuryPassive && unit.isAlive) {
+        const anyUnitHasBleed = this.allUnits.some(u => 
+            u.isAlive && buffDebuffHelpers.hasDebuff(u, 'Bleed')
+        );
+        
+        if (anyUnitHasBleed && !buffDebuffHelpers.hasBuff(unit, 'Increase Attack')) {
+            this.applyBuff(unit, 'Increase Attack', unit.burningFuryDuration || 1, { damageMultiplier: 1.5 });
+            this.log(`${unit.name}'s burning fury ignites!`);
+        }
+    }
+
     // Eternal Tide passive - every turn, lowest HP ally gains shield and removes debuff
     if (unit.eternalTidePassive && unit.isAlive) {
         const allies = this.getParty(unit);
@@ -1163,6 +1175,37 @@ executeAbility(caster, abilityIndex, target) {
     
     endTurn() {
         if (this.currentUnit) {
+            // Hydra's Command passive - random ally attacks
+            if (this.currentUnit.hydrasCommandPassive && this.currentUnit.isAlive) {
+                const allies = this.getParty(this.currentUnit);
+                const aliveAllies = allies.filter(a => a && a.isAlive && a !== this.currentUnit);
+                
+                if (aliveAllies.length > 0) {
+                    const randomAlly = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
+                    
+                    // Find first non-passive ability
+                    let firstAbilityIndex = -1;
+                    for (let i = 0; i < randomAlly.abilities.length; i++) {
+                        if (randomAlly.abilities[i] && !randomAlly.abilities[i].passive) {
+                            firstAbilityIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    if (firstAbilityIndex >= 0) {
+                        // Get random enemy target
+                        const enemies = this.getEnemies(randomAlly);
+                        const aliveEnemies = enemies.filter(e => e && e.isAlive);
+                        
+                        if (aliveEnemies.length > 0) {
+                            const randomTarget = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+                            this.log(`Hydra commands ${randomAlly.name} to attack!`);
+                            this.executeAbility(randomAlly, firstAbilityIndex, randomTarget);
+                        }
+                    }
+                }
+            }
+
             // Hide active circle for current unit
             const elementId = this.currentUnit.isEnemy ? `enemy${this.currentUnit.position + 1}` : `party${this.currentUnit.position + 1}`;
             const element = document.getElementById(elementId);
@@ -1628,6 +1671,17 @@ if (attacker.stalkersMarkPassive && target.isAlive && actualDamage > 0) {
                 // Champion Male passive
                 this.applyDebuff(attacker, 'Stun', effect.duration, { stunned: true });
                 this.log(`${target.name} stuns ${attacker.name} with a counter!`);
+            } else if (effect.type === 'grant_speed_to_ally' && target.eyeOfTheStormPassive) {
+                const allies = this.getParty(target);
+                const aliveAllies = allies.filter(a => a && a.isAlive && a !== target);
+                if (aliveAllies.length > 0) {
+                    const randomAlly = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
+                    this.applyBuff(randomAlly, 'Increase Speed', target.eyeOfTheStormDuration || 1, {});
+                    this.log(`Storm's eye grants ${randomAlly.name} speed!`);
+                }
+            } else if (effect.type === 'frozen_heart_defense' && damageType === 'magical') {
+                this.applyBuff(target, 'Increase Defense', effect.duration || 1, {});
+                this.log(`${target.name}'s frozen heart grants defense against magic!`);
             }
         });
     }
