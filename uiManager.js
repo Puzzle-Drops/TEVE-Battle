@@ -3144,8 +3144,10 @@ if (enemy.gear && Object.keys(enemy.gear).some(slot => enemy.gear[slot] !== null
                     </div>
                 </div>`;
             } else if (result.gold > 0) {
+    console.log('[UI] Result has gold:', result.gold, 'soldItem:', result.soldItem);
     // Check if this was an autosold item
     if (result.soldItem) {
+        console.log('[UI] Showing autosold item:', result.soldItem.name);
         const soldItemStarData = result.soldItem.getStars();
         rewardSlotHTML = `<div class="itemSlot golden" onmouseenter="game.uiManager.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseleave="game.uiManager.hideGoldTooltip()">
             <div class="itemContainer" style="position: relative;">
