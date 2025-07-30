@@ -1052,7 +1052,7 @@ cancelSell() {
         }
         if (item.quality5 > 0) {
             html += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between;">
-                <span>+5 All Stats</span>
+                <span>+10 All Stats</span>
                 <span style="color: #ffd700;">100%</span>
             </div>`;
         }
@@ -1168,7 +1168,7 @@ cancelSell() {
             // Will add divine roll
             previewItem.roll5 = 'allstats';
             previewItem.quality5 = 5;
-            explanation = 'Divine enhancement unlocked! +5 All Stats';
+            explanation = 'Divine enhancement unlocked! +10 All Stats';
             context.refinementType = 'divine';
             boldRoll = 5;
             previewRarity = 'gold';
@@ -1289,7 +1289,7 @@ cancelSell() {
             if (i === 5 && boldRoll === 5) {
                 // Divine roll
                 html += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between; font-weight: bold;">
-                    <span>+5 All Stats</span>
+                    <span>+10 All Stats</span>
                     <span style="color: #ffd700;">100%</span>
                 </div>`;
             } else if (boldRoll === i && context.refinementType === 'newroll') {
@@ -1384,7 +1384,7 @@ cancelSell() {
         let qualityText = '';
 
         if (context.refinementType === 'divine') {
-            statText = '+5 All Stats!';
+            statText = '+10 All Stats!';
             qualityText = 'Divine!';
         } else if (context.refinementType === 'newroll') {
             const rollSlot = context.newRollSlot;
@@ -1477,7 +1477,7 @@ setTimeout(() => {
                     
                     if (i === 5) {
                         html += `<div class="itemStat" style="color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between; ${boldRoll === 5 ? 'font-weight: bold;' : ''}">
-                            <span>+5 All Stats</span>
+                            <span>+10 All Stats</span>
                             <span style="color: #ffd700;">100%</span>
                         </div>`;
                     } else {
