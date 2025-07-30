@@ -19,6 +19,9 @@ class Tutorial {
         // Bind the click handler
         this.handleDialogueClick = this.handleDialogueClick.bind(this);
 
+        // Wiki state
+        this.currentWikiTopic = 'overview';
+
         // Male and female name lists for random selection
         this.maleNames = [
             'Marcus', 'Felix', 'Darius', 'Cassius', 'Maximus', 'Lucius', 'Gaius', 
@@ -50,30 +53,1129 @@ class Tutorial {
                 console.log('Arnold clicked - not yet implemented');
                 break;
             case 'bob':
-                // Future implementation for Bob's arena services
-                console.log('Bob clicked - not yet implemented');
+                this.showWiki();
                 break;
             default:
                 console.log(`NPC ${npcName} clicked - not yet implemented`);
         }
     }
+
+    // Wiki System
+    showWiki() {
+        // Create wiki overlay within scaleWrapper
+        const scaleWrapper = document.getElementById('scaleWrapper');
+        
+        const overlay = document.createElement('div');
+        overlay.id = 'wikiOverlay';
+        overlay.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1920px;
+            height: 1080px;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+
+        // Create wiki container
+        const container = document.createElement('div');
+        container.id = 'wikiContainer';
+        container.style.cssText = `
+            background: rgba(10, 25, 41, 0.98);
+            border: 2px solid #2a6a8a;
+            border-radius: 8px;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 30px rgba(42, 106, 138, 0.5);
+        `;
+
+        // Create header
+        const header = document.createElement('div');
+        header.style.cssText = `
+            padding: 20px;
+            border-bottom: 2px solid #2a6a8a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        `;
+        header.innerHTML = `
+            <h1 style="color: #4dd0e1; margin: 0; font-size: 28px;">Bob's Arena Guide</h1>
+            <button id="closeWikiBtn" style="
+                background: #cc0000;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                font-size: 18px;
+                cursor: pointer;
+                border-radius: 4px;
+            ">✕ Close</button>
+        `;
+
+        // Create main content area with sidebar and content
+        const mainContent = document.createElement('div');
+        mainContent.style.cssText = `
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        `;
+
+        // Create sidebar
+        const sidebar = document.createElement('div');
+        sidebar.style.cssText = `
+            width: 350px;
+            background: rgba(10, 15, 26, 0.5);
+            border-right: 2px solid #2a6a8a;
+            padding: 20px;
+            overflow-y: auto;
+        `;
+
+        // Define wiki topics
+        const wikiTopics = [
+            { id: 'overview', title: 'Items Overview', icon: '📖' },
+            { id: 'properties', title: 'Item Properties', icon: '🔧' },
+            { id: 'quality', title: 'Quality System', icon: '💎' },
+            { id: 'rarity', title: 'Rarity & Stars', icon: '⭐' },
+            { id: 'score', title: 'Item Score', icon: '📊' },
+            { id: 'refinement', title: 'Refinement System', icon: '🔨' },
+            { id: 'collection', title: 'Collection Log', icon: '📚' },
+            { id: 'equipment', title: 'Equipment & Storage', icon: '🎒' },
+            { id: 'autosell', title: 'Autosell System', icon: '💰' }
+        ];
+
+        // Create topic buttons
+        wikiTopics.forEach(topic => {
+            const button = document.createElement('button');
+            button.className = 'wikiTopicButton';
+            if (topic.id === this.currentWikiTopic) {
+                button.classList.add('active');
+            }
+            button.style.cssText = `
+                width: 100%;
+                padding: 15px;
+                margin-bottom: 10px;
+                background: ${topic.id === this.currentWikiTopic ? '#0066cc' : '#004499'};
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                text-align: left;
+                font-size: 18px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                transition: background 0.2s;
+            `;
+            button.innerHTML = `<span style="font-size: 24px;">${topic.icon}</span> ${topic.title}`;
+            button.onmouseover = () => {
+                if (topic.id !== this.currentWikiTopic) {
+                    button.style.background = '#0055aa';
+                }
+            };
+            button.onmouseout = () => {
+                if (topic.id !== this.currentWikiTopic) {
+                    button.style.background = '#004499';
+                }
+            };
+            button.onclick = () => {
+                this.showWikiTopic(topic.id);
+                // Update button states
+                sidebar.querySelectorAll('.wikiTopicButton').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.background = '#004499';
+                });
+                button.classList.add('active');
+                button.style.background = '#0066cc';
+            };
+            sidebar.appendChild(button);
+        });
+
+        // Create content area
+        const contentArea = document.createElement('div');
+        contentArea.id = 'wikiContent';
+        contentArea.style.cssText = `
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            color: #b0e0f0;
+            font-size: 18px;
+            line-height: 1.6;
+        `;
+
+        // Assemble container
+        mainContent.appendChild(sidebar);
+        mainContent.appendChild(contentArea);
+        container.appendChild(header);
+        container.appendChild(mainContent);
+        overlay.appendChild(container);
+        scaleWrapper.appendChild(overlay);
+
+        // Event listeners
+        document.getElementById('closeWikiBtn').onclick = () => this.closeWiki();
+
+        // Show default topic
+        this.showWikiTopic(this.currentWikiTopic);
+    }
+
+    closeWiki() {
+        const overlay = document.getElementById('wikiOverlay');
+        if (overlay) {
+            overlay.remove();
+        }
+    }
+
+    showWikiTopic(topicId) {
+        this.currentWikiTopic = topicId;
+        const content = document.getElementById('wikiContent');
+        if (!content) return;
+
+        // Clear existing content
+        content.innerHTML = '';
+
+        // Add content based on topic
+        switch(topicId) {
+            case 'overview':
+                this.showWikiOverview(content);
+                break;
+            case 'properties':
+                this.showWikiProperties(content);
+                break;
+            case 'quality':
+                this.showWikiQuality(content);
+                break;
+            case 'rarity':
+                this.showWikiRarity(content);
+                break;
+            case 'score':
+                this.showWikiScore(content);
+                break;
+            case 'refinement':
+                this.showWikiRefinement(content);
+                break;
+            case 'collection':
+                this.showWikiCollection(content);
+                break;
+            case 'equipment':
+                this.showWikiEquipment(content);
+                break;
+            case 'autosell':
+                this.showWikiAutosell(content);
+                break;
+        }
+    }
+
+    showWikiOverview(content) {
+        content.innerHTML = `
+            <h2 style="color: #4dd0e1; margin-top: 0;">Items Overview</h2>
+            <p>Items are equipment pieces that provide stat bonuses to heroes when equipped. Each item has specific properties that determine its power and effectiveness.</p>
+            
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Key Concepts</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 15px;">
+                    <span style="color: #ffd700;">⚔️ Equipment Slots</span> - Items can be equipped in one of six slots: Head, Chest, Legs, Weapon, Offhand, or Trinket
+                </li>
+                <li style="margin-bottom: 15px;">
+                    <span style="color: #00ff88;">📊 Stats</span> - Items provide bonuses to various hero statistics like Strength, Agility, Intelligence, HP, Attack, etc.
+                </li>
+                <li style="margin-bottom: 15px;">
+                    <span style="color: #4dd0e1;">💎 Quality</span> - Each stat roll has a quality from 1-5, determining how much of the maximum value is provided
+                </li>
+                <li style="margin-bottom: 15px;">
+                    <span style="color: #d896ff;">⭐ Stars</span> - Perfect quality rolls (5/5) are shown as stars, with color matching the item's rarity
+                </li>
+                <li style="margin-bottom: 15px;">
+                    <span style="color: #ff4444;">🔨 Refinement</span> - Items can be refined once to improve their stats or add new ones
+                </li>
+            </ul>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Item Generation</h3>
+            <p>When an item drops:</p>
+            <ol>
+                <li>The first stat roll always occurs with random quality (1-5)</li>
+                <li>Additional rolls have a chance to occur (45%, 40%, 35% base chances)</li>
+                <li>Each successful roll gets a random quality value</li>
+                <li>Collection bonuses can improve quality of specific rolls</li>
+            </ol>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Visual Indicators</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px;">
+                    <strong style="color: #4dd0e1;">On Items:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Border color shows rarity</li>
+                        <li>Stars (★) indicate perfect rolls</li>
+                        <li>Level shown bottom-right</li>
+                        <li>Quality % shown top-right</li>
+                        <li>Refined items show * top-left</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px;">
+                    <strong style="color: #4dd0e1;">Rarity Colors:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><span style="color: #00ff88;">Green</span> - 1 stat roll</li>
+                        <li><span style="color: #00c3ff;">Blue</span> - 2 stat rolls</li>
+                        <li><span style="color: #d896ff;">Purple</span> - 3 stat rolls</li>
+                        <li><span style="color: #ff4444;">Red</span> - 4 stat rolls</li>
+                        <li><span style="color: #ffd700;">Gold</span> - 5 stat rolls (refined only)</li>
+                    </ul>
+                </div>
+            </div>
+        `;
+    }
+
+    showWikiProperties(content) {
+        content.innerHTML = `
+            <h2 style="color: #4dd0e1; margin-top: 0;">Item Properties</h2>
+            
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Core Properties</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <tr style="border-bottom: 1px solid #2a6a8a;">
+                    <th style="text-align: left; padding: 10px; color: #4dd0e1;">Property</th>
+                    <th style="text-align: left; padding: 10px; color: #4dd0e1;">Description</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;"><strong>ID</strong></td>
+                    <td style="padding: 10px;">Unique identifier for the item template</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;"><strong>Name</strong></td>
+                    <td style="padding: 10px;">Display name of the item</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;"><strong>Level</strong></td>
+                    <td style="padding: 10px;">Numerical value determining base stat values</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;"><strong>Slot</strong></td>
+                    <td style="padding: 10px;">Equipment slot where the item can be equipped</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;"><strong>Sell Cost</strong></td>
+                    <td style="padding: 10px;">Gold value when selling the item</td>
+                </tr>
+            </table>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Equipment Slots</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;">
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 32px;">🎩</div>
+                    <strong>Head</strong>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 32px;">👕</div>
+                    <strong>Chest</strong>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 32px;">👖</div>
+                    <strong>Legs</strong>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 32px;">⚔️</div>
+                    <strong>Weapon</strong>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 32px;">🛡️</div>
+                    <strong>Offhand</strong>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 32px;">💍</div>
+                    <strong>Trinket</strong>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Stat Types</h3>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin-top: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <strong style="color: #ffd700;">Primary Stats:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>STR</strong> - Strength</li>
+                            <li><strong>AGI</strong> - Agility</li>
+                            <li><strong>INT</strong> - Intelligence</li>
+                            <li><strong>All Stats</strong> - Increases all three equally</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong style="color: #ffd700;">Secondary Stats:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>HP</strong> - Health Points</li>
+                            <li><strong>Attack</strong> - Attack power</li>
+                            <li><strong>Attack Speed</strong> - Attack speed %</li>
+                            <li><strong>HP Regen</strong> - Health regeneration</li>
+                            <li><strong>Armor</strong> - Physical defense</li>
+                            <li><strong>Resist</strong> - Magical defense</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Stat Rolls</h3>
+            <p>Each item template defines up to 4 possible stat rolls:</p>
+            <ul>
+                <li><strong>Roll 1</strong> - Primary stat (always present)</li>
+                <li><strong>Roll 2</strong> - Secondary stat (45% base chance)</li>
+                <li><strong>Roll 3</strong> - Tertiary stat (40% base chance, requires roll 2)</li>
+                <li><strong>Roll 4</strong> - Quaternary stat (35% base chance, requires roll 3)</li>
+                <li><strong>Roll 5</strong> - Special fifth roll (only from refining perfect items)</li>
+            </ul>
+        `;
+    }
+
+    showWikiQuality(content) {
+        content.innerHTML = `
+            <h2 style="color: #4dd0e1; margin-top: 0;">Quality System</h2>
+            
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Quality Values</h3>
+            <p>Each active stat roll has a quality value from 1 to 5:</p>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin: 20px 0;">
+                <table style="width: 100%; text-align: center;">
+                    <tr>
+                        <th style="color: #4dd0e1; padding: 10px;">Quality</th>
+                        <th style="color: #4dd0e1; padding: 10px;">Percentage</th>
+                        <th style="color: #4dd0e1; padding: 10px;">Example (100 max)</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">1/5</td>
+                        <td style="padding: 10px;">20%</td>
+                        <td style="padding: 10px;">20</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">2/5</td>
+                        <td style="padding: 10px;">40%</td>
+                        <td style="padding: 10px;">40</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">3/5</td>
+                        <td style="padding: 10px;">60%</td>
+                        <td style="padding: 10px;">60</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">4/5</td>
+                        <td style="padding: 10px;">80%</td>
+                        <td style="padding: 10px;">80</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; color: #ffd700;">5/5 ★</td>
+                        <td style="padding: 10px; color: #ffd700;">100%</td>
+                        <td style="padding: 10px; color: #ffd700;">100</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Quality Calculation</h3>
+            <p>The actual stat value is calculated as:</p>
+            <div style="background: rgba(0, 0, 0, 0.5); padding: 15px; border-radius: 4px; margin: 20px 0; font-family: monospace;">
+                actual_value = Math.floor(max_value × (quality / 5))
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Item Quality Percentage</h3>
+            <p>Overall item quality is the average quality of all active rolls:</p>
+            <div style="background: rgba(0, 0, 0, 0.5); padding: 15px; border-radius: 4px; margin: 20px 0; font-family: monospace;">
+                quality% = Math.floor((sum of all roll qualities / number of active rolls) / 5 × 100)
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Examples</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px;">
+                    <strong style="color: #00ff88;">Green Item (1 roll)</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Roll 1: Quality 3/5</li>
+                        <li>Item Quality: 60%</li>
+                        <li>Stars: 0</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px;">
+                    <strong style="color: #00c3ff;">Blue Item (2 rolls)</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Roll 1: Quality 5/5 ★</li>
+                        <li>Roll 2: Quality 3/5</li>
+                        <li>Item Quality: 80%</li>
+                        <li>Stars: 1</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px;">
+                    <strong style="color: #d896ff;">Purple Item (3 rolls)</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Roll 1: Quality 5/5 ★</li>
+                        <li>Roll 2: Quality 5/5 ★</li>
+                        <li>Roll 3: Quality 4/5</li>
+                        <li>Item Quality: 93%</li>
+                        <li>Stars: 2</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 4px;">
+                    <strong style="color: #ff4444;">Red Item (4 rolls)</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Roll 1-4: Quality 5/5 ★</li>
+                        <li>Item Quality: 100%</li>
+                        <li>Stars: 4</li>
+                        <li>Perfect item!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Quality Display</h3>
+            <ul>
+                <li>Individual rolls show quality as percentage in tooltips (20%, 40%, 60%, 80%, 100%)</li>
+                <li>Overall item quality shown as aggregate percentage in top-right corner</li>
+                <li>Perfect rolls (5/5) are highlighted and contribute to star count</li>
+            </ul>
+        `;
+    }
+
+    showWikiRarity(content) {
+        content.innerHTML = `
+            <h2 style="color: #4dd0e1; margin-top: 0;">Rarity & Stars System</h2>
+            
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Rarity Tiers</h3>
+            <p>Item rarity is determined by the number of active stat rolls:</p>
+            
+            <div style="margin-top: 20px;">
+                <div style="background: rgba(0, 255, 136, 0.1); border: 2px solid #00ff88; padding: 20px; margin-bottom: 15px; border-radius: 4px;">
+                    <h4 style="color: #00ff88; margin: 0;">Green Items</h4>
+                    <p style="margin: 10px 0;">1 stat roll - Common items with a single stat bonus</p>
+                    <div style="font-size: 24px;">Example: +25 Strength</div>
+                </div>
+                
+                <div style="background: rgba(0, 195, 255, 0.1); border: 2px solid #00c3ff; padding: 20px; margin-bottom: 15px; border-radius: 4px;">
+                    <h4 style="color: #00c3ff; margin: 0;">Blue Items</h4>
+                    <p style="margin: 10px 0;">2 stat rolls - Uncommon items with two stat bonuses</p>
+                    <div style="font-size: 24px;">Example: +25 Strength, +18 HP</div>
+                </div>
+                
+                <div style="background: rgba(216, 150, 255, 0.1); border: 2px solid #d896ff; padding: 20px; margin-bottom: 15px; border-radius: 4px;">
+                    <h4 style="color: #d896ff; margin: 0;">Purple Items</h4>
+                    <p style="margin: 10px 0;">3 stat rolls - Rare items with three stat bonuses</p>
+                    <div style="font-size: 24px;">Example: +25 Strength, +18 HP, +12 Attack</div>
+                </div>
+                
+                <div style="background: rgba(255, 68, 68, 0.1); border: 2px solid #ff4444; padding: 20px; margin-bottom: 15px; border-radius: 4px;">
+                    <h4 style="color: #ff4444; margin: 0;">Red Items</h4>
+                    <p style="margin: 10px 0;">4 stat rolls - Epic items with four stat bonuses</p>
+                    <div style="font-size: 24px;">Example: +25 Strength, +18 HP, +12 Attack, +8% Attack Speed</div>
+                </div>
+                
+                <div style="background: rgba(255, 215, 0, 0.1); border: 2px solid #ffd700; padding: 20px; border-radius: 4px;">
+                    <h4 style="color: #ffd700; margin: 0;">Gold Items</h4>
+                    <p style="margin: 10px 0;">5 stat rolls - Legendary items (only achievable through refinement)</p>
+                    <div style="font-size: 24px;">Example: All of the above + <span style="color: #ffd700;">+10 All Stats</span></div>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Star System</h3>
+            <p>Stars represent perfect quality rolls (5/5):</p>
+            
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin-top: 20px;">
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 15px;">
+                        <span style="font-size: 24px; color: #ffd700;">★</span> = One roll with perfect 5/5 quality (100%)
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <span style="font-size: 24px; color: #ffd700;">★★</span> = Two rolls with perfect quality
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <span style="font-size: 24px; color: #ffd700;">★★★</span> = Three rolls with perfect quality
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <span style="font-size: 24px; color: #ffd700;">★★★★</span> = Four rolls with perfect quality (Perfect red item!)
+                    </li>
+                </ul>
+                
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #2a6a8a;">
+                    <strong>Visual Details:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Star color matches item rarity (green, blue, purple, red, or gold)</li>
+                        <li>Stars use -3px letter-spacing for compact display</li>
+                        <li>Displayed in bottom-left corner of item slots</li>
+                        <li>Maximum stars = number of active rolls</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Drop Chances</h3>
+            <p>When an item drops, additional rolls are determined by chance:</p>
+            <table style="width: 100%; margin-top: 20px;">
+                <tr>
+                    <th style="text-align: left; padding: 10px; color: #4dd0e1;">Roll</th>
+                    <th style="text-align: left; padding: 10px; color: #4dd0e1;">Base Chance</th>
+                    <th style="text-align: left; padding: 10px; color: #4dd0e1;">Requirement</th>
+                </tr>
+                <tr style="border-top: 1px solid #2a6a8a;">
+                    <td style="padding: 10px;">Roll 1</td>
+                    <td style="padding: 10px;">100%</td>
+                    <td style="padding: 10px;">Always occurs</td>
+                </tr>
+                <tr style="border-top: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;">Roll 2</td>
+                    <td style="padding: 10px;">45%</td>
+                    <td style="padding: 10px;">-</td>
+                </tr>
+                <tr style="border-top: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;">Roll 3</td>
+                    <td style="padding: 10px;">40%</td>
+                    <td style="padding: 10px;">Only if Roll 2 succeeded</td>
+                </tr>
+                <tr style="border-top: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;">Roll 4</td>
+                    <td style="padding: 10px;">35%</td>
+                    <td style="padding: 10px;">Only if Roll 3 succeeded</td>
+                </tr>
+            </table>
+            <p style="margin-top: 15px;"><em>Note: These chances can be increased by collection bonuses!</em></p>
+        `;
+    }
+
+    showWikiScore(content) {
+        content.innerHTML = `
+            <h2 style="color: #4dd0e1; margin-top: 0;">Item Score</h2>
+            
+            <p>Item score provides a quick numerical comparison value for items. It combines level, number of rolls, and quality into a single number.</p>
+            
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Score Formula</h3>
+            <div style="background: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 4px; margin: 20px 0; font-family: monospace; font-size: 20px; text-align: center;">
+                Score = Math.floor((Level × Number of Rolls) × (Quality% / 100))
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Score Examples</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px;">
+                    <h4 style="color: #00ff88;">Example 1: Green Item</h4>
+                    <ul style="margin-top: 10px;">
+                        <li>Level: 100</li>
+                        <li>Rolls: 1</li>
+                        <li>Quality: 60%</li>
+                        <li><strong>Score: 60</strong></li>
+                    </ul>
+                    <div style="margin-top: 10px; padding: 10px; background: rgba(0, 0, 0, 0.5); border-radius: 4px;">
+                        (100 × 1) × (60 / 100) = 60
+                    </div>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px;">
+                    <h4 style="color: #00c3ff;">Example 2: Blue Item</h4>
+                    <ul style="margin-top: 10px;">
+                        <li>Level: 100</li>
+                        <li>Rolls: 2</li>
+                        <li>Quality: 80%</li>
+                        <li><strong>Score: 160</strong></li>
+                    </ul>
+                    <div style="margin-top: 10px; padding: 10px; background: rgba(0, 0, 0, 0.5); border-radius: 4px;">
+                        (100 × 2) × (80 / 100) = 160
+                    </div>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px;">
+                    <h4 style="color: #d896ff;">Example 3: Purple Item</h4>
+                    <ul style="margin-top: 10px;">
+                        <li>Level: 150</li>
+                        <li>Rolls: 3</li>
+                        <li>Quality: 73%</li>
+                        <li><strong>Score: 328</strong></li>
+                    </ul>
+                    <div style="margin-top: 10px; padding: 10px; background: rgba(0, 0, 0, 0.5); border-radius: 4px;">
+                        (150 × 3) × (73 / 100) = 328
+                    </div>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px;">
+                    <h4 style="color: #ff4444;">Example 4: Perfect Red Item</h4>
+                    <ul style="margin-top: 10px;">
+                        <li>Level: 200</li>
+                        <li>Rolls: 4</li>
+                        <li>Quality: 100%</li>
+                        <li><strong>Score: 800</strong></li>
+                    </ul>
+                    <div style="margin-top: 10px; padding: 10px; background: rgba(0, 0, 0, 0.5); border-radius: 4px;">
+                        (200 × 4) × (100 / 100) = 800
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Using Item Score</h3>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin-top: 20px;">
+                <p><strong>Item score is useful for:</strong></p>
+                <ul style="margin-top: 15px;">
+                    <li style="margin-bottom: 10px;">📊 <strong>Quick Comparison</strong> - Higher score generally means better item</li>
+                    <li style="margin-bottom: 10px;">📦 <strong>Sorting Items</strong> - Default sort order uses item score</li>
+                    <li style="margin-bottom: 10px;">💰 <strong>Autosell Decisions</strong> - Can set minimum score thresholds</li>
+                    <li style="margin-bottom: 10px;">🎯 <strong>Upgrade Targets</strong> - Identify lowest score items to replace</li>
+                </ul>
+                
+                <div style="margin-top: 20px; padding: 15px; background: rgba(255, 215, 0, 0.1); border: 1px solid #ffd700; border-radius: 4px;">
+                    <strong style="color: #ffd700;">⚠️ Important Note:</strong>
+                    <p style="margin-top: 10px;">Item score is a general guideline. Sometimes a lower score item might be better for your hero if it has the specific stats they need (like mainstat bonuses).</p>
+                </div>
+            </div>
+        `;
+    }
+
+    showWikiRefinement(content) {
+        content.innerHTML = `
+            <h2 style="color: #4dd0e1; margin-top: 0;">Refinement System</h2>
+            
+            <p>Items can be refined once to improve their power. Refined items are marked with a <span style="color: #ffd700;">*</span> symbol.</p>
+            
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Refinement Cost</h3>
+            <div style="background: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 4px; margin: 20px 0; font-family: monospace; font-size: 18px; text-align: center;">
+                Cost = Math.floor((Level + (Level × Quality%)) × 500) × 2
+            </div>
+            
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin-top: 20px;">
+                <strong>Example Costs:</strong>
+                <ul style="margin-top: 10px;">
+                    <li>Level 100, 60% quality: 160,000 gold</li>
+                    <li>Level 200, 80% quality: 360,000 gold</li>
+                    <li>Level 300, 100% quality: 600,000 gold</li>
+                </ul>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Refinement Effects</h3>
+            <p>The effect depends on the current state of the item:</p>
+            
+            <div style="margin-top: 20px;">
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; margin-bottom: 15px; border-radius: 4px; border-left: 4px solid #00ff88;">
+                    <h4 style="color: #00ff88; margin: 0;">Items with &lt; 4 rolls</h4>
+                    <p style="margin: 10px 0;"><strong>Effect:</strong> Adds a new roll with random quality (1-5)</p>
+                    <div style="background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 4px; margin-top: 10px;">
+                        <strong>Example:</strong> Green item → Blue item<br>
+                        Blue item → Purple item<br>
+                        Purple item → Red item
+                    </div>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; margin-bottom: 15px; border-radius: 4px; border-left: 4px solid #4dd0e1;">
+                    <h4 style="color: #4dd0e1; margin: 0;">4-roll items (not perfect)</h4>
+                    <p style="margin: 10px 0;"><strong>Effect:</strong> Sets the lowest quality roll to 5/5</p>
+                    <div style="background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 4px; margin-top: 10px;">
+                        <strong>Example:</strong> Red item with qualities 5/5, 4/5, 3/5, 2/5<br>
+                        After refine: 5/5, 4/5, 3/5, <span style="color: #ffd700;">5/5</span> ★
+                    </div>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; border-left: 4px solid #ffd700;">
+                    <h4 style="color: #ffd700; margin: 0;">Perfect 4-star items</h4>
+                    <p style="margin: 10px 0;"><strong>Effect:</strong> Adds a 5th roll: <span style="color: #ffd700;">+10 All Stats</span></p>
+                    <div style="background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 4px; margin-top: 10px;">
+                        <strong>Result:</strong> Item becomes <span style="color: #ffd700;">Gold rarity</span><br>
+                        The only way to achieve 5-roll items!<br>
+                        +10 STR, +10 AGI, +10 INT (always perfect quality)
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Refinement Strategy</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px;">
+                    <h4 style="color: #00ff88;">Best Value</h4>
+                    <p>Refining items with fewer rolls gives the biggest improvement:</p>
+                    <ul style="margin-top: 10px;">
+                        <li>Green → Blue: +100% rolls</li>
+                        <li>Blue → Purple: +50% rolls</li>
+                        <li>Purple → Red: +33% rolls</li>
+                    </ul>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px;">
+                    <h4 style="color: #ff4444;">Best Power</h4>
+                    <p>Refining perfect 4-star items creates the strongest items:</p>
+                    <ul style="margin-top: 10px;">
+                        <li>Becomes gold rarity</li>
+                        <li>+10 to all primary stats</li>
+                        <li>Maximum possible item power</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Refinement Tips</h3>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin-top: 20px;">
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 15px;">💡 <strong>Check the preview</strong> - See exactly what will happen before confirming</li>
+                    <li style="margin-bottom: 15px;">💰 <strong>Save gold</strong> - High level items are expensive to refine</li>
+                    <li style="margin-bottom: 15px;">🎯 <strong>Target key slots</strong> - Weapon and mainstat items often give biggest impact</li>
+                    <li style="margin-bottom: 15px;">⭐ <strong>Perfect items are special</strong> - Consider saving perfect 4-stars for gold upgrade</li>
+                    <li style="margin-bottom: 15px;">🚫 <strong>One time only</strong> - Items can only be refined once, choose wisely!</li>
+                </ul>
+            </div>
+        `;
+    }
+
+    showWikiCollection(content) {
+        content.innerHTML = `
+            <h2 style="color: #4dd0e1; margin-top: 0;">Collection Log System</h2>
+            
+            <p>The Collection Log tracks when you find items with ALL perfect quality rolls. It provides permanent bonuses to future item drops!</p>
+            
+            <h3 style="color: #4dd0e1; margin-top: 30px;">How Collection Works</h3>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin-top: 20px;">
+                <p><strong>Items are collected when:</strong></p>
+                <ul style="margin-top: 15px;">
+                    <li>ALL active rolls have 5/5 quality (100%)</li>
+                    <li>The item drops from a dungeon</li>
+                    <li>That specific quality level hasn't been collected before</li>
+                </ul>
+                
+                <div style="margin-top: 20px; padding: 15px; background: rgba(255, 215, 0, 0.1); border: 1px solid #ffd700; border-radius: 4px;">
+                    <strong style="color: #ffd700;">Example:</strong>
+                    <p style="margin-top: 10px;">A blue sword with 2 rolls, both at 5/5 quality = Collected as "sword_2"</p>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Collection Tracking</h3>
+            <p>Each dungeon tracks collection separately. For each item, there are 4 possible collection slots:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px;">
+                <div style="background: rgba(0, 255, 136, 0.2); border: 2px solid #00ff88; padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 24px; color: #00ff88;">★</div>
+                    <strong>1-Star Perfect</strong>
+                    <div style="font-size: 14px; margin-top: 5px;">Green with 1 perfect roll</div>
+                </div>
+                <div style="background: rgba(0, 195, 255, 0.2); border: 2px solid #00c3ff; padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 24px; color: #00c3ff;">★★</div>
+                    <strong>2-Star Perfect</strong>
+                    <div style="font-size: 14px; margin-top: 5px;">Blue with 2 perfect rolls</div>
+                </div>
+                <div style="background: rgba(216, 150, 255, 0.2); border: 2px solid #d896ff; padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 24px; color: #d896ff;">★★★</div>
+                    <strong>3-Star Perfect</strong>
+                    <div style="font-size: 14px; margin-top: 5px;">Purple with 3 perfect rolls</div>
+                </div>
+                <div style="background: rgba(255, 68, 68, 0.2); border: 2px solid #ff4444; padding: 15px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 24px; color: #ff4444;">★★★★</div>
+                    <strong>4-Star Perfect</strong>
+                    <div style="font-size: 14px; margin-top: 5px;">Red with 4 perfect rolls</div>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Collection Bonuses</h3>
+            
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin-top: 20px;">
+                <h4 style="color: #ffd700;">🌟 Global Drop Bonus</h4>
+                <p style="margin-top: 10px;">Each collected slot provides +0.03% to ALL item drop chances</p>
+                <ul style="margin-top: 15px;">
+                    <li>100 slots collected = +3% to all roll chances</li>
+                    <li>1000 slots collected = +30% to all roll chances</li>
+                    <li>Maximum bonus: 90% (at 3000 slots)</li>
+                </ul>
+                
+                <div style="margin-top: 20px; padding: 15px; background: rgba(0, 0, 0, 0.5); border-radius: 4px;">
+                    <strong>Modified drop chances with bonus:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Roll 2: 45% + bonus</li>
+                        <li>Roll 3: 40% + bonus</li>
+                        <li>Roll 4: 35% + bonus</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin-top: 20px;">
+                <h4 style="color: #4dd0e1;">🎯 Item-Specific Bonus</h4>
+                <p style="margin-top: 10px;">When you've collected a specific item, future drops of that item get bonuses:</p>
+                
+                <div style="margin-top: 15px; padding: 15px; background: rgba(0, 0, 0, 0.5); border-radius: 4px;">
+                    <strong>If you've collected a 3-star perfect sword:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Future swords that roll 3+ stats get +2 quality to their 3rd roll</li>
+                        <li>This can push a 3/5 roll to 5/5 automatically!</li>
+                        <li>Bonus is capped at 5/5 maximum</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Collection Display</h3>
+            <ul>
+                <li>Access via Collection Log button in stash</li>
+                <li>Shows progress per tier and per dungeon</li>
+                <li>Completed slots show ✓ and collection details on hover</li>
+                <li>Track overall progress with percentage complete</li>
+                <li>See current drop bonus percentages</li>
+            </ul>
+
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255, 215, 0, 0.1); border: 2px solid #ffd700; border-radius: 4px;">
+                <h4 style="color: #ffd700; margin: 0;">💡 Collection Tips</h4>
+                <ul style="margin-top: 15px;">
+                    <li>Focus on lower tier dungeons first - easier to get perfect items</li>
+                    <li>Every slot counts - even 1-star perfects give bonuses</li>
+                    <li>Collection bonuses are permanent and account-wide</li>
+                    <li>The more you collect, the easier it becomes to find perfect items!</li>
+                </ul>
+            </div>
+        `;
+    }
+
+    showWikiEquipment(content) {
+        content.innerHTML = `
+            <h2 style="color: #4dd0e1; margin-top: 0;">Equipment & Storage</h2>
+            
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Hero Equipment</h3>
+            <p>Each hero has 6 equipment slots:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0;">
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 48px;">🎩</div>
+                    <h4 style="color: #4dd0e1;">Head</h4>
+                    <p style="font-size: 14px;">Helmets, hats, crowns</p>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 48px;">👕</div>
+                    <h4 style="color: #4dd0e1;">Chest</h4>
+                    <p style="font-size: 14px;">Armor, robes, vests</p>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 48px;">👖</div>
+                    <h4 style="color: #4dd0e1;">Legs</h4>
+                    <p style="font-size: 14px;">Pants, greaves, boots</p>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 48px;">⚔️</div>
+                    <h4 style="color: #4dd0e1;">Weapon</h4>
+                    <p style="font-size: 14px;">Swords, staves, bows</p>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 48px;">🛡️</div>
+                    <h4 style="color: #4dd0e1;">Offhand</h4>
+                    <p style="font-size: 14px;">Shields, orbs, quivers</p>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; text-align: center;">
+                    <div style="font-size: 48px;">💍</div>
+                    <h4 style="color: #4dd0e1;">Trinket</h4>
+                    <p style="font-size: 14px;">Rings, amulets, charms</p>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Stash System</h3>
+            <p>Items are stored in class family-specific stashes. Each class family has its own shared storage:</p>
+            
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin: 20px 0;">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div><strong style="color: #4dd0e1;">👥 Villager</strong> - Starting class</div>
+                    <div><strong style="color: #4dd0e1;">✨ Acolyte</strong> - Healers & support</div>
+                    <div><strong style="color: #4dd0e1;">🏹 Archer</strong> - Ranged attackers</div>
+                    <div><strong style="color: #4dd0e1;">🍃 Druid</strong> - Nature magic</div>
+                    <div><strong style="color: #4dd0e1;">🔮 Initiate</strong> - Mages & wizards</div>
+                    <div><strong style="color: #4dd0e1;">⚔️ Swordsman</strong> - Melee fighters</div>
+                    <div><strong style="color: #4dd0e1;">🛡️ Templar</strong> - Holy warriors</div>
+                    <div><strong style="color: #4dd0e1;">🗡️ Thief</strong> - Rogues & assassins</div>
+                    <div><strong style="color: #4dd0e1;">🔥 Witch Hunter</strong> - Hybrid fighters</div>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: rgba(0, 0, 0, 0.5); border-radius: 4px;">
+                    <strong>Each stash tracks:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>💰 Gold amount (shared by all heroes in that family)</li>
+                        <li>📦 Items array (no size limit)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Equipment Restrictions</h3>
+            <div style="background: rgba(255, 215, 0, 0.1); border: 2px solid #ffd700; padding: 20px; border-radius: 4px; margin: 20px 0;">
+                <strong style="color: #ffd700;">⚠️ Villager Restriction</strong>
+                <p style="margin-top: 10px;">Villagers (and Testers) can only equip items level 70 and below. Promote to a new class to use higher level gear!</p>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Item Management</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px;">
+                    <h4 style="color: #4dd0e1;">Sorting Options</h4>
+                    <p>Items can be sorted by:</p>
+                    <ul style="margin-top: 10px;">
+                        <li>Item Score (default ↓)</li>
+                        <li>Rarity (default ↓)</li>
+                        <li>Stars (default ↓)</li>
+                        <li>Quality % (default ↓)</li>
+                        <li>Level (default ↓)</li>
+                        <li>Name (default ↑)</li>
+                    </ul>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px;">
+                    <h4 style="color: #4dd0e1;">Context Menu (Right-Click)</h4>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>Equip</strong> - Put on hero</li>
+                        <li><strong>Unequip</strong> - Remove from hero</li>
+                        <li><strong>Refine</strong> - Improve item (costs gold)</li>
+                        <li><strong>Sell</strong> - Convert to gold</li>
+                        <li><strong>Mass Sell</strong> - Sell this + all below</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Mass Sell Feature</h3>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin-top: 20px;">
+                <p>The Mass Sell option sells the clicked item plus all items below it in the current sort order.</p>
+                
+                <div style="margin-top: 15px; padding: 15px; background: rgba(255, 68, 68, 0.1); border: 1px solid #ff4444; border-radius: 4px;">
+                    <strong style="color: #ff4444;">⚠️ Be Careful!</strong>
+                    <p style="margin-top: 10px;">Mass sell uses your current sort settings. Make sure items are sorted how you want before using this feature!</p>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <strong>Example:</strong>
+                    <ol style="margin-top: 10px;">
+                        <li>Sort by Item Score (high to low)</li>
+                        <li>Right-click an item with score 150</li>
+                        <li>Select "Mass Sell"</li>
+                        <li>All items with score ≤150 will be sold</li>
+                    </ol>
+                </div>
+            </div>
+        `;
+    }
+
+    showWikiAutosell(content) {
+        content.innerHTML = `
+            <h2 style="color: #4dd0e1; margin-top: 0;">Autosell System</h2>
+            
+            <p>The autosell system automatically evaluates and sells items based on configurable criteria, saving you time and inventory management!</p>
+            
+            <h3 style="color: #4dd0e1; margin-top: 30px;">How It Works</h3>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin: 20px 0;">
+                <ol>
+                    <li style="margin-bottom: 10px;">Enable autosell in party select screen</li>
+                    <li style="margin-bottom: 10px;">Choose a preset or customize criteria</li>
+                    <li style="margin-bottom: 10px;">When items drop, they're automatically evaluated</li>
+                    <li style="margin-bottom: 10px;">Items meeting sell criteria are instantly converted to gold</li>
+                    <li style="margin-bottom: 10px;">Gold is added to your rewards</li>
+                </ol>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Presets</h3>
+            
+            <div style="margin-top: 20px;">
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; margin-bottom: 15px; border-radius: 4px; border-left: 4px solid #4dd0e1;">
+                    <h4 style="color: #4dd0e1; margin: 0;">Basic Preset</h4>
+                    <p style="margin: 10px 0;">Sells items below the item score of your current hero's equipped item in that slot</p>
+                    <ul style="margin-top: 10px;">
+                        <li>Compares new item score with equipped item score</li>
+                        <li>Keeps items if no item equipped in that slot</li>
+                        <li>Simple and effective for maintaining upgrades</li>
+                    </ul>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; margin-bottom: 15px; border-radius: 4px; border-left: 4px solid #ff4444;">
+                    <h4 style="color: #ff4444; margin: 0;">Strict Preset</h4>
+                    <ul style="margin-top: 10px;">
+                        <li>Quality Below: 80%</li>
+                        <li>Stars Below: 2</li>
+                        <li>Sell Rarities: Green, Blue, Purple</li>
+                        <li>Keeps only high-quality red items</li>
+                    </ul>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; margin-bottom: 15px; border-radius: 4px; border-left: 4px solid #ffd700;">
+                    <h4 style="color: #ffd700; margin: 0;">Balanced Preset</h4>
+                    <ul style="margin-top: 10px;">
+                        <li>Quality Below: 60%</li>
+                        <li>Stars Below: 0 (no star requirement)</li>
+                        <li>Sell Rarities: Green, Blue</li>
+                        <li>Good middle ground</li>
+                    </ul>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; margin-bottom: 15px; border-radius: 4px; border-left: 4px solid #00ff88;">
+                    <h4 style="color: #00ff88; margin: 0;">Relaxed Preset</h4>
+                    <ul style="margin-top: 10px;">
+                        <li>Quality Below: 50%</li>
+                        <li>Stars Below: 0</li>
+                        <li>Sell Rarities: Green only</li>
+                        <li>Keeps most items</li>
+                    </ul>
+                </div>
+                
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; border-left: 4px solid #d896ff;">
+                    <h4 style="color: #d896ff; margin: 0;">Custom Preset</h4>
+                    <p style="margin: 10px 0;">Configure your own criteria:</p>
+                    <ul style="margin-top: 10px;">
+                        <li>Set specific level thresholds</li>
+                        <li>Choose minimum item score</li>
+                        <li>Define quality requirements</li>
+                        <li>Select which rarities to sell</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Selling Criteria (OR Logic)</h3>
+            <p>For non-basic presets, items are sold if they meet ANY of these criteria:</p>
+            
+            <table style="width: 100%; margin-top: 20px;">
+                <tr>
+                    <th style="text-align: left; padding: 10px; color: #4dd0e1; border-bottom: 2px solid #2a6a8a;">Criterion</th>
+                    <th style="text-align: left; padding: 10px; color: #4dd0e1; border-bottom: 2px solid #2a6a8a;">Description</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;"><strong>Level Below</strong></td>
+                    <td style="padding: 10px;">Item level is less than threshold</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;"><strong>Score Below</strong></td>
+                    <td style="padding: 10px;">Item score is less than threshold</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;"><strong>Quality Below</strong></td>
+                    <td style="padding: 10px;">Item quality % is less than threshold</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;"><strong>Stars Below</strong></td>
+                    <td style="padding: 10px;">Perfect roll count is less than threshold</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #1a4a6a;">
+                    <td style="padding: 10px;"><strong>Rarity</strong></td>
+                    <td style="padding: 10px;">Item matches selected rarities to sell</td>
+                </tr>
+            </table>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Visual Indicators</h3>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 4px; margin-top: 20px;">
+                <p>In battle results, autosold items appear as:</p>
+                <ul style="margin-top: 15px;">
+                    <li>Gold coin icon with amount</li>
+                    <li>Greyed out item image in background</li>
+                    <li>Shows what was sold and for how much</li>
+                </ul>
+            </div>
+
+            <h3 style="color: #4dd0e1; margin-top: 30px;">Statistics Tracking</h3>
+            <p>The autosell system tracks:</p>
+            <ul style="margin-top: 10px;">
+                <li>📊 <strong>Items Sold</strong> - Total count of autosold items</li>
+                <li>💰 <strong>Gold Gained</strong> - Total gold earned from autoselling</li>
+                <li>📦 <strong>Items Saved</strong> - Items that passed criteria and were kept</li>
+            </ul>
+
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255, 215, 0, 0.1); border: 2px solid #ffd700; border-radius: 4px;">
+                <h4 style="color: #ffd700; margin: 0;">💡 Autosell Tips</h4>
+                <ul style="margin-top: 15px;">
+                    <li>Start with Relaxed preset and adjust as needed</li>
+                    <li>Basic preset is great for maintaining gear upgrades</li>
+                    <li>Check statistics regularly to ensure you're not selling valuable items</li>
+                    <li>Custom preset gives you full control over what to keep</li>
+                    <li>Remember: Perfect items for collection are never autosold!</li>
+                </ul>
+            </div>
+        `;
+    }
     
-    // New Game Tutorial
-newGameStart() {
-    this.isNewGameTutorial = true;
-    this.newGameHeroCount = 0;
-    
-    // Initial Skypper dialogue
-    this.npcDialogue('Skypper', [
-        "Ahh, there you are. I wasn't sure anyone would answer the call.",
-        "Name's Skypper. I was a hero, once... Now I help spot the next ones.",
-        "You won't start with legends. You start with potential. Raw, restless, and real.",
-        "You three will do. Give me your names, one day, folk'll know those names. Maybe even fear 'em."
-    ], true, () => {
-        // After initial dialogue, create first hero
-        this.continueNewGameTutorial();
-    });
-}
+    // New game tutorial
+    newGameStart() {
+        this.isNewGameTutorial = true;
+        this.newGameHeroCount = 0;
+        
+        // Initial Skypper dialogue
+        this.npcDialogue('Skypper', [
+            "Ahh, there you are. I wasn't sure anyone would answer the call.",
+            "Name's Skypper. I was a hero, once... Now I help spot the next ones.",
+            "You won't start with legends. You start with potential. Raw, restless, and real.",
+            "You three will do. Give me your names, one day, folk'll know those names. Maybe even fear 'em."
+        ], true, () => {
+            // After initial dialogue, create first hero
+            this.continueNewGameTutorial();
+        });
+    }
 
 continueNewGameTutorial() {
     if (this.newGameHeroCount === 0) {
