@@ -3144,9 +3144,44 @@ if (enemy.gear && Object.keys(enemy.gear).some(slot => enemy.gear[slot] !== null
                     </div>
                 </div>`;
             } else if (result.gold > 0) {
-                rewardSlotHTML = `<div class="itemSlot golden" onmouseenter="game.uiManager.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseleave="game.uiManager.hideGoldTooltip()">
-                    <img src="https://puzzle-drops.github.io/TEVE/img/items/gold.png" alt="Gold" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
-                </div>`;
+    // Check if this was an autosold item
+    if (result.soldItem) {
+        const soldItemStarData = result.soldItem.getStars();
+        rewardSlotHTML = `<div class="itemSlot golden" onmouseenter="game.uiManager.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseleave="game.uiManager.hideGoldTooltip()">
+            <div class="itemContainer" style="position: relative;">
+                <!-- Sold item image (greyed out) -->
+                <img src="https://puzzle-drops.github.io/TEVE/img/items/${result.soldItem.id}.png" 
+                     alt="${result.soldItem.name}"
+                     style="width: 100%; height: 100%; filter: grayscale(100%) brightness(0.3); opacity: 0.5;"
+                     onerror="this.style.display='none'">
+                ${result.soldItem.refined ? '<div class="itemRefined" style="opacity: 0.3;">*</div>' : ''}
+                ${soldItemStarData.html ? `<div class="itemStars ${soldItemStarData.colorClass}" style="opacity: 0.3;">${soldItemStarData.html}</div>` : ''}
+                <div class="itemLevel" style="opacity: 0.3;">${result.soldItem.level}</div>
+                <div class="itemQuality" style="opacity: 0.3;">${result.soldItem.getQualityPercent()}%</div>
+                
+                <!-- Gold overlay -->
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                            width: 48px; height: 48px; z-index: 10;">
+                    <img src="https://puzzle-drops.github.io/TEVE/img/items/gold.png" 
+                         alt="Gold" 
+                         style="width: 100%; height: 100%; filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));">
+                </div>
+                
+                <!-- Gold amount text -->
+                <div style="position: absolute; bottom: 2px; right: 2px; 
+                            color: #ffd700; font-weight: bold; font-size: 14px; 
+                            text-shadow: 0 0 4px rgba(0, 0, 0, 1), 1px 1px 2px rgba(0, 0, 0, 1);
+                            z-index: 11;">
+                    +${result.gold}
+                </div>
+            </div>
+        </div>`;
+    } else {
+        // Just gold (no item was rolled)
+        rewardSlotHTML = `<div class="itemSlot golden" onmouseenter="game.uiManager.showGoldTooltip(event, ${result.gold}, ${!results.victory})" onmouseleave="game.uiManager.hideGoldTooltip()">
+            <img src="https://puzzle-drops.github.io/TEVE/img/items/gold.png" alt="Gold" style="width: 100%; height: 100%;" onerror="this.style.display='none'">
+        </div>`;
+    }
             } else {
                 rewardSlotHTML = '<div class="itemSlot"></div>';
             }
