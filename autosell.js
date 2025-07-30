@@ -209,6 +209,7 @@ class AutoSell {
                 hero: hero,
                 gold: itemRoll.gold + item.sellcost,
                 item: null,
+                soldItem: item,
                 autosold: true
             };
         } else {
