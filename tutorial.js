@@ -40,25 +40,64 @@ class Tutorial {
         
     }
 
-    // NPC Click Handler
-    handleNPCClick(npcName) {
-        const npcNameLower = npcName.toLowerCase();
+    updateNPCClickIndicators() {
+        const npcs = ['bob', 'arnold', 'squeaky'];
         
-        switch(npcNameLower) {
-            case 'squeaky':
-                this.showBestiary();
-                break;
-            case 'arnold':
-                // Future implementation for Arnold's shop/services
-                console.log('Arnold clicked - not yet implemented');
-                break;
-            case 'bob':
-                this.showWiki();
-                break;
-            default:
-                console.log(`NPC ${npcName} clicked - not yet implemented`);
+        npcs.forEach(npcName => {
+            const npcElement = document.querySelector(`.${npcName}Button`);
+            if (!npcElement) return;
+            
+            // Remove any existing indicator
+            const existingIndicator = npcElement.querySelector('.npcClickIndicator');
+            if (existingIndicator) {
+                existingIndicator.remove();
+            }
+            
+            // Add indicator if NPC hasn't been clicked
+            if (!this.game.clickedNPCs[npcName]) {
+                const indicator = document.createElement('div');
+                indicator.className = 'npcClickIndicator';
+                indicator.textContent = 'Click me!';
+                npcElement.appendChild(indicator);
+            }
+        });
+    }
+    
+    // Find the handleNPCClick method:
+handleNPCClick(npcName) {
+    const npcNameLower = npcName.toLowerCase();
+    
+    // Add this at the very beginning of the method:
+    // Mark NPC as clicked
+    this.game.clickedNPCs[npcNameLower] = true;
+    
+    // Remove click indicator
+    const npcElement = document.querySelector(`.${npcNameLower}Button`);
+    if (npcElement) {
+        const indicator = npcElement.querySelector('.npcClickIndicator');
+        if (indicator) {
+            indicator.remove();
         }
     }
+    
+    // Save the state
+    saveManager.saveToSlot(saveManager.currentSlot, true);
+    
+    switch(npcNameLower) {
+        case 'squeaky':
+            this.showBestiary();
+            break;
+        case 'arnold':
+            // Future implementation for Arnold's shop/services
+            console.log('Arnold clicked - not yet implemented');
+            break;
+        case 'bob':
+            this.showWiki();
+            break;
+        default:
+            console.log(`NPC ${npcName} clicked - not yet implemented`);
+    }
+}
 
     // Wiki System
     showWiki() {
