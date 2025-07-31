@@ -393,8 +393,7 @@ if (this.game.uiManager) {
                 sortSettings: game.sortSettings,
                 autoBattle: game.autoBattle,
                 autoReplay: game.autoReplay,
-                tutorialCompleted: game.tutorialCompleted,
-                clickedNPCs: game.clickedNPCs
+                tutorialCompleted: game.tutorialCompleted
             },
             
             // Current state (optional)
@@ -458,13 +457,12 @@ if (this.game.uiManager) {
         game.collectionLog = saveData.collectionLog || {};
         
         // Load settings
-if (saveData.settings) {
-    game.sortSettings = saveData.settings.sortSettings || game.sortSettings;
-    game.autoBattle = saveData.settings.autoBattle || false;
-    game.autoReplay = saveData.settings.autoReplay || false;
-    game.tutorialCompleted = saveData.settings.tutorialCompleted || false;
-    game.clickedNPCs = saveData.settings.clickedNPCs || {};
-}
+        if (saveData.settings) {
+            game.sortSettings = saveData.settings.sortSettings || game.sortSettings;
+            game.autoBattle = saveData.settings.autoBattle || false;
+            game.autoReplay = saveData.settings.autoReplay || false;
+            game.tutorialCompleted = saveData.settings.tutorialCompleted || false;
+        }
         
         // Update UI toggles
         const autoBattleToggle = document.getElementById('autoModeToggle');
