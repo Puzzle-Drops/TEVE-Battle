@@ -33,9 +33,6 @@ class Game {
         // Create autosell system
         this.autosell = new AutoSell(this);
 
-        // Track which NPCs have been clicked (loaded from save data)
-        this.clickedNPCs = {};
-
         // Progression tracking
         this.progression = {
             unlockedFeatures: {
@@ -534,20 +531,6 @@ enterDungeon(tierName, dungeonIndex) {
     }
 
 handleNPCClick(npcName) {
-    // Mark this NPC as clicked
-    this.clickedNPCs[npcName.toLowerCase()] = true;
-    
-    // Save to current slot (silent save)
-    if (saveManager.currentSlot) {
-        saveManager.saveToSlot(saveManager.currentSlot, true);
-    }
-    
-    // Remove the click indicator
-    const indicator = document.querySelector(`[data-npc="${npcName.toLowerCase()}"] .npcClickIndicator`);
-    if (indicator) {
-        indicator.remove();
-    }
-    
     if (this.tutorial) {
         this.tutorial.handleNPCClick(npcName);
     }
