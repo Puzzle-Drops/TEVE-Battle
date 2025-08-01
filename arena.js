@@ -53,23 +53,27 @@ generateArenaTeamOpponents(teamData) {
     const opponents = [];
     
     teamData.heroes.forEach(heroData => {
+        // Check awakened status BEFORE creating the enemy
+        let isAwakened = false;
+        const classData = unitData.classes[heroData.className];
+        if (classData && classData.tier >= 4 && heroData.level >= 400) {
+            isAwakened = true;
+        }
+        
         // Create an Enemy object that looks like a hero
         const enemy = new Enemy(heroData.className, heroData.level);
         
         // Override the name
         enemy.name = heroData.name;
         enemy.gender = heroData.gender;
-
-        // Set awakened status and re-get abilities if needed
-const classData = unitData.classes[heroData.className];
-if (classData) {
-    // Check if this should be awakened (tier 4 at level 400+)
-    if (classData.tier >= 4 && heroData.level >= 400) {
-        enemy.awakened = true;
-        // Re-get abilities now that awakened is set
-        enemy.abilities = enemy.getClassAbilities(classData.spells);
-    }
-}
+        
+        // Set awakened status if needed
+        if (isAwakened) {
+            //enemy.awakened = true;
+            // Re-get abilities now that awakened is set
+            //enemy.abilities = enemy.getClassAbilities(classData.spells);
+        }
+    
         
         // Equip gear properly using the new gear system
         Object.entries(heroData.gear || {}).forEach(([slot, gearData]) => {
