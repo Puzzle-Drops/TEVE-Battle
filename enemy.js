@@ -5,6 +5,9 @@ class Enemy {
         this.level = level;
         this.spellLevel = spellLevel || Math.max(1, Math.min(5, Math.floor(level / 100) + 1));
         this.stars = this.calculateStars(level);
+
+	// Add awakened property for tier 4 enemies
+        this.awakened = false;
         
         // Add gear system
         this.gear = {
@@ -308,6 +311,11 @@ getClassAbilities(spellIds) {
     // Add abilities from spell list
     spells.forEach((spell, index) => {
         if (spell) {
+            // Skip the 4th spell (index 3) if not awakened
+            if (index === 3 && !this.awakened) {
+                return; // Skip the 4th ability
+            }
+            
             // Get the correct cooldown for this spell level
             let cooldownValue = 0;
             if (Array.isArray(spell.cooldown)) {
