@@ -109,13 +109,23 @@ class Enemy {
             }
             
             getStars() {
-                return game.generateStars({ 
-                    type: 'enemy',
-                    level: this.level,
-                    isBoss: this.isBoss,
-		    awakened: this.awakened
-                });
-            }
+    // For hero-like enemies, we need to pass classTier
+    if (this.isHeroLike) {
+        const classData = unitData?.classes[this.className];
+        return game.generateStars({ 
+            type: 'enemy',
+            isHeroLike: true,
+            classTier: classData?.tier || 0,
+            awakened: this.awakened
+        });
+    } else {
+        return game.generateStars({ 
+            type: 'enemy', 
+            level: this.level, 
+            isBoss: this.isBoss
+        });
+    }
+}
 
 get baseStats() {
     const str = Math.floor(this.initial.str + (this.level * this.modifiers.str));
