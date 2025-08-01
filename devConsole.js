@@ -796,8 +796,8 @@ Press \` to toggle console</span>`;
         });
         
         // Complete all arena teams (1 completion each with 0 deaths)
-        // Completing 60 arena teams (0-59)
-        for (let i = 0; i < 60; i++) {
+        // Completing 1000 arena teams (0-999)
+        for (let i = 0; i < 1000; i++) {
             const teamId = `team_${i}`;
             if (!game.progression.completedArenas[teamId]) {
                 game.progression.completedArenas[teamId] = {
