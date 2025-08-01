@@ -68,6 +68,8 @@ generateArenaTeamOpponents(teamData) {
             // Check if this should be awakened (tier 4 at level 400+)
             if (classData.tier >= 4 && heroData.level >= 400) {
                 enemy.awakened = true;
+                // Re-get abilities now that awakened is set
+                enemy.abilities = enemy.getClassAbilities(classData.spells);
             }
         }
         
