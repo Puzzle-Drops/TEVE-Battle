@@ -1991,10 +1991,11 @@ updateArenaEnemyFormation() {
 const classData = unitData?.classes[enemy.className];
 const classTier = classData?.tier || 0;
 
-// Generate stars - arena enemies use enemy type with awakened status
+// Generate stars - arena enemies are hero-like
 const starData = this.game.generateStars({ 
-    type: 'enemy', 
-    level: enemy.level,
+    type: 'enemy',
+    isHeroLike: true,
+    classTier: classTier,
     awakened: enemy.awakened || false 
 });
                 
