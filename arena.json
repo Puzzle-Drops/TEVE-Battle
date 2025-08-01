@@ -6,9 +6,9 @@
       "description": "A group of aspiring villagers",
       "heroes": [
         {
-          "className": "sniper_male",
+          "className": "villager_male",
           "name": "Brin",
-          "level": 380,
+          "level": 5,
           "gender": "male",
           "gear": {
             "weapon": {"id": "glade_fangblade", "quality": [2, 0, 0, 0]},
@@ -17,9 +17,9 @@
           }
         },
         {
-          "className": "sniper_female",
+          "className": "villager_male",
           "name": "Dain",
-          "level": 400,
+          "level": 10,
           "gender": "male",
           "gear": {
             "offhand": {"id": "glade_wicker_guard", "quality": [2, 2, 0, 0]},
@@ -28,9 +28,9 @@
           }
         },
         {
-          "className": "sniper_male",
+          "className": "villager_male",
           "name": "Finn",
-          "level": 450,
+          "level": 10,
           "gender": "male",
           "gear": {
             "weapon": {"id": "glade_shadowfang", "quality": [3, 2, 0, 0]},
