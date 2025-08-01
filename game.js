@@ -202,7 +202,8 @@ generateStars(config) {
     let starCount = 0;
     let colorClass = 'normal';
     
-    if (config.type === 'hero') {
+    // Use hero logic for heroes OR hero-like enemies
+    if (config.type === 'hero' || config.isHeroLike) {
         // Hero star logic
         if (config.awakened) {
             starCount = 6;
@@ -211,8 +212,8 @@ generateStars(config) {
             // Tier 0 (villager) = 1 star, Tier 1 = 2 stars, etc.
             starCount = (config.classTier || 0) + 1;
         }
-    } else if (config.type === 'enemy') {
-        // Enemy star logic based on level
+    } else {
+        // Regular enemy logic
         const level = config.level;
         if (level < 50) starCount = 1;
         else if (level < 100) starCount = 2;
@@ -225,29 +226,26 @@ generateStars(config) {
         else if (level < 1000) starCount = 9;
         else starCount = 10;
         
-        // Check if enemy is awakened (for arena hero-like enemies)
-        if (config.awakened) {
-            starCount = 6;
-            colorClass = 'awakened'; // Purple for awakened enemies
-        } else if (config.isBoss) {
-            // Boss units get +1 star and special coloring
+        // Boss units get +1 star and can have up to 10 stars
+        if (config.isBoss) {
+            // Add +1 star for being a boss
             starCount += 1;
             
             // Bosses can exceed normal star limits
             if (level >= 1000) starCount = 10;
             else if (level >= 900) starCount = 9;
             else if (level >= 800) starCount = 8;
+            // Use calculated starCount for levels below 800
             
-            // Boss color class based on final star count
+            // Color class based on final star count
             if (starCount >= 7) {
                 colorClass = 'red';
             } else if (starCount >= 5) {
                 colorClass = 'purple';
             }
         } else {
-            // Regular non-boss enemies cap at 6 stars and stay normal/golden
+            // Non-boss enemies cap at 6 stars
             if (starCount > 6) starCount = 6;
-            // colorClass stays 'normal'
         }
     }
     
