@@ -465,13 +465,12 @@ applyInitialPassives(units = null) {
             }
         });
         
-        // Apply Lord's Presence passive effects
+// Apply Lord's Presence passive effects
 if (unit.lordsPresencePassive) {
-    const attackBonus = unit.lordsPresenceAttackBonus || 0.2;
     const allies = this.getParty(unit);
     allies.forEach(ally => {
         if (ally.isAlive) {
-            ally.source.attack = Math.floor(ally.source.attack * (1 + attackBonus));
+            this.applyBuff(ally, 'Increase Attack', unit.lordsPresenceBuffDuration || 1, { damageMultiplier: 1.5 });
             ally.stunImmunity = true;
         }
     });
@@ -1286,6 +1285,17 @@ if (this.currentUnit.regenerativeRootsPassive && this.currentUnit.isAlive) {
         }
     }
 }
+
+            // Lord's Presence passive - apply Increase Attack to all allies each turn
+            if (this.currentUnit.lordsPresencePassive && this.currentUnit.isAlive) {
+                const allies = this.getParty(this.currentUnit);
+                allies.forEach(ally => {
+                    if (ally.isAlive) {
+                        this.applyBuff(ally, 'Increase Attack', this.currentUnit.lordsPresenceBuffDuration || 1, { damageMultiplier: 1.5 });
+                    }
+                });
+                this.log(`${this.currentUnit.name}'s presence continues to empower allies!`);
+            }
 
             // Apply DOT effects first (before buff/debuff duration update)
             this.applyDotEffects(this.currentUnit);
