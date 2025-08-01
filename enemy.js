@@ -39,6 +39,8 @@ class Enemy {
             enemyData = unitData?.classes[enemyId];
             isHeroLike = true;
         }
+
+	this.isHeroLike = isHeroLike;
         
         if (enemyData) {
             this.name = enemyData.name;
@@ -108,9 +110,10 @@ class Enemy {
             
             getStars() {
                 return game.generateStars({ 
-                    type: 'enemy', 
-                    level: this.level, 
-                    isBoss: this.isBoss 
+                    type: 'enemy',
+                    level: this.level,
+                    isBoss: this.isBoss,
+		    awakened: this.awakened
                 });
             }
 
