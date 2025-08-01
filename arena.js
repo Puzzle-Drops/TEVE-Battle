@@ -79,6 +79,8 @@ if (classData) {
             item.quality2 = gearData.quality[1] || 0;
             item.quality3 = gearData.quality[2] || 0;
             item.quality4 = gearData.quality[3] || 0;
+            item.quality5 = gearData.quality[4] || 0;
+            item.refined = gearData.refined || false;
             
             // Use the enemy's equipItem method
             enemy.equipItem(item, slot);
