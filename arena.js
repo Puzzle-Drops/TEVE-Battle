@@ -69,9 +69,9 @@ generateArenaTeamOpponents(teamData) {
         
         // Set awakened status if needed
         if (isAwakened) {
-            //enemy.awakened = true;
+            enemy.awakened = true;
             // Re-get abilities now that awakened is set
-            //enemy.abilities = enemy.getClassAbilities(classData.spells);
+            enemy.abilities = enemy.getClassAbilities(classData.spells);
         }
     
         
