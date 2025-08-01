@@ -2054,7 +2054,7 @@ showArenaEnemyInfoPopup(enemy) {
     document.getElementById('popupHeroName').innerHTML = `Lv.${enemy.level} ${displayClassName} <span class="gender-${enemy.gender}">${enemy.gender === 'male' ? '♂' : '♀'}</span> | ${enemy.name}`;
     
     // Show stats
-    const stats = enemy.baseStats;
+    const stats = enemy.totalStats || enemy.baseStats;
     const statsHtml = `
         <div style="display: flex; gap: 40px;">
             <div style="flex: 1;">
@@ -2931,7 +2931,7 @@ document.getElementById('popupGear').innerHTML = gearHtml;
         }
         
         // Show stats in double column format
-        const stats = enemy.baseStats;
+        const stats = enemy.totalStats || enemy.baseStats;
         const statsHtml = `
             <div style="display: flex; gap: 40px;">
                 <div style="flex: 1;">
