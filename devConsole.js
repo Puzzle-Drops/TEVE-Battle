@@ -817,7 +817,7 @@ Press \` to toggle console</span>`;
         this.addLog('info', `- All features unlocked`);
         this.addLog('info', `- All ${allTiers.length} tiers unlocked`);
         this.addLog('info', `- All ${Object.keys(dungeonData.dungeons).length} dungeons completed`);
-        this.addLog('info', `- All 60 arena teams completed`);
+        this.addLog('info', `- All 1000 arena teams completed`);
         
         // Update UI if on main menu
         if (game.currentScreen === 'mainMenuScreen') {
