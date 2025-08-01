@@ -4506,7 +4506,7 @@ infernalCommandLogic: function(battle, caster, target, spell, spellLevel = 1) {
 lordsPresencePassiveLogic: function(battle, caster, target, spell, spellLevel = 1) {
     const levelIndex = spellLevel - 1;
     caster.lordsPresencePassive = true;
-    caster.lordsPresenceAttackBonus = spellHelpers.getParam(spell, 'attackBonus', levelIndex, 0.2);
+    caster.lordsPresenceBuffDuration = spellHelpers.getParam(spell, 'buffDuration', levelIndex, 1);
 },
 
 soulReaperLogic: function(battle, caster, target, spell, spellLevel = 1) {
