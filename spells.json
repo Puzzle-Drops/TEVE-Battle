@@ -4082,11 +4082,11 @@
 "lords_presence_passive": {
   "id": "lords_presence_passive",
   "name": "Lord's Presence",
-  "description": "Allies gain +20% attack and are immune to Stun",
+  "description": "Allies gain Increase Attack buff and are immune to Stun.",
   "cooldown": [0, 0, 0, 0, 0],
   "effects": ["passive"],
   "passive": true,
-  "attackBonus": 0.2,
+  "buffDuration": [1, 1, 1, 1, 1],
   "target": "self",
   "logicKey": "lordsPresencePassiveLogic"
 },
