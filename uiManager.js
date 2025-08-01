@@ -1987,7 +1987,11 @@ updateArenaEnemyFormation() {
             if (index < 5) {
                 const slot = slots[index];
                 
-                // Generate stars - arena enemies use enemy type with awakened status
+// Get class data for display name
+const classData = unitData?.classes[enemy.className];
+const classTier = classData?.tier || 0;
+
+// Generate stars - arena enemies use enemy type with awakened status
 const starData = this.game.generateStars({ 
     type: 'enemy', 
     level: enemy.level,
