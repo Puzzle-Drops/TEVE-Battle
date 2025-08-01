@@ -1987,12 +1987,10 @@ updateArenaEnemyFormation() {
             if (index < 5) {
                 const slot = slots[index];
                 
-                // Generate stars based on class tier and awakened status
-const classData = unitData?.classes[enemy.className];
-const classTier = classData?.tier || 0;
+                // Generate stars - arena enemies use enemy type with awakened status
 const starData = this.game.generateStars({ 
-    type: 'hero', 
-    classTier: classTier, 
+    type: 'enemy', 
+    level: enemy.level,
     awakened: enemy.awakened || false 
 });
                 
