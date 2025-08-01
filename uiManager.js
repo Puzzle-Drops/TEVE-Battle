@@ -1987,14 +1987,14 @@ updateArenaEnemyFormation() {
             if (index < 5) {
                 const slot = slots[index];
                 
-                // Generate stars based on class tier
-                const classData = unitData?.classes[enemy.className];
-                const classTier = classData?.tier || 0;
-                const starData = this.game.generateStars({ 
-                    type: 'hero', 
-                    classTier: classTier, 
-                    awakened: false 
-                });
+                // Generate stars based on class tier and awakened status
+const classData = unitData?.classes[enemy.className];
+const classTier = classData?.tier || 0;
+const starData = this.game.generateStars({ 
+    type: 'hero', 
+    classTier: classTier, 
+    awakened: enemy.awakened || false 
+});
                 
                 // Get display class name from unitData
                 const displayClassName = classData?.name || enemy.className;
