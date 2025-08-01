@@ -4326,7 +4326,15 @@ if (scaleWrapper) {
         if (direction === 'prev') {
             newTeam = currentTeam - 1;
             if (newTeam < 0) {
-                newTeam = 0; // Can't go below first team
+                // Find the highest unlocked team to wrap around to
+                let highestUnlocked = 0;
+                for (let i = this.game.arenaTeams.length - 1; i >= 0; i--) {
+                    if (this.game.isArenaTeamAccessible(i)) {
+                        highestUnlocked = i;
+                        break;
+                    }
+                }
+                newTeam = highestUnlocked;
             }
         } else {
             newTeam = currentTeam + 1;
