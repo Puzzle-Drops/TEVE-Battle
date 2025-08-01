@@ -64,6 +64,11 @@ generateArenaTeamOpponents(teamData) {
         const classData = unitData.classes[heroData.className];
         if (classData) {
             enemy.spellLevel = Math.min(4, classData.tier || 1);
+            
+            // Check if this should be awakened (tier 4 at level 400+)
+            if (classData.tier >= 4 && heroData.level >= 400) {
+                enemy.awakened = true;
+            }
         }
         
         // Equip gear properly using the new gear system
