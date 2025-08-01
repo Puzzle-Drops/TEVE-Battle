@@ -198,65 +198,71 @@ calculateMaxPartySize() {
     }
     
     // Consolidated star generation function
-    generateStars(config) {
-        let starCount = 0;
-        let colorClass = 'normal';
-        
-        if (config.type === 'hero') {
-            // Hero star logic
-            if (config.awakened) {
-                starCount = 6;
-                colorClass = 'awakened';
-            } else {
-                // Tier 0 (villager) = 1 star, Tier 1 = 2 stars, etc.
-                starCount = (config.classTier || 0) + 1;
-            }
-        } else if (config.type === 'enemy') {
-    // Enemy star logic based on level
-    const level = config.level;
-    if (level < 50) starCount = 1;
-    else if (level < 100) starCount = 2;
-    else if (level < 200) starCount = 3;
-    else if (level < 300) starCount = 4;
-    else if (level < 400) starCount = 5;
-    else if (level < 500) starCount = 6;
-    else if (level < 800) starCount = 7;
-    else if (level < 900) starCount = 8;
-    else if (level < 1000) starCount = 9;
-    else starCount = 10;
+generateStars(config) {
+    let starCount = 0;
+    let colorClass = 'normal';
     
-    // Boss units get +1 star and can have up to 10 stars
-    if (config.isBoss) {
-        // Add +1 star for being a boss
-        starCount += 1;
-        
-        // Bosses can exceed normal star limits
-        if (level >= 1000) starCount = 10;
-        else if (level >= 900) starCount = 9;
-        else if (level >= 800) starCount = 8;
-        // Use calculated starCount for levels below 800
-        
-        // Color class based on final star count
-        if (starCount >= 7) {
-            colorClass = 'red';
-        } else if (starCount >= 5) {
-            colorClass = 'purple';
+    if (config.type === 'hero') {
+        // Hero star logic
+        if (config.awakened) {
+            starCount = 6;
+            colorClass = 'awakened';
+        } else {
+            // Tier 0 (villager) = 1 star, Tier 1 = 2 stars, etc.
+            starCount = (config.classTier || 0) + 1;
         }
-    } else {
-        // Non-boss enemies cap at 6 stars
-        if (starCount > 6) starCount = 6;
+    } else if (config.type === 'enemy') {
+        // Check if enemy is awakened first (for arena enemies)
+        if (config.awakened) {
+            starCount = 6;
+            colorClass = 'awakened';
+        } else {
+            // Enemy star logic based on level
+            const level = config.level;
+            if (level < 50) starCount = 1;
+            else if (level < 100) starCount = 2;
+            else if (level < 200) starCount = 3;
+            else if (level < 300) starCount = 4;
+            else if (level < 400) starCount = 5;
+            else if (level < 500) starCount = 6;
+            else if (level < 800) starCount = 7;
+            else if (level < 900) starCount = 8;
+            else if (level < 1000) starCount = 9;
+            else starCount = 10;
+            
+            // Boss units get +1 star and can have up to 10 stars
+            if (config.isBoss) {
+                // Add +1 star for being a boss
+                starCount += 1;
+                
+                // Bosses can exceed normal star limits
+                if (level >= 1000) starCount = 10;
+                else if (level >= 900) starCount = 9;
+                else if (level >= 800) starCount = 8;
+                // Use calculated starCount for levels below 800
+                
+                // Color class based on final star count
+                if (starCount >= 7) {
+                    colorClass = 'red';
+                } else if (starCount >= 5) {
+                    colorClass = 'purple';
+                }
+            } else {
+                // Non-boss enemies cap at 6 stars
+                if (starCount > 6) starCount = 6;
+            }
+        }
     }
+    
+    // Generate the star HTML
+    const stars = '★'.repeat(starCount);
+    return {
+        count: starCount,
+        html: stars,
+        colorClass: colorClass,
+        fullHtml: stars ? `<span class="${config.cssClass || 'stars'} ${colorClass}">${stars}</span>` : ''
+    };
 }
-        
-        // Generate the star HTML
-        const stars = '★'.repeat(starCount);
-        return {
-            count: starCount,
-            html: stars,
-            colorClass: colorClass,
-            fullHtml: stars ? `<span class="${config.cssClass || 'stars'} ${colorClass}">${stars}</span>` : ''
-        };
-    }
 
 //init init init
 init() {
