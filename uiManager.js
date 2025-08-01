@@ -1963,14 +1963,15 @@ updateArenaEnemyFormation() {
         }
         
         // Disable/enable navigation arrows
-        const prevArrow = waveNav.querySelector('.waveArrow:first-child');
-        const nextArrow = waveNav.querySelector('.waveArrow:last-child');
-        
-        if (prevArrow) {
-            prevArrow.disabled = this.game.currentArenaTeam === 0;
-            prevArrow.style.opacity = prevArrow.disabled ? '0.5' : '1';
-            prevArrow.style.cursor = prevArrow.disabled ? 'default' : 'pointer';
-        }
+const prevArrow = waveNav.querySelector('.waveArrow:first-child');
+const nextArrow = waveNav.querySelector('.waveArrow:last-child');
+
+if (prevArrow) {
+    // Never disable the prev arrow - allow wrap around
+    prevArrow.disabled = false;
+    prevArrow.style.opacity = '1';
+    prevArrow.style.cursor = 'pointer';
+}
         
         if (nextArrow) {
             const canGoNext = this.game.currentArenaTeam < this.game.arenaTeams.length - 1 && 
