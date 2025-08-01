@@ -12,7 +12,7 @@
           "gender": "male",
           "gear": {
             "weapon": {"id": "glade_fangblade", "quality": [2, 0, 0, 0]},
-            "chest": {"id": "glade_hidewrap", "quality": [5, 5, 5, 5], "refined": true},
+            "chest": {"id": "glade_hidewrap", "quality": [5, 5, 5, 5, 5], "refined": true},
             "head": {"id": "glade_horncap", "quality": [2, 0, 0, 0]}
           }
         },
