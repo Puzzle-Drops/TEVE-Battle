@@ -1,3 +1,22 @@
+Prompt Endings:
+Show me the snippets of code and functions needed for me to paste in. Show me exactly where to place each piece of code with good detail and context so I can be confident with my placement. I really like it when you show me where the old code is that I will now be replacing. I really like where the game is at right now so let's make sure we keep it intact while doing this.
+
+
+past imp dungeons regular units tier 10, bosses tier 15.
+
+-----------------------
+---At Some Point Do---
+
+arnold tutorial screen (basically a q/a)
+
+gear faster maybe?
+
+----------------
+---On Release---
+disable '`' devconsole
+
+---------------
+---------------
 Map Buttons
 
 V: Village
@@ -41,7 +60,8 @@ Final Aetherium – Eternal Singularity (Ascended 3) (Lv 500)
 
 
 
-
+---------------
+---------------
 New Dungeons (replace all #):
 Prompt 1 (dungeons.json, enemies.json, spells.json, spellLogic.js):
 
