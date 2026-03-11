@@ -3161,7 +3161,7 @@ exitBattle() {
             tooltip = document.createElement('div');
             tooltip.id = 'buffDebuffTooltip';
             tooltip.style.cssText = `
-                position: fixed;
+                position: absolute;
                 background: rgba(10, 15, 26, 0.95);
                 border: 2px solid #2a6a8a;
                 padding: 12px;
@@ -3171,7 +3171,12 @@ exitBattle() {
                 max-width: 300px;
                 display: none;
             `;
-            document.body.appendChild(tooltip);
+            const scaleWrapper = document.getElementById('scaleWrapper');
+            if (scaleWrapper) {
+                scaleWrapper.appendChild(tooltip);
+            } else {
+                document.body.appendChild(tooltip);
+            }
         }
         
         const descriptions = {
@@ -3204,19 +3209,24 @@ exitBattle() {
         `;
         
         tooltip.style.display = 'block';
-        
-        // Position tooltip
+
+        // Position tooltip using game coordinates
         const rect = event.target.getBoundingClientRect();
-        tooltip.style.left = rect.left + 'px';
-        tooltip.style.top = (rect.bottom + 5) + 'px';
-        
-        // Adjust if tooltip goes off screen
+        const gameCoords = window.scalingSystem.viewportToGame(rect.left, rect.bottom + 5);
+        tooltip.style.left = gameCoords.x + 'px';
+        tooltip.style.top = gameCoords.y + 'px';
+
+        // Adjust if tooltip goes off game area
         const tooltipRect = tooltip.getBoundingClientRect();
-        if (tooltipRect.right > window.innerWidth) {
-            tooltip.style.left = (window.innerWidth - tooltipRect.width - 10) + 'px';
+        const tooltipWidth = tooltipRect.width;
+        const tooltipHeight = tooltipRect.height;
+        const tooltipGameCoords = window.scalingSystem.viewportToGame(tooltipRect.left, tooltipRect.top);
+        if (tooltipGameCoords.x + tooltipWidth > 1920) {
+            tooltip.style.left = (1920 - tooltipWidth - 10) + 'px';
         }
-        if (tooltipRect.bottom > window.innerHeight) {
-            tooltip.style.top = (rect.top - tooltipRect.height - 5) + 'px';
+        if (tooltipGameCoords.y + tooltipHeight > 1080) {
+            const topCoords = window.scalingSystem.viewportToGame(rect.left, rect.top - 5);
+            tooltip.style.top = (topCoords.y - tooltipHeight) + 'px';
         }
     }
 

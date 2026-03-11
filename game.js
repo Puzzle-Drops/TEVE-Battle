@@ -799,9 +799,9 @@ menu.style.left = menuLeft + 'px';
 menu.style.top = menuTop + 'px';
 
 // Check if menu would go off screen and adjust
-// We need to measure the menu in game coordinates
-const menuWidth = menu.offsetWidth / window.scalingSystem.getScale();
-const menuHeight = menu.offsetHeight / window.scalingSystem.getScale();
+// With CSS zoom, offsetWidth/Height are already in game coordinates
+const menuWidth = menu.offsetWidth;
+const menuHeight = menu.offsetHeight;
 
 // Adjust if menu goes off game bounds (1920x1080)
 if (menuLeft + menuWidth > 1920) {
@@ -1545,7 +1545,7 @@ const gameCoords = window.scalingSystem.viewportToGame(viewportCenterX, viewport
 
 // Apply vertical offset in game space
 const centerX = gameCoords.x;
-const centerY = gameCoords.y + (verticalOffset / window.scalingSystem.getScale());
+const centerY = gameCoords.y + verticalOffset;
 
 floatText.style.left = centerX + 'px';
 floatText.style.top = centerY + 'px';
@@ -1665,7 +1665,8 @@ menu.style.left = menuLeft + 'px';
 menu.style.top = menuTop + 'px';
 
 // Check if menu would go off screen and adjust
-const menuWidth = menu.offsetWidth / window.scalingSystem.getScale();
+// With CSS zoom, offsetWidth is already in game coordinates
+const menuWidth = menu.offsetWidth;
 
 // Adjust if menu goes off game bounds (1920x1080)
 if (menuLeft + menuWidth > 1920) {

@@ -26,6 +26,9 @@
     </div>
 </div>
 
+    <!-- Scale Wrapper for fixed 1920x1080 rendering -->
+    <div id="scaleWrapper">
+
 	<!-- Developer Console -->
 <div id="devConsole" style="display: none;">
     <div class="devConsoleHeader">
@@ -38,9 +41,6 @@
         <input type="text" class="devConsoleInput" id="devConsoleInput" placeholder="Type command..." />
     </div>
 </div>
-
-    <!-- Scale Wrapper for fixed 1920x1080 rendering -->
-    <div id="scaleWrapper">
         <div id="gameContainer" style="display: none;">
         
             <!-- Splash Screen -->
@@ -110,7 +110,7 @@
 </div>
 	    
 <!-- Save/Load Button -->
-<div class="menuNavButton saveLoadButton" style="position: fixed; top: 10px; right: 10px;">
+<div class="menuNavButton saveLoadButton" style="position: absolute; top: 10px; right: 10px;">
     <button class="menuNavPlaceholder" onclick="game.uiManager.showSaveLoad()">
         <div class="dungeonTierStarsStatic icon">💾</div>
         <div class="dungeonTierContent">

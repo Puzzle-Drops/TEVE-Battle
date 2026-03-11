@@ -141,12 +141,11 @@ body {
     justify-content: center;
 }
 
-/* Scale wrapper - this is what gets scaled */
+/* Scale wrapper - uses CSS zoom for crisp text rasterization */
 #scaleWrapper {
-    position: absolute;
+    position: relative;
     width: 1920px;
     height: 1080px;
-    transform-origin: center center;
 }
 
 /* Game container - always exactly 1920x1080 */
@@ -2385,7 +2384,7 @@ body {
 /* Dungeons Screen */
 #dungeonsScreen {
     display: none;
-    height: 100vh;
+    height: 1080px;
     background: #0a0f1a;
     position: relative;
     overflow: hidden;
@@ -2499,11 +2498,11 @@ body {
 /* Dungeon Blade Select Screen */
 .dungeonSelectScreen {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 1920px;
+    height: 1080px;
     background: #0a0f1a;
     z-index: 100;
 }
@@ -6187,7 +6186,7 @@ body {
 }
 
 .npcDialogueContainer {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     width: 1920px;

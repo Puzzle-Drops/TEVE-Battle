@@ -3670,7 +3670,7 @@ newItemHTML = newItemHTML.split(oldSpan).join(newSpan);
             tooltip = document.createElement('div');
             tooltip.id = 'itemTooltipDiv';
             tooltip.style.cssText = `
-                position: fixed;
+                position: absolute;
                 background: rgba(10, 15, 26, 0.95);
                 border: 2px solid #2a6a8a;
                 padding: 16px;
@@ -3767,8 +3767,8 @@ tooltip.style.top = gameCoords.y + 'px';
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
 const tooltipGameCoords = window.scalingSystem.viewportToGame(tooltipRect.left, tooltipRect.top);
-const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
-const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+const tooltipWidth = tooltipRect.width;
+const tooltipHeight = tooltipRect.height;
 
 if (tooltipGameCoords.x + tooltipWidth > 1920) {
     const leftCoords = window.scalingSystem.viewportToGame(rect.left - 10, rect.top);
@@ -3808,7 +3808,7 @@ if (tooltipGameCoords.y + tooltipHeight > 1080) {
             tooltip = document.createElement('div');
             tooltip.id = 'abilityTooltip';
             tooltip.style.cssText = `
-                position: fixed;
+                position: absolute;
                 background: rgba(10, 15, 26, 0.95);
                 border: 2px solid #2a6a8a;
                 padding: 16px;
@@ -3839,8 +3839,8 @@ tooltip.style.display = 'block';
 
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
-const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
-const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+const tooltipWidth = tooltipRect.width;
+const tooltipHeight = tooltipRect.height;
 
 if (gameCoords.x + tooltipWidth > 1920) {
     tooltip.style.left = (1920 - tooltipWidth - 10) + 'px';
@@ -3891,7 +3891,7 @@ if (gameCoords.y + tooltipHeight > 1080) {
             tooltip = document.createElement('div');
             tooltip.id = 'statTooltip';
             tooltip.style.cssText = `
-                position: fixed;
+                position: absolute;
                 background: rgba(10, 15, 26, 0.95);
                 border: 2px solid #2a6a8a;
                 padding: 10px;
@@ -3933,8 +3933,8 @@ tooltip.style.top = gameCoords.y + 'px';
 
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
-const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
-const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+const tooltipWidth = tooltipRect.width;
+const tooltipHeight = tooltipRect.height;
 
 if (gameCoords.x + tooltipWidth > 1920) {
     tooltip.style.left = (1920 - tooltipWidth - 10) + 'px';
@@ -3959,7 +3959,7 @@ if (gameCoords.y + tooltipHeight > 1080) {
             tooltip = document.createElement('div');
             tooltip.id = 'goldTooltipDiv';
             tooltip.style.cssText = `
-                position: fixed;
+                position: absolute;
                 background: rgba(10, 15, 26, 0.95);
                 border: 2px solid #ffd700;
                 padding: 12px 20px;
@@ -3990,8 +3990,8 @@ tooltip.style.top = gameCoords.y + 'px';
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
 const tooltipGameCoords = window.scalingSystem.viewportToGame(tooltipRect.left, tooltipRect.top);
-const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
-const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+const tooltipWidth = tooltipRect.width;
+const tooltipHeight = tooltipRect.height;
 
 if (tooltipGameCoords.x + tooltipWidth > 1920) {
     const leftCoords = window.scalingSystem.viewportToGame(rect.left - 10, rect.top);
@@ -4016,7 +4016,7 @@ if (tooltipGameCoords.y + tooltipHeight > 1080) {
         tooltip = document.createElement('div');
         tooltip.id = 'arenaStatTooltipDiv';
         tooltip.style.cssText = `
-            position: fixed;
+            position: absolute;
             background: rgba(10, 15, 26, 0.95);
             border: 2px solid #4dd0e1;
             padding: 8px 12px;
@@ -4048,8 +4048,8 @@ tooltip.style.top = gameCoords.y + 'px';
 
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
-const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
-const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+const tooltipWidth = tooltipRect.width;
+const tooltipHeight = tooltipRect.height;
 
 if (gameCoords.x + tooltipWidth > 1920) {
     tooltip.style.left = (1920 - tooltipWidth - 10) + 'px';
@@ -4099,7 +4099,7 @@ hideArenaStatTooltip() {
             tooltip = document.createElement('div');
             tooltip.id = 'itemTooltipDiv';
             tooltip.style.cssText = `
-                position: fixed;
+                position: absolute;
                 background: rgba(10, 15, 26, 0.95);
                 border: 2px solid #2a6a8a;
                 padding: 16px;
@@ -4156,8 +4156,8 @@ tooltip.style.top = gameCoords.y + 'px';
 // Adjust if tooltip goes off game area
 const tooltipRect = tooltip.getBoundingClientRect();
 const tooltipGameCoords = window.scalingSystem.viewportToGame(tooltipRect.left, tooltipRect.top);
-const tooltipWidth = tooltipRect.width / window.scalingSystem.getScale();
-const tooltipHeight = tooltipRect.height / window.scalingSystem.getScale();
+const tooltipWidth = tooltipRect.width;
+const tooltipHeight = tooltipRect.height;
 
 if (tooltipGameCoords.x + tooltipWidth > 1920) {
     const leftCoords = window.scalingSystem.viewportToGame(rect.left - 10, rect.top);
