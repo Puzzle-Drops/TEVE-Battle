@@ -26,10 +26,10 @@ class BattleRealtime {
         this.projectiles = [];
 
         // Battlefield bounds (bottom half of 1920x1080)
-        this.fieldMinX = 60;
-        this.fieldMaxX = 1860;
-        this.fieldMinY = 410;  // shifted up 150px
-        this.fieldMaxY = 770;  // shifted up 150px
+        this.fieldMinX = 30;
+        this.fieldMaxX = 1890;
+        this.fieldMinY = 370;  // above highest unit (378)
+        this.fieldMaxY = 770;  // below lowest unit (756)
 
         // Timer
         this.startTime = Date.now();
@@ -148,20 +148,28 @@ class BattleRealtime {
         const count = units.length;
         if (count === 0) return;
 
-        // Closer horizontally: party at 350, enemies at 1570
-        const xBase = isParty ? 350 : 1570;
-        const xSpread = 100;
-        // Tighter vertical grouping
-        const yMid = (this.fieldMinY + this.fieldMaxY) / 2;
-        const yTotalSpread = Math.min(250, (this.fieldMaxY - this.fieldMinY) * 0.6);
-        const yStart = yMid - yTotalSpread / 2;
-        const ySpacing = count > 1 ? yTotalSpread / (count - 1) : 0;
+        // Use the original CSS positions from the turn-based layout
+        const partyPositions = [
+            { x: 576, y: 605 },  // party1 — front center
+            { x: 346, y: 432 },  // party2 — mid top
+            { x: 269, y: 756 },  // party3 — mid bottom
+            { x: 115, y: 378 },  // party4 — back top
+            { x: 38,  y: 702 }   // party5 — back bottom
+        ];
+        const enemyPositions = [
+            { x: 1344, y: 605 }, // enemy1 — front center
+            { x: 1574, y: 432 }, // enemy2 — mid top
+            { x: 1651, y: 756 }, // enemy3 — mid bottom
+            { x: 1805, y: 378 }, // enemy4 — back top
+            { x: 1882, y: 702 }  // enemy5 — back bottom
+        ];
+
+        const positions = isParty ? partyPositions : enemyPositions;
 
         units.forEach((unit, i) => {
-            const x = xBase + (Math.random() - 0.5) * xSpread;
-            const y = count > 1 ? yStart + ySpacing * i : yMid;
+            const pos = positions[i] || positions[positions.length - 1];
             const facing = isParty ? 1 : -1;
-            unit.initRealtime(x, y, facing);
+            unit.initRealtime(pos.x, pos.y, facing);
         });
     }
 
