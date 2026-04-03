@@ -154,17 +154,17 @@ class BattleRealtime {
         // Use the original CSS positions from the turn-based layout
         const partyPositions = [
             { x: 776, y: 605 },  // party1 — front center
-            { x: 546, y: 432 },  // party2 — mid top
-            { x: 469, y: 756 },  // party3 — mid bottom
-            { x: 315, y: 378 },  // party4 — back top
-            { x: 238, y: 702 }   // party5 — back bottom
+            { x: 661, y: 432 },  // party2 — mid top
+            { x: 622, y: 756 },  // party3 — mid bottom
+            { x: 545, y: 378 },  // party4 — back top
+            { x: 507, y: 702 }   // party5 — back bottom
         ];
         const enemyPositions = [
             { x: 1144, y: 605 }, // enemy1 — front center
-            { x: 1374, y: 432 }, // enemy2 — mid top
-            { x: 1451, y: 756 }, // enemy3 — mid bottom
-            { x: 1605, y: 378 }, // enemy4 — back top
-            { x: 1682, y: 702 }  // enemy5 — back bottom
+            { x: 1259, y: 432 }, // enemy2 — mid top
+            { x: 1298, y: 756 }, // enemy3 — mid bottom
+            { x: 1375, y: 378 }, // enemy4 — back top
+            { x: 1413, y: 702 }  // enemy5 — back bottom
         ];
 
         const positions = isParty ? partyPositions : enemyPositions;
