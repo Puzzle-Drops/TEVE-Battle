@@ -7383,14 +7383,15 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 280px;
+    width: 380px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 10px;
-    background: rgba(10, 15, 26, 0.85);
-    border: 1px solid rgba(42, 106, 138, 0.5);
-    border-radius: 6px;
+    gap: 6px;
+    padding: 14px;
+    background: rgba(10, 15, 26, 0.9);
+    border: 1px solid rgba(42, 106, 138, 0.6);
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     z-index: 500;
     pointer-events: auto;
 }
@@ -7406,36 +7407,43 @@ body {
 /* --- Panel Entry (one per unit) --- */
 
 .rt-panel-entry {
+    /* Fixed height so buffs don't cause layout shift */
+    min-height: 100px;
+    padding: 6px;
+    background: rgba(15, 25, 40, 0.6);
+    border: 1px solid rgba(42, 106, 138, 0.3);
+    border-radius: 4px;
     transition: opacity 0.3s;
 }
 
 .rt-panel-entry.rt-panel-dead {
-    opacity: 0.35;
-    filter: grayscale(0.7);
+    opacity: 0.3;
+    filter: grayscale(0.8);
 }
 
 .rt-panel-row {
     display: flex;
-    gap: 8px;
-    align-items: center;
+    gap: 10px;
+    align-items: flex-start;
 }
 
 /* Portrait */
 .rt-panel-portrait {
     position: relative;
-    width: 48px;
-    height: 48px;
+    width: 64px;
+    height: 64px;
     flex-shrink: 0;
     border: 2px solid #2a6a8a;
-    border-radius: 4px;
+    border-radius: 6px;
     overflow: hidden;
     background: #0a1929;
     cursor: pointer;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .rt-panel-portrait:hover {
     border-color: #4dd0e1;
+    box-shadow: 0 0 12px rgba(77, 208, 225, 0.5);
 }
 
 .rt-panel-portrait img {
@@ -7451,12 +7459,12 @@ body {
     left: 0;
     right: 0;
     text-align: center;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: bold;
     color: #4dd0e1;
-    background: rgba(0, 0, 0, 0.8);
-    line-height: 1.3;
-    text-shadow: 0 0 4px rgba(77, 208, 225, 0.5);
+    background: rgba(0, 0, 0, 0.85);
+    line-height: 1.4;
+    text-shadow: 0 0 6px rgba(77, 208, 225, 0.6);
 }
 
 /* Info column */
@@ -7465,21 +7473,22 @@ body {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
 }
 
 .rt-panel-name {
-    font-size: 13px;
+    font-size: 16px;
     font-weight: bold;
     color: #b0e0f0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-shadow: 0 0 4px rgba(0,0,0,0.8);
+    text-shadow: 0 0 6px rgba(0,0,0,0.8);
+    line-height: 1.2;
 }
 
 .rt-panel-stars {
-    font-size: 11px;
+    font-size: 13px;
     letter-spacing: -1px;
 }
 
@@ -7491,11 +7500,12 @@ body {
 /* HP bar inside panel */
 .rt-panel-hpbar .healthBar {
     width: 100%;
-    height: 18px;
+    height: 24px;
     background: #0a1929;
     border: 1px solid #2a6a8a;
     position: relative;
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
+    border-radius: 2px;
 }
 
 .rt-panel-hpbar .healthFill {
@@ -7503,14 +7513,14 @@ body {
     height: 100%;
     background: linear-gradient(90deg, #00ff88 0%, #00cc66 100%);
     transition: width 0.15s;
-    box-shadow: 0 0 6px rgba(0, 255, 136, 0.4);
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
 }
 
 .rt-panel-hpbar .shieldFill {
     position: absolute;
     height: 100%;
     background: linear-gradient(90deg, #ffffff 0%, #e0e0e0 100%);
-    box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
     z-index: 1;
 }
 
@@ -7518,28 +7528,28 @@ body {
     position: absolute;
     width: 100%;
     text-align: center;
-    font-size: 12px;
-    line-height: 18px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+    font-size: 15px;
+    line-height: 24px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.95);
     z-index: 2;
     color: #fff;
+    font-weight: bold;
 }
 
-/* Buff/debuff container inside panel */
+/* Buff/debuff container inside panel — fixed height reserved */
 .rt-panel-entry .buffDebuffContainer {
     position: relative;
     top: auto;
     left: auto;
-    width: auto;
-    max-width: 200px;
-    height: auto;
-    min-height: 0;
+    width: 100%;
+    height: 32px;
+    min-height: 32px;
     display: flex;
     flex-wrap: wrap;
-    gap: 2px;
-    align-items: center;
+    gap: 3px;
+    align-items: flex-start;
     justify-content: flex-start;
-    padding: 2px 0 0 0;
+    padding: 4px 0 0 0;
     pointer-events: auto;
     z-index: 1000;
     overflow: visible;
@@ -7547,25 +7557,33 @@ body {
 
 .rt-panel-entry .buffIcon,
 .rt-panel-entry .debuffIcon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     position: relative;
     cursor: pointer;
     transition: all 0.2s;
 }
 
 .rt-panel-entry .buffIcon {
-    box-shadow: 0 0 6px rgba(0, 195, 255, 0.4);
+    box-shadow: 0 0 8px rgba(0, 195, 255, 0.5);
 }
 
 .rt-panel-entry .debuffIcon {
-    box-shadow: 0 0 6px rgba(255, 68, 68, 0.4);
+    box-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
 }
 
 .rt-panel-entry .buffIcon:hover,
 .rt-panel-entry .debuffIcon:hover {
-    transform: scale(1.15);
+    transform: scale(1.2);
     z-index: 100;
+}
+
+.rt-panel-entry .buffIcon:hover {
+    box-shadow: 0 0 12px rgba(0, 195, 255, 0.8);
+}
+
+.rt-panel-entry .debuffIcon:hover {
+    box-shadow: 0 0 12px rgba(255, 68, 68, 0.8);
 }
 
 .rt-panel-entry .buffIcon img,
@@ -7579,14 +7597,14 @@ body {
     position: absolute;
     bottom: -2px;
     right: -2px;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: bold;
     color: #fff;
-    background: rgba(0, 0, 0, 0.8);
-    padding: 0 2px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 0 3px;
     border-radius: 2px;
     text-shadow: 1px 1px 2px rgba(0,0,0,1);
-    min-width: 10px;
+    min-width: 12px;
     text-align: center;
 }
 
