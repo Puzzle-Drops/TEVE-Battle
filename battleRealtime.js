@@ -228,51 +228,33 @@ class BattleRealtime {
         });
     }
 
-    // --- Side Panels ---
+    // --- Unit Cards (individual popouts per unit) ---
 
-    createSidePanels() {
-        const battleScene = document.getElementById('battleScene');
-        if (!battleScene) return;
-
-        // Remove existing panels
-        const existingLeft = document.getElementById('rtPanelLeft');
-        const existingRight = document.getElementById('rtPanelRight');
-        if (existingLeft) existingLeft.remove();
-        if (existingRight) existingRight.remove();
-
-        // Left panel (party)
-        const leftPanel = document.createElement('div');
-        leftPanel.id = 'rtPanelLeft';
-        leftPanel.className = 'rt-side-panel rt-panel-left';
-        battleScene.appendChild(leftPanel);
-
-        // Right panel (enemies)
-        const rightPanel = document.createElement('div');
-        rightPanel.id = 'rtPanelRight';
-        rightPanel.className = 'rt-side-panel rt-panel-right';
-        battleScene.appendChild(rightPanel);
-
-        // Populate party panel
-        this.party.forEach(unit => {
-            this.createPanelEntry(unit, leftPanel);
+    createUnitCards() {
+        // Create individual cards for party (left side)
+        this.party.forEach((unit, i) => {
+            this.createUnitCard(unit, 'left', i, this.party.length);
         });
 
-        // Populate enemy panel
-        this.enemies.forEach(unit => {
-            this.createPanelEntry(unit, rightPanel);
+        // Create individual cards for enemies (right side)
+        this.enemies.forEach((unit, i) => {
+            this.createUnitCard(unit, 'right', i, this.enemies.length);
         });
     }
 
     rebuildEnemyPanel() {
-        const rightPanel = document.getElementById('rtPanelRight');
-        if (!rightPanel) return;
-        rightPanel.innerHTML = '';
-        this.enemies.forEach(unit => {
-            this.createPanelEntry(unit, rightPanel);
+        // Remove old enemy cards
+        document.querySelectorAll('.rt-card.rt-card-right').forEach(el => el.remove());
+        // Create new ones
+        this.enemies.forEach((unit, i) => {
+            this.createUnitCard(unit, 'right', i, this.enemies.length);
         });
     }
 
-    createPanelEntry(unit, panel) {
+    createUnitCard(unit, side, index, totalCount) {
+        const battleScene = document.getElementById('battleScene');
+        if (!battleScene) return;
+
         // Portrait URL
         let portraitUrl;
         if (unit.isEnemy) {
@@ -288,38 +270,43 @@ class BattleRealtime {
             starHtml = `<span class="rt-panel-stars ${starData.colorClass}">${starData.html}</span>`;
         }
 
-        const entry = document.createElement('div');
-        entry.className = 'rt-panel-entry';
-        entry.dataset.unitId = unit.isEnemy ? `enemy-${unit.position}` : `party-${unit.position}`;
+        // Vertical positioning — evenly distribute cards
+        const cardHeight = 160;
+        const gap = 8;
+        const totalHeight = totalCount * cardHeight + (totalCount - 1) * gap;
+        const startY = (1080 - totalHeight) / 2;
+        const yPos = startY + index * (cardHeight + gap);
 
-        entry.innerHTML = `
-            <div class="rt-panel-row">
-                <div class="rt-panel-portrait">
-                    <img src="${portraitUrl}" alt="${unit.name}"
-                         style="image-rendering: pixelated;"
-                         draggable="false"
-                         onerror="this.src='https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${unit.isEnemy ? unit.source.enemyId : unit.source.className + '_battle'}.png'">
-                    <div class="rt-panel-level">${unit.source.level}</div>
-                </div>
-                <div class="rt-panel-info">
-                    <div class="rt-panel-name">${unit.name} ${starHtml}</div>
-                    <div class="rt-panel-hpbar">
-                        <div class="healthBar">
-                            <div class="healthFill" style="width:100%"></div>
-                            <div class="shieldFill" style="width:0%;display:none"></div>
-                            <div class="healthText">${unit.currentHp}</div>
-                        </div>
+        const card = document.createElement('div');
+        card.className = `rt-card rt-card-${side}`;
+        card.style.top = yPos + 'px';
+
+        card.innerHTML = `
+            <div class="rt-card-portrait">
+                <img src="${portraitUrl}" alt="${unit.name}"
+                     style="image-rendering: pixelated;"
+                     draggable="false"
+                     onerror="this.src='https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${unit.isEnemy ? unit.source.enemyId : unit.source.className + '_battle'}.png'">
+                <div class="rt-card-lvl">Lv.${unit.source.level}</div>
+            </div>
+            <div class="rt-card-body">
+                <div class="rt-card-name">${unit.name} ${starHtml}</div>
+                <div class="rt-card-hpbar">
+                    <div class="healthBar">
+                        <div class="healthFill" style="width:100%"></div>
+                        <div class="shieldFill" style="width:0%;display:none"></div>
+                        <div class="healthText">${unit.currentHp}</div>
                     </div>
-                    <div class="buffDebuffContainer"></div>
                 </div>
+                <div class="rt-card-buffs buffDebuffContainer"></div>
             </div>
         `;
 
-        panel.appendChild(entry);
-        unit.panelEl = entry;
+        battleScene.appendChild(card);
+        unit.panelEl = card;
 
         // Click portrait for info
-        entry.querySelector('.rt-panel-portrait').addEventListener('click', (e) => {
+        card.querySelector('.rt-card-portrait').addEventListener('click', (e) => {
             e.stopPropagation();
             this.game.uiManager.closeHeroInfo();
             if (unit.isEnemy) {
@@ -349,8 +336,8 @@ class BattleRealtime {
             this.createRealtimeUnitEl(unit);
         });
 
-        // Create side panels with HP bars, buffs, portraits
-        this.createSidePanels();
+        // Create individual unit cards on left/right sides
+        this.createUnitCards();
 
         // Start timer
         this.startTimerUpdate();
@@ -2039,13 +2026,10 @@ class BattleRealtime {
         }
 
         setTimeout(() => {
-            // Clean up battlefield and side panels
+            // Clean up battlefield and unit cards
             const battlefield = document.getElementById('realtimeBattlefield');
             if (battlefield) battlefield.innerHTML = '';
-            const leftPanel = document.getElementById('rtPanelLeft');
-            const rightPanel = document.getElementById('rtPanelRight');
-            if (leftPanel) leftPanel.remove();
-            if (rightPanel) rightPanel.remove();
+            document.querySelectorAll('.rt-card').forEach(el => el.remove());
 
             if (this.mode === 'arena') {
                 this.game.uiManager.showArenaResults();
@@ -2059,10 +2043,7 @@ class BattleRealtime {
         // Clean up
         const battlefield = document.getElementById('realtimeBattlefield');
         if (battlefield) battlefield.innerHTML = '';
-        const leftPanel = document.getElementById('rtPanelLeft');
-        const rightPanel = document.getElementById('rtPanelRight');
-        if (leftPanel) leftPanel.remove();
-        if (rightPanel) rightPanel.remove();
+        document.querySelectorAll('.rt-card').forEach(el => el.remove());
 
         if (this._animFrameId) {
             cancelAnimationFrame(this._animFrameId);
