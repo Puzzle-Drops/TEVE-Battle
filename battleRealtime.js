@@ -200,13 +200,15 @@ class BattleRealtime {
         const nameColorClass = isAlly ? 'ally-name' : 'enemy-name';
         const hpFillClass = isAlly ? 'ally' : 'enemy';
 
+        // Level indicator with stars (same as turn-based)
+        const starData = unit.isEnemy ? unit.source.getStars() : unit.source.getStars();
+        let levelHtml = '<div class="levelNumber">' + unit.source.level + '</div>';
+        if (starData.html) {
+            levelHtml += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
+        }
+
         el.innerHTML = `
             <div class="rt-unit-inner">
-                <div class="rt-name ${nameColorClass}">${unit.name} Lv.${unit.source.level}</div>
-                <div class="rt-bars">
-                    <div class="rt-hp-bg"><div class="rt-hp-fill ${hpFillClass}" style="width:100%"></div><div class="rt-shield-fill" style="width:0%;display:none"></div></div>
-                </div>
-                <div class="rt-buffs"></div>
                 <div class="rt-sprite-container">
                     <div class="rt-sprite">
                         <img src="${spriteUrl}" alt="${unit.name}"
@@ -216,13 +218,36 @@ class BattleRealtime {
                     </div>
                     <div class="rt-shadow"></div>
                 </div>
+                <div class="healthBarContainer">
+                    <div class="healthBar">
+                        <div class="healthFill" style="width:100%"></div>
+                        <div class="shieldFill" style="width:0%;display:none"></div>
+                        <div class="healthText">${unit.currentHp}</div>
+                    </div>
+                </div>
+                <div class="levelIndicator">${levelHtml}</div>
+                <div class="buffDebuffContainer"></div>
             </div>
         `;
 
         battlefield.appendChild(el);
         unit.el = el;
 
-        // Add click handler for unit info
+        // Add click handler for unit info on level indicator
+        const levelIndicator = el.querySelector('.levelIndicator');
+        if (levelIndicator) {
+            levelIndicator.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.game.uiManager.closeHeroInfo();
+                if (unit.isEnemy) {
+                    this.game.uiManager.showEnemyInfoPopup(unit.source);
+                } else {
+                    this.game.uiManager.showHeroInfoPopup(unit.source);
+                }
+            });
+        }
+
+        // Right-click on whole unit for info
         el.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -760,34 +785,47 @@ class BattleRealtime {
             if (unit._lastHpKey !== hpKey) {
                 unit._lastHpKey = hpKey;
 
-                if (!unit._hpFill) unit._hpFill = unit.el.querySelector('.rt-hp-fill');
-                if (!unit._shieldFill) unit._shieldFill = unit.el.querySelector('.rt-shield-fill');
+                if (!unit._hpFill) unit._hpFill = unit.el.querySelector('.healthFill');
+                if (!unit._shieldFill) unit._shieldFill = unit.el.querySelector('.shieldFill');
+                if (!unit._hpText) unit._hpText = unit.el.querySelector('.healthText');
 
                 const hpFill = unit._hpFill;
                 const shieldFill = unit._shieldFill;
+                const hpText = unit._hpText;
 
                 if (hpFill) {
                     const totalMax = unit.maxHp + shield;
                     const hpPercent = (unit.currentHp / totalMax) * 100;
                     hpFill.style.width = hpPercent + '%';
+                    hpFill.style.position = 'absolute';
+                    hpFill.style.left = '0';
 
                     const hpOfMax = (unit.currentHp / unit.maxHp) * 100;
                     if (hpOfMax > 60) {
-                        hpFill.style.background = 'linear-gradient(90deg, #00ff88, #00cc66)';
+                        hpFill.style.background = 'linear-gradient(90deg, #00ff88 0%, #00cc66 100%)';
                     } else if (hpOfMax > 30) {
-                        hpFill.style.background = 'linear-gradient(90deg, #ffaa00, #ff8800)';
+                        hpFill.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff8800 100%)';
                     } else {
-                        hpFill.style.background = 'linear-gradient(90deg, #ff4444, #cc0000)';
+                        hpFill.style.background = 'linear-gradient(90deg, #ff4444 0%, #cc0000 100%)';
                     }
 
                     if (shieldFill) {
                         if (shield > 0) {
                             shieldFill.style.display = 'block';
                             shieldFill.style.width = (shield / totalMax * 100) + '%';
+                            shieldFill.style.position = 'absolute';
                             shieldFill.style.left = hpPercent + '%';
                         } else {
                             shieldFill.style.display = 'none';
                         }
+                    }
+                }
+
+                if (hpText) {
+                    if (shield > 0) {
+                        hpText.textContent = `${Math.floor(unit.currentHp)}+${Math.floor(shield)}`;
+                    } else {
+                        hpText.textContent = `${Math.floor(unit.currentHp)}`;
                     }
                 }
             }
@@ -798,7 +836,7 @@ class BattleRealtime {
     }
 
     renderBuffDebuffIcons(unit) {
-        const container = unit.el.querySelector('.rt-buffs');
+        const container = unit.el.querySelector('.buffDebuffContainer');
         if (!container) return;
 
         const currentState = JSON.stringify({
@@ -809,19 +847,43 @@ class BattleRealtime {
         if (unit._lastBuffDebuffState === currentState) return;
         unit._lastBuffDebuffState = currentState;
 
+        // Add many-effects class if lots of icons
+        const totalEffects = unit.buffs.length + unit.debuffs.length;
+        if (totalEffects > 6) {
+            container.classList.add('many-effects');
+        } else {
+            container.classList.remove('many-effects');
+        }
+
         container.innerHTML = '';
+
         unit.buffs.forEach(buff => {
             const iconName = this.getBuffIconName(buff.name);
             const div = document.createElement('div');
-            div.className = 'rt-buff-icon';
-            div.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" alt="${buff.name}" onerror="this.style.display='none'">`;
+            div.className = 'buffIcon';
+            div.innerHTML = `
+                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png"
+                     alt="${buff.name}"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%2300c3ff\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>B</text></svg>'">
+                ${buff.duration > 0 ? `<div class="buffDebuffDuration">${Math.ceil(buff.duration)}</div>` : ''}
+            `;
+            div.onmouseenter = (e) => this.showBuffDebuffTooltip(e, buff, true);
+            div.onmouseleave = () => this.hideBuffDebuffTooltip();
             container.appendChild(div);
         });
+
         unit.debuffs.forEach(debuff => {
             const iconName = this.getDebuffIconName(debuff.name);
             const div = document.createElement('div');
-            div.className = 'rt-debuff-icon';
-            div.innerHTML = `<img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png" alt="${debuff.name}" onerror="this.style.display='none'">`;
+            div.className = 'debuffIcon';
+            div.innerHTML = `
+                <img src="https://puzzle-drops.github.io/TEVE/img/buffs/${iconName}.png"
+                     alt="${debuff.name}"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\'><rect fill=\\'%23ff4444\\' width=\\'24\\' height=\\'24\\'/><text x=\\'12\\' y=\\'16\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'12\\'>D</text></svg>'">
+                ${debuff.duration > 0 ? `<div class="buffDebuffDuration">${Math.ceil(debuff.duration)}</div>` : ''}
+            `;
+            div.onmouseenter = (e) => this.showBuffDebuffTooltip(e, debuff, false);
+            div.onmouseleave = () => this.hideBuffDebuffTooltip();
             container.appendChild(div);
         });
     }
@@ -2084,9 +2146,64 @@ class BattleRealtime {
         return iconMap[debuffName] || 'debuff';
     }
 
-    // Buff/debuff tooltip (simplified for realtime — reuses battle.js pattern)
     showBuffDebuffTooltip(event, buffDebuff, isBuff) {
-        // Delegate to battle.js pattern if needed
+        if (!buffDebuff || !buffDebuff.name) return;
+
+        let tooltip = document.getElementById('buffDebuffTooltip');
+        if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.id = 'buffDebuffTooltip';
+            tooltip.style.cssText = `
+                position: absolute;
+                background: rgba(10, 15, 26, 0.95);
+                border: 2px solid #2a6a8a;
+                padding: 12px;
+                border-radius: 4px;
+                z-index: 10002;
+                pointer-events: none;
+                max-width: 300px;
+                display: none;
+            `;
+            const scaleWrapper = document.getElementById('scaleWrapper');
+            if (scaleWrapper) {
+                scaleWrapper.appendChild(tooltip);
+            } else {
+                document.body.appendChild(tooltip);
+            }
+        }
+
+        const descriptions = {
+            'Boss': '50% stun resistance, 25% damage reduction',
+            'Increase Attack': '+50% attack damage',
+            'Increase Speed': '+33% action bar progress',
+            'Increase Defense': '+25% damage reduction, and -25% damage taken',
+            'Immune': 'Cannot gain debuffs',
+            'Shield': `Absorbs ${Math.round(buffDebuff.shieldAmount || 0)} damage`,
+            'Frost Armor': '+25% damage reduction, attackers are slowed',
+            'Reduce Attack': '-50% attack damage',
+            'Reduce Speed': '-33% movement and attack speed',
+            'Reduce Defense': '-25% damage reduction, and +25% damage taken',
+            'Blight': 'No health regen, cannot be healed',
+            'Bleed': 'Takes 2.5% max HP damage per second',
+            'Stun': 'Cannot act',
+            'Taunt': 'Must attack the unit that taunted',
+            'Silence': 'Forces basic attack on random enemy',
+            'Mark': '+25% damage taken, cannot gain buffs or evade'
+        };
+
+        tooltip.className = isBuff ? 'buff' : 'debuff';
+        const durationText = buffDebuff.duration > 0 ? `<div style="margin-top: 5px; color: #6a9aaa;">${Math.ceil(buffDebuff.duration)}s remaining</div>` : '';
+        tooltip.innerHTML = `
+            <div class="buffDebuffTooltipTitle">${buffDebuff.name}</div>
+            <div class="buffDebuffTooltipDesc">${descriptions[buffDebuff.name] || 'Unknown effect'}</div>
+            ${durationText}
+        `;
+        tooltip.style.display = 'block';
+
+        const rect = event.target.getBoundingClientRect();
+        const gameCoords = window.scalingSystem.viewportToGame(rect.left, rect.bottom + 5);
+        tooltip.style.left = gameCoords.x + 'px';
+        tooltip.style.top = gameCoords.y + 'px';
     }
 
     hideBuffDebuffTooltip() {
