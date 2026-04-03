@@ -7476,8 +7476,8 @@ body {
 }
 
 .rt-sprite {
-    width: 240px;
-    height: 240px;
+    width: 256px;
+    height: 256px;
     display: flex;
     align-items: flex-end; /* anchor at feet (bottom of sprite) */
     justify-content: center;
