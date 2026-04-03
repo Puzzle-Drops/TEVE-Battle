@@ -199,7 +199,7 @@ class BattleRealtime {
                 <div class="rt-sprite-container">
                     <div class="rt-sprite">
                         <img src="${spriteUrl}" alt="${unit.name}"
-                             style="image-rendering: pixelated; transform: scaleX(${unit.facing});"
+                             style="image-rendering: pixelated; transform: scaleX(${unit.isEnemy ? -unit.facing : unit.facing});"
                              draggable="false"
                              onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size:11px;text-align:center;\\'>${unit.name}</div>'">
                     </div>
@@ -729,10 +729,12 @@ class BattleRealtime {
             unit.el.style.zIndex = Math.floor(unit.y);
 
             // Sprite flip — only update when facing changes
+            // Enemy sprites are pre-mirrored (already face left), so invert their flip
             if (unit._lastFacing !== unit.facing) {
                 unit._lastFacing = unit.facing;
                 if (!unit._spriteImg) unit._spriteImg = unit.el.querySelector('.rt-sprite img');
-                if (unit._spriteImg) unit._spriteImg.style.transform = `scaleX(${unit.facing})`;
+                const flipValue = unit.isEnemy ? -unit.facing : unit.facing;
+                if (unit._spriteImg) unit._spriteImg.style.transform = `scaleX(${flipValue})`;
             }
 
             // Animation state class — only update when state changes
