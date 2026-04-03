@@ -135,20 +135,16 @@ class RealtimeAI {
         const allies = this.battle.getParty(unit).filter(a => a && a.isAlive && a !== unit);
         const separationThreshold = 35;
         const separationForce = 2;
-        let sepX = 0;
         let sepY = 0;
 
         allies.forEach(ally => {
-            const adx = unit.x - ally.x;
             const ady = unit.y - ally.y;
-            const aDist = Math.sqrt(adx * adx + ady * ady);
+            const aDist = Math.abs(ady);
             if (aDist < separationThreshold && aDist > 0) {
-                sepX += (adx / aDist) * separationForce;
-                sepY += (ady / aDist) * separationForce;
+                sepY += (ady > 0 ? 1 : -1) * separationForce;
             }
         });
 
-        dirX += sepX;
         dirY += sepY;
 
         // Normalize
