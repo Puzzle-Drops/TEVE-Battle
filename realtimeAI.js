@@ -133,8 +133,8 @@ class RealtimeAI {
 
         // Separation force — avoid stacking with nearby allies
         const allies = this.battle.getParty(unit).filter(a => a && a.isAlive && a !== unit);
-        const separationThreshold = 80;
-        const separationForce = 5;
+        const separationThreshold = 35;
+        const separationForce = 2;
         let sepX = 0;
         let sepY = 0;
 

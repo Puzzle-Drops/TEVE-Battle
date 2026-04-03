@@ -207,7 +207,6 @@ class BattleRealtime {
                              draggable="false"
                              onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'font-size:11px;text-align:center;\\'>${unit.name}</div>'">
                     </div>
-                    <div class="rt-shadow"></div>
                 </div>
             </div>
         `;
@@ -296,6 +295,11 @@ class BattleRealtime {
                         <div class="healthFill" style="width:100%"></div>
                         <div class="shieldFill" style="width:0%;display:none"></div>
                         <div class="healthText">${unit.currentHp}</div>
+                    </div>
+                </div>
+                <div class="rt-card-atkbar">
+                    <div class="actionBar">
+                        <div class="actionFill" style="width:0%"></div>
                     </div>
                 </div>
                 <div class="rt-card-buffs buffDebuffContainer"></div>
@@ -895,6 +899,23 @@ class BattleRealtime {
                         hpText.textContent = `${Math.floor(unit.currentHp)}+${Math.floor(shield)}`;
                     } else {
                         hpText.textContent = `${Math.floor(unit.currentHp)}`;
+                    }
+                }
+            }
+
+            // Attack cooldown bar
+            if (!unit.isDead) {
+                if (!unit._atkFill) unit._atkFill = unit.panelEl.querySelector('.actionFill');
+                if (unit._atkFill) {
+                    const maxCd = 1 / unit.attackSpeed;
+                    const remaining = Math.max(0, unit.globalCooldown);
+                    const readyPercent = Math.min(((maxCd - remaining) / maxCd) * 100, 100);
+                    unit._atkFill.style.width = readyPercent + '%';
+
+                    if (readyPercent >= 100) {
+                        unit._atkFill.style.boxShadow = '0 0 10px rgba(77, 208, 225, 1)';
+                    } else {
+                        unit._atkFill.style.boxShadow = '0 0 5px rgba(77, 208, 225, 0.5)';
                     }
                 }
             }

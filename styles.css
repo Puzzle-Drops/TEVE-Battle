@@ -7519,6 +7519,26 @@ body {
     font-weight: bold;
 }
 
+/* Attack cooldown bar inside card */
+.rt-card-atkbar .actionBar {
+    width: 100%;
+    height: 10px;
+    top: 0;
+    background: #0a1929;
+    border: 1px solid rgba(42, 106, 138, 0.5);
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.rt-card-atkbar .actionFill {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(90deg, #1a5a7a 0%, #4dd0e1 100%);
+    transition: width 0.05s linear;
+    box-shadow: 0 0 5px rgba(77, 208, 225, 0.5);
+}
+
 /* Buff/debuff container inside card — fixed height */
 .rt-card-buffs {
     position: relative;
