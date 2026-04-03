@@ -95,6 +95,8 @@ async function loadGameData() {
         { src: 'battleAI.js', name: 'Battle AI' },
         { src: 'battleAnimations.js', name: 'Battle Animations' },
         { src: 'battle.js', name: 'Battle System' },
+        { src: 'realtimeAI.js', name: 'Realtime AI' },
+        { src: 'battleRealtime.js', name: 'Realtime Battle' },
         { src: 'devConsole.js', name: 'Dev Console' },
         { src: 'item.js', name: 'Item System' },
         { src: 'autosell.js', name: 'Autosell System' },

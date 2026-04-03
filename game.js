@@ -1943,8 +1943,8 @@ startBattle(mode = null) {
         this.lastArenaParty = [...this.selectedParty];
         this.lastArenaOpponents = this.arenaOpponents;
         
-        // Create and start arena battle
-        this.currentBattle = new Battle(this, party, [this.arenaOpponents], 'arena');
+        // Create and start arena battle (realtime)
+        this.currentBattle = new BattleRealtime(this, party, [this.arenaOpponents], 'arena');
 
         // If auto replay is on, ensure auto battle is also on
         if (this.autoReplay && !this.autoBattle) {
@@ -1964,8 +1964,8 @@ if (this.autoBattle) {
             this.toggleAutoBattle(true);
         }
         
-        // Create and start battle with waves
-        this.currentBattle = new Battle(this, party, this.dungeonWaves, 'dungeon');
+        // Create and start battle with waves (realtime)
+        this.currentBattle = new BattleRealtime(this, party, this.dungeonWaves, 'dungeon');
         
         // Set auto mode if enabled
         if (this.autoBattle) {
@@ -2062,6 +2062,16 @@ continueFromArena() {
     
     exitBattle() {
     if (this.currentBattle) {
+
+        // Cancel realtime animation frame if running
+        if (this.currentBattle._animFrameId) {
+            cancelAnimationFrame(this.currentBattle._animFrameId);
+            this.currentBattle._animFrameId = null;
+        }
+
+        // Clean up realtime battlefield DOM
+        const rtBattlefield = document.getElementById('realtimeBattlefield');
+        if (rtBattlefield) rtBattlefield.innerHTML = '';
 
         // Clear the battle timer interval FIRST
         if (this.currentBattle.timerInterval) {

@@ -1,7 +1,7 @@
-# TEVE - Twilight's Forever
+# TEVE-Battle - Twilight's Forever (Autobattler)
 
-Turn-based strategy RPG / idle game hybrid. Browser-based, vanilla JS, 1920x1080 fixed resolution.
-Summoners War PvE-inspired. Party of up to 5 heroes vs waves of enemies. Progression-driven with item farming, class promotions, and dungeon grinding.
+Real-time autobattler RPG / idle game hybrid. Browser-based, vanilla JS, 1920x1080 fixed resolution.
+Forked from TEVE (turn-based). Units move freely on a 2D battlefield, auto-target nearest enemy, and attack when in range. Cooldown-based abilities replace the old action bar system. Party of up to 5 heroes vs waves of enemies. Progression-driven with item farming, class promotions, and dungeon grinding.
 
 ## Quick Reference
 
@@ -31,6 +31,7 @@ Summoners War PvE-inspired. Party of up to 5 heroes vs waves of enemies. Progres
 2. `loadingManager.js` (loaded in HTML head)
 3. Then via `loadGameData()`:
    - `spellLogic.js` → `battleUnit.js` → `battleAI.js` → `battleAnimations.js` → `battle.js`
+   - `realtimeAI.js` → `battleRealtime.js`
    - `devConsole.js` → `item.js` → `autosell.js` → `uiManager.js`
    - `hero.js` → `enemy.js` → `arena.js` → `tutorial.js` → `saveManager.js` → `game.js`
 4. JSON data: spells → heroes → enemies → dungeons → items → arena
@@ -40,10 +41,12 @@ Summoners War PvE-inspired. Party of up to 5 heroes vs waves of enemies. Progres
 | File | Class/Role | Key Responsibilities |
 |------|-----------|---------------------|
 | `game.js` | `Game` | Central state, init, progression, stashes, dungeon management |
-| `battle.js` | `Battle` | Combat loop, action bar, turn order, damage dealing, wave transitions |
-| `battleUnit.js` | `BattleUnit` | Combat wrapper around Hero/Enemy, tracks HP/buffs/debuffs/action bar |
-| `battleAI.js` | `BattleAI` | Scoring-based AI decision making for auto-play and enemies |
-| `battleAnimations.js` | `BattleAnimations` | Visual effects (damage numbers, death, buffs) |
+| `battle.js` | `Battle` | **Legacy** turn-based combat loop (kept but not instantiated) |
+| `battleRealtime.js` | `BattleRealtime` | **Active** real-time battle engine, rAF loop, damage pipeline, wave management |
+| `realtimeAI.js` | `RealtimeAI` | Per-tick AI: nearest-target, movement with separation, ability priority |
+| `battleUnit.js` | `BattleUnit` | Combat wrapper around Hero/Enemy, tracks HP/buffs/debuffs + realtime position/cooldowns |
+| `battleAI.js` | `BattleAI` | **Legacy** scoring-based AI (kept but not instantiated) |
+| `battleAnimations.js` | `BattleAnimations` | Visual effects — dual-mode for both turn-based and realtime units |
 | `hero.js` | `Hero` | Player character — stats, leveling, promotion, gear, exp |
 | `enemy.js` | `Enemy` | Enemy creation from templates, stat scaling by tier |
 | `item.js` | `Item` | Gear generation with random rolls, refinement, quality calc |
@@ -63,7 +66,8 @@ Summoners War PvE-inspired. Party of up to 5 heroes vs waves of enemies. Progres
 - **BattleUnit Wrapping**: `BattleUnit` wraps either `Hero` or `Enemy` as `.source` for uniform combat interface.
 - **Spell System**: `spells.json` defines spell data/scaling → `spellLogic.js` has a function per spell ID → `battle.js` calls spellLogic during combat.
 - **Shared Stashes**: Items stored per class family (e.g., all Swordsman-tree classes share one stash).
-- **Action Bar**: 0→10,000 units. Speed determines gain per cycle. Highest bar acts first.
+- **Action Bar**: 0→10,000 units. Speed determines gain per cycle. Highest bar acts first. *(Legacy — replaced by real-time cooldowns in BattleRealtime)*
+- **Real-time Battle**: Units move freely on bottom half of screen (y: 540-1080). `requestAnimationFrame` loop. 1 turn = 2 seconds for duration conversion. Melee range 60px, ranged 200px, healer 180px. Move speed 80-160px/s based on AGI. Attack speed 0.8-1.5/s based on AGI.
 
 ## Stat System Summary
 

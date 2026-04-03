@@ -7339,3 +7339,299 @@ body {
 .dodgeText {
     font-family: 'Segoe UI', Arial, sans-serif;
 }
+
+/* ============================================================
+   REAL-TIME AUTOBATTLER STYLES
+   ============================================================ */
+
+/* --- Battlefield Container (bottom half of 1920x1080) --- */
+
+#realtimeBattlefield {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: visible;
+    pointer-events: none;
+}
+
+#realtimeBattlefield * {
+    pointer-events: auto;
+}
+
+/* --- Unit Element --- */
+
+.rt-unit {
+    position: absolute;
+    width: 120px;
+    transform: translateX(-60px); /* center on x,y */
+    pointer-events: auto;
+    transition: none; /* movement handled by JS */
+}
+
+.rt-unit-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- Name Tag --- */
+
+.rt-name {
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 0 0 4px rgba(0,0,0,0.9), 0 1px 2px rgba(0,0,0,0.8);
+    margin-bottom: 2px;
+    pointer-events: none;
+}
+
+.rt-name.ally-name {
+    color: #7fdfff;
+}
+
+.rt-name.enemy-name {
+    color: #ff7777;
+}
+
+/* --- HP Bar --- */
+
+.rt-bars {
+    width: 80px;
+    margin-bottom: 2px;
+}
+
+.rt-hp-bg {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(100, 200, 255, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.rt-hp-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #00ff88, #00cc66);
+    transition: width 0.15s ease;
+}
+
+.rt-hp-fill.ally {
+    background: linear-gradient(90deg, #00ff88, #00cc66);
+}
+
+.rt-hp-fill.enemy {
+    background: linear-gradient(90deg, #ff6666, #cc3333);
+}
+
+.rt-shield-fill {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #66ccff, #3399ff);
+    transition: width 0.15s ease;
+}
+
+/* --- Buff/Debuff Icons --- */
+
+.rt-buffs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1px;
+    max-width: 100px;
+    min-height: 12px;
+    margin-bottom: 1px;
+}
+
+.rt-buff-icon, .rt-debuff-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.rt-buff-icon img, .rt-debuff-icon img {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+}
+
+.rt-debuff-icon {
+    filter: hue-rotate(180deg) brightness(0.9);
+}
+
+/* --- Sprite --- */
+
+.rt-sprite-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rt-sprite {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: flex-end; /* anchor at feet (bottom of sprite) */
+    justify-content: center;
+}
+
+.rt-sprite img {
+    max-width: 100%;
+    max-height: 100%;
+    image-rendering: pixelated;
+    object-fit: contain;
+}
+
+.rt-shadow {
+    width: 40px;
+    height: 8px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
+    margin-top: -2px;
+}
+
+/* --- Animation States --- */
+
+/* Idle bob */
+.rt-idle .rt-sprite {
+    animation: rt-idle-bob 1.8s ease-in-out infinite;
+}
+
+@keyframes rt-idle-bob {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-3px) scale(1.01); }
+}
+
+/* Walk cycle */
+.rt-walking .rt-sprite {
+    animation: rt-walk 0.35s ease-in-out infinite;
+}
+
+@keyframes rt-walk {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-4px) rotate(-2deg); }
+    75% { transform: translateY(-4px) rotate(2deg); }
+}
+
+/* Attack lunge */
+.rt-attack-lunge .rt-sprite {
+    animation: rt-lunge 0.4s ease-out;
+}
+
+@keyframes rt-lunge {
+    0% { transform: translateX(0) scale(1); }
+    30% { transform: translateX(calc(15px * var(--face, 1))) scale(1.08) rotate(calc(3deg * var(--face, 1))); }
+    100% { transform: translateX(0) scale(1) rotate(0deg); }
+}
+
+/* Attacking state */
+.rt-attacking .rt-sprite {
+    animation: rt-lunge 0.4s ease-out;
+}
+
+/* Casting state */
+.rt-casting .rt-sprite {
+    animation: rt-cast-glow 0.5s ease;
+}
+
+@keyframes rt-cast-glow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.5) drop-shadow(0 0 8px rgba(100, 200, 255, 0.6)); }
+}
+
+/* Hit flash */
+.rt-hit .rt-sprite img {
+    animation: rt-hit-flash 0.25s ease;
+}
+
+@keyframes rt-hit-flash {
+    0% { filter: brightness(1); }
+    30% { filter: brightness(3) saturate(0.4); }
+    100% { filter: brightness(1); }
+}
+
+/* Stunned */
+.rt-stunned .rt-sprite img {
+    opacity: 0.75;
+    filter: saturate(0.5);
+}
+
+.rt-stunned .rt-sprite {
+    animation: rt-stun-wobble 0.8s ease-in-out infinite !important;
+}
+
+@keyframes rt-stun-wobble {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-4deg); }
+    75% { transform: rotate(4deg); }
+}
+
+/* Death crumple */
+.rt-dying {
+    animation: rt-death-crumple 0.5s ease forwards;
+    pointer-events: none;
+}
+
+@keyframes rt-death-crumple {
+    0% { opacity: 1; transform: translateX(-60px) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translateX(-60px) scale(0.5) rotate(8deg) translateY(20px); }
+}
+
+.rt-dead {
+    opacity: 0;
+    pointer-events: none;
+    display: none;
+}
+
+/* --- Projectile --- */
+
+.rt-projectile {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle, #ffdd44 0%, #ff8800 60%, transparent 100%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 6px rgba(255, 200, 0, 0.8);
+}
+
+/* --- Damage Numbers (realtime) --- */
+
+.rt-damage-number {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 20px;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 10000;
+    animation: rt-damage-float 1.5s ease-out forwards;
+    text-shadow: 0 0 4px rgba(0,0,0,0.9), 0 2px 4px rgba(0,0,0,0.7);
+}
+
+@keyframes rt-damage-float {
+    0% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.2); }
+    20% { transform: translateX(-50%) translateY(-15px) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-50px) scale(0.8); }
+}
+
+/* --- Dodge Text (realtime) --- */
+
+.rt-dodge-text {
+    position: absolute;
+    transform: translateX(-50%);
+    color: #4dd0e1;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(77, 208, 225, 0.8);
+    pointer-events: none;
+    z-index: 10000;
+    animation: rt-damage-float 1s ease-out forwards;
+}

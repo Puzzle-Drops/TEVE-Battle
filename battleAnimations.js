@@ -8,71 +8,98 @@ class BattleAnimations {
         this.processingUnits = new Set(); // Track which units are processing
     }
 
+    // Helper: get the DOM element for a unit (works for both turn-based and realtime)
+    getUnitElement(unit) {
+        // Real-time units have .el
+        if (unit.el) return unit.el;
+        // Turn-based fallback
+        const id = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
+        return document.getElementById(id);
+    }
+
+    // Helper: get the animation container inside a unit element
+    getAnimContainer(unitEl) {
+        if (!unitEl) return null;
+        // Realtime uses .rt-unit-inner, turn-based uses .unitAnimationContainer
+        return unitEl.querySelector('.rt-unit-inner') || unitEl.querySelector('.unitAnimationContainer');
+    }
+
     showDamageAnimation(attacker, target, damage, damageType) {
-        // Show damage number
-        const targetId = target.isEnemy ? `enemy${target.position + 1}` : `party${target.position + 1}`;
-        const targetElement = document.getElementById(targetId);
-        
+        const targetElement = this.getUnitElement(target);
+
         if (targetElement) {
-            // Get health bar position for damage number spawn
-            const healthBar = targetElement.querySelector('.healthBar');
-            const healthFill = healthBar ? healthBar.querySelector('.healthFill') : null;
-            
-            if (healthBar && healthFill) {
-                // Calculate position at end of health fill
-                const fillWidth = parseFloat(healthFill.style.width || '100');
-                const fillPixelWidth = (healthBar.offsetWidth * fillWidth) / 100;
-                
-                // Create damage number
-                const damageNum = document.createElement('div');
-                damageNum.className = 'damageNumber';
-                damageNum.textContent = `-${damage}`;
-                
-                // Add damage type class for color
-                if (damageType === 'physical') damageNum.classList.add('physical');
-                else if (damageType === 'magical') damageNum.classList.add('magical');
-                else if (damageType === 'pure') damageNum.classList.add('pure');
-                else damageNum.classList.add('physical'); // default
-                
-                // Position at end of health fill
-                damageNum.style.left = `${54 + fillPixelWidth}px`; // 54px is the healthBar left offset
-                damageNum.style.top = '0px'; // Start from health bar position
-                
-                targetElement.appendChild(damageNum);
-                
-                // Remove after animation
-                setTimeout(() => {
-                    if (damageNum.parentNode) {
-                        damageNum.remove();
-                    }
-                }, 1500);
-            }
-        }
-        
-        // Animate attacker lunge
-        const attackerId = attacker.isEnemy ? `enemy${attacker.position + 1}` : `party${attacker.position + 1}`;
-        const attackerElement = document.getElementById(attackerId);
-        
-        if (attackerElement) {
-            const attackerAnimContainer = attackerElement.querySelector('.unitAnimationContainer');
-            if (attackerAnimContainer) {
-                // Add directional lunge class based on attacker's side
-                if (attacker.isEnemy) {
-                    attackerAnimContainer.classList.add('unit-lunge-left');
-                } else {
-                    attackerAnimContainer.classList.add('unit-lunge-right');
+            // --- Real-time battlefield: position damage number at unit's world coords ---
+            if (target.el) {
+                const battlefield = document.getElementById('realtimeBattlefield');
+                if (battlefield) {
+                    const damageNum = document.createElement('div');
+                    damageNum.className = 'damageNumber rt-damage-number';
+                    damageNum.textContent = `-${damage}`;
+                    if (damageType === 'physical') damageNum.classList.add('physical');
+                    else if (damageType === 'magical') damageNum.classList.add('magical');
+                    else if (damageType === 'pure') damageNum.classList.add('pure');
+                    else damageNum.classList.add('physical');
+
+                    damageNum.style.left = `${target.x}px`;
+                    damageNum.style.top = `${target.y - 40}px`;
+                    battlefield.appendChild(damageNum);
+
+                    setTimeout(() => { if (damageNum.parentNode) damageNum.remove(); }, 1500);
                 }
-                setTimeout(() => {
-                    attackerAnimContainer.classList.remove('unit-lunge-left', 'unit-lunge-right');
-                }, 600);
+            } else {
+                // Turn-based fallback
+                const healthBar = targetElement.querySelector('.healthBar');
+                const healthFill = healthBar ? healthBar.querySelector('.healthFill') : null;
+                if (healthBar && healthFill) {
+                    const fillWidth = parseFloat(healthFill.style.width || '100');
+                    const fillPixelWidth = (healthBar.offsetWidth * fillWidth) / 100;
+                    const damageNum = document.createElement('div');
+                    damageNum.className = 'damageNumber';
+                    damageNum.textContent = `-${damage}`;
+                    if (damageType === 'physical') damageNum.classList.add('physical');
+                    else if (damageType === 'magical') damageNum.classList.add('magical');
+                    else if (damageType === 'pure') damageNum.classList.add('pure');
+                    else damageNum.classList.add('physical');
+                    damageNum.style.left = `${54 + fillPixelWidth}px`;
+                    damageNum.style.top = '0px';
+                    targetElement.appendChild(damageNum);
+                    setTimeout(() => { if (damageNum.parentNode) damageNum.remove(); }, 1500);
+                }
+            }
+
+            // Hit flash for realtime units
+            if (target.el) {
+                target.el.classList.add('rt-hit');
+                setTimeout(() => { if (target.el) target.el.classList.remove('rt-hit'); }, 250);
             }
         }
-        
-        // Animate target recoil
-        if (targetElement) {
+
+        // Attacker lunge
+        const attackerElement = this.getUnitElement(attacker);
+        if (attackerElement) {
+            if (attacker.el) {
+                // Realtime: lunge handled by CSS class on rt-unit
+                attacker.el.classList.add('rt-attack-lunge');
+                setTimeout(() => { if (attacker.el) attacker.el.classList.remove('rt-attack-lunge'); }, 400);
+            } else {
+                const attackerAnimContainer = attackerElement.querySelector('.unitAnimationContainer');
+                if (attackerAnimContainer) {
+                    if (attacker.isEnemy) {
+                        attackerAnimContainer.classList.add('unit-lunge-left');
+                    } else {
+                        attackerAnimContainer.classList.add('unit-lunge-right');
+                    }
+                    setTimeout(() => {
+                        attackerAnimContainer.classList.remove('unit-lunge-left', 'unit-lunge-right');
+                    }, 600);
+                }
+            }
+        }
+
+        // Target recoil
+        if (targetElement && !target.el) {
             const targetAnimContainer = targetElement.querySelector('.unitAnimationContainer');
             if (targetAnimContainer) {
-                // Add directional recoil class based on target's side
                 if (target.isEnemy) {
                     targetAnimContainer.classList.add('unit-recoil-right');
                 } else {
@@ -86,61 +113,63 @@ class BattleAnimations {
     }
 
     showDodgeAnimation(target) {
-        const targetId = target.isEnemy ? `enemy${target.position + 1}` : `party${target.position + 1}`;
-        const targetElement = document.getElementById(targetId);
-        
+        const targetElement = this.getUnitElement(target);
+
         if (targetElement) {
-            // Create dodge text
-            const dodgeText = document.createElement('div');
-            dodgeText.className = 'dodgeText';
-            dodgeText.textContent = 'Dodge!';
-            dodgeText.style.cssText = `
-                position: absolute;
-                left: 50%;
-                top: 30%;
-                transform: translateX(-50%);
-                color: #4dd0e1;
-                font-size: 24px;
-                font-weight: bold;
-                text-shadow: 0 0 10px rgba(77, 208, 225, 0.8);
-                animation: dodgeFloat 1s ease-out;
-                pointer-events: none;
-                z-index: 100;
-            `;
-            
-            targetElement.appendChild(dodgeText);
-            
-            // Animate target dodge
-            const animContainer = targetElement.querySelector('.unitAnimationContainer');
-            if (animContainer) {
-                animContainer.classList.add('unit-dodge');
-                setTimeout(() => {
-                    animContainer.classList.remove('unit-dodge');
-                }, 600);
-            }
-            
-            // Remove dodge text after animation
-            setTimeout(() => {
-                if (dodgeText.parentNode) {
-                    dodgeText.remove();
+            if (target.el) {
+                // Realtime: place dodge text on battlefield
+                const battlefield = document.getElementById('realtimeBattlefield');
+                if (battlefield) {
+                    const dodgeText = document.createElement('div');
+                    dodgeText.className = 'dodgeText rt-dodge-text';
+                    dodgeText.textContent = 'Dodge!';
+                    dodgeText.style.left = `${target.x}px`;
+                    dodgeText.style.top = `${target.y - 50}px`;
+                    battlefield.appendChild(dodgeText);
+                    setTimeout(() => { if (dodgeText.parentNode) dodgeText.remove(); }, 1000);
                 }
-            }, 1000);
+            } else {
+                // Turn-based
+                const dodgeText = document.createElement('div');
+                dodgeText.className = 'dodgeText';
+                dodgeText.textContent = 'Dodge!';
+                dodgeText.style.cssText = `
+                    position: absolute;
+                    left: 50%;
+                    top: 30%;
+                    transform: translateX(-50%);
+                    color: #4dd0e1;
+                    font-size: 24px;
+                    font-weight: bold;
+                    text-shadow: 0 0 10px rgba(77, 208, 225, 0.8);
+                    animation: dodgeFloat 1s ease-out;
+                    pointer-events: none;
+                    z-index: 100;
+                `;
+                targetElement.appendChild(dodgeText);
+
+                const animContainer = targetElement.querySelector('.unitAnimationContainer');
+                if (animContainer) {
+                    animContainer.classList.add('unit-dodge');
+                    setTimeout(() => animContainer.classList.remove('unit-dodge'), 600);
+                }
+                setTimeout(() => { if (dodgeText.parentNode) dodgeText.remove(); }, 1000);
+            }
         }
     }
 
 showSpellAnimation(caster, spellName, effects, abilityId) {
         // Clear any pending buff/debuff texts for the caster
         this.clearUnitQueue(caster);
-        
+
     // Clear any existing spell animations first
     document.querySelectorAll('.spellText').forEach(text => text.remove());
-    
-    const elementId = caster.isEnemy ? `enemy${caster.position + 1}` : `party${caster.position + 1}`;
-    const unitSlot = document.getElementById(elementId);
-    
+
+    const unitSlot = this.getUnitElement(caster);
+
     if (unitSlot) {
         // Get animation container
-        const animContainer = unitSlot.querySelector('.unitAnimationContainer');
+        const animContainer = this.getAnimContainer(unitSlot);
         if (!animContainer) return;
         
         // Clear any existing spell text in this container
@@ -236,67 +265,73 @@ showSpellAnimation(caster, spellName, effects, abilityId) {
 }
 
     triggerDeathAnimation(unit) {
+        // Realtime death is handled by BattleRealtime.handleUnitDeath (adds rt-dying/rt-dead classes)
+        if (unit.el) return;
+
+        // Turn-based fallback
         const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
         const element = document.getElementById(elementId);
-        
+
         if (element) {
             const animContainer = element.querySelector('.unitAnimationContainer');
             if (animContainer) {
                 const unitDiv = animContainer.querySelector('.unit');
                 const unitShadow = animContainer.querySelector('.unitShadow');
-                
+
                 if (unitDiv && !unitDiv.classList.contains('dying')) {
-                    // Only add dying class if it doesn't already have it
                     unitDiv.classList.add('dying');
-                    
-                    // Hide shadow immediately when dying
-                    if (unitShadow) {
-                        unitShadow.style.display = 'none';
-                    }
-                    
-                    // Hide UI elements after animation
+                    if (unitShadow) unitShadow.style.display = 'none';
+
                     setTimeout(() => {
-                        // Double-check element still exists and unit is still dead
                         const currentElement = document.getElementById(elementId);
                         if (currentElement && unit.isDead) {
                             const healthBar = currentElement.querySelector('.healthBar');
                             const actionBar = currentElement.querySelector('.actionBar');
                             const levelIndicator = currentElement.querySelector('.levelIndicator');
                             const buffDebuffContainer = currentElement.querySelector('.buffDebuffContainer');
-                            
+
                             if (healthBar) healthBar.style.display = 'none';
                             if (actionBar) actionBar.style.display = 'none';
                             if (levelIndicator) levelIndicator.style.display = 'none';
                             if (buffDebuffContainer) buffDebuffContainer.style.display = 'none';
                         }
-                    }, 800); // Match CSS animation duration
+                    }, 800);
                 }
             }
         }
     }
 
     updateStunVisuals(unit) {
+        const isStunned = unit.debuffs.some(d => d.name === 'Stun' || d.stunned);
+
+        // Realtime units
+        if (unit.el) {
+            if (isStunned) {
+                unit.el.classList.add('rt-stunned');
+            } else {
+                unit.el.classList.remove('rt-stunned');
+            }
+            return;
+        }
+
+        // Turn-based fallback
         const elementId = unit.isEnemy ? `enemy${unit.position + 1}` : `party${unit.position + 1}`;
         const element = document.getElementById(elementId);
-        
+
         if (!element) return;
-        
+
         const animContainer = element.querySelector('.unitAnimationContainer');
         if (!animContainer) return;
-        
+
         const unitDiv = animContainer.querySelector('.unit');
         if (!unitDiv) return;
-        
-        const isStunned = unit.debuffs.some(d => d.name === 'Stun' || d.stunned);
-        
+
         if (isStunned) {
-            // Apply stun visuals to unit img only
             const tiltDegrees = unit.isEnemy ? -4 : 4;
             unitDiv.style.transform = `rotate(${tiltDegrees}deg)`;
             unitDiv.style.opacity = '0.75';
             unitDiv.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
         } else {
-            // Remove stun visuals from unit img
             unitDiv.style.transform = '';
             unitDiv.style.opacity = '';
             unitDiv.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
@@ -397,28 +432,22 @@ showSpellAnimation(caster, spellName, effects, abilityId) {
     }
     
     showBuffDebuffText(target, text, isDebuff = false) {
-        const elementId = target.isEnemy ? `enemy${target.position + 1}` : `party${target.position + 1}`;
-        const unitSlot = document.getElementById(elementId);
-        
+        const unitSlot = this.getUnitElement(target);
+
         if (unitSlot) {
-            // Get animation container
-            const animContainer = unitSlot.querySelector('.unitAnimationContainer');
+            const animContainer = this.getAnimContainer(unitSlot);
             if (!animContainer) return;
-            
-            // Create buff/debuff text
+
             const buffDebuffText = document.createElement('div');
             buffDebuffText.className = 'buffDebuffText';
             buffDebuffText.classList.add(isDebuff ? 'debuff' : 'buff');
             buffDebuffText.textContent = text;
-            
+
             animContainer.appendChild(buffDebuffText);
-            
-            // Remove text after animation
+
             setTimeout(() => {
-                if (buffDebuffText.parentNode) {
-                    buffDebuffText.remove();
-                }
-            }, 1500); // Match the animation duration
+                if (buffDebuffText.parentNode) buffDebuffText.remove();
+            }, 1500);
         }
     }
     

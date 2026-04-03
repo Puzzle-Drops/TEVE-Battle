@@ -25,6 +25,29 @@ class BattleUnit {
                 }
             });
         }
+
+        // Real-time positioning (battlefield bottom half: y 540-1080)
+        this.x = 0;
+        this.y = 0;
+        this.moveSpeed = 0; // pixels per second, set by initRealtime()
+        this.baseAtkRange = 0; // pixels, set by initRealtime()
+
+        // Animation state
+        this.animState = 'idle'; // 'idle' | 'walking' | 'attacking' | 'casting' | 'dying' | 'dead'
+        this.facing = 1; // 1 = right, -1 = left
+        this.stateTimer = 0; // time remaining in current animation lock
+
+        // Real-time combat cooldowns
+        this.globalCooldown = 0; // seconds remaining
+        this.abilityCooldowns = {}; // ability index → seconds remaining
+        this.currentTarget = null; // reference to target BattleUnit
+
+        // Passive & DOT timers
+        this._passiveTimer = 0; // fires passives every 2s
+        this._dotAccumulator = 0; // accumulates time for 1s DOT ticks
+
+        // DOM reference for real-time battlefield
+        this.el = null;
     }
     
     get name() {
@@ -140,6 +163,89 @@ class BattleUnit {
         });
     }
     
+    // --- Real-time getters & methods ---
+
+    // Ranged class families and healer families
+    static RANGED_FAMILIES = ['Archer', 'Initiate', 'Witch Hunter'];
+    static HEALER_FAMILIES = ['Acolyte', 'Druid'];
+    static RANGED_CLASSES = [
+        'Archer', 'Ranger', 'Sharpshooter', 'Deadeye', 'Hawkeye',
+        'Mage', 'Wizard', 'Warlock', 'Sorcerer', 'Sorceress',
+        'Witch Hunter', 'Inquisitor', 'Shadowbane', 'Duskblade',
+        'Initiate', 'Invoker'
+    ];
+    static HEALER_CLASSES = [
+        'Acolyte', 'Cleric', 'Priest', 'Priestess', 'Hierophant',
+        'Patriarch', 'Matriarch', 'Prophet', 'Prophetess',
+        'Druid', 'Warden', 'Grove Keeper', 'Sage', 'Earthcaller',
+        'Lifeshaper', 'Verdant Sentinel', 'Elderwood Guardian'
+    ];
+
+    get isRanged() {
+        const className = this.source.classData?.name || this.source.name || '';
+        return BattleUnit.RANGED_CLASSES.some(c => className.includes(c));
+    }
+
+    get isHealer() {
+        const className = this.source.classData?.name || this.source.name || '';
+        return BattleUnit.HEALER_CLASSES.some(c => className.includes(c));
+    }
+
+    get realtimeMoveSpeed() {
+        const agi = this.stats.agi;
+        // Base 80px/s, scales with AGI up to ~160px/s
+        let speed = 80 + 80 * (agi / (agi + 1000));
+
+        // Apply speed buffs/debuffs
+        if (this.buffs.some(b => b.name === 'Increase Speed')) speed *= 1.33;
+        if (this.debuffs.some(d => d.name === 'Reduce Speed')) speed *= 0.67;
+
+        return speed;
+    }
+
+    get realtimeAtkRange() {
+        if (this.isHealer) return 180;
+        if (this.isRanged) return 200;
+        return 60; // melee
+    }
+
+    get attackSpeed() {
+        const agi = this.stats.agi;
+        // Base 0.8 atk/s, scales with AGI up to ~1.5 atk/s
+        let speed = 0.8 + 0.7 * (agi / (agi + 1000));
+
+        // Apply speed buffs/debuffs
+        if (this.buffs.some(b => b.name === 'Increase Speed')) speed *= 1.33;
+        if (this.debuffs.some(d => d.name === 'Reduce Speed')) speed *= 0.67;
+
+        return speed;
+    }
+
+    initRealtime(startX, startY, facingDir) {
+        this.x = startX;
+        this.y = startY;
+        this.facing = facingDir;
+        this.moveSpeed = this.realtimeMoveSpeed;
+        this.baseAtkRange = this.realtimeAtkRange;
+        this.animState = 'idle';
+        this.stateTimer = 0;
+        this.globalCooldown = 0;
+        this.abilityCooldowns = {};
+        this._passiveTimer = 0;
+        this._dotAccumulator = 0;
+        this.currentTarget = null;
+    }
+
+    distanceTo(other) {
+        const dx = this.x - other.x;
+        const dy = this.y - other.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    isInRange(target) {
+        return this.distanceTo(target) <= this.realtimeAtkRange;
+    }
+
     updateBuffsDebuffs() {
         // Store if unit was stunned before update
         const wasStunned = this.debuffs.some(d => d.name === 'Stun' || d.stunned);

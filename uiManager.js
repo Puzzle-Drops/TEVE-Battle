@@ -1199,13 +1199,13 @@ showArena() {
     this.closeHeroInfo();
     this.game.currentScreen = 'battleScene';
     document.getElementById('battleScene').style.display = 'block';
-    
+
     // Ensure exit button is visible by default
     const exitButton = document.querySelector('.exitBattleButton');
     if (exitButton) {
         exitButton.style.display = '';
     }
-        
+
         // Set battlefield background based on current battle mode
 const battleFieldBg = document.querySelector('.battleFieldBackground');
 if (battleFieldBg) {
@@ -1217,13 +1217,25 @@ if (battleFieldBg) {
         battleFieldBg.style.backgroundImage = `url('https://puzzle-drops.github.io/TEVE/img/fields/${dungeonName}.png')`;
     }
 }
-                    
+
+        // Hide old fixed unit slots — realtime uses #realtimeBattlefield instead
+        for (let i = 1; i <= 5; i++) {
+            const partyEl = document.getElementById(`party${i}`);
+            if (partyEl) partyEl.style.display = 'none';
+            const enemyEl = document.getElementById(`enemy${i}`);
+            if (enemyEl) enemyEl.style.display = 'none';
+        }
+
+        // Clear and show realtime battlefield
+        const rtBattlefield = document.getElementById('realtimeBattlefield');
+        if (rtBattlefield) {
+            rtBattlefield.innerHTML = '';
+            rtBattlefield.style.display = 'block';
+        }
+
         // Set auto toggles based on saved states
         document.getElementById('autoModeToggle').checked = this.game.autoBattle;
         document.getElementById('autoReplayToggle').checked = this.game.autoReplay;
-            
-        // Update UI with actual units
-        this.updateBattleUI();
     }
 
     updateBattleUI() {
