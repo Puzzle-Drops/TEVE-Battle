@@ -28,8 +28,8 @@ class BattleRealtime {
         // Battlefield bounds (bottom half of 1920x1080)
         this.fieldMinX = 60;
         this.fieldMaxX = 1860;
-        this.fieldMinY = 580;  // feet can't go above ~540 line + some padding
-        this.fieldMaxY = 1040; // bottom padding
+        this.fieldMinY = 560;  // feet stay in bottom half
+        this.fieldMaxY = 920;  // raised so feet don't clip off-screen
 
         // Timer
         this.startTime = Date.now();
@@ -148,15 +148,18 @@ class BattleRealtime {
         const count = units.length;
         if (count === 0) return;
 
-        const xBase = isParty ? 200 : 1720;
-        const xSpread = isParty ? 150 : 150;
-        const yStart = this.fieldMinY;
-        const yEnd = this.fieldMaxY;
-        const ySpacing = count > 1 ? (yEnd - yStart) / (count - 1) : 0;
+        // Closer horizontally: party at 350, enemies at 1570
+        const xBase = isParty ? 350 : 1570;
+        const xSpread = 100;
+        // Tighter vertical grouping
+        const yMid = (this.fieldMinY + this.fieldMaxY) / 2;
+        const yTotalSpread = Math.min(250, (this.fieldMaxY - this.fieldMinY) * 0.6);
+        const yStart = yMid - yTotalSpread / 2;
+        const ySpacing = count > 1 ? yTotalSpread / (count - 1) : 0;
 
         units.forEach((unit, i) => {
             const x = xBase + (Math.random() - 0.5) * xSpread;
-            const y = count > 1 ? yStart + ySpacing * i : (yStart + yEnd) / 2;
+            const y = count > 1 ? yStart + ySpacing * i : yMid;
             const facing = isParty ? 1 : -1;
             unit.initRealtime(x, y, facing);
         });

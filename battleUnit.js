@@ -204,9 +204,9 @@ class BattleUnit {
     }
 
     get realtimeAtkRange() {
-        if (this.isHealer) return 180;
-        if (this.isRanged) return 200;
-        return 60; // melee
+        if (this.isHealer) return 360;
+        if (this.isRanged) return 400;
+        return 120; // melee
     }
 
     get attackSpeed() {
