@@ -28,8 +28,8 @@ class BattleRealtime {
         // Battlefield bounds (bottom half of 1920x1080)
         this.fieldMinX = 60;
         this.fieldMaxX = 1860;
-        this.fieldMinY = 560;  // feet stay in bottom half
-        this.fieldMaxY = 920;  // raised so feet don't clip off-screen
+        this.fieldMinY = 410;  // shifted up 150px
+        this.fieldMaxY = 770;  // shifted up 150px
 
         // Timer
         this.startTime = Date.now();

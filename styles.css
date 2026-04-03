@@ -7364,8 +7364,8 @@ body {
 
 .rt-unit {
     position: absolute;
-    width: 180px;
-    transform: translateX(-90px); /* center on x,y */
+    width: 260px;
+    transform: translateX(-130px); /* center on x,y */
     pointer-events: auto;
     transition: none; /* movement handled by JS */
 }
@@ -7476,8 +7476,8 @@ body {
 }
 
 .rt-sprite {
-    width: 160px;
-    height: 160px;
+    width: 240px;
+    height: 240px;
     display: flex;
     align-items: flex-end; /* anchor at feet (bottom of sprite) */
     justify-content: center;
@@ -7491,8 +7491,8 @@ body {
 }
 
 .rt-shadow {
-    width: 60px;
-    height: 10px;
+    width: 80px;
+    height: 12px;
     background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
     margin-top: -4px;
 }
@@ -7580,8 +7580,8 @@ body {
 }
 
 @keyframes rt-death-crumple {
-    0% { opacity: 1; transform: translateX(-90px) scale(1) rotate(0deg); }
-    100% { opacity: 0; transform: translateX(-90px) scale(0.5) rotate(8deg) translateY(20px); }
+    0% { opacity: 1; transform: translateX(-130px) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translateX(-130px) scale(0.5) rotate(8deg) translateY(20px); }
 }
 
 .rt-dead {
