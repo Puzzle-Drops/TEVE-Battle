@@ -139,6 +139,9 @@ class BattleRealtime {
             this.createRealtimeUnitEl(unit);
         });
 
+        // Rebuild enemy side panel
+        this.rebuildEnemyPanel();
+
         return true;
     }
 
@@ -173,8 +176,9 @@ class BattleRealtime {
         });
     }
 
-    // --- DOM Creation for real-time units ---
+    // --- DOM Creation ---
 
+    // Battlefield sprite only (no UI — that goes in the side panel)
     createRealtimeUnitEl(unit) {
         const battlefield = document.getElementById('realtimeBattlefield');
         if (!battlefield) return;
@@ -186,25 +190,12 @@ class BattleRealtime {
         el.style.left = unit.x + 'px';
         el.style.top = unit.y + 'px';
         el.style.zIndex = Math.floor(unit.y);
-        el.style.setProperty('--face', unit.facing);
 
-        // Build sprite image
         let spriteUrl;
         if (unit.isEnemy) {
             spriteUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${unit.source.enemyId}.png`;
         } else {
             spriteUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unit.source.className}_battle.png`;
-        }
-
-        const isAlly = !unit.isEnemy;
-        const nameColorClass = isAlly ? 'ally-name' : 'enemy-name';
-        const hpFillClass = isAlly ? 'ally' : 'enemy';
-
-        // Level indicator with stars (same as turn-based)
-        const starData = unit.isEnemy ? unit.source.getStars() : unit.source.getStars();
-        let levelHtml = '<div class="levelNumber">' + unit.source.level + '</div>';
-        if (starData.html) {
-            levelHtml += '<div class="levelStars ' + starData.colorClass + '">' + starData.html + '</div>';
         }
 
         el.innerHTML = `
@@ -218,38 +209,117 @@ class BattleRealtime {
                     </div>
                     <div class="rt-shadow"></div>
                 </div>
-                <div class="healthBarContainer">
-                    <div class="healthBar">
-                        <div class="healthFill" style="width:100%"></div>
-                        <div class="shieldFill" style="width:0%;display:none"></div>
-                        <div class="healthText">${unit.currentHp}</div>
-                    </div>
-                </div>
-                <div class="levelIndicator">${levelHtml}</div>
-                <div class="buffDebuffContainer"></div>
             </div>
         `;
 
         battlefield.appendChild(el);
         unit.el = el;
 
-        // Add click handler for unit info on level indicator
-        const levelIndicator = el.querySelector('.levelIndicator');
-        if (levelIndicator) {
-            levelIndicator.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.game.uiManager.closeHeroInfo();
-                if (unit.isEnemy) {
-                    this.game.uiManager.showEnemyInfoPopup(unit.source);
-                } else {
-                    this.game.uiManager.showHeroInfoPopup(unit.source);
-                }
-            });
-        }
-
-        // Right-click on whole unit for info
+        // Right-click on sprite for info
         el.addEventListener('contextmenu', (e) => {
             e.preventDefault();
+            e.stopPropagation();
+            this.game.uiManager.closeHeroInfo();
+            if (unit.isEnemy) {
+                this.game.uiManager.showEnemyInfoPopup(unit.source);
+            } else {
+                this.game.uiManager.showHeroInfoPopup(unit.source);
+            }
+        });
+    }
+
+    // --- Side Panels ---
+
+    createSidePanels() {
+        const battleScene = document.getElementById('battleScene');
+        if (!battleScene) return;
+
+        // Remove existing panels
+        const existingLeft = document.getElementById('rtPanelLeft');
+        const existingRight = document.getElementById('rtPanelRight');
+        if (existingLeft) existingLeft.remove();
+        if (existingRight) existingRight.remove();
+
+        // Left panel (party)
+        const leftPanel = document.createElement('div');
+        leftPanel.id = 'rtPanelLeft';
+        leftPanel.className = 'rt-side-panel rt-panel-left';
+        battleScene.appendChild(leftPanel);
+
+        // Right panel (enemies)
+        const rightPanel = document.createElement('div');
+        rightPanel.id = 'rtPanelRight';
+        rightPanel.className = 'rt-side-panel rt-panel-right';
+        battleScene.appendChild(rightPanel);
+
+        // Populate party panel
+        this.party.forEach(unit => {
+            this.createPanelEntry(unit, leftPanel);
+        });
+
+        // Populate enemy panel
+        this.enemies.forEach(unit => {
+            this.createPanelEntry(unit, rightPanel);
+        });
+    }
+
+    rebuildEnemyPanel() {
+        const rightPanel = document.getElementById('rtPanelRight');
+        if (!rightPanel) return;
+        rightPanel.innerHTML = '';
+        this.enemies.forEach(unit => {
+            this.createPanelEntry(unit, rightPanel);
+        });
+    }
+
+    createPanelEntry(unit, panel) {
+        // Portrait URL
+        let portraitUrl;
+        if (unit.isEnemy) {
+            portraitUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${unit.source.enemyId}.png`;
+        } else {
+            portraitUrl = `https://puzzle-drops.github.io/TEVE/img/sprites/heroes/${unit.source.className}_portrait.png`;
+        }
+
+        // Stars
+        const starData = unit.source.getStars();
+        let starHtml = '';
+        if (starData.html) {
+            starHtml = `<span class="rt-panel-stars ${starData.colorClass}">${starData.html}</span>`;
+        }
+
+        const entry = document.createElement('div');
+        entry.className = 'rt-panel-entry';
+        entry.dataset.unitId = unit.isEnemy ? `enemy-${unit.position}` : `party-${unit.position}`;
+
+        entry.innerHTML = `
+            <div class="rt-panel-row">
+                <div class="rt-panel-portrait">
+                    <img src="${portraitUrl}" alt="${unit.name}"
+                         style="image-rendering: pixelated;"
+                         draggable="false"
+                         onerror="this.src='https://puzzle-drops.github.io/TEVE/img/sprites/enemies/${unit.isEnemy ? unit.source.enemyId : unit.source.className + '_battle'}.png'">
+                    <div class="rt-panel-level">${unit.source.level}</div>
+                </div>
+                <div class="rt-panel-info">
+                    <div class="rt-panel-name">${unit.name} ${starHtml}</div>
+                    <div class="rt-panel-hpbar">
+                        <div class="healthBar">
+                            <div class="healthFill" style="width:100%"></div>
+                            <div class="shieldFill" style="width:0%;display:none"></div>
+                            <div class="healthText">${unit.currentHp}</div>
+                        </div>
+                    </div>
+                    <div class="buffDebuffContainer"></div>
+                </div>
+            </div>
+        `;
+
+        panel.appendChild(entry);
+        unit.panelEl = entry;
+
+        // Click portrait for info
+        entry.querySelector('.rt-panel-portrait').addEventListener('click', (e) => {
             e.stopPropagation();
             this.game.uiManager.closeHeroInfo();
             if (unit.isEnemy) {
@@ -278,6 +348,9 @@ class BattleRealtime {
         this.party.forEach(unit => {
             this.createRealtimeUnitEl(unit);
         });
+
+        // Create side panels with HP bars, buffs, portraits
+        this.createSidePanels();
 
         // Start timer
         this.startTimerUpdate();
@@ -749,34 +822,43 @@ class BattleRealtime {
 
     renderUnits() {
         this.allUnits.forEach(unit => {
-            if (!unit.el) return;
+            // --- Battlefield sprite ---
+            if (unit.el) {
+                if (unit.isDead) {
+                    if (unit.animState !== 'dead') {
+                        unit.animState = 'dead';
+                        unit.el.classList.add('rt-dead');
+                    }
+                } else {
+                    // Position
+                    unit.el.style.left = unit.x + 'px';
+                    unit.el.style.top = unit.y + 'px';
+                    unit.el.style.zIndex = Math.floor(unit.y);
 
-            if (unit.isDead) {
-                if (unit.animState !== 'dead') {
-                    unit.animState = 'dead';
-                    unit.el.classList.add('rt-dead');
+                    // Sprite flip
+                    if (unit._lastFacing !== unit.facing) {
+                        unit._lastFacing = unit.facing;
+                        if (!unit._spriteImg) unit._spriteImg = unit.el.querySelector('.rt-sprite img');
+                        const flipValue = unit.isEnemy ? -unit.facing : unit.facing;
+                        if (unit._spriteImg) unit._spriteImg.style.transform = `scaleX(${flipValue})`;
+                    }
+
+                    // Animation state
+                    if (unit._lastAnimState !== unit.animState) {
+                        unit._lastAnimState = unit.animState;
+                        unit.el.className = `rt-unit rt-${unit.animState}`;
+                    }
                 }
-                return;
             }
 
-            // Position (always update — units move every frame)
-            unit.el.style.left = unit.x + 'px';
-            unit.el.style.top = unit.y + 'px';
-            unit.el.style.zIndex = Math.floor(unit.y);
+            // --- Side panel UI ---
+            if (!unit.panelEl) return;
 
-            // Sprite flip — only update when facing changes
-            // Enemy sprites are pre-mirrored (already face left), so invert their flip
-            if (unit._lastFacing !== unit.facing) {
-                unit._lastFacing = unit.facing;
-                if (!unit._spriteImg) unit._spriteImg = unit.el.querySelector('.rt-sprite img');
-                const flipValue = unit.isEnemy ? -unit.facing : unit.facing;
-                if (unit._spriteImg) unit._spriteImg.style.transform = `scaleX(${flipValue})`;
-            }
-
-            // Animation state class — only update when state changes
-            if (unit._lastAnimState !== unit.animState) {
-                unit._lastAnimState = unit.animState;
-                unit.el.className = `rt-unit rt-${unit.animState}`;
+            // Gray out on death
+            if (unit.isDead) {
+                if (!unit.panelEl.classList.contains('rt-panel-dead')) {
+                    unit.panelEl.classList.add('rt-panel-dead');
+                }
             }
 
             // HP bar — only update when HP or shield changes
@@ -785,9 +867,9 @@ class BattleRealtime {
             if (unit._lastHpKey !== hpKey) {
                 unit._lastHpKey = hpKey;
 
-                if (!unit._hpFill) unit._hpFill = unit.el.querySelector('.healthFill');
-                if (!unit._shieldFill) unit._shieldFill = unit.el.querySelector('.shieldFill');
-                if (!unit._hpText) unit._hpText = unit.el.querySelector('.healthText');
+                if (!unit._hpFill) unit._hpFill = unit.panelEl.querySelector('.healthFill');
+                if (!unit._shieldFill) unit._shieldFill = unit.panelEl.querySelector('.shieldFill');
+                if (!unit._hpText) unit._hpText = unit.panelEl.querySelector('.healthText');
 
                 const hpFill = unit._hpFill;
                 const shieldFill = unit._shieldFill;
@@ -830,13 +912,14 @@ class BattleRealtime {
                 }
             }
 
-            // Buff/debuff icons (already diff-checked inside)
+            // Buff/debuff icons
             this.renderBuffDebuffIcons(unit);
         });
     }
 
     renderBuffDebuffIcons(unit) {
-        const container = unit.el.querySelector('.buffDebuffContainer');
+        if (!unit.panelEl) return;
+        const container = unit.panelEl.querySelector('.buffDebuffContainer');
         if (!container) return;
 
         const currentState = JSON.stringify({
@@ -1956,9 +2039,13 @@ class BattleRealtime {
         }
 
         setTimeout(() => {
-            // Clean up battlefield elements
+            // Clean up battlefield and side panels
             const battlefield = document.getElementById('realtimeBattlefield');
             if (battlefield) battlefield.innerHTML = '';
+            const leftPanel = document.getElementById('rtPanelLeft');
+            const rightPanel = document.getElementById('rtPanelRight');
+            if (leftPanel) leftPanel.remove();
+            if (rightPanel) rightPanel.remove();
 
             if (this.mode === 'arena') {
                 this.game.uiManager.showArenaResults();
@@ -1972,6 +2059,10 @@ class BattleRealtime {
         // Clean up
         const battlefield = document.getElementById('realtimeBattlefield');
         if (battlefield) battlefield.innerHTML = '';
+        const leftPanel = document.getElementById('rtPanelLeft');
+        const rightPanel = document.getElementById('rtPanelRight');
+        if (leftPanel) leftPanel.remove();
+        if (rightPanel) rightPanel.remove();
 
         if (this._animFrameId) {
             cancelAnimationFrame(this._animFrameId);
